@@ -1,0 +1,161 @@
+﻿#pragma once
+
+/// std
+#include <memory>
+#include <vector>
+
+/// engine
+#include "Window.h"
+
+/// ///////////////////////////////////////////////////
+/// windowの管理クラス
+/// ///////////////////////////////////////////////////
+namespace ONEngine {
+
+class WindowManager final {
+public:
+	/// ===================================================
+	/// public : enum
+	/// ===================================================
+
+	enum class WindowType {
+		Main,
+		Sub,
+	};
+
+
+public:
+	/// ===================================================
+	/// public : static method
+	/// ===================================================
+
+	/// @brief main windowのwindowプロシージャ
+	/// @param _hwnd 
+	/// @param _msg 
+	/// @param _wparam 
+	/// @param _lparam 
+	/// @return 
+	static LRESULT CALLBACK MainWindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lparam);
+
+	/// @brief sub windowのwindowプロシージャ
+	/// @param _hwnd 
+	/// @param _msg 
+	/// @param _wparam 
+	/// @param _lparam 
+	/// @return 
+	static LRESULT CALLBACK SubWindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lparam);
+
+
+public:
+	/// ===================================================
+	/// public : method
+	/// ===================================================
+
+	WindowManager(DxManager* _dxm);
+	~WindowManager();
+
+	/// @brief Instanceの取得
+	static WindowManager* GetInstance();
+
+	/// @brief 初期化
+	void Initialize();
+
+	/// @brief 更新
+	void Update();
+
+	/// @brief 終了処理
+	void Finalize();
+
+	/// @brief main windowの描画前処理
+	void MainWindowPreDraw();
+
+	/// @brief main windowの描画後処理
+	void MainWindowPostDraw();
+
+	/// @brief windows_の描画前処理
+	void PreDrawAll();
+
+	/// @brief windows_の描画後処理
+	void PostDrawAll();
+
+	/// @brief windows_の描画
+	void PresentAll();
+
+	/// @brief 新しいwindowを生成
+	/// @param _windowName windowの名前
+	/// @param _windowSize windowのサイズ
+	/// @param _windowType windowの種類
+	/// @return 生成したwindowのポインタ
+	Window* GenerateWindow(const std::wstring& _windowName, const Vector2& _windowSize, WindowType _windowType = WindowType::Sub, UINT _windowStyle = WS_OVERLAPPEDWINDOW & ~(WS_MAXIMIZEBOX | WS_THICKFRAME));
+
+	/// @brief game windowを非表示
+	/// @param _windowPtr 隠したいwindowのポインタ
+	void HideGameWindow(Window* _windowPtr) { ShowWindow(_windowPtr->GetHwnd(), SW_HIDE); }
+
+	/// @brief game windowを表示
+	/// @param _windowPtr 表示したいwindowのポインタ
+	void ShowGameWindow(Window* _windowPtr) { ShowWindow(_windowPtr->GetHwnd(), SW_SHOW); }
+
+private:
+	/// ===================================================
+	/// private : methods
+	/// ===================================================
+
+	/// @brief  game windowの生成
+	/// @param _title windowのタイトル
+	/// @param _size  windowのサイズ
+	/// @param _windowStyle windowのスタイル
+	/// @param _windowPtr windowのポインタ
+	/// @param _windowType windowの種類
+	void CreateGameWindow(const wchar_t* _title, const Vector2& _size, UINT _windowStyle, Window* _windowPtr, WindowType _windowType);
+
+	/// @brief main windowの更新
+	void UpdateMainWindow();
+
+
+private:
+	/// ===================================================
+	/// private : objects
+	/// ===================================================
+
+	///  ----- other class ----- ///
+	class DxManager*                     pDxManager_ = nullptr;
+
+	std::vector<std::unique_ptr<Window>> windows_;
+	Window*                              pMainWindow_ = nullptr;
+
+	bool                                 isProcessEnd_;
+	bool                                 closeRequested_ = false;
+
+
+public:
+	/// ===================================================
+	/// public : accessor
+	/// ===================================================
+
+	/// @brief MainWindowの取得
+	Window* GetMainWindow() const;
+
+	/// @brief 現在のアクティブなWindowを取得
+	Window* GetActiveWindow() const;
+
+	/// @brief 終了リクエストが来ているか
+	bool IsCloseRequested() const;
+
+	/// @brief 終了リクエストを設定
+	void SetCloseRequested(bool _isCloseRequested);
+
+private:
+	/// ===================================================
+	/// private : copy delete
+	/// ===================================================
+
+	WindowManager(const WindowManager&)            = delete;
+	WindowManager(WindowManager&&)                 = delete;
+	WindowManager& operator=(const WindowManager&) = delete;
+	WindowManager& operator=(WindowManager&&)      = delete;
+};
+
+void InternalGetWindowSize(Vector2* _size);
+
+} /// ONEngine

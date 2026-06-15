@@ -1,0 +1,134 @@
+﻿#pragma once
+
+/// std
+#include <string>
+
+/// externals
+#include <nlohmann/json.hpp>
+
+/// engine
+#include "Engine/Asset/Assets/Material/Material.h"
+#include "Engine/Core/Utility/Utility.h"
+#include "Engine/Graphics/Buffer/StructuredBuffer.h"
+#include "Engine/Graphics/Buffer/ConstantBuffer.h"
+#include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+
+/// interface
+#include "Engine/ECS/Component/Components/Interface/IComponent.h"
+
+namespace Editor {
+class GrassArrangementPipeline;
+}
+
+namespace ONEngine {
+class DxManager;
+class DxDevice;
+class DxCommand;
+class DxSRVHeap;
+class GrassField;
+}
+
+namespace ONEngine::Asset {
+class AssetCollection;
+}
+
+
+/// ////////////////////////////////////////////////////////
+/// 草のインスタンス情報 (シェーダーで利用)
+/// ////////////////////////////////////////////////////////
+namespace ONEngine {
+
+struct GrassData {
+	Vector3 position;
+	Vector3 tangent;
+	float scale;
+	float random01;
+};
+
+/// ////////////////////////////////////////////////////////
+/// Editor
+/// ////////////////////////////////////////////////////////
+namespace ComponentDebug {
+void GrassFieldDebug(GrassField* _grassField, Asset::AssetCollection* _assetCollection);
+}
+
+/// ////////////////////////////////////////////////////////
+/// json変換
+/// ////////////////////////////////////////////////////////
+void to_json(nlohmann::json& _j, const GrassField& _p);
+void from_json(const nlohmann::json& _j, GrassField& _p);
+
+/// ////////////////////////////////////////////////////////
+/// Terrainに生やすための草の群クラス
+/// ////////////////////////////////////////////////////////
+class GrassField : public IComponent {
+	/// friendクラス
+	friend class ::Editor::GrassArrangementPipeline;
+
+	/// privateメンバ変数の参照のためにフレンド宣言
+	friend void ComponentDebug::GrassFieldDebug(GrassField* _grassField, Asset::AssetCollection* _assetCollection);
+	friend void to_json(nlohmann::json& _j, const GrassField& _p);
+	friend void from_json(const nlohmann::json& _j, GrassField& _p);
+public:
+	/// ==================================================
+	/// public : methods
+	/// ===================================================
+
+	GrassField();
+	~GrassField();
+
+	/// 草のバッファを初期化する
+	void Initialize(
+		uint32_t _maxBladeCount,
+		DxDevice* _dxDevice, DxCommand* _dxCommand, DxSRVHeap* _dxSRVHeap
+	);
+
+	/// material_をBufferにMapする
+	void SetupRenderingData(Asset::AssetCollection* _assetCollection);
+	/// rwGrassInstanceBuffer_の開始インデックスを設定する
+	void StartIndexMapping(UINT _oneDrawInstanceCount);
+
+	/// rwGrassInstanceBuffer_のインスタンス数を読む
+	void AppendBufferReadCounter(DxManager* _dxm, DxCommand* _dxCommand);
+
+private:
+	/// ===================================================
+	/// private : objects
+	/// ===================================================
+
+	/// ----- buffer ----- ///
+	StructuredBuffer<GrassData> rwGrassInstanceBuffer_;
+	StructuredBuffer<uint32_t> startIndexBuffer_;
+	StructuredBuffer<float> timeBuffer_;
+	ConstantBuffer<GPUMaterial> materialBuffer_;
+
+	/// ----- parameters ----- ///
+	uint32_t maxGrassCount_; ///< 最大草の本数
+	std::string distributionTexturePath_; ///< 草の配置に使うテクスチャのパス
+	bool isCreated_;
+	bool isArranged_; ///< 配置済みかどうか
+	uint32_t instanceCount_; ///< 実際に配置された草の本数
+
+	Asset::Material material_;
+
+public:
+	/// ===================================================
+	/// public : accessors
+	/// ===================================================
+
+	/// 草のインスタンスバッファの取得
+	StructuredBuffer<GrassData>& GetRwGrassInstanceBuffer();
+	StructuredBuffer<uint32_t>& GetStartIndexBufferRef();
+	StructuredBuffer<float>& GetTimeBuffer();
+	ConstantBuffer<GPUMaterial>& GetMaterialBufferRef();
+
+	/// 最大草の本数の取得
+	uint32_t GetMaxGrassCount() const;
+	bool GetIsCreated() const;
+	uint32_t GetInstanceCount() const;
+};
+
+
+
+
+} /// ONEngine

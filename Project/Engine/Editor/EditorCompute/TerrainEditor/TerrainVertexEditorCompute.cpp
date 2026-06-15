@@ -1,0 +1,137 @@
+﻿#include "TerrainVertexEditorCompute.h"
+
+/// engine
+#include "Engine/Core/Config/EngineConfig.h"
+#include "Engine/Core/DirectX12/Manager/DxManager.h"
+#include "Engine/Asset/Collection/AssetCollection.h"
+
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Terrain/Terrain.h"
+
+using namespace Editor;
+
+TerrainVertexEditorCompute::TerrainVertexEditorCompute() = default;
+TerrainVertexEditorCompute::~TerrainVertexEditorCompute() = default;
+
+void TerrainVertexEditorCompute::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) {
+
+	{	/// Shader
+
+		ONEngine::Shader shader;
+		shader.Initialize(_shaderCompiler);
+		shader.CompileShader(L"./Packages/Shader/Editor/TerrainVertexEditor.cs.hlsl", L"cs_6_6", ONEngine::Shader::Type::cs);
+
+		pipeline_ = std::make_unique<ONEngine::ComputePipeline>();
+		pipeline_->SetShader(&shader);
+
+		pipeline_->AddCBV(D3D12_SHADER_VISIBILITY_ALL, 0); /// CBV_TERRAIN_INFO
+		pipeline_->AddCBV(D3D12_SHADER_VISIBILITY_ALL, 1); /// CBV_INPUT_INFO
+
+		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); /// UAV_VERTICES
+		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); /// SRV_POSITION_TEXTURE
+		pipeline_->AddDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); /// SRV_FLAG_TEXTURE
+
+		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0); /// UAV_VERTICES
+		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1); /// SRV_POSITION_TEXTURE
+		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2); /// SRV_FLAG_TEXTURE
+
+		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
+
+		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+	}
+
+	{	/// Buffer
+
+		terrainInfo_.Create(_dxm->GetDxDevice());
+		inputInfo_.Create(_dxm->GetDxDevice());
+
+	}
+}
+
+void TerrainVertexEditorCompute::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* _assetCollection) {
+
+	ONEngine::ComponentArray<ONEngine::Terrain>* terrainArray = _ecs->GetCurrentGroup()->GetComponentArray<ONEngine::Terrain>();
+	if (!terrainArray || terrainArray->GetUsedComponents().empty()) {
+		//ONEngine::Console::LogError("TerrainVertexEditorCompute::Execute: Terrain component array is null");
+		return;
+	}
+
+	ONEngine::Terrain* pTerrain = nullptr;
+	for (auto& terrain : terrainArray->GetUsedComponents()) {
+		if (!terrain) {
+			continue;
+		}
+
+		pTerrain = terrain;
+	}
+
+	/// terrain がないなら終わり
+	if (!pTerrain) {
+		return;
+	}
+
+	if (!pTerrain->GetIsCreated()) {
+		return;
+	}
+
+
+
+
+	/// マウスが範囲外なら処理しない
+	const ONEngine::Vector2& mousePosition = ONEngine::Input::GetImGuiImageMousePosNormalized("Scene");
+	if (!ONEngine::Math::Inside(mousePosition, ONEngine::Vector2::Zero, ONEngine::Vector2::HD)) {
+		return;
+	}
+
+	/// bufferに値をセット
+	terrainInfo_.SetMappedData(TerrainInfo{ pTerrain->GetOwner()->GetId() });
+
+	bool isRaiseTerrainButtonPressed = ONEngine::Input::PressMouse(ONEngine::Mouse::Left) && !ONEngine::Input::PressKey(DIK_LSHIFT);
+	bool isLowerTerrainButtonPressed = ONEngine::Input::PressMouse(ONEngine::Mouse::Left) && ONEngine::Input::PressKey(DIK_LSHIFT);
+	int byte = 0;
+	byte |= (isRaiseTerrainButtonPressed << 0);
+	byte |= (isLowerTerrainButtonPressed << 1);
+
+
+	inputInfo_.SetMappedData(
+		InputInfo{
+			mousePosition,
+			pTerrain->editorInfo_.brushRadius,
+			pTerrain->editorInfo_.brushStrength,
+			byte,
+			pTerrain->editorInfo_.editMode,
+			pTerrain->editorInfo_.usedTextureIndex
+		}
+	);
+
+
+	/// 押していないときは処理をしない
+	if (!ONEngine::Input::PressMouse(ONEngine::Mouse::Left)) {
+		return;
+	}
+
+
+	/// pipelineの設定&実行
+	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	auto cmdList = _dxCommand->GetCommandList();
+
+	/// CBV
+	terrainInfo_.BindForComputeCommandList(cmdList, CBV_TERRAIN_INFO);
+	inputInfo_.BindForComputeCommandList(cmdList, CBV_INPUT_INFO);
+
+	/// UAV
+	pTerrain->GetRwVertices().UAVBindForComputeCommandList(cmdList, UAV_VERTICES);
+
+	/// SRV
+	const ONEngine::Asset::Texture* positionTexture = _assetCollection->GetTexture("./Assets/Scene/RenderTexture/debugWorldPosition");
+	const ONEngine::Asset::Texture* flagTexture = _assetCollection->GetTexture("./Assets/Scene/RenderTexture/debugFlags");
+
+	cmdList->SetComputeRootDescriptorTable(SRV_POSITION_TEXTURE, positionTexture->GetSRVGPUHandle());
+	cmdList->SetComputeRootDescriptorTable(SRV_FLAG_TEXTURE, flagTexture->GetSRVGPUHandle());
+
+	const UINT threadGroupSize = 256;
+	cmdList->Dispatch(
+		ONEngine::Math::DivideAndRoundUp(pTerrain->GetMaxVertexNum(), threadGroupSize),
+		1, 1
+	);
+}

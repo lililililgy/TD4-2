@@ -1,0 +1,58 @@
+﻿#pragma once
+
+/// std
+#include <array>
+
+/// engine 
+#include "Engine/Core/Utility/Math/Vector2.h"
+#include "Engine/Graphics/Pipelines/Interface/IPostProcessPipeline.h"
+#include "Engine/Graphics/Buffer/ConstantBuffer.h"
+
+/// ///////////////////////////////////////////////////
+/// 地形エディタのブラシを表示するポストプロセス
+/// ///////////////////////////////////////////////////
+namespace ONEngine {
+
+class PostProcessTerrainBrush : public PerObjectPostProcess {
+
+	enum ROOT_PARAM {
+		CBV_BRUSH,
+		SRV_COLOR,
+		SRV_POSITION,
+		SRV_FLAGS,
+		UAV_RESULT
+	};
+
+
+	struct Brush {
+		Vector2 position;
+		float radius;
+	};
+
+public:
+	/// ===================================================
+	/// public : methods
+	/// ===================================================
+
+	PostProcessTerrainBrush();
+	~PostProcessTerrainBrush();
+
+	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
+
+	void Execute(
+		const std::string& _textureName,
+		DxCommand* _dxCommand,
+		Asset::AssetCollection* _assetCollection,
+		EntityComponentSystem* _ecs
+	) override;
+
+private:
+	/// ===================================================
+	/// private : objects
+	/// ===================================================
+
+	std::array<size_t, 4> textureIndices_;
+	ConstantBuffer<Brush> brushBuffer_;
+};
+
+} /// ONEngine

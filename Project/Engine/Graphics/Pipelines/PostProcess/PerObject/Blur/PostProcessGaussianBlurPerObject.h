@@ -1,0 +1,42 @@
+﻿#pragma once
+
+/// std
+#include <memory>
+#include <array>
+
+/// engine
+#include "../../../Interface/IPostProcessPipeline.h"
+
+/// ///////////////////////////////////////////////////
+/// オブジェクト毎のガウスブラー処理
+/// ///////////////////////////////////////////////////
+namespace ONEngine {
+
+class PostProcessGaussianBlurPerObject : public PerObjectPostProcess {
+public:
+	/// ===================================================
+	/// public : methods
+	/// ===================================================
+
+	PostProcessGaussianBlurPerObject() = default;
+	~PostProcessGaussianBlurPerObject() override = default;
+
+	void Initialize(ShaderCompiler* _shaderCompiler, class DxManager* _dxm) override;
+	void Execute(
+		const std::string& _textureName,
+		DxCommand* _dxCommand,
+		Asset::AssetCollection* _assetCollection,
+		EntityComponentSystem* _entityComponentSystem
+	) override;
+
+private:
+	/// ===================================================
+	/// private : objects
+	/// ===================================================
+	
+	std::array<size_t, 2> textureIndices_; ///< テクスチャのインデックス
+
+};
+
+
+} /// ONEngine

@@ -1,0 +1,552 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+public class PuzzleStage : MonoScript {
+	private PuzzleBlockData blockData_;
+
+	// マップの情報、ブロックリスト、プレイヤーリスト
+	private List<List<int>> mapData_;
+	private Entity blockParent_;
+	private List<Entity> blocks_;
+	private List<Entity> players_;
+	private Entity magatama_; /// 勾玉エンティティ(アクティブプレイヤーの周囲を周る)
+	private float magatamaRotateValue_ = 0.0f;
+	private float magatamaHeight_ = 0.15f;
+
+	private Vector3 blockPosOffset_; // ブロックの位置オフセット
+	private Entity activePlayer_; // 
+	private Entity mapChip_;
+	[SerializeField] private string stageFilePath_ = "stage2.json";
+
+	PuzzleCommandStacker commandStacker_;
+
+	int initCallCount_ = 0; // 初期化の呼び出し回数
+
+	/// <summary>
+	/// 移動パラメータ
+	/// </summary>
+	private Vector2Int moveDir_;
+
+	public override void Initialize() {
+		initCallCount_++;
+		Debug.Log("====================================================================");
+		Debug.Log("PuzzleStage Initialize called. Call count: " + initCallCount_);
+
+		commandStacker_ = new PuzzleCommandStacker();
+
+		mapChip_ = ecsGroup.CreateEntity("Mapchip");
+		if (mapChip_ != null) {
+			mapChip_.parent = entity;
+			Mapchip mapchipScript = mapChip_.GetScript<Mapchip>();
+			if (mapchipScript != null) {
+				mapchipScript.LoadMap("./Assets/Game/StageData/", stageFilePath_);
+			}
+
+			mapData_ = mapchipScript.GetStartMapData();
+		}
+
+		blockData_.blockSpace = 0.22f; // ブロックのアドレスを初期化
+		Debug.Log("created mapchip");
+
+		CreateBlockParent();
+		BlockDeploy(); // ブロック配置
+		PlayerDeploy(); // プレイヤー配置
+		DeployMagatama(); /// 勾玉配置
+		UpdateEntityPosition();
+		Debug.Log("====================================================================");
+	}
+
+
+	public override void Update() {
+		Game();
+	}
+
+
+	/// ///////////////////////////////////////////////////////////////////////////////////////////
+	/// 初期化に使用する関数
+	/// ///////////////////////////////////////////////////////////////////////////////////////////
+	private void CreateBlockParent() {
+		blockParent_ = ecsGroup.CreateEntity("GameEntity");
+		blockParent_.parent = entity;
+
+		if (mapData_ != null) {
+			int width = mapData_[0].Count;
+			int height = mapData_.Count;
+			float space = blockData_.blockSpace;
+			blockPosOffset_ = new Vector3(width / 2f, 0f, height / 2f) * space;
+			blockPosOffset_ -= new Vector3(space / 2f, 0f, space / 2f);
+			blockPosOffset_ *= -1.0f;
+			blockPosOffset_.y = 2f;
+
+			blockParent_.transform.position = blockPosOffset_;
+		}
+	}
+
+	private void PlayerDeploy() {
+		Debug.Log("----- PlayerDeploy. -----");
+		/* ----- プレイヤーの配置 ----- */
+
+		Mapchip mapchipScript = mapChip_.GetScript<Mapchip>();
+		if (!mapchipScript) {
+			return;
+		}
+
+		List<Stage.Player> stagePlayers = new List<Stage.Player>();
+		stagePlayers.Add(mapchipScript.GetPlayer());
+		if (mapchipScript.GetSubPlayer() != null) {
+			stagePlayers.Add(mapchipScript.GetSubPlayer());
+		}
+
+		List<Vector2Int> playerAddresses = new List<Vector2Int>();
+		players_ = new List<Entity>();
+
+		for (int i = 0; i < stagePlayers.Count; i++) {
+			playerAddresses.Add(new Vector2Int(stagePlayers[i].column, stagePlayers[i].row));
+			players_.Add(ecsGroup.CreateEntity("PuzzlePlayer"));
+		}
+
+		for (int i = 0; i < players_.Count; i++) {
+			Entity player = players_[i];
+			Stage.Player stagePlayer = stagePlayers[i];
+
+			player.parent = blockParent_;
+			if (player.parent != null) {
+				Debug.LogInfo("player parent setting");
+			} else {
+				Debug.Log("player parent not set");
+			}
+
+			Vector2Int playerAddress = playerAddresses[i];
+			/// 座標設定
+			Transform t = player.transform;
+			t.position = new Vector3(playerAddress.x * blockData_.blockSpace, 0f,
+				playerAddress.y * blockData_.blockSpace);
+
+			/// スクリプトの値設定
+			PuzzlePlayer puzzlePlayer = player.GetScript<PuzzlePlayer>();
+			if (puzzlePlayer != null) {
+				puzzlePlayer.blockData.address = playerAddress; // プレイヤーのアドレスを設定
+				puzzlePlayer.blockData.blockSpace = blockData_.blockSpace; // プレイヤーの高さを設定
+
+				if (stagePlayer.type == (int)BlockType.Black) {
+					puzzlePlayer.blockData.mapValue = (int)MAPDATA.PLAYER_BLACK;
+				} else {
+					puzzlePlayer.blockData.mapValue = (int)MAPDATA.PLAYER_WHITE;
+				}
+			}
+		}
+
+		/// アクティブなプレイヤーは最初のプレイヤーで
+		activePlayer_ = players_[0];
+
+		Debug.Log("----- PlayerDeploy. ended -----");
+	}
+
+	private void BlockDeploy() {
+		/* ----- ブロックの配置を行う ----- */
+
+		Debug.Log("----- BlockDeployed. -----");
+
+
+		blocks_ = new List<Entity>();
+
+		for (int r = 0; r < mapData_.Count; r++) {
+			for (int c = 0; c < mapData_[r].Count; c++) {
+				Debug.Log("map[" + r + "][" + c + "] = " + mapData_[r][c]);
+
+				/// マップデータがブロックでは無ければ配置しない
+				Entity block = null;
+				int mapValue = mapData_[r][c];
+				if (CheckIsBlock(mapValue)) {
+					block = ecsGroup.CreateEntity("Block");
+				} else if (CheckIsGoal(mapValue)) {
+					block = ecsGroup.CreateEntity("Goal");
+				} else if (CheckIsConstantBlock(mapValue)) {
+					block = ecsGroup.CreateEntity("ConstantBlock");
+				}
+
+				if (block == null) {
+					continue;
+				}
+
+				/// blockの初期化
+				Block blockScript = block.GetScript<Block>();
+				if (blockScript) {
+					blockScript.blockData.address = new Vector2Int(c, r);
+					blockScript.blockData.blockSpace = blockData_.blockSpace;
+					blockScript.blockData.mapValue = mapValue;
+				}
+
+				block.parent = blockParent_;
+				Transform t = block.transform;
+
+				/// blockのindexで位置を決定
+				t.position = new Vector3(c, 0f, r);
+
+				MeshRenderer mr = block.GetComponent<MeshRenderer>();
+				if (mr != null) {
+					/// 色を黒か白に設定
+					Vector4 color = Vector4.one * mapData_[r][c]; // 1なら白、0なら黒
+					color.w = 1f;
+
+					mr.color = color;
+				}
+
+				blocks_.Add(block); // ブロックをリストに追加
+			}
+		}
+
+		Debug.Log("----- BlockDeployed. ended -----");
+	}
+
+
+	void DeployMagatama() {
+		/* ----- 勾玉の配置 ----- */
+		magatama_ = ecsGroup.CreateEntity("Magatama");
+		if (magatama_ != null) {
+			magatama_.parent = blockParent_;
+		}
+
+		magatama_.transform.position = activePlayer_.transform.position + new Vector3(0f, 0.1f, 0f);
+	}
+
+
+	/// ///////////////////////////////////////////////////////////////////////////////////////////
+	/// 更新に使用する関数
+	/// ///////////////////////////////////////////////////////////////////////////////////////////
+	void Game() {
+		UpdateBlockParentPosition();
+
+		/// パズルのリセット処理
+		if (Input.TriggerGamepad(Gamepad.X)) {
+			Reset();
+		}
+
+		/* パズルを行っているときの更新 */
+		commandStacker_?.Update();
+		UpdatePlayer();
+		UpdateEntityPosition();
+
+	}
+
+
+	private void UpdatePlayer() {
+		/* ----- プレイヤーの更新 ----- */
+		/* ----- プレイヤーの状態で色を変える ----- */
+		for (int i = 0; i < players_.Count; ++i) {
+			Entity player = players_[i];
+			PuzzlePlayer pp = player.GetScript<PuzzlePlayer>();
+			if (pp) {
+				pp.isActive = player == activePlayer_;
+			}
+		}
+
+		if (activePlayer_ == null) {
+			return;
+		}
+
+		/* ----- プレイヤーの移動を行う ----- */
+		PuzzlePlayer puzzlePlayer = activePlayer_.GetScript<PuzzlePlayer>();
+		if (!puzzlePlayer) {
+			Debug.LogError("PuzzleStage UpdatePlayer: puzzlePlayer is null");
+			return;
+		}
+
+		/// 操作対象の切り替え
+		if (Input.TriggerGamepad(Gamepad.RightShoulder) || Input.TriggerGamepad(Gamepad.LeftShoulder)) {
+			if (commandStacker_ != null) {
+				PuzzleCommands.SwitchActivePlayerCommand command = commandStacker_.ExecutionCommand<PuzzleCommands.SwitchActivePlayerCommand>();
+				if (command != null) {
+					command.Awake(this.entity);
+				}
+			}
+		}
+
+		/// 移動方向の決定
+		moveDir_ = InputAxis();
+
+		if (moveDir_ == Vector2Int.zero) {
+			return; //!< 移動しないなら処理を行わない
+		}
+
+		/// プレイヤーの移動処理を実行
+		if (commandStacker_ != null) {
+			PuzzlePlayer pp = activePlayer_.GetScript<PuzzlePlayer>();
+			int type = pp.blockData.type;
+			/// 黒、白でコマンドを分ける
+			if (type == (int)BlockType.White) {
+				PuzzleCommands.MoveWhiteBlockCommand command = commandStacker_.ExecutionCommand<PuzzleCommands.MoveWhiteBlockCommand>();
+				if (command != null) {
+					command.Awake(this.entity, activePlayer_, moveDir_);
+				}
+			} else if (type == (int)BlockType.Black) {
+				PuzzleCommands.MoveBlackBlockCommand command = commandStacker_.ExecutionCommand<PuzzleCommands.MoveBlackBlockCommand>();
+				if (command != null) {
+					command.Awake(this.entity, activePlayer_, moveDir_);
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// プレイヤーが移動可能かどうかをチェックする
+	/// </summary>
+	private bool CheckPlayerMoving(Vector2Int _currentAddress, Vector2Int _moveDir) {
+		/// 移動しないなら false
+		if (_moveDir == Vector2Int.zero) {
+			return false;
+		}
+
+		PuzzlePlayer puzzlePlayer = activePlayer_.GetScript<PuzzlePlayer>();
+		if (!puzzlePlayer) {
+			return false; //!< スクリプトを取得出来ないならfalseを返す
+		}
+
+		/// 移動方向が範囲外なら false
+		Vector2Int newAddress = _currentAddress + _moveDir;
+		if (newAddress.x < 0 || newAddress.x >= mapData_[0].Count || newAddress.y < 0
+			|| newAddress.y >= mapData_.Count) {
+			return false;
+		}
+
+		/// 移動方向がブロックじゃないなら
+		if (!CheckIsBlock(mapData_[newAddress.y][newAddress.x]) && !CheckIsGoal(mapData_[newAddress.y][newAddress.x])) {
+			return false;
+		}
+
+		/// 移動方向が自身と違う色なら false
+		if (mapData_[newAddress.y][newAddress.x] % 10 != puzzlePlayer.blockData.type) {
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/// <summary>
+	/// 移動後のmap dataの更新を行う
+	/// </summary>
+	public void Moved(Vector2Int _currentAddress, Vector2Int _movedAddress) {
+		/// x,zのどちらに移動したのか確認
+
+		if (_currentAddress.x != _movedAddress.x) {
+			/// x軸に移動した
+			int yAddress = _currentAddress.y;
+			int subLenght = Mathf.Abs(_movedAddress.x - _currentAddress.x);
+
+			for (int i = 0; i < subLenght; i++) {
+				int value = mapData_[yAddress][_currentAddress.x + i];
+				if (value == (int)MAPDATA.BLOCK_BLACK) {
+					mapData_[yAddress][_currentAddress.x + i] = (int)MAPDATA.BLOCK_WHTIE;
+				} else if (value == (int)MAPDATA.BLOCK_WHTIE) {
+					mapData_[yAddress][_currentAddress.x + i] = (int)MAPDATA.BLOCK_BLACK;
+				}
+			}
+		} else if (_currentAddress.y != _movedAddress.y) {
+			/// y軸に移動した
+			int xAddress = _currentAddress.x;
+			int subLength = Mathf.Abs(_movedAddress.y - _currentAddress.y);
+
+			for (int i = 0; i < subLength; i++) {
+				int value = mapData_[_currentAddress.y + i][xAddress];
+				if (value == (int)MAPDATA.BLOCK_BLACK) {
+					mapData_[_currentAddress.y + i][xAddress] = (int)MAPDATA.BLOCK_WHTIE;
+				} else if (value == (int)MAPDATA.BLOCK_WHTIE) {
+					mapData_[_currentAddress.y + i][xAddress] = (int)MAPDATA.BLOCK_BLACK;
+				}
+			}
+		}
+	}
+
+
+
+
+	private bool CheckIsGoaled(PuzzlePlayer _puzzlePlayer) {
+		/// プレイヤーのアドレスを確認
+		if (!_puzzlePlayer) {
+			return false; //!< puzzle playerが null
+		}
+
+		Vector2Int address = _puzzlePlayer.blockData.address;
+		if (CheckIsGoal(mapData_[address.y][address.x])) {
+			return true; //!< 現在いる場所がゴールだったら
+		}
+
+		return false;
+	}
+
+
+	private void Reset() {
+		activePlayer_ = null;
+		for (int i = 0; i < players_.Count; ++i) {
+			players_[i].Destroy();
+		}
+		players_.Clear();
+
+		for (int i = 0; i < blocks_.Count; i++) {
+			blocks_[i].Destroy();
+		}
+		blocks_.Clear();
+
+		mapData_.Clear();
+		Mapchip mapchipScript = mapChip_.GetScript<Mapchip>();
+		mapData_ = mapchipScript.GetStartMapData();
+
+		BlockDeploy();
+		PlayerDeploy();
+	}
+
+	public void UpdateEntityPosition() {
+		/// ====================================================
+		/// このパズルのエンティティの座標を更新する
+		/// ====================================================
+
+		for (int i = 0; i < players_.Count; ++i) {
+			Entity player = players_[i];
+			PuzzlePlayer pp = player.GetScript<PuzzlePlayer>();
+			if (pp) {
+				pp.UpdatePosition();
+			}
+		}
+
+		PuzzlePlayer activePlayer = activePlayer_.GetScript<PuzzlePlayer>();
+		for (int i = 0; i < blocks_.Count; i++) {
+			Entity block = blocks_[i];
+			if (block == null) {
+				continue;
+			}
+
+			Block blockScript = block.GetScript<Block>();
+			if (blockScript) {
+				Vector2Int address = blockScript.blockData.address;
+				blockScript.blockData.mapValue = mapData_[address.y][address.x];
+				blockScript.UpdatePosition(activePlayer.blockData.type);
+			}
+		}
+
+		/// 勾玉の位置の更新
+		magatamaRotateValue_ += 1.0f / 12.0f;
+		Vector3 magatamaPos = activePlayer_.transform.position + new Vector3(0f, magatamaHeight_, 0f);
+		magatama_.transform.position = Vector3.Lerp(magatama_.transform.position, magatamaPos, 0.6f);
+		magatama_.transform.rotate = Quaternion.MakeFromAxis(Vector3.up, magatamaRotateValue_);
+
+	}
+
+
+	public void SwitchActivePlayer() {
+		/// ====================================================
+		/// 操作対象のプレイヤーを切り替える
+		/// ====================================================
+
+		for (int i = 0; i < players_.Count; ++i) {
+			if (activePlayer_ != players_[i]) {
+				activePlayer_ = players_[i];
+				break;
+			}
+		}
+	}
+
+	private Vector2Int InputAxis() {
+		Vector2Int dir = Vector2Int.zero;
+
+		/// 十字キー入力
+		if (Input.TriggerGamepad(Gamepad.DPadUp)) {
+			dir = Vector2Int.up;
+		}
+
+		if (Input.TriggerGamepad(Gamepad.DPadDown)) {
+			dir = Vector2Int.down;
+		}
+
+		if (Input.TriggerGamepad(Gamepad.DPadLeft)) {
+			dir = Vector2Int.left;
+		}
+
+		if (Input.TriggerGamepad(Gamepad.DPadRight)) {
+			dir = Vector2Int.right;
+		}
+
+		return dir;
+	}
+
+	public void UpdateBlockParentPosition() {
+		if (mapData_ != null) {
+			int width = mapData_[0].Count;
+			int height = mapData_.Count;
+			float space = blockData_.blockSpace;
+			blockPosOffset_ = new Vector3(width / 2f, 0f, height / 2f) * space;
+			blockPosOffset_ -= new Vector3(space / 2f, 0f, space / 2f);
+			blockPosOffset_ *= -1.0f;
+			blockPosOffset_.y = 2f;
+
+			blockParent_.transform.position = blockPosOffset_;
+		}
+	}
+
+
+	/// ///////////////////////////////////////////////////////////////////////////////////////////
+	/// アクセッサ
+	/// ///////////////////////////////////////////////////////////////////////////////////////////
+	public List<List<int>> GetMapData() {
+		return mapData_;
+	}
+
+	public List<Entity> GetPlayers() {
+		return players_;
+	}
+
+	public PuzzlePlayer GetActivePlayer() {
+		return activePlayer_.GetScript<PuzzlePlayer>();
+	}
+
+	public List<Entity> GetBlocks() {
+		return blocks_;
+	}
+
+	public bool CheckIsBlock(int _mapValue) {
+		if (_mapValue == (int)MAPDATA.BLOCK_BLACK || _mapValue == (int)MAPDATA.BLOCK_WHTIE) {
+			return true;
+		}
+		return false;
+	}
+
+	public bool CheckIsConstantBlock(int _mapValue) {
+		if (_mapValue == (int)MAPDATA.CONSTANT_BLOCK_BLACK || _mapValue == (int)MAPDATA.CONSTANT_BLOCK_WHITE) {
+			return true;
+		}
+		return false;
+	}
+
+	public bool CheckIsGoal(int _mapValue) {
+		if (_mapValue == (int)MAPDATA.GOAL_BLACK || _mapValue == (int)MAPDATA.GOAL_WHITE) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public int GetMapValue(Vector2Int _address) {
+		if (_address.y < 0 || _address.y >= mapData_.Count || _address.x < 0 || _address.x >= mapData_[0].Count) {
+			return -1;
+		}
+		return mapData_[_address.y][_address.x];
+	}
+
+	public void SetMapValue(Vector2Int _address, int _mapValue) {
+		if (_address.y < 0 || _address.y >= mapData_.Count || _address.x < 0 || _address.x >= mapData_[0].Count) {
+			return;
+		}
+		mapData_[_address.y][_address.x] = _mapValue;
+	}
+
+	public bool IsExecutingCommand() {
+		if (commandStacker_ != null) {
+			return commandStacker_.IsRunning();
+		}
+		return false;
+	}
+
+}

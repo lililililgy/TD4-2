@@ -1,0 +1,149 @@
+﻿#pragma once
+
+/// std
+#include <memory>
+#include <type_traits>
+#include <vector>
+#include <deque>
+#include <unordered_map>
+#include <string>
+#include <functional>
+#include <any>
+
+/// engine
+#include "Engine/Core/Utility/Utility.h"
+
+/// editor
+#include "Engine/Editor/Clipboard/Clipboard.h"
+#include "Engine/Editor/Commands/IEditCommand.h"
+#include "Engine/Editor/EditorCompute/Interface/IEditorCompute.h"
+
+namespace ONEngine {
+class DxManager;
+class EntityComponentSystem;
+class ShaderCompiler;
+class SceneManager;
+}
+
+namespace ONEngine::Asset {
+class AssetCollection;
+}
+
+
+namespace Editor {
+
+/// @brief コマンドの生成関数
+using Creator = std::function<std::unique_ptr<IEditCommand>(const std::vector<std::any>&)>;
+
+template <typename T>
+concept IsEditorCommand = std::is_base_of_v<IEditCommand, T>;
+
+/// /////////////////////////////////////////////////
+/// エディタの管理クラス
+/// /////////////////////////////////////////////////
+class EditorManager final {
+	friend class EditCommand;
+public:
+	/// =========================================
+	/// public : methods
+	/// =========================================
+
+	EditorManager(ONEngine::EntityComponentSystem* ecs);
+	~EditorManager();
+
+	void Initialize(ONEngine::DxManager* dxm, ONEngine::ShaderCompiler* sc, ONEngine::SceneManager* sm);
+
+	void Update(ONEngine::Asset::AssetCollection* ac);
+
+
+	/// ----- factory ----- ///
+
+	template<IsEditorCommand T, typename... Args>
+	std::unique_ptr<T> CloneCommand(Args&&... args);
+
+
+	/// ----- command ----- ///
+
+	template<IsEditorCommand T, typename... Args>
+	void ExecuteCommand(Args&&... args);
+
+	void Undo();
+	void Redo();
+
+	/// ----- mark dirty ----- ///
+	void MarkSceneDirty();
+
+	/// ----- editor compute ----- ///
+
+	void AddEditorCompute(ONEngine::DxManager* dxm, ONEngine::ShaderCompiler* sc, std::unique_ptr<IEditorCompute> compute);
+
+
+private:
+	/// ==========================================
+	/// private : objects
+	/// ==========================================
+
+	/// ----- other class ----- ///
+	ONEngine::EntityComponentSystem* pEcs_;
+	ONEngine::DxManager* pDxManager_;
+	ONEngine::SceneManager* pSceneManager_;
+
+	/// ----- clipboard ----- ///
+	Clipboard clipboard_;
+
+	/// ----- container -----///
+	std::unordered_map<std::string, std::unique_ptr<IEditCommand>> prototypeCommands_; ///< コマンドのコレクション
+	IEditCommand* runningCommand_; ///< 現在実行中のコマンド
+	std::deque<std::unique_ptr<IEditCommand>> commandStack_; ///< コマンドのスタック
+	std::deque<std::unique_ptr<IEditCommand>> redoStack_; ///< コマンドのリドゥスタック
+
+	/// ----- editor compute ----- ///
+	std::vector<std::unique_ptr<IEditorCompute>> editorComputes_;
+
+	/// ----- temp object ----- ///
+	std::string className_;
+};
+
+
+template<IsEditorCommand T, typename ...Args>
+inline std::unique_ptr<T> EditorManager::CloneCommand(Args&&... args) {
+	className_ = typeid(T).name();
+	auto it = prototypeCommands_.find(className_);
+	if(it == prototypeCommands_.end()) {
+		prototypeCommands_[className_] = std::make_unique<T>(args...);
+	}
+
+	// コピーコンストラクタで T のインスタンスを複製
+	const T* prototype = static_cast<T*>(prototypeCommands_.at(className_).get());
+	return std::make_unique<T>(*prototype);
+}
+
+template<IsEditorCommand T, typename ...Args>
+inline void EditorManager::ExecuteCommand(Args && ... args) {
+	std::unique_ptr<T> command = std::make_unique<T>(args...);
+	ONEngine::Console::Log(std::format("[UndoDebug] Executing Command: {}", typeid(T).name()));
+	
+	EDITOR_STATE state = command->Execute();
+	if(state == EDITOR_STATE_RUNNING) {
+		runningCommand_ = command.get();
+		ONEngine::Console::Log("[UndoDebug] Command state: RUNNING");
+	}
+
+	commandStack_.push_back(std::move(command));
+	ONEngine::Console::Log(std::format("[UndoDebug] Command pushed to stack. Current stack size: {}", commandStack_.size()));
+
+	if(state == EDITOR_STATE_FINISH) {
+		ONEngine::Console::Log(std::format("Command Executed: {}", typeid(T).name()));
+		MarkSceneDirty();
+	} else {
+		ONEngine::Console::Log(std::format("Command Failed/Pending: {}", typeid(T).name()));
+	}
+
+	/// redoスタックにコマンドがあればクリアする
+	if(redoStack_.size() > 0) {
+		ONEngine::Console::Log(std::format("[UndoDebug] Clearing redo stack (size: {})", redoStack_.size()));
+		redoStack_.clear();
+	}
+}
+
+} /// Editor

@@ -1,0 +1,65 @@
+﻿#pragma once
+
+/// engine
+#include "../IAssetLoader.h"
+#include "../../Meta/MetaFile.h"
+#include "Model.h"
+
+struct aiNode;
+struct aiScene;
+
+namespace ONEngine::Asset {
+
+template<>
+class AssetLoader<Model> : public IAssetLoader {
+public:
+	/// ====================================================
+	/// public : methods
+	/// ====================================================
+
+	AssetLoader(DxManager* _dxm);
+	~AssetLoader() override = default;
+
+	/// @brief モデルファイルの読み込みを行う
+	/// @param _filepath 対象のファイルパス
+	/// @return 読み込んだモデル
+	[[nodiscard]]
+	std::optional<Model> Load(const std::string& _filepath, typename Meta<Model::MetaData> meta);
+
+	/// @brief モデルファイルの再読み込みを行う
+	/// @param _filepath 対象のファイルパス
+	/// @param _src 元のモデル
+	/// @return 再読み込みしたモデル
+	[[nodiscard]]
+	std::optional<Model> Reload(const std::string& _filepath, Model* _src = nullptr, typename Meta<Model::MetaData> meta = {});
+
+
+	Meta<typename Model::MetaData> GetMetaData(const std::string& _filepath);
+
+private:
+
+	/// @brief アニメーションのNodeを読み込む
+	/// @param _node 読み込み対象のaiNodeポインタ
+	/// @return 読み込まれたNode構造体
+	Node ReadNode(aiNode* _node);
+
+	/// @brief アニメーションの読み込み
+	/// @param _model 読み込み対象のModelポインタ
+	/// @param _scene AssimpのaiScene
+	void LoadAnimation(Model* _model, const aiScene* _scene);
+
+	/// @brief 読み込めるモデルであるのかチェックする
+	/// @param _aiScene チェック対象のモデル
+	/// @return true: 読み込める / false: 読み込めない
+	bool ValidateModel(const aiScene* _aiScene);
+
+private:
+	/// ====================================================
+	/// private : objects
+	/// ====================================================
+
+	DxManager* pDxManager_;
+	uint32_t assimpLoadFlags_;
+};
+
+} /// namespace ONEngine::Asset

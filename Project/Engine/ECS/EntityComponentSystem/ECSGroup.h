@@ -1,0 +1,166 @@
+﻿#pragma once
+
+/// engine
+#include "../Entity/Collection/EntityCollection.h"
+#include "../Component/Collection/ComponentCollection.h"
+#include "../System/SystemCollection/SystemCollection.h"
+
+#include "Engine/Editor/Commands/ComponentEditCommands/ComponentEditCommands.h"
+
+namespace ONEngine {
+
+template<typename T>
+concept SystemType = std::is_base_of_v<ECSISystem, T>;
+
+/// ///////////////////////////////////////////////////
+/// ECSのコレクションのグループ
+/// ///////////////////////////////////////////////////
+class ECSGroup {
+public:
+	/// ====================================================
+	/// public : methods
+	/// ====================================================
+
+	ECSGroup(class DxManager* _dxm);
+	~ECSGroup();
+
+	void Initialize(const std::string& _groupName);
+	void Update();
+
+
+	/// ----- entity ----- ///
+
+	/// 生成
+	GameEntity* GenerateEntity(const Guid& _guid, bool _isRuntime);
+	GameEntity* GenerateEntityFromPrefab(const std::string& _prefabName, bool _isRuntime = true);
+
+	/// 取得
+	GameEntity* GetEntityFromGuid(const Guid& _guid);
+
+	/// 削除
+	void RemoveEntity(GameEntity* _entity, bool _deleteChildren = true);
+	void RemoveEntityAll();
+
+	/// 非破棄エンティティの追加と削除
+	void AddDoNotDestroyEntity(GameEntity* _entity);
+	void RemoveDoNotDestroyEntity(GameEntity* _entity);
+
+	/// Id
+	uint32_t GetEntityId(const std::string& _name);
+
+	/// _nameのEntityが何体いるのかチェックする
+	uint32_t CountEntity(const std::string& _name);
+
+
+	/// ----- component ----- ///
+
+	/// 生成
+	template<IsComponent Comp>
+	Comp* AddComponent();
+	IComponent* AddComponent(const std::string& _compName);
+
+	/// 取得
+	template<IsComponent Comp>
+	Comp* GetComponent(size_t _entityId);
+	template<IsComponent Comp>
+	ComponentArray<Comp>* GetComponentArray();
+
+	/// 削除
+	template<IsComponent Comp>
+	void RemoveComponent(uint32_t _compId);
+	void RemoveComponent(size_t _hash, uint32_t _compId);
+	void RemoveComponentAll(GameEntity* _entity);
+
+	/// 読み込み
+	void LoadComponent(GameEntity* _entity);
+
+
+	/// ----- system ----- ///
+
+	/// 追加
+	template<SystemType Sys, typename... Args>
+	void AddSystem(Args... _args);
+
+	/// 更新
+	void OutsideOfRuntimeUpdateSystems();
+	void RuntimeUpdateSystems();
+
+
+private:
+	/// ===================================================
+	/// public : objects
+	/// ===================================================
+
+	/// ----- parameters ----- ///
+	std::string groupName_;
+
+	/// ----- collections ----- ///
+	std::unique_ptr<EntityCollection> entityCollection_;
+	std::unique_ptr<ComponentCollection> componentCollection_;
+	std::unique_ptr<SystemCollection> systemCollection_;
+
+	/// ----- command ----- ///
+	Editor::EntityDataInputCommand componentInputCommand_;
+
+
+public:
+	/// ===================================================
+	/// public : accessors
+	/// ===================================================
+
+	/// ----- setter ----- ///
+
+	void SetMainCamera(CameraComponent* _camera);
+	void SetMainCamera2D(CameraComponent* _camera);
+
+
+	/// ----- getter ----- ///
+
+	EntityCollection* GetEntityCollection();
+	const std::vector<std::unique_ptr<GameEntity>>& GetEntities() const;
+
+	GameEntity* GetEntity(int32_t _id) const;
+
+	const CameraComponent* GetMainCamera() const;
+	CameraComponent* GetMainCamera();
+	const CameraComponent* GetMainCamera2D() const;
+	CameraComponent* GetMainCamera2D();
+
+	const std::string& GetGroupName() const;
+};
+
+/// ===================================================
+/// inline methods
+/// ===================================================
+
+template<IsComponent Comp>
+inline Comp* ECSGroup::AddComponent() {
+	return componentCollection_->AddComponent<Comp>();
+}
+
+template<IsComponent Comp>
+inline Comp* ECSGroup::GetComponent(size_t _entityId) {
+	GameEntity* entity = entityCollection_->GetEntity(_entityId);
+	if (entity) {
+		return entity->GetComponent<Comp>();
+	}
+
+	return nullptr;
+}
+
+template<IsComponent Comp>
+inline ComponentArray<Comp>* ECSGroup::GetComponentArray() {
+	return componentCollection_->GetComponentArray<Comp>();
+}
+
+template<IsComponent Comp>
+inline void ECSGroup::RemoveComponent(uint32_t _compId) {
+	componentCollection_->RemoveComponent<Comp>(_compId);
+}
+
+template<SystemType Sys, typename ...Args>
+inline void ECSGroup::AddSystem(Args ..._args) {
+	systemCollection_->AddSystem(std::make_unique<Sys>(_args...));
+}
+
+} /// ONEngine

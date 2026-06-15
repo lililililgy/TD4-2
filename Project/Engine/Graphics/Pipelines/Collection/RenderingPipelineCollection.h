@@ -1,0 +1,152 @@
+﻿#pragma once
+
+/// std
+#include <vector>
+#include <memory>
+
+/// engine
+#include "../Interface/IRenderingPipeline.h"
+#include "../Interface/IPostProcessPipeline.h"
+
+
+namespace ONEngine {
+class DxManager;
+class EntityComponentSystem;
+class CameraComponent;
+}
+
+namespace ONEngine::Asset {
+class AssetCollection;
+}
+
+
+
+namespace ONEngine {
+
+template <typename T>
+concept IsRenderingPipeline = std::is_base_of_v<IRenderingPipeline, T>;
+
+template <typename T>
+concept IsPostProcessPipeline = std::is_base_of_v<IPostProcessPipeline, T>;
+
+/// ///////////////////////////////////////////////////
+/// renderer collection
+/// ///////////////////////////////////////////////////
+class RenderingPipelineCollection final {
+public:
+	/// ===================================================
+	/// public : methods
+	/// ===================================================
+
+	RenderingPipelineCollection(ShaderCompiler* _shaderCompiler, DxManager* _dxm, EntityComponentSystem* _pEntityComponentSystem, Asset::AssetCollection* _assetCollection);
+	~RenderingPipelineCollection();
+
+	/// @brief 初期化関数
+	void Initialize();
+
+
+
+	/// @brief rendering pipelineの生成
+	/// @tparam T 生成する rendering pipelineの型
+	template <IsRenderingPipeline T, typename... Args>
+	void Generate3DRenderingPipeline(Args&&... _args);
+
+	template <IsRenderingPipeline T, typename... Args>
+	void Generate2DRenderingPipeline(Args&&... _args);
+
+	template <IsPostProcessPipeline T, typename... Args>
+	void GeneratePostProcessPipeline(Args&&... _args);
+
+
+
+	/// @brief すべてのPipelineのPreDrawを実行する
+	/// @param _3dCamera 3Dカメラ
+	/// @param _2dCamera 2Dカメラ
+	void PreDrawEntities(CameraComponent* _3dCamera, CameraComponent* _2dCamera);
+
+	/// @brief 現在のECSGroupのすべてのEntityを描画する
+	/// @param _3dCamera 3Dカメラ
+	/// @param _2dCamera 2DCamera
+	void DrawEntities(CameraComponent* _3dCamera, CameraComponent* _2dCamera);
+
+	/// @brief パーティクルの描画 (ポストエフェクト後に実行)
+	void DrawParticles(CameraComponent* _3dCamera);
+
+	/// @brief Gizmoの描画
+	void DrawGizmos(CameraComponent* _3dCamera);
+
+	/// @brief 2DのEntityを描画する
+	/// @param _2dCamera 2Dカメラ
+	/// @param _groupName 対象のECSGroupの名前 (空なら現在のGroup)
+	void DrawEntities2D(CameraComponent* _2dCamera, const std::string& _groupName = "");
+
+	/// @brief 選択されたPrefabの描画
+	/// @param _3dCamera 3Dカメラ
+	/// @param _2dCamera 2Dカメラ
+	void DrawSelectedPrefab(CameraComponent* _3dCamera, CameraComponent* _2dCamera);
+
+	/// @brief 選択されたPrefabの2D描画
+	/// @param _2dCamera 2Dカメラ
+	/// @param _groupName 対象のECSGroupの名前 (空ならDebug)
+	void DrawSelectedPrefab2D(CameraComponent* _2dCamera, const std::string& _groupName = "");
+
+
+	/// @brief ポストエフェクトの実行
+	/// @param _sceneTextureName シーンの名前 (Debug, Game, Prefab etc...)
+	void ExecutePostProcess(const std::string& _sceneTextureName);
+
+
+	/// @brief 引数のカメラが有効なのか確認する
+	/// @param _camera チェックしたいカメラ
+	/// @return true: 有効, false: 無効
+	bool IsEnableCamera(const CameraComponent* _camera) const;
+
+private:
+	/// ===================================================
+	/// private : objects
+	/// ===================================================
+
+	DxManager* pDxManager_;
+	EntityComponentSystem* pEntityComponentSystem_;
+	Asset::AssetCollection* pAssetCollection_;
+	ShaderCompiler* pShaderCompiler_;
+
+	std::unique_ptr<IRenderingPipeline> prefabRenderingPipeline_;
+
+	std::vector<std::unique_ptr<IRenderingPipeline>>   renderer3ds_;
+	std::vector<std::unique_ptr<IRenderingPipeline>>   renderer2ds_;
+
+	std::unique_ptr<IRenderingPipeline>   particleRenderer_;
+	std::unique_ptr<IRenderingPipeline>   gizmoRenderer_;
+
+	std::vector<std::unique_ptr<IPostProcessPipeline>> postProcesses_;
+};
+
+
+
+/// ===================================================
+/// inline methods
+/// ===================================================
+
+template<IsRenderingPipeline T, typename... Args>
+inline void RenderingPipelineCollection::Generate3DRenderingPipeline(Args&&... _args) {
+	std::unique_ptr<T> renderer = std::make_unique<T>(std::forward<Args>(_args)...);
+	renderer->Initialize(pShaderCompiler_, pDxManager_);
+	renderer3ds_.push_back(std::move(renderer));
+}
+
+template<IsRenderingPipeline T, typename... Args>
+inline void RenderingPipelineCollection::Generate2DRenderingPipeline(Args&&... _args) {
+	std::unique_ptr<T> renderer = std::make_unique<T>(std::forward<Args>(_args)...);
+	renderer->Initialize(pShaderCompiler_, pDxManager_);
+	renderer2ds_.push_back(std::move(renderer));
+}
+
+template<IsPostProcessPipeline T, typename... Args>
+inline void RenderingPipelineCollection::GeneratePostProcessPipeline(Args&&... _args) {
+	std::unique_ptr<T> postProcess = std::make_unique<T>();
+	postProcess->Initialize(pShaderCompiler_, pDxManager_);
+	postProcesses_.push_back(std::move(postProcess));
+}
+
+} /// ONEngine

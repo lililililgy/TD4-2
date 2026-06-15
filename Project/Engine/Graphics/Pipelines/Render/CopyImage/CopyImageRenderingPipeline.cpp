@@ -1,0 +1,62 @@
+﻿#include "CopyImageRenderingPipeline.h"
+
+using namespace ONEngine;
+
+/// engine
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
+#include "Engine/Asset/Collection/AssetCollection.h"
+#include "Engine/Core/DirectX12/Manager/DxManager.h"
+
+
+CopyImageRenderingPipeline::CopyImageRenderingPipeline(Asset::AssetCollection* _assetCollection)
+	: pAssetCollection_(_assetCollection) {}
+
+void CopyImageRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+
+	{
+		Shader shader;
+		shader.Initialize(_shaderCompiler);
+
+		shader.CompileShader(L"Packages/Shader/Render/CopyImage/CopyImage.vs.hlsl", L"vs_6_0", Shader::Type::vs);
+		shader.CompileShader(L"Packages/Shader/Render/CopyImage/CopyImage.ps.hlsl", L"ps_6_0", Shader::Type::ps);
+
+		pipeline_ = std::make_unique<GraphicsPipeline>();
+		pipeline_->SetShader(&shader);
+
+		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); ///< texture
+		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_PIXEL, 0);      ///< texture
+		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_PIXEL, 0);        ///< texture sampler
+
+		pipeline_->SetCullMode(D3D12_CULL_MODE_NONE);
+		pipeline_->SetFillMode(D3D12_FILL_MODE_SOLID);
+		pipeline_->SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+		pipeline_->SetBlendDesc(BlendMode::Normal());
+
+		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
+
+		pipeline_->SetRTVNum(1);
+		pipeline_->SetRTVFormat(DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
+		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+
+	}
+
+}
+
+
+void CopyImageRenderingPipeline::Draw(ECSGroup* /*_ecs*/, CameraComponent*, DxCommand* _dxCommand) {
+
+	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	ID3D12GraphicsCommandList* cmdList = _dxCommand->GetCommandList();
+
+	/// settings
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	auto& textures = pAssetCollection_->GetTextures();
+	size_t index = pAssetCollection_->GetTextureIndex("./Assets/Scene/RenderTexture/sceneScene");
+
+	cmdList->SetGraphicsRootDescriptorTable(0, textures[index].GetSRVGPUHandle());
+
+	cmdList->DrawInstanced(3, 1, 0, 0);
+
+}

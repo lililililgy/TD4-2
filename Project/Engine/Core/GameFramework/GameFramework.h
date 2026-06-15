@@ -1,0 +1,58 @@
+﻿#pragma once
+
+/// std
+#include <memory>
+
+/// engine
+#include "Engine/Core/DirectX12/Manager/DxManager.h"
+#include "Engine/Core/Window/WindowManager.h"
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
+#include "Engine/Graphics/Framework/RenderingFramework.h"
+#include "Engine/Scene/SceneManager.h"
+#include "Engine/Script/MonoScriptEngine.h"
+#include "GameFrameworkConfig.h"
+
+/// editor
+#include "Engine/Editor/Manager/EditorManager.h"
+#include "Engine/Editor/Manager/ImGuiManager.h"
+
+/// ///////////////////////////////////////////////////
+/// game framework class
+/// ///////////////////////////////////////////////////
+namespace ONEngine {
+
+class GameFramework final {
+public:
+	/// ===================================================
+	/// public : methods
+	/// ===================================================
+
+	GameFramework();
+	~GameFramework();
+
+	/// @brief 初期化処理
+	/// @param _startSetting 開始時の設定
+	void Initialize(const GameFrameworkConfig& _startSetting);
+
+	/// @brief ゲームのメインループ
+	void Run();
+
+	/// debug用のシーン.jsonを読み込む
+	void LoadDebugScene();
+
+private:
+	/// ===================================================
+	/// private : objects
+	/// ===================================================
+
+	std::unique_ptr<DxManager> dxManager_;
+	std::unique_ptr<WindowManager> windowManager_;
+	std::unique_ptr<SceneManager> sceneManager_;
+	std::unique_ptr<EntityComponentSystem> entityComponentSystem_;
+	std::unique_ptr<RenderingFramework> renderingFramework_;
+
+	std::unique_ptr<Editor::ImGuiManager> imGuiManager_;
+	std::unique_ptr<Editor::EditorManager> editorManager_;
+};
+
+} // namespace ONEngine
