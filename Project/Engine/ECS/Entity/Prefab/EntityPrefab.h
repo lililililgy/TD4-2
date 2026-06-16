@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -18,8 +18,8 @@ public:
 	/// ===================================================
 
 	/// @brief JSONファイルを読み込んでPrefabを生成する
-	/// @param _path .jsonへのパス
-	EntityPrefab(const std::string& _path);
+	/// @param path .jsonへのパス
+	EntityPrefab(const std::string& path);
 	~EntityPrefab();
 
 

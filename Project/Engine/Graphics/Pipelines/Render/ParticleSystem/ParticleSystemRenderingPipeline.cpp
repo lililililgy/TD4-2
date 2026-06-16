@@ -1,4 +1,4 @@
-﻿#include "ParticleSystemRenderingPipeline.h"
+#include "ParticleSystemRenderingPipeline.h"
 
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -9,17 +9,17 @@
 
 namespace ONEngine {
 
-ParticleSystemRenderingPipeline::ParticleSystemRenderingPipeline(Asset::AssetCollection* _assetCollection)
-    : pAssetCollection_(_assetCollection) {}
+ParticleSystemRenderingPipeline::ParticleSystemRenderingPipeline(Asset::AssetCollection* assetCollection)
+    : pAssetCollection_(assetCollection) {}
 
 ParticleSystemRenderingPipeline::~ParticleSystemRenderingPipeline() {}
 
-void ParticleSystemRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
-    pDxManager_ = _dxm;
+void ParticleSystemRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
+    pDxManager_ = dxm;
     {
         // shader compile
         Shader shader;
-        shader.Initialize(_shaderCompiler);
+        shader.Initialize(shaderCompiler);
         shader.CompileShader(L"Packages/Shader/Render/ParticleSystem/ParticleSystem.vs.hlsl", L"vs_6_0", Shader::Type::vs);
         shader.CompileShader(L"Packages/Shader/Render/ParticleSystem/ParticleSystem.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -64,38 +64,38 @@ void ParticleSystemRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler
 
             pipeline->SetBlendDesc(blendModeFuncs[i]());
             pipeline->SetDepthStencilDesc(DepthRead()); // 深度書き込みを無効化
-            pipeline->CreatePipeline(_dxm->GetDxDevice());
+            pipeline->CreatePipeline(dxm->GetDxDevice());
         }
     }
 
     {   // buffer create
-        cameraDataBuffer_.Create(_dxm->GetDxDevice());
+        cameraDataBuffer_.Create(dxm->GetDxDevice());
 
-        particleBuffer_.Create(static_cast<uint32_t>(kMaxParticlesTotal_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-        materialBuffer_.Create(static_cast<uint32_t>(kMaxParticlesTotal_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-        textureIdBuffer_.Create(static_cast<uint32_t>(kMaxParticlesTotal_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
+        particleBuffer_.Create(static_cast<uint32_t>(kMaxParticlesTotal_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+        materialBuffer_.Create(static_cast<uint32_t>(kMaxParticlesTotal_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+        textureIdBuffer_.Create(static_cast<uint32_t>(kMaxParticlesTotal_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
     }
 }
 
-void ParticleSystemRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
-    ComponentArray<ParticleSystem>* psArray = _ecs->GetComponentArray<ParticleSystem>();
+void ParticleSystemRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
+    ComponentArray<ParticleSystem>* psArray = ecs->GetComponentArray<ParticleSystem>();
     if (!psArray || psArray->GetUsedComponents().empty()) {
         return;
     }
 
     GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::ParticleRendering);
 
-    auto cmdList = _dxCommand->GetCommandList();
+    auto cmdList = dxCommand->GetCommandList();
 
     // Prepare billboard matrix from camera
-    Matrix4x4 matBillboard = _camera->GetOwner()->GetTransform()->matWorld;
+    Matrix4x4 matBillboard = camera->GetOwner()->GetTransform()->matWorld;
     matBillboard.m[3][0] = 0.0f;
     matBillboard.m[3][1] = 0.0f;
     matBillboard.m[3][2] = 0.0f;
     
     CameraData camData;
     camData.billboardMatrix = matBillboard;
-    camData.cameraPosition = _camera->GetOwner()->GetTransform()->GetMatWorld().ExtractTranslation();
+    camData.cameraPosition = camera->GetOwner()->GetTransform()->GetMatWorld().ExtractTranslation();
     camData.padding = 0.0f;
 
     cameraDataBuffer_.SetMappedData(camData);
@@ -104,12 +104,12 @@ void ParticleSystemRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _cam
 
     // 先にいずれかのパイプライン（ルートシグネチャ）をセットしておかないとバインド時にクラッシュする
     size_t currentBlendMode = 0;
-    pipelines_[currentBlendMode]->SetPipelineStateForCommandList(_dxCommand);
+    pipelines_[currentBlendMode]->SetPipelineStateForCommandList(dxCommand);
 
     cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     
     // Bind global buffers (these stay same across pipeline changes because Root Signature is identical)
-    _camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
+    camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
     cameraDataBuffer_.BindForGraphicsCommandList(cmdList, CBV_CAMERA_DATA);
 
     auto& textures = pAssetCollection_->GetTextures();
@@ -135,10 +135,10 @@ void ParticleSystemRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _cam
 
         if (blendMode != currentBlendMode) {
             if (pipelines_.find(blendMode) != pipelines_.end()) {
-                pipelines_[blendMode]->SetPipelineStateForCommandList(_dxCommand);
+                pipelines_[blendMode]->SetPipelineStateForCommandList(dxCommand);
                 
                 cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-                _camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
+                camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
                 cameraDataBuffer_.BindForGraphicsCommandList(cmdList, CBV_CAMERA_DATA);
                 cmdList->SetGraphicsRootDescriptorTable(SRV_TEXTURES, pDxManager_->GetDxSRVHeap()->GetSRVStartGPUHandle());
                 

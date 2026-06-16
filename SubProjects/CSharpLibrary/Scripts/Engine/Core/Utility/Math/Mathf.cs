@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 struct Mathf {
 
@@ -129,7 +129,7 @@ struct Mathf {
 	/// --------------------------------------------
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static public extern string LoadFile(string _path);
+	static public extern string LoadFile(string path);
 
 
 
@@ -137,13 +137,13 @@ struct Mathf {
 	/// 色
 	/// --------------------------------------------
 
-	static public Vector4 FromColorCode(uint _colorCode) {
+	static public Vector4 FromColorCode(uint colorCode) {
 		Vector4 v = new Vector4();
     
-		uint r = (_colorCode >> 24) & 0xFF;
-		uint g = (_colorCode >> 16) & 0xFF;
-		uint b = (_colorCode >> 8)  & 0xFF;
-		uint a = (_colorCode)       & 0xFF;
+		uint r = (colorCode >> 24) & 0xFF;
+		uint g = (colorCode >> 16) & 0xFF;
+		uint b = (colorCode >> 8)  & 0xFF;
+		uint a = (colorCode)       & 0xFF;
 
 		// 0.0f ～ 1.0f に変換
 		v.x = r / 255.0f;

@@ -144,8 +144,8 @@ namespace ONEngine {
 
     ParticleSystemUpdateSystem::ParticleSystemUpdateSystem() : ECSISystem() {}
 
-    void ParticleSystemUpdateSystem::OutsideOfRuntimeUpdate(class ECSGroup* _ecs) {
-        DrawGizmos(_ecs);
+    void ParticleSystemUpdateSystem::OutsideOfRuntimeUpdate(class ECSGroup* ecs) {
+        DrawGizmos(ecs);
 
         // --- Editor Preview Update ---
         // エンジンのUnscaledDeltaTimeを使用して実時間でのシミュレーションを行う
@@ -154,7 +154,7 @@ namespace ONEngine {
         // 停止中や不安定な場合の補正
         if (dt <= 0.0f || dt > 0.1f) dt = 1.0f / 60.0f;
 
-        auto& entities = _ecs->GetEntities();
+        auto& entities = ecs->GetEntities();
         for (auto& entityPtr : entities) {
             GameEntity* entity = entityPtr.get();
             if (!entity || !entity->active) continue;
@@ -166,13 +166,13 @@ namespace ONEngine {
         }
     }
 
-    void ParticleSystemUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
-        DrawGizmos(_ecs);
+    void ParticleSystemUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
+        DrawGizmos(ecs);
 
         float dt = Time::DeltaTime();
         if (dt <= 0.0f) return;
 
-        auto& entities = _ecs->GetEntities();
+        auto& entities = ecs->GetEntities();
         for (auto& entityPtr : entities) {
             GameEntity* entity = entityPtr.get();
             if (!entity || !entity->active) continue;
@@ -369,9 +369,9 @@ namespace ONEngine {
         ps->hasPreviousWorldMat = true;
     }
 
-    void ParticleSystemUpdateSystem::DrawGizmos(class ECSGroup* _ecs) {
-        if (!_ecs) return;
-        auto& entities = _ecs->GetEntities();
+    void ParticleSystemUpdateSystem::DrawGizmos(class ECSGroup* ecs) {
+        if (!ecs) return;
+        auto& entities = ecs->GetEntities();
         for (auto& entityPtr : entities) {
             GameEntity* entity = entityPtr.get();
             if (!entity || !entity->active) continue;

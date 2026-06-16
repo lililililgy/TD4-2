@@ -1,4 +1,4 @@
-﻿#include "TextureLoader.h"
+#include "TextureLoader.h"
 
 /// std
 #include <fstream>
@@ -19,12 +19,12 @@ namespace {
 std::mutex s_textureGpuMutex;
 
 /// @brief DXGI_FORMATの文字列から列挙型を取得する
-DXGI_FORMAT GetDxgiFormatFromString(const std::string& _formatStr) {
-	if(_formatStr == "R8G8B8A8_UNORM") return DXGI_FORMAT_R8G8B8A8_UNORM;
-	if(_formatStr == "R8G8B8A8_UNORM_SRGB") return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	if(_formatStr == "BC7_UNORM") return DXGI_FORMAT_BC7_UNORM;
-	if(_formatStr == "BC7_UNORM_SRGB") return DXGI_FORMAT_BC7_UNORM_SRGB;
-	if(_formatStr == "R32G32B32A32_FLOAT") return DXGI_FORMAT_R32G32B32A32_FLOAT;
+DXGI_FORMAT GetDxgiFormatFromString(const std::string& formatStr) {
+	if(formatStr == "R8G8B8A8_UNORM") return DXGI_FORMAT_R8G8B8A8_UNORM;
+	if(formatStr == "R8G8B8A8_UNORM_SRGB") return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	if(formatStr == "BC7_UNORM") return DXGI_FORMAT_BC7_UNORM;
+	if(formatStr == "BC7_UNORM_SRGB") return DXGI_FORMAT_BC7_UNORM_SRGB;
+	if(formatStr == "R32G32B32A32_FLOAT") return DXGI_FORMAT_R32G32B32A32_FLOAT;
 	return DXGI_FORMAT_UNKNOWN;
 }
 
@@ -32,18 +32,18 @@ DXGI_FORMAT GetDxgiFormatFromString(const std::string& _formatStr) {
 
 namespace ONEngine::Asset {
 
-AssetLoader<Texture>::AssetLoader(DxManager* _dxm, AssetCollection* _ac)
-	: pDxManager_(_dxm), pAssetCollection_(_ac) {}
+AssetLoader<Texture>::AssetLoader(DxManager* dxm, AssetCollection* ac)
+	: pDxManager_(dxm), pAssetCollection_(ac) {}
 
-std::optional<Texture> AssetLoader<Texture>::Load(const std::string& _filepath, Meta<Texture::MetaData> meta) {
+std::optional<Texture> AssetLoader<Texture>::Load(const std::string& filepath, Meta<Texture::MetaData> meta) {
 	std::optional<Texture> res{};
 
-	const std::string extension = FileSystem::FileExtension(_filepath);
+	const std::string extension = FileSystem::FileExtension(filepath);
 	if(extension == ".dds") {
-		DirectX::ScratchImage scratch = LoadScratchImage3D(_filepath);
+		DirectX::ScratchImage scratch = LoadScratchImage3D(filepath);
 		const auto& texMeta = scratch.GetMetadata();
 		if(texMeta.dimension == DirectX::TEX_DIMENSION_TEXTURE3D) {
-			res = Load3DTexture(_filepath);
+			res = Load3DTexture(filepath);
 			if(res.has_value()) {
 				res->guid = meta.base.guid;
 				return res;
@@ -51,22 +51,22 @@ std::optional<Texture> AssetLoader<Texture>::Load(const std::string& _filepath, 
 		}
 	}
 
-	res = Load2DTexture(_filepath);
+	res = Load2DTexture(filepath);
 	if(res.has_value()) {
 		res->guid = meta.base.guid;
 	}
 	return res;
 }
 
-std::optional<Texture> AssetLoader<Texture>::Reload(const std::string& _filepath, Texture* _src, Meta<Texture::MetaData> meta) {
+std::optional<Texture> AssetLoader<Texture>::Reload(const std::string& filepath, Texture* src, Meta<Texture::MetaData> meta) {
 	std::optional<Texture> res{};
 
-	const std::string extension = FileSystem::FileExtension(_filepath);
+	const std::string extension = FileSystem::FileExtension(filepath);
 	if(extension == ".dds") {
-		DirectX::ScratchImage scratch = LoadScratchImage3D(_filepath);
+		DirectX::ScratchImage scratch = LoadScratchImage3D(filepath);
 		const auto& texMeta = scratch.GetMetadata();
 		if(texMeta.dimension == DirectX::TEX_DIMENSION_TEXTURE3D) {
-			res = Reload3DTexture(_filepath, _src);
+			res = Reload3DTexture(filepath, src);
 			if(res.has_value()) {
 				res->guid = meta.base.guid;
 				return res;
@@ -74,18 +74,18 @@ std::optional<Texture> AssetLoader<Texture>::Reload(const std::string& _filepath
 		}
 	}
 
-	res = Reload2DTexture(_filepath, _src);
+	res = Reload2DTexture(filepath, src);
 	if(res.has_value()) {
 		res->guid = meta.base.guid;
 	}
 	return res;
 }
 
-Meta<Texture::MetaData> AssetLoader<Texture>::GetMetaData(const std::string& _filepath) {
+Meta<Texture::MetaData> AssetLoader<Texture>::GetMetaData(const std::string& filepath) {
 	Meta<Texture::MetaData> res{};
 
-	const std::string metaPath = _filepath + ".meta";
-	res.base = LoadOrGenerateMetaBase(metaPath, _filepath);
+	const std::string metaPath = filepath + ".meta";
+	res.base = LoadOrGenerateMetaBase(metaPath, filepath);
 
 	nlohmann::json j;
 	std::ifstream ifs(metaPath);
@@ -104,21 +104,21 @@ Meta<Texture::MetaData> AssetLoader<Texture>::GetMetaData(const std::string& _fi
 }
 
 
-std::optional<Texture> AssetLoader<Texture>::Load2DTexture(const std::string& _filepath) {
+std::optional<Texture> AssetLoader<Texture>::Load2DTexture(const std::string& filepath) {
 	Texture texture;
 
-	DirectX::ScratchImage       scratchImage = LoadScratchImage2D(_filepath);
+	DirectX::ScratchImage       scratchImage = LoadScratchImage2D(filepath);
 	const DirectX::TexMetadata& metadata = scratchImage.GetMetadata();
 
 	texture.dxResource_ = std::move(CreateTextureResource2D(pDxManager_->GetDxDevice(), metadata));
 	if(!texture.dxResource_.Get()) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Load Failed] [Texture] - Don't Create DxResource: \"" + _filepath + "\"");
+		Console::LogError("[Load Failed] [Texture] - Don't Create DxResource: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
-	texture.dxResource_.Get()->SetName(ConvertString(_filepath).c_str());
-	texture.name_ = _filepath;
+	texture.dxResource_.Get()->SetName(ConvertString(filepath).c_str());
+	texture.name_ = filepath;
 
 	DxResource intermediateResource;
 
@@ -179,40 +179,40 @@ std::optional<Texture> AssetLoader<Texture>::Load2DTexture(const std::string& _f
 		texture.isCubeMap_ = metadata.IsCubemap();
 		texture.arraySize_ = static_cast<UINT>(metadata.arraySize);
 
-		Console::Log("[Success Texture Info] Path: \"" + _filepath + "\"");
+		Console::Log("[Success Texture Info] Path: \"" + filepath + "\"");
 		Console::Log(" - DescriptorIndex: " + std::to_string(texture.srvHandle_->descriptorIndex));
 	}
 
 	return std::move(texture);
 }
 
-std::optional<Texture> AssetLoader<Texture>::Load3DTexture(const std::string& _filepath) {
+std::optional<Texture> AssetLoader<Texture>::Load3DTexture(const std::string& filepath) {
 	Texture texture;
 
-	DirectX::ScratchImage scratchImage = LoadScratchImage3D(_filepath);
+	DirectX::ScratchImage scratchImage = LoadScratchImage3D(filepath);
 	if(scratchImage.GetImageCount() == 0) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Load Failed] [Texture DDS] - Failed to load DDS file: \"" + _filepath + "\"");
+		Console::LogError("[Load Failed] [Texture DDS] - Failed to load DDS file: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
 	const DirectX::TexMetadata& metadata = scratchImage.GetMetadata();
 	if(metadata.dimension != DirectX::TEX_DIMENSION_TEXTURE3D) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Load Failed] [Texture DDS] - Not a 3D texture: \"" + _filepath + "\"");
+		Console::LogError("[Load Failed] [Texture DDS] - Not a 3D texture: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
 	texture.dxResource_ = std::move(CreateTextureResource3D(pDxManager_->GetDxDevice(), metadata));
 	if(!texture.dxResource_.Get()) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Load Failed] [Texture DDS] - Don't Create DxResource: \"" + _filepath + "\"");
+		Console::LogError("[Load Failed] [Texture DDS] - Don't Create DxResource: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
-	texture.dxResource_.Get()->SetName(ConvertString(_filepath).c_str());
+	texture.dxResource_.Get()->SetName(ConvertString(filepath).c_str());
 	texture.dxResource_.SetCurrentState(D3D12_RESOURCE_STATE_GENERIC_READ);
-	texture.name_ = _filepath;
+	texture.name_ = filepath;
 
 	DxResource intermediateResource;
 
@@ -253,32 +253,32 @@ std::optional<Texture> AssetLoader<Texture>::Load3DTexture(const std::string& _f
 		texture.depth_ = static_cast<uint32_t>(metadata.depth);
 		texture.srvFormat_ = metadata.format;
 
-		Console::Log("[Texture DDS Info] Path: \"" + _filepath + "\"");
+		Console::Log("[Texture DDS Info] Path: \"" + filepath + "\"");
 	}
 
 	return std::move(texture);
 }
 
-std::optional<Texture> AssetLoader<Texture>::Reload2DTexture(const std::string& _filepath, Texture* _src) {
-	Texture texture = *_src;
+std::optional<Texture> AssetLoader<Texture>::Reload2DTexture(const std::string& filepath, Texture* src) {
+	Texture texture = *src;
 
-	DirectX::ScratchImage       scratchImage = LoadScratchImage2D(_filepath);
+	DirectX::ScratchImage       scratchImage = LoadScratchImage2D(filepath);
 	const DirectX::TexMetadata& metadata = scratchImage.GetMetadata();
 
 	if(metadata.width == 0 || metadata.height == 0) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Reload Failed] [Texture] - Invalid dimensions: \"" + _filepath + "\"");
+		Console::LogError("[Reload Failed] [Texture] - Invalid dimensions: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
 	DxResource newResource = CreateTextureResource2D(pDxManager_->GetDxDevice(), metadata);
 	if(!newResource.Get()) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Reload Failed] [Texture] - Don't Create DxResource: \"" + _filepath + "\"");
+		Console::LogError("[Reload Failed] [Texture] - Don't Create DxResource: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
-	newResource.Get()->SetName(ConvertString(_filepath).c_str());
+	newResource.Get()->SetName(ConvertString(filepath).c_str());
 	texture.dxResource_ = std::move(newResource);
 	DxResource intermediateResource;
 
@@ -321,37 +321,37 @@ std::optional<Texture> AssetLoader<Texture>::Reload2DTexture(const std::string& 
 		texture.isCubeMap_ = metadata.IsCubemap();
 		texture.arraySize_ = static_cast<UINT>(metadata.arraySize);
 
-		Console::Log("[Success Reload Texture Info] Path: \"" + _filepath + "\"");
+		Console::Log("[Success Reload Texture Info] Path: \"" + filepath + "\"");
 	}
 
 	return std::move(texture);
 }
 
-std::optional<Texture> AssetLoader<Texture>::Reload3DTexture(const std::string& _filepath, Texture* _src) {
-	Texture texture = *_src;
+std::optional<Texture> AssetLoader<Texture>::Reload3DTexture(const std::string& filepath, Texture* src) {
+	Texture texture = *src;
 
-	DirectX::ScratchImage scratchImage = LoadScratchImage3D(_filepath);
+	DirectX::ScratchImage scratchImage = LoadScratchImage3D(filepath);
 	if(scratchImage.GetImageCount() == 0) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Reload Failed] [Texture DDS] - Failed to load DDS file: \"" + _filepath + "\"");
+		Console::LogError("[Reload Failed] [Texture DDS] - Failed to load DDS file: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
 	const DirectX::TexMetadata& metadata = scratchImage.GetMetadata();
 	if(metadata.dimension != DirectX::TEX_DIMENSION_TEXTURE3D) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Reload Failed] [Texture DDS] - Not a 3D texture: \"" + _filepath + "\"");
+		Console::LogError("[Reload Failed] [Texture DDS] - Not a 3D texture: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
 	DxResource newResource = CreateTextureResource3D(pDxManager_->GetDxDevice(), metadata);
 	if(!newResource.Get()) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Reload Failed] [Texture DDS] - Don't Create DxResource: \"" + _filepath + "\"");
+		Console::LogError("[Reload Failed] [Texture DDS] - Don't Create DxResource: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
-	newResource.Get()->SetName(ConvertString(_filepath).c_str());
+	newResource.Get()->SetName(ConvertString(filepath).c_str());
 	DxResource oldResourceKeeper = std::move(texture.dxResource_);
 	texture.dxResource_ = std::move(newResource);
 	DxResource intermediateResource;
@@ -389,18 +389,18 @@ std::optional<Texture> AssetLoader<Texture>::Reload3DTexture(const std::string& 
 		texture.depth_ = static_cast<uint32_t>(metadata.depth);
 		texture.srvFormat_ = metadata.format;
 
-		Console::Log("[Success Reload Texture3D] Path: \"" + _filepath + "\"");
+		Console::Log("[Success Reload Texture3D] Path: \"" + filepath + "\"");
 	}
 
 	return std::move(texture);
 }
 
-DirectX::ScratchImage AssetLoader<Texture>::LoadScratchImage2D(const std::string& _filepath) {
+DirectX::ScratchImage AssetLoader<Texture>::LoadScratchImage2D(const std::string& filepath) {
 	DirectX::ScratchImage image{};
-	std::wstring          filePathW = ConvertString(_filepath);
+	std::wstring          filePathW = ConvertString(filepath);
 	HRESULT hr = S_OK;
 
-	if(_filepath.ends_with(".dds")) {
+	if(filepath.ends_with(".dds")) {
 		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
 	} else {
 		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
@@ -412,7 +412,7 @@ DirectX::ScratchImage AssetLoader<Texture>::LoadScratchImage2D(const std::string
 
 	if (FAILED(hr)) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError(std::format("[Load Failed] [Texture WIC/DDS] - HRESULT: 0x{:08X}, Path: \"{}\"", (uint32_t)hr, _filepath));
+		Console::LogError(std::format("[Load Failed] [Texture WIC/DDS] - HRESULT: 0x{:08X}, Path: \"{}\"", (uint32_t)hr, filepath));
 		return DirectX::ScratchImage{};
 	}
 
@@ -424,34 +424,34 @@ DirectX::ScratchImage AssetLoader<Texture>::LoadScratchImage2D(const std::string
 		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
 		if (FAILED(hr)) {
 			std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-			Console::LogWarning(std::format("[MipMap Failed] [Texture] - HRESULT: 0x{:08X}, Path: \"{}\"", (uint32_t)hr, _filepath));
+			Console::LogWarning(std::format("[MipMap Failed] [Texture] - HRESULT: 0x{:08X}, Path: \"{}\"", (uint32_t)hr, filepath));
 			mipImages = std::move(image);
 		}
 	}
 	return mipImages;
 }
 
-DirectX::ScratchImage AssetLoader<Texture>::LoadScratchImage3D(const std::string& _filepath) {
-	if(!_filepath.ends_with(".dds")) {
+DirectX::ScratchImage AssetLoader<Texture>::LoadScratchImage3D(const std::string& filepath) {
+	if(!filepath.ends_with(".dds")) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
 		Console::LogError("LoadScratchImage3D: Only DDS files are supported for Texture3D.");
 		return DirectX::ScratchImage{};
 	}
 
-	std::wstring filePathW = ConvertString(_filepath);
+	std::wstring filePathW = ConvertString(filepath);
 	DirectX::ScratchImage image;
 
 	HRESULT hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
 	if(FAILED(hr)) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Load Failed] Texture3D DDS: \"" + _filepath + "\"");
+		Console::LogError("[Load Failed] Texture3D DDS: \"" + filepath + "\"");
 		return DirectX::ScratchImage{};
 	}
 
 	const DirectX::TexMetadata& meta = image.GetMetadata();
 	if(meta.dimension != DirectX::TEX_DIMENSION_TEXTURE3D) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-		Console::LogError("[Load Failed] File is not a Texture3D DDS: \"" + _filepath + "\"");
+		Console::LogError("[Load Failed] File is not a Texture3D DDS: \"" + filepath + "\"");
 		return DirectX::ScratchImage{};
 	}
 
@@ -462,44 +462,44 @@ DirectX::ScratchImage AssetLoader<Texture>::LoadScratchImage3D(const std::string
 		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_DEFAULT, 0, mipImages);
 		if(FAILED(hr)) {
 			std::lock_guard<std::mutex> lock(s_textureGpuMutex);
-			Console::LogWarning("[GenerateMipMaps Failed] Using original image: \"" + _filepath + "\"");
+			Console::LogWarning("[GenerateMipMaps Failed] Using original image: \"" + filepath + "\"");
 			mipImages = std::move(image);
 		}
 	}
 	return mipImages;
 }
 
-DxResource AssetLoader<Texture>::CreateTextureResource2D(DxDevice* _dxDevice, const DirectX::TexMetadata& _metadata) {
+DxResource AssetLoader<Texture>::CreateTextureResource2D(DxDevice* dxDevice, const DirectX::TexMetadata& metadata) {
 	D3D12_RESOURCE_DESC desc{};
-	desc.Width = UINT(_metadata.width);
-	desc.Height = UINT(_metadata.height);
-	desc.MipLevels = UINT16(_metadata.mipLevels);
-	desc.DepthOrArraySize = UINT16(_metadata.arraySize);
-	desc.Format = _metadata.format;
+	desc.Width = UINT(metadata.width);
+	desc.Height = UINT(metadata.height);
+	desc.MipLevels = UINT16(metadata.mipLevels);
+	desc.DepthOrArraySize = UINT16(metadata.arraySize);
+	desc.Format = metadata.format;
 	desc.SampleDesc.Count = 1;
-	desc.Dimension = D3D12_RESOURCE_DIMENSION(_metadata.dimension);
+	desc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
 
 	D3D12_HEAP_PROPERTIES heapProperties{};
 	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
 
 	DxResource dxResource;
-	dxResource.CreateCommittedResource(_dxDevice, &heapProperties, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr);
+	dxResource.CreateCommittedResource(dxDevice, &heapProperties, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr);
 	return dxResource;
 }
 
-DxResource AssetLoader<Texture>::CreateTextureResource3D(DxDevice* _dxDevice, const DirectX::TexMetadata& _metadata) {
-	if(_metadata.dimension != DirectX::TEX_DIMENSION_TEXTURE3D) {
+DxResource AssetLoader<Texture>::CreateTextureResource3D(DxDevice* dxDevice, const DirectX::TexMetadata& metadata) {
+	if(metadata.dimension != DirectX::TEX_DIMENSION_TEXTURE3D) {
 		std::lock_guard<std::mutex> lock(s_textureGpuMutex);
 		Console::LogError("[CreateTexture3DResource] Metadata is not Texture3D.");
 		return DxResource{};
 	}
 
 	D3D12_RESOURCE_DESC desc{};
-	desc.Width = static_cast<UINT>(_metadata.width);
-	desc.Height = static_cast<UINT>(_metadata.height);
-	desc.DepthOrArraySize = static_cast<UINT16>(_metadata.depth);
-	desc.MipLevels = static_cast<UINT16>(_metadata.mipLevels);
-	desc.Format = _metadata.format;
+	desc.Width = static_cast<UINT>(metadata.width);
+	desc.Height = static_cast<UINT>(metadata.height);
+	desc.DepthOrArraySize = static_cast<UINT16>(metadata.depth);
+	desc.MipLevels = static_cast<UINT16>(metadata.mipLevels);
+	desc.Format = metadata.format;
 	desc.SampleDesc.Count = 1;
 	desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
@@ -509,11 +509,11 @@ DxResource AssetLoader<Texture>::CreateTextureResource3D(DxDevice* _dxDevice, co
 	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
 
 	DxResource dxResource;
-	dxResource.CreateCommittedResource(_dxDevice, &heapProperties, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr);
+	dxResource.CreateCommittedResource(dxDevice, &heapProperties, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr);
 	return dxResource;
 }
 
-DxResource AssetLoader<Texture>::UploadTextureData(ID3D12Resource* _texture, const DirectX::ScratchImage& _mipScratchImage) {
+DxResource AssetLoader<Texture>::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipScratchImage) {
 	DxDevice* dxDevice = pDxManager_->GetDxDevice();
 
 	/// 実行しているスレッドに応じてコマンドリストを出し分ける
@@ -527,19 +527,19 @@ DxResource AssetLoader<Texture>::UploadTextureData(ID3D12Resource* _texture, con
 	}
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
-	DirectX::PrepareUpload(dxDevice->GetDevice(), _mipScratchImage.GetImages(), _mipScratchImage.GetImageCount(), _mipScratchImage.GetMetadata(), subresources);
-	uint64_t intermediateSize = GetRequiredIntermediateSize(_texture, 0, static_cast<UINT>(subresources.size()));
+	DirectX::PrepareUpload(dxDevice->GetDevice(), mipScratchImage.GetImages(), mipScratchImage.GetImageCount(), mipScratchImage.GetMetadata(), subresources);
+	uint64_t intermediateSize = GetRequiredIntermediateSize(texture, 0, static_cast<UINT>(subresources.size()));
 
 	DxResource intermediateDxResource;
 	intermediateDxResource.CreateResource(dxDevice, intermediateSize);
 
-	UpdateSubresources(cmdList, _texture, intermediateDxResource.Get(), 0, 0, static_cast<UINT>(subresources.size()), subresources.data());
+	UpdateSubresources(cmdList, texture, intermediateDxResource.Get(), 0, 0, static_cast<UINT>(subresources.size()), subresources.data());
 
 	/// 型依存（DxCommand）を避けるため、手動でリソースバリアを作成
 	D3D12_RESOURCE_BARRIER barrier{};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = _texture;
+	barrier.Transition.pResource = texture;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;

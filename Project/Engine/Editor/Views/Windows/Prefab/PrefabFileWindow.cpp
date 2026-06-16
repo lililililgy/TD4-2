@@ -1,4 +1,4 @@
-﻿#include "PrefabFileWindow.h"
+#include "PrefabFileWindow.h"
 
 /// externals
 #include <imgui.h>
@@ -15,8 +15,8 @@
 
 using namespace Editor;
 
-PrefabFileWindow::PrefabFileWindow(ONEngine::EntityComponentSystem* _ecs, ONEngine::Asset::AssetCollection* _assetCollection, InspectorWindow* _inspector)
-	: pEcs_(_ecs), pAssetCollection_(_assetCollection), pInspector_(_inspector) {
+PrefabFileWindow::PrefabFileWindow(ONEngine::EntityComponentSystem* ecs, ONEngine::Asset::AssetCollection* assetCollection, InspectorWindow* inspector)
+	: pEcs_(ecs), pAssetCollection_(assetCollection), pInspector_(inspector) {
 
 	/// Prefabファイルの取得
 	files_ = ONEngine::FileSystem::GetFiles("Assets/Prefabs", ".prefab");
@@ -91,12 +91,12 @@ void PrefabFileWindow::ShowPrefabFileList() {
 	}
 }
 
-void PrefabFileWindow::ReloadPrefabFiles(const ONEngine::Asset::Texture* _tex) {
+void PrefabFileWindow::ReloadPrefabFiles(const ONEngine::Asset::Texture* tex) {
 
 	/// Reloadボタンの表示
 	ImVec2 buttonSize = ImVec2(24.0f, 24.0f);
 	if (ImGui::ImageButton(
-		"##reload", ImTextureID(_tex->GetSRVGPUHandle().ptr), buttonSize,
+		"##reload", ImTextureID(tex->GetSRVGPUHandle().ptr), buttonSize,
 		ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 0), ImVec4(0.1f, 0.1f, 0.75f, 1))) {
 
 		/// ファイルの再読み込み

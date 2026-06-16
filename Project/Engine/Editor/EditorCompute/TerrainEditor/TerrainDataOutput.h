@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/Graphics/Buffer/ConstantBuffer.h"
@@ -30,8 +30,8 @@ public:
 	TerrainDataOutput();
 	~TerrainDataOutput() override;
 
-	void Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) override;
-	void Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* _assetCollection) override;
+	void Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) override;
+	void Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* assetCollection) override;
 
 private:
 	/// ==========================================

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -34,35 +34,35 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	AssetContainer(size_t _maxResourceSize);
+	AssetContainer(size_t maxResourceSize);
 	~AssetContainer();
 
 	/// 追加
-	T* Add(const std::string& _key, T _t);
+	T* Add(const std::string& key, T t);
 
 	/// 削除
-	void Remove(const std::string& _key);
-	void Remove(int32_t _index);
+	void Remove(const std::string& key);
+	void Remove(int32_t index);
 
 
 	/// --------------- 取得用 --------------- ///
 
-	T* Get(const std::string& _key);
-	T* Get(int32_t _index);
+	T* Get(const std::string& key);
+	T* Get(int32_t index);
 	T* GetFirst();
 
-	const std::string& GetKey(int32_t _index) const;
+	const std::string& GetKey(int32_t index) const;
 
-	int32_t GetIndex(const std::string& _key) const;
-	int32_t GetIndex(const Guid& _guid) const;
+	int32_t GetIndex(const std::string& key) const;
+	int32_t GetIndex(const Guid& guid) const;
 
 	const std::vector<T>& GetValues() const;
 	std::vector<T>& GetValues();
 
 	const std::unordered_map<std::string, int32_t>& GetIndexMap() const;
 
-	const Guid& GetGuid(const std::string& _key) const;
-	const Guid& GetGuid(int32_t _index) const;
+	const Guid& GetGuid(const std::string& key) const;
+	const Guid& GetGuid(int32_t index) const;
 
 private:
 	/// ===================================================
@@ -85,88 +85,88 @@ private:
 /// ///////////////////////////////////////////////////
 
 template<IsAsset T>
-inline AssetContainer<T>::AssetContainer(size_t _maxResourceSize) {
-	values_.resize(_maxResourceSize);
+inline AssetContainer<T>::AssetContainer(size_t maxResourceSize) {
+	values_.resize(maxResourceSize);
 }
 
 template<IsAsset T>
 inline AssetContainer<T>::~AssetContainer() {}
 
 template<IsAsset T>
-inline T* AssetContainer<T>::Add(const std::string& _key, T _t) {
+inline T* AssetContainer<T>::Add(const std::string& key, T t) {
 	std::unique_lock<std::shared_mutex> lock(mtx_);
 
-	if(indexMap_.contains(_key)) {
-		uint32_t index = indexMap_[_key];
-		values_[index] = std::move(_t);
+	if(indexMap_.contains(key)) {
+		uint32_t index = indexMap_[key];
+		values_[index] = std::move(t);
 		return &values_[index];
 	}
 
 	uint32_t index = static_cast<uint32_t>(indexMap_.size());
-	indexMap_[_key] = index;
-	reverseIndexMap_[index] = _key;
+	indexMap_[key] = index;
+	reverseIndexMap_[index] = key;
 
-	guidToIndexMap_[_t.guid] = index;
-	indexToGuidMap_[index] = _t.guid;
+	guidToIndexMap_[t.guid] = index;
+	indexToGuidMap_[index] = t.guid;
 
-	//if(std::filesystem::exists(_key + ".meta")) {
+	//if(std::filesystem::exists(key + ".meta")) {
 	//	MetaFile metaFile;
-	//	metaFile.LoadFromFile(_key + ".meta");
+	//	metaFile.LoadFromFile(key + ".meta");
 	//	Guid& guid = metaFile.guid;
 	//	guidToIndexMap_[guid] = index;
 	//	indexToGuidMap_[index] = guid;
-	//	_t.guid = guid;
+	//	t.guid = guid;
 	//} else {
-	//	MetaFile metaFile = GenerateMetaFile(_key);
+	//	MetaFile metaFile = GenerateMetaFile(key);
 	//	Guid& guid = metaFile.guid;
 	//	guidToIndexMap_[guid] = index;
 	//	indexToGuidMap_[index] = guid;
-	//	_t.guid = guid;
+	//	t.guid = guid;
 	//}
 
-	values_[index] = std::move(_t);
+	values_[index] = std::move(t);
 	return &values_[index];
 }
 
 template<IsAsset T>
-inline void AssetContainer<T>::Remove(const std::string& _key) {
+inline void AssetContainer<T>::Remove(const std::string& key) {
 	std::unique_lock<std::shared_mutex> lock(mtx_);
 
-	if(indexMap_.contains(_key)) {
-		uint32_t index = indexMap_[_key];
-		indexMap_.erase(_key);
+	if(indexMap_.contains(key)) {
+		uint32_t index = indexMap_[key];
+		indexMap_.erase(key);
 		reverseIndexMap_.erase(index);
 	}
 }
 
 template<IsAsset T>
-inline void AssetContainer<T>::Remove(int32_t _index) {
+inline void AssetContainer<T>::Remove(int32_t index) {
 	std::unique_lock<std::shared_mutex> lock(mtx_);
 
-	if(reverseIndexMap_.contains(_index)) {
-		std::string key = reverseIndexMap_[_index];
+	if(reverseIndexMap_.contains(index)) {
+		std::string key = reverseIndexMap_[index];
 		indexMap_.erase(key);
-		reverseIndexMap_.erase(_index);
+		reverseIndexMap_.erase(index);
 	}
 }
 
 template<IsAsset T>
-inline T* AssetContainer<T>::Get(const std::string& _key) {
+inline T* AssetContainer<T>::Get(const std::string& key) {
 	std::shared_lock<std::shared_mutex> lock(mtx_);
 
-	if(indexMap_.contains(_key)) {
-		uint32_t index = indexMap_[_key];
+	if(indexMap_.contains(key)) {
+		uint32_t index = indexMap_[key];
 		return &values_[index];
 	}
 	return nullptr;
 }
 
 template<IsAsset T>
-inline T* AssetContainer<T>::Get(int32_t _index) {
+inline T* AssetContainer<T>::Get(int32_t index) {
 	std::shared_lock<std::shared_mutex> lock(mtx_);
 
-	if(_index < values_.size()) {
-		return &values_[_index];
+	if(index < values_.size()) {
+		return &values_[index];
 	}
 	return nullptr;
 }
@@ -178,32 +178,32 @@ inline T* AssetContainer<T>::GetFirst() {
 }
 
 template<IsAsset T>
-inline const std::string& AssetContainer<T>::GetKey(int32_t _index) const {
+inline const std::string& AssetContainer<T>::GetKey(int32_t index) const {
 	std::shared_lock<std::shared_mutex> lock(mtx_);
 
-	if(reverseIndexMap_.contains(_index)) {
-		return reverseIndexMap_.at(_index);
+	if(reverseIndexMap_.contains(index)) {
+		return reverseIndexMap_.at(index);
 	}
 	static const std::string emptyString;
 	return emptyString;
 }
 
 template<IsAsset T>
-inline int32_t AssetContainer<T>::GetIndex(const std::string& _key) const {
+inline int32_t AssetContainer<T>::GetIndex(const std::string& key) const {
 	std::shared_lock<std::shared_mutex> lock(mtx_);
 
-	if(indexMap_.contains(_key)) {
-		return indexMap_.at(_key);
+	if(indexMap_.contains(key)) {
+		return indexMap_.at(key);
 	}
 	return -1;
 }
 
 template<IsAsset T>
-inline int32_t AssetContainer<T>::GetIndex(const Guid& _guid) const {
+inline int32_t AssetContainer<T>::GetIndex(const Guid& guid) const {
 	std::shared_lock<std::shared_mutex> lock(mtx_);
 
-	if(guidToIndexMap_.contains(_guid)) {
-		return guidToIndexMap_.at(_guid);
+	if(guidToIndexMap_.contains(guid)) {
+		return guidToIndexMap_.at(guid);
 	}
 	return -1;
 }
@@ -227,19 +227,19 @@ inline const std::unordered_map<std::string, int32_t>& AssetContainer<T>::GetInd
 }
 
 template<IsAsset T>
-inline const Guid& AssetContainer<T>::GetGuid(const std::string& _key) const {
+inline const Guid& AssetContainer<T>::GetGuid(const std::string& key) const {
 	std::shared_lock<std::shared_mutex> lock(mtx_);
 
-	if(indexMap_.contains(_key)) {
-		return indexToGuidMap_.at(indexMap_.at(_key));
+	if(indexMap_.contains(key)) {
+		return indexToGuidMap_.at(indexMap_.at(key));
 	}
 	return Guid::kInvalid;
 }
 
 template<IsAsset T>
-inline const Guid& AssetContainer<T>::GetGuid(int32_t _index) const {
+inline const Guid& AssetContainer<T>::GetGuid(int32_t index) const {
 	std::shared_lock<std::shared_mutex> lock(mtx_);
-	return indexToGuidMap_.at(_index);
+	return indexToGuidMap_.at(index);
 }
 
 } /// namespace ONEngine::Asset

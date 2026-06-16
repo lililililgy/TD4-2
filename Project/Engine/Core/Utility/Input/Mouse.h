@@ -43,28 +43,28 @@ public:
 	~Mouse();
 
 	/// @brief 初期化
-	/// @param _directInput DirectInput8へのポインタ
-	/// @param _windowManager WindowManagerへのポインタ
-	/// @param _imGuiManager ImGuiManagerへのポインタ
-	void Initialize(IDirectInput8* _directInput, class WindowManager* _windowManager, Editor::ImGuiManager* _imGuiManager);
+	/// @param directInput DirectInput8へのポインタ
+	/// @param windowManager WindowManagerへのポインタ
+	/// @param imGuiManager ImGuiManagerへのポインタ
+	void Initialize(IDirectInput8* directInput, class WindowManager* windowManager, Editor::ImGuiManager* imGuiManager);
 
 	/// @brief 更新
-	/// @param _window 現在のウィンドウへのポインタ
-	void Update(class Window* _window);
+	/// @param window 現在のウィンドウへのポインタ
+	void Update(class Window* window);
 
 
 	/// @brief Image内でのマウス位置を1280x720に正規化した座標で取得
-	/// @param _name Imageの名前
+	/// @param name Imageの名前
 	/// @return 1280x720内でのマウス位置 
-	const Vector2& GetImGuiImageMousePosNormalized(const std::string& _name);
+	const Vector2& GetImGuiImageMousePosNormalized(const std::string& name);
 
 	/// @brief Imageの位置を取得
-	/// @param _name Imageの名前
-	const Vector2& GetImGuiImagePos(const std::string& _name);
+	/// @param name Imageの名前
+	const Vector2& GetImGuiImagePos(const std::string& name);
 
 	/// @brief Imageのサイズを取得
-	/// @param _name Imageの名前
-	const Vector2& GetImGuiImageSize(const std::string& _name);
+	/// @param name Imageの名前
+	const Vector2& GetImGuiImageSize(const std::string& name);
 
 
 private:

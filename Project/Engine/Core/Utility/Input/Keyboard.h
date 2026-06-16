@@ -23,13 +23,13 @@ public:
 	~Keyboard();
 
 	/// @brief 初期化
-	/// @param _directInput DirectInputのポインタ
-	/// @param _windowManager WindowManagerのポインタ
-	void Initialize(IDirectInput8* _directInput, class WindowManager* _windowManager);
+	/// @param directInput DirectInputのポインタ
+	/// @param windowManager WindowManagerのポインタ
+	void Initialize(IDirectInput8* directInput, class WindowManager* windowManager);
 
 	/// @brief 更新処理
-	/// @param _window Windowのポインタ
-	void Update(class Window* _window);
+	/// @param window Windowのポインタ
+	void Update(class Window* window);
 
 private:
 	/// ===================================================

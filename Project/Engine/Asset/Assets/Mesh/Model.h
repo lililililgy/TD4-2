@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -41,8 +41,8 @@ public:
 	~Model() override;
 
 	/// @brief mesh の新規追加
-	/// @param _mesh meshのunique_ptr
-	void AddMesh(std::shared_ptr<ModelMesh>&& _mesh);
+	/// @param mesh meshのunique_ptr
+	void AddMesh(std::shared_ptr<ModelMesh>&& mesh);
 
 	ModelMesh* CreateMesh();
 
@@ -70,9 +70,9 @@ public:
 
 	/// ----- setters ----- ///
 
-	void SetMeshes(std::vector<std::shared_ptr<ModelMesh>>&& _meshes);
-	void SetPath(const std::string& _path);
-	void SetRootNode(const Node& _node);
+	void SetMeshes(std::vector<std::shared_ptr<ModelMesh>>&& meshes);
+	void SetPath(const std::string& path);
+	void SetRootNode(const Node& node);
 
 
 	/// ----- getters ----- ///

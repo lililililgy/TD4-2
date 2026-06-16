@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// external
 #include <nlohmann/json.hpp>
@@ -28,14 +28,14 @@ public:
 	~ScreenPostEffectTag() override = default;
 
 	/// @brief ポストエフェクトの有効/無効を設定する
-	/// @param _type 対象のポストエフェクトの種類
-	/// @param _enable true: 有効 false: 無効
-	void SetPostEffectEnable(PostEffectType _type, bool _enable);
+	/// @param type 対象のポストエフェクトの種類
+	/// @param enable true: 有効 false: 無効
+	void SetPostEffectEnable(PostEffectType type, bool enable);
 
 	/// @brief 指定した種類のポストエフェクトが有効かどうかを返す
-	/// @param _type 確認するポストエフェクトの種類
+	/// @param type 確認するポストエフェクトの種類
 	/// @return true: 有効 false: 無効
-	bool GetPostEffectEnable(PostEffectType _type) const;
+	bool GetPostEffectEnable(PostEffectType type) const;
 
 private:
 	/// ===================================================
@@ -46,12 +46,12 @@ private:
 
 
 namespace ComponentDebug {
-	void ScreenPostEffectTagDebug(ScreenPostEffectTag* _component);
+	void ScreenPostEffectTagDebug(ScreenPostEffectTag* component);
 }
 
 
 /// Json変換
-void from_json(const nlohmann::json& _j, ScreenPostEffectTag& _c);
-void to_json(nlohmann::json& _j, const ScreenPostEffectTag& _c);
+void from_json(const nlohmann::json& j, ScreenPostEffectTag& c);
+void to_json(nlohmann::json& j, const ScreenPostEffectTag& c);
 
 } /// ONEngine

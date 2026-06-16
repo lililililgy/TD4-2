@@ -1,4 +1,4 @@
-﻿#include "Model.h"
+#include "Model.h"
 
 
 namespace ONEngine::Asset {
@@ -6,8 +6,8 @@ namespace ONEngine::Asset {
 Model::Model() = default;
 Model::~Model() = default;
 
-void Model::AddMesh(std::shared_ptr<ModelMesh>&& _mesh) {
-	meshes_.push_back(std::move(_mesh));
+void Model::AddMesh(std::shared_ptr<ModelMesh>&& mesh) {
+	meshes_.push_back(std::move(mesh));
 }
 
 Model::ModelMesh* Model::CreateMesh() {
@@ -16,14 +16,14 @@ Model::ModelMesh* Model::CreateMesh() {
 	return meshes_.back().get();
 }
 
-void Model::SetMeshes(std::vector<std::shared_ptr<ModelMesh>>&& _meshes) {
+void Model::SetMeshes(std::vector<std::shared_ptr<ModelMesh>>&& meshes) {
 	/// ----- 新しいMeshと今のMeshを入れ替える ----- ///
-	if(_meshes.size() > meshes_.size()) {
-		meshes_.resize(_meshes.size());
+	if(meshes.size() > meshes_.size()) {
+		meshes_.resize(meshes.size());
 	}
 
-	for(size_t i = 0; i < _meshes.size(); ++i) {
-		meshes_[i] = std::move(_meshes[i]);
+	for(size_t i = 0; i < meshes.size(); ++i) {
+		meshes_[i] = std::move(meshes[i]);
 	}
 }
 
@@ -35,12 +35,12 @@ std::vector<std::shared_ptr<Model::ModelMesh>>& Model::GetMeshes() {
 	return meshes_;
 }
 
-void Model::SetPath(const std::string& _path) {
-	path_ = _path;
+void Model::SetPath(const std::string& path) {
+	path_ = path;
 }
 
-void Model::SetRootNode(const Node& _node) {
-	rootNode_ = _node;
+void Model::SetRootNode(const Node& node) {
+	rootNode_ = node;
 }
 
 const std::string& Model::GetPath() const {

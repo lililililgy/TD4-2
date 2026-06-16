@@ -1,12 +1,12 @@
-﻿#include "GameEventEditorWindow.h"
+#include "GameEventEditorWindow.h"
 #include <imgui.h>
 #include "Engine/Core/Utility/Utility.h"
 #include <cstring>
 
 namespace Editor {
 
-    GameEventEditorWindow::GameEventEditorWindow(const std::string& _name)
-        : m_Name(_name) {
+    GameEventEditorWindow::GameEventEditorWindow(const std::string& name)
+        : m_Name(name) {
         ONEngine::GameEventManager::GetInstance().Initialize();
     }
 

@@ -16,23 +16,23 @@ using namespace ONEngine;
 #include "Engine/Script/MonoScriptEngine.h"
 #include "Engine/Core/Utility/Time/CPUTimeStamp.h"
 
-ScriptUpdateSystem::ScriptUpdateSystem(ECSGroup* _ecs) {
+ScriptUpdateSystem::ScriptUpdateSystem(ECSGroup* ecs) {
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
-	MakeScriptMethod(monoEngine.Image(), _ecs->GetGroupName());
+	MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
 }
 
 ScriptUpdateSystem::~ScriptUpdateSystem() {
 	ReleaseGCHandle();
 }
 
-void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
+void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	/// ----- HotReloadをしたときにC#側がリセットされるのでスクリプトを追加し直す----- ///
 
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 
 	if (monoEngine.GetIsHotReloadRequest()) {
 		/// C#側のECSGroupを取得、更新関数を呼ぶ
-		ComponentArray<Script>* scriptArray = _ecs->GetComponentArray<Script>();
+		ComponentArray<Script>* scriptArray = ecs->GetComponentArray<Script>();
 		if (!scriptArray || scriptArray->GetUsedComponents().empty()) {
 			return;
 		}
@@ -45,17 +45,17 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
 		}
 
 		ReleaseGCHandle();
-		MakeScriptMethod(monoEngine.Image(), _ecs->GetGroupName());
+		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
 	}
 }
 
-void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
+void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 #ifdef DEBUG_MODE
 	CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::CSharpScriptUpdate);
 #endif // DEBUG_MODE
 
 	/// C#側に未追加にエンティティとコンポーネントを追加する
-	AddAllEntitiesAndComponents(_ecs);
+	AddAllEntitiesAndComponents(ecs);
 
 	/// 関数呼び出しの条件
 	CallUpdateEcsGroup();
@@ -66,16 +66,16 @@ void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
 #endif // DEBUG_MODE
 }
 
-void ScriptUpdateSystem::AddAllEntitiesAndComponents(ECSGroup* _ecsGroup) {
+void ScriptUpdateSystem::AddAllEntitiesAndComponents(ECSGroup* ecsGroup) {
 	/// スクリプトを持たないエンティティも追加することでC#で扱いやすくする
-	for (auto& entity : _ecsGroup->GetEntities()) {
+	for (auto& entity : ecsGroup->GetEntities()) {
 		AddEntityToScript(entity.get());
 	}
 }
 
-bool ScriptUpdateSystem::AddEntityToScript(GameEntity* _entity) {
+bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 	/// runtime中に生成したオブジェクトは無視
-	//if (_entity->GetId() < 0) {
+	//if (entity->GetId() < 0) {
 	//	return false;
 	//}
 
@@ -90,7 +90,7 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* _entity) {
 	/// Entityの追加関数を呼び出す
 	/// --------------------------------------------------------------------------------
 	void* addEntityArgs[1];
-	int32_t entityId = _entity->GetId();
+	int32_t entityId = entity->GetId();
 	addEntityArgs[0] = &entityId;
 
 	MonoObject* exc = nullptr;
@@ -103,8 +103,8 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* _entity) {
 		mono_free(err);
 	}
 
-	Variables* vars = _entity->GetComponent<Variables>();
-	Script* script = _entity->GetComponent<Script>();
+	Variables* vars = entity->GetComponent<Variables>();
+	Script* script = entity->GetComponent<Script>();
 
 	if (script) {
 		/// --------------------------------------------------------------------------------
@@ -190,13 +190,13 @@ void ScriptUpdateSystem::CallUpdateEcsGroup() {
 }
 
 
-void ScriptUpdateSystem::MakeScriptMethod(MonoImage* _image, const std::string& _ecsGroupName) {
+void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& ecsGroupName) {
 
 	/// --------------------------------------------------------------------------------
 	/// EntityComponentSystemの関数から新規にグループを追加する
 	/// --------------------------------------------------------------------------------
 
-	MonoClass* ecsClass = mono_class_from_name(_image, "", "EntityComponentSystem");
+	MonoClass* ecsClass = mono_class_from_name(image, "", "EntityComponentSystem");
 	if (!ecsClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem");
 		return;
@@ -207,7 +207,7 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* _image, const std::string& 
 
 	/// 関数の引数
 	void* args[1];
-	args[0] = mono_string_new(mono_domain_get(), _ecsGroupName.c_str());; /// ECSのGroup名
+	args[0] = mono_string_new(mono_domain_get(), ecsGroupName.c_str());; /// ECSのGroup名
 
 	/// 関数を呼び出す
 	MonoObject* exc = nullptr;
@@ -252,18 +252,18 @@ void ScriptUpdateSystem::ReleaseGCHandle() {
 /// デバッグ用のスクリプト更新システム
 /// ///////////////////////////////////////////////
 
-DebugScriptUpdateSystem::DebugScriptUpdateSystem(ECSGroup* _ecs)
-	: ScriptUpdateSystem(_ecs) {
+DebugScriptUpdateSystem::DebugScriptUpdateSystem(ECSGroup* ecs)
+	: ScriptUpdateSystem(ecs) {
 }
 DebugScriptUpdateSystem::~DebugScriptUpdateSystem() {}
 
-void DebugScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
+void DebugScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	/// 作成中のPrefabを更新してしまう問題を防ぐため、デバッグカメラのみ追加する
 
-	ScriptUpdateSystem::OutsideOfRuntimeUpdate(_ecs);
-	CameraComponent* camera = _ecs->GetMainCamera();
+	ScriptUpdateSystem::OutsideOfRuntimeUpdate(ecs);
+	CameraComponent* camera = ecs->GetMainCamera();
 	if (!camera) {
-		Console::LogError("Main camera is not set in ECSGroup: " + _ecs->GetGroupName());
+		Console::LogError("Main camera is not set in ECSGroup: " + ecs->GetGroupName());
 		return;
 	}
 
@@ -275,4 +275,4 @@ void DebugScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
 	CallUpdateEcsGroup();
 }
 
-void DebugScriptUpdateSystem::RuntimeUpdate(ECSGroup* /*_ecs*/) {}
+void DebugScriptUpdateSystem::RuntimeUpdate(ECSGroup* /*ecs*/) {}

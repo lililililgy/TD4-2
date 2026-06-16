@@ -1,15 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 class MeshRenderer : Component {
+	[StructLayout(LayoutKind.Sequential)]
 	public struct BatchData {
 		public uint compId;
 		public Vector4 color;
 		public uint postEffectFlags;
+		public UVTransform uvTransform;
 	}
 
 	BatchData batchData;
@@ -50,21 +53,21 @@ class MeshRenderer : Component {
 	/// -------------------------------------------
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern string InternalGetMeshName(ulong _nativeHandle);
+	static extern string InternalGetMeshName(ulong nativeHandle);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetMeshName(ulong _nativeHandle, string _meshName);
+	static extern void InternalSetMeshName(ulong nativeHandle, string meshName);
 
 	//[MethodImpl(MethodImplOptions.InternalCall)]
-	//static extern Vector4 InternalGetColor(ulong _nativeHandle);
+	//static extern Vector4 InternalGetColor(ulong nativeHandle);
 
 	//[MethodImpl(MethodImplOptions.InternalCall)]
-	//static extern void InternalSetColor(ulong _nativeHandle, Vector4 _color);
+	//static extern void InternalSetColor(ulong nativeHandle, Vector4 color);
 
 	//[MethodImpl(MethodImplOptions.InternalCall)]
-	//static extern uint InternalGetPostEffectFlags(ulong _nativeHandle);
+	//static extern uint InternalGetPostEffectFlags(ulong nativeHandle);
 
 	//[MethodImpl(MethodImplOptions.InternalCall)]
-	//static extern void InternalSetPostEffectFlags(ulong _nativeHandle, uint _flags);
+	//static extern void InternalSetPostEffectFlags(ulong nativeHandle, uint flags);
 
 }

@@ -53,25 +53,25 @@ private:
 	/// @brief spdlogの終了処理など
 	static void Finalize();
 
-	static void AddToBuffer(const std::string& _msg, LogLevel _level, LogCategory _category);
+	static void AddToBuffer(const std::string& msg, LogLevel level, LogCategory category);
 
 
 public:
 
 	~Console();
 
-	static void Log(const std::string& _message, LogCategory _category = LogCategory::Engine);
-	static void Log(const std::wstring& _message, LogCategory _category = LogCategory::Engine);
-	static void LogInfo(const std::string& _message, LogCategory _category = LogCategory::Engine);
-	static void LogError(const std::string& _message, LogCategory _category = LogCategory::Engine);
-	static void LogWarning(const std::string& _message, LogCategory _category = LogCategory::Engine);
+	static void Log(const std::string& message, LogCategory category = LogCategory::Engine);
+	static void Log(const std::wstring& message, LogCategory category = LogCategory::Engine);
+	static void LogInfo(const std::string& message, LogCategory category = LogCategory::Engine);
+	static void LogError(const std::string& message, LogCategory category = LogCategory::Engine);
+	static void LogWarning(const std::string& message, LogCategory category = LogCategory::Engine);
 
 	/// @brief ログのvectorを返す
 	static const std::vector<LogEntry>& GetLogVector();
 
 	/// @brief ログのバッファをクリアする
-	/// @param _category 指定したカテゴリのみクリアする。デフォルト(std::nullopt)は全てクリア
-	static void ClearLogBuffer(std::optional<LogCategory> _category = std::nullopt);
+	/// @param category 指定したカテゴリのみクリアする。デフォルト(std::nullopt)は全てクリア
+	static void ClearLogBuffer(std::optional<LogCategory> category = std::nullopt);
 
 	/// @brief ログをファイルに保存して終了する
 	static void Shutdown();
@@ -79,20 +79,20 @@ public:
 
 
 /// @brief wstring -> string 変換関数
-std::string ConvertString(const std::wstring& _wstr);
+std::string ConvertString(const std::wstring& wstr);
 
 /// @brief string -> wstring 変換関数
-std::wstring ConvertString(const std::string& _str);
+std::wstring ConvertString(const std::string& str);
 
 /// @brief TCHAR* -> string 変換関数
-std::string ConvertTCHARToString(const TCHAR* _tstr);
+std::string ConvertTCHARToString(const TCHAR* tstr);
 
 /// @brief DWORDを文字列に変換する
-/// @param _dw 
+/// @param dw 
 /// @return 
-std::string ConvertString(DWORD _dw);
+std::string ConvertString(DWORD dw);
 
 /// @brief HRESULTを文字列に変換する
-std::string HrToString(HRESULT _hr);
+std::string HrToString(HRESULT hr);
 
 } /// ONEngine

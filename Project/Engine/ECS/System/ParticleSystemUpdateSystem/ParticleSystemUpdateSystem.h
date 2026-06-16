@@ -9,11 +9,11 @@ namespace ONEngine {
         ParticleSystemUpdateSystem();
         ~ParticleSystemUpdateSystem() override = default;
 
-        void RuntimeUpdate(class ECSGroup* _ecs) override;
-        void OutsideOfRuntimeUpdate(class ECSGroup* _ecs) override;
+        void RuntimeUpdate(class ECSGroup* ecs) override;
+        void OutsideOfRuntimeUpdate(class ECSGroup* ecs) override;
 
     private:
-        void DrawGizmos(class ECSGroup* _ecs);
+        void DrawGizmos(class ECSGroup* ecs);
         void UpdateSingleSystem(class ParticleSystem* ps, class GameEntity* entity, float dt);
     };
 

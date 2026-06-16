@@ -9,87 +9,87 @@
 
 using namespace ONEngine;
 
-Vector3 ANIME_MATH::CalculateValue(const std::vector<KeyFrameVector3>& _keyFrames, float _time) {
+Vector3 ANIME_MATH::CalculateValue(const std::vector<KeyFrameVector3>& keyFrames, float time) {
 	/// ----- Vector3のキーフレーム配列を計算 ----- ///
 
-	Assert(!_keyFrames.empty(), "keyframe empty...");
+	Assert(!keyFrames.empty(), "keyframe empty...");
 
 	/// 最初のキーフレーム以前の場合は最初の値を返す
-	if (_keyFrames.size() == 1 || _time <= _keyFrames[0].time) {
-		return _keyFrames[0].value;
+	if (keyFrames.size() == 1 || time <= keyFrames[0].time) {
+		return keyFrames[0].value;
 	}
 
 	/// キーフレーム間の補間計算
-	for (size_t index = 0; index < _keyFrames.size() - 1; ++index) {
+	for (size_t index = 0; index < keyFrames.size() - 1; ++index) {
 		size_t nextIndex = index + 1;
 
-		if (_keyFrames[index].time <= _time && _time <= _keyFrames[nextIndex].time) {
-			float t = (_time - _keyFrames[index].time) / (_keyFrames[nextIndex].time - _keyFrames[index].time);
-			return Vector3::Lerp(_keyFrames[index].value, _keyFrames[nextIndex].value, t);
+		if (keyFrames[index].time <= time && time <= keyFrames[nextIndex].time) {
+			float t = (time - keyFrames[index].time) / (keyFrames[nextIndex].time - keyFrames[index].time);
+			return Vector3::Lerp(keyFrames[index].value, keyFrames[nextIndex].value, t);
 		}
 	}
 
-	return _keyFrames.back().value;
+	return keyFrames.back().value;
 }
 
-Quaternion ANIME_MATH::CalculateValue(const std::vector<KeyFrameQuaternion>& _keyFrames, float _time) {
+Quaternion ANIME_MATH::CalculateValue(const std::vector<KeyFrameQuaternion>& keyFrames, float time) {
 	/// ----- Quaternionのキーフレーム配列を計算 ----- ///
 
-	Assert(!_keyFrames.empty(), "keyframe empty...");
+	Assert(!keyFrames.empty(), "keyframe empty...");
 
 
 	/// 最初のキーフレーム以前の場合は最初の値を返す
-	if (_keyFrames.size() == 1 || _time <= _keyFrames[0].time) {
-		return _keyFrames[0].value;
+	if (keyFrames.size() == 1 || time <= keyFrames[0].time) {
+		return keyFrames[0].value;
 	}
 
 	/// キーフレーム間の補間計算
-	for (size_t index = 0; index < _keyFrames.size() - 1; ++index) {
+	for (size_t index = 0; index < keyFrames.size() - 1; ++index) {
 		size_t nextIndex = index + 1;
 
-		if (_keyFrames[index].time <= _time && _time <= _keyFrames[nextIndex].time) {
-			float t = (_time - _keyFrames[index].time) / (_keyFrames[nextIndex].time - _keyFrames[index].time);
-			return Quaternion::Slerp(_keyFrames[index].value, _keyFrames[nextIndex].value, t);
+		if (keyFrames[index].time <= time && time <= keyFrames[nextIndex].time) {
+			float t = (time - keyFrames[index].time) / (keyFrames[nextIndex].time - keyFrames[index].time);
+			return Quaternion::Slerp(keyFrames[index].value, keyFrames[nextIndex].value, t);
 		}
 	}
 
-	return _keyFrames.back().value;
+	return keyFrames.back().value;
 }
 
-int32_t ANIME_MATH::CreateJoint(const Node& _node, const std::optional<int32_t>& _parent, std::vector<Joint>& _joints) {
+int32_t ANIME_MATH::CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints) {
 	/// ----- ノードからジョイントを作成 ----- ///
 
 	/// 自身のインデックスを決定し、追加する
-	int32_t selfIndex = static_cast<int32_t>(_joints.size());
-	_joints.emplace_back();
+	int32_t selfIndex = static_cast<int32_t>(joints.size());
+	joints.emplace_back();
 
 	/// 参照を取得 (再確保に注意)
-	Joint& joint = _joints[selfIndex];
-	joint.name = _node.name;
-	joint.nameHash = StringHash::Get(_node.name);
-	joint.transform.matWorld = _node.transform.matWorld;
+	Joint& joint = joints[selfIndex];
+	joint.name = node.name;
+	joint.nameHash = StringHash::Get(node.name);
+	joint.transform.matWorld = node.transform.matWorld;
 
 	joint.matSkeletonSpace = Matrix4x4::kIdentity;
 	joint.index = selfIndex;
-	joint.parent = _parent;
+	joint.parent = parent;
 
 	/// 子ノードのジョイントを再帰的に作成
-	for (const Node& child : _node.children) {
-		int32_t childIndex = CreateJoint(child, selfIndex, _joints);
+	for (const Node& child : node.children) {
+		int32_t childIndex = CreateJoint(child, selfIndex, joints);
 
 		/// 再確保されている可能性があるため、再度インデックスでアクセスして子を追加
-		_joints[selfIndex].children.push_back(childIndex);
+		joints[selfIndex].children.push_back(childIndex);
 	}
 
 	return selfIndex;
 }
 
-Skeleton ANIME_MATH::CreateSkeleton(const Node& _rootNode) {
+Skeleton ANIME_MATH::CreateSkeleton(const Node& rootNode) {
 	/// ----- ノードからスケルトンを作成 ----- ///
 	Console::LogInfo("ANIME_MATH::CreateSkeleton: Starting skeleton creation.");
 
 	Skeleton result;
-	result.root = CreateJoint(_rootNode, {}, result.joints);
+	result.root = CreateJoint(rootNode, {}, result.joints);
 
 	for (const Joint& joint : result.joints) {
 		result.jointMap.emplace(joint.nameHash, joint.index);
@@ -99,24 +99,24 @@ Skeleton ANIME_MATH::CreateSkeleton(const Node& _rootNode) {
 	return result;
 }
 
-SkinCluster ANIME_MATH::CreateSkinCluster(const Skeleton& _skeleton, Asset::Model* _model, DxManager* _dxm) {
+SkinCluster ANIME_MATH::CreateSkinCluster(const Skeleton& skeleton, Asset::Model* model, DxManager* dxm) {
 	/// ----- スキンクラスターを作成 ----- ///
 	Console::LogInfo(std::format("ANIME_MATH::CreateSkinCluster: Starting (Joints: {}, Meshes: {})", 
-		_skeleton.joints.size(), _model->GetMeshes().size()));
+		skeleton.joints.size(), model->GetMeshes().size()));
 
 	SkinCluster result{};
 
-	DxDevice* dxDevice = _dxm->GetDxDevice();
+	DxDevice* dxDevice = dxm->GetDxDevice();
 	ID3D12Device* device = dxDevice->GetDevice();
 
 	/// matrix paletteの作成 (ボーンパレットは全メッシュ共通)
-	result.paletteResource.CreateResource(dxDevice, sizeof(WellForGPU) * _skeleton.joints.size());
+	result.paletteResource.CreateResource(dxDevice, sizeof(WellForGPU) * skeleton.joints.size());
 	WellForGPU* mappedPalette = nullptr;
 	result.paletteResource.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
-	std::memset(mappedPalette, 0, sizeof(WellForGPU) * _skeleton.joints.size());
-	result.mappedPalette = { mappedPalette, _skeleton.joints.size() };
+	std::memset(mappedPalette, 0, sizeof(WellForGPU) * skeleton.joints.size());
+	result.mappedPalette = { mappedPalette, skeleton.joints.size() };
 
-	DxSRVHeap* pSRVHeap = _dxm->GetDxSRVHeap();
+	DxSRVHeap* pSRVHeap = dxm->GetDxSRVHeap();
 
 	/// cpu,gpu handle get
 	result.srvDescriptorIndex = pSRVHeap->AllocateBuffer();
@@ -129,23 +129,23 @@ SkinCluster ANIME_MATH::CreateSkinCluster(const Skeleton& _skeleton, Asset::Mode
 	paletteSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
 	paletteSRVDesc.Buffer.FirstElement = 0;
 	paletteSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	paletteSRVDesc.Buffer.NumElements = static_cast<UINT>(_skeleton.joints.size());
+	paletteSRVDesc.Buffer.NumElements = static_cast<UINT>(skeleton.joints.size());
 	paletteSRVDesc.Buffer.StructureByteStride = sizeof(WellForGPU);
 
 	device->CreateShaderResourceView(result.paletteResource.Get(), &paletteSRVDesc, result.paletteSRVHandle.first);
 
 
 	/// resource create
-	if (_model->GetMeshes().empty()) {
+	if (model->GetMeshes().empty()) {
 		Console::LogError("ANIME_MATH::CreateSkinCluster: Model has no meshes.");
 		return result;
 	}
 
-	size_t meshCount = _model->GetMeshes().size();
+	size_t meshCount = model->GetMeshes().size();
 	result.meshClusters.resize(meshCount);
 
 	/// すべて単位行列で初期化
-	result.matBindPoseInverseArray.resize(_skeleton.joints.size());
+	result.matBindPoseInverseArray.resize(skeleton.joints.size());
 	std::generate(
 		result.matBindPoseInverseArray.begin(), result.matBindPoseInverseArray.end(),
 		[]() {return Matrix4x4::kIdentity; }
@@ -153,7 +153,7 @@ SkinCluster ANIME_MATH::CreateSkinCluster(const Skeleton& _skeleton, Asset::Mode
 
 	// 1. 各メッシュのインフルエンスバッファ作成
 	for (size_t meshIndex = 0; meshIndex < meshCount; ++meshIndex) {
-		Asset::Model::ModelMesh* mesh = _model->GetMeshes()[meshIndex].get();
+		Asset::Model::ModelMesh* mesh = model->GetMeshes()[meshIndex].get();
 		size_t vertexCount = mesh->GetVertices().size();
 		auto& meshCluster = result.meshClusters[meshIndex];
 
@@ -171,11 +171,11 @@ SkinCluster ANIME_MATH::CreateSkinCluster(const Skeleton& _skeleton, Asset::Mode
 		meshCluster.vbv.StrideInBytes = sizeof(VertexInfluence);
 
 		// 2. そのメッシュのウェイトデータを流し込む
-		const auto& jointWeights = _model->GetMeshJointWeightData()[meshIndex];
+		const auto& jointWeights = model->GetMeshJointWeightData()[meshIndex];
 
 		for (const auto& [jointHash, weightData] : jointWeights) {
-			auto itr = _skeleton.jointMap.find(jointHash);
-			if (itr == _skeleton.jointMap.end()) continue;
+			auto itr = skeleton.jointMap.find(jointHash);
+			if (itr == skeleton.jointMap.end()) continue;
 
 			uint32_t skeletonJointIndex = itr->second;
 			result.matBindPoseInverseArray[skeletonJointIndex] = weightData.matBindPoseInverse;
@@ -203,18 +203,18 @@ SkinCluster ANIME_MATH::CreateSkinCluster(const Skeleton& _skeleton, Asset::Mode
 	return result;
 }
 
-void ANIME_MATH::SampleAnimation(const std::unordered_map<uint32_t, AnimationClip>& _clips, const AnimationState& _state, uint32_t _jointNameHash, SampledTransform& _outTransform) {
-    auto itClip = _clips.find(_state.clipId);
-    if (itClip == _clips.end()) return;
+void ANIME_MATH::SampleAnimation(const std::unordered_map<uint32_t, AnimationClip>& clips, const AnimationState& state, uint32_t jointNameHash, SampledTransform& outTransform) {
+    auto itClip = clips.find(state.clipId);
+    if (itClip == clips.end()) return;
 
     const AnimationClip& clip = itClip->second;
 
-    auto itAnim = clip.nodeAnimationMap.find(_jointNameHash);
+    auto itAnim = clip.nodeAnimationMap.find(jointNameHash);
     if (itAnim == clip.nodeAnimationMap.end()) return;
 
     const NodeAnimation& anim = itAnim->second;
 
-    if (!anim.translate.empty()) _outTransform.translate = CalculateValue(anim.translate, _state.time);
-    if (!anim.rotate.empty()) _outTransform.rotate = CalculateValue(anim.rotate, _state.time);
-    if (!anim.scale.empty()) _outTransform.scale = CalculateValue(anim.scale, _state.time);
+    if (!anim.translate.empty()) outTransform.translate = CalculateValue(anim.translate, state.time);
+    if (!anim.rotate.empty()) outTransform.rotate = CalculateValue(anim.rotate, state.time);
+    if (!anim.scale.empty()) outTransform.scale = CalculateValue(anim.scale, state.time);
 }

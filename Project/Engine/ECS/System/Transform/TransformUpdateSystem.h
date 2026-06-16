@@ -17,10 +17,10 @@ public:
 	TransformUpdateSystem() = default;
 	~TransformUpdateSystem() override = default;
 	
-	void OutsideOfRuntimeUpdate(class ECSGroup* _ecs) override;
-	void RuntimeUpdate(class ECSGroup* _ecs) override;
+	void OutsideOfRuntimeUpdate(class ECSGroup* ecs) override;
+	void RuntimeUpdate(class ECSGroup* ecs) override;
 
-	void Update(class ECSGroup* _ecs);
+	void Update(class ECSGroup* ecs);
 };
 
 

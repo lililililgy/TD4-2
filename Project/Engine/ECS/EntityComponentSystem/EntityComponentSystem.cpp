@@ -406,26 +406,26 @@ void MonoInternalMethods::InternalAddScript(int32_t _entityId, MonoString* _scri
 	}
 }
 
-bool MonoInternalMethods::InternalGetScript(int32_t _entityId, MonoString* _scriptName, MonoString* _groupName) {
-	std::string groupName = mono_string_to_utf8(_groupName);
-	GameEntity* entity = GetEntityById(_entityId, groupName);
+bool MonoInternalMethods::InternalGetScript(int32_t entityId, MonoString* scriptName, MonoString* groupName) {
+	std::string groupNameStr = mono_string_to_utf8(groupName);
+	GameEntity* entity = GetEntityById(entityId, groupNameStr);
 	if(!entity) {
-		Console::LogError("Entity not found for ID: " + std::to_string(_entityId));
+		Console::LogError("Entity not found for ID: " + std::to_string(entityId));
 		return false;
 	}
 
 	Script* script = entity->GetComponent<Script>();
 	if(!script) {
-		Console::LogError("Script component not found for Entity ID: " + std::to_string(_entityId));
+		Console::LogError("Script component not found for Entity ID: " + std::to_string(entityId));
 		return false;
 	}
 
-	char* cstr = mono_string_to_utf8(_scriptName);
-	std::string scriptName(cstr);
+	char* cstr = mono_string_to_utf8(scriptName);
+	std::string scriptNameStr(cstr);
 	mono_free(cstr);
 
-	if(script->Contains(scriptName)) {
-		Console::Log(std::format("Script {} found for Entity ID: {}", scriptName, _entityId));
+	if(script->Contains(scriptNameStr)) {
+		Console::Log(std::format("Script {} found for Entity ID: {}", scriptNameStr, entityId));
 		return true;
 	}
 

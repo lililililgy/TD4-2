@@ -1,4 +1,4 @@
-﻿#include "FileWatcher.h"
+#include "FileWatcher.h"
 
 /// std
 #include <filesystem>
@@ -13,11 +13,11 @@ FileWatcher::~FileWatcher() {
 	Stop();
 }
 
-bool FileWatcher::Start(const std::vector<std::wstring>& _dirs) {
+bool FileWatcher::Start(const std::vector<std::wstring>& dirs) {
 	if (isRunning_) return false;
 	isRunning_ = true;
 
-	for (const auto& dir : _dirs) {
+	for (const auto& dir : dirs) {
 		if (!std::filesystem::exists(dir)) continue;
 
 		auto ctx = std::make_shared<WatchTarget>();
@@ -102,16 +102,16 @@ std::vector<FileEvent> FileWatcher::ConsumeEvents() {
 	return out;
 }
 
-void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> _ctx) {
+void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> ctx) {
 	/// ----- ディレクトリ監視ループ ----- ///
 
-	if (!_ctx || _ctx->hDir == INVALID_HANDLE_VALUE || !_ctx->hEvent) {
+	if (!ctx || ctx->hDir == INVALID_HANDLE_VALUE || !ctx->hEvent) {
 		return;
 	}
 
 	BYTE buffer[4096];
 	OVERLAPPED overlapped = {};
-	overlapped.hEvent = _ctx->hEvent;
+	overlapped.hEvent = ctx->hEvent;
 
 	bool isPending = false;
 
@@ -119,7 +119,7 @@ void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> _ctx) {
 		if (!isPending) {
 			DWORD bytesReturned = 0;
 			BOOL ok = ReadDirectoryChangesW(
-				_ctx->hDir,
+				ctx->hDir,
 				buffer,
 				sizeof(buffer),
 				TRUE,
@@ -137,7 +137,7 @@ void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> _ctx) {
 			isPending = true;
 		}
 
-		DWORD wait = WaitForSingleObject(_ctx->hEvent, 100); // タイムアウト付き
+		DWORD wait = WaitForSingleObject(ctx->hEvent, 100); // タイムアウト付き
 		if (!isRunning_) {
 			break;
 		}
@@ -151,7 +151,7 @@ void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> _ctx) {
 		}
 
 		DWORD bytesTransferred = 0;
-		if (!GetOverlappedResult(_ctx->hDir, &overlapped, &bytesTransferred, FALSE)) {
+		if (!GetOverlappedResult(ctx->hDir, &overlapped, &bytesTransferred, FALSE)) {
 			/// ----- error ----- ///
 			break;
 		}
@@ -180,8 +180,8 @@ void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> _ctx) {
 			}
 
 			/// Pathの構築
-			ev.path = _ctx->dirPath + L"\\" + std::wstring(fni->FileName, fni->FileNameLength / sizeof(WCHAR));
-			ev.watchedDir = _ctx->dirPath;
+			ev.path = ctx->dirPath + L"\\" + std::wstring(fni->FileName, fni->FileNameLength / sizeof(WCHAR));
+			ev.watchedDir = ctx->dirPath;
 
 			/// タイプ判定（削除でもできるだけ推定）
 			if (std::filesystem::exists(ev.path)) {

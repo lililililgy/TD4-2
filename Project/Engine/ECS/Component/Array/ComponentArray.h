@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -22,8 +22,8 @@ public:
 	virtual ~IComponentArray() = default;
 
 	virtual IComponent* AddComponentUntyped() = 0;
-	virtual void RemoveComponent(size_t _index) = 0;
-	virtual size_t GetComponentIndex(IComponent* _component) = 0;
+	virtual void RemoveComponent(size_t index) = 0;
+	virtual size_t GetComponentIndex(IComponent* component) = 0;
 	virtual size_t NewComponentId() = 0;
 	virtual size_t GetUsedComponentCount() = 0;
 
@@ -55,18 +55,18 @@ public:
 	IComponent* AddComponentUntyped() override;
 
 	/// @brief Comp型の_index番目のComponentを取得する
-	/// @param _index 配列のインデックス
+	/// @param index 配列のインデックス
 	/// @return 取得したComponentのポインタ、失敗したら nullptr
-	Comp* GetComponent(size_t _index);
+	Comp* GetComponent(size_t index);
 
-	/// @brief _index番目のComponentを削除する
-	/// @param _index ComponentArrayのインデックス
-	void RemoveComponent(size_t _index) override;
+	/// @brief index番目のComponentを削除する
+	/// @param index ComponentArrayのインデックス
+	void RemoveComponent(size_t index) override;
 
 	/// @brief ポインタからComponentArrayのインデックスを取得する
-	/// @param _component ComponentArrayの要素
-	/// @return _componentのIndex
-	size_t GetComponentIndex(IComponent* _component) override;
+	/// @param component ComponentArrayの要素
+	/// @return componentのIndex
+	size_t GetComponentIndex(IComponent* component) override;
 
 	/// @brief 使用中のComponent数を取得する
 	/// @return 使用中のComponent数
@@ -134,34 +134,34 @@ inline IComponent* ComponentArray<Comp>::AddComponentUntyped() {
 }
 
 template<IsComponent Comp>
-inline Comp* ComponentArray<Comp>::GetComponent(size_t _index) {
-	if(_index >= components_.size()) {
+inline Comp* ComponentArray<Comp>::GetComponent(size_t index) {
+	if(index >= components_.size()) {
 		Console::LogError("ComponentArray: GetComponent failed, index out of range.");
 		return nullptr;
 	}
-	return &components_[_index];
+	return &components_[index];
 }
 
 template <IsComponent Comp>
-inline void ComponentArray<Comp>::RemoveComponent(size_t _id) {
-	if(_id >= components_.size()) {
+inline void ComponentArray<Comp>::RemoveComponent(size_t id) {
+	if(id >= components_.size()) {
 		Console::LogError("ComponentArray: RemoveComponent failed, index out of range.");
 		return;
 	}
 
-	usedIndices_.erase(std::remove(usedIndices_.begin(), usedIndices_.end(), _id), usedIndices_.end());
-	removedIndices_.push_back(_id);
+	usedIndices_.erase(std::remove(usedIndices_.begin(), usedIndices_.end(), id), usedIndices_.end());
+	removedIndices_.push_back(id);
 
-	components_[_id].SetOwner(nullptr); ///< コンポーネントのオーナーをnullptrに設定
-	usedComponents_.erase(std::remove(usedComponents_.begin(), usedComponents_.end(), &components_[_id]), usedComponents_.end());
+	components_[id].SetOwner(nullptr); ///< コンポーネントのオーナーをnullptrに設定
+	usedComponents_.erase(std::remove(usedComponents_.begin(), usedComponents_.end(), &components_[id]), usedComponents_.end());
 }
 
 template <IsComponent Comp>
-inline size_t ComponentArray<Comp>::GetComponentIndex(IComponent* _component) {
+inline size_t ComponentArray<Comp>::GetComponentIndex(IComponent* component) {
 
 	for(size_t i = 0; i < components_.size(); i++) {
 		const Comp& comp = components_[i];
-		if(comp.id == _component->id) {
+		if(comp.id == component->id) {
 			return i;
 		}
 	}

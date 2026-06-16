@@ -24,21 +24,21 @@ using namespace ONEngine;
 #include "InternalCalls/EventInternalCalls.h"
 
 namespace {
-	void LogCallback(const char* _log_domain, const char* _log_level, const char* _message, mono_bool _fatal, void*) {
-		const char* domain = _log_domain ? _log_domain : "null";
-		const char* level = _log_level ? _log_level : "null";
-		const char* message = _message ? _message : "null";
+	void LogCallback(const char* log_domain, const char* log_level, const char* message, mono_bool fatal, void*) {
+		const char* domain = log_domain ? log_domain : "null";
+		const char* level = log_level ? log_level : "null";
+		const char* msg = message ? message : "null";
 
-		std::string log = "[" + std::string(domain) + "][" + std::string(level) + "] " + message;
-		if (_fatal) log += " (fatal)";
+		std::string log = "[" + std::string(domain) + "][" + std::string(level) + "] " + msg;
+		if (fatal) log += " (fatal)";
 
 		Console::Log(log, LogCategory::ScriptEngine);
 	}
 
-	void ConsoleLog(MonoString* _msg, LogCategory _category) {
+	void ConsoleLog(MonoString* msg, LogCategory category) {
 		// MonoString* -> const char* 変換
-		char* cstr = mono_string_to_utf8(_msg);
-		Console::Log(cstr, _category);
+		char* cstr = mono_string_to_utf8(msg);
+		Console::Log(cstr, category);
 		mono_free(cstr);
 	}
 
@@ -217,20 +217,20 @@ void MonoScriptEngine::HotReload() {
 	Console::Log("Reloaded assembly successfully in new domain.", LogCategory::ScriptEngine);
 }
 
-void MonoScriptEngine::SetEcsPtr(EntityComponentSystem* _ecs) {
-	pEcs_ = _ecs;
+void MonoScriptEngine::SetEcsPtr(EntityComponentSystem* ecs) {
+	pEcs_ = ecs;
 }
 
-std::optional<std::string> MonoScriptEngine::FindLatestDll(const std::string& _dirPath, const std::string& _baseName) {
-	std::regex pattern(_baseName + R"(.*\.dll)"); // プレフィックスが一致する全てのDLL
+std::optional<std::string> MonoScriptEngine::FindLatestDll(const std::string& dirPath, const std::string& baseName) {
+	std::regex pattern(baseName + R"(.*\.dll)"); // プレフィックスが一致する全てのDLL
 	std::optional<std::string> latestFile;
 	std::filesystem::file_time_type latestTime;
 
-	if (!std::filesystem::exists(_dirPath)) {
+	if (!std::filesystem::exists(dirPath)) {
 		return std::nullopt;
 	}
 
-	for (const auto& entry : std::filesystem::directory_iterator(_dirPath)) {
+	for (const auto& entry : std::filesystem::directory_iterator(dirPath)) {
 		if (!entry.is_regular_file()) {
 			continue;
 		}
@@ -278,7 +278,7 @@ void MonoScriptEngine::ResetCS() {
 	}
 }
 
-MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& _ecsGroupName, int32_t _entityId) {
+MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& ecsGroupName, int32_t entityId) {
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if (!monoClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem", LogCategory::ScriptEngine);
@@ -292,8 +292,8 @@ MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& _ecsGroupName, 
 	}
 
 	void* args[2];
-	args[0] = mono_string_new(mono_domain_get(), _ecsGroupName.c_str());
-	args[1] = &_entityId;
+	args[0] = mono_string_new(mono_domain_get(), ecsGroupName.c_str());
+	args[1] = &entityId;
 
 	MonoObject* exc = nullptr;
 	MonoObject* result = mono_runtime_invoke(method, nullptr, args, &exc);
@@ -307,7 +307,7 @@ MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& _ecsGroupName, 
 	return result;
 }
 
-MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& _ecsGroupName, int32_t _entityId, const std::string& _behaviorName) {
+MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupName, int32_t entityId, const std::string& behaviorName) {
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if (!monoClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem", LogCategory::ScriptEngine);
@@ -321,9 +321,9 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& _ecsGroup
 	}
 
 	void* args[3];
-	args[0] = mono_string_new(mono_domain_get(), _ecsGroupName.c_str());
-	args[1] = &_entityId;
-	args[2] = mono_string_new(mono_domain_get(), _behaviorName.c_str());
+	args[0] = mono_string_new(mono_domain_get(), ecsGroupName.c_str());
+	args[1] = &entityId;
+	args[2] = mono_string_new(mono_domain_get(), behaviorName.c_str());
 
 	MonoObject* exc = nullptr;
 	MonoObject* result = mono_runtime_invoke(method, nullptr, args, &exc);
@@ -337,30 +337,30 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& _ecsGroup
 	return result;
 }
 
-GameEntity* MonoScriptEngine::GetOwnerEntity(MonoObject* _obj) {
-	if (!_obj || !image_ || !pEcs_) return nullptr;
+GameEntity* MonoScriptEngine::GetOwnerEntity(MonoObject* obj) {
+	if (!obj || !image_ || !pEcs_) return nullptr;
 
-	MonoClass* klass = mono_object_get_class(_obj);
+	MonoClass* klass = mono_object_get_class(obj);
 	if (!klass) return nullptr;
 
 	// 'entity' プロパティを取得 (MonoScriptに定義されている)
 	MonoProperty* entityProp = mono_class_get_property_from_name(klass, "entity");
 	MonoObject* entityObj = nullptr;
 	if (entityProp) {
-		entityObj = mono_property_get_value(entityProp, _obj, nullptr, nullptr);
+		entityObj = mono_property_get_value(entityProp, obj, nullptr, nullptr);
 	} else {
 		// プロパティがない場合はフィールドを探す (互換性のため)
 		MonoClassField* entityField = mono_class_get_field_from_name(klass, "entity");
 		if (entityField) {
-			mono_field_get_value(_obj, entityField, &entityObj);
+			mono_field_get_value(obj, entityField, &entityObj);
 		}
 	}
 
 	if (!entityObj) {
-		// _obj 自身が Entity クラスのインスタンスである可能性を考慮
+		// obj 自身が Entity クラスのインスタンスである可能性を考慮
 		MonoClass* entityClass = mono_class_from_name(image_, "", "Entity");
 		if (mono_class_is_assignable_from(entityClass, klass)) {
-			entityObj = _obj;
+			entityObj = obj;
 		}
 	}
 
@@ -387,22 +387,22 @@ GameEntity* MonoScriptEngine::GetOwnerEntity(MonoObject* _obj) {
 	return nullptr;
 }
 
-GameEntity* MonoScriptEngine::GetOwnerEntity(const Guid& _guid) {
+GameEntity* MonoScriptEngine::GetOwnerEntity(const Guid& guid) {
 	if (!pEcs_) return nullptr;
 
 	for (auto& pair : pEcs_->GetECSGroups()) {
-		GameEntity* entity = pair.second->GetEntityFromGuid(_guid);
+		GameEntity* entity = pair.second->GetEntityFromGuid(guid);
 		if (entity) return entity;
 	}
 
 	return nullptr;
 }
 
-std::string MonoScriptEngine::GetGroupNameByEntityGuid(const Guid& _guid) {
+std::string MonoScriptEngine::GetGroupNameByEntityGuid(const Guid& guid) {
 	if (!pEcs_) return "";
 
 	for (auto& pair : pEcs_->GetECSGroups()) {
-		if (pair.second->GetEntityFromGuid(_guid)) {
+		if (pair.second->GetEntityFromGuid(guid)) {
 			return pair.first;
 		}
 	}
@@ -410,22 +410,22 @@ std::string MonoScriptEngine::GetGroupNameByEntityGuid(const Guid& _guid) {
 	return "";
 }
 
-MonoMethod* MonoScriptEngine::GetMethodFromCS(const std::string& _namespace, const std::string& _className, const std::string& _methodName, int _argsCount) {
+MonoMethod* MonoScriptEngine::GetMethodFromCS(const std::string& nameSpace, const std::string& className, const std::string& methodName, int argsCount) {
 	/// MonoClassを取得
-	MonoClass* monoClass = mono_class_from_name(image_, _namespace.c_str(), _className.c_str());
+	MonoClass* monoClass = mono_class_from_name(image_, nameSpace.c_str(), className.c_str());
 	if (!monoClass) {
-		Console::LogError("Failed to find class: " + (_namespace.empty() ? "" : _namespace + ".") + _className, LogCategory::ScriptEngine);
+		Console::LogError("Failed to find class: " + (nameSpace.empty() ? "" : nameSpace + ".") + className, LogCategory::ScriptEngine);
 		return nullptr;
 	}
 
 	for (MonoClass* current = monoClass; current != nullptr; current = mono_class_get_parent(current)) {
-		MonoMethod* method = mono_class_get_method_from_name(current, _methodName.c_str(), _argsCount);
+		MonoMethod* method = mono_class_get_method_from_name(current, methodName.c_str(), argsCount);
 		if (method) {
 			return method;
 		}
 	}
 
-	Console::LogError("Failed to find method: " + (_namespace.empty() ? "" : _namespace + ".") + _className + "::" + _methodName, LogCategory::ScriptEngine);
+	Console::LogError("Failed to find method: " + (nameSpace.empty() ? "" : nameSpace + ".") + className + "::" + methodName, LogCategory::ScriptEngine);
 	return nullptr;
 }
 
@@ -453,8 +453,8 @@ MonoAssembly* MonoScriptEngine::Assembly() const {
 	return assembly_;
 }
 
-void MonoScriptEngine::SetIsHotReloadRequest(bool _request) {
-	isHotReloadRequest_ = _request;
+void MonoScriptEngine::SetIsHotReloadRequest(bool request) {
+	isHotReloadRequest_ = request;
 }
 
 bool MonoScriptEngine::GetIsHotReloadRequest() const {
@@ -641,13 +641,13 @@ void MonoScriptEngine::NotifyEventCompleted(int32_t entityId, const std::string&
 	}
 }
 
-void MonoScriptEngine::ClearECSGroup(const std::string& _name) {
+void MonoScriptEngine::ClearECSGroup(const std::string& name) {
 	if (!clearEcsGroupMethod_) {
 		return;
 	}
 
 	void* args[1];
-	args[0] = mono_string_new(domain_, _name.c_str());
+	args[0] = mono_string_new(domain_, name.c_str());
 
 	MonoObject* exc = nullptr;
 	mono_runtime_invoke(clearEcsGroupMethod_, nullptr, args, &exc);
@@ -659,12 +659,12 @@ void MonoScriptEngine::ClearECSGroup(const std::string& _name) {
 	}
 }
 
-void MonoScriptEngine::SyncInitialComponentsToCS(ECSGroup* _ecsGroup) {
-	if (!_ecsGroup) {
+void MonoScriptEngine::SyncInitialComponentsToCS(ECSGroup* ecsGroup) {
+	if (!ecsGroup) {
 		return;
 	}
 
-	const std::string& ecsGroupName = _ecsGroup->GetGroupName();
+	const std::string& ecsGroupName = ecsGroup->GetGroupName();
 
 	if (!addEcsGroupMethod_ || !getComponentCollectionField_ || !receiveAllBatchesMethod_) {
 		Console::LogError("One or more methods for SyncInitialComponentsToCS are not found.", LogCategory::ScriptEngine);
@@ -696,7 +696,7 @@ void MonoScriptEngine::SyncInitialComponentsToCS(ECSGroup* _ecsGroup) {
 	}
 
 	if (addEntityMethod_) {
-		for (const auto& entity : _ecsGroup->GetEntities()) {
+		for (const auto& entity : ecsGroup->GetEntities()) {
 			int32_t id = entity->GetId();
 			void* addArgs[1];
 			addArgs[0] = &id;
@@ -732,23 +732,23 @@ void MonoScriptEngine::SyncInitialComponentsToCS(ECSGroup* _ecsGroup) {
 	Console::Log("Successfully synced initial components to C# for group: " + ecsGroupName, LogCategory::ScriptEngine);
 }
 
-MonoMethod* MonoScriptEngineUtils::FindMethodInClassOrParents(MonoClass* _class, const char* _methodName, int _paramCount) {
-	while (_class) {
-		MonoMethod* method = mono_class_get_method_from_name(_class, _methodName, _paramCount);
+MonoMethod* MonoScriptEngineUtils::FindMethodInClassOrParents(MonoClass* monoClass, const char* methodName, int paramCount) {
+	while (monoClass) {
+		MonoMethod* method = mono_class_get_method_from_name(monoClass, methodName, paramCount);
 		if (method)
 			return method;
-		_class = mono_class_get_parent(_class);
+		monoClass = mono_class_get_parent(monoClass);
 	}
 	return nullptr;
 }
 
-MonoClassField* ONEngine::MonoScriptEngineUtils::FindFieldRecursive(MonoClass* _class, const char* _name) {
-	while(_class) {
-		MonoClassField* field = mono_class_get_field_from_name(_class, _name);
+MonoClassField* ONEngine::MonoScriptEngineUtils::FindFieldRecursive(MonoClass* monoClass, const char* name) {
+	while(monoClass) {
+		MonoClassField* field = mono_class_get_field_from_name(monoClass, name);
 		if(field) {
 			return field;
 		}
-		_class = mono_class_get_parent(_class);
+		monoClass = mono_class_get_parent(monoClass);
 	}
 	return nullptr;
 }

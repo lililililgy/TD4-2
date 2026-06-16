@@ -119,27 +119,27 @@ namespace {
 	}
 
 	json VarToJson(const Variables::Var& var) {
-		return std::visit([](auto&& _arg) -> json {
-			using T = std::decay_t<decltype(_arg)>;
+		return std::visit([](auto&& arg) -> json {
+			using T = std::decay_t<decltype(arg)>;
 			if constexpr (std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, bool> || std::is_same_v<T, std::string> ||
 				std::is_same_v<T, Vector2> || std::is_same_v<T, Vector3> || std::is_same_v<T, Vector4> ||
 				std::is_same_v<T, std::vector<int>> || std::is_same_v<T, std::vector<float>> ||
 				std::is_same_v<T, std::vector<bool>> || std::is_same_v<T, std::vector<std::string>>) {
-				return _arg;
+				return arg;
 			} else if constexpr (std::is_same_v<T, std::vector<Vector3>>) {
 				json j = json::array();
-				for (const auto& v : _arg) j.push_back(v);
+				for (const auto& v : arg) j.push_back(v);
 				return j;
 			} else if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
 				json j = json::object();
-				if (_arg) {
-					j["__type"] = _arg->typeName;
-					for (auto& [k, v] : _arg->fields) j[k] = VarToJson(v);
+				if (arg) {
+					j["__type"] = arg->typeName;
+					for (auto& [k, v] : arg->fields) j[k] = VarToJson(v);
 				}
 				return j;
 			} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
 				json j = json::array();
-				for (const auto& o : _arg) {
+				for (const auto& o : arg) {
 					json oj = json::object();
 					if (o) {
 						oj["__type"] = o->typeName;
@@ -275,12 +275,12 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 		MonoClassField* field = mono_class_get_field_from_name((MonoClass*)klass, name.c_str());
 		if (!field) continue;
 
-		std::visit([&](auto&& _arg) {
-			using T = std::decay_t<decltype(_arg)>;
+		std::visit([&](auto&& arg) {
+			using T = std::decay_t<decltype(arg)>;
 			if constexpr (std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, bool> || std::is_same_v<T, Vector2> || std::is_same_v<T, Vector3> || std::is_same_v<T, Vector4>) {
-				mono_field_set_value((MonoObject*)obj, field, (void*)&_arg);
+				mono_field_set_value((MonoObject*)obj, field, (void*)&arg);
 			} else if constexpr (std::is_same_v<T, std::string>) {
-				MonoString* s = mono_string_new(mono_domain_get(), _arg.c_str());
+				MonoString* s = mono_string_new(mono_domain_get(), arg.c_str());
 				mono_field_set_value((MonoObject*)obj, field, s);
 			} else if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
 				MonoObject* child = mono_field_get_value_object(mono_domain_get(), field, (MonoObject*)obj);
@@ -294,7 +294,7 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 					MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
 					MonoType* et = mono_signature_get_return_type(mono_method_signature(mono_class_get_method_from_name(lc, "get_Item", 1)));
 					MonoClass* ek = mono_class_from_mono_type(et);
-					for (auto& itemGen : _arg) {
+					for (auto& itemGen : arg) {
 						MonoObject* item = mono_object_new(mono_domain_get(), ek);
 						mono_runtime_object_init(item);
 						VarToMonoObject(item, ek, itemGen);
@@ -307,15 +307,15 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 	}
 }
 
-void ONEngine::from_json(const nlohmann::json& _j, Variables& _v) {
-	_v.groupKeyMap_.clear();
-	_v.groups_.clear();
+void ONEngine::from_json(const nlohmann::json& j, Variables& v) {
+	v.groupKeyMap_.clear();
+	v.groups_.clear();
 
-	for (auto& [groupKey, groupValue] : _j.items()) {
+	for (auto& [groupKey, groupValue] : j.items()) {
 		if (groupKey == "type") continue;
 
-		if (!_v.HasGroup(groupKey)) _v.AddGroup(groupKey);
-		Variables::Group& group = _v.groups_[_v.groupKeyMap_.at(groupKey)];
+		if (!v.HasGroup(groupKey)) v.AddGroup(groupKey);
+		Variables::Group& group = v.groups_[v.groupKeyMap_.at(groupKey)];
 
 		for (auto& [varKey, varValue] : groupValue.items()) {
 			group.Add(varKey, JsonToVar(varValue));
@@ -323,14 +323,14 @@ void ONEngine::from_json(const nlohmann::json& _j, Variables& _v) {
 	}
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const Variables& _v) {
-	_j = nlohmann::json::object();
-	_j["type"] = "Variables";
+void ONEngine::to_json(nlohmann::json& j, const Variables& v) {
+	j = nlohmann::json::object();
+	j["type"] = "Variables";
 
-	for (const auto& [groupKey, value] : _v.groupKeyMap_) {
-		_j[groupKey] = nlohmann::json::object();
-		for (const auto& [varKey, varValue] : _v.groups_[value].keyMap) {
-			_j[groupKey][varKey] = VarToJson(_v.groups_[value].variables[varValue]);
+	for (const auto& [groupKey, value] : v.groupKeyMap_) {
+		j[groupKey] = nlohmann::json::object();
+		for (const auto& [varKey, varValue] : v.groups_[value].keyMap) {
+			j[groupKey][varKey] = VarToJson(v.groups_[value].variables[varValue]);
 		}
 	}
 }
@@ -342,14 +342,14 @@ Variables::Variables() {
 
 Variables::~Variables() = default;
 
-void Variables::LoadJson(const std::string& _path) {
-	std::string ext = FileSystem::FileExtension(_path);
+void Variables::LoadJson(const std::string& path) {
+	std::string ext = FileSystem::FileExtension(path);
 	if (ext != ".json" && ext != ".entity") return;
-	if (!std::filesystem::exists(_path)) return;
+	if (!std::filesystem::exists(path)) return;
 
 	nlohmann::json j;
 	{
-		std::ifstream ifs(_path);
+		std::ifstream ifs(path);
 		if (!ifs.is_open()) return;
 		ifs >> j;
 		ifs.close();
@@ -373,7 +373,7 @@ void Variables::LoadJson(const std::string& _path) {
 	}
 }
 
-void Variables::SaveJson(const std::string& _path) {
+void Variables::SaveJson(const std::string& path) {
 	nlohmann::json j;
 	GameEntity* owner = GetOwner();
 	if (!owner) return;
@@ -381,11 +381,11 @@ void Variables::SaveJson(const std::string& _path) {
 	to_json(j, *this);
 	if (j.contains("type")) j.erase("type");
 
-	std::filesystem::path path(_path);
-	std::filesystem::create_directories(path.parent_path());
+	std::filesystem::path fsPath(path);
+	std::filesystem::create_directories(fsPath.parent_path());
 
-	std::ofstream ofs(_path);
-	if (!ofs) throw std::runtime_error("Failed to open: " + _path);
+	std::ofstream ofs(fsPath);
+	if (!ofs) throw std::runtime_error("Failed to open: " + path);
 	ofs << j.dump(4);
 }
 
@@ -445,15 +445,15 @@ void Variables::ReloadScriptVariables() {
 	}
 }
 
-void Variables::SetScriptVariables(const std::string& _scriptName) {
+void Variables::SetScriptVariables(const std::string& scriptName) {
 	GameEntity* owner = GetOwner();
 	if (!owner) return;
 	Script* script = owner->GetComponent<Script>();
-	if (!script || !HasGroup(_scriptName)) return;
+	if (!script || !HasGroup(scriptName)) return;
 
-	Group& group = groups_[groupKeyMap_.at(_scriptName)];
+	Group& group = groups_[groupKeyMap_.at(scriptName)];
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
-	MonoObject* safeObj = monoEngine.GetMonoBehaviorFromCS(owner->GetECSGroup()->GetGroupName(), owner->GetId(), _scriptName);
+	MonoObject* safeObj = monoEngine.GetMonoBehaviorFromCS(owner->GetECSGroup()->GetGroupName(), owner->GetId(), scriptName);
 	if (!safeObj) return;
 
 	MonoClass* monoClass = mono_object_get_class(safeObj);
@@ -465,12 +465,12 @@ void Variables::SetScriptVariables(const std::string& _scriptName) {
 		if (!group.Has(name)) continue;
 		auto& val = group.Get(name);
 
-		std::visit([&](auto&& _arg) {
-			using T = std::decay_t<decltype(_arg)>;
+		std::visit([&](auto&& arg) {
+			using T = std::decay_t<decltype(arg)>;
 			if constexpr (std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, bool> || std::is_same_v<T, Vector2> || std::is_same_v<T, Vector3> || std::is_same_v<T, Vector4>) {
-				mono_field_set_value(safeObj, field, (void*)&_arg);
+				mono_field_set_value(safeObj, field, (void*)&arg);
 			} else if constexpr (std::is_same_v<T, std::string>) {
-				mono_field_set_value(safeObj, field, mono_string_new(mono_domain_get(), _arg.c_str()));
+				mono_field_set_value(safeObj, field, mono_string_new(mono_domain_get(), arg.c_str()));
 			} else if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
 				MonoObject* obj = mono_field_get_value_object(mono_domain_get(), field, safeObj);
 				if (obj) VarToMonoObject(obj, mono_object_get_class(obj), val);
@@ -483,7 +483,7 @@ void Variables::SetScriptVariables(const std::string& _scriptName) {
 					MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
 					MonoType* et = mono_signature_get_return_type(mono_method_signature(mono_class_get_method_from_name(lc, "get_Item", 1)));
 					MonoClass* ek = mono_class_from_mono_type(et);
-					for (auto& itemGen : _arg) {
+					for (auto& itemGen : arg) {
 						MonoObject* item = mono_object_new(mono_domain_get(), ek);
 						mono_runtime_object_init(item);
 						VarToMonoObject(item, ek, itemGen);
@@ -496,30 +496,30 @@ void Variables::SetScriptVariables(const std::string& _scriptName) {
 	}
 }
 
-size_t Variables::AddGroup(const std::string& _name) {
-	if (groupKeyMap_.contains(_name)) return groupKeyMap_.at(_name);
-	Group group; group.name = _name;
+size_t Variables::AddGroup(const std::string& name) {
+	if (groupKeyMap_.contains(name)) return groupKeyMap_.at(name);
+	Group group; group.name = name;
 	size_t index = groups_.size();
 	groups_.push_back(group);
-	groupKeyMap_[_name] = index;
+	groupKeyMap_[name] = index;
 	return index;
 }
 
-const Variables::Group& Variables::GetGroup(const std::string& _name) const { return groups_[groupKeyMap_.at(_name)]; }
-bool Variables::HasGroup(const std::string& _name) const { return groupKeyMap_.contains(_name); }
+const Variables::Group& Variables::GetGroup(const std::string& name) const { return groups_[groupKeyMap_.at(name)]; }
+bool Variables::HasGroup(const std::string& name) const { return groupKeyMap_.contains(name); }
 const std::unordered_map<std::string, size_t>& Variables::GetGroupKeyMap() const { return groupKeyMap_; }
 const std::vector<Variables::Group>& Variables::GetGroups() const { return groups_; }
 
-void Variables::SetVariable(const std::string& _groupName, const std::string& _varName, const Var& _value) {
-	size_t groupIdx = HasGroup(_groupName) ? groupKeyMap_.at(_groupName) : AddGroup(_groupName);
-	groups_[groupIdx].Add(_varName, _value);
+void Variables::SetVariable(const std::string& groupName, const std::string& varName, const Var& value) {
+	size_t groupIdx = HasGroup(groupName) ? groupKeyMap_.at(groupName) : AddGroup(groupName);
+	groups_[groupIdx].Add(varName, value);
 }
 
-void ComponentDebug::VariablesDebug(Variables* _variables) {
-	if (!_variables) return;
+void ComponentDebug::VariablesDebug(Variables* variables) {
+	if (!variables) return;
 	if (ImGui::Button("export entity")) {
-		GameEntity* entity = _variables->GetOwner();
-		_variables->ReloadScriptVariables();
+		GameEntity* entity = variables->GetOwner();
+		variables->ReloadScriptVariables();
 		nlohmann::json entityJson = EntityJsonConverter::ToJson(entity);
 		std::string path = "Assets/Scene/" + entity->GetECSGroup()->GetGroupName() + "/" + entity->GetName() + ".entity";
 		std::filesystem::create_directories(std::filesystem::path(path).parent_path());
@@ -528,5 +528,5 @@ void ComponentDebug::VariablesDebug(Variables* _variables) {
 	}
 }
 
-const Variables::Var& Variables::Group::Get(const std::string& _name) const { return variables[keyMap.at(_name)]; }
-bool Variables::Group::Has(const std::string& _name) const { return keyMap.contains(_name); }
+const Variables::Var& Variables::Group::Get(const std::string& varName) const { return variables[keyMap.at(varName)]; }
+bool Variables::Group::Has(const std::string& varName) const { return keyMap.contains(varName); }

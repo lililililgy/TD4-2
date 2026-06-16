@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <variant>
@@ -20,16 +20,16 @@ namespace ONEngine {
 class Variables;
 
 /// Json変換
-void from_json(const nlohmann::json& _j, class Variables& _g);
-void to_json(nlohmann::json& _j, const class Variables& _g);
+void from_json(const nlohmann::json& j, class Variables& g);
+void to_json(nlohmann::json& j, const class Variables& g);
 
 
 /// ///////////////////////////////////////////////////
 /// 変数component
 /// ///////////////////////////////////////////////////
 class Variables : public IComponent {
-	friend void from_json(const nlohmann::json& _j, Variables& _v);
-	friend void to_json(nlohmann::json& _j, const Variables& _v);
+	friend void from_json(const nlohmann::json& j, Variables& v);
+	friend void to_json(nlohmann::json& j, const Variables& v);
 public:
 	/// ================================================
 	/// public : sub class
@@ -65,12 +65,12 @@ public:
 		std::string typeName;
 		std::map<std::string, Var> fields;
 
-		void Add(const std::string& _name, const Var& _value) {
-			fields[_name] = _value;
+		void Add(const std::string& name, const Var& value) {
+			fields[name] = value;
 		}
 
-		bool Has(const std::string& _name) const {
-			return fields.contains(_name);
+		bool Has(const std::string& name) const {
+			return fields.contains(name);
 		}
 	};
 
@@ -86,29 +86,28 @@ public:
 		std::vector<Var> variables; ///< グループに属する変数
 
 		template <typename T = Var>
-		void Add(const std::string& _name, const T& _value) {
-			if (keyMap.contains(_name)) {
-				variables[keyMap[_name]] = _value;
+		void Add(const std::string& name, const T& value) {
+			if (keyMap.contains(name)) {
+				variables[keyMap[name]] = value;
 				return;
 			}
 
-			keyMap[_name] = variables.size();
-			variables.emplace_back(_value);
+			keyMap[name] = variables.size();
+			variables.emplace_back(value);
 		}
 
 		template <typename T>
-		T& Get(const std::string& _name) {
-			return std::get<T>(variables[keyMap.at(_name)]);
+		T& Get(const std::string& name) {
+			return std::get<T>(variables[keyMap.at(name)]);
 		}
 
 		template <typename T>
-		const T& Get(const std::string& _name) const {
-			return std::get<T>(variables[keyMap.at(_name)]);
+		const T& Get(const std::string& name) const {
+			return std::get<T>(variables[keyMap.at(name)]);
 		}
 
-		const Var& Get(const std::string& _name) const;
-
-		bool Has(const std::string& _name) const;
+		const Var& Get(const std::string& varName) const;
+		bool Has(const std::string& varName) const;
 
 
 	};
@@ -125,12 +124,12 @@ public:
 
 
 	/// @brief jsonを読み込んで変数を設定する
-	/// @param _path 読み込むjsonファイルのパス
-	void LoadJson(const std::string& _path);
+	/// @param path 読み込むjsonファイルのパス
+	void LoadJson(const std::string& path);
 
 	/// @brief 変数をjsonに保存する
-	/// @param _path 保存するjsonファイルのパス
-	void SaveJson(const std::string& _path);
+	/// @param path 保存するjsonファイルのパス
+	void SaveJson(const std::string& path);
 
 
 	/// @brief スクリプト内の変数を登録する
@@ -140,24 +139,24 @@ public:
 	void ReloadScriptVariables();
 
 	/// @brief スクリプトに変数の値を設定する
-	/// @param _scriptName 対象のスクリプト名
-	void SetScriptVariables(const std::string& _scriptName);
+	/// @param scriptName 対象のスクリプト名
+	void SetScriptVariables(const std::string& scriptName);
 
 
 	/// @brief 変数のグループ(スクリプト単位)を追加する
-	/// @param _name グループ名
+	/// @param name グループ名
 	/// @return GroupのIndex
-	size_t AddGroup(const std::string& _name);
+	size_t AddGroup(const std::string& name);
 
 	/// @brief 指定した名前に対応するグループを取得する
-	/// @param _name 取得するグループの名前。
+	/// @param name 取得するグループの名前。
 	/// @return 指定された名前に対応するGroup
-	const Group& GetGroup(const std::string& _name) const;
+	const Group& GetGroup(const std::string& name) const;
 
 	/// @brief 引数のGroupを持っているか
-	/// @param _name Group名
+	/// @param name Group名
 	/// @return true: 持っている false: 持っていない
-	bool HasGroup(const std::string& _name) const;
+	bool HasGroup(const std::string& name) const;
 
 
 	/// @brief グループのキーのマップを取得する
@@ -167,10 +166,10 @@ public:
 	const std::vector<Group>& GetGroups() const;
 
 	/// @brief 変数を設定する（既存なら上書き、なければ追加）
-	/// @param _groupName グループ名
-	/// @param _varName 変数名
-	/// @param _value 値
-	void SetVariable(const std::string& _groupName, const std::string& _varName, const Var& _value);
+	/// @param groupName グループ名
+	/// @param varName 変数名
+	/// @param value 値
+	void SetVariable(const std::string& groupName, const std::string& varName, const Var& value);
 
 private:
 	/// ================================================
@@ -190,8 +189,8 @@ private:
 /// @brief ComponentのDebug
 namespace ComponentDebug {
 	/// @brief Variableをデバッグする
-	/// @param _variables 対象のポインタ
-	void VariablesDebug(Variables* _variables);
+	/// @param variables 対象のポインタ
+	void VariablesDebug(Variables* variables);
 }
 
 } /// ONEngine

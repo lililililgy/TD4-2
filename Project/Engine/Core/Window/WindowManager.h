@@ -30,20 +30,20 @@ public:
 	/// ===================================================
 
 	/// @brief main windowのwindowプロシージャ
-	/// @param _hwnd 
-	/// @param _msg 
-	/// @param _wparam 
-	/// @param _lparam 
+	/// @param hwnd 
+	/// @param msg 
+	/// @param wparam 
+	/// @param lparam 
 	/// @return 
-	static LRESULT CALLBACK MainWindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lparam);
+	static LRESULT CALLBACK MainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 	/// @brief sub windowのwindowプロシージャ
-	/// @param _hwnd 
-	/// @param _msg 
-	/// @param _wparam 
-	/// @param _lparam 
+	/// @param hwnd 
+	/// @param msg 
+	/// @param wparam 
+	/// @param lparam 
 	/// @return 
-	static LRESULT CALLBACK SubWindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lparam);
+	static LRESULT CALLBACK SubWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 
 public:
@@ -51,7 +51,7 @@ public:
 	/// public : method
 	/// ===================================================
 
-	WindowManager(DxManager* _dxm);
+	WindowManager(DxManager* dxm);
 	~WindowManager();
 
 	/// @brief Instanceの取得
@@ -82,19 +82,19 @@ public:
 	void PresentAll();
 
 	/// @brief 新しいwindowを生成
-	/// @param _windowName windowの名前
-	/// @param _windowSize windowのサイズ
-	/// @param _windowType windowの種類
+	/// @param windowName windowの名前
+	/// @param windowSize windowのサイズ
+	/// @param windowType windowの種類
 	/// @return 生成したwindowのポインタ
-	Window* GenerateWindow(const std::wstring& _windowName, const Vector2& _windowSize, WindowType _windowType = WindowType::Sub, UINT _windowStyle = WS_OVERLAPPEDWINDOW & ~(WS_MAXIMIZEBOX | WS_THICKFRAME));
+	Window* GenerateWindow(const std::wstring& windowName, const Vector2& windowSize, WindowType windowType = WindowType::Sub, UINT windowStyle = WS_OVERLAPPEDWINDOW & ~(WS_MAXIMIZEBOX | WS_THICKFRAME));
 
 	/// @brief game windowを非表示
-	/// @param _windowPtr 隠したいwindowのポインタ
-	void HideGameWindow(Window* _windowPtr) { ShowWindow(_windowPtr->GetHwnd(), SW_HIDE); }
+	/// @param windowPtr 隠したいwindowのポインタ
+	void HideGameWindow(Window* windowPtr) { ShowWindow(windowPtr->GetHwnd(), SW_HIDE); }
 
 	/// @brief game windowを表示
-	/// @param _windowPtr 表示したいwindowのポインタ
-	void ShowGameWindow(Window* _windowPtr) { ShowWindow(_windowPtr->GetHwnd(), SW_SHOW); }
+	/// @param windowPtr 表示したいwindowのポインタ
+	void ShowGameWindow(Window* windowPtr) { ShowWindow(windowPtr->GetHwnd(), SW_SHOW); }
 
 private:
 	/// ===================================================
@@ -102,12 +102,12 @@ private:
 	/// ===================================================
 
 	/// @brief  game windowの生成
-	/// @param _title windowのタイトル
-	/// @param _size  windowのサイズ
-	/// @param _windowStyle windowのスタイル
-	/// @param _windowPtr windowのポインタ
-	/// @param _windowType windowの種類
-	void CreateGameWindow(const wchar_t* _title, const Vector2& _size, UINT _windowStyle, Window* _windowPtr, WindowType _windowType);
+	/// @param title windowのタイトル
+	/// @param size  windowのサイズ
+	/// @param windowStyle windowのスタイル
+	/// @param windowPtr windowのポインタ
+	/// @param windowType windowの種類
+	void CreateGameWindow(const wchar_t* title, const Vector2& size, UINT windowStyle, Window* windowPtr, WindowType windowType);
 
 	/// @brief main windowの更新
 	void UpdateMainWindow();
@@ -143,7 +143,7 @@ public:
 	bool IsCloseRequested() const;
 
 	/// @brief 終了リクエストを設定
-	void SetCloseRequested(bool _isCloseRequested);
+	void SetCloseRequested(bool isCloseRequested);
 
 private:
 	/// ===================================================
@@ -156,6 +156,6 @@ private:
 	WindowManager& operator=(WindowManager&&)      = delete;
 };
 
-void InternalGetWindowSize(Vector2* _size);
+void InternalGetWindowSize(Vector2* size);
 
 } /// ONEngine

@@ -1,4 +1,4 @@
-﻿#include "VoxelTerrainVertexCreatePipeline.h"
+#include "VoxelTerrainVertexCreatePipeline.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -9,18 +9,18 @@
 
 using namespace ONEngine;
 
-VoxelTerrainVertexCreatePipeline::VoxelTerrainVertexCreatePipeline(AssetCollection* _ac) : pAssetCollection_(_ac) {}
+VoxelTerrainVertexCreatePipeline::VoxelTerrainVertexCreatePipeline(AssetCollection* ac) : pAssetCollection_(ac) {}
 VoxelTerrainVertexCreatePipeline::~VoxelTerrainVertexCreatePipeline() {}
 
 
-void VoxelTerrainVertexCreatePipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void VoxelTerrainVertexCreatePipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
-	pDxManager_ = _dxm;
+	pDxManager_ = dxm;
 
 	{	/// shader
 
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrainTest/VoxelTerrainVertexCreator.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
 		computePipeline_ = std::make_unique<ComputePipeline>();
@@ -44,14 +44,14 @@ void VoxelTerrainVertexCreatePipeline::Initialize(ShaderCompiler* _shaderCompile
 		computePipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2); // UAV_VERTEX_COUNTER
 		computePipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 3); // SRV_VOXEL_TEXTURES
 
-		computePipeline_->CreatePipeline(_dxm->GetDxDevice());
+		computePipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 }
 
-void VoxelTerrainVertexCreatePipeline::PreDraw(ECSGroup* _ecs, CameraComponent* /*_camera*/, DxCommand* _dxCommand) {
+void VoxelTerrainVertexCreatePipeline::PreDraw(ECSGroup* ecs, CameraComponent* /*camera*/, DxCommand* dxCommand) {
 
-	ComponentArray<VoxelTerrain>* voxelTerrainCompArray = _ecs->GetComponentArray<VoxelTerrain>();
+	ComponentArray<VoxelTerrain>* voxelTerrainCompArray = ecs->GetComponentArray<VoxelTerrain>();
 	if(!CheckComponentArrayEnable(voxelTerrainCompArray)) {
 		return;
 	}
@@ -91,8 +91,8 @@ void VoxelTerrainVertexCreatePipeline::PreDraw(ECSGroup* _ecs, CameraComponent* 
 	}
 
 
-	computePipeline_->SetPipelineStateForCommandList(_dxCommand);
-	auto cmdList = _dxCommand->GetCommandList();
+	computePipeline_->SetPipelineStateForCommandList(dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
 
 	vt->SettingTerrainInfo();
 	vt->cBufferTerrainInfo_.BindForComputeCommandList(cmdList, CBV_VOXEL_TERRAIN_INFO);
@@ -119,15 +119,15 @@ void VoxelTerrainVertexCreatePipeline::PreDraw(ECSGroup* _ecs, CameraComponent* 
 	}
 
 
-	//_dxCommand->CommandExecuteAndWait();
-	//_dxCommand->CommandReset();
-	//_dxCommand->WaitForGpuComplete();
+	//dxCommand->CommandExecuteAndWait();
+	//dxCommand->CommandReset();
+	//dxCommand->WaitForGpuComplete();
 
 	/// カウンター
 	//for(uint32_t i = 0; i < 1; i++) {
 		for(uint32_t i = 0; i < vt->chunks_.size(); i++) {
 		auto& chunk = vt->chunks_[i];
-		//uint32_t count = chunk.rwVertices.ReadCounter(_dxCommand);
+		//uint32_t count = chunk.rwVertices.ReadCounter(dxCommand);
 		//chunk.vertexCount = count;
 
 		 // UAVバリアを挿入（シェーダーの書き込み完了を保証）

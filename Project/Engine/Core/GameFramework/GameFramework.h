@@ -31,14 +31,41 @@ public:
 	~GameFramework();
 
 	/// @brief 初期化処理
-	/// @param _startSetting 開始時の設定
-	void Initialize(const GameFrameworkConfig& _startSetting);
+	/// @param startSetting 開始時の設定
+	void Initialize(const GameFrameworkConfig& startSetting);
 
 	/// @brief ゲームのメインループ
 	void Run();
 
 	/// debug用のシーン.jsonを読み込む
 	void LoadDebugScene();
+
+private:
+	/// ===================================================
+	/// private : methods
+	/// ===================================================
+
+	/// @brief サブシステムの生成
+	void CreateSubsystems();
+
+	/// @brief コアシステムの初期化
+	void InitializeCore(const GameFrameworkConfig& config);
+
+	/// @brief グラフィックスシステムの初期化
+	void InitializeGraphics();
+
+	/// @brief ECSシステムの初期化
+	void InitializeECS();
+
+	/// @brief エディタシステムの初期化
+	void InitializeEditor(const GameFrameworkConfig& config);
+
+	/// @brief 更新フェーズ
+	void Update();
+
+	/// @brief 描画フェーズ
+	void Draw();
+
 
 private:
 	/// ===================================================

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <list>
@@ -35,14 +35,14 @@ public:
 	~Line3DRenderingPipeline();
 
 	/// @brief 初期化処理
-	/// @param _shaderCompiler shaderのコンパイラー
-	/// @param _dxDevice DxDeviceへのポインタ
-	void Initialize(ShaderCompiler* _shaderCompiler, class DxManager* _dxm) override;
+	/// @param shaderCompiler shaderのコンパイラー
+	/// @param dxDevice DxDeviceへのポインタ
+	void Initialize(ShaderCompiler* shaderCompiler, class DxManager* dxm) override;
 
 	/// @brief 描画処理
-	/// @param _dxCommand DxCommandへのポインタ
-	/// @param _entityCollection EntityCollectionへのポインタ
-	void Draw(class ECSGroup* _ecs, class CameraComponent* _camera, DxCommand* _dxCommand) override;
+	/// @param dxCommand DxCommandへのポインタ
+	/// @param entityCollection EntityCollectionへのポインタ
+	void Draw(class ECSGroup* ecs, class CameraComponent* camera, DxCommand* dxCommand) override;
 
 
 private:

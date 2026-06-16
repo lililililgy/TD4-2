@@ -44,25 +44,25 @@ namespace ONEngine {
         void Save();
 
         // 攻撃データの操作
-        const AttackDefinition* GetAttack(const std::string& _name) const;
+        const AttackDefinition* GetAttack(const std::string& name) const;
         std::map<std::string, AttackDefinition>& GetAttacks() { return attacks_; }
-        void AddAttack(const AttackDefinition& _attack);
-        void RemoveAttack(const std::string& _name);
+        void AddAttack(const AttackDefinition& attack);
+        void RemoveAttack(const std::string& name);
 
         // アニメーションデータの操作
-        const AnimationDefinition* GetAnimation(const std::string& _name) const;
+        const AnimationDefinition* GetAnimation(const std::string& name) const;
         std::map<std::string, AnimationDefinition>& GetAnimations() { return animations_; }
-        void AddAnimation(const AnimationDefinition& _anim);
-        void RemoveAnimation(const std::string& _name);
+        void AddAnimation(const AnimationDefinition& anim);
+        void RemoveAnimation(const std::string& name);
 
         // エフェクトデータの操作
-        const EffectDefinition* GetEffect(const std::string& _name) const;
+        const EffectDefinition* GetEffect(const std::string& name) const;
         std::map<std::string, EffectDefinition>& GetEffects() { return effects_; }
-        void AddEffect(const EffectDefinition& _effect);
-        void RemoveEffect(const std::string& _name);
+        void AddEffect(const EffectDefinition& effect);
+        void RemoveEffect(const std::string& name);
 
         bool IsDirty() const { return isDirty_; }
-        void SetDirty(bool _dirty) { isDirty_ = _dirty; }
+        void SetDirty(bool dirty) { isDirty_ = dirty; }
 
     private:
         GameEventManager() = default;

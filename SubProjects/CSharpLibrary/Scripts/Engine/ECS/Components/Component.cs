@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +11,7 @@ public class Component {
 	public uint compId;
 	public Entity entity;
 
-	public static implicit operator bool(Component _component) {
-		return _component != null;
+	public static implicit operator bool(Component component) {
+		return component != null;
 	}
 }

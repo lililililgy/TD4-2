@@ -1,9 +1,9 @@
-﻿public struct Vector2Int {
+public struct Vector2Int {
 	public int x, y;
 
-	public Vector2Int(int _x, int _y) {
-		this.x = _x;
-		this.y = _y;
+	public Vector2Int(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	public Vector2Int(Vector2Int other) {

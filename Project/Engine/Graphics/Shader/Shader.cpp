@@ -1,4 +1,4 @@
-﻿#include "Shader.h"
+#include "Shader.h"
 
 using namespace ONEngine;
 
@@ -12,16 +12,16 @@ using namespace ONEngine;
 Shader::Shader() = default;
 Shader::~Shader() = default;
 
-void Shader::Initialize(ShaderCompiler* _compiler) {
-	pShaderCompiler_ = _compiler;
+void Shader::Initialize(ShaderCompiler* compiler) {
+	pShaderCompiler_ = compiler;
 }
 
-bool Shader::CompileShader(const std::wstring& _filePath, const wchar_t* _profile, Type _type, const std::wstring& _entryPoint) {
+bool Shader::CompileShader(const std::wstring& filePath, const wchar_t* profile, Type type, const std::wstring& entryPoint) {
 	/// ----- Typeごとにコンパイル結果を保存 ----- ///
 
-	ComPtr<IDxcBlob> shader = pShaderCompiler_->CompileShader(_filePath, _profile, _entryPoint);
+	ComPtr<IDxcBlob> shader = pShaderCompiler_->CompileShader(filePath, profile, entryPoint);
 
-	switch (_type) {
+	switch (type) {
 	case Shader::Type::vs:
 		vs_ = shader;
 		return true;

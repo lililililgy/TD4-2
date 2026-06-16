@@ -45,22 +45,22 @@ void Transform::Reset() {
 	matWorld = Matrix4x4::kIdentity;
 }
 
-void Transform::SetPosition(const Vector3& _v) {
-	position = _v;
+void Transform::SetPosition(const Vector3& v) {
+	position = v;
 }
 
-void Transform::SetRotate(const Vector3& _v) {
-	euler = _v; // ここでの _v は度数法を想定
+void Transform::SetRotate(const Vector3& v) {
+	euler = v; // ここでの v は度数法を想定
 	SyncQuaternionFromEuler();
 }
 
-void Transform::SetRotate(const Quaternion& _q) {
-	rotate = _q;
+void Transform::SetRotate(const Quaternion& q) {
+	rotate = q;
 	SyncEulerFromQuaternion();
 }
 
-void Transform::SetScale(const Vector3& _v) {
-	scale = _v;
+void Transform::SetScale(const Vector3& v) {
+	scale = v;
 }
 
 const Vector3& Transform::GetPosition() const {
@@ -104,14 +104,14 @@ void Transform::SyncEulerFromQuaternion() {
 /// mono からのTransform取得用関数
 /// ===================================================
 
-void ONEngine::UpdateTransform(Transform* _transform) {
-	if(GameEntity* entity = _transform->GetOwner()) {
+void ONEngine::UpdateTransform(Transform* transform) {
+	if(GameEntity* entity = transform->GetOwner()) {
 		entity->UpdateTransform();
 	}
 }
 
-void ONEngine::InternalGetPosition(uint64_t _nativeHandle, float* _x, float* _y, float* _z) {
-	Transform* transform = reinterpret_cast<Transform*>(_nativeHandle);
+void ONEngine::InternalGetPosition(uint64_t nativeHandle, float* x, float* y, float* z) {
+	Transform* transform = reinterpret_cast<Transform*>(nativeHandle);
 	if(!transform) {
 		Console::LogError("Transform pointer is null");
 		return;
@@ -120,113 +120,113 @@ void ONEngine::InternalGetPosition(uint64_t _nativeHandle, float* _x, float* _y,
 	const Matrix4x4& matWorld = transform->GetMatWorld();
 	const Vector3& position = { matWorld.m[3][0], matWorld.m[3][1], matWorld.m[3][2] };
 
-	if(_x) { *_x = position.x; }
-	if(_y) { *_y = position.y; }
-	if(_z) { *_z = position.z; }
+	if(x) { *x = position.x; }
+	if(y) { *y = position.y; }
+	if(z) { *z = position.z; }
 }
 
-void ONEngine::InternalGetLocalPosition(uint64_t _nativeHandle, float* _x, float* _y, float* _z) {
-	Transform* transform = reinterpret_cast<Transform*>(_nativeHandle);
+void ONEngine::InternalGetLocalPosition(uint64_t nativeHandle, float* x, float* y, float* z) {
+	Transform* transform = reinterpret_cast<Transform*>(nativeHandle);
 	if(!transform) {
 		Console::LogError("Transform pointer is null");
 		return;
 	}
 
-	if(_x) { *_x = transform->position.x; }
-	if(_y) { *_y = transform->position.y; }
-	if(_z) { *_z = transform->position.z; }
+	if(x) { *x = transform->position.x; }
+	if(y) { *y = transform->position.y; }
+	if(z) { *z = transform->position.z; }
 }
 
-void ONEngine::InternalGetRotate(uint64_t _nativeHandle, float* _x, float* _y, float* _z, float* _w) {
-	Transform* transform = reinterpret_cast<Transform*>(_nativeHandle);
+void ONEngine::InternalGetRotate(uint64_t nativeHandle, float* x, float* y, float* z, float* w) {
+	Transform* transform = reinterpret_cast<Transform*>(nativeHandle);
 	if(!transform) {
 		Console::LogError("Transform pointer is null");
 		return;
 	}
 
-	if(_x) { *_x = transform->rotate.x; }
-	if(_y) { *_y = transform->rotate.y; }
-	if(_z) { *_z = transform->rotate.z; }
-	if(_w) { *_w = transform->rotate.w; }
+	if(x) { *x = transform->rotate.x; }
+	if(y) { *y = transform->rotate.y; }
+	if(z) { *z = transform->rotate.z; }
+	if(w) { *w = transform->rotate.w; }
 }
 
-void ONEngine::InternalGetScale(uint64_t _nativeHandle, float* _x, float* _y, float* _z) {
-	Transform* transform = reinterpret_cast<Transform*>(_nativeHandle);
+void ONEngine::InternalGetScale(uint64_t nativeHandle, float* x, float* y, float* z) {
+	Transform* transform = reinterpret_cast<Transform*>(nativeHandle);
 	if(!transform) {
 		Console::LogError("Transform pointer is null");
 		return;
 	}
 
-	if(_x) { *_x = transform->scale.x; }
-	if(_y) { *_y = transform->scale.y; }
-	if(_z) { *_z = transform->scale.z; }
+	if(x) { *x = transform->scale.x; }
+	if(y) { *y = transform->scale.y; }
+	if(z) { *z = transform->scale.z; }
 }
 
-void ONEngine::InternalSetPosition(uint64_t _nativeHandle, float _x, float _y, float _z) {
-	Transform* transform = reinterpret_cast<Transform*>(_nativeHandle);
+void ONEngine::InternalSetPosition(uint64_t nativeHandle, float x, float y, float z) {
+	Transform* transform = reinterpret_cast<Transform*>(nativeHandle);
 	if(!transform) {
 		Console::LogError("Transform pointer is null");
 		return;
 	}
 
-	transform->position.x = _x;
-	transform->position.y = _y;
-	transform->position.z = _z;
+	transform->position.x = x;
+	transform->position.y = y;
+	transform->position.z = z;
 	UpdateTransform(transform); // 更新を呼び出す
 }
 
-void ONEngine::InternalSetLocalPosition(uint64_t _nativeHandle, float _x, float _y, float _z) {
-	Transform* transform = reinterpret_cast<Transform*>(_nativeHandle);
+void ONEngine::InternalSetLocalPosition(uint64_t nativeHandle, float x, float y, float z) {
+	Transform* transform = reinterpret_cast<Transform*>(nativeHandle);
 	if(!transform) {
 		Console::LogError("Transform pointer is null");
 		return;
 	}
 
-	transform->position.x = _x;
-	transform->position.y = _y;
-	transform->position.z = _z;
+	transform->position.x = x;
+	transform->position.y = y;
+	transform->position.z = z;
 	UpdateTransform(transform); // 更新を呼び出す
 }
 
-void ONEngine::InternalSetRotate(uint64_t _nativeHandle, float _x, float _y, float _z, float _w) {
-	Transform* transform = reinterpret_cast<Transform*>(_nativeHandle);
+void ONEngine::InternalSetRotate(uint64_t nativeHandle, float x, float y, float z, float w) {
+	Transform* transform = reinterpret_cast<Transform*>(nativeHandle);
 	if(!transform) {
 		Console::LogError("Transform pointer is null");
 		return;
 	}
 
-	transform->rotate.x = _x;
-	transform->rotate.y = _y;
-	transform->rotate.z = _z;
-	transform->rotate.w = _w;
+	transform->rotate.x = x;
+	transform->rotate.y = y;
+	transform->rotate.z = z;
+	transform->rotate.w = w;
 	transform->SyncEulerFromQuaternion(); // Eulerキャッシュを同期
 	UpdateTransform(transform); // 更新を呼び出す
 }
 
-void ONEngine::InternalSetScale(uint64_t _nativeHandle, float _x, float _y, float _z) {
-	Transform* transform = reinterpret_cast<Transform*>(_nativeHandle);
+void ONEngine::InternalSetScale(uint64_t nativeHandle, float x, float y, float z) {
+	Transform* transform = reinterpret_cast<Transform*>(nativeHandle);
 	if(!transform) {
 		Console::LogError("Transform pointer is null");
 		return;
 	}
 
-	transform->scale.x = _x;
-	transform->scale.y = _y;
-	transform->scale.z = _z;
+	transform->scale.x = x;
+	transform->scale.y = y;
+	transform->scale.z = z;
 	UpdateTransform(transform); // 更新を呼び出す
 }
 
-void ComponentDebug::TransformDebug(Transform* _transform) {
-	std::vector<Transform*> transforms = { _transform };
+void ComponentDebug::TransformDebug(Transform* transform) {
+	std::vector<Transform*> transforms = { transform };
 	TransformDebug(transforms);
 }
 
-void ComponentDebug::TransformDebug(const std::vector<Transform*>& _transforms) {
-	if(_transforms.empty()) {
+void ComponentDebug::TransformDebug(const std::vector<Transform*>& transforms) {
+	if(transforms.empty()) {
 		return;
 	}
 
-	Transform* first = _transforms[0];
+	Transform* first = transforms[0];
 
 	// アニメーションなどで外部から回転が書き換えられていないかチェック
 	if (!(first->rotate == first->lastSyncedRotate)) {
@@ -251,24 +251,24 @@ void ComponentDebug::TransformDebug(const std::vector<Transform*>& _transforms) 
 
 	if (posActivated) {
 		s_startPos.clear();
-		for (auto t : _transforms) s_startPos.push_back(t->position);
+		for (auto t : transforms) s_startPos.push_back(t->position);
 	}
 
 	if (posChanged) {
-		for (auto t : _transforms) { t->position = pos; t->Update(); }
+		for (auto t : transforms) { t->position = pos; t->Update(); }
 	}
 
 	if (posDeactivated) {
-		if (s_startPos.size() == _transforms.size()) {
+		if (s_startPos.size() == transforms.size()) {
 			bool changed = false;
-			for (size_t i = 0; i < _transforms.size(); ++i) {
-				if (s_startPos[i] != _transforms[i]->position) { changed = true; break; }
+			for (size_t i = 0; i < transforms.size(); ++i) {
+				if (s_startPos[i] != transforms[i]->position) { changed = true; break; }
 			}
 
 			if (changed) {
 				std::vector<Editor::ModifyTransformCommand::Data> data;
-				for (size_t i = 0; i < _transforms.size(); ++i) {
-					data.push_back({ _transforms[i], s_startPos[i], _transforms[i]->position });
+				for (size_t i = 0; i < transforms.size(); ++i) {
+					data.push_back({ transforms[i], s_startPos[i], transforms[i]->position });
 				}
 				Editor::EditCommand::Execute<Editor::ModifyTransformCommand>(Editor::ModifyTransformCommand::Target::Position, data);
 			}
@@ -282,11 +282,11 @@ void ComponentDebug::TransformDebug(const std::vector<Transform*>& _transforms) 
 
 	if (rotActivated) {
 		s_startEuler.clear();
-		for (auto t : _transforms) s_startEuler.push_back(t->euler);
+		for (auto t : transforms) s_startEuler.push_back(t->euler);
 	}
 
 	if (rotChanged) {
-		for (auto t : _transforms) { 
+		for (auto t : transforms) { 
 			t->euler = euler; 
 			t->SyncQuaternionFromEuler(); 
 			t->Update(); 
@@ -294,16 +294,16 @@ void ComponentDebug::TransformDebug(const std::vector<Transform*>& _transforms) 
 	}
 
 	if (rotDeactivated) {
-		if (s_startEuler.size() == _transforms.size()) {
+		if (s_startEuler.size() == transforms.size()) {
 			bool changed = false;
-			for (size_t i = 0; i < _transforms.size(); ++i) {
-				if (s_startEuler[i] != _transforms[i]->euler) { changed = true; break; }
+			for (size_t i = 0; i < transforms.size(); ++i) {
+				if (s_startEuler[i] != transforms[i]->euler) { changed = true; break; }
 			}
 
 			if (changed) {
 				std::vector<Editor::ModifyTransformCommand::Data> data;
-				for (size_t i = 0; i < _transforms.size(); ++i) {
-					data.push_back({ _transforms[i], s_startEuler[i], _transforms[i]->euler });
+				for (size_t i = 0; i < transforms.size(); ++i) {
+					data.push_back({ transforms[i], s_startEuler[i], transforms[i]->euler });
 				}
 				Editor::EditCommand::Execute<Editor::ModifyTransformCommand>(Editor::ModifyTransformCommand::Target::Rotation, data);
 			}
@@ -317,24 +317,24 @@ void ComponentDebug::TransformDebug(const std::vector<Transform*>& _transforms) 
 
 	if (scaleActivated) {
 		s_startScale.clear();
-		for (auto t : _transforms) s_startScale.push_back(t->scale);
+		for (auto t : transforms) s_startScale.push_back(t->scale);
 	}
 
 	if (scaleChanged) {
-		for (auto t : _transforms) { t->scale = scale; t->Update(); }
+		for (auto t : transforms) { t->scale = scale; t->Update(); }
 	}
 
 	if (scaleDeactivated) {
-		if (s_startScale.size() == _transforms.size()) {
+		if (s_startScale.size() == transforms.size()) {
 			bool changed = false;
-			for (size_t i = 0; i < _transforms.size(); ++i) {
-				if (s_startScale[i] != _transforms[i]->scale) { changed = true; break; }
+			for (size_t i = 0; i < transforms.size(); ++i) {
+				if (s_startScale[i] != transforms[i]->scale) { changed = true; break; }
 			}
 
 			if (changed) {
 				std::vector<Editor::ModifyTransformCommand::Data> data;
-				for (size_t i = 0; i < _transforms.size(); ++i) {
-					data.push_back({ _transforms[i], s_startScale[i], _transforms[i]->scale });
+				for (size_t i = 0; i < transforms.size(); ++i) {
+					data.push_back({ transforms[i], s_startScale[i], transforms[i]->scale });
 				}
 				Editor::EditCommand::Execute<Editor::ModifyTransformCommand>(Editor::ModifyTransformCommand::Target::Scale, data);
 			}
@@ -347,30 +347,30 @@ void ComponentDebug::TransformDebug(const std::vector<Transform*>& _transforms) 
 	flagsChanged |= ImGui::CheckboxFlags("matrixCalcFlags: scale", &flags, Transform::kScale);
 	
 	if (flagsChanged) {
-		for (auto t : _transforms) { t->matrixCalcFlags = flags; t->Update(); }
+		for (auto t : transforms) { t->matrixCalcFlags = flags; t->Update(); }
 	}
 
 	first->lastSyncedRotate = first->rotate;
 }
 
 
-void ONEngine::from_json(const nlohmann::json& _j, Transform& _t) {
-	_t.enable = _j.at("enable").get<int>();
-	_t.position = _j.at("position").get<Vector3>();
-	_t.rotate = _j.at("rotate").get<Quaternion>();
-	_t.scale = _j.at("scale").get<Vector3>();
-	_t.matrixCalcFlags = _j.value("matrixCalcFlags", Transform::kAll);
-	_t.SyncEulerFromQuaternion(); 
-	_t.Update();
+void ONEngine::from_json(const nlohmann::json& j, Transform& t) {
+	t.enable = j.at("enable").get<int>();
+	t.position = j.at("position").get<Vector3>();
+	t.rotate = j.at("rotate").get<Quaternion>();
+	t.scale = j.at("scale").get<Vector3>();
+	t.matrixCalcFlags = j.value("matrixCalcFlags", Transform::kAll);
+	t.SyncEulerFromQuaternion(); 
+	t.Update();
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const Transform& _t) {
-	_j = nlohmann::json{
+void ONEngine::to_json(nlohmann::json& j, const Transform& t) {
+	j = nlohmann::json{
 		{ "type", "Transform" },
-		{ "enable", _t.enable },
-		{ "position", _t.position },
-		{ "rotate", _t.rotate },
-		{ "scale", _t.scale },
-		{ "matrixCalcFlags", _t.matrixCalcFlags }
+		{ "enable", t.enable },
+		{ "position", t.position },
+		{ "rotate", t.rotate },
+		{ "scale", t.scale },
+		{ "matrixCalcFlags", t.matrixCalcFlags }
 	};
 }

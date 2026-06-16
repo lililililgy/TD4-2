@@ -1,4 +1,4 @@
-﻿#include "AssetDebugger.h"
+#include "AssetDebugger.h"
 
 
 /// externals
@@ -14,13 +14,13 @@ namespace Editor {
 namespace ImMathf {
 
 /// テクスチャのドロップスペースの表示
-void DrawTextureDropSpace(const std::string& _areaName) {
+void DrawTextureDropSpace(const std::string& areaName) {
 	/// テクスチャがない場合はドラッグドロップ領域を表示する
 	ImVec2 size = ImVec2(64, 64);
 	ImVec2 pos = ImGui::GetCursorScreenPos();
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 	// InvisibleButton はクリック判定やDragDropのターゲット領域になる
-	ImGui::InvisibleButton(_areaName.c_str(), size);
+	ImGui::InvisibleButton(areaName.c_str(), size);
 	// 視覚的な四角形を描く
 	ImU32 imColor = IM_COL32(100, 100, 255, 100); // 半透明の青
 	drawList->AddRectFilled(pos, ImVec2(pos.x + size.x, pos.y + size.y), imColor, 4.0f);
@@ -30,13 +30,13 @@ void DrawTextureDropSpace(const std::string& _areaName) {
 
 
 /// テクスチャのプレビュー表示
-void DrawTexturePreview(const ONEngine::Asset::Texture* _texture) {
-	if(!_texture) {
+void DrawTexturePreview(const ONEngine::Asset::Texture* texture) {
+	if(!texture) {
 		return;
 	}
-	ONEngine::Vector2 aspectRatio = _texture->GetTextureSize();
+	ONEngine::Vector2 aspectRatio = texture->GetTextureSize();
 	aspectRatio /= (std::max)(aspectRatio.x, aspectRatio.y);
-	ImTextureID texId = reinterpret_cast<ImTextureID>(_texture->GetSRVGPUHandle().ptr);
+	ImTextureID texId = reinterpret_cast<ImTextureID>(texture->GetSRVGPUHandle().ptr);
 	ImGui::Image(texId, ImVec2(64.0f * aspectRatio.x, 64.0f * aspectRatio.y));
 }
 
@@ -52,7 +52,7 @@ bool TextureButton(const std::string& label, const ONEngine::Asset::Texture* tex
 }
 
 /// テクスチャのドロップ処理
-bool HandleTextureDrop(ONEngine::Asset::Material* _material) {
+bool HandleTextureDrop(ONEngine::Asset::Material* material) {
 	bool edit = false;
 	if(ImGui::BeginDragDropTarget()) {
 		if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
@@ -61,7 +61,7 @@ bool HandleTextureDrop(ONEngine::Asset::Material* _material) {
 				const std::string path = assetPayload->filePath;
 				if(ONEngine::Asset::CheckAssetType(ONEngine::FileSystem::FileExtension(path), ONEngine::Asset::AssetType::Texture)) {
 					const ONEngine::Guid& guid = assetPayload->guid;
-					_material->SetBaseTextureGuid(guid);
+					material->SetBaseTextureGuid(guid);
 					edit = true;
 				}
 			}
@@ -73,7 +73,7 @@ bool HandleTextureDrop(ONEngine::Asset::Material* _material) {
 
 
 /// 法線テクスチャのドロップ処理
-bool HandleNormalTextureDrop(ONEngine::Asset::Material* _material) {
+bool HandleNormalTextureDrop(ONEngine::Asset::Material* material) {
 	bool edit = false;
 	if(ImGui::BeginDragDropTarget()) {
 		if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
@@ -83,7 +83,7 @@ bool HandleNormalTextureDrop(ONEngine::Asset::Material* _material) {
 				ONEngine::Asset::AssetType type = ONEngine::Asset::GetAssetTypeFromExtension(ONEngine::FileSystem::FileExtension(path));
 				if(type == ONEngine::Asset::AssetType::Texture) {
 					const ONEngine::Guid& guid = assetPayload->guid;
-					_material->SetNormalTextureGuid(guid);
+					material->SetNormalTextureGuid(guid);
 					edit = true;
 				}
 			}
@@ -95,25 +95,25 @@ bool HandleNormalTextureDrop(ONEngine::Asset::Material* _material) {
 
 
 
-bool MaterialEdit(const std::string& _label, ONEngine::Asset::Material* _material, ONEngine::Asset::AssetCollection* _assetCollection, bool _isEditNormalTexture) {
+bool MaterialEdit(const std::string& label, ONEngine::Asset::Material* material, ONEngine::Asset::AssetCollection* assetCollection, bool isEditNormalTexture) {
 	/// nullptr check
-	if(!_material) {
+	if(!material) {
 		return false;
 	}
 
 	/// 折りたたみヘッダー
-	if(!ImGui::CollapsingHeader(_label.c_str())) {
+	if(!ImGui::CollapsingHeader(label.c_str())) {
 		return false;
 	}
 
-	ImGui::PushID(_label.c_str());
+	ImGui::PushID(label.c_str());
 
 	bool edit = false;
 
 	/// ---------------------------------------------------
 	/// 色の編集
 	/// ---------------------------------------------------
-	edit |= ImMathf::DragFloat4("Base Color", &_material->baseColor, 0.01f, 0.0f, 1.0f);
+	edit |= ImMathf::DragFloat4("Base Color", &material->baseColor, 0.01f, 0.0f, 1.0f);
 
 
 	/// Indentを付けて見やすくする
@@ -122,7 +122,7 @@ bool MaterialEdit(const std::string& _label, ONEngine::Asset::Material* _materia
 	/// ---------------------------------------------------
 	/// uvTransform
 	/// ---------------------------------------------------
-	edit |= ImMathf::UVTransformEdit("UV Transform", &_material->uvTransform);
+	edit |= ImMathf::UVTransformEdit("UV Transform", &material->uvTransform);
 
 
 	/// ---------------------------------------------------
@@ -130,19 +130,19 @@ bool MaterialEdit(const std::string& _label, ONEngine::Asset::Material* _materia
 	/// ---------------------------------------------------
 	if(ImGui::CollapsingHeader("PostEffectFlags")) {
 		/// ポストエフェクトのフラグ
-		if(ImGui::CheckboxFlags("Lighting", &_material->postEffectFlags, PostEffectFlags_Lighting)) {
+		if(ImGui::CheckboxFlags("Lighting", &material->postEffectFlags, PostEffectFlags_Lighting)) {
 			edit = true;
 		}
 
-		if(ImGui::CheckboxFlags("Grayscale", &_material->postEffectFlags, PostEffectFlags_Grayscale)) {
+		if(ImGui::CheckboxFlags("Grayscale", &material->postEffectFlags, PostEffectFlags_Grayscale)) {
 			edit = true;
 		}
 
-		if(ImGui::CheckboxFlags("EnvironmentReflection", &_material->postEffectFlags, PostEffectFlags_EnvironmentReflection)) {
+		if(ImGui::CheckboxFlags("EnvironmentReflection", &material->postEffectFlags, PostEffectFlags_EnvironmentReflection)) {
 			edit = true;
 		}
 
-		if(ImGui::CheckboxFlags("Shadow", &_material->postEffectFlags, PostEffectFlags_Shadow)) {
+		if(ImGui::CheckboxFlags("Shadow", &material->postEffectFlags, PostEffectFlags_Shadow)) {
 			edit = true;
 		}
 	}
@@ -153,27 +153,27 @@ bool MaterialEdit(const std::string& _label, ONEngine::Asset::Material* _materia
 		/// ---------------------------------------------------
 		/// ベーステクスチャの編集
 		/// ---------------------------------------------------
-		bool hasTextureGuid = _material->HasBaseTexture();
+		bool hasTextureGuid = material->HasBaseTexture();
 		if(hasTextureGuid) {
-			DrawTexturePreview(_assetCollection->GetTexture(_assetCollection->GetTexturePath(_material->GetBaseTextureGuid())));
+			DrawTexturePreview(assetCollection->GetTexture(assetCollection->GetTexturePath(material->GetBaseTextureGuid())));
 		} else {
 			DrawTextureDropSpace("BaseTex");
 		}
-		HandleTextureDrop(_material);
+		HandleTextureDrop(material);
 
 
 
-		if(_isEditNormalTexture) {
+		if(isEditNormalTexture) {
 			/// ---------------------------------------------------
 			/// 法線テクスチャの編集
 			/// ---------------------------------------------------
-			bool hasNormalTextureGuid = _material->HasNormalTexture();
+			bool hasNormalTextureGuid = material->HasNormalTexture();
 			if(hasNormalTextureGuid) {
-				DrawTexturePreview(_assetCollection->GetTexture(_assetCollection->GetTexturePath(_material->GetNormalTextureGuid())));
+				DrawTexturePreview(assetCollection->GetTexture(assetCollection->GetTexturePath(material->GetNormalTextureGuid())));
 			} else {
 				DrawTextureDropSpace("NormalTex");
 			}
-			HandleNormalTextureDrop(_material);
+			HandleNormalTextureDrop(material);
 		}
 
 	}

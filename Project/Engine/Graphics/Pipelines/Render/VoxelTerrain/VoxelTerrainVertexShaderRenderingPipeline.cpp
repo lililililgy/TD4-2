@@ -1,4 +1,4 @@
-﻿#include "VoxelTerrainVertexShaderRenderingPipeline.h"
+#include "VoxelTerrainVertexShaderRenderingPipeline.h"
 
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
@@ -8,19 +8,19 @@
 
 using namespace ONEngine;
 
-VoxelTerrainVertexShaderRenderingPipeline::VoxelTerrainVertexShaderRenderingPipeline(Asset::AssetCollection* _ac)
-	: pAssetCollection_(_ac) {
+VoxelTerrainVertexShaderRenderingPipeline::VoxelTerrainVertexShaderRenderingPipeline(Asset::AssetCollection* ac)
+	: pAssetCollection_(ac) {
 }
 
 VoxelTerrainVertexShaderRenderingPipeline::~VoxelTerrainVertexShaderRenderingPipeline() {}
 
 
-void VoxelTerrainVertexShaderRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
-	pDxManager_ = _dxm;
+void VoxelTerrainVertexShaderRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
+	pDxManager_ = dxm;
 
 	{	/// Shader
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrainTest/VoxelTerrain.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrainTest/VoxelTerrain.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -40,13 +40,13 @@ void VoxelTerrainVertexShaderRenderingPipeline::Initialize(ShaderCompiler* _shad
 		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
 		pipeline_->SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 }
 
-void VoxelTerrainVertexShaderRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void VoxelTerrainVertexShaderRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
-	ComponentArray<VoxelTerrain>* voxelTerrainCompArray = _ecs->GetComponentArray<VoxelTerrain>();
+	ComponentArray<VoxelTerrain>* voxelTerrainCompArray = ecs->GetComponentArray<VoxelTerrain>();
 	if(!CheckComponentArrayEnable(voxelTerrainCompArray)) {
 		return;
 	}
@@ -72,11 +72,11 @@ void VoxelTerrainVertexShaderRenderingPipeline::Draw(ECSGroup* _ecs, CameraCompo
 
 	vt->SettingMaterial(pAssetCollection_);
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
-	auto cmdList = _dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
 
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
 	vt->cBufferMaterial_.BindForGraphicsCommandList(cmdList, CBV_MATERIAL);
 
 	for(size_t i = 0; i < 3; i++) {

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/Asset/Assets/Texture/Texture.h"
@@ -43,25 +43,25 @@ public:
 	RenderTexture();
 	~RenderTexture();
 
-	void Initialize(DXGI_FORMAT _format, const Vector4& _clearColor, const Vector2& _textureSize, const std::string& _name, DxManager* _dxm, DxDepthStencil* _dxDepthStencil, Asset::AssetCollection* _assetCollection);
+	void Initialize(DXGI_FORMAT format, const Vector4& clearColor, const Vector2& textureSize, const std::string& name, DxManager* dxm, DxDepthStencil* dxDepthStencil, Asset::AssetCollection* assetCollection);
 
 	/// @brief render targetとして設定
-	/// @param _dxCommand DxCommandのインスタンスへのポインタ
-	void SetRenderTarget(DxCommand* _dxCommand, DxDSVHeap* _dxDSVHeap, bool _clear = true);
+	/// @param dxCommand DxCommandのインスタンスへのポインタ
+	void SetRenderTarget(DxCommand* dxCommand, DxDSVHeap* dxDSVHeap, bool clear = true);
 
 	/// @brief 複数のrender targetとして設定
-	/// @param _dxCommand DxCommandのインスタンスへのポインタ
-	/// @param _dxDSVHeap DxDSVHeapのインスタンスへのポインタ
-	/// @param _other 他のrender textureのvector
-	void SetRenderTarget(DxCommand* _dxCommand, DxDSVHeap* _dxDSVHeap, const std::vector<std::unique_ptr<RenderTexture>>& _other, bool _clear = true);
+	/// @param dxCommand DxCommandのインスタンスへのポインタ
+	/// @param dxDSVHeap DxDSVHeapのインスタンスへのポインタ
+	/// @param other 他のrender textureのvector
+	void SetRenderTarget(DxCommand* dxCommand, DxDSVHeap* dxDSVHeap, const std::vector<std::unique_ptr<RenderTexture>>& other, bool clear = true);
 
 	/// @brief render textureとして設定
-	/// @param _dxCommand DxCommandのインスタンスへのポインタ
-	void CreateBarrierRenderTarget(DxCommand* _dxCommand);
+	/// @param dxCommand DxCommandのインスタンスへのポインタ
+	void CreateBarrierRenderTarget(DxCommand* dxCommand);
 
 	/// @brief srvとして設定
-	/// @param _dxCommand DxCommandのインスタンスへのポインタ
-	void CreateBarrierPixelShaderResource(DxCommand* _dxCommand);
+	/// @param dxCommand DxCommandのインスタンスへのポインタ
+	void CreateBarrierPixelShaderResource(DxCommand* dxCommand);
 
 	/// @brief RenderTextureの名前を取得
 	/// @return std::string RenderTextureの名前
@@ -111,10 +111,10 @@ public:
 	~UAVTexture();
 
 	/// @brief uav textureの初期化
-	/// @param _textureName textureの名前
-	/// @param _dxm DxManagerへのポインタ
-	/// @param _assetCollection AssetCollectionへのポインタ
-	void Initialize(const std::string& _textureName, DxManager* _dxm, class Asset::AssetCollection* _assetCollection);
+	/// @param textureName textureの名前
+	/// @param dxm DxManagerへのポインタ
+	/// @param assetCollection AssetCollectionへのポインタ
+	void Initialize(const std::string& textureName, DxManager* dxm, class Asset::AssetCollection* assetCollection);
 
 
 private:

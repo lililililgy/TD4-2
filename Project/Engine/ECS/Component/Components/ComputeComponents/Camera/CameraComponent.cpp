@@ -1,4 +1,4 @@
-﻿#include "CameraComponent.h"
+#include "CameraComponent.h"
 
 #include <array>
 
@@ -18,46 +18,46 @@ namespace {
 
 
 /// @brief ViewProjection行列から視錐台を作成する
-/// @param _matVP ViewProjection行列
+/// @param matVP ViewProjection行列
 /// @return Frustum
-Frustum CreateFrustumFromMatrix(const Matrix4x4& _matVP) {
+Frustum CreateFrustumFromMatrix(const Matrix4x4& matVP) {
 	Frustum frustum;
 
 	// Left
-	frustum.planes[0].normal.x = _matVP.m[0][3] + _matVP.m[0][0];
-	frustum.planes[0].normal.y = _matVP.m[1][3] + _matVP.m[1][0];
-	frustum.planes[0].normal.z = _matVP.m[2][3] + _matVP.m[2][0];
-	frustum.planes[0].d = _matVP.m[3][3] + _matVP.m[3][0];
+	frustum.planes[0].normal.x = matVP.m[0][3] + matVP.m[0][0];
+	frustum.planes[0].normal.y = matVP.m[1][3] + matVP.m[1][0];
+	frustum.planes[0].normal.z = matVP.m[2][3] + matVP.m[2][0];
+	frustum.planes[0].d = matVP.m[3][3] + matVP.m[3][0];
 
 	// Right
-	frustum.planes[1].normal.x = _matVP.m[0][3] - _matVP.m[0][0];
-	frustum.planes[1].normal.y = _matVP.m[1][3] - _matVP.m[1][0];
-	frustum.planes[1].normal.z = _matVP.m[2][3] - _matVP.m[2][0];
-	frustum.planes[1].d = _matVP.m[3][3] - _matVP.m[3][0];
+	frustum.planes[1].normal.x = matVP.m[0][3] - matVP.m[0][0];
+	frustum.planes[1].normal.y = matVP.m[1][3] - matVP.m[1][0];
+	frustum.planes[1].normal.z = matVP.m[2][3] - matVP.m[2][0];
+	frustum.planes[1].d = matVP.m[3][3] - matVP.m[3][0];
 
 	// Bottom
-	frustum.planes[2].normal.x = _matVP.m[0][3] + _matVP.m[0][1];
-	frustum.planes[2].normal.y = _matVP.m[1][3] + _matVP.m[1][1];
-	frustum.planes[2].normal.z = _matVP.m[2][3] + _matVP.m[2][1];
-	frustum.planes[2].d = _matVP.m[3][3] + _matVP.m[3][1];
+	frustum.planes[2].normal.x = matVP.m[0][3] + matVP.m[0][1];
+	frustum.planes[2].normal.y = matVP.m[1][3] + matVP.m[1][1];
+	frustum.planes[2].normal.z = matVP.m[2][3] + matVP.m[2][1];
+	frustum.planes[2].d = matVP.m[3][3] + matVP.m[3][1];
 
 	// Top
-	frustum.planes[3].normal.x = _matVP.m[0][3] - _matVP.m[0][1];
-	frustum.planes[3].normal.y = _matVP.m[1][3] - _matVP.m[1][1];
-	frustum.planes[3].normal.z = _matVP.m[2][3] - _matVP.m[2][1];
-	frustum.planes[3].d = _matVP.m[3][3] - _matVP.m[3][1];
+	frustum.planes[3].normal.x = matVP.m[0][3] - matVP.m[0][1];
+	frustum.planes[3].normal.y = matVP.m[1][3] - matVP.m[1][1];
+	frustum.planes[3].normal.z = matVP.m[2][3] - matVP.m[2][1];
+	frustum.planes[3].d = matVP.m[3][3] - matVP.m[3][1];
 
 	// Near
-	frustum.planes[4].normal.x = _matVP.m[0][2];
-	frustum.planes[4].normal.y = _matVP.m[1][2];
-	frustum.planes[4].normal.z = _matVP.m[2][2];
-	frustum.planes[4].d = _matVP.m[3][2];
+	frustum.planes[4].normal.x = matVP.m[0][2];
+	frustum.planes[4].normal.y = matVP.m[1][2];
+	frustum.planes[4].normal.z = matVP.m[2][2];
+	frustum.planes[4].d = matVP.m[3][2];
 
 	// Far
-	frustum.planes[5].normal.x = _matVP.m[0][3] - _matVP.m[0][2];
-	frustum.planes[5].normal.y = _matVP.m[1][3] - _matVP.m[1][2];
-	frustum.planes[5].normal.z = _matVP.m[2][3] - _matVP.m[2][2];
-	frustum.planes[5].d = _matVP.m[3][3] - _matVP.m[3][2];
+	frustum.planes[5].normal.x = matVP.m[0][3] - matVP.m[0][2];
+	frustum.planes[5].normal.y = matVP.m[1][3] - matVP.m[1][2];
+	frustum.planes[5].normal.z = matVP.m[2][3] - matVP.m[2][2];
+	frustum.planes[5].d = matVP.m[3][3] - matVP.m[3][2];
 
 	// 法線を正規化
 	for(auto& p : frustum.planes) {
@@ -70,8 +70,8 @@ Frustum CreateFrustumFromMatrix(const Matrix4x4& _matVP) {
 
 
 /// @brief 視錐台の情報をImGuiで表示する
-/// @param _frustum 表示元のデータ
-void ImGuiShowFrustum(const Frustum& _frustum) {
+/// @param frustum 表示元のデータ
+void ImGuiShowFrustum(const Frustum& frustum) {
 	if(ImGui::CollapsingHeader("Frustum")) {
 		const char* names[6] = { "Left", "Right", "Bottom", "Top", "Near", "Far" };
 		std::string clipboardText;
@@ -79,19 +79,19 @@ void ImGuiShowFrustum(const Frustum& _frustum) {
 		for(int i = 0; i < 6; ++i) {
 			ImGui::Text("%s plane:", names[i]);
 			ImGui::Text("  Normal: %.3f, %.3f, %.3f",
-						_frustum.planes[i].normal.x,
-						_frustum.planes[i].normal.y,
-						_frustum.planes[i].normal.z);
-			ImGui::Text("  Distance: %.3f", _frustum.planes[i].d);
+						frustum.planes[i].normal.x,
+						frustum.planes[i].normal.y,
+						frustum.planes[i].normal.z);
+			ImGui::Text("  Distance: %.3f", frustum.planes[i].d);
 
 			// クリップボード用文字列を作成
 			clipboardText += names[i];
 			clipboardText += " plane: ";
 			clipboardText += "Normal(";
-			clipboardText += std::to_string(_frustum.planes[i].normal.x) + ", ";
-			clipboardText += std::to_string(_frustum.planes[i].normal.y) + ", ";
-			clipboardText += std::to_string(_frustum.planes[i].normal.z) + "), ";
-			clipboardText += "Distance(" + std::to_string(_frustum.planes[i].d) + ")\n";
+			clipboardText += std::to_string(frustum.planes[i].normal.x) + ", ";
+			clipboardText += std::to_string(frustum.planes[i].normal.y) + ", ";
+			clipboardText += std::to_string(frustum.planes[i].normal.z) + "), ";
+			clipboardText += "Distance(" + std::to_string(frustum.planes[i].d) + ")\n";
 		}
 
 		// Clipboardコピー用ボタン
@@ -105,40 +105,40 @@ void ImGuiShowFrustum(const Frustum& _frustum) {
 }	/// namespace
 
 
-void ComponentDebug::CameraDebug(CameraComponent* _camera) {
-	if(!_camera) {
+void ComponentDebug::CameraDebug(CameraComponent* camera) {
+	if(!camera) {
 		return;
 	}
 
-	Editor::ImMathf::DragFloat("fovY", &_camera->fovY_, 0.01f, 0.1f, Math::PI);
-	Editor::ImMathf::DragFloat("near clip", &_camera->nearClip_, 0.01f, 0.01f, 100.0f);
-	Editor::ImMathf::DragFloat("far clip", &_camera->farClip_, 0.01f, 100.0f, 10000.0f);
+	Editor::ImMathf::DragFloat("fovY", &camera->fovY_, 0.01f, 0.1f, Math::PI);
+	Editor::ImMathf::DragFloat("near clip", &camera->nearClip_, 0.01f, 0.01f, 100.0f);
+	Editor::ImMathf::DragFloat("far clip", &camera->farClip_, 0.01f, 100.0f, 10000.0f);
 
 
 	ImGui::Spacing();
 
 	/// type debug
-	ImGui::Combo("camera type", &_camera->cameraType_, "3D\0 2D\0");
+	ImGui::Combo("camera type", &camera->cameraType_, "3D\0 2D\0");
 
 	ImGui::Spacing();
 
 	if(ImGui::Button("main camera setting")) {
-		_camera->SetIsMainCameraRequest(true);
+		camera->SetIsMainCameraRequest(true);
 	}
 
 
 	/// frustum debug
-	ImGui::Checkbox("Draw Frustum", &_camera->isDrawFrustum_);
+	ImGui::Checkbox("Draw Frustum", &camera->isDrawFrustum_);
 
 	if(ImGui::CollapsingHeader("Frustum Debug")) {
-		Frustum frustum = CreateFrustumFromMatrix(_camera->GetViewProjection().matVP);
+		Frustum frustum = CreateFrustumFromMatrix(camera->GetViewProjection().matVP);
 		ImGuiShowFrustum(frustum);
 	}
 
 	if(ImGui::CollapsingHeader("Matrix Debug")) {
 
 		/// 行列のデバッグ表示
-		const ViewProjection& vp = _camera->GetViewProjection();
+		const ViewProjection& vp = camera->GetViewProjection();
 		ImGui::Text("View Matrix:");
 		for(int i = 0; i < 4; ++i) {
 			ImGui::Text("%.3f %.3f %.3f %.3f", vp.matView.m[i][0], vp.matView.m[i][1], vp.matView.m[i][2], vp.matView.m[i][3]);
@@ -171,9 +171,9 @@ void ComponentDebug::CameraDebug(CameraComponent* _camera) {
 
 
 	if(ImGui::CollapsingHeader("FogParams")) {
-		Vector3& color = _camera->fogParams_.color;
-		float& fogStart = _camera->fogParams_.fogStart;
-		float& fogEnd = _camera->fogParams_.fogEnd;
+		Vector3& color = camera->fogParams_.color;
+		float& fogStart = camera->fogParams_.fogStart;
+		float& fogEnd = camera->fogParams_.fogEnd;
 
 		ImGui::ColorEdit3("Fog Color Edit", &color.x);
 		Editor::DragFloat("Fog Start", fogStart, 0.1f, 0.0f, 1000.0f);
@@ -182,33 +182,33 @@ void ComponentDebug::CameraDebug(CameraComponent* _camera) {
 
 }
 
-void ONEngine::from_json(const nlohmann::json& _j, CameraComponent& _c) {
-	_c.isMainCameraRequest_ = _j.value("isMainCamera", true);
-	_c.fovY_ = _j.value("fovY", 0.7f);
-	_c.nearClip_ = _j.value("nearClip", 0.1f);
-	_c.farClip_ = _j.value("farClip", 1000.0f);
-	_c.cameraType_ = _j.value("cameraType", static_cast<int>(CameraType::Type3D));
-	_c.isDrawFrustum_ = _j.value("isDrawFrustum", false);
-	_c.fogParams_ = {
-		.color = _j.value("fogColor", Vector3::One),
-		.fogStart = _j.value("fogStart", 0.0f),
-		.fogEnd = _j.value("fogEnd", 1000.0f)
+void ONEngine::from_json(const nlohmann::json& j, CameraComponent& c) {
+	c.isMainCameraRequest_ = j.value("isMainCamera", true);
+	c.fovY_ = j.value("fovY", 0.7f);
+	c.nearClip_ = j.value("nearClip", 0.1f);
+	c.farClip_ = j.value("farClip", 1000.0f);
+	c.cameraType_ = j.value("cameraType", static_cast<int>(CameraType::Type3D));
+	c.isDrawFrustum_ = j.value("isDrawFrustum", false);
+	c.fogParams_ = {
+		.color = j.value("fogColor", Vector3::One),
+		.fogStart = j.value("fogStart", 0.0f),
+		.fogEnd = j.value("fogEnd", 1000.0f)
 	};
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const CameraComponent& _c) {
-	_j = nlohmann::json{
+void ONEngine::to_json(nlohmann::json& j, const CameraComponent& c) {
+	j = nlohmann::json{
 		{ "type", "CameraComponent" },
-		{ "enable", _c.enable },
-		{ "fovY", _c.fovY_ },
-		{ "nearClip", _c.nearClip_ },
-		{ "farClip", _c.farClip_ },
-		{ "cameraType", _c.cameraType_ },
-		{ "isMainCamera", _c.isMainCameraRequest_ },
-		{ "isDrawFrustum", _c.isDrawFrustum_ },
-		{ "fogColor", _c.fogParams_.color },
-		{ "fogStart", _c.fogParams_.fogStart },
-		{ "fogEnd", _c.fogParams_.fogEnd }
+		{ "enable", c.enable },
+		{ "fovY", c.fovY_ },
+		{ "nearClip", c.nearClip_ },
+		{ "farClip", c.farClip_ },
+		{ "cameraType", c.cameraType_ },
+		{ "isMainCamera", c.isMainCameraRequest_ },
+		{ "isDrawFrustum", c.isDrawFrustum_ },
+		{ "fogColor", c.fogParams_.color },
+		{ "fogStart", c.fogParams_.fogStart },
+		{ "fogEnd", c.fogParams_.fogEnd }
 	};
 }
 
@@ -302,17 +302,17 @@ void CameraComponent::LookAt(const Vector3& direction) {
 	transform->rotate = Quaternion::LookAt(Vector3::Zero, direction);
 }
 
-void CameraComponent::MakeViewProjection(DxDevice* _dxDevice) {
-	viewProjection_.Create(_dxDevice);
+void CameraComponent::MakeViewProjection(DxDevice* dxDevice) {
+	viewProjection_.Create(dxDevice);
 	viewProjection_.SetMappedData(ViewProjection(
 		Matrix4x4::kIdentity
 	));
 
-	cameraPosBuffer_.Create(_dxDevice);
+	cameraPosBuffer_.Create(dxDevice);
 	Vector4 cameraPos = Math::ConvertToVector4(GetOwner()->GetPosition(), 1.0f);
 	cameraPosBuffer_.SetMappedData(cameraPos);
 
-	cBufferFogParams_.Create(_dxDevice);
+	cBufferFogParams_.Create(dxDevice);
 	cBufferFogParams_.SetMappedData(FogParams{});
 }
 
@@ -321,47 +321,47 @@ void CameraComponent::MakeViewProjection(DxDevice* _dxDevice) {
 /// CameraMath
 /// ///////////////////////////////////////////////////
 
-Matrix4x4 CameraMath::MakePerspectiveFovMatrix(float _fovY, float _aspectRatio, float _nearClip, float _farClip) {
+Matrix4x4 CameraMath::MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
 	/// ----- 透視投影行列の作成 ----- ///
 
 	return Matrix4x4(
-		(1 / _aspectRatio) * Math::Cot(_fovY / 2.0f), 0.0f, 0.0f, 0.0f,
-		0.0f, Math::Cot(_fovY / 2.0f), 0.0f, 0.0f,
-		0.0f, 0.0f, _farClip / (_farClip - _nearClip), 1.0f,
-		0.0f, 0.0f, (-_nearClip * _farClip) / (_farClip - _nearClip), 0.0f
+		(1 / aspectRatio) * Math::Cot(fovY / 2.0f), 0.0f, 0.0f, 0.0f,
+		0.0f, Math::Cot(fovY / 2.0f), 0.0f, 0.0f,
+		0.0f, 0.0f, farClip / (farClip - nearClip), 1.0f,
+		0.0f, 0.0f, (-nearClip * farClip) / (farClip - nearClip), 0.0f
 	);
 }
 
-Matrix4x4 CameraMath::MakeOrthographicMatrix(float _left, float _right, float _bottom, float _top, float _znear, float _zfar) {
+Matrix4x4 CameraMath::MakeOrthographicMatrix(float left, float right, float bottom, float top, float znear, float zfar) {
 	/// ----- 平行投影行列の作成 ----- ///
 
 	Matrix4x4 result = {};
 
-	float width = _right - _left;
-	float height = _top - _bottom;
-	float depth = _zfar - _znear;
+	float width = right - left;
+	float height = top - bottom;
+	float depth = zfar - znear;
 
 	result.m[0][0] = 2.0f / width;
 	result.m[1][1] = 2.0f / height;
 	result.m[2][2] = 1.0f / depth;
-	result.m[3][0] = -(_right + _left) / width;
-	result.m[3][1] = -(_top + _bottom) / height;
-	result.m[3][2] = -_znear / depth;
+	result.m[3][0] = -(right + left) / width;
+	result.m[3][1] = -(top + bottom) / height;
+	result.m[3][2] = -znear / depth;
 	result.m[3][3] = 1.0f;
 
 	return result;
 }
 
-void CameraComponent::SetIsMainCameraRequest(bool _isMainCamera) {
-	isMainCameraRequest_ = _isMainCamera;
+void CameraComponent::SetIsMainCameraRequest(bool isMainCamera) {
+	isMainCameraRequest_ = isMainCamera;
 }
 
-void CameraComponent::SetCameraType(int _cameraType) {
-	cameraType_ = _cameraType;
+void CameraComponent::SetCameraType(int cameraType) {
+	cameraType_ = cameraType;
 }
 
-void CameraComponent::SetOrthographicSize(const Vector2& _size) {
-	orthographicSize_ = _size;
+void CameraComponent::SetOrthographicSize(const Vector2& size) {
+	orthographicSize_ = size;
 }
 
 bool CameraComponent::GetIsMainCameraRequest() const {

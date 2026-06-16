@@ -1,4 +1,4 @@
-﻿#include "GrassArrangementPipeline.h"
+#include "GrassArrangementPipeline.h"
 
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
@@ -12,11 +12,11 @@ using namespace Editor;
 GrassArrangementPipeline::GrassArrangementPipeline() = default;
 GrassArrangementPipeline::~GrassArrangementPipeline() = default;
 
-void GrassArrangementPipeline::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) {
+void GrassArrangementPipeline::Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) {
 
 	{	/// shader
 		ONEngine::Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Editor/GrassArrangement.cs.hlsl", L"cs_6_6", ONEngine::Shader::Type::cs);
 
 		/// pipeline
@@ -34,38 +34,38 @@ void GrassArrangementPipeline::Initialize(ONEngine::ShaderCompiler* _shaderCompi
 
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0); // s0
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 	{	/// buffer
-		usedTexIdBuffer_.Create(_dxm->GetDxDevice());
+		usedTexIdBuffer_.Create(dxm->GetDxDevice());
 
 	}
 
 }
 
-void GrassArrangementPipeline::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* _assetCollection) {
+void GrassArrangementPipeline::Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* assetCollection) {
 
 	/// ==================================================
 	/// 早期リターン条件のチェック
 	/// ==================================================
-	ONEngine::ComponentArray<ONEngine::GrassField>* grassArray = _ecs->GetCurrentGroup()->GetComponentArray<ONEngine::GrassField>();
+	ONEngine::ComponentArray<ONEngine::GrassField>* grassArray = ecs->GetCurrentGroup()->GetComponentArray<ONEngine::GrassField>();
 	if (!grassArray || grassArray->GetUsedComponents().empty()) {
 		return;
 	}
 
 	/// Pipelineの設定
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
 	/// bufferの設定
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
-	uint32_t grassArrangementTexId = static_cast<uint32_t>(_assetCollection->GetTextureIndex("./Packages/Textures/Terrain/GrassArrangement.png"));
-	uint32_t terrainVertexTexId    = static_cast<uint32_t>(_assetCollection->GetTextureIndex("./Packages/Textures/Terrain/TerrainVertex.png"));
+	uint32_t grassArrangementTexId = static_cast<uint32_t>(assetCollection->GetTextureIndex("./Packages/Textures/Terrain/GrassArrangement.png"));
+	uint32_t terrainVertexTexId    = static_cast<uint32_t>(assetCollection->GetTextureIndex("./Packages/Textures/Terrain/TerrainVertex.png"));
 	usedTexIdBuffer_.SetMappedData(UsedTextureIDs{ grassArrangementTexId, terrainVertexTexId });
 	usedTexIdBuffer_.BindForComputeCommandList(cmdList, CBV_USED_TEXTURED_IDS);
 
-	const auto& textures = _assetCollection->GetTextures();
+	const auto& textures = assetCollection->GetTextures();
 	cmdList->SetComputeRootDescriptorTable(SRV_TEXTURES, textures[0].GetSRVHandle().gpuHandle);
 
 	for (auto& grass : grassArray->GetUsedComponents()) {

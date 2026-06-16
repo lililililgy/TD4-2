@@ -1,4 +1,4 @@
-﻿#include "PostProcessRadialBlur.h"
+#include "PostProcessRadialBlur.h"
 
 using namespace ONEngine;
 
@@ -12,11 +12,11 @@ using namespace ONEngine;
 PostProcessRadialBlur::PostProcessRadialBlur() {}
 PostProcessRadialBlur::~PostProcessRadialBlur() {}
 
-void PostProcessRadialBlur::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void PostProcessRadialBlur::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/PostProcess/Screen/RadialBlur/RadialBlur.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ComputePipeline>();
@@ -27,16 +27,16 @@ void PostProcessRadialBlur::Initialize(ShaderCompiler* _shaderCompiler, DxManage
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
 }
 
-void PostProcessRadialBlur::Execute(const std::string& _textureName, DxCommand* _dxCommand, Asset::AssetCollection* _assetCollection, EntityComponentSystem* _entityComponentSystem) {
+void PostProcessRadialBlur::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem) {
 
 	/// 配列の取得とタグの確認
-	ComponentArray<ScreenPostEffectTag>* screenPostEffectTagArray = _entityComponentSystem->GetCurrentGroup()->GetComponentArray<ScreenPostEffectTag>();
+	ComponentArray<ScreenPostEffectTag>* screenPostEffectTagArray = entityComponentSystem->GetCurrentGroup()->GetComponentArray<ScreenPostEffectTag>();
 	if (!screenPostEffectTagArray || screenPostEffectTagArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -55,12 +55,12 @@ void PostProcessRadialBlur::Execute(const std::string& _textureName, DxCommand* 
 		return; // ラジアルブラーエフェクトが無効な場合は何もしない
 	}
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
-	auto command = _dxCommand->GetCommandList();
-	auto& textures = _assetCollection->GetTextures();
-	textureIndices_[0] = _assetCollection->GetTextureIndex(_textureName + "Scene");
-	textureIndices_[1] = _assetCollection->GetTextureIndex("postProcessResult");
+	auto command = dxCommand->GetCommandList();
+	auto& textures = assetCollection->GetTextures();
+	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
+	textureIndices_[1] = assetCollection->GetTextureIndex("postProcessResult");
 
 	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetUAVGPUHandle());

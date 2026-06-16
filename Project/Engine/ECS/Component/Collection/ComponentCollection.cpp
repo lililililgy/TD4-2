@@ -1,4 +1,4 @@
-﻿#include "ComponentCollection.h"
+#include "ComponentCollection.h"
 
 using namespace ONEngine;
 
@@ -14,8 +14,8 @@ ComponentCollection::ComponentCollection() {
 
 ComponentCollection::~ComponentCollection() {}
 
-IComponent* ComponentCollection::AddComponent(const std::string& _name) {
-	size_t hash = GetComponentHash(_name);
+IComponent* ComponentCollection::AddComponent(const std::string& name) {
+	size_t hash = GetComponentHash(name);
 
 	if (arrayMap_.find(hash) == arrayMap_.end()) {
 		return nullptr;
@@ -26,15 +26,15 @@ IComponent* ComponentCollection::AddComponent(const std::string& _name) {
 	return comp;
 }
 
-void ComponentCollection::RemoveComponent(size_t _hash, size_t _id) {
-	auto it = arrayMap_.find(_hash);
+void ComponentCollection::RemoveComponent(size_t hash, size_t id) {
+	auto it = arrayMap_.find(hash);
 	if (it != arrayMap_.end()) {
-		it->second->RemoveComponent(_id);
+		it->second->RemoveComponent(id);
 	}
 }
 
-void ComponentCollection::RemoveComponentAll(GameEntity* _entity) {
-	for (auto& component : _entity->GetComponents()) {
+void ComponentCollection::RemoveComponentAll(GameEntity* entity) {
+	for (auto& component : entity->GetComponents()) {
 		auto it = arrayMap_.find(component.first);
 		if (it != arrayMap_.end()) {
 			it->second->RemoveComponent(component.second->id);

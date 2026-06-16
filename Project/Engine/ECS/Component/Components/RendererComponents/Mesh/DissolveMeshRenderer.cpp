@@ -1,4 +1,4 @@
-﻿#include "DissolveMeshRenderer.h"
+#include "DissolveMeshRenderer.h"
 
 /// externals
 #include <magic_enum/magic_enum.hpp>
@@ -10,13 +10,13 @@
 
 using namespace ONEngine;
 
-void ONEngine::ShowGUI(DissolveMeshRenderer* _dmr, Asset::AssetCollection* _ac) {
-	if(!_dmr) {
+void ONEngine::ShowGUI(DissolveMeshRenderer* dmr, Asset::AssetCollection* ac) {
+	if(!dmr) {
 		return;
 	}
 
 	/// param get
-	Vector4& color = _dmr->material_.baseColor;
+	Vector4& color = dmr->material_.baseColor;
 
 	/// edit
 	if (Editor::ImGuiColorEdit("color", &color)) {
@@ -26,15 +26,15 @@ void ONEngine::ShowGUI(DissolveMeshRenderer* _dmr, Asset::AssetCollection* _ac) 
 	ImGui::Spacing();
 
 	/// meshの変更
-	std::string meshName = _ac->GetAssetPath<Asset::Model>(_dmr->meshGuid_);
+	std::string meshName = ac->GetAssetPath<Asset::Model>(dmr->meshGuid_);
 	ImGui::Text("mesh path");
 	ImGui::InputText("##mesh", meshName.data(), meshName.capacity(), ImGuiInputTextFlags_ReadOnly);
 	if (ImGui::BeginDragDropTarget()) {
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
 			if (payload->Data) {
 				Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
-				if (_ac->GetAssetTypeFromGuid(assetPayload->guid) == Asset::AssetType::Mesh) {
-					_dmr->meshGuid_ = assetPayload->guid;
+				if (ac->GetAssetTypeFromGuid(assetPayload->guid) == Asset::AssetType::Mesh) {
+					dmr->meshGuid_ = assetPayload->guid;
 					Console::Log(std::format("Mesh path set to: {}", assetPayload->filePath));
 				}
 			}
@@ -48,9 +48,9 @@ void ONEngine::ShowGUI(DissolveMeshRenderer* _dmr, Asset::AssetCollection* _ac) 
 	/// ----------------------------------------------
 	/// テクスチャのプレビュー表示
 	/// ----------------------------------------------
-	bool hasTextureGuid = _dmr->dissolveTexture_ != Guid::kInvalid;
+	bool hasTextureGuid = dmr->dissolveTexture_ != Guid::kInvalid;
 	if (hasTextureGuid) {
-		const Asset::Texture* tex = _ac->GetTextureFromGuid(_dmr->dissolveTexture_);
+		const Asset::Texture* tex = ac->GetTextureFromGuid(dmr->dissolveTexture_);
 		if (tex) {
 			Vector2 aspectRatio = tex->GetTextureSize();
 			aspectRatio /= (std::max)(aspectRatio.x, aspectRatio.y);
@@ -78,8 +78,8 @@ void ONEngine::ShowGUI(DissolveMeshRenderer* _dmr, Asset::AssetCollection* _ac) 
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
 			if (payload->Data) {
 				Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
-				if (_ac->GetAssetTypeFromGuid(assetPayload->guid) == Asset::AssetType::Texture) {
-					_dmr->dissolveTexture_ = assetPayload->guid;
+				if (ac->GetAssetTypeFromGuid(assetPayload->guid) == Asset::AssetType::Texture) {
+					dmr->dissolveTexture_ = assetPayload->guid;
 					Console::Log(std::format("Dissolve Texture path set to: {}", assetPayload->filePath));
 				}
 			}
@@ -91,38 +91,38 @@ void ONEngine::ShowGUI(DissolveMeshRenderer* _dmr, Asset::AssetCollection* _ac) 
 	ImGui::SeparatorText("Dissolve Settings");
 
 	/// compare
-	Editor::Combo<DissolveCompare>("Dissolve Compare", _dmr->dissolveCompare_);
-	Editor::SliderFloat("Dissolve Threshold", _dmr->dissolveThreshold_, 0.0f, 1.0f);
-	Editor::SliderFloat("Edge Width", _dmr->edgeWidth_, 0.0f, 0.5f);
-	Editor::ImGuiColorEdit("Edge Color", &_dmr->edgeColor_);
+	Editor::Combo<DissolveCompare>("Dissolve Compare", dmr->dissolveCompare_);
+	Editor::SliderFloat("Dissolve Threshold", dmr->dissolveThreshold_, 0.0f, 1.0f);
+	Editor::SliderFloat("Edge Width", dmr->edgeWidth_, 0.0f, 0.5f);
+	Editor::ImGuiColorEdit("Edge Color", &dmr->edgeColor_);
 
 	ImGui::Spacing();
 
 	/// material
-	Editor::ImMathf::MaterialEdit("Material##DissolveMeshRenderer", &_dmr->material_, _ac);
+	Editor::ImMathf::MaterialEdit("Material##DissolveMeshRenderer", &dmr->material_, ac);
 
 }
 
-void ONEngine::from_json(const nlohmann::json& _j, DissolveMeshRenderer& _dmr) {
-	_dmr.meshGuid_ = _j.value("meshGuid", Guid::kInvalid);
-	_dmr.material_ = _j.value("material", Asset::Material());
-	_dmr.dissolveTexture_ = _j.value("dissolveTexture", Guid::kInvalid);
-	_dmr.dissolveCompare_ = _j.value("dissolveCompare", DissolveCompare::LessEqual);
-	_dmr.dissolveThreshold_ = _j.value("dissolveThreshold", 1.0f);
-	_dmr.edgeWidth_ = _j.value("edgeWidth", 0.05f);
-	_dmr.edgeColor_ = _j.value("edgeColor", Vector4(1.0f, 0.5f, 0.0f, 1.0f));
+void ONEngine::from_json(const nlohmann::json& j, DissolveMeshRenderer& dmr) {
+	dmr.meshGuid_ = j.value("meshGuid", Guid::kInvalid);
+	dmr.material_ = j.value("material", Asset::Material());
+	dmr.dissolveTexture_ = j.value("dissolveTexture", Guid::kInvalid);
+	dmr.dissolveCompare_ = j.value("dissolveCompare", DissolveCompare::LessEqual);
+	dmr.dissolveThreshold_ = j.value("dissolveThreshold", 1.0f);
+	dmr.edgeWidth_ = j.value("edgeWidth", 0.05f);
+	dmr.edgeColor_ = j.value("edgeColor", Vector4(1.0f, 0.5f, 0.0f, 1.0f));
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const DissolveMeshRenderer& _dmr) {
-	_j = {
+void ONEngine::to_json(nlohmann::json& j, const DissolveMeshRenderer& dmr) {
+	j = {
 		{ "type", "DissolveMeshRenderer" },
-		{ "meshGuid", _dmr.meshGuid_ },
-		{ "material", _dmr.material_ },
-		{ "dissolveTexture", _dmr.dissolveTexture_ },
-		{ "dissolveCompare", _dmr.dissolveCompare_ },
-		{ "dissolveThreshold", _dmr.dissolveThreshold_ },
-		{ "edgeWidth", _dmr.edgeWidth_ },
-		{ "edgeColor", _dmr.edgeColor_ }
+		{ "meshGuid", dmr.meshGuid_ },
+		{ "material", dmr.material_ },
+		{ "dissolveTexture", dmr.dissolveTexture_ },
+		{ "dissolveCompare", dmr.dissolveCompare_ },
+		{ "dissolveThreshold", dmr.dissolveThreshold_ },
+		{ "edgeWidth", dmr.edgeWidth_ },
+		{ "edgeColor", dmr.edgeColor_ }
 	};
 }
 
@@ -144,8 +144,8 @@ const Guid& DissolveMeshRenderer::GetDissolveTextureGuid() const {
 	return dissolveTexture_;
 }
 
-uint32_t DissolveMeshRenderer::GetDissolveTextureId(Asset::AssetCollection* _ac) const {
-	const Asset::Texture* dissolveTex = _ac->GetTextureFromGuid(dissolveTexture_);
+uint32_t DissolveMeshRenderer::GetDissolveTextureId(Asset::AssetCollection* ac) const {
+	const Asset::Texture* dissolveTex = ac->GetTextureFromGuid(dissolveTexture_);
 	if(dissolveTex) {
 		return dissolveTex->GetSRVDescriptorIndex();
 	}
@@ -156,7 +156,7 @@ float DissolveMeshRenderer::GetDissolveThreshold() const {
 	return dissolveThreshold_;
 }
 
-GPUMaterial DissolveMeshRenderer::GetGPUMaterial(Asset::AssetCollection* _ac) const {
+GPUMaterial DissolveMeshRenderer::GetGPUMaterial(Asset::AssetCollection* ac) const {
 	GPUMaterial result{};
 	result.uvTransform = material_.uvTransform;
 	result.baseColor = material_.baseColor;
@@ -164,7 +164,7 @@ GPUMaterial DissolveMeshRenderer::GetGPUMaterial(Asset::AssetCollection* _ac) co
 	result.entityId = GetOwner()->GetId();
 
 	if(material_.HasBaseTexture()) {
-		const Asset::Texture* baseTex = _ac->GetTextureFromGuid(material_.GetBaseTextureGuid());
+		const Asset::Texture* baseTex = ac->GetTextureFromGuid(material_.GetBaseTextureGuid());
 		if(baseTex) {
 			result.baseTextureId = baseTex->GetSRVDescriptorIndex();
 		}

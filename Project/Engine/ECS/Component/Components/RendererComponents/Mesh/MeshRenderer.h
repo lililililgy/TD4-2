@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// externals
 #include <mono/jit/jit.h>
@@ -27,12 +27,12 @@ namespace ONEngine {
 
 namespace ComponentDebug {
 /// @brief MeshRendererのデバッグ表示
-void MeshRendererDebug(MeshRenderer* _mr, Asset::AssetCollection* _assetCollection);
+void MeshRendererDebug(MeshRenderer* mr, Asset::AssetCollection* assetCollection);
 }
 
 /// Json変換
-void from_json(const nlohmann::json& _j, MeshRenderer& _mr);
-void to_json(nlohmann::json& _j, const MeshRenderer& _mr);
+void from_json(const nlohmann::json& j, MeshRenderer& mr);
+void to_json(nlohmann::json& j, const MeshRenderer& mr);
 
 
 /// @brief 描画の優先順位
@@ -48,9 +48,9 @@ enum class RenderQueue : uint32_t {
 class MeshRenderer : public IRenderComponent {
 	friend class AnimationPlayer;
 	/// friend methods
-	friend void ComponentDebug::MeshRendererDebug(MeshRenderer* _mr, Asset::AssetCollection* _assetCollection);
-	friend void from_json(const nlohmann::json& _j, MeshRenderer& _mr);
-	friend void to_json(nlohmann::json& _j, const MeshRenderer& _mr);
+	friend void ComponentDebug::MeshRendererDebug(MeshRenderer* mr, Asset::AssetCollection* assetCollection);
+	friend void from_json(const nlohmann::json& j, MeshRenderer& mr);
+	friend void to_json(nlohmann::json& j, const MeshRenderer& mr);
 
 public:
 	/// ===================================================
@@ -61,7 +61,7 @@ public:
 	~MeshRenderer();
 
 	/// @brief 描画のために必要なデータを設定する
-	void SetupRenderData(Asset::AssetCollection* _assetCollection);
+	void SetupRenderData(Asset::AssetCollection* assetCollection);
 
 private:
 	/// ===================================================
@@ -81,25 +81,25 @@ public:
 	/// ===================================================
 
 	/// @brief 描画するレイヤーの設定
-	void SetRenderQueue(RenderQueue _queue);
+	void SetRenderQueue(RenderQueue queue);
 
 	/// @brief 描画レイヤーの取得
 	RenderQueue GetRenderQueue() const;
 
 	/// @brief 描画するmeshの file pathを設定
-	/// @param _path .slnからの相対パス
-	void SetMeshPath(const std::string& _path);
+	/// @param path .slnからの相対パス
+	void SetMeshPath(const std::string& path);
 
 	/// @brief 描画する色の設定
-	/// @param _color RGBA 0.0f ~ 1.0f
-	void SetColor(const Vector4& _color);
+	/// @param color RGBA 0.0f ~ 1.0f
+	void SetColor(const Vector4& color);
 
 	/// @brief ポストエフェクトのフラグを設定
-	/// @param _flags ポストエフェクトのフラグ
-	void SetPostEffectFlags(uint32_t _flags);
+	/// @param flags ポストエフェクトのフラグ
+	void SetPostEffectFlags(uint32_t flags);
 
 	/// @brief UV変形のセット
-	void SetUVTransform(const UVTransform& _uvTransform);
+	void SetUVTransform(const UVTransform& uvTransform);
 
 	/// @brief 描画するmeshの file pathを取得
 	/// @return .slnからの相対パス
@@ -133,13 +133,13 @@ public:
 /// csで使用するための関数群
 /// ===================================================
 
-MonoString* InternalGetMeshName(uint64_t _nativeHandle);
-void InternalSetMeshName(uint64_t _nativeHandle, MonoString* _meshName);
-Vector4 InternalGetMeshColor(uint64_t _nativeHandle);
-void InternalSetMeshColor(uint64_t _nativeHandle, Vector4 _color);
-uint32_t InternalGetPostEffectFlags(uint64_t _nativeHandle);
-void InternalSetPostEffectFlags(uint64_t _nativeHandle, uint32_t _flags);
-uint32_t InternalGetRenderQueue(uint64_t _nativeHandle);
-void InternalSetRenderQueue(uint64_t _nativeHandle, uint32_t _queue);
+MonoString* InternalGetMeshName(uint64_t nativeHandle);
+void InternalSetMeshName(uint64_t nativeHandle, MonoString* meshName);
+Vector4 InternalGetMeshColor(uint64_t nativeHandle);
+void InternalSetMeshColor(uint64_t nativeHandle, Vector4 color);
+uint32_t InternalGetPostEffectFlags(uint64_t nativeHandle);
+void InternalSetPostEffectFlags(uint64_t nativeHandle, uint32_t flags);
+uint32_t InternalGetRenderQueue(uint64_t nativeHandle);
+void InternalSetRenderQueue(uint64_t nativeHandle, uint32_t queue);
 
 } /// ONEngine

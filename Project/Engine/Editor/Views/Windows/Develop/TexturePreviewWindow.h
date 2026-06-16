@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -21,7 +21,7 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	TexturePreviewWindow(ONEngine::Asset::AssetCollection* _assetCollection);
+	TexturePreviewWindow(ONEngine::Asset::AssetCollection* assetCollection);
 	~TexturePreviewWindow();
 
 	void ShowImGui() override;

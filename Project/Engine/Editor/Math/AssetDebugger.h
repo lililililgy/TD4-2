@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -39,10 +39,10 @@ bool HandleNormalTextureDrop(ONEngine::Asset::Material* material);
 
 
 /// @brief Materialの編集UIの表示
-/// @param _label ヘッダーの名前
-/// @param _material 編集対象のMaterialポインタ
-/// @param _assetCollection AssetCollectionポインタ
-/// @param _isEditNormalTexture ノーマルマップの編集を行うかどうか
+/// @param label ヘッダーの名前
+/// @param material 編集対象のMaterialポインタ
+/// @param assetCollection AssetCollectionポインタ
+/// @param isEditNormalTexture ノーマルマップの編集を行うかどうか
 /// @return true: 編集が行われた, false: 編集されなかった
 bool MaterialEdit(const std::string& label, ONEngine::Asset::Material* material, ONEngine::Asset::AssetCollection* assetCollection, bool isEditNormalTexture = true);
 

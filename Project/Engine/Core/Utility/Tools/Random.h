@@ -13,18 +13,18 @@ namespace ONEngine {
 
 class Random final {
 public:
-	static int Int(int _min, int _max);
+	static int Int(int min, int max);
 	static int Int();
 
-	static uint64_t UInt64(uint64_t _min, uint64_t _max);
+	static uint64_t UInt64(uint64_t min, uint64_t max);
 	static uint64_t UInt64();
 
-	static float Float(float _min, float _max);
+	static float Float(float min, float max);
 	static float Float();
 
-	static Vector2 Vec2(const Vector2& _min, const Vector2& _max);
-	static Vector3 Vec3(const Vector3& _min, const Vector3& _max);
-	static Vector4 Vec4(const Vector4& _min, const Vector4& _max);
+	static Vector2 Vec2(const Vector2& min, const Vector2& max);
+	static Vector3 Vec3(const Vector3& min, const Vector3& max);
+	static Vector4 Vec4(const Vector4& min, const Vector4& max);
 
 	static Vector3 InsideUnitSphere();
 

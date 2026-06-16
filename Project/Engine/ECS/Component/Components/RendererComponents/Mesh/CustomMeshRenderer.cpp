@@ -1,4 +1,4 @@
-﻿#include "CustomMeshRenderer.h"
+#include "CustomMeshRenderer.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -12,8 +12,8 @@ CustomMeshRenderer::CustomMeshRenderer() {
 
 CustomMeshRenderer::~CustomMeshRenderer() {}
 
-void CustomMeshRenderer::MeshRecreate(DxDevice* _pDxDevice) {
-	mesh_.CreateBuffer(_pDxDevice);
+void CustomMeshRenderer::MeshRecreate(DxDevice* pDxDevice) {
+	mesh_.CreateBuffer(pDxDevice);
 	mesh_.VertexBufferMapping();
 	mesh_.IndexBufferMapping();
 }
@@ -22,28 +22,28 @@ void CustomMeshRenderer::VertexMemcpy() {
 	mesh_.MemcpyVertexData();
 }
 
-void CustomMeshRenderer::SetVertices(const std::vector<CustomMeshRenderer::Vertex>& _vertices) {
-	mesh_.SetVertices(_vertices);
+void CustomMeshRenderer::SetVertices(const std::vector<CustomMeshRenderer::Vertex>& vertices) {
+	mesh_.SetVertices(vertices);
 }
 
-void CustomMeshRenderer::SetIndices(const std::vector<uint32_t>& _indices) {
-	mesh_.SetIndices(_indices);
+void CustomMeshRenderer::SetIndices(const std::vector<uint32_t>& indices) {
+	mesh_.SetIndices(indices);
 }
 
-void CustomMeshRenderer::SetTexturePath(const std::string& _path) {
-	texturePath_ = _path;
+void CustomMeshRenderer::SetTexturePath(const std::string& path) {
+	texturePath_ = path;
 }
 
-void CustomMeshRenderer::SetColor(const Vector4& _color) {
-	gpuMaterial_.baseColor = _color;
+void CustomMeshRenderer::SetColor(const Vector4& color) {
+	gpuMaterial_.baseColor = color;
 }
 
-void CustomMeshRenderer::SetIsVisible(bool _isVisible) {
-	isVisible_ = _isVisible;
+void CustomMeshRenderer::SetIsVisible(bool isVisible) {
+	isVisible_ = isVisible;
 }
 
-void CustomMeshRenderer::SetIsBufferRecreate(bool _isBufferRecreate) {
-	isBufferRecreate_ = _isBufferRecreate;
+void CustomMeshRenderer::SetIsBufferRecreate(bool isBufferRecreate) {
+	isBufferRecreate_ = isBufferRecreate;
 }
 
 const std::string& CustomMeshRenderer::GetTexturePath() const {

@@ -14,7 +14,7 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	DxRTVHeap(DxDevice* _dxDevice, uint32_t _maxHeapSize);
+	DxRTVHeap(DxDevice* dxDevice, uint32_t maxHeapSize);
 	~DxRTVHeap();
 
 	/// @brief 初期化

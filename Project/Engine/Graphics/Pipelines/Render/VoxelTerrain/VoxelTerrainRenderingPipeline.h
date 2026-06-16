@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../../Interface/IRenderingPipeline.h"
@@ -53,16 +53,16 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	VoxelTerrainRenderingPipeline(Asset::AssetCollection* _assetCollection);
+	VoxelTerrainRenderingPipeline(Asset::AssetCollection* assetCollection);
 	~VoxelTerrainRenderingPipeline();
 
 	/// --------------- override methods --------------- ///
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
-	void Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) override;
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
+	void Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
 
 	void DrawCubic(VoxelTerrain* vt, CameraComponent* camera, DxCommand* dxCommand);
 
-	void CreatePipeline(GraphicsPipeline* _pipeline, Shader& _shader, DxManager* _dxm, D3D12_FILL_MODE _fillMode, D3D12_BLEND_DESC _blendMode);
+	void CreatePipeline(GraphicsPipeline* pipeline, Shader& shader, DxManager* dxm, D3D12_FILL_MODE fillMode, D3D12_BLEND_DESC blendMode);
 
 private:
 	/// ===================================================

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -21,12 +21,12 @@ public:
 	PostProcessGaussianBlurPerObject() = default;
 	~PostProcessGaussianBlurPerObject() override = default;
 
-	void Initialize(ShaderCompiler* _shaderCompiler, class DxManager* _dxm) override;
+	void Initialize(ShaderCompiler* shaderCompiler, class DxManager* dxm) override;
 	void Execute(
-		const std::string& _textureName,
-		DxCommand* _dxCommand,
-		Asset::AssetCollection* _assetCollection,
-		EntityComponentSystem* _entityComponentSystem
+		const std::string& textureName,
+		DxCommand* dxCommand,
+		Asset::AssetCollection* assetCollection,
+		EntityComponentSystem* entityComponentSystem
 	) override;
 
 private:

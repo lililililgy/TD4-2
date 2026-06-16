@@ -1,4 +1,4 @@
-﻿#include "Animator.h"
+#include "Animator.h"
 #include "Engine/Core/Utility/Tools/Log.h"
 
 /// engine
@@ -18,13 +18,13 @@ Animator::Animator() {
     Console::LogInfo("Animator: Component created.");
 }
 
-void Animator::Play(uint32_t _clipId, uint32_t _layerIndex) {
-    if (_layerIndex >= MAX_ANIMATION_LAYERS) return;
+void Animator::Play(uint32_t clipId, uint32_t layerIndex) {
+    if (layerIndex >= MAX_ANIMATION_LAYERS) return;
 
-    AnimationLayer& layer = layers[_layerIndex];
+    AnimationLayer& layer = layers[layerIndex];
 
     // 即時切り替え
-    layer.states[0].clipId = _clipId;
+    layer.states[0].clipId = clipId;
     layer.states[0].time = 0.0f;
     layer.states[0].prevTime = 0.0f;
     layer.states[0].weight = 1.0f;
@@ -36,15 +36,15 @@ void Animator::Play(uint32_t _clipId, uint32_t _layerIndex) {
     layer.transitionTimer = 0.0f;
 }
 
-void Animator::CrossFade(uint32_t _clipId, float _duration, uint32_t _layerIndex) {
-    if (_layerIndex >= MAX_ANIMATION_LAYERS) return;
+void Animator::CrossFade(uint32_t clipId, float duration, uint32_t layerIndex) {
+    if (layerIndex >= MAX_ANIMATION_LAYERS) return;
 
-    Console::LogInfo(std::format("Animator::CrossFade - ClipId: {}, Duration: {}, Layer: {}", _clipId, _duration, _layerIndex));
+    Console::LogInfo(std::format("Animator::CrossFade - ClipId: {}, Duration: {}, Layer: {}", clipId, duration, layerIndex));
 
-    AnimationLayer& layer = layers[_layerIndex];
+    AnimationLayer& layer = layers[layerIndex];
 
     // すでに同じクリップを再生しようとしている場合は無視（またはリセット）
-    if (layer.states[0].clipId == _clipId && layer.transitionDuration <= 0.0f) {
+    if (layer.states[0].clipId == clipId && layer.transitionDuration <= 0.0f) {
         return;
     }
 
@@ -52,27 +52,27 @@ void Animator::CrossFade(uint32_t _clipId, float _duration, uint32_t _layerIndex
     // states[1] がフェードアウト、states[0] がフェードイン
     layer.states[1] = layer.states[0];
     
-    layer.states[0].clipId = _clipId;
+    layer.states[0].clipId = clipId;
     layer.states[0].time = 0.0f;
     layer.states[0].prevTime = 0.0f;
     layer.states[0].weight = 0.0f;
 
-    layer.transitionDuration = _duration;
+    layer.transitionDuration = duration;
     layer.transitionTimer = 0.0f;
 }
 
-void Animator::SetPlaybackSpeed(float _speed, uint32_t _layerIndex) {
-    if (_layerIndex >= MAX_ANIMATION_LAYERS) return;
-    layers[_layerIndex].states[0].playbackSpeed = _speed;
+void Animator::SetPlaybackSpeed(float speed, uint32_t layerIndex) {
+    if (layerIndex >= MAX_ANIMATION_LAYERS) return;
+    layers[layerIndex].states[0].playbackSpeed = speed;
 }
 
-void Animator::SetLoop(bool _isLoop, uint32_t _layerIndex) {
-    if (_layerIndex >= MAX_ANIMATION_LAYERS) return;
-    layers[_layerIndex].states[0].isLoop = _isLoop;
+void Animator::SetLoop(bool isLoop, uint32_t layerIndex) {
+    if (layerIndex >= MAX_ANIMATION_LAYERS) return;
+    layers[layerIndex].states[0].isLoop = isLoop;
 }
 
-float Animator::GetAnimationDuration(uint32_t _clipId) const {
-    if (_clipId == 0) return 0.0f;
+float Animator::GetAnimationDuration(uint32_t clipId) const {
+    if (clipId == 0) return 0.0f;
 
     auto* owner = GetOwner();
     if (!owner) return 0.0f;
@@ -112,11 +112,11 @@ float Animator::GetAnimationDuration(uint32_t _clipId) const {
         loggedClips[smr->GetMeshPath()] = true;
     }
 
-    auto it = clips.find(_clipId);
+    auto it = clips.find(clipId);
     if (it != clips.end()) {
         static int foundLogCount = 0;
         if (foundLogCount < 20) {
-            Console::LogInfo(std::format("Animator::GetAnimationDuration - SUCCESS: ClipId {} ('{}'), Duration: {}", _clipId, it->second.name, it->second.duration));
+            Console::LogInfo(std::format("Animator::GetAnimationDuration - SUCCESS: ClipId {} ('{}'), Duration: {}", clipId, it->second.name, it->second.duration));
             foundLogCount++;
         }
         return it->second.duration;
@@ -124,26 +124,26 @@ float Animator::GetAnimationDuration(uint32_t _clipId) const {
 
     static int failLogCount = 0;
     if (failLogCount < 10) {
-        Console::LogWarning(std::format("Animator::GetAnimationDuration - FAIL: ClipId {} NOT FOUND in model '{}' ({} clips total)", _clipId, smr->GetMeshPath(), clips.size()));
+        Console::LogWarning(std::format("Animator::GetAnimationDuration - FAIL: ClipId {} NOT FOUND in model '{}' ({} clips total)", clipId, smr->GetMeshPath(), clips.size()));
         failLogCount++;
     }
     return 0.0f;
 }
 
-void from_json(const nlohmann::json& _j, Animator& _animator) {
-    if (_j.contains("enable")) {
-        _animator.enable = _j.at("enable").get<int>();
+void from_json(const nlohmann::json& j, Animator& animator) {
+    if (j.contains("enable")) {
+        animator.enable = j.at("enable").get<int>();
     }
 
-    if (_j.contains("defaultClipId")) {
-        _animator.defaultClipId = _j.at("defaultClipId").get<uint32_t>();
+    if (j.contains("defaultClipId")) {
+        animator.defaultClipId = j.at("defaultClipId").get<uint32_t>();
     }
 
-    if (_j.contains("layers")) {
-        const auto& layersJson = _j.at("layers");
+    if (j.contains("layers")) {
+        const auto& layersJson = j.at("layers");
         for (uint32_t i = 0; i < (uint32_t)layersJson.size() && i < MAX_ANIMATION_LAYERS; ++i) {
             const auto& layerJson = layersJson[i];
-            AnimationLayer& layer = _animator.layers[i];
+            AnimationLayer& layer = animator.layers[i];
 
             if (layerJson.contains("weight")) layer.weight = layerJson.at("weight").get<float>();
             if (layerJson.contains("boneMaskHash")) layer.boneMaskHash = layerJson.at("boneMaskHash").get<uint32_t>();
@@ -165,16 +165,16 @@ void from_json(const nlohmann::json& _j, Animator& _animator) {
     }
 }
 
-void to_json(nlohmann::json& _j, const Animator& _animator) {
-    _j = nlohmann::json{
+void to_json(nlohmann::json& j, const Animator& animator) {
+    j = nlohmann::json{
         { "type", "Animator" },
-        { "enable", _animator.enable },
-        { "defaultClipId", _animator.defaultClipId }
+        { "enable", animator.enable },
+        { "defaultClipId", animator.defaultClipId }
     };
 
     auto layersJson = nlohmann::json::array();
     for (uint32_t i = 0; i < MAX_ANIMATION_LAYERS; ++i) {
-        const AnimationLayer& layer = _animator.layers[i];
+        const AnimationLayer& layer = animator.layers[i];
 
         auto layerJson = nlohmann::json{
             { "weight", layer.weight },
@@ -195,55 +195,55 @@ void to_json(nlohmann::json& _j, const Animator& _animator) {
         layerJson["states"] = statesJson;
         layersJson.push_back(layerJson);
     }
-    _j["layers"] = layersJson;
+    j["layers"] = layersJson;
 }
 
-void Internal_Play(uint64_t _nativeHandle, uint32_t _clipId, uint32_t _layerIndex) {
-    Animator* animator = reinterpret_cast<Animator*>(_nativeHandle);
+void Internal_Play(uint64_t nativeHandle, uint32_t clipId, uint32_t layerIndex) {
+    Animator* animator = reinterpret_cast<Animator*>(nativeHandle);
     if (animator) {
-        animator->Play(_clipId, _layerIndex);
+        animator->Play(clipId, layerIndex);
     }
 }
 
-void Internal_CrossFade(uint64_t _nativeHandle, uint32_t _clipId, float _duration, uint32_t _layerIndex) {
-    Animator* animator = reinterpret_cast<Animator*>(_nativeHandle);
+void Internal_CrossFade(uint64_t nativeHandle, uint32_t clipId, float duration, uint32_t layerIndex) {
+    Animator* animator = reinterpret_cast<Animator*>(nativeHandle);
     if (animator) {
-        animator->CrossFade(_clipId, _duration, _layerIndex);
+        animator->CrossFade(clipId, duration, layerIndex);
     }
 }
 
-void Internal_SetPlaybackSpeed(uint64_t _nativeHandle, float _speed, uint32_t _layerIndex) {
-    Animator* animator = reinterpret_cast<Animator*>(_nativeHandle);
+void Internal_SetPlaybackSpeed(uint64_t nativeHandle, float speed, uint32_t layerIndex) {
+    Animator* animator = reinterpret_cast<Animator*>(nativeHandle);
     if (animator) {
-        animator->SetPlaybackSpeed(_speed, _layerIndex);
+        animator->SetPlaybackSpeed(speed, layerIndex);
     }
 }
 
-void Internal_SetLoop(uint64_t _nativeHandle, bool _isLoop, uint32_t _layerIndex) {
-    Animator* animator = reinterpret_cast<Animator*>(_nativeHandle);
+void Internal_SetLoop(uint64_t nativeHandle, bool isLoop, uint32_t layerIndex) {
+    Animator* animator = reinterpret_cast<Animator*>(nativeHandle);
     if (animator) {
-        animator->SetLoop(_isLoop, _layerIndex);
+        animator->SetLoop(isLoop, layerIndex);
     }
 }
 
-float Internal_GetAnimationDuration(uint64_t _nativeHandle, uint32_t _clipId) {
-    Animator* animator = reinterpret_cast<Animator*>(_nativeHandle);
+float Internal_GetAnimationDuration(uint64_t nativeHandle, uint32_t clipId) {
+    Animator* animator = reinterpret_cast<Animator*>(nativeHandle);
     if (animator) {
-        return animator->GetAnimationDuration(_clipId);
+        return animator->GetAnimationDuration(clipId);
     }
     return 0.0f;
 }
 
 namespace ComponentDebug {
-    void AnimatorDebug(Animator* _animator) {
-        std::vector<Animator*> animators = { _animator };
+    void AnimatorDebug(Animator* animator) {
+        std::vector<Animator*> animators = { animator };
         AnimatorDebug(animators);
     }
 
-    void AnimatorDebug(const std::vector<Animator*>& _animators) {
-        if (_animators.empty()) return;
+    void AnimatorDebug(const std::vector<Animator*>& animators) {
+        if (animators.empty()) return;
 
-        Animator* first = _animators[0];
+        Animator* first = animators[0];
 
         // デフォルトクリップの表示
         {
@@ -259,7 +259,7 @@ namespace ComponentDebug {
             }
             ImGui::Text("Default Clip: %s (ID: %u)", defaultClipName.c_str(), first->GetDefaultClip());
             if (ImGui::Button("Play Default")) {
-                for (auto a : _animators) a->Play(a->GetDefaultClip());
+                for (auto a : animators) a->Play(a->GetDefaultClip());
             }
             ImGui::Separator();
         }
@@ -278,7 +278,7 @@ namespace ComponentDebug {
                     }
 
                     if (isEdit) {
-                        for (auto a : _animators) {
+                        for (auto a : animators) {
                             a->layers[i].weight = weight;
                         }
                     }
@@ -303,12 +303,12 @@ namespace ComponentDebug {
                         
                         bool isLoop = layer.states[0].isLoop;
                         if (ImGui::Checkbox("Loop", &isLoop)) {
-                            for (auto a : _animators) a->layers[i].states[0].isLoop = isLoop;
+                            for (auto a : animators) a->layers[i].states[0].isLoop = isLoop;
                         }
 
                         float speed = layer.states[0].playbackSpeed;
                         if (ImGui::DragFloat("Speed", &speed, 0.01f)) {
-                            for (auto a : _animators) a->layers[i].states[0].playbackSpeed = speed;
+                            for (auto a : animators) a->layers[i].states[0].playbackSpeed = speed;
                         }
                         
                         ImGui::TreePop();

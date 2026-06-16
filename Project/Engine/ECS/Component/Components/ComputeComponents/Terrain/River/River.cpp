@@ -1,4 +1,4 @@
-﻿#include "River.h"
+#include "River.h"
 
 /// std
 #include <fstream>
@@ -17,36 +17,36 @@
 using namespace ONEngine;
 
 
-RiverControlPoint ONEngine::CatmullRom(const RiverControlPoint& _p0, const RiverControlPoint& _p1, const RiverControlPoint& _p2, const RiverControlPoint& _p3, float _t) {
+RiverControlPoint ONEngine::CatmullRom(const RiverControlPoint& p0, const RiverControlPoint& p1, const RiverControlPoint& p2, const RiverControlPoint& p3, float t) {
 	RiverControlPoint result;
-	result.position = Math::CatmullRomPosition(_p0.position, _p1.position, _p2.position, _p3.position, _t);
-	result.width = _p1.width * (1.0f - _t) + _p2.width * _t;
+	result.position = Math::CatmullRomPosition(p0.position, p1.position, p2.position, p3.position, t);
+	result.width = p1.width * (1.0f - t) + p2.width * t;
 	return result;
 }
 
-std::vector<RiverControlPoint> ONEngine::SampleRiverSpline(const std::vector<RiverControlPoint>& _points, int _samplePerSegment) {
+std::vector<RiverControlPoint> ONEngine::SampleRiverSpline(const std::vector<RiverControlPoint>& points, int samplePerSegment) {
 	std::vector<RiverControlPoint> result;
 
 	/// コントロールポイントが4個以下なら何もできない
-	if (_points.size() < 4) {
+	if (points.size() < 4) {
 		return result;
 	}
 
-	for (size_t i = 0; i < _points.size() - 3; i++) {
-		for (size_t s = 0; s < _samplePerSegment; s++) {
-			float t = static_cast<float>(s) / _samplePerSegment;
+	for (size_t i = 0; i < points.size() - 3; i++) {
+		for (size_t s = 0; s < samplePerSegment; s++) {
+			float t = static_cast<float>(s) / samplePerSegment;
 			result.push_back(CatmullRom(
-				_points[i + 0],
-				_points[i + 1],
-				_points[i + 2],
-				_points[i + 3],
+				points[i + 0],
+				points[i + 1],
+				points[i + 2],
+				points[i + 3],
 				t
 			));
 		}
 	}
 
 	// 最後のポイントも追加（p2）
-	result.push_back(_points[_points.size() - 2]);
+	result.push_back(points[points.size() - 2]);
 	return result;
 }
 
@@ -55,7 +55,7 @@ std::vector<RiverControlPoint> ONEngine::SampleRiverSpline(const std::vector<Riv
 River::River() : samplePerSegment_(10), isCreatedBuffers_(false), isGenerateMeshRequest_(false) {};
 River::~River() = default;
 
-void River::Edit(EntityComponentSystem* /*_ecs*/) {
+void River::Edit(EntityComponentSystem* /*ecs*/) {
 	/// ----- 川の編集 ----- ///
 
 	/// ---------------------------------------------------------------
@@ -91,7 +91,7 @@ void River::Edit(EntityComponentSystem* /*_ecs*/) {
 		///// 操作対象の行列
 		//Matrix4x4 targetMatrix = Matrix4x4::MakeTranslate(point.position);
 		///// カメラの取得
-		//CameraComponent* camera = _ecs->GetECSGroup("Debug")->GetMainCamera();
+		//CameraComponent* camera = ecs->GetECSGroup("Debug")->GetMainCamera();
 		//if (camera) {
 		//	ImGuizmo::Manipulate(
 		//		&camera->GetViewMatrix().m[0][0],
@@ -143,10 +143,10 @@ void River::Edit(EntityComponentSystem* /*_ecs*/) {
 	DrawSplineCurve();
 }
 
-void River::SaveToJson(const std::string& _name) {
+void River::SaveToJson(const std::string& name) {
 
 	/// ファイルに保存
-	const std::string filepath = "./Packages/Jsons/Terrain/" + _name + ".json";
+	const std::string filepath = "./Packages/Jsons/Terrain/" + name + ".json";
 	std::ifstream ifs(filepath);
 	if (!ifs.is_open()) {
 		/// ファイルが開けない場合未生成チェック
@@ -165,7 +165,7 @@ void River::SaveToJson(const std::string& _name) {
 		/// ファイルの作成
 		std::ofstream ofs(filepath);
 		if (!ofs) {
-			Console::LogError("failed error create: \" " + _name + "\"");
+			Console::LogError("failed error create: \" " + name + "\"");
 			return;
 		}
 
@@ -196,9 +196,9 @@ void River::SaveToJson(const std::string& _name) {
 	outputFile.close();
 }
 
-void River::LoadFromJson(const std::string& _name) {
+void River::LoadFromJson(const std::string& name) {
 	/// ファイルを読み込む
-	const std::string filepath = "./Packages/Jsons/Terrain/" + _name + ".json";
+	const std::string filepath = "./Packages/Jsons/Terrain/" + name + ".json";
 	std::ifstream ifs(filepath);
 	if (!ifs.is_open()) {
 		Console::LogError("failed error open file: \"" + filepath + "\"");
@@ -236,17 +236,17 @@ void River::DrawSplineCurve() {
 	}
 }
 
-void River::CreateBuffers(DxDevice* _dxDevice, DxSRVHeap* _dxSRVHeap, DxCommand* _dxCommand) {
+void River::CreateBuffers(DxDevice* dxDevice, DxSRVHeap* dxSRVHeap, DxCommand* dxCommand) {
 	uint32_t totalSegments = static_cast<uint32_t>(createdPoints_.size() - 3);
 	uint32_t totalSamples = static_cast<uint32_t>(totalSegments * samplePerSegment_);
 	totalVertices_ = totalSamples * 2; /// 頂点数はサンプル数の2倍
 	totalIndices_ = totalVertices_ * 6 / 2 - 6;
 
-	paramBuf_.Create(_dxDevice);
-	materialBuffer_.Create(_dxDevice);
-	controlPointBuf_.Create(100, _dxDevice, _dxSRVHeap);
-	rwVertices_.CreateUAV(totalVertices_, _dxDevice, _dxCommand, _dxSRVHeap);
-	rwIndices_.CreateUAV(totalIndices_, _dxDevice, _dxCommand, _dxSRVHeap);
+	paramBuf_.Create(dxDevice);
+	materialBuffer_.Create(dxDevice);
+	controlPointBuf_.Create(100, dxDevice, dxSRVHeap);
+	rwVertices_.CreateUAV(totalVertices_, dxDevice, dxCommand, dxSRVHeap);
+	rwIndices_.CreateUAV(totalIndices_, dxDevice, dxCommand, dxSRVHeap);
 	isCreatedBuffers_ = true;
 }
 
@@ -266,7 +266,7 @@ void River::SetBufferData() {
 		});
 }
 
-void River::SetMaterialData(int32_t _entityId, int32_t _texIndex) {
+void River::SetMaterialData(int32_t entityId, int32_t texIndex) {
 	materialBuffer_.SetMappedData({
 		.uvTransform = {
 			.position = Vector2(Time::GetTime(), 0.0f),
@@ -275,38 +275,38 @@ void River::SetMaterialData(int32_t _entityId, int32_t _texIndex) {
 		},
 		.baseColor = Vector4::White,
 		.postEffectFlags = 0,
-		.entityId = _entityId,
-		.baseTextureId = _texIndex,
+		.entityId = entityId,
+		.baseTextureId = texIndex,
 		.normalTextureId = -1
 		}
 	);
 }
 
-void River::CreateRenderingBarriers(DxCommand* _dxCommand) {
+void River::CreateRenderingBarriers(DxCommand* dxCommand) {
 	rwVertices_.GetResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
-		_dxCommand
+		dxCommand
 	);
 
 	rwIndices_.GetResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_INDEX_BUFFER,
-		_dxCommand
+		dxCommand
 	);
 }
 
-void River::RestoreResourceBarriers(DxCommand* _dxCommand) {
+void River::RestoreResourceBarriers(DxCommand* dxCommand) {
 	rwVertices_.GetResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-		_dxCommand
+		dxCommand
 	);
 
 	rwIndices_.GetResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_INDEX_BUFFER,
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-		_dxCommand
+		dxCommand
 	);
 }
 
@@ -338,8 +338,8 @@ bool River::GetIsGenerateMeshRequest() const {
 	return isGenerateMeshRequest_;
 }
 
-void River::SetIsGenerateMeshRequest(bool _request) {
-	isGenerateMeshRequest_ = _request;
+void River::SetIsGenerateMeshRequest(bool request) {
+	isGenerateMeshRequest_ = request;
 }
 
 const ConstantBuffer<River::Param>& River::GetParamBuffer() const {

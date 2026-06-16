@@ -1,4 +1,4 @@
-﻿#include "ImGuiSelection.h"
+#include "ImGuiSelection.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -26,22 +26,22 @@ const ONEngine::Guid& ImGuiSelection::GetLastSelectedObject() {
 	return gLastSelectedObject;
 }
 
-void ImGuiSelection::SetSelectedObject(const ONEngine::Guid& _guid, SelectionType _type) {
+void ImGuiSelection::SetSelectedObject(const ONEngine::Guid& guid, SelectionType type) {
 	gSelectedObjects.clear();
-	gSelectedObjects.insert(_guid);
-	gLastSelectedObject = _guid;
-	gSelectionType = _type;
+	gSelectedObjects.insert(guid);
+	gLastSelectedObject = guid;
+	gSelectionType = type;
 }
 
-void ImGuiSelection::AddSelectedObject(const ONEngine::Guid& _guid, SelectionType _type) {
-	gSelectedObjects.insert(_guid);
-	gLastSelectedObject = _guid;
-	gSelectionType = _type;
+void ImGuiSelection::AddSelectedObject(const ONEngine::Guid& guid, SelectionType type) {
+	gSelectedObjects.insert(guid);
+	gLastSelectedObject = guid;
+	gSelectionType = type;
 }
 
-void ImGuiSelection::RemoveSelectedObject(const ONEngine::Guid& _guid) {
-	gSelectedObjects.erase(_guid);
-	if (gLastSelectedObject == _guid) {
+void ImGuiSelection::RemoveSelectedObject(const ONEngine::Guid& guid) {
+	gSelectedObjects.erase(guid);
+	if (gLastSelectedObject == guid) {
 		gLastSelectedObject = ONEngine::Guid::kInvalid;
 	}
 	if (gSelectedObjects.empty()) {
@@ -55,8 +55,8 @@ void ImGuiSelection::ClearSelection() {
 	gSelectionType = SelectionType::None;
 }
 
-bool ImGuiSelection::IsSelected(const ONEngine::Guid& _guid) {
-	return gSelectedObjects.contains(_guid);
+bool ImGuiSelection::IsSelected(const ONEngine::Guid& guid) {
+	return gSelectedObjects.contains(guid);
 }
 
 SelectionType ImGuiSelection::GetSelectionType() {
@@ -69,6 +69,6 @@ const std::string& ImGuiInfo::GetInfo() {
 	return gInfo;
 }
 
-void ImGuiInfo::SetInfo(const std::string& _info) {
-	gInfo = _info;
+void ImGuiInfo::SetInfo(const std::string& info) {
+	gInfo = info;
 }

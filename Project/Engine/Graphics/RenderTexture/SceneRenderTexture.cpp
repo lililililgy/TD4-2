@@ -1,4 +1,4 @@
-﻿#include "SceneRenderTexture.h"
+#include "SceneRenderTexture.h"
 
 using namespace ONEngine;
 
@@ -13,15 +13,15 @@ SceneRenderTexture::SceneRenderTexture() {
 
 
 void SceneRenderTexture::Initialize( 
-	const std::string& _name, const Vector4& _clearColor, const Vector2& _textureSize,
-	DxManager* _dxm, Asset::AssetCollection* _assetCollection) {
+	const std::string& name, const Vector4& clearColor, const Vector2& textureSize,
+	DxManager* dxm, Asset::AssetCollection* assetCollection) {
 
 	/// パラメータの設定
-	name_ = _name;
-	clearColor_ = _clearColor;
+	name_ = name;
+	clearColor_ = clearColor;
 
 	/// 新規のDepthStencilを作成
-	pDxDepthStencil_ = _dxm->AddDepthStencil(_name);
+	pDxDepthStencil_ = dxm->AddDepthStencil(name);
 
 
 	/// texture init
@@ -32,37 +32,37 @@ void SceneRenderTexture::Initialize(
 			renderTexture = std::make_unique<RenderTexture>();
 		}
 
-		renderTextures_[0]->Initialize(static_cast<DXGI_FORMAT>(RTVFormat::Color),         clearColor_, _textureSize, name_ + "Scene",         _dxm, pDxDepthStencil_, _assetCollection);
-		renderTextures_[1]->Initialize(static_cast<DXGI_FORMAT>(RTVFormat::WorldPosition), clearColor_, _textureSize, name_ + "WorldPosition", _dxm, pDxDepthStencil_, _assetCollection);
-		renderTextures_[2]->Initialize(static_cast<DXGI_FORMAT>(RTVFormat::Normal),        clearColor_, _textureSize, name_ + "Normal",        _dxm, pDxDepthStencil_, _assetCollection);
-		renderTextures_[3]->Initialize(static_cast<DXGI_FORMAT>(RTVFormat::Flags),         {},          _textureSize, name_ + "Flags",         _dxm, pDxDepthStencil_, _assetCollection);
+		renderTextures_[0]->Initialize(static_cast<DXGI_FORMAT>(RTVFormat::Color),         clearColor_, textureSize, name_ + "Scene",         dxm, pDxDepthStencil_, assetCollection);
+		renderTextures_[1]->Initialize(static_cast<DXGI_FORMAT>(RTVFormat::WorldPosition), clearColor_, textureSize, name_ + "WorldPosition", dxm, pDxDepthStencil_, assetCollection);
+		renderTextures_[2]->Initialize(static_cast<DXGI_FORMAT>(RTVFormat::Normal),        clearColor_, textureSize, name_ + "Normal",        dxm, pDxDepthStencil_, assetCollection);
+		renderTextures_[3]->Initialize(static_cast<DXGI_FORMAT>(RTVFormat::Flags),         {},          textureSize, name_ + "Flags",         dxm, pDxDepthStencil_, assetCollection);
 	}
 
 }
 
-void SceneRenderTexture::SetRenderTarget(DxCommand* _dxCommand, DxDSVHeap* _dxDSVHeap, bool _clear) {
+void SceneRenderTexture::SetRenderTarget(DxCommand* dxCommand, DxDSVHeap* dxDSVHeap, bool clear) {
 	renderTextures_[0]->SetRenderTarget(
-		_dxCommand, _dxDSVHeap,
+		dxCommand, dxDSVHeap,
 		renderTextures_,
-		_clear
+		clear
 	);
 }
 
-void SceneRenderTexture::CreateBarrierRenderTarget(DxCommand* _dxCommand) {
+void SceneRenderTexture::CreateBarrierRenderTarget(DxCommand* dxCommand) {
 	for (auto& renderTexture : renderTextures_) {
-		renderTexture->CreateBarrierRenderTarget(_dxCommand);
+		renderTexture->CreateBarrierRenderTarget(dxCommand);
 	}
 }
 
-void SceneRenderTexture::CreateBarrierPixelShaderResource(DxCommand* _dxCommand) {
+void SceneRenderTexture::CreateBarrierPixelShaderResource(DxCommand* dxCommand) {
 	for (auto& renderTexture : renderTextures_) {
-		renderTexture->CreateBarrierPixelShaderResource(_dxCommand);
+		renderTexture->CreateBarrierPixelShaderResource(dxCommand);
 	}
 }
 
-const std::string& SceneRenderTexture::GetName(size_t _index) const {
-	if (_index < renderTextures_.size()) {
-		return renderTextures_[_index]->GetName();
+const std::string& SceneRenderTexture::GetName(size_t index) const {
+	if (index < renderTextures_.size()) {
+		return renderTextures_[index]->GetName();
 	}
 
 	static const std::string emptyString = "";
@@ -73,7 +73,7 @@ const std::string& SceneRenderTexture::GetName() const {
 	return name_;
 }
 
-DxResource& SceneRenderTexture::GetDxResource(size_t _index) {
-	return renderTextures_[_index]->GetDxResource();
+DxResource& SceneRenderTexture::GetDxResource(size_t index) {
+	return renderTextures_[index]->GetDxResource();
 }
 

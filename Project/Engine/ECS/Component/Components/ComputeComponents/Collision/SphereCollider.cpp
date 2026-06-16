@@ -1,4 +1,4 @@
-﻿#include "SphereCollider.h"
+#include "SphereCollider.h"
 
 /// std
 #include <bit>
@@ -13,27 +13,27 @@
 
 using namespace ONEngine;
 
-void ComponentDebug::SphereColliderDebug(SphereCollider* _c) {
-	if(!_c) {
+void ComponentDebug::SphereColliderDebug(SphereCollider* c) {
+	if(!c) {
 		return;
 	}
 
 	/// 共通パラメータ
 	ImGui::SeparatorText("common parameter");
 	{	/// CollisionState
-		int currentIndex = static_cast<int>(_c->collisionState_);
+		int currentIndex = static_cast<int>(c->collisionState_);
 
 		auto names = magic_enum::enum_names<CollisionState>();
 		std::vector<const char*> items;
 		for(auto& n : names) items.push_back(n.data());
 
 		if(ImGui::Combo("CollisionState", &currentIndex, items.data(), (int)items.size())) {
-			_c->collisionState_ = static_cast<CollisionState>(currentIndex);
+			c->collisionState_ = static_cast<CollisionState>(currentIndex);
 		}
 
-		ImGui::Checkbox("Is Trigger", &_c->isTrigger_);
-		ImGui::Checkbox("Freeze Y", &_c->freezeY_);
-		ImGui::DragFloat("Mass", &_c->mass_, 0.1f, 0.001f, 10000.0f);
+		ImGui::Checkbox("Is Trigger", &c->isTrigger_);
+		ImGui::Checkbox("Freeze Y", &c->freezeY_);
+		ImGui::DragFloat("Mass", &c->mass_, 0.1f, 0.001f, 10000.0f);
 	}
 
 	{	/// CollisionFilter (ImGui側の処理)
@@ -50,7 +50,7 @@ void ComponentDebug::SphereColliderDebug(SphereCollider* _c) {
 		// ---------------------------------------------------------
 		// 1. Category の設定 (Combo)
 		// ---------------------------------------------------------
-		uint32_t currentCategoryBit = _c->GetCategoryBits();
+		uint32_t currentCategoryBit = c->GetCategoryBits();
 		int categoryIdx = 0;
 
 		for(size_t i = 0; i < entries.size(); ++i) {
@@ -61,7 +61,7 @@ void ComponentDebug::SphereColliderDebug(SphereCollider* _c) {
 		}
 
 		if(ImGui::Combo("Category", &categoryIdx, items.data(), static_cast<int>(items.size()))) {
-			_c->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
+			c->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
 		}
 
 		// ---------------------------------------------------------
@@ -70,23 +70,23 @@ void ComponentDebug::SphereColliderDebug(SphereCollider* _c) {
 		ImGui::Spacing();
 		ImGui::Text("Collides With (Mask):");
 
-		uint32_t currentMask = _c->GetMaskBits();
+		uint32_t currentMask = c->GetMaskBits();
 
 		if(ImGui::Button("Select All")) {
 			currentMask = 0xFFFFFFFF; // ALL定数
-			_c->SetMaskBits(currentMask);
+			c->SetMaskBits(currentMask);
 		}
 		ImGui::SameLine();
 		if(ImGui::Button("Clear All")) {
 			currentMask = 0;
-			_c->SetMaskBits(currentMask);
+			c->SetMaskBits(currentMask);
 		}
 
 		// 各レイヤーをチェックボックスとして表示 (複数選択可能)
 		for(const auto& entry : entries) {
 			uint32_t bitValue = static_cast<uint32_t>(entry.first);
 			if(ImGui::CheckboxFlags(entry.second.data(), &currentMask, bitValue)) {
-				_c->SetMaskBits(currentMask);
+				c->SetMaskBits(currentMask);
 			}
 		}
 	}
@@ -95,33 +95,33 @@ void ComponentDebug::SphereColliderDebug(SphereCollider* _c) {
 
 	/// sphere parameter
 	ImGui::SeparatorText("sphere parameter");
-	Editor::ImMathf::DragFloat("radius", &_c->radius_, 0.1f, 0.0f, 100.0f);
+	Editor::ImMathf::DragFloat("radius", &c->radius_, 0.1f, 0.0f, 100.0f);
 
 }
 
 
-void ONEngine::from_json(const nlohmann::json& _j, SphereCollider& _s) {
-	_s.enable = _j.value("enable", 1);
-	_s.radius_ = _j.value("radius", 1.0f);
-	_s.isTrigger_ = _j.value("isTrigger", false);
-	_s.freezeY_ = _j.value("freezeY", false);
-	_s.mass_ = _j.value("mass", 1.0f);
-	_s.collisionState_ = magic_enum::enum_cast<CollisionState>(_j.value("state", "Dynamic")).value_or(CollisionState::Dynamic);
-	_s.categoryBits_ = _j.value("categoryBits", static_cast<uint32_t>(CollisionFilter::Default));
-	_s.maskBits_ = _j.value("maskBits", static_cast<uint32_t>(CollisionFilter::ALL));
+void ONEngine::from_json(const nlohmann::json& j, SphereCollider& s) {
+	s.enable = j.value("enable", 1);
+	s.radius_ = j.value("radius", 1.0f);
+	s.isTrigger_ = j.value("isTrigger", false);
+	s.freezeY_ = j.value("freezeY", false);
+	s.mass_ = j.value("mass", 1.0f);
+	s.collisionState_ = magic_enum::enum_cast<CollisionState>(j.value("state", "Dynamic")).value_or(CollisionState::Dynamic);
+	s.categoryBits_ = j.value("categoryBits", static_cast<uint32_t>(CollisionFilter::Default));
+	s.maskBits_ = j.value("maskBits", static_cast<uint32_t>(CollisionFilter::ALL));
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const SphereCollider& _s) {
-	_j = nlohmann::json{
+void ONEngine::to_json(nlohmann::json& j, const SphereCollider& s) {
+	j = nlohmann::json{
 		{ "type", "SphereCollider" },
-		{ "enable", _s.enable },
-		{ "radius", _s.GetRadius() },
-		{ "isTrigger", _s.IsTrigger() },
-		{ "freezeY", _s.freezeY_ },
-		{ "mass", _s.mass_ },
-		{ "state", magic_enum::enum_name(_s.collisionState_) },
-		{ "categoryBits", _s.categoryBits_ },
-		{ "maskBits", _s.maskBits_ }
+		{ "enable", s.enable },
+		{ "radius", s.GetRadius() },
+		{ "isTrigger", s.IsTrigger() },
+		{ "freezeY", s.freezeY_ },
+		{ "mass", s.mass_ },
+		{ "state", magic_enum::enum_name(s.collisionState_) },
+		{ "categoryBits", s.categoryBits_ },
+		{ "maskBits", s.maskBits_ }
 	};
 }
 
@@ -131,41 +131,41 @@ SphereCollider::SphereCollider() {
 	radius_ = 1.0f;
 }
 
-void SphereCollider::SetRadius(float _radius) {
-	radius_ = _radius;
+void SphereCollider::SetRadius(float radius) {
+	radius_ = radius;
 }
 
 float SphereCollider::GetRadius() const {
 	return radius_;
 }
 
-float ONEngine::InternalGetRadius(uint64_t _nativeHandle) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(_nativeHandle);
+float ONEngine::InternalGetRadius(uint64_t nativeHandle) {
+	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
 	return c ? c->GetRadius() : 0.0f;
 }
 
-void ONEngine::InternalSetRadius(uint64_t _nativeHandle, float _radius) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(_nativeHandle);
-	if(c) c->SetRadius(_radius);
+void ONEngine::InternalSetRadius(uint64_t nativeHandle, float radius) {
+	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+	if(c) c->SetRadius(radius);
 }
 
-bool ONEngine::InternalIsTriggerSphere(uint64_t _nativeHandle) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(_nativeHandle);
+bool ONEngine::InternalIsTriggerSphere(uint64_t nativeHandle) {
+	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
 	return c ? c->IsTrigger() : false;
 }
 
-void ONEngine::InternalSetTriggerSphere(uint64_t _nativeHandle, bool _trigger) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(_nativeHandle);
-	if(c) c->SetTrigger(_trigger);
+void ONEngine::InternalSetTriggerSphere(uint64_t nativeHandle, bool trigger) {
+	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+	if(c) c->SetTrigger(trigger);
 }
 
-float ONEngine::InternalGetMass(uint64_t _nativeHandle) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(_nativeHandle);
+float ONEngine::InternalGetMass(uint64_t nativeHandle) {
+	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
 	return c ? c->GetMass() : 1.0f;
 }
 
-void ONEngine::InternalSetMass(uint64_t _nativeHandle, float _mass) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(_nativeHandle);
-	if(c) c->SetMass(_mass);
+void ONEngine::InternalSetMass(uint64_t nativeHandle, float mass) {
+	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+	if(c) c->SetMass(mass);
 }
 

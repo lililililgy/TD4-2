@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "../IAssetLoader.h"
 #include "../../Meta/MetaFile.h"
@@ -16,10 +16,10 @@ public:
 	AssetLoader() = default;
 	~AssetLoader() override = default;
 
-	std::optional<AudioClip> Load(const std::string& _filepath, Meta<typename AudioClip::MetaData> meta);
-	std::optional<AudioClip> Reload(const std::string& _filepath, AudioClip* _src = nullptr, Meta<typename AudioClip::MetaData> meta = {});
+	std::optional<AudioClip> Load(const std::string& filepath, Meta<typename AudioClip::MetaData> meta);
+	std::optional<AudioClip> Reload(const std::string& filepath, AudioClip* src = nullptr, Meta<typename AudioClip::MetaData> meta = {});
 
-	Meta<typename AudioClip::MetaData> GetMetaData(const std::string& _filepath);
+	Meta<typename AudioClip::MetaData> GetMetaData(const std::string& filepath);
 
 };
 

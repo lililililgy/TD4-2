@@ -1,4 +1,4 @@
-﻿#include "TerrainVertexEditorCompute.h"
+#include "TerrainVertexEditorCompute.h"
 
 /// engine
 #include "Engine/Core/Config/EngineConfig.h"
@@ -13,12 +13,12 @@ using namespace Editor;
 TerrainVertexEditorCompute::TerrainVertexEditorCompute() = default;
 TerrainVertexEditorCompute::~TerrainVertexEditorCompute() = default;
 
-void TerrainVertexEditorCompute::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) {
+void TerrainVertexEditorCompute::Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) {
 
 	{	/// Shader
 
 		ONEngine::Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Editor/TerrainVertexEditor.cs.hlsl", L"cs_6_6", ONEngine::Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ONEngine::ComputePipeline>();
@@ -37,20 +37,20 @@ void TerrainVertexEditorCompute::Initialize(ONEngine::ShaderCompiler* _shaderCom
 
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 	{	/// Buffer
 
-		terrainInfo_.Create(_dxm->GetDxDevice());
-		inputInfo_.Create(_dxm->GetDxDevice());
+		terrainInfo_.Create(dxm->GetDxDevice());
+		inputInfo_.Create(dxm->GetDxDevice());
 
 	}
 }
 
-void TerrainVertexEditorCompute::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* _assetCollection) {
+void TerrainVertexEditorCompute::Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* assetCollection) {
 
-	ONEngine::ComponentArray<ONEngine::Terrain>* terrainArray = _ecs->GetCurrentGroup()->GetComponentArray<ONEngine::Terrain>();
+	ONEngine::ComponentArray<ONEngine::Terrain>* terrainArray = ecs->GetCurrentGroup()->GetComponentArray<ONEngine::Terrain>();
 	if (!terrainArray || terrainArray->GetUsedComponents().empty()) {
 		//ONEngine::Console::LogError("TerrainVertexEditorCompute::Execute: Terrain component array is null");
 		return;
@@ -112,8 +112,8 @@ void TerrainVertexEditorCompute::Execute(ONEngine::EntityComponentSystem* _ecs, 
 
 
 	/// pipelineの設定&実行
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
-	auto cmdList = _dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
 
 	/// CBV
 	terrainInfo_.BindForComputeCommandList(cmdList, CBV_TERRAIN_INFO);
@@ -123,8 +123,8 @@ void TerrainVertexEditorCompute::Execute(ONEngine::EntityComponentSystem* _ecs, 
 	pTerrain->GetRwVertices().UAVBindForComputeCommandList(cmdList, UAV_VERTICES);
 
 	/// SRV
-	const ONEngine::Asset::Texture* positionTexture = _assetCollection->GetTexture("./Assets/Scene/RenderTexture/debugWorldPosition");
-	const ONEngine::Asset::Texture* flagTexture = _assetCollection->GetTexture("./Assets/Scene/RenderTexture/debugFlags");
+	const ONEngine::Asset::Texture* positionTexture = assetCollection->GetTexture("./Assets/Scene/RenderTexture/debugWorldPosition");
+	const ONEngine::Asset::Texture* flagTexture = assetCollection->GetTexture("./Assets/Scene/RenderTexture/debugFlags");
 
 	cmdList->SetComputeRootDescriptorTable(SRV_POSITION_TEXTURE, positionTexture->GetSRVGPUHandle());
 	cmdList->SetComputeRootDescriptorTable(SRV_FLAG_TEXTURE, flagTexture->GetSRVGPUHandle());

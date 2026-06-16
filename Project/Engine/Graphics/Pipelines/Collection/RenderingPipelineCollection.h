@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -38,7 +38,7 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	RenderingPipelineCollection(ShaderCompiler* _shaderCompiler, DxManager* _dxm, EntityComponentSystem* _pEntityComponentSystem, Asset::AssetCollection* _assetCollection);
+	RenderingPipelineCollection(ShaderCompiler* shaderCompiler, DxManager* dxm, EntityComponentSystem* pEntityComponentSystem, Asset::AssetCollection* assetCollection);
 	~RenderingPipelineCollection();
 
 	/// @brief 初期化関数
@@ -49,13 +49,13 @@ public:
 	/// @brief rendering pipelineの生成
 	/// @tparam T 生成する rendering pipelineの型
 	template <IsRenderingPipeline T, typename... Args>
-	void Generate3DRenderingPipeline(Args&&... _args);
+	void Generate3DRenderingPipeline(Args&&... args);
 
 	template <IsRenderingPipeline T, typename... Args>
-	void Generate2DRenderingPipeline(Args&&... _args);
+	void Generate2DRenderingPipeline(Args&&... args);
 
 	template <IsPostProcessPipeline T, typename... Args>
-	void GeneratePostProcessPipeline(Args&&... _args);
+	void GeneratePostProcessPipeline(Args&&... args);
 
 
 
@@ -77,8 +77,8 @@ public:
 
 	/// @brief 2DのEntityを描画する
 	/// @param _2dCamera 2Dカメラ
-	/// @param _groupName 対象のECSGroupの名前 (空なら現在のGroup)
-	void DrawEntities2D(CameraComponent* _2dCamera, const std::string& _groupName = "");
+	/// @param groupName 対象のECSGroupの名前 (空なら現在のGroup)
+	void DrawEntities2D(CameraComponent* _2dCamera, const std::string& groupName = "");
 
 	/// @brief 選択されたPrefabの描画
 	/// @param _3dCamera 3Dカメラ
@@ -87,19 +87,19 @@ public:
 
 	/// @brief 選択されたPrefabの2D描画
 	/// @param _2dCamera 2Dカメラ
-	/// @param _groupName 対象のECSGroupの名前 (空ならDebug)
-	void DrawSelectedPrefab2D(CameraComponent* _2dCamera, const std::string& _groupName = "");
+	/// @param groupName 対象のECSGroupの名前 (空ならDebug)
+	void DrawSelectedPrefab2D(CameraComponent* _2dCamera, const std::string& groupName = "");
 
 
 	/// @brief ポストエフェクトの実行
-	/// @param _sceneTextureName シーンの名前 (Debug, Game, Prefab etc...)
-	void ExecutePostProcess(const std::string& _sceneTextureName);
+	/// @param sceneTextureName シーンの名前 (Debug, Game, Prefab etc...)
+	void ExecutePostProcess(const std::string& sceneTextureName);
 
 
 	/// @brief 引数のカメラが有効なのか確認する
-	/// @param _camera チェックしたいカメラ
+	/// @param camera チェックしたいカメラ
 	/// @return true: 有効, false: 無効
-	bool IsEnableCamera(const CameraComponent* _camera) const;
+	bool IsEnableCamera(const CameraComponent* camera) const;
 
 private:
 	/// ===================================================
@@ -129,21 +129,21 @@ private:
 /// ===================================================
 
 template<IsRenderingPipeline T, typename... Args>
-inline void RenderingPipelineCollection::Generate3DRenderingPipeline(Args&&... _args) {
-	std::unique_ptr<T> renderer = std::make_unique<T>(std::forward<Args>(_args)...);
+inline void RenderingPipelineCollection::Generate3DRenderingPipeline(Args&&... args) {
+	std::unique_ptr<T> renderer = std::make_unique<T>(std::forward<Args>(args)...);
 	renderer->Initialize(pShaderCompiler_, pDxManager_);
 	renderer3ds_.push_back(std::move(renderer));
 }
 
 template<IsRenderingPipeline T, typename... Args>
-inline void RenderingPipelineCollection::Generate2DRenderingPipeline(Args&&... _args) {
-	std::unique_ptr<T> renderer = std::make_unique<T>(std::forward<Args>(_args)...);
+inline void RenderingPipelineCollection::Generate2DRenderingPipeline(Args&&... args) {
+	std::unique_ptr<T> renderer = std::make_unique<T>(std::forward<Args>(args)...);
 	renderer->Initialize(pShaderCompiler_, pDxManager_);
 	renderer2ds_.push_back(std::move(renderer));
 }
 
 template<IsPostProcessPipeline T, typename... Args>
-inline void RenderingPipelineCollection::GeneratePostProcessPipeline(Args&&... _args) {
+inline void RenderingPipelineCollection::GeneratePostProcessPipeline(Args&&... args) {
 	std::unique_ptr<T> postProcess = std::make_unique<T>();
 	postProcess->Initialize(pShaderCompiler_, pDxManager_);
 	postProcesses_.push_back(std::move(postProcess));

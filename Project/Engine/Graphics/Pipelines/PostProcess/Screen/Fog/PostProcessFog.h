@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <array>
@@ -27,12 +27,12 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
 	void Execute(
-		const std::string& _textureName,
-		DxCommand* _dxCommand,
-		Asset::AssetCollection* _assetCollection,
-		EntityComponentSystem* _entityComponentSystem
+		const std::string& textureName,
+		DxCommand* dxCommand,
+		Asset::AssetCollection* assetCollection,
+		EntityComponentSystem* entityComponentSystem
 	) override;
 
 

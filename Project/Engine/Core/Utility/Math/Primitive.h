@@ -59,25 +59,25 @@ struct Cone {
 /// 以下より上の構造体のJson変換関数
 /// ///////////////////////////////////////////////////
 
-void from_json(const nlohmann::json& _j, Sphere& _s);
-void to_json(nlohmann::json& _j, const Sphere& _s);
+void from_json(const nlohmann::json& j, Sphere& s);
+void to_json(nlohmann::json& j, const Sphere& s);
 
-void from_json(const nlohmann::json& _j, Cube& _c);
-void to_json(nlohmann::json& _j, const Cube& _c);
+void from_json(const nlohmann::json& j, Cube& c);
+void to_json(nlohmann::json& j, const Cube& c);
 
-void from_json(const nlohmann::json& _j, Line& _l);
-void to_json(nlohmann::json& _j, const Line& _l);
+void from_json(const nlohmann::json& j, Line& l);
+void to_json(nlohmann::json& j, const Line& l);
 
-void from_json(const nlohmann::json& _j, Ray& _r);
-void to_json(nlohmann::json& _j, const Ray& _r);
+void from_json(const nlohmann::json& j, Ray& r);
+void to_json(nlohmann::json& j, const Ray& r);
 
-void from_json(const nlohmann::json& _j, Plane& _p);
-void to_json(nlohmann::json& _j, const Plane& _p);
+void from_json(const nlohmann::json& j, Plane& p);
+void to_json(nlohmann::json& j, const Plane& p);
 
-void from_json(const nlohmann::json& _j, Frustum& _f);
-void to_json(nlohmann::json& _j, const Frustum& _f);
+void from_json(const nlohmann::json& j, Frustum& f);
+void to_json(nlohmann::json& j, const Frustum& f);
 
-void from_json(const nlohmann::json& _j, Cone& _c);
-void to_json(nlohmann::json& _j, const Cone& _c);
+void from_json(const nlohmann::json& j, Cone& c);
+void to_json(nlohmann::json& j, const Cone& c);
 
 } /// ONEngine

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -30,8 +30,8 @@ public:
 		std::array<MonoMethod*, 3> collisionEventMethods = {};
 
 		bool enable;
-		bool GetEnable(GameEntity* _entity);
-		void SetEnable(GameEntity* _entity, bool _enable);
+		bool GetEnable(GameEntity* entity);
+		void SetEnable(GameEntity* entity, bool enable);
 	};
 
 public:
@@ -44,23 +44,23 @@ public:
 
 
 	/// @brief スクリプトを持っているかチェックする
-	/// @param _scriptName チェックする対象のスクリプト名
+	/// @param scriptName チェックする対象のスクリプト名
 	/// @return true: 持っている false: 持っていない
-	bool Contains(const std::string& _scriptName) const;
+	bool Contains(const std::string& scriptName) const;
 
 	/// @brief 指定されたスクリプト名を追加します。
-	/// @param _scriptName 追加するスクリプトの名前
-	void AddScript(const std::string& _scriptName);
+	/// @param scriptName 追加するスクリプトの名前
+	void AddScript(const std::string& scriptName);
 
 	/// @brief 引数のスクリプトを削除する
-	/// @param _scriptName 削除するスクリプトの名前
-	void RemoveScript(const std::string& _scriptName);
+	/// @param scriptName 削除するスクリプトの名前
+	void RemoveScript(const std::string& scriptName);
 
 
 	/// @brief スクリプトの名前を引数Indexから取得する
-	/// @param _index Script配列のIndex
+	/// @param index Script配列のIndex
 	/// @return スクリプトの名前
-	const std::string& GetScriptName(size_t _index) const;
+	const std::string& GetScriptName(size_t index) const;
 
 	/// @brief スクリプトの名前配列を得る
 	std::vector<std::string> GetScriptNames() const;
@@ -69,18 +69,18 @@ public:
 	/// @brief スクリプトのデータのリストを取得する
 	const std::vector<ScriptData>& GetScriptDataList() const;
 	std::vector<ScriptData>& GetScriptDataList();
-	ScriptData* GetScriptData(const std::string& _scriptName);
+	ScriptData* GetScriptData(const std::string& scriptName);
 
 
 	/// @brief スクリプトの有効/無効を設定する
-	/// @param _scriptName スクリプト名
-	/// @param _enable 設定する有効/無効
-	void SetEnable(const std::string& _scriptName, bool _enable);
+	/// @param scriptName スクリプト名
+	/// @param enable 設定する有効/無効
+	void SetEnable(const std::string& scriptName, bool enable);
 
 	/// @brief スクリプトの有効/無効を取得する
-	/// @param _scriptName スクリプト名
+	/// @param scriptName スクリプト名
 	/// @return true: 有効 false: 無効
-	bool GetEnable(const std::string& _scriptName);
+	bool GetEnable(const std::string& scriptName);
 
 private:
 	/// ===================================================
@@ -98,13 +98,13 @@ public:
 	/// ===================================================
 
 	/// エンティティが追加されたか
-	void SetIsAdded(bool _added);
+	void SetIsAdded(bool added);
 	bool GetIsAdded() const;
 
 };
 
 namespace ComponentDebug {
-	void ScriptDebug(Script* _script);
+	void ScriptDebug(Script* script);
 }
 
 
@@ -112,7 +112,7 @@ namespace ComponentDebug {
 /// ///////////////////////////////////////////////////
 /// json用の関数
 /// ///////////////////////////////////////////////////
-void from_json(const nlohmann::json& _j, Script& _s);
-void to_json(nlohmann::json& _j, const Script& _s);
+void from_json(const nlohmann::json& j, Script& s);
+void to_json(nlohmann::json& j, const Script& s);
 
 } /// ONEngine

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// externals
 #include <nlohmann/json.hpp>
@@ -33,9 +33,9 @@ enum class DissolveCompare {
 /// ///////////////////////////////////////////////////
 class DissolveMeshRenderer : public IRenderComponent {
 	friend class AnimationPlayer;
-	friend void ShowGUI(DissolveMeshRenderer* _dmr, Asset::AssetCollection* _ac);
-	friend void from_json(const nlohmann::json& _j, DissolveMeshRenderer& _dmr);
-	friend void to_json(nlohmann::json& _j, const DissolveMeshRenderer& _dmr);
+	friend void ShowGUI(DissolveMeshRenderer* dmr, Asset::AssetCollection* ac);
+	friend void from_json(const nlohmann::json& j, DissolveMeshRenderer& dmr);
+	friend void to_json(nlohmann::json& j, const DissolveMeshRenderer& dmr);
 public:
 	/// ===========================================
 	/// public : methods
@@ -70,10 +70,10 @@ public:
 	const Guid& GetMeshGuid() const;
 	const Guid& GetDissolveTextureGuid() const;
 
-	uint32_t GetDissolveTextureId(Asset::AssetCollection* _ac) const;
+	uint32_t GetDissolveTextureId(Asset::AssetCollection* ac) const;
 	float GetDissolveThreshold() const;
 
-	GPUMaterial GetGPUMaterial(Asset::AssetCollection* _ac) const;
+	GPUMaterial GetGPUMaterial(Asset::AssetCollection* ac) const;
 
 	uint32_t GetDissolveCompare() const;
 
@@ -85,8 +85,8 @@ public:
 		dissolveThreshold_ = threshold;
 	}
 
-	void SetUVTransform(const UVTransform& _uvTransform) {
-		material_.uvTransform = _uvTransform;
+	void SetUVTransform(const UVTransform& uvTransform) {
+		material_.uvTransform = uvTransform;
 	}
 
 	const UVTransform& GetUVTransform() const {

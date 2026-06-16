@@ -1,4 +1,4 @@
-﻿#include "AddInternalMethods.h"
+#include "AddInternalMethods.h"
 
 /// externals
 #include <mono/jit/jit.h>
@@ -36,17 +36,17 @@
 namespace {
 	std::mutex g_GizmoMutex;
 
-	void Internal_SubmitLineBatch(MonoArray* _batch, int _count) {
-		if (!_batch) return;
+	void Internal_SubmitLineBatch(MonoArray* batch, int count) {
+		if (!batch) return;
 
 		// 検証用ログ (毎フレーム出ると多すぎるため、最初の10回だけ詳細を出力)
 		static int receiveLogCount = 0;
 		if (receiveLogCount < 10) {
-			std::string msg = "[C++ Bridge] Internal_SubmitLineBatch received " + std::to_string(_count) + " items.";
+			std::string msg = "[C++ Bridge] Internal_SubmitLineBatch received " + std::to_string(count) + " items.";
 			
 			// 最初の1要素の座標と太さをサンプルとして出力
-			if (_count > 0) {
-				ONEngine::Gizmo::LineData* sample = (ONEngine::Gizmo::LineData*)mono_array_addr(_batch, ONEngine::Gizmo::LineData, 0);
+			if (count > 0) {
+				ONEngine::Gizmo::LineData* sample = (ONEngine::Gizmo::LineData*)mono_array_addr(batch, ONEngine::Gizmo::LineData, 0);
 				if (sample) {
 					msg += " Sample[0]: Start(" + std::to_string(sample->startPosition.x) + "," + std::to_string(sample->startPosition.y) + "," + std::to_string(sample->startPosition.z) + ")";
 					msg += " End(" + std::to_string(sample->endPosition.x) + "," + std::to_string(sample->endPosition.y) + "," + std::to_string(sample->endPosition.z) + ")";
@@ -58,8 +58,8 @@ namespace {
 		}
 		
 		std::lock_guard<std::mutex> lock(g_GizmoMutex);
-		for (int i = 0; i < _count; ++i) {
-			ONEngine::Gizmo::LineData* data = (ONEngine::Gizmo::LineData*)mono_array_addr(_batch, ONEngine::Gizmo::LineData, i);
+		for (int i = 0; i < count; ++i) {
+			ONEngine::Gizmo::LineData* data = (ONEngine::Gizmo::LineData*)mono_array_addr(batch, ONEngine::Gizmo::LineData, i);
 			if (!data) continue;
 
 			// エンジン側のGizmo::DrawLineを呼び出す
@@ -72,6 +72,76 @@ namespace {
 using namespace ONEngine;
 using namespace MonoInternalMethods;
 
+#define ADD_INTERNAL_CALL(name) mono_add_internal_call(name, (void*)Internal##name)
+
+namespace {
+	void AddTransformInternalCalls() {
+		mono_add_internal_call("Transform::InternalGetPosition", (void*)InternalGetPosition);
+		mono_add_internal_call("Transform::InternalGetLocalPosition", (void*)InternalGetLocalPosition);
+		mono_add_internal_call("Transform::InternalGetRotate", (void*)InternalGetRotate);
+		mono_add_internal_call("Transform::InternalGetScale", (void*)InternalGetScale);
+		mono_add_internal_call("Transform::InternalSetPosition", (void*)InternalSetPosition);
+		mono_add_internal_call("Transform::InternalSetLocalPosition", (void*)InternalSetLocalPosition);
+		mono_add_internal_call("Transform::InternalSetRotate", (void*)InternalSetRotate);
+		mono_add_internal_call("Transform::InternalSetScale", (void*)InternalSetScale);
+	}
+
+	void AddMeshRendererInternalCalls() {
+		mono_add_internal_call("MeshRenderer::InternalGetMeshName", (void*)InternalGetMeshName);
+		mono_add_internal_call("MeshRenderer::InternalSetMeshName", (void*)InternalSetMeshName);
+		mono_add_internal_call("MeshRenderer::InternalGetColor", (void*)InternalGetMeshColor);
+		mono_add_internal_call("MeshRenderer::InternalSetColor", (void*)InternalSetMeshColor);
+		mono_add_internal_call("MeshRenderer::InternalGetPostEffectFlags", (void*)InternalGetPostEffectFlags);
+		mono_add_internal_call("MeshRenderer::InternalSetPostEffectFlags", (void*)InternalSetPostEffectFlags);
+		mono_add_internal_call("MeshRenderer::InternalGetRenderQueue", (void*)InternalGetRenderQueue);
+		mono_add_internal_call("MeshRenderer::InternalSetRenderQueue", (void*)InternalSetRenderQueue);
+	}
+
+	void AddSkinMeshInternalCalls() {
+		mono_add_internal_call("SkinMeshRenderer::InternalGetMeshPath", (void*)InternalGetMeshPath);
+		mono_add_internal_call("SkinMeshRenderer::InternalSetMeshPath", (void*)InternalSetMeshPath);
+		mono_add_internal_call("SkinMeshRenderer::InternalGetTexturePath", (void*)InternalGetTexturePath);
+		mono_add_internal_call("SkinMeshRenderer::InternalSetTexturePath", (void*)InternalSetTexturePath);
+		mono_add_internal_call("SkinMeshRenderer::InternalGetIsPlaying", (void*)InternalGetIsPlaying);
+		mono_add_internal_call("SkinMeshRenderer::InternalSetIsPlaying", (void*)InternalSetIsPlaying);
+		mono_add_internal_call("SkinMeshRenderer::InternalGetAnimationTime", (void*)InternalGetAnimationTime);
+		mono_add_internal_call("SkinMeshRenderer::InternalSetAnimationTime", (void*)InternalSetAnimationTime);
+		mono_add_internal_call("SkinMeshRenderer::InternalGetAnimationScale", (void*)InternalGetAnimationScale);
+		mono_add_internal_call("SkinMeshRenderer::InternalSetAnimationScale", (void*)InternalSetAnimationScale);
+		mono_add_internal_call("SkinMeshRenderer::InternalGetJointTransform", (void*)InternalGetJointTransform);
+
+		mono_add_internal_call("Animator::Internal_Play", (void*)Internal_Play);
+		mono_add_internal_call("Animator::Internal_CrossFade", (void*)Internal_CrossFade);
+		mono_add_internal_call("Animator::Internal_SetPlaybackSpeed", (void*)Internal_SetPlaybackSpeed);
+		mono_add_internal_call("Animator::Internal_SetLoop", (void*)Internal_SetLoop);
+		mono_add_internal_call("Animator::Internal_GetAnimationDuration", (void*)Internal_GetAnimationDuration);
+	}
+
+	void AddColliderInternalCalls() {
+		mono_add_internal_call("SphereCollider::InternalGetRadius", (void*)InternalGetRadius);
+		mono_add_internal_call("SphereCollider::InternalSetRadius", (void*)InternalSetRadius);
+		mono_add_internal_call("SphereCollider::InternalIsTrigger", (void*)InternalIsTriggerSphere);
+		mono_add_internal_call("SphereCollider::InternalSetTrigger", (void*)InternalSetTriggerSphere);
+		mono_add_internal_call("SphereCollider::InternalGetMass", (void*)InternalGetMass);
+		mono_add_internal_call("SphereCollider::InternalSetMass", (void*)InternalSetMass);
+
+		mono_add_internal_call("BoxCollider::InternalGetSize", (void*)InternalGetSize);
+		mono_add_internal_call("BoxCollider::InternalSetSize", (void*)InternalSetSize);
+		mono_add_internal_call("BoxCollider::InternalIsTrigger", (void*)InternalIsTriggerBox);
+		mono_add_internal_call("BoxCollider::InternalSetTrigger", (void*)InternalSetTriggerBox);
+		mono_add_internal_call("BoxCollider::InternalGetMassBox", (void*)InternalGetMassBox);
+		mono_add_internal_call("BoxCollider::InternalSetMassBox", (void*)InternalSetMassBox);
+	}
+
+	void AddAudioInternalCalls() {
+		mono_add_internal_call("AudioSource::InternalGetParams", (void*)InternalGetParams);
+		mono_add_internal_call("AudioSource::InternalSetParams", (void*)InternalSetParams);
+		mono_add_internal_call("AudioSource::InternalPlay", (void*)InternalPlay);
+		mono_add_internal_call("AudioSource::InternalStop", (void*)InternalStop);
+		mono_add_internal_call("AudioSource::InternalPlayOneShot", (void*)InternalPlayOneShot);
+	}
+}
+
 void ONEngine::AddWindowInternalCalls() {
 	mono_add_internal_call("Window::InternalGetSize", (void*)InternalGetWindowSize);
 }
@@ -82,74 +152,16 @@ void ONEngine::AddComponentInternalCalls() {
 	mono_add_internal_call("ComponentBatchManager::InternalSetBatch", (void*)InternalSetBatch);
 	mono_add_internal_call("ComponentBatchManager::InternalGetBatch", (void*)InternalGetBatch);
 
-	/// transform
-	mono_add_internal_call("Transform::InternalGetPosition", (void*)InternalGetPosition);
-	mono_add_internal_call("Transform::InternalGetLocalPosition", (void*)InternalGetLocalPosition);
-	mono_add_internal_call("Transform::InternalGetRotate", (void*)InternalGetRotate);
-	mono_add_internal_call("Transform::InternalGetScale", (void*)InternalGetScale);
-	mono_add_internal_call("Transform::InternalSetPosition", (void*)InternalSetPosition);
-	mono_add_internal_call("Transform::InternalSetLocalPosition", (void*)InternalSetLocalPosition);
-	mono_add_internal_call("Transform::InternalSetRotate", (void*)InternalSetRotate);
-	mono_add_internal_call("Transform::InternalSetScale", (void*)InternalSetScale);
-
-	/// mesh renderer
-	mono_add_internal_call("MeshRenderer::InternalGetMeshName", (void*)InternalGetMeshName);
-	mono_add_internal_call("MeshRenderer::InternalSetMeshName", (void*)InternalSetMeshName);
-	mono_add_internal_call("MeshRenderer::InternalGetColor", (void*)InternalGetMeshColor);
-	mono_add_internal_call("MeshRenderer::InternalSetColor", (void*)InternalSetMeshColor);
-	mono_add_internal_call("MeshRenderer::InternalGetPostEffectFlags", (void*)InternalGetPostEffectFlags);
-	mono_add_internal_call("MeshRenderer::InternalSetPostEffectFlags", (void*)InternalSetPostEffectFlags);
-	mono_add_internal_call("MeshRenderer::InternalGetRenderQueue", (void*)InternalGetRenderQueue);
-	mono_add_internal_call("MeshRenderer::InternalSetRenderQueue", (void*)InternalSetRenderQueue);
-
-
-	/// skin mesh renderer
-	mono_add_internal_call("SkinMeshRenderer::InternalGetMeshPath", (void*)InternalGetMeshPath);
-	mono_add_internal_call("SkinMeshRenderer::InternalSetMeshPath", (void*)InternalSetMeshPath);
-	mono_add_internal_call("SkinMeshRenderer::InternalGetTexturePath", (void*)InternalGetTexturePath);
-	mono_add_internal_call("SkinMeshRenderer::InternalSetTexturePath", (void*)InternalSetTexturePath);
-	mono_add_internal_call("SkinMeshRenderer::InternalGetIsPlaying", (void*)InternalGetIsPlaying);
-	mono_add_internal_call("SkinMeshRenderer::InternalSetIsPlaying", (void*)InternalSetIsPlaying);
-	mono_add_internal_call("SkinMeshRenderer::InternalGetAnimationTime", (void*)InternalGetAnimationTime);
-	mono_add_internal_call("SkinMeshRenderer::InternalSetAnimationTime", (void*)InternalSetAnimationTime);
-	mono_add_internal_call("SkinMeshRenderer::InternalGetAnimationScale", (void*)InternalGetAnimationScale);
-	mono_add_internal_call("SkinMeshRenderer::InternalSetAnimationScale", (void*)InternalSetAnimationScale);
-	mono_add_internal_call("SkinMeshRenderer::InternalGetJointTransform", (void*)InternalGetJointTransform);
-
-	/// animator
-	mono_add_internal_call("Animator::Internal_Play", (void*)Internal_Play);
-	mono_add_internal_call("Animator::Internal_CrossFade", (void*)Internal_CrossFade);
-	mono_add_internal_call("Animator::Internal_SetPlaybackSpeed", (void*)Internal_SetPlaybackSpeed);
-	mono_add_internal_call("Animator::Internal_SetLoop", (void*)Internal_SetLoop);
-	mono_add_internal_call("Animator::Internal_GetAnimationDuration", (void*)Internal_GetAnimationDuration);
+	AddTransformInternalCalls();
+	AddMeshRendererInternalCalls();
+	AddSkinMeshInternalCalls();
+	AddColliderInternalCalls();
+	AddAudioInternalCalls();
 
 	/// sprite renderer
 	mono_add_internal_call("SpriteRenderer::InternalGetColor", (void*)InternalGetColor);
 	mono_add_internal_call("SpriteRenderer::InternalSetColor", (void*)InternalSetColor);
-
-	/// sphere collider
-	mono_add_internal_call("SphereCollider::InternalGetRadius", (void*)InternalGetRadius);
-	mono_add_internal_call("SphereCollider::InternalSetRadius", (void*)InternalSetRadius);
-	mono_add_internal_call("SphereCollider::InternalIsTrigger", (void*)InternalIsTriggerSphere);
-	mono_add_internal_call("SphereCollider::InternalSetTrigger", (void*)InternalSetTriggerSphere);
-	mono_add_internal_call("SphereCollider::InternalGetMass", (void*)InternalGetMass);
-	mono_add_internal_call("SphereCollider::InternalSetMass", (void*)InternalSetMass);
-
-	/// box collider
-	mono_add_internal_call("BoxCollider::InternalGetSize", (void*)InternalGetSize);
-	mono_add_internal_call("BoxCollider::InternalSetSize", (void*)InternalSetSize);
-	mono_add_internal_call("BoxCollider::InternalIsTrigger", (void*)InternalIsTriggerBox);
-	mono_add_internal_call("BoxCollider::InternalSetTrigger", (void*)InternalSetTriggerBox);
-	mono_add_internal_call("BoxCollider::InternalGetMassBox", (void*)InternalGetMassBox);
-	mono_add_internal_call("BoxCollider::InternalSetMassBox", (void*)InternalSetMassBox);
 	mono_add_internal_call("SpriteRenderer::InternalGetTextureSize", (void*)InternalGetTextureSize);
-
-	/// audio source
-	mono_add_internal_call("AudioSource::InternalGetParams", (void*)InternalGetParams);
-	mono_add_internal_call("AudioSource::InternalSetParams", (void*)InternalSetParams);
-	mono_add_internal_call("AudioSource::InternalPlay", (void*)InternalPlay);
-	mono_add_internal_call("AudioSource::InternalStop", (void*)InternalStop);
-	mono_add_internal_call("AudioSource::InternalPlayOneShot", (void*)InternalPlayOneShot);
 
 }
 

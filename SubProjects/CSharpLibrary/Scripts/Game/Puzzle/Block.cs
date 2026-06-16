@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -67,9 +67,9 @@ public class Block : MonoScript {
 		}
 	}
 
-	public void UpdatePosition(int _playerType) {
+	public void UpdatePosition(int playerType) {
 		float height = 0f;
-		if (_playerType != this.blockData.type) {
+		if (playerType != this.blockData.type) {
 			height -= 0.05f;
 		}
 

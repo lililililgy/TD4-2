@@ -11,15 +11,15 @@ using namespace ONEngine;
 using namespace Editor;
 
 AITab::AITab(
-	DxManager* _dxm,
-	EntityComponentSystem* _ecs,
-	EditorManager* _editorManager, SceneManager* _sceneManager)
+	DxManager* dxm,
+	EntityComponentSystem* ecs,
+	EditorManager* editorManager, SceneManager* sceneManager)
 	: IEditorWindowContainer("AI") {
 
-	(void)_dxm;
-	(void)_editorManager;
-	(void)_sceneManager;
+	(void)dxm;
+	(void)editorManager;
+	(void)sceneManager;
 
 	/// BehaviorTreeEditorWindowを追加
-	AddView(std::make_unique<BehaviorTreeEditorWindow>("AI Behavior Tree", _ecs));
+	AddView(std::make_unique<BehaviorTreeEditorWindow>("AI Behavior Tree", ecs));
 }

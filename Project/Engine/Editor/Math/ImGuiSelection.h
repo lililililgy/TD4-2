@@ -28,20 +28,20 @@ const std::unordered_set<ONEngine::Guid>& GetSelectedObjects();
 const ONEngine::Guid& GetLastSelectedObject();
 
 /// @brief 選択したオブジェクトを単一設定する (既存の選択はクリア)
-/// @param _guid オブジェクトのGuid
-void SetSelectedObject(const ONEngine::Guid& _guid, SelectionType _type);
+/// @param guid オブジェクトのGuid
+void SetSelectedObject(const ONEngine::Guid& guid, SelectionType type);
 
 /// @brief 選択を追加する
-void AddSelectedObject(const ONEngine::Guid& _guid, SelectionType _type);
+void AddSelectedObject(const ONEngine::Guid& guid, SelectionType type);
 
 /// @brief 選択を解除する
-void RemoveSelectedObject(const ONEngine::Guid& _guid);
+void RemoveSelectedObject(const ONEngine::Guid& guid);
 
 /// @brief 選択をすべてクリアする
 void ClearSelection();
 
 /// @brief 指定したGuidが選択されているか
-bool IsSelected(const ONEngine::Guid& _guid);
+bool IsSelected(const ONEngine::Guid& guid);
 
 /// @brief 選択しているオブジェクトの種類を返す
 /// @return オブジェクトの種類
@@ -59,8 +59,8 @@ namespace ImGuiInfo {
 const std::string& GetInfo();
 
 /// @brief ImGuiの情報文字列を設定する
-/// @param _info 設定する情報文字列
-void SetInfo(const std::string& _info);
+/// @param info 設定する情報文字列
+void SetInfo(const std::string& info);
 
 }
 

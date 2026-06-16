@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -60,18 +60,18 @@ public:
 	/// public : accessors
 	/// ==========================================
 
-	void SetMeshPath(const std::string& _path);
-	void SetTexturePath(const std::string& _path);
+	void SetMeshPath(const std::string& path);
+	void SetTexturePath(const std::string& path);
 
-	void SetColor(const Vector4& _color);
+	void SetColor(const Vector4& color);
 
-	void SetIsPlaying(bool _isPlaying);
-	void SetAnimationTime(float _time);
-	void SetDuration(float _duration);
-	void SetAnimationScale(float _scale);
-	void SetDebugJointSize(float _size);
-	void SetDebugRectSize(float _size);
-	void SetNodeAnimationMap(const std::unordered_map<uint32_t, NodeAnimation>& _map);
+	void SetIsPlaying(bool isPlaying);
+	void SetAnimationTime(float time);
+	void SetDuration(float duration);
+	void SetAnimationScale(float scale);
+	void SetDebugJointSize(float size);
+	void SetDebugRectSize(float size);
+	void SetNodeAnimationMap(const std::unordered_map<uint32_t, NodeAnimation>& map);
 
 
 	const std::string& GetMeshPath() const;
@@ -92,7 +92,7 @@ public:
 
 
 namespace ComponentDebug {
-	void SkinMeshRendererDebug(SkinMeshRenderer* _smr, Asset::AssetCollection* _assetCollection);
+	void SkinMeshRendererDebug(SkinMeshRenderer* smr, Asset::AssetCollection* assetCollection);
 }
 
 
@@ -100,28 +100,28 @@ namespace ComponentDebug {
 /// csで使用するための関数群
 /// ===================================================
 
-SkinMeshRenderer* GetSkinMeshRenderer(uint64_t _nativeHandle);
+SkinMeshRenderer* GetSkinMeshRenderer(uint64_t nativeHandle);
 
-MonoString* InternalGetMeshPath(uint64_t _nativeHandle);
-void InternalSetMeshPath(uint64_t _nativeHandle, MonoString* _path);
+MonoString* InternalGetMeshPath(uint64_t nativeHandle);
+void InternalSetMeshPath(uint64_t nativeHandle, MonoString* path);
 
-MonoString* InternalGetTexturePath(uint64_t _nativeHandle);
-void InternalSetTexturePath(uint64_t _nativeHandle, MonoString* _path);
+MonoString* InternalGetTexturePath(uint64_t nativeHandle);
+void InternalSetTexturePath(uint64_t nativeHandle, MonoString* path);
 
-bool InternalGetIsPlaying(uint64_t _nativeHandle);
-void InternalSetIsPlaying(uint64_t _nativeHandle, bool _isPlaying);
+bool InternalGetIsPlaying(uint64_t nativeHandle);
+void InternalSetIsPlaying(uint64_t nativeHandle, bool isPlaying);
 
-float InternalGetAnimationTime(uint64_t _nativeHandle);
-void InternalSetAnimationTime(uint64_t _nativeHandle, float _time);
+float InternalGetAnimationTime(uint64_t nativeHandle);
+void InternalSetAnimationTime(uint64_t nativeHandle, float time);
 
-float InternalGetAnimationScale(uint64_t _nativeHandle);
-void InternalSetAnimationScale(uint64_t _nativeHandle, float _scale);
+float InternalGetAnimationScale(uint64_t nativeHandle);
+void InternalSetAnimationScale(uint64_t nativeHandle, float scale);
 
-void InternalGetJointTransform(uint64_t _nativeHandle, MonoString* _jointName, Vector3* _outScale, Quaternion* _outRotation, Vector3* _outPosition);
+void InternalGetJointTransform(uint64_t nativeHandle, MonoString* jointName, Vector3* outScale, Quaternion* outRotation, Vector3* outPosition);
 
 
 
-void from_json(const nlohmann::json& _j, SkinMeshRenderer& _smr);
-void to_json(nlohmann::json& _j, const SkinMeshRenderer& _smr);
+void from_json(const nlohmann::json& j, SkinMeshRenderer& smr);
+void to_json(nlohmann::json& j, const SkinMeshRenderer& smr);
 
 } /// ONEngine

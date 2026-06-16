@@ -12,12 +12,12 @@ using namespace ONEngine;
 Line3DRenderingPipeline::Line3DRenderingPipeline() {}
 Line3DRenderingPipeline::~Line3DRenderingPipeline() {}
 
-void Line3DRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void Line3DRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 	{	/// pipelineの作成
 
 		/// shaderをコンパイル
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/Line/Line3D.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"./Packages/Shader/Render/Line/Line3D.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -36,7 +36,7 @@ void Line3DRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
 		/// create pipeline
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 
@@ -44,7 +44,7 @@ void Line3DRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 	vertices_.reserve(kMaxVertexNum_);
 
 	/// vertex bufferの作成
-	vertexBuffer_.CreateResource(_dxm->GetDxDevice(), sizeof(VertexData) * kMaxVertexNum_);
+	vertexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(VertexData) * kMaxVertexNum_);
 	vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
 
 	vbv_.BufferLocation = vertexBuffer_.Get()->GetGPUVirtualAddress();
@@ -54,9 +54,9 @@ void Line3DRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 
 }
 
-void Line3DRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void Line3DRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
-	ComponentArray<Line3DRenderer>* line3DRendererArray = _ecs->GetComponentArray<Line3DRenderer>();
+	ComponentArray<Line3DRenderer>* line3DRendererArray = ecs->GetComponentArray<Line3DRenderer>();
 	if (!line3DRendererArray || line3DRendererArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -80,12 +80,12 @@ void Line3DRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camer
 	std::memcpy(mappingData_, vertices_.data(), sizeof(VertexData) * vertices_.size());
 
 	/// ここから描画処理
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 	cmdList->IASetVertexBuffers(0, 1, &vbv_);
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
 
 	/// 描画
 	cmdList->DrawInstanced(static_cast<UINT>(vertices_.size()), 1, 0, 0);

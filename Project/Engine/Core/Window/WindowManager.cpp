@@ -11,7 +11,7 @@ using namespace ONEngine;
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
 #include "Engine/Core/Utility/Tools/Assert.h"
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
 static WindowManager* gWindowManager = nullptr;
@@ -20,20 +20,20 @@ WindowManager* WindowManager::GetInstance() {
 	return gWindowManager;
 }
 
-void ONEngine::InternalGetWindowSize(Vector2* _size) {
-	if(_size && gWindowManager && gWindowManager->GetMainWindow()) {
-		*_size = gWindowManager->GetMainWindow()->GetWindowSize();
+void ONEngine::InternalGetWindowSize(Vector2* size) {
+	if(size && gWindowManager && gWindowManager->GetMainWindow()) {
+		*size = gWindowManager->GetMainWindow()->GetWindowSize();
 	}
 }
 
-LRESULT WindowManager::MainWindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lparam) {
+LRESULT WindowManager::MainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #ifdef DEBUG_MODE
-	if (ImGui_ImplWin32_WndProcHandler(_hwnd, _msg, _wparam, _lparam)) {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
 	}
 #endif // DEBUG_MODE
 
-	switch (_msg) {
+	switch (msg) {
 	case WM_CLOSE:
 		if (gWindowManager) {
 			gWindowManager->SetCloseRequested(true);
@@ -43,30 +43,30 @@ LRESULT WindowManager::MainWindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPA
 		return 0;
 	}
 
-	return DefWindowProc(_hwnd, _msg, _wparam, _lparam);
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-LRESULT WindowManager::SubWindowProc(HWND _hwnd, UINT _msg, WPARAM _wparam, LPARAM _lparam) {
+LRESULT WindowManager::SubWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #ifdef DEBUG_MODE
-	if (ImGui_ImplWin32_WndProcHandler(_hwnd, _msg, _wparam, _lparam)) {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
 	}
 #endif // DEBUG_MODE
 
-	switch (_msg) {
+	switch (msg) {
 	case WM_CLOSE:
 	case WM_DESTROY: /// window破棄
-		DestroyWindow(_hwnd);
+		DestroyWindow(hwnd);
 		return 0;
 	}
 
-	return DefWindowProc(_hwnd, _msg, _wparam, _lparam);
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
 
 
-WindowManager::WindowManager(DxManager* _dxm)
-	: pDxManager_(_dxm) {}
+WindowManager::WindowManager(DxManager* dxm)
+	: pDxManager_(dxm) {}
 
 WindowManager::~WindowManager() = default;
 
@@ -149,64 +149,64 @@ void WindowManager::PresentAll() {
 
 
 
-Window* WindowManager::GenerateWindow(const std::wstring& _windowName, const Vector2& _windowSize, WindowType _windowType, UINT _windowStyle) {
+Window* WindowManager::GenerateWindow(const std::wstring& windowName, const Vector2& windowSize, WindowType windowType, UINT windowStyle) {
 	std::unique_ptr<Window> newWindow = std::make_unique<Window>();
 
 	/// game windowを作成して表示する
-	CreateGameWindow(_windowName.c_str(), _windowSize, _windowStyle, newWindow.get(), _windowType);
-	newWindow->Initialize(_windowName, _windowSize, pDxManager_);
+	CreateGameWindow(windowName.c_str(), windowSize, windowStyle, newWindow.get(), windowType);
+	newWindow->Initialize(windowName, windowSize, pDxManager_);
 
 	/// returnする用のpointer	
 	Window* resultPtr = newWindow.get();
 
 	windows_.push_back(std::move(newWindow));
-	if (_windowType == WindowType::Main) {
+	if (windowType == WindowType::Main) {
 		pMainWindow_ = resultPtr;
 	}
 
 	return resultPtr;
 }
 
-void WindowManager::CreateGameWindow(const wchar_t* _title, const Vector2& _size, UINT _windowStyle, Window* _windowPtr, WindowType _windowType) {
+void WindowManager::CreateGameWindow(const wchar_t* title, const Vector2& size, UINT windowStyle, Window* windowPtr, WindowType windowType) {
 
 	timeBeginPeriod(1);
 
-	_windowPtr->windowClass_ = {};
-	_windowPtr->windowStyle_ = _windowStyle;
+	windowPtr->windowClass_ = {};
+	windowPtr->windowStyle_ = windowStyle;
 
 	/// windowの設定
-	if (_windowType == WindowType::Main) {
-		_windowPtr->windowClass_.lpfnWndProc = MainWindowProc;
+	if (windowType == WindowType::Main) {
+		windowPtr->windowClass_.lpfnWndProc = MainWindowProc;
 	} else {
-		_windowPtr->windowClass_.lpfnWndProc = SubWindowProc;
+		windowPtr->windowClass_.lpfnWndProc = SubWindowProc;
 	}
 
-	_windowPtr->windowClass_.lpszClassName = _title;
-	_windowPtr->windowClass_.hInstance = GetModuleHandle(nullptr);
-	_windowPtr->windowClass_.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	windowPtr->windowClass_.lpszClassName = title;
+	windowPtr->windowClass_.hInstance = GetModuleHandle(nullptr);
+	windowPtr->windowClass_.hCursor = LoadCursor(nullptr, IDC_ARROW);
 
-	RegisterClass(&_windowPtr->windowClass_);
+	RegisterClass(&windowPtr->windowClass_);
 
-	_windowPtr->wrc_ = { 0, 0, static_cast<int>(_size.x), static_cast<int>(_size.y) };
-	AdjustWindowRect(&_windowPtr->wrc_, WS_OVERLAPPEDWINDOW, false);
+	windowPtr->wrc_ = { 0, 0, static_cast<int>(size.x), static_cast<int>(size.y) };
+	AdjustWindowRect(&windowPtr->wrc_, WS_OVERLAPPEDWINDOW, false);
 
-	_windowPtr->hwnd_ = CreateWindowEx(
+	windowPtr->hwnd_ = CreateWindowEx(
 		0,
-		_windowPtr->windowClass_.lpszClassName,
-		_title,
-		_windowPtr->windowStyle_,
+		windowPtr->windowClass_.lpszClassName,
+		title,
+		windowPtr->windowStyle_,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		_windowPtr->wrc_.right - _windowPtr->wrc_.left,
-		_windowPtr->wrc_.bottom - _windowPtr->wrc_.top,
+		windowPtr->wrc_.right - windowPtr->wrc_.left,
+		windowPtr->wrc_.bottom - windowPtr->wrc_.top,
 		nullptr,
 		nullptr,
-		_windowPtr->windowClass_.hInstance,
+		windowPtr->windowClass_.hInstance,
 		nullptr
 	);
 
 	/// windowの生成できたかチェック
-	if (!_windowPtr->hwnd_) {
+	if (!windowPtr->hwnd_) {
 		DWORD err = GetLastError();
 		Console::LogError("CreateWindowEx failed. Error code: " + std::to_string(err));
 		Assert(false, "Failed CreateWindowEx");
@@ -214,7 +214,7 @@ void WindowManager::CreateGameWindow(const wchar_t* _title, const Vector2& _size
 
 
 	/// window表示
-	ShowWindow(_windowPtr->hwnd_, SW_SHOW);
+	ShowWindow(windowPtr->hwnd_, SW_SHOW);
 }
 
 void WindowManager::UpdateMainWindow() {
@@ -260,6 +260,6 @@ bool WindowManager::IsCloseRequested() const {
 	return closeRequested_;
 }
 
-void WindowManager::SetCloseRequested(bool _isCloseRequested) {
-	closeRequested_ = _isCloseRequested;
+void WindowManager::SetCloseRequested(bool isCloseRequested) {
+	closeRequested_ = isCloseRequested;
 }

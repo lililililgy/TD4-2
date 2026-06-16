@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -10,17 +10,17 @@ public class MonoScript {
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     /// Behaviorの生成
-    public void CreateBehavior(int _entityId, string _name, ECSGroup _ecsGroup) {
-        if (!_ecsGroup) {
-            Debug.LogError("MonoBehavior.CreateBehavior - ECSGroup is null. Cannot create MonoBehavior for Entity ID: " + _entityId);
+    public void CreateBehavior(int entityId, string name, ECSGroup ecsGroup) {
+        if (!ecsGroup) {
+            Debug.LogError("MonoBehavior.CreateBehavior - ECSGroup is null. Cannot create MonoBehavior for Entity ID: " + entityId);
             return;
         }
 
-        name_ = _name;
-        ecsGroup = _ecsGroup;
-        entity = ecsGroup.GetEntity(_entityId);
+        name_ = name;
+        this.ecsGroup = ecsGroup;
+        entity = this.ecsGroup.GetEntity(entityId);
 
-        Debug.Log("MonoBehavior created for Entity ID: " + _entityId + ", Script Name: " + _name + ", Group Name: " + _ecsGroup.groupName);
+        Debug.Log("MonoBehavior created for Entity ID: " + entityId + ", Script Name: " + name + ", Group Name: " + ecsGroup.groupName);
     }
 
 
@@ -69,8 +69,8 @@ public class MonoScript {
     ///////////////////////////////////////////////////////////////////////////////////////////
     /// operators
     ///////////////////////////////////////////////////////////////////////////////////////////
-    public static implicit operator bool(MonoScript _monoBehavior) {
-        return _monoBehavior != null;
+    public static implicit operator bool(MonoScript monoBehavior) {
+        return monoBehavior != null;
     }
 
 }

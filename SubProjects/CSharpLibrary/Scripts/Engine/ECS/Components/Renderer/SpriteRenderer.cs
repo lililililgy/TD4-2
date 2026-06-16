@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,15 +31,15 @@ class SpriteRenderer : Component {
 	/// -------------------------------------------
 
 	//[MethodImpl(MethodImplOptions.InternalCall)]
-	//static extern string InternalGetMeshName(ulong _nativeHandle);
+	//static extern string InternalGetMeshName(ulong nativeHandle);
 
 	//[MethodImpl(MethodImplOptions.InternalCall)]
-	//static extern void InternalSetMeshName(ulong _nativeHandle, string _meshName);
+	//static extern void InternalSetMeshName(ulong nativeHandle, string meshName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern Vector4 InternalGetColor(ulong _nativeHandle);
+	static extern Vector4 InternalGetColor(ulong nativeHandle);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetColor(ulong _nativeHandle, Vector4 _color);
+	static extern void InternalSetColor(ulong nativeHandle, Vector4 color);
 
 }

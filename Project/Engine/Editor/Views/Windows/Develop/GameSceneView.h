@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../../EditorViewCollection.h"
@@ -17,8 +17,8 @@ public:
 	/// ===================================================
 	/// public : methods
 	/// ===================================================
-	GameSceneView(ONEngine::Asset::AssetCollection* _ac, const std::string& _windowName)
-		: pAssetCollection_(_ac), windowName_(_windowName) {
+	GameSceneView(ONEngine::Asset::AssetCollection* ac, const std::string& windowName)
+		: pAssetCollection_(ac), windowName_(windowName) {
 	}
 	~GameSceneView() {}
 

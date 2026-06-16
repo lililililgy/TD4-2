@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -49,14 +49,14 @@ struct GrassData {
 /// Editor
 /// ////////////////////////////////////////////////////////
 namespace ComponentDebug {
-void GrassFieldDebug(GrassField* _grassField, Asset::AssetCollection* _assetCollection);
+void GrassFieldDebug(GrassField* grassField, Asset::AssetCollection* assetCollection);
 }
 
 /// ////////////////////////////////////////////////////////
 /// json変換
 /// ////////////////////////////////////////////////////////
-void to_json(nlohmann::json& _j, const GrassField& _p);
-void from_json(const nlohmann::json& _j, GrassField& _p);
+void to_json(nlohmann::json& j, const GrassField& p);
+void from_json(const nlohmann::json& j, GrassField& p);
 
 /// ////////////////////////////////////////////////////////
 /// Terrainに生やすための草の群クラス
@@ -66,9 +66,9 @@ class GrassField : public IComponent {
 	friend class ::Editor::GrassArrangementPipeline;
 
 	/// privateメンバ変数の参照のためにフレンド宣言
-	friend void ComponentDebug::GrassFieldDebug(GrassField* _grassField, Asset::AssetCollection* _assetCollection);
-	friend void to_json(nlohmann::json& _j, const GrassField& _p);
-	friend void from_json(const nlohmann::json& _j, GrassField& _p);
+	friend void ComponentDebug::GrassFieldDebug(GrassField* grassField, Asset::AssetCollection* assetCollection);
+	friend void to_json(nlohmann::json& j, const GrassField& p);
+	friend void from_json(const nlohmann::json& j, GrassField& p);
 public:
 	/// ==================================================
 	/// public : methods
@@ -79,17 +79,17 @@ public:
 
 	/// 草のバッファを初期化する
 	void Initialize(
-		uint32_t _maxBladeCount,
-		DxDevice* _dxDevice, DxCommand* _dxCommand, DxSRVHeap* _dxSRVHeap
+		uint32_t maxBladeCount,
+		DxDevice* dxDevice, DxCommand* dxCommand, DxSRVHeap* dxSRVHeap
 	);
 
 	/// material_をBufferにMapする
-	void SetupRenderingData(Asset::AssetCollection* _assetCollection);
+	void SetupRenderingData(Asset::AssetCollection* assetCollection);
 	/// rwGrassInstanceBuffer_の開始インデックスを設定する
-	void StartIndexMapping(UINT _oneDrawInstanceCount);
+	void StartIndexMapping(UINT oneDrawInstanceCount);
 
 	/// rwGrassInstanceBuffer_のインスタンス数を読む
-	void AppendBufferReadCounter(DxManager* _dxm, DxCommand* _dxCommand);
+	void AppendBufferReadCounter(DxManager* dxm, DxCommand* dxCommand);
 
 private:
 	/// ===================================================

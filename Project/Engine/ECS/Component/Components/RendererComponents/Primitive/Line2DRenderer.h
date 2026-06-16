@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../../Interface/IComponent.h"
@@ -21,10 +21,10 @@ public:
 	~Line2DRenderer();
 
 	/// @brief lineの設定
-	/// @param _start 初期値
-	/// @param _end   終了値
-	/// @param _color 色
-	void SetLine(const Vector2& _start, const Vector2& _end, const Vector4& _color);
+	/// @param start 初期値
+	/// @param end   終了値
+	/// @param color 色
+	void SetLine(const Vector2& start, const Vector2& end, const Vector4& color);
 
 private:
 	/// ===================================================

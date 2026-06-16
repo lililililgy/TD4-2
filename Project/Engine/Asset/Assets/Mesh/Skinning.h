@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// directX
 #include <d3d12.h>
@@ -149,36 +149,36 @@ struct BoneMask {
 namespace ANIME_MATH {
 
 	/// @brief Vector3のキーフームを基に補間計算を行う
-	/// @param _keyFrames Vector3のキーフレーム配列
-	/// @param _time 補間時間
+	/// @param keyFrames Vector3のキーフレーム配列
+	/// @param time 補間時間
 	/// @return 補間後のVector3値
-	Vector3 CalculateValue(const std::vector<KeyFrameVector3>& _keyFrames, float _time);
+	Vector3 CalculateValue(const std::vector<KeyFrameVector3>& keyFrames, float time);
 
 	/// @brief Quaternionのキーフームを基に補間計算を行う
-	/// @param _keyFrames Quaternionのキーフーム配列
-	/// @param _time 補間時間
+	/// @param keyFrames Quaternionのキーフーム配列
+	/// @param time 補間時間
 	/// @return 補間後のQuaternion値
-	Quaternion CalculateValue(const std::vector<KeyFrameQuaternion>& _keyFrames, float _time);
+	Quaternion CalculateValue(const std::vector<KeyFrameQuaternion>& keyFrames, float time);
 
 
 	/// @brief ノードからジョイントを作成
-	/// @param _node ソースのノード
-	/// @param _parent 親子関係を示す親のインデックス
-	/// @param _joints Joint配列への参照
+	/// @param node ソースのノード
+	/// @param parent 親子関係を示す親のインデックス
+	/// @param joints Joint配列への参照
 	/// @return 生成されたJointのインデックス
-	int32_t CreateJoint(const Node& _node, const std::optional<int32_t>& _parent, std::vector<Joint>& _joints);
+	int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
 
 	/// @brief モデルのスケルトン構築
-	/// @param _rootNode ソースのルートノード
+	/// @param rootNode ソースのルートノード
 	/// @return 構築されたスケルトン
-	Skeleton CreateSkeleton(const Node& _rootNode);
+	Skeleton CreateSkeleton(const Node& rootNode);
 
 	/// @brief スキンクラスターの作成
-	/// @param _skeleton CreateSkeletonで作成されたスケルトン
-	/// @param _model ソースモデル
-	/// @param _dxm DxManagerのインスタンスへのポインタ
+	/// @param skeleton CreateSkeletonで作成されたスケルトン
+	/// @param model ソースモデル
+	/// @param dxm DxManagerのインスタンスへのポインタ
 	/// @return 構築されたスキンクラスター
-	SkinCluster CreateSkinCluster(const Skeleton& _skeleton, Asset::Model* _model, DxManager* _dxm);
+	SkinCluster CreateSkinCluster(const Skeleton& skeleton, Asset::Model* model, DxManager* dxm);
 
 	/// @brief アニメーションのサンプリング結果
 	struct SampledTransform {
@@ -188,11 +188,11 @@ namespace ANIME_MATH {
 	};
 
 	/// @brief 複数のアニメーションをブレンドしてサンプリング
-	/// @param _clips モデルに含まれる全クリップ
-	/// @param _state 再生状態
-	/// @param _jointNameHash ジョイント名のハッシュ
-	/// @param _outTransform 結果格納先
-	void SampleAnimation(const std::unordered_map<uint32_t, AnimationClip>& _clips, const AnimationState& _state, uint32_t _jointNameHash, SampledTransform& _outTransform);
+	/// @param clips モデルに含まれる全クリップ
+	/// @param state 再生状態
+	/// @param jointNameHash ジョイント名のハッシュ
+	/// @param outTransform 結果格納先
+	void SampleAnimation(const std::unordered_map<uint32_t, AnimationClip>& clips, const AnimationState& state, uint32_t jointNameHash, SampledTransform& outTransform);
 }
 
 

@@ -1,4 +1,4 @@
-﻿#include "RiverTerrainAdjustPipeline.h"
+#include "RiverTerrainAdjustPipeline.h"
 
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
@@ -11,11 +11,11 @@ using namespace Editor;
 RiverTerrainAdjustPipeline::RiverTerrainAdjustPipeline() = default;
 RiverTerrainAdjustPipeline::~RiverTerrainAdjustPipeline() = default;
 
-void RiverTerrainAdjustPipeline::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) {
+void RiverTerrainAdjustPipeline::Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) {
 
 	{	/// shader
 		ONEngine::Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Editor/RiverTerrainAdjust.cs.hlsl", L"cs_6_6", ONEngine::Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ONEngine::ComputePipeline>();
@@ -31,16 +31,16 @@ void RiverTerrainAdjustPipeline::Initialize(ONEngine::ShaderCompiler* _shaderCom
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 }
 
-void RiverTerrainAdjustPipeline::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* /*_assetCollection*/) {
+void RiverTerrainAdjustPipeline::Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* /*assetCollection*/) {
 
 	/// ----------------------------------------------------
 	/// 早期 return条件
 	/// ----------------------------------------------------
-	ONEngine::ComponentArray<ONEngine::Terrain>* terrainArray = _ecs->GetCurrentGroup()->GetComponentArray<ONEngine::Terrain>();
+	ONEngine::ComponentArray<ONEngine::Terrain>* terrainArray = ecs->GetCurrentGroup()->GetComponentArray<ONEngine::Terrain>();
 	if (!terrainArray) {
 		return;
 	}
@@ -65,8 +65,8 @@ void RiverTerrainAdjustPipeline::Execute(ONEngine::EntityComponentSystem* _ecs, 
 	/// pipeline起動に必要な情報を取得
 	/// ----------------------------------------------------
 
-	auto cmdList = _dxCommand->GetCommandList();
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
 
 	river->GetParamBuffer().BindForComputeCommandList(cmdList, CBV_PARAMS);

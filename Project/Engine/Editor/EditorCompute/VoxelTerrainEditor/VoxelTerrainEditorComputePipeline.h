@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <vector>
 
@@ -47,8 +47,8 @@ public:
 	VoxelTerrainEditorComputePipeline();
 	~VoxelTerrainEditorComputePipeline() override;
 
-	void Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) override;
-	void Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* _assetCollection) override;
+	void Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) override;
+	void Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* assetCollection) override;
 
 	/// @brief エディタ用のパイプラインを生成する。 基本的なBuffer等は同一なので関数でまとめる
 	/// @param pipeline 対象のパイプライン

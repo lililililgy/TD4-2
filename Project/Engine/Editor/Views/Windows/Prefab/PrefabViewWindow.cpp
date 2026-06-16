@@ -1,4 +1,4 @@
-﻿#include "PrefabViewWindow.h"
+#include "PrefabViewWindow.h"
 
 /// externals
 #include <imgui.h>
@@ -15,8 +15,8 @@
 
 using namespace Editor;
 
-PrefabViewWindow::PrefabViewWindow(ONEngine::EntityComponentSystem* _ecs, ONEngine::Asset::AssetCollection* _assetCollection)
-	: pEcs_(_ecs), pAssetCollection_(_assetCollection) {}
+PrefabViewWindow::PrefabViewWindow(ONEngine::EntityComponentSystem* ecs, ONEngine::Asset::AssetCollection* assetCollection)
+	: pEcs_(ecs), pAssetCollection_(assetCollection) {}
 
 void PrefabViewWindow::ShowImGui() {
 	if (!ImGui::Begin("prefab view")) {

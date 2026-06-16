@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -24,19 +24,19 @@ public:
 	virtual ~IRenderingPipeline() = default;
 
 	/// @brief このクラスの初期化関数
-	/// @param _shaderCompiler シェーダーのコンパイラーへのポインタ
-	virtual void Initialize(ShaderCompiler* _shaderCompiler, class DxManager* _dxm) = 0;
+	/// @param shaderCompiler シェーダーのコンパイラーへのポインタ
+	virtual void Initialize(ShaderCompiler* shaderCompiler, class DxManager* dxm) = 0;
 
 	/// @brief 描画前の処理を行う
-	/// @param _ecs ECSGroupへのポインタ
-	/// @param _camera 描画に用いるカメラへのポインタ
-	/// @param _dxCommand DxCommandへのポインタ
-	virtual void PreDraw(class ECSGroup* /*_ecs*/, class CameraComponent* /*_camera*/, DxCommand* /*_dxCommand*/) {}
+	/// @param ecs ECSGroupへのポインタ
+	/// @param camera 描画に用いるカメラへのポインタ
+	/// @param dxCommand DxCommandへのポインタ
+	virtual void PreDraw(class ECSGroup* /*ecs*/, class CameraComponent* /*camera*/, DxCommand* /*dxCommand*/) {}
 
 	/// @brief 描画処理を行う
-	/// @param _dxCommand DxCommandへのポインタ
-	/// @param _entityCollection EntityCollectionへのポインタ
-	virtual void Draw(class ECSGroup* _ecs, class CameraComponent* _camera, DxCommand* _dxCommand) = 0;
+	/// @param dxCommand DxCommandへのポインタ
+	/// @param entityCollection EntityCollectionへのポインタ
+	virtual void Draw(class ECSGroup* ecs, class CameraComponent* camera, DxCommand* dxCommand) = 0;
 
 protected:
 	/// ===================================================

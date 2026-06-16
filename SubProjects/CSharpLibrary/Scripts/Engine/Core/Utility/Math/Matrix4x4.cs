@@ -1,6 +1,8 @@
-﻿
+
+using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
+[StructLayout(LayoutKind.Sequential)]
 public struct Matrix4x4 {
 	public float m00, m01, m02, m03;
 	public float m10, m11, m12, m13;
@@ -13,27 +15,27 @@ public struct Matrix4x4 {
 	public static readonly Matrix4x4 kIdentity = new Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 
 	public Matrix4x4(
-		float _m00, float _m01, float _m02, float _m03,
-		float _m10, float _m11, float _m12, float _m13,
-		float _m20, float _m21, float _m22, float _m23,
-		float _m30, float _m31, float _m32, float _m33) {
+		float m00, float m01, float m02, float m03,
+		float m10, float m11, float m12, float m13,
+		float m20, float m21, float m22, float m23,
+		float m30, float m31, float m32, float m33) {
 
-		this.m00 = _m00;
-		this.m01 = _m01;
-		this.m02 = _m02;
-		this.m03 = _m03;
-		this.m10 = _m10;
-		this.m11 = _m11;
-		this.m12 = _m12;
-		this.m13 = _m13;
-		this.m20 = _m20;
-		this.m21 = _m21;
-		this.m22 = _m22;
-		this.m23 = _m23;
-		this.m30 = _m30;
-		this.m31 = _m31;
-		this.m32 = _m32;
-		this.m33 = _m33;
+		this.m00 = m00;
+		this.m01 = m01;
+		this.m02 = m02;
+		this.m03 = m03;
+		this.m10 = m10;
+		this.m11 = m11;
+		this.m12 = m12;
+		this.m13 = m13;
+		this.m20 = m20;
+		this.m21 = m21;
+		this.m22 = m22;
+		this.m23 = m23;
+		this.m30 = m30;
+		this.m31 = m31;
+		this.m32 = m32;
+		this.m33 = m33;
 	}
 
 
@@ -42,68 +44,68 @@ public struct Matrix4x4 {
 	/// =================================
 
 
-	static public Matrix4x4 Scale(Vector3 _v) {
+	static public Matrix4x4 Scale(Vector3 v) {
 		return new Matrix4x4(
-			_v.x, 0, 0, 0,
-			0, _v.y, 0, 0,
-			0, 0, _v.z, 0,
+			v.x, 0, 0, 0,
+			0, v.y, 0, 0,
+			0, 0, v.z, 0,
 			0, 0, 0, 1
 		);
 	}
 
-	static public Matrix4x4 RotateX(float _x) {
+	static public Matrix4x4 RotateX(float x) {
 		return new Matrix4x4(
 			1, 0, 0, 0,
-			0, Mathf.Cos(_x), Mathf.Sin(_x), 0,
-			0, -Mathf.Sin(_x), Mathf.Cos(_x), 0,
+			0, Mathf.Cos(x), Mathf.Sin(x), 0,
+			0, -Mathf.Sin(x), Mathf.Cos(x), 0,
 			0, 0, 0, 1
 		);
 	}
 
-	static public Matrix4x4 RotateY(float _y) {
+	static public Matrix4x4 RotateY(float y) {
 		return new Matrix4x4(
-			Mathf.Cos(_y), 0, -Mathf.Sin(_y), 0,
+			Mathf.Cos(y), 0, -Mathf.Sin(y), 0,
 			0, 1, 0, 0,
-			Mathf.Sin(_y), 0, Mathf.Cos(_y), 0,
+			Mathf.Sin(y), 0, Mathf.Cos(y), 0,
 			0, 0, 0, 1
 		);
 	}
 
-	static public Matrix4x4 RotateZ(float _z) {
+	static public Matrix4x4 RotateZ(float z) {
 		return new Matrix4x4(
-			Mathf.Cos(_z), Mathf.Sin(_z), 0, 0,
-			-Mathf.Sin(_z), Mathf.Cos(_z), 0, 0,
+			Mathf.Cos(z), Mathf.Sin(z), 0, 0,
+			-Mathf.Sin(z), Mathf.Cos(z), 0, 0,
 			0, 0, 1, 0,
 			0, 0, 0, 1
 		);
 	}
 
 
-	static public Matrix4x4 Rotate(Vector3 _v) {
-		Matrix4x4 rx = RotateX(_v.x);
-		Matrix4x4 ry = RotateY(_v.y);
-		Matrix4x4 rz = RotateZ(_v.z);
+	static public Matrix4x4 Rotate(Vector3 v) {
+		Matrix4x4 rx = RotateX(v.x);
+		Matrix4x4 ry = RotateY(v.y);
+		Matrix4x4 rz = RotateZ(v.z);
 
 		// Combine the rotations: R = Rz * Ry * Rx
 		return rx * ry * rz;
 	}
 
-	static public Matrix4x4 Rotate(Quaternion _q) {
-		if (Quaternion.Length(_q) == 0.0f) {
+	static public Matrix4x4 Rotate(Quaternion q) {
+		if (Quaternion.Length(q) == 0.0f) {
 			return new Matrix4x4();
 		}
 		Matrix4x4 result = new Matrix4x4();
 
-		float ww = _q.w * _q.w;
-		float xx = _q.x * _q.x;
-		float yy = _q.y * _q.y;
-		float zz = _q.z * _q.z;
-		float wx = _q.w * _q.x;
-		float wy = _q.w * _q.y;
-		float wz = _q.w * _q.z;
-		float xy = _q.x * _q.y;
-		float xz = _q.x * _q.z;
-		float yz = _q.y * _q.z;
+		float ww = q.w * q.w;
+		float xx = q.x * q.x;
+		float yy = q.y * q.y;
+		float zz = q.z * q.z;
+		float wx = q.w * q.x;
+		float wy = q.w * q.y;
+		float wz = q.w * q.z;
+		float xy = q.x * q.y;
+		float xz = q.x * q.z;
+		float yz = q.y * q.z;
 
 		result.m00 = ww + xx - yy - zz;
 		result.m01 = 2 * (xy + wz);
@@ -122,30 +124,30 @@ public struct Matrix4x4 {
 		return result;
 	}
 
-	static public Matrix4x4 Translate(Vector3 _v) {
+	static public Matrix4x4 Translate(Vector3 v) {
 		return new Matrix4x4(
 			1, 0, 0, 0,
 			0, 1, 0, 0,
 			0, 0, 1, 0,
-			_v.x, _v.y, _v.z, 1
+			v.x, v.y, v.z, 1
 		);
 	}
 
 
-	static public Vector3 Transform(Vector3 _v, Matrix4x4 _m) {
+	static public Vector3 Transform(Vector3 v, Matrix4x4 m) {
 		return new Vector3(
-			_m.m00 * _v.x + _m.m10 * _v.y + _m.m20 * _v.z + _m.m30,
-			_m.m01 * _v.x + _m.m11 * _v.y + _m.m21 * _v.z + _m.m31,
-			_m.m02 * _v.x + _m.m12 * _v.y + _m.m22 * _v.z + _m.m32
+			m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30,
+			m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31,
+			m.m02 * v.x + m.m12 * v.y + m.m22 * v.z + m.m32
 		);
 	}
 
 
-	static public Matrix4x4 Inverse(Matrix4x4 _m) {
-		float a = _m.m00, b = _m.m01, c = _m.m02, d = _m.m03;
-		float e = _m.m10, f = _m.m11, g = _m.m12, h = _m.m13;
-		float i = _m.m20, j = _m.m21, k = _m.m22, l = _m.m23;
-		float m4 = _m.m30, n = _m.m31, o = _m.m32, p = _m.m33;
+	static public Matrix4x4 Inverse(Matrix4x4 m) {
+		float a = m.m00, b = m.m01, c = m.m02, d = m.m03;
+		float e = m.m10, f = m.m11, g = m.m12, h = m.m13;
+		float i = m.m20, j = m.m21, k = m.m22, l = m.m23;
+		float m4 = m.m30, n = m.m31, o = m.m32, p = m.m33;
 
 		float kp_lo = k * p - l * o;
 		float jp_ln = j * p - l * n;
@@ -196,45 +198,45 @@ public struct Matrix4x4 {
 		return r;
 	}
 
-	public static Matrix4x4 CreateLookToLH(Vector3 _eye, Vector3 _forward, Vector3 _up) {
-		Vector3 zAxis = Vector3.Normalize(_forward); // +Z
-		Vector3 xAxis = Vector3.Normalize(Vector3.Cross(_up, zAxis)); // +X
+	public static Matrix4x4 CreateLookToLH(Vector3 eye, Vector3 forward, Vector3 up) {
+		Vector3 zAxis = Vector3.Normalize(forward); // +Z
+		Vector3 xAxis = Vector3.Normalize(Vector3.Cross(up, zAxis)); // +X
 		Vector3 yAxis = Vector3.Cross(zAxis, xAxis); // +Y
 
 		return new Matrix4x4(
 			xAxis.x, yAxis.x, zAxis.x, 0,
 			xAxis.y, yAxis.y, zAxis.y, 0,
 			xAxis.z, yAxis.z, zAxis.z, 0,
-			-Vector3.Dot(xAxis, _eye),
-			-Vector3.Dot(yAxis, _eye),
-			-Vector3.Dot(zAxis, _eye),
+			-Vector3.Dot(xAxis, eye),
+			-Vector3.Dot(yAxis, eye),
+			-Vector3.Dot(zAxis, eye),
 			1
 		);
 	}
 
 
-	public static Matrix4x4 operator *(Matrix4x4 _a, Matrix4x4 _b) {
+	public static Matrix4x4 operator *(Matrix4x4 a, Matrix4x4 b) {
 		Matrix4x4 result = new Matrix4x4();
 
-		result.m00 = _a.m00 * _b.m00 + _a.m01 * _b.m10 + _a.m02 * _b.m20 + _a.m03 * _b.m30;
-		result.m01 = _a.m00 * _b.m01 + _a.m01 * _b.m11 + _a.m02 * _b.m21 + _a.m03 * _b.m31;
-		result.m02 = _a.m00 * _b.m02 + _a.m01 * _b.m12 + _a.m02 * _b.m22 + _a.m03 * _b.m32;
-		result.m03 = _a.m00 * _b.m03 + _a.m01 * _b.m13 + _a.m02 * _b.m23 + _a.m03 * _b.m33;
+		result.m00 = a.m00 * b.m00 + a.m01 * b.m10 + a.m02 * b.m20 + a.m03 * b.m30;
+		result.m01 = a.m00 * b.m01 + a.m01 * b.m11 + a.m02 * b.m21 + a.m03 * b.m31;
+		result.m02 = a.m00 * b.m02 + a.m01 * b.m12 + a.m02 * b.m22 + a.m03 * b.m32;
+		result.m03 = a.m00 * b.m03 + a.m01 * b.m13 + a.m02 * b.m23 + a.m03 * b.m33;
 
-		result.m10 = _a.m10 * _b.m00 + _a.m11 * _b.m10 + _a.m12 * _b.m20 + _a.m13 * _b.m30;
-		result.m11 = _a.m10 * _b.m01 + _a.m11 * _b.m11 + _a.m12 * _b.m21 + _a.m13 * _b.m31;
-		result.m12 = _a.m10 * _b.m02 + _a.m11 * _b.m12 + _a.m12 * _b.m22 + _a.m13 * _b.m32;
-		result.m13 = _a.m10 * _b.m03 + _a.m11 * _b.m13 + _a.m12 * _b.m23 + _a.m13 * _b.m33;
+		result.m10 = a.m10 * b.m00 + a.m11 * b.m10 + a.m12 * b.m20 + a.m13 * b.m30;
+		result.m11 = a.m10 * b.m01 + a.m11 * b.m11 + a.m12 * b.m21 + a.m13 * b.m31;
+		result.m12 = a.m10 * b.m02 + a.m11 * b.m12 + a.m12 * b.m22 + a.m13 * b.m32;
+		result.m13 = a.m10 * b.m03 + a.m11 * b.m13 + a.m12 * b.m23 + a.m13 * b.m33;
 
-		result.m20 = _a.m20 * _b.m00 + _a.m21 * _b.m10 + _a.m22 * _b.m20 + _a.m23 * _b.m30;
-		result.m21 = _a.m20 * _b.m01 + _a.m21 * _b.m11 + _a.m22 * _b.m21 + _a.m23 * _b.m31;
-		result.m22 = _a.m20 * _b.m02 + _a.m21 * _b.m12 + _a.m22 * _b.m22 + _a.m23 * _b.m32;
-		result.m23 = _a.m20 * _b.m03 + _a.m21 * _b.m13 + _a.m22 * _b.m23 + _a.m23 * _b.m33;
+		result.m20 = a.m20 * b.m00 + a.m21 * b.m10 + a.m22 * b.m20 + a.m23 * b.m30;
+		result.m21 = a.m20 * b.m01 + a.m21 * b.m11 + a.m22 * b.m21 + a.m23 * b.m31;
+		result.m22 = a.m20 * b.m02 + a.m21 * b.m12 + a.m22 * b.m22 + a.m23 * b.m32;
+		result.m23 = a.m20 * b.m03 + a.m21 * b.m13 + a.m22 * b.m23 + a.m23 * b.m33;
 
-		result.m30 = _a.m30 * _b.m00 + _a.m31 * _b.m10 + _a.m32 * _b.m20 + _a.m33 * _b.m30;
-		result.m31 = _a.m30 * _b.m01 + _a.m31 * _b.m11 + _a.m32 * _b.m21 + _a.m33 * _b.m31;
-		result.m32 = _a.m30 * _b.m02 + _a.m31 * _b.m12 + _a.m32 * _b.m22 + _a.m33 * _b.m32;
-		result.m33 = _a.m30 * _b.m03 + _a.m31 * _b.m13 + _a.m32 * _b.m23 + _a.m33 * _b.m33;
+		result.m30 = a.m30 * b.m00 + a.m31 * b.m10 + a.m32 * b.m20 + a.m33 * b.m30;
+		result.m31 = a.m30 * b.m01 + a.m31 * b.m11 + a.m32 * b.m21 + a.m33 * b.m31;
+		result.m32 = a.m30 * b.m02 + a.m31 * b.m12 + a.m32 * b.m22 + a.m33 * b.m32;
+		result.m33 = a.m30 * b.m03 + a.m31 * b.m13 + a.m32 * b.m23 + a.m33 * b.m33;
 
 		return result;
 	}

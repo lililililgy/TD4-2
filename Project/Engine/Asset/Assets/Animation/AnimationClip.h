@@ -38,8 +38,8 @@ class AnimationClip : public IAsset {
 public:
     struct MetaData {
         // 現在は特になし
-        void to_json(nlohmann::json& /*_j*/) const {}
-        void from_json(const nlohmann::json& /*_j*/) {}
+        void to_json(nlohmann::json& /*j*/) const {}
+        void from_json(const nlohmann::json& /*j*/) {}
     };
 
     AnimationClip() = default;

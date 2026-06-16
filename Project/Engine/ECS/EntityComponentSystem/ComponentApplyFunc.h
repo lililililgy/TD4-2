@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -14,39 +14,39 @@ namespace ONEngine {
 
 class ECSGroup;
 
-using ComponentApplyFunc = void(*)(void* _data, ECSGroup* _ecsGroup);
-using ComponentFetchFunc = void(*)(void* _data, ECSGroup* _ecsGroup);
-//using ComponentApplyFunc = void(*)(MonoObject* _element, MonoClass* _class, ECSGroup* _ecsGroup);
+using ComponentApplyFunc = void(*)(void* data, ECSGroup* ecsGroup);
+using ComponentFetchFunc = void(*)(void* data, ECSGroup* ecsGroup);
+//using ComponentApplyFunc = void(*)(MonoObject* element, MonoClass* class, ECSGroup* ecsGroup);
 
 namespace ComponentApplyFuncs {
 
 /// Apply
 
-void ApplyTransform(void* _element, ECSGroup* _ecsGroup);
-void ApplyMeshRenderer(void* _element, ECSGroup* _ecsGroup);
-void ApplyDissolve(void* _element, ECSGroup* _ecsGroup);
-void ApplySprite(void* _element, ECSGroup* _ecsGroup);
-void ApplyAgentIntent(void* _element, ECSGroup* _ecsGroup);
-void ApplyCamera(void* _element, ECSGroup* _ecsGroup);
-void ApplyAnimator(void* _element, ECSGroup* _ecsGroup);
+void ApplyTransform(void* element, ECSGroup* ecsGroup);
+void ApplyMeshRenderer(void* element, ECSGroup* ecsGroup);
+void ApplyDissolve(void* element, ECSGroup* ecsGroup);
+void ApplySprite(void* element, ECSGroup* ecsGroup);
+void ApplyAgentIntent(void* element, ECSGroup* ecsGroup);
+void ApplyCamera(void* element, ECSGroup* ecsGroup);
+void ApplyAnimator(void* element, ECSGroup* ecsGroup);
 
 /// Fetch
 
-void FetchTransform(void* _element, ECSGroup* _ecsGroup);
-void FetchMeshRenderer(void* _element, ECSGroup* _ecsGroup);
-void FetchDissolve(void* _element, ECSGroup* _ecsGroup);
-void FetchSprite(void* _element, ECSGroup* _ecsGroup);
-void FetchAgentIntent(void* _element, ECSGroup* _ecsGroup);
-void FetchCamera(void* _element, ECSGroup* _ecsGroup);
-void FetchAnimator(void* _element, ECSGroup* _ecsGroup);
+void FetchTransform(void* element, ECSGroup* ecsGroup);
+void FetchMeshRenderer(void* element, ECSGroup* ecsGroup);
+void FetchDissolve(void* element, ECSGroup* ecsGroup);
+void FetchSprite(void* element, ECSGroup* ecsGroup);
+void FetchAgentIntent(void* element, ECSGroup* ecsGroup);
+void FetchCamera(void* element, ECSGroup* ecsGroup);
+void FetchAnimator(void* element, ECSGroup* ecsGroup);
 
 
-ComponentApplyFunc GetApplyFunc(MonoClass* _monoClass);
-ComponentFetchFunc GetFetchFunc(MonoClass* _monoClass);
+ComponentApplyFunc GetApplyFunc(MonoClass* monoClass);
+ComponentFetchFunc GetFetchFunc(MonoClass* monoClass);
 
-size_t GetBatchElementSize(MonoClass* _monoClass);
+size_t GetBatchElementSize(MonoClass* monoClass);
 
-void Initialize(MonoImage* _monoImage);
+void Initialize(MonoImage* monoImage);
 }
 
 

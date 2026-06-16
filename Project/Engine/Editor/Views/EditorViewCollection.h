@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -36,12 +36,12 @@ public:
 	/// ===================================================
 
 	EditorViewCollection(
-		ONEngine::DxManager* _dxm,
-		ONEngine::EntityComponentSystem* _ecs,
-		ONEngine::Asset::AssetCollection* _assetCollection,
-		ImGuiManager* _imGuiManager,
-		EditorManager* _editorManager,
-		ONEngine::SceneManager* _sceneManager
+		ONEngine::DxManager* dxm,
+		ONEngine::EntityComponentSystem* ecs,
+		ONEngine::Asset::AssetCollection* assetCollection,
+		ImGuiManager* imGuiManager,
+		EditorManager* editorManager,
+		ONEngine::SceneManager* sceneManager
 	);
 	~EditorViewCollection();
 
@@ -49,7 +49,7 @@ public:
 	void Update();
 
 	/// @brief windowの追加
-	void AddViewContainer(const std::string& _name, std::unique_ptr<class IEditorWindowContainer> _window);
+	void AddViewContainer(const std::string& name, std::unique_ptr<class IEditorWindowContainer> window);
 
 private:
 	/// ===================================================
@@ -85,7 +85,7 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	IEditorWindowContainer(const std::string& _windowName);
+	IEditorWindowContainer(const std::string& windowName);
 	virtual ~IEditorWindowContainer() = default;
 
 	void ShowImGui();
@@ -94,8 +94,8 @@ public:
 	void UpdateViews();
 
 	/// @brief 子windowの追加
-	/// @param _child 子window 
-	class IEditorWindow* AddView(std::unique_ptr<class IEditorWindow> _child);
+	/// @param child 子window 
+	class IEditorWindow* AddView(std::unique_ptr<class IEditorWindow> child);
 
 
 protected:

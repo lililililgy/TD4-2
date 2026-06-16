@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -25,24 +25,24 @@ enum class AssetType {
 
 
 /// @brief 入力された拡張子と第二引数のTypeが同一タイプかチェックする
-/// @param _extension 拡張子
-/// @param _type 確認したいType
+/// @param extension 拡張子
+/// @param type 確認したいType
 /// @return true: 同一のType   false: Typeの不一致 
-bool CheckAssetType(const std::string& _extension, AssetType _type);
+bool CheckAssetType(const std::string& extension, AssetType type);
 
 /// @brief 入力された拡張子とテンプレート引数のTypeが同一タイプかチェックする
 /// @tparam T チェックしたいAssetType
-/// @param _extension 確認対象の拡張子
+/// @param extension 確認対象の拡張子
 /// @return true: 同一のType   false: Typeの不一致
 template <AssetType T>
-bool CheckAssetType(const std::string& _extension) {
-	return CheckAssetType(_extension, T);
+bool CheckAssetType(const std::string& extension) {
+	return CheckAssetType(extension, T);
 }
 
 /// @brief 拡張子からAssetTypeを取得する
-/// @param _extension 拡張子
+/// @param extension 拡張子
 /// @return AssetType
-AssetType GetAssetTypeFromExtension(const std::string& _extension);
+AssetType GetAssetTypeFromExtension(const std::string& extension);
 
 
 

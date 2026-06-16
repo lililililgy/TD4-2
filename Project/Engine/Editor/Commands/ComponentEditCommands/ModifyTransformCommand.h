@@ -22,8 +22,8 @@ public:
         ONEngine::Vector3 newVal;
     };
 
-    ModifyTransformCommand(Target _target, const std::vector<Data>& _data)
-        : target_(_target), data_(_data) {}
+    ModifyTransformCommand(Target target, const std::vector<Data>& data)
+        : target_(target), data_(data) {}
 
     EDITOR_STATE Execute() override {
         if (data_.empty()) return EDITOR_STATE_FAILED;
@@ -42,23 +42,23 @@ public:
     }
 
 private:
-    void ApplyValue(ONEngine::Transform* _pTransform, const ONEngine::Vector3& _val) {
-        if (!_pTransform) return;
+    void ApplyValue(ONEngine::Transform* pTransform, const ONEngine::Vector3& val) {
+        if (!pTransform) return;
 
         switch (target_) {
         case Target::Position: 
-            _pTransform->position = _val; 
+            pTransform->position = val; 
             break;
         case Target::Rotation: 
             // 度数法(Degrees) -> 弧度法(Euler Radian) -> Quaternion の順で変換
-            _pTransform->euler = _val; 
-            _pTransform->SyncQuaternionFromEuler();
+            pTransform->euler = val; 
+            pTransform->SyncQuaternionFromEuler();
             break;
         case Target::Scale:    
-            _pTransform->scale = _val;    
+            pTransform->scale = val;    
             break;
         }
-        _pTransform->Update();
+        pTransform->Update();
     }
 
     Target target_;

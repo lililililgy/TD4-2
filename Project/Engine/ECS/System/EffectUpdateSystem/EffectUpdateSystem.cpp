@@ -1,4 +1,4 @@
-﻿#include "EffectUpdateSystem.h"
+#include "EffectUpdateSystem.h"
 
 using namespace ONEngine;
 
@@ -12,15 +12,15 @@ using namespace ONEngine;
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 
-void EffectUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
+void EffectUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 	/// エフェクトのコンポーネント配列を取得＆使用中のコンポーネントがなければ何もしない
-	ComponentArray<Effect>* effectArray = _ecs->GetComponentArray<Effect>();
+	ComponentArray<Effect>* effectArray = ecs->GetComponentArray<Effect>();
 	if (!effectArray || effectArray->GetUsedComponents().empty()) {
 		return;
 	}
 
-	mainCamera_ = _ecs->GetMainCamera();
+	mainCamera_ = ecs->GetMainCamera();
 	if (!mainCamera_) {
 		Console::LogWarning("EffectUpdateSystem::Update: main camera is null");
 		return;
@@ -155,29 +155,29 @@ void EffectUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
 }
 
 
-void EffectUpdateSystem::UpdateElement(Effect* _effect, Effect::Element* _element) {
+void EffectUpdateSystem::UpdateElement(Effect* effect, Effect::Element* element) {
 
-	if (_effect->elementUpdateFunc_) {
-		_effect->elementUpdateFunc_(_element);
+	if (effect->elementUpdateFunc_) {
+		effect->elementUpdateFunc_(element);
 	}
 
-	if (_element->velocity != Vector3::Zero) {
+	if (element->velocity != Vector3::Zero) {
 		Console::LogWarning("effect element velocity not zero");
 	}
 
-	_element->transform.position += _element->velocity * Time::DeltaTime();
-	_element->lifeTime -= Time::DeltaTime();
-	if (_element->lifeTime <= 0.0f) {
+	element->transform.position += element->velocity * Time::DeltaTime();
+	element->lifeTime -= Time::DeltaTime();
+	if (element->lifeTime <= 0.0f) {
 		return;
 	}
 
-	if (_effect->useBillboard_) {
-		Matrix4x4&& matScale = Matrix4x4::MakeScale(_element->transform.scale);
-		Matrix4x4&& matTranslate = Matrix4x4::MakeTranslate(_element->transform.position);
+	if (effect->useBillboard_) {
+		Matrix4x4&& matScale = Matrix4x4::MakeScale(element->transform.scale);
+		Matrix4x4&& matTranslate = Matrix4x4::MakeTranslate(element->transform.position);
 
-		_element->transform.matWorld = matScale * matBillboard_ * matTranslate;
+		element->transform.matWorld = matScale * matBillboard_ * matTranslate;
 
 	} else {
-		_element->transform.Update();
+		element->transform.Update();
 	}
 }

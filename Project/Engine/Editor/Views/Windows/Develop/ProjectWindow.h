@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -39,7 +39,7 @@ public:
 	void ShowImGui() override;
 
 	/// @brief ImGui::Beginに用いるウィンドウ名を設定する
-	/// @param _windowName ウィンドウ名
+	/// @param windowName ウィンドウ名
 	void SetWindowName(const std::string& windowName);
 
 	void DrawDirectoryTree(const std::filesystem::path& directory);

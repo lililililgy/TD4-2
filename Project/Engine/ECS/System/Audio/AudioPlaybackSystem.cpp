@@ -1,4 +1,4 @@
-﻿#include "AudioPlaybackSystem.h"
+#include "AudioPlaybackSystem.h"
 
 
 /// engine
@@ -10,8 +10,8 @@
 
 namespace ONEngine {
 
-AudioPlaybackSystem::AudioPlaybackSystem(Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {
+AudioPlaybackSystem::AudioPlaybackSystem(Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {
 
 	HRESULT hr = S_FALSE;
 
@@ -27,11 +27,11 @@ AudioPlaybackSystem::AudioPlaybackSystem(Asset::AssetCollection* _assetCollectio
 AudioPlaybackSystem::~AudioPlaybackSystem() {}
 
 
-void AudioPlaybackSystem::OutsideOfRuntimeUpdate(ECSGroup* /*_ecs*/) {}
+void AudioPlaybackSystem::OutsideOfRuntimeUpdate(ECSGroup* /*ecs*/) {}
 
-void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* _ecs) {
+void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 	/// AudioSourceコンポーネントの配列を取得、有効かチェック
-	ComponentArray<AudioSource>* asArray = _ecs->GetComponentArray<AudioSource>();
+	ComponentArray<AudioSource>* asArray = ecs->GetComponentArray<AudioSource>();
 	if(!asArray || asArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -98,37 +98,37 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* _ecs) {
 
 }
 
-void AudioPlaybackSystem::SetAudioClip(AudioSource* _audioSource) {
-	if(_audioSource->path_.empty()) return;
+void AudioPlaybackSystem::SetAudioClip(AudioSource* audioSource) {
+	if(audioSource->path_.empty()) return;
 
-	Asset::AudioClip* clip = pAssetCollection_->GetAudioClip(_audioSource->path_);
+	Asset::AudioClip* clip = pAssetCollection_->GetAudioClip(audioSource->path_);
 	if(clip) {
-		_audioSource->pAudioClip_ = clip;
+		audioSource->pAudioClip_ = clip;
 	} else {
-		Console::LogError(std::format("[CPP Audio] Failed to load clip from path: {}", _audioSource->path_));
+		Console::LogError(std::format("[CPP Audio] Failed to load clip from path: {}", audioSource->path_));
 	}
 }
 
-void AudioPlaybackSystem::PlayAudio(AudioSource* _audioSource) {
-	if(!_audioSource->pAudioClip_) {
+void AudioPlaybackSystem::PlayAudio(AudioSource* audioSource) {
+	if(!audioSource->pAudioClip_) {
 		Console::LogError("[CPP Audio] Cannot play - AudioClip is null");
 		return;
 	}
 
-	Console::Log(std::format("[CPP Audio] Playing Sustained Sound: {}", _audioSource->path_));
-	if(_audioSource->path_ == "") {
+	Console::Log(std::format("[CPP Audio] Playing Sustained Sound: {}", audioSource->path_));
+	if(audioSource->path_ == "") {
 		return;
 	}
 
 	/// stateをPlayingに変更
-	_audioSource->state_ = static_cast<int>(AudioState::Playing);
-	_audioSource->isPlayingRequest_ = false;
+	audioSource->state_ = static_cast<int>(AudioState::Playing);
+	audioSource->isPlayingRequest_ = false;
 
 	IXAudio2SourceVoice* sourceVoice = nullptr;
-	sourceVoice = _audioSource->pAudioClip_->CreateSourceVoice(xAudio2_.Get());
+	sourceVoice = audioSource->pAudioClip_->CreateSourceVoice(xAudio2_.Get());
 
 	/// 再生する波形データの設定
-	const Asset::AudioStructs::SoundData& soundData = _audioSource->pAudioClip_->GetSoundData();
+	const Asset::AudioStructs::SoundData& soundData = audioSource->pAudioClip_->GetSoundData();
 	XAUDIO2_BUFFER buffer{};
 	buffer.pAudioData = soundData.buffer.data();
 	buffer.AudioBytes = static_cast<UINT32>(soundData.buffer.size());
@@ -136,20 +136,20 @@ void AudioPlaybackSystem::PlayAudio(AudioSource* _audioSource) {
 
 	/// 波形データの再生
 	sourceVoice->SubmitSourceBuffer(&buffer);
-	sourceVoice->SetVolume(_audioSource->volume_);
-	sourceVoice->SetFrequencyRatio(_audioSource->pitch_);
+	sourceVoice->SetVolume(audioSource->volume_);
+	sourceVoice->SetFrequencyRatio(audioSource->pitch_);
 	sourceVoice->Start();
 
 	/// 音声ソースをAudioSourceに追加
-	_audioSource->sourceVoices_.push_back(sourceVoice);
+	audioSource->sourceVoices_.push_back(sourceVoice);
 }
 
-void AudioPlaybackSystem::PlayOneShot(Asset::AudioClip* _audioClip, float _volume, float _pitch, const std::string& /*_path*/) {
+void AudioPlaybackSystem::PlayOneShot(Asset::AudioClip* audioClip, float volume, float pitch, const std::string& /*path*/) {
 	IXAudio2SourceVoice* sourceVoice = nullptr;
-	sourceVoice = _audioClip->CreateSourceVoice(xAudio2_.Get());
+	sourceVoice = audioClip->CreateSourceVoice(xAudio2_.Get());
 
 	/// 再生する波形データの設定
-	const Asset::AudioStructs::SoundData& soundData = _audioClip->GetSoundData();
+	const Asset::AudioStructs::SoundData& soundData = audioClip->GetSoundData();
 	XAUDIO2_BUFFER buffer{};
 	buffer.pAudioData = soundData.buffer.data();
 	buffer.AudioBytes = static_cast<UINT32>(soundData.buffer.size());
@@ -157,23 +157,23 @@ void AudioPlaybackSystem::PlayOneShot(Asset::AudioClip* _audioClip, float _volum
 
 	/// 波形データの再生
 	sourceVoice->SubmitSourceBuffer(&buffer);
-	sourceVoice->SetVolume(_volume);
-	sourceVoice->SetFrequencyRatio(_pitch);
+	sourceVoice->SetVolume(volume);
+	sourceVoice->SetFrequencyRatio(pitch);
 	sourceVoice->Start();
 
 	/// 音声ソースをAudioSourceに追加
 	oneShotAudios_.push_back(sourceVoice);
 }
 
-int AudioPlaybackSystem::GetAudioState(AudioSource* _audioSource) {
-	Asset::AudioClip* clip = _audioSource->pAudioClip_;
+int AudioPlaybackSystem::GetAudioState(AudioSource* audioSource) {
+	Asset::AudioClip* clip = audioSource->pAudioClip_;
 	if(!clip) {
 		// クリップが設定されていない場合は停止状態
 		return static_cast<int>(AudioState::Stopped);
 	}
 
 
-	std::list<IXAudio2SourceVoice*>& sourceVoices = _audioSource->sourceVoices_;
+	std::list<IXAudio2SourceVoice*>& sourceVoices = audioSource->sourceVoices_;
 	for(auto itr = sourceVoices.begin(); itr != sourceVoices.end();) {
 		IXAudio2SourceVoice* sourceVoice = *itr;
 		if(!sourceVoice) {

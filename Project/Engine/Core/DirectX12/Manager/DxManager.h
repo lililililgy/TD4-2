@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -35,7 +35,7 @@ public:
 
 	/// @brief 追加のDepthStencilを作成する
 	/// @return 作成されたDepthStencilのポインタ
-	DxDepthStencil* AddDepthStencil(const std::string& _name);
+	DxDepthStencil* AddDepthStencil(const std::string& name);
 
 private:
 	/// ===================================================
@@ -77,9 +77,9 @@ public:
 	DxDSVHeap* GetDxDSVHeap() const;
 
 	/// @brief 名前からDxDepthStencilを取得する
-	/// @param _name DxDepthStencilの名前
+	/// @param name DxDepthStencilの名前
 	/// @return 見つかったDxDepthStencilのポインタ、見つからなかった場合はnullptr
-	DxDepthStencil* GetDxDepthStencil(const std::string& _name) const;
+	DxDepthStencil* GetDxDepthStencil(const std::string& name) const;
 
 private:
 	/// ===================================================
@@ -94,3 +94,4 @@ private:
 
 
 } /// ONEngine
+

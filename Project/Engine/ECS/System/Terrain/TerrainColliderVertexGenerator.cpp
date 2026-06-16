@@ -8,12 +8,12 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/TerrainCollider.h"
 
 
-TerrainColliderVertexGenerator::TerrainColliderVertexGenerator(class DxManager* _dxm)
-	: pDxManager_(_dxm) {}
+TerrainColliderVertexGenerator::TerrainColliderVertexGenerator(class DxManager* dxm)
+	: pDxManager_(dxm) {}
 
-void TerrainColliderVertexGenerator::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
+void TerrainColliderVertexGenerator::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 
-	ComponentArray<TerrainCollider>* colliderArray = _ecs->GetComponentArray<TerrainCollider>();
+	ComponentArray<TerrainCollider>* colliderArray = ecs->GetComponentArray<TerrainCollider>();
 	if (!colliderArray || colliderArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -39,6 +39,6 @@ void TerrainColliderVertexGenerator::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
 
 }
 
-void TerrainColliderVertexGenerator::RuntimeUpdate(ECSGroup*) {
+void TerrainColliderVertexGenerator::RuntimeUpdate(ECSGroup* /*ecs*/) {
 
 }

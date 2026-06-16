@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -32,9 +32,9 @@ public class Entity {
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	public Entity(int _id, ECSGroup _ecsGroup) {
-		entityId_ = _id;
-		ecsGroup_ = _ecsGroup;
+	public Entity(int id, ECSGroup ecsGroup) {
+		entityId_ = id;
+		ecsGroup_ = ecsGroup;
 		ecsGroupName_ = ecsGroup_.groupName;
 		transform = AddComponent<Transform>();
 	}
@@ -92,8 +92,8 @@ public class Entity {
 	/// methods
 	/// =========================================
 
-	public Entity GetChild(uint _index) {
-		int childId = InternalGetChildId(entityId_, _index, ecsGroupName_);
+	public Entity GetChild(uint index) {
+		int childId = InternalGetChildId(entityId_, index, ecsGroupName_);
 		ECSGroup ecsGroup = EntityComponentSystem.GetECSGroup(ecsGroupName_);
 		if (ecsGroup == null) {
 			return null;
@@ -204,10 +204,10 @@ public class Entity {
 		return null;
 	}
 
-	public MonoScript GetScript(string _scriptName) {
+	public MonoScript GetScript(string scriptName) {
 		/// スクリプトを得る
-		if (scripts_.ContainsKey(_scriptName)) {
-			return scripts_[_scriptName];
+		if (scripts_.ContainsKey(scriptName)) {
+			return scripts_[scriptName];
 		}
 		return null;
 	}
@@ -255,8 +255,8 @@ public class Entity {
 	}
 
 
-	public static implicit operator bool(Entity _entity) {
-		return _entity != null;
+	public static implicit operator bool(Entity entity) {
+		return entity != null;
 	}
 
 	/// ------------------------------------------
@@ -264,39 +264,39 @@ public class Entity {
 	/// ------------------------------------------
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern ulong InternalAddComponent<T>(int _entityId, string _compTypeName, string _groupName, out uint _compId);
+	static extern ulong InternalAddComponent<T>(int entityId, string compTypeName, string groupName, out uint compId);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern ulong InternalGetComponent<T>(int _entityId, string _compTypeName, string _groupName, out uint _compId);
+	static extern ulong InternalGetComponent<T>(int entityId, string compTypeName, string groupName, out uint compId);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern IntPtr InternalGetName(int _entityId, string _groupName);
+	static extern IntPtr InternalGetName(int entityId, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetName(int _entityId, string _name, string _groupName);
+	static extern void InternalSetName(int entityId, string name, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern int InternalGetChildId(int _entityId, uint _childIndex, string _groupName);
+	static extern int InternalGetChildId(int entityId, uint childIndex, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern int InternalGetChildrenCount(int _entityId, string _groupName);
+	static extern int InternalGetChildrenCount(int entityId, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern int InternalGetParentId(int _entityId, string _groupName);
+	static extern int InternalGetParentId(int entityId, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetParent(int _entityId, int _parentId, string _groupName);
+	static extern void InternalSetParent(int entityId, int parentId, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalAddScript(int _entityId, string _scriptName, string _groupName);
+	static extern void InternalAddScript(int entityId, string scriptName, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern bool InternalGetScript(int _entityId, string _scriptName, string _groupName);
+	static extern bool InternalGetScript(int entityId, string scriptName, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern bool InternalGetEnable(int _entityId, string _groupName);
+	static extern bool InternalGetEnable(int entityId, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetEnable(int _entityId, bool _enable, string _groupName);
+	static extern void InternalSetEnable(int entityId, bool enable, string groupName);
 
 }

@@ -1,4 +1,4 @@
-﻿#include "ModelLoader.h"
+#include "ModelLoader.h"
 
 /// std
 #include <fstream>
@@ -17,34 +17,34 @@
 
 namespace ONEngine::Asset {
 
-AssetLoader<Model>::AssetLoader(DxManager* _dxm)
-	: pDxManager_(_dxm) {
+AssetLoader<Model>::AssetLoader(DxManager* dxm)
+	: pDxManager_(dxm) {
 	assimpLoadFlags_ = aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_LimitBoneWeights;
 }
 
-std::optional<Model> AssetLoader<Model>::Load(const std::string& _filepath, Meta<Model::MetaData> meta) {
+std::optional<Model> AssetLoader<Model>::Load(const std::string& filepath, Meta<Model::MetaData> meta) {
 	/// ----- モデルの読み込み ----- ///
 
-	const std::string fileExtension = FileSystem::FileExtension(_filepath);
-	Console::LogInfo(std::format("[Load] [Model] - Starting load: \"{}\" (ext: \"{}\")", _filepath, fileExtension));
+	const std::string fileExtension = FileSystem::FileExtension(filepath);
+	Console::LogInfo(std::format("[Load] [Model] - Starting load: \"{}\" (ext: \"{}\")", filepath, fileExtension));
 
 	Assimp::Importer importer;
 	const aiScene* scene = nullptr;
 	
 	try {
-		scene = importer.ReadFile(_filepath, assimpLoadFlags_);
+		scene = importer.ReadFile(filepath, assimpLoadFlags_);
 	} catch (const std::exception& e) {
-		Console::LogError(std::format("[Load] [Model] - Assimp Exception: \"{}\", path: \"{}\"", e.what(), _filepath));
+		Console::LogError(std::format("[Load] [Model] - Assimp Exception: \"{}\", path: \"{}\"", e.what(), filepath));
 		return std::nullopt;
 	} catch (...) {
-		Console::LogError(std::format("[Load] [Model] - Unknown Assimp Exception, path: \"{}\"", _filepath));
+		Console::LogError(std::format("[Load] [Model] - Unknown Assimp Exception, path: \"{}\"", filepath));
 		return std::nullopt;
 	}
 
 	/// 読み込めるモデルであるのかチェックする
 	if(!ValidateModel(scene)) {
 		if(!scene) {
-			Console::LogError(std::format("[Load] [Model] - Assimp Error: \"{}\", path: \"{}\"", importer.GetErrorString(), _filepath));
+			Console::LogError(std::format("[Load] [Model] - Assimp Error: \"{}\", path: \"{}\"", importer.GetErrorString(), filepath));
 		}
 		return std::nullopt;
 	}
@@ -55,7 +55,7 @@ std::optional<Model> AssetLoader<Model>::Load(const std::string& _filepath, Meta
 
 	Model model;
 	model.guid = meta.base.guid;
-	model.SetPath(_filepath);
+	model.SetPath(filepath);
 
 	/// mesh 解析
 	model.GetMeshJointWeightData().resize(scene->mNumMeshes);
@@ -146,22 +146,22 @@ std::optional<Model> AssetLoader<Model>::Load(const std::string& _filepath, Meta
 	}
 
 	Console::LogInfo(std::format("[Load] [Model] - Finished: \"{}\", Total Meshes: {}, Total Clips: {}", 
-		_filepath, scene->mNumMeshes, model.GetAnimationClips().size()));
+		filepath, scene->mNumMeshes, model.GetAnimationClips().size()));
 
 	return model;
 }
 
-std::optional<Model> AssetLoader<Model>::Reload(const std::string& _filepath, Model* /*_src*/, Meta<Model::MetaData> meta) {
+std::optional<Model> AssetLoader<Model>::Reload(const std::string& filepath, Model* /*src*/, Meta<Model::MetaData> meta) {
 	/// モデルの再読み込みは特殊な操作をする必要がないのでもう一度読み込んだ内容を渡す
-	return Load(_filepath, meta);
+	return Load(filepath, meta);
 }
 
 
-Meta<Model::MetaData> AssetLoader<Model>::GetMetaData(const std::string& _filepath) {
+Meta<Model::MetaData> AssetLoader<Model>::GetMetaData(const std::string& filepath) {
 	Meta<Model::MetaData> res{};
 
-	const std::string metaPath = _filepath + ".meta";
-	res.base = LoadOrGenerateMetaBase(metaPath, _filepath);
+	const std::string metaPath = filepath + ".meta";
+	res.base = LoadOrGenerateMetaBase(metaPath, filepath);
 
 	nlohmann::json j;
 	std::ifstream ifs(metaPath);
@@ -180,7 +180,7 @@ Meta<Model::MetaData> AssetLoader<Model>::GetMetaData(const std::string& _filepa
 
 
 
-Node AssetLoader<Model>::ReadNode(aiNode* _node) {
+Node AssetLoader<Model>::ReadNode(aiNode* node) {
 	/// ----- nodeの読み込み ----- ///
 
 	Node result;
@@ -189,7 +189,7 @@ Node AssetLoader<Model>::ReadNode(aiNode* _node) {
 	aiQuaternion rotate;
 	aiVector3D   scale;
 
-	_node->mTransformation.Decompose(scale, rotate, position);
+	node->mTransformation.Decompose(scale, rotate, position);
 
 	result.transform.scale = { scale.x, scale.y, scale.z };
 	result.transform.rotate = { rotate.x, -rotate.y, -rotate.z, rotate.w };
@@ -197,27 +197,27 @@ Node AssetLoader<Model>::ReadNode(aiNode* _node) {
 	result.transform.Update();
 
 	/// nodeから必要な値をゲット
-	result.name = _node->mName.C_Str();
-	result.children.resize(_node->mNumChildren);
+	result.name = node->mName.C_Str();
+	result.children.resize(node->mNumChildren);
 
 	/// childrenの解析
-	for(size_t childIndex = 0; childIndex < _node->mNumChildren; ++childIndex) {
-		result.children[childIndex] = ReadNode(_node->mChildren[childIndex]);
+	for(size_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {
+		result.children[childIndex] = ReadNode(node->mChildren[childIndex]);
 	}
 
 	return result;
 }
 
-void AssetLoader<Model>::LoadAnimation(Model* _model, const aiScene* _scene) {
+void AssetLoader<Model>::LoadAnimation(Model* model, const aiScene* scene) {
 	/// ----- アニメーションの読み込み ----- ///
 
 	///!< アニメーションが存在しない場合は何もしない
-	if(!_scene->mAnimations || _scene->mNumAnimations == 0) {
+	if(!scene->mAnimations || scene->mNumAnimations == 0) {
 		return;
 	}
 
-	for(uint32_t animIndex = 0; animIndex < _scene->mNumAnimations; ++animIndex) {
-		aiAnimation* animationAssimp = _scene->mAnimations[animIndex];
+	for(uint32_t animIndex = 0; animIndex < scene->mNumAnimations; ++animIndex) {
+		aiAnimation* animationAssimp = scene->mAnimations[animIndex];
 		
 		std::string clipName = animationAssimp->mName.C_Str();
 		if(clipName.empty()) {
@@ -225,7 +225,7 @@ void AssetLoader<Model>::LoadAnimation(Model* _model, const aiScene* _scene) {
 		}
 
 		uint32_t clipNameHash = StringHash::Get(clipName);
-		AnimationClip& clip = _model->GetAnimationClips()[clipNameHash];
+		AnimationClip& clip = model->GetAnimationClips()[clipNameHash];
 		clip.name = clipName;
 		clip.nameHash = clipNameHash;
 		clip.duration = static_cast<float>(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);
@@ -291,18 +291,18 @@ void AssetLoader<Model>::LoadAnimation(Model* _model, const aiScene* _scene) {
 	}
 }
 
-bool AssetLoader<Model>::ValidateModel(const aiScene* _aiScene) {
-	if(!_aiScene) {
+bool AssetLoader<Model>::ValidateModel(const aiScene* aiScene) {
+	if(!aiScene) {
 		Console::LogError("AssetLoader<Model>::ValidateModel: aiScene is null.");
 		return false;
 	}
-	if(!_aiScene->mNumMeshes) {
+	if(!aiScene->mNumMeshes) {
 		Console::LogError("AssetLoader<Model>::ValidateModel: Model has no meshes.");
 		return false;
 	}
 
-	for(unsigned int i = 0; i < _aiScene->mNumMeshes; i++) {
-		const aiMesh* mesh = _aiScene->mMeshes[i];
+	for(unsigned int i = 0; i < aiScene->mNumMeshes; i++) {
+		const aiMesh* mesh = aiScene->mMeshes[i];
 		if(!mesh) {
 			Console::LogError(std::format("AssetLoader<Model>::ValidateModel: Mesh[{}] is null.", i));
 			return false;

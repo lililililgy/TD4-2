@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -41,15 +41,15 @@ namespace ONEngine {
 static const uint32_t kMaxTerrainTextureNum = 4u;
 
 namespace ComponentDebug {
-void TerrainDebug(Terrain* _terrain, EntityComponentSystem* _ecs, Asset::AssetCollection* _assetCollection);
+void TerrainDebug(Terrain* terrain, EntityComponentSystem* ecs, Asset::AssetCollection* assetCollection);
 
 /// テクスチャモードの編集
-bool TerrainTextureEditModeDebug(std::array<std::string, kMaxTerrainTextureNum>* _texturePaths, int32_t* _usedTextureIndex, Asset::AssetCollection* _assetCollection);
+bool TerrainTextureEditModeDebug(std::array<std::string, kMaxTerrainTextureNum>* texturePaths, int32_t* usedTextureIndex, Asset::AssetCollection* assetCollection);
 } // namespace ComponentDebug
 
 /// Json変換
-void from_json(const nlohmann::json& _j, Terrain& _t);
-void to_json(nlohmann::json& _j, const Terrain& _t);
+void from_json(const nlohmann::json& j, Terrain& t);
+void to_json(nlohmann::json& j, const Terrain& t);
 
 
 /// ///////////////////////////////////////////////////
@@ -69,9 +69,9 @@ struct TerrainEditorInfo {
 class Terrain : public IComponent {
 	friend class ::Editor::TerrainVertexEditorCompute;
 
-	friend void ComponentDebug::TerrainDebug(Terrain* _terrain, EntityComponentSystem* _ecs, Asset::AssetCollection* _assetCollection);
-	friend void from_json(const nlohmann::json& _j, Terrain& _t);
-	friend void to_json(nlohmann::json& _j, const Terrain& _t);
+	friend void ComponentDebug::TerrainDebug(Terrain* terrain, EntityComponentSystem* ecs, Asset::AssetCollection* assetCollection);
+	friend void from_json(const nlohmann::json& j, Terrain& t);
+	friend void to_json(nlohmann::json& j, const Terrain& t);
 public:
 	/// =========================================
 	/// public : sub class
@@ -103,16 +103,16 @@ public:
 	~Terrain() override;
 
 	/// @brief VerticesとIndicesのUAVBufferを作成する
-	void CreateVerticesAndIndicesBuffers(DxDevice* _dxDevice, DxCommand* _dxCommand, DxSRVHeap* _dxSrvHeap);
+	void CreateVerticesAndIndicesBuffers(DxDevice* dxDevice, DxCommand* dxCommand, DxSRVHeap* dxSrvHeap);
 
 
 	/// @brief VBVとIBVのバリアを生成する(描画用に)
-	/// @param _dxCommand DxCommandへのポインタ
-	void CreateRenderingBarriers(DxCommand* _dxCommand);
+	/// @param dxCommand DxCommandへのポインタ
+	void CreateRenderingBarriers(DxCommand* dxCommand);
 
 	/// @brief VBVとIBVのバリアを復元する(計算用に)
-	/// @param _dxCommand DxCommandへのポインタ
-	void RestoreResourceBarriers(DxCommand* _dxCommand);
+	/// @param dxCommand DxCommandへのポインタ
+	void RestoreResourceBarriers(DxCommand* dxCommand);
 
 	/// @brief 描画用にVBVを生成する
 	D3D12_VERTEX_BUFFER_VIEW CreateVBV();
@@ -165,7 +165,7 @@ public:
 	const StructuredBuffer<uint32_t>& GetRwIndices() const;
 	DxResource& GetVerticesResource();
 
-	void SetIsCreated(bool _isCreated);
+	void SetIsCreated(bool isCreated);
 	bool GetIsCreated() const;
 
 	uint32_t GetMaxVertexNum();
@@ -181,7 +181,7 @@ public:
 
 	/// ----- flags ----- ///
 	bool GetIsRenderingProcedural() const;
-	void SetIsRenderingProcedural(bool _isRenderingProcedural);
+	void SetIsRenderingProcedural(bool isRenderingProcedural);
 
 };
 

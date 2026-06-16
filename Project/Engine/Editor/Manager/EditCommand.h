@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "EditorManager.h"
@@ -26,16 +26,16 @@ public:
 
 	/// @brief コマンドの実行
 	/// @tparam T 実行するコマンドの型
-	/// @param ..._args コマンドの引数
+	/// @param ...args コマンドの引数
 	template <IsEditorCommand T, typename ...Args>
-	static void Execute(Args&& ..._args);
+	static void Execute(Args&& ...args);
 
 	static void Redo();
 	static void Undo();
 
 	template <typename T>
-	static void SetClipboardData(const T& _data) {
-		pEditorManager_->clipboard_.Set(_data);
+	static void SetClipboardData(const T& data) {
+		pEditorManager_->clipboard_.Set(data);
 	}
 
 	template <typename T>
@@ -54,8 +54,8 @@ private:
 
 
 template<IsEditorCommand T, typename ...Args>
-inline void EditCommand::Execute(Args&& ..._args) {
-	pEditorManager_->ExecuteCommand<T>(_args...);
+inline void EditCommand::Execute(Args&& ...args) {
+	pEditorManager_->ExecuteCommand<T>(args...);
 }
 
 } /// Editor

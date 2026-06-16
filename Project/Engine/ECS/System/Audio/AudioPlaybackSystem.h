@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <list>
@@ -33,11 +33,11 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	AudioPlaybackSystem(Asset::AssetCollection* _assetCollection);
+	AudioPlaybackSystem(Asset::AssetCollection* assetCollection);
 	~AudioPlaybackSystem();
 
-	void OutsideOfRuntimeUpdate(ECSGroup* _ecs) override;
-	void RuntimeUpdate(ECSGroup* _ecs) override;
+	void OutsideOfRuntimeUpdate(ECSGroup* ecs) override;
+	void RuntimeUpdate(ECSGroup* ecs) override;
 
 private:
 	/// ==================================================
@@ -46,14 +46,14 @@ private:
 
 
 	/// 設定
-	void SetAudioClip(AudioSource* _audioSource);
+	void SetAudioClip(AudioSource* audioSource);
 
 	/// 再生
-	void PlayAudio(AudioSource* _audioSource);
-	void PlayOneShot(Asset::AudioClip* _audioClip, float _volume, float _pitch, const std::string& _path);
+	void PlayAudio(AudioSource* audioSource);
+	void PlayOneShot(Asset::AudioClip* audioClip, float volume, float pitch, const std::string& path);
 
 	/// 状態の取得
-	int GetAudioState(AudioSource* _audioSource);
+	int GetAudioState(AudioSource* audioSource);
 
 private:
 	/// ===================================================

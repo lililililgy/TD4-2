@@ -1,4 +1,4 @@
-﻿#include "MaterialLoader.h"
+#include "MaterialLoader.h"
 
 /// std
 #include <fstream>
@@ -10,11 +10,11 @@
 namespace ONEngine::Asset {
 
 
-std::optional<Material> AssetLoader<Material>::Load(const std::string& _filepath, Meta<Material::MetaData> meta) {
+std::optional<Material> AssetLoader<Material>::Load(const std::string& filepath, Meta<Material::MetaData> meta) {
 	/// ファイルを開く
-	std::ifstream ifs(_filepath);
+	std::ifstream ifs(filepath);
 	if(!ifs) {
-		Console::LogError("[Load Failed] [Material] - File not found: \"" + _filepath + "\"");
+		Console::LogError("[Load Failed] [Material] - File not found: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
@@ -35,22 +35,22 @@ std::optional<Material> AssetLoader<Material>::Load(const std::string& _filepath
 	}
 
 	/// コンソールにログを出力
-	Console::Log("[Load] [Material] - path:\"" + _filepath + "\"");
+	Console::Log("[Load] [Material] - path:\"" + filepath + "\"");
 
 	return std::move(material);
 }
 
-std::optional<Material> AssetLoader<Material>::Reload(const std::string& _filepath, Material* /*_src*/, Meta<Material::MetaData> meta) {
+std::optional<Material> AssetLoader<Material>::Reload(const std::string& filepath, Material* /*src*/, Meta<Material::MetaData> meta) {
 	/// Materialの再読み込みは新規読み込みと同じ処理を行う
-	return std::move(Load(_filepath, meta));
+	return std::move(Load(filepath, meta));
 }
 
 
-Meta<Material::MetaData> AssetLoader<Material>::GetMetaData(const std::string& _filepath) {
+Meta<Material::MetaData> AssetLoader<Material>::GetMetaData(const std::string& filepath) {
 	Meta<Material::MetaData> res{};
 
-	const std::string metaPath = _filepath + ".meta";
-	res.base = LoadOrGenerateMetaBase(metaPath, _filepath);
+	const std::string metaPath = filepath + ".meta";
+	res.base = LoadOrGenerateMetaBase(metaPath, filepath);
 
 	nlohmann::json j;
 	std::ifstream ifs(metaPath);

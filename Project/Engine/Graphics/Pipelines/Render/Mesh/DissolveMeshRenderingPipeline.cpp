@@ -1,4 +1,4 @@
-﻿#include "DissolveMeshRenderingPipeline.h"
+#include "DissolveMeshRenderingPipeline.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -11,15 +11,15 @@
 
 using namespace ONEngine;
 
-DissolveMeshRenderingPipeline::DissolveMeshRenderingPipeline(Asset::AssetCollection* _ac)
-	: pAssetCollection_(_ac) {
+DissolveMeshRenderingPipeline::DissolveMeshRenderingPipeline(Asset::AssetCollection* ac)
+	: pAssetCollection_(ac) {
 }
 
-void DissolveMeshRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void DissolveMeshRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/Mesh/DissolveMesh.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"./Packages/Shader/Render/Mesh/DissolveMesh.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -58,21 +58,21 @@ void DissolveMeshRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, 
 		pipeline_->Add32BitConstant(D3D12_SHADER_VISIBILITY_VERTEX, 1);        /// instance id: 6
 
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 	{	/// buffers
-		sbufTransforms_.Create(kMaxRenderingMeshCount_, _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-		sbufMaterials_.Create(kMaxRenderingMeshCount_, _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-		sbufTextureIds_.Create(kMaxRenderingMeshCount_, _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-		sbufDissolveParams_.Create(kMaxRenderingMeshCount_, _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
+		sbufTransforms_.Create(kMaxRenderingMeshCount_, dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+		sbufMaterials_.Create(kMaxRenderingMeshCount_, dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+		sbufTextureIds_.Create(kMaxRenderingMeshCount_, dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+		sbufDissolveParams_.Create(kMaxRenderingMeshCount_, dxm->GetDxDevice(), dxm->GetDxSRVHeap());
 	}
 
 }
 
-void DissolveMeshRenderingPipeline::Draw(ECSGroup* _ecsGroup, CameraComponent* _camera, DxCommand* _dxCommand) {
+void DissolveMeshRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, DxCommand* dxCommand) {
 
-	ComponentArray<DissolveMeshRenderer>* dmrArray = _ecsGroup->GetComponentArray<DissolveMeshRenderer>();
+	ComponentArray<DissolveMeshRenderer>* dmrArray = ecsGroup->GetComponentArray<DissolveMeshRenderer>();
 	if(!CheckComponentArrayEnable(dmrArray)) {
 		return;
 	}
@@ -96,11 +96,11 @@ void DissolveMeshRenderingPipeline::Draw(ECSGroup* _ecsGroup, CameraComponent* _
 
 
 
-	auto cmdList = _dxCommand->GetCommandList();
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
 
 	const Asset::Texture& frontTexture = pAssetCollection_->GetTextures().front();
 	cmdList->SetGraphicsRootDescriptorTable(SRV_TEXTURE, frontTexture.GetSRVGPUHandle());

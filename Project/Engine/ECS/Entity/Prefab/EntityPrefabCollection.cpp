@@ -1,4 +1,4 @@
-﻿#include "EntityPrefabCollection.h"
+#include "EntityPrefabCollection.h"
 
 using namespace ONEngine;
 
@@ -21,33 +21,33 @@ void EntityPrefabCollection::LoadPrefabAll() {
 	}
 }
 
-void EntityPrefabCollection::ReloadPrefab(const std::string& _prefabName) {
-	auto itr = prefabs_.find(_prefabName);
+void EntityPrefabCollection::ReloadPrefab(const std::string& prefabName) {
+	auto itr = prefabs_.find(prefabName);
 	if (itr == prefabs_.end()) {
 		/// もう一度Fileを探索して確認
-		File file = FileSystem::GetFile("./Assets/Prefabs/", _prefabName);
+		File file = FileSystem::GetFile("./Assets/Prefabs/", prefabName);
 
 		if (file.first.empty()) {
-			Console::LogWarning("Prefab not found: " + _prefabName);
+			Console::LogWarning("Prefab not found: " + prefabName);
 			return;
 		}
 
 		///!< 複数あった場合は最初に見つかったものを使用する
 		prefabs_[file.second] = std::make_unique<EntityPrefab>(file.first);
 
-		itr = prefabs_.find(_prefabName);
+		itr = prefabs_.find(prefabName);
 	}
 
 	/// prefabを再読み込み
 	itr->second->Reload();
 }
 
-EntityPrefab* EntityPrefabCollection::GetPrefab(const std::string& _prefabName) {
-	auto itr = prefabs_.find(_prefabName);
+EntityPrefab* EntityPrefabCollection::GetPrefab(const std::string& prefabName) {
+	auto itr = prefabs_.find(prefabName);
 	if (itr != prefabs_.end()) {
 		return itr->second.get();
 	}
 
-	Console::LogWarning("Prefab not found: " + _prefabName);
+	Console::LogWarning("Prefab not found: " + prefabName);
 	return nullptr;
 }

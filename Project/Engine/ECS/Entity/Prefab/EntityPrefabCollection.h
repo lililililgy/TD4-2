@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -23,10 +23,10 @@ public:
 
 	/// 読み込み
 	void LoadPrefabAll();
-	void ReloadPrefab(const std::string& _prefabName);
+	void ReloadPrefab(const std::string& prefabName);
 	
 	/// 取得
-	EntityPrefab* GetPrefab(const std::string& _prefabName);
+	EntityPrefab* GetPrefab(const std::string& prefabName);
 
 private:
 	/// ===================================================

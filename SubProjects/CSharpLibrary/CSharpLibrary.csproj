@@ -79,6 +79,7 @@
     <Compile Include="Scripts\Engine\ECS\EntityComponentSystem\EntityComponentSystem.cs" />
     <Compile Include="Scripts\Engine\ECS\Entity\Entity.cs" />
     <Compile Include="Scripts\Engine\Graphics\Material.cs" />
+    <Compile Include="Scripts\Engine\Graphics\UVTransform.cs" />
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Transform.cs" />
     <Compile Include="Scripts\Game\AttachObjectToJoint.cs" />

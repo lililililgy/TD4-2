@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/Core/Config/EngineConfig.h"
@@ -12,8 +12,8 @@ class BoxCollider;
 
 namespace ComponentDebug {
 /// @brief BoxColliderのデバッグ表示
-/// @param _boxCollider 
-void BoxColliderDebug(BoxCollider* _boxCollider);
+/// @param boxCollider 
+void BoxColliderDebug(BoxCollider* boxCollider);
 
 }	/// namespace ComponentDebug
 
@@ -22,9 +22,9 @@ void BoxColliderDebug(BoxCollider* _boxCollider);
 /// //////////////////////////////////////
 class BoxCollider : public ICollider {
 	/// --------------- friend function --------------- ///
-	friend void ComponentDebug::BoxColliderDebug(BoxCollider* _boxCollider);
-	friend void from_json(const nlohmann::json& _j, BoxCollider& _b);
-	friend void to_json(nlohmann::json& _j, const BoxCollider& _b);
+	friend void ComponentDebug::BoxColliderDebug(BoxCollider* boxCollider);
+	friend void from_json(const nlohmann::json& j, BoxCollider& b);
+	friend void to_json(nlohmann::json& j, const BoxCollider& b);
 public:
 	/// ====================================================
 	/// public : methods
@@ -45,17 +45,17 @@ public:
 	/// public : accessors
 	/// =====================================================
 
-	void SetSize(const Vector3& _size);
+	void SetSize(const Vector3& size);
 	const Vector3& GetSize() const;
 
 };
 
 /// @brief Mono Internal Calls
-Vector3 InternalGetSize(uint64_t _nativeHandle);
-void InternalSetSize(uint64_t _nativeHandle, Vector3 _size);
-bool InternalIsTriggerBox(uint64_t _nativeHandle);
-void InternalSetTriggerBox(uint64_t _nativeHandle, bool _trigger);
-float InternalGetMassBox(uint64_t _nativeHandle);
-void InternalSetMassBox(uint64_t _nativeHandle, float _mass);
+Vector3 InternalGetSize(uint64_t nativeHandle);
+void InternalSetSize(uint64_t nativeHandle, Vector3 size);
+bool InternalIsTriggerBox(uint64_t nativeHandle);
+void InternalSetTriggerBox(uint64_t nativeHandle, bool trigger);
+float InternalGetMassBox(uint64_t nativeHandle);
+void InternalSetMassBox(uint64_t nativeHandle, float mass);
 
 } /// ONEngine

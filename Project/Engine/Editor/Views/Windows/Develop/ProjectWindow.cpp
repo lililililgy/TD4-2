@@ -1,4 +1,4 @@
-﻿#include "ProjectWindow.h"
+#include "ProjectWindow.h"
 
 /// std
 #include <filesystem>
@@ -30,8 +30,8 @@ const std::filesystem::path kRootPath = std::filesystem::absolute("./");
 
 
 /// @brief 指定した基準パスに対する、与えられた絶対パスの相対パスを計算して文字列で返す。
-std::string GetRelativePath(const std::filesystem::path& _absolutePath, const std::filesystem::path& _basePath = kRootPath) {
-	std::filesystem::path relativePath = std::filesystem::relative(_absolutePath, _basePath);
+std::string GetRelativePath(const std::filesystem::path& absolutePath, const std::filesystem::path& basePath = kRootPath) {
+	std::filesystem::path relativePath = std::filesystem::relative(absolutePath, basePath);
 	std::string relativeStr = relativePath.string();
 
 	if(!relativeStr.empty() && relativeStr[0] != '.') {
@@ -47,8 +47,8 @@ std::string GetRelativePath(const std::filesystem::path& _absolutePath, const st
 
 }
 
-ProjectWindow::ProjectWindow(ONEngine::Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {
+ProjectWindow::ProjectWindow(ONEngine::Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {
 	windowName_ = "Project";
 
 	rootPaths_ = { "./Assets", "./Packages", "../SubProjects/CSharpLibrary/Scripts" };

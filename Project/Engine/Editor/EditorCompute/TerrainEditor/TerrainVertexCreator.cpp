@@ -1,4 +1,4 @@
-﻿#include "TerrainVertexCreator.h"
+#include "TerrainVertexCreator.h"
 
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
@@ -14,14 +14,14 @@ using namespace Editor;
 TerrainVertexCreator::TerrainVertexCreator() {}
 TerrainVertexCreator::~TerrainVertexCreator() {}
 
-void TerrainVertexCreator::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) {
-	pDxManager_ = _dxm;
+void TerrainVertexCreator::Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) {
+	pDxManager_ = dxm;
 
 
 	{	/// shader
 
 		ONEngine::Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Editor/TerrainVertexCreator.cs.hlsl", L"cs_6_6", ONEngine::Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ONEngine::ComputePipeline>();
@@ -40,19 +40,19 @@ void TerrainVertexCreator::Initialize(ONEngine::ShaderCompiler* _shaderCompiler,
 
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
 	{	/// buffer
-		terrainSize_.Create(_dxm->GetDxDevice());
+		terrainSize_.Create(dxm->GetDxDevice());
 	}
 
 
 }
 
-void TerrainVertexCreator::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* _assetCollection) {
-	ONEngine::ComponentArray<ONEngine::Terrain>* terrainArray = _ecs->GetCurrentGroup()->GetComponentArray<ONEngine::Terrain>();
+void TerrainVertexCreator::Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* assetCollection) {
+	ONEngine::ComponentArray<ONEngine::Terrain>* terrainArray = ecs->GetCurrentGroup()->GetComponentArray<ONEngine::Terrain>();
 	if (!terrainArray) {
 		ONEngine::Console::LogError("TerrainVertexEditorCompute::Execute: Terrain component array is null");
 		return;
@@ -80,15 +80,15 @@ void TerrainVertexCreator::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngi
 		ONEngine::Console::LogInfo("TerrainVertexEditorCompute::Execute: Creating terrain vertices and indices");
 
 		/// VBVとIBVの生成
-		pTerrain->CreateVerticesAndIndicesBuffers(pDxManager_->GetDxDevice(), _dxCommand, pDxManager_->GetDxSRVHeap());
+		pTerrain->CreateVerticesAndIndicesBuffers(pDxManager_->GetDxDevice(), dxCommand, pDxManager_->GetDxSRVHeap());
 
 
 		const uint32_t width = static_cast<uint32_t>(pTerrain->GetSize().x);
 		const uint32_t depth = static_cast<uint32_t>(pTerrain->GetSize().y);
 
 		/// pipelineに設定&実行
-		pipeline_->SetPipelineStateForCommandList(_dxCommand);
-		auto cmdList = _dxCommand->GetCommandList();
+		pipeline_->SetPipelineStateForCommandList(dxCommand);
+		auto cmdList = dxCommand->GetCommandList();
 
 		terrainSize_.SetMappedData(TerrainSize{ width, depth });
 		terrainSize_.BindForComputeCommandList(cmdList, CBV_TERRAIN_SIZE);
@@ -96,11 +96,11 @@ void TerrainVertexCreator::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngi
 		pTerrain->GetRwVertices().UAVBindForComputeCommandList(cmdList, UAV_VERTICES);
 		pTerrain->GetRwIndices().UAVBindForComputeCommandList(cmdList, UAV_INDICES);
 
-		const ONEngine::Asset::Texture* vertexTexture = _assetCollection->GetTexture("./Packages/Textures/Terrain/TerrainVertex.png");
-		if(!vertexTexture) vertexTexture = _assetCollection->GetTexture("./Packages/Textures/Terrain/TerrainVertex.dds");
+		const ONEngine::Asset::Texture* vertexTexture = assetCollection->GetTexture("./Packages/Textures/Terrain/TerrainVertex.png");
+		if(!vertexTexture) vertexTexture = assetCollection->GetTexture("./Packages/Textures/Terrain/TerrainVertex.dds");
 
-		const ONEngine::Asset::Texture* blendTexture = _assetCollection->GetTexture("./Packages/Textures/Terrain/TerrainSplatBlend.png");
-		if(!blendTexture) blendTexture = _assetCollection->GetTexture("./Packages/Textures/Terrain/TerrainSplatBlend.dds");
+		const ONEngine::Asset::Texture* blendTexture = assetCollection->GetTexture("./Packages/Textures/Terrain/TerrainSplatBlend.png");
+		if(!blendTexture) blendTexture = assetCollection->GetTexture("./Packages/Textures/Terrain/TerrainSplatBlend.dds");
 
 		if (vertexTexture) { cmdList->SetComputeRootDescriptorTable(SRV_VERTEX_TEXTURE, vertexTexture->GetSRVGPUHandle()); }
 		if (blendTexture) { cmdList->SetComputeRootDescriptorTable(SRV_SPLAT_BLEND_TEXTURE, blendTexture->GetSRVGPUHandle()); }

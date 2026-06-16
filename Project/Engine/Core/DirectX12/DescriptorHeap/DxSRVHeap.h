@@ -22,7 +22,7 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	DxSRVHeap(DxDevice* _dxDevice, uint32_t _bufferHeapSize, uint32_t _textureHeapSize);
+	DxSRVHeap(DxDevice* dxDevice, uint32_t bufferHeapSize, uint32_t textureHeapSize);
 	~DxSRVHeap();
 
 	/// @brief 初期化

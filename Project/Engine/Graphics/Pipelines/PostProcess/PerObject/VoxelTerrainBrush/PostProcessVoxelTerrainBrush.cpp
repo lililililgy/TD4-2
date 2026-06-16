@@ -1,4 +1,4 @@
-﻿#include "PostProcessVoxelTerrainBrush.h"
+#include "PostProcessVoxelTerrainBrush.h"
 
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
@@ -14,12 +14,12 @@ PostProcessVoxelTerrainBrush::PostProcessVoxelTerrainBrush() = default;
 PostProcessVoxelTerrainBrush::~PostProcessVoxelTerrainBrush() = default;
 
 
-void PostProcessVoxelTerrainBrush::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void PostProcessVoxelTerrainBrush::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{	/// shader compile
 
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/PostProcess/PerObject/VoxelTerrainBrush/VoxelTerrainBrush.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ComputePipeline>();
@@ -41,21 +41,21 @@ void PostProcessVoxelTerrainBrush::Initialize(ShaderCompiler* _shaderCompiler, D
 
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 	{	/// buffer
-		brushBuffer_.Create(_dxm->GetDxDevice());
+		brushBuffer_.Create(dxm->GetDxDevice());
 	}
 
 }
 
 void PostProcessVoxelTerrainBrush::Execute(
-	const std::string& _textureName, DxCommand* _dxCommand,
-	Asset::AssetCollection* _assetCollection, EntityComponentSystem* _ecs) {
+	const std::string& textureName, DxCommand* dxCommand,
+	Asset::AssetCollection* assetCollection, EntityComponentSystem* ecs) {
 
 	/// TerrainComponentの有無チェック
-	ComponentArray<VoxelTerrain>* voxelTerrainArray = _ecs->GetCurrentGroup()->GetComponentArray<VoxelTerrain>();
+	ComponentArray<VoxelTerrain>* voxelTerrainArray = ecs->GetCurrentGroup()->GetComponentArray<VoxelTerrain>();
 	/// 両方とも存在しない、もしくは使用中のコンポーネントが無い場合は処理しない
 	if(!CheckComponentArrayEnable(voxelTerrainArray)) {
 		return;
@@ -111,16 +111,16 @@ void PostProcessVoxelTerrainBrush::Execute(
 	);
 
 	/// texture index
-	auto& textures = _assetCollection->GetTextures();
-	textureIndices_[0] = _assetCollection->GetTextureIndex(_textureName + "Scene");
-	textureIndices_[1] = _assetCollection->GetTextureIndex(_textureName + "WorldPosition");
-	textureIndices_[2] = _assetCollection->GetTextureIndex(_textureName + "Flags");
-	textureIndices_[3] = _assetCollection->GetTextureIndex("postProcessResult");
+	auto& textures = assetCollection->GetTextures();
+	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
+	textureIndices_[1] = assetCollection->GetTextureIndex(textureName + "WorldPosition");
+	textureIndices_[2] = assetCollection->GetTextureIndex(textureName + "Flags");
+	textureIndices_[3] = assetCollection->GetTextureIndex("postProcessResult");
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
-	brushBuffer_.BindForComputeCommandList(_dxCommand->GetCommandList(), CBV_BRUSH);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
+	brushBuffer_.BindForComputeCommandList(dxCommand->GetCommandList(), CBV_BRUSH);
 	cmdList->SetComputeRootDescriptorTable(SRV_COLOR, textures[textureIndices_[0]].GetSRVGPUHandle());
 	cmdList->SetComputeRootDescriptorTable(SRV_POSITION, textures[textureIndices_[1]].GetSRVGPUHandle());
 	cmdList->SetComputeRootDescriptorTable(SRV_FLAGS, textures[textureIndices_[2]].GetSRVGPUHandle());

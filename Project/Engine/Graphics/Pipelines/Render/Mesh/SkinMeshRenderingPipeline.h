@@ -52,11 +52,11 @@ public:
 	/// public : methods
 	/// ====================================================
 
-	SkinMeshRenderingPipeline(Asset::AssetCollection* _assetCollection);
+	SkinMeshRenderingPipeline(Asset::AssetCollection* assetCollection);
 	~SkinMeshRenderingPipeline() override = default;
 
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
-	void Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) override;
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
+	void Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
 
 private:
 	/// ===================================================

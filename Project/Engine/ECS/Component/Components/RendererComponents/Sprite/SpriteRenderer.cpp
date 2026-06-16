@@ -1,4 +1,4 @@
-﻿#include "SpriteRenderer.h"
+#include "SpriteRenderer.h"
 
 /// external
 #include <imgui.h>
@@ -22,31 +22,31 @@ using namespace ONEngine;
 /// デバッグ用のSpriteRenderer
 /// /////////////////////////////////////////////////////////////
 
-void ComponentDebug::SpriteDebug(SpriteRenderer* _sr, Asset::AssetCollection* _assetCollection) {
-	if (!_sr) {
+void ComponentDebug::SpriteDebug(SpriteRenderer* sr, Asset::AssetCollection* assetCollection) {
+	if (!sr) {
 		return;
 	}
 
 	float indentValue = 1.8f;
 	ImGui::Indent(indentValue);
 
-	Editor::ImMathf::MaterialEdit("Material", &_sr->material_, _assetCollection, false);
+	Editor::ImMathf::MaterialEdit("Material", &sr->material_, assetCollection, false);
 
 	ImGui::Unindent(indentValue);
 }
 
 
-void ONEngine::to_json(nlohmann::json& _j, const SpriteRenderer& _sr) {
-	_j = nlohmann::json{
+void ONEngine::to_json(nlohmann::json& j, const SpriteRenderer& sr) {
+	j = nlohmann::json{
 		{ "type", "SpriteRenderer" },
-		{ "enable", _sr.enable },
-		{ "material", _sr.material_ }
+		{ "enable", sr.enable },
+		{ "material", sr.material_ }
 	};
 }
 
-void ONEngine::from_json(const nlohmann::json& _j, SpriteRenderer& _sr) {
-	_sr.enable = _j.value("enable", static_cast<int>(true));
-	_sr.material_ = _j.value("material", Asset::Material{});
+void ONEngine::from_json(const nlohmann::json& j, SpriteRenderer& sr) {
+	sr.enable = j.value("enable", static_cast<int>(true));
+	sr.material_ = j.value("material", Asset::Material{});
 }
 
 
@@ -66,13 +66,13 @@ SpriteRenderer::SpriteRenderer() {
 }
 SpriteRenderer::~SpriteRenderer() {}
 
-void SpriteRenderer::RenderingSetup(Asset::AssetCollection* _assetCollection) {
+void SpriteRenderer::RenderingSetup(Asset::AssetCollection* assetCollection) {
 
 	gpuMaterial_.baseColor = material_.baseColor;
 	gpuMaterial_.postEffectFlags = material_.postEffectFlags;
 	/// base texture
 	if (material_.HasBaseTexture()) {
-		int32_t textureIndex = _assetCollection->GetTextureIndexFromGuid(material_.GetBaseTextureGuid());
+		int32_t textureIndex = assetCollection->GetTextureIndexFromGuid(material_.GetBaseTextureGuid());
 		if (textureIndex != -1) {
 			gpuMaterial_.baseTextureId = textureIndex;
 		} else {
@@ -88,12 +88,12 @@ void SpriteRenderer::RenderingSetup(Asset::AssetCollection* _assetCollection) {
 }
 
 
-void SpriteRenderer::SetColor(const Vector4& _color) {
-	material_.baseColor = _color;
+void SpriteRenderer::SetColor(const Vector4& color) {
+	material_.baseColor = color;
 }
 
-void SpriteRenderer::SetUVTransform(const UVTransform& _uvTransform) {
-	material_.uvTransform = _uvTransform;
+void SpriteRenderer::SetUVTransform(const UVTransform& uvTransform) {
+	material_.uvTransform = uvTransform;
 }
 
 const Vector4& SpriteRenderer::GetColor() const {
@@ -108,9 +108,9 @@ const UVTransform& SpriteRenderer::GetUVTransform() const {
 	return material_.uvTransform;
 }
 
-Vector2 SpriteRenderer::GetTextureSize(Asset::AssetCollection* _assetCollection) const {
+Vector2 SpriteRenderer::GetTextureSize(Asset::AssetCollection* assetCollection) const {
 	if (material_.HasBaseTexture()) {
-		Asset::Texture* texture = _assetCollection->GetTextureFromGuid(material_.GetBaseTextureGuid());
+		Asset::Texture* texture = assetCollection->GetTextureFromGuid(material_.GetBaseTextureGuid());
 		if (texture) {
 			return texture->GetTextureSize();
 		}
@@ -123,8 +123,8 @@ Vector2 SpriteRenderer::GetTextureSize(Asset::AssetCollection* _assetCollection)
 /// csで使用するための関数群
 /// ===================================================
 
-Vector4 MonoInternalMethods::InternalGetColor(uint64_t _nativeHandle) {
-	SpriteRenderer* sr = reinterpret_cast<SpriteRenderer*>(_nativeHandle);
+Vector4 MonoInternalMethods::InternalGetColor(uint64_t nativeHandle) {
+	SpriteRenderer* sr = reinterpret_cast<SpriteRenderer*>(nativeHandle);
 	if (sr) {
 		return sr->GetColor();
 	}
@@ -134,18 +134,18 @@ Vector4 MonoInternalMethods::InternalGetColor(uint64_t _nativeHandle) {
 	return Vector4();
 }
 
-void MonoInternalMethods::InternalSetColor(uint64_t _nativeHandle, Vector4 _color) {
-	SpriteRenderer* sr = reinterpret_cast<SpriteRenderer*>(_nativeHandle);
+void MonoInternalMethods::InternalSetColor(uint64_t nativeHandle, Vector4 color) {
+	SpriteRenderer* sr = reinterpret_cast<SpriteRenderer*>(nativeHandle);
 	if (sr) {
-		sr->SetColor(_color);
+		sr->SetColor(color);
 		return;
 	}
 
 	Console::LogError("MonoInternalMethods::InternalSetColor() | native handle is invalid");
 }
 
-Vector2 MonoInternalMethods::InternalGetTextureSize(uint64_t _nativeHandle) {
-	SpriteRenderer* sr = reinterpret_cast<SpriteRenderer*>(_nativeHandle);
+Vector2 MonoInternalMethods::InternalGetTextureSize(uint64_t nativeHandle) {
+	SpriteRenderer* sr = reinterpret_cast<SpriteRenderer*>(nativeHandle);
 	if (sr) {
 		auto* assetCollection = Asset::AssetCollection::GetInstance();
 		return sr->GetTextureSize(assetCollection);

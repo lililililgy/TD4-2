@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -95,26 +95,26 @@ static class ComponentBatchManager {
 
 
 	// 一括送信
-	public static void SendAllBatches(ComponentCollection _collection, string _ecsGroupName) {
+	public static void SendAllBatches(ComponentCollection collection, string ecsGroupName) {
 		Debug.LogInfo("ComponentBatchManager.SendAllBatches: Start sending all batches.");
 		// Debug.LogInfo($"ComponentBatchManager.SendAllBatches: Total converters registered: {converters.Count}.");
 
 		foreach (var kv in converters) {
-			if (!_collection.TryGetArray(kv.Key, out IComponentArray array)) {
+			if (!collection.TryGetArray(kv.Key, out IComponentArray array)) {
 				Debug.LogWarning($"ComponentBatchManager.SendAllBatches: ComponentArray for {kv.Key} not found.");
 				continue;
 			}
 
 			// Debug.LogInfo($"ComponentBatchManager.SendAllBatches: Sending batch for {kv.Key}.");
 			Array batch = kv.Value(array);
-			InternalSetBatch(kv.Key, batch, batch.Length, _ecsGroupName);
+			InternalSetBatch(kv.Key, batch, batch.Length, ecsGroupName);
 		}
 	}
 
 	// 一括受信
-	public static void ReceiveAllBatches(ComponentCollection _collection, string _ecsGroupName) {
+	public static void ReceiveAllBatches(ComponentCollection collection, string ecsGroupName) {
 		foreach (var kv in allocators) {
-			if (!_collection.TryGetArray(kv.Key, out IComponentArray array)) {
+			if (!collection.TryGetArray(kv.Key, out IComponentArray array)) {
 				Debug.LogWarning($"ComponentBatchManager.ReceiveAllBatches: ComponentArray for {kv.Key} not found.");
 				continue;
 			}
@@ -131,7 +131,7 @@ static class ComponentBatchManager {
 			Debug.LogInfo($"ComponentBatchManager.ReceiveAllBatches: Receiving batch for {kv.Key} with count {count}.");
 
 			// batch内には既に compId/nativeHandle が入っているので、C++側で正しく処理可能
-			InternalGetBatch(kv.Key, batch, count, _ecsGroupName);
+			InternalGetBatch(kv.Key, batch, count, ecsGroupName);
 
 			ApplyBatch(kv.Key, batch, array);
 		}
@@ -139,43 +139,43 @@ static class ComponentBatchManager {
 
 
 	// データの適用
-	static public void ApplyBatch(Type _componentType, Array _batch, IComponentArray _array) {
-		if (_componentType == typeof(Transform)) {
-			var array = (ComponentArray<Transform>)_array;
-			var batch = (Transform.BatchData[])_batch;
+	static public void ApplyBatch(Type componentType, Array batch, IComponentArray array) {
+		if (componentType == typeof(Transform)) {
+			var transformArray = (ComponentArray<Transform>)array;
+			var transformBatch = (Transform.BatchData[])batch;
 
-			for (int i = 0; i < batch.Length; i++) {
-				var comp = array.Get(i);
+			for (int i = 0; i < transformBatch.Length; i++) {
+				var comp = transformArray.Get(i);
 
 				// 念のためIDの一致を確認することも可能だが、
 				// Allocatorで順番通りに作成しているため、ここではそのまま適用する
-				// comp.compId = batch[i].compId; // IDは変更しない
+				// comp.compId = transformBatch[i].compId; // IDは変更しない
 
-				comp.position = batch[i].position;
-				comp.rotate = batch[i].rotate;
-				comp.scale = batch[i].scale;
+				comp.position = transformBatch[i].position;
+				comp.rotate = transformBatch[i].rotate;
+				comp.scale = transformBatch[i].scale;
 			}
 		}
 
-		if (_componentType == typeof(MeshRenderer)) {
-			var array = (ComponentArray<MeshRenderer>)_array;
-			var batch = (MeshRenderer.BatchData[])_batch;
+		if (componentType == typeof(MeshRenderer)) {
+			var meshArray = (ComponentArray<MeshRenderer>)array;
+			var meshBatch = (MeshRenderer.BatchData[])batch;
 
-			for (int i = 0; i < batch.Length; i++) {
-				var comp = array.Get(i);
+			for (int i = 0; i < meshBatch.Length; i++) {
+				var comp = meshArray.Get(i);
 
 				// Handleは変更せず、描画パラメータのみ更新
-				//comp.compId = batch[i].compId;
-				comp.color = batch[i].color;
-				comp.postEffectFlags = batch[i].postEffectFlags;
+				//comp.compId = meshBatch[i].compId;
+				comp.color = meshBatch[i].color;
+				comp.postEffectFlags = meshBatch[i].postEffectFlags;
 			}
 		}
 	}
 
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetBatch(Type _componentType, Array _batch, int _count, string _ecsGroupName);
+	static extern void InternalSetBatch(Type componentType, Array batch, int count, string ecsGroupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalGetBatch(Type _componentType, Array batch_, int _count, string _ecsGroupName);
+	static extern void InternalGetBatch(Type componentType, Array batch_, int count, string ecsGroupName);
 }

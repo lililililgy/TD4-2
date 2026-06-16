@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <array>
@@ -38,13 +38,13 @@ public:
 	PostProcessVoxelTerrainBrush();
 	~PostProcessVoxelTerrainBrush();
 
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
 
 	void Execute(
-		const std::string& _textureName,
-		DxCommand* _dxCommand,
-		Asset::AssetCollection* _assetCollection,
-		EntityComponentSystem* _ecs
+		const std::string& textureName,
+		DxCommand* dxCommand,
+		Asset::AssetCollection* assetCollection,
+		EntityComponentSystem* ecs
 	) override;
 
 private:

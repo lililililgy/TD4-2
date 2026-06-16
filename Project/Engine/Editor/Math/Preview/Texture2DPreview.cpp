@@ -1,28 +1,28 @@
-﻿#include "Texture2DPreview.h"
+#include "Texture2DPreview.h"
 
 /// externals
 #include <imgui.h>
 
-void Editor::ShowTexture2DPreview(const std::string& _name, ONEngine::Asset::Texture* _texture, const ONEngine::Vector2& _textureSize, float _previewFactor) {
-	if(_name != "") {
-		ImGui::Text("%s", _name.c_str());
+void Editor::ShowTexture2DPreview(const std::string& name, ONEngine::Asset::Texture* texture, const ONEngine::Vector2& textureSize, float previewFactor) {
+	if(name != "") {
+		ImGui::Text("%s", name.c_str());
 	} else {
 		ImGui::Text("Texture2D Preview");
 	}
 
-	if(_texture) {
-		if(_texture->IsStandard2D()) {
-			ONEngine::Vector2 aspectRatio = _textureSize;
+	if(texture) {
+		if(texture->IsStandard2D()) {
+			ONEngine::Vector2 aspectRatio = textureSize;
 			aspectRatio /= (std::max)(aspectRatio.x, aspectRatio.y);
 
-			ImTextureID texId = reinterpret_cast<ImTextureID>(_texture->GetSRVGPUHandle().ptr);
-			ImGui::Image(texId, ImVec2(_previewFactor * aspectRatio.x, _previewFactor * aspectRatio.y));
+			ImTextureID texId = reinterpret_cast<ImTextureID>(texture->GetSRVGPUHandle().ptr);
+			ImGui::Image(texId, ImVec2(previewFactor * aspectRatio.x, previewFactor * aspectRatio.y));
 		} else {
 			ImGui::Text("Preview not supported\n(CubeMap or 3D Texture)");
 		}
 	} else {
 		/// テクスチャがない場合はドラッグドロップ領域を表示する
-		ImVec2 size = ImVec2(_previewFactor, _previewFactor);
+		ImVec2 size = ImVec2(previewFactor, previewFactor);
 		ImVec2 pos = ImGui::GetCursorScreenPos();
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 

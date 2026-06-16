@@ -1,4 +1,4 @@
-﻿#include "AddECSSystemFunction.h"
+#include "AddECSSystemFunction.h"
 
 
 /// engine
@@ -30,69 +30,69 @@ using namespace ONEngine;
 /// ---------------------------------------------------
 /// ゲームように使用するシステム追加関数
 /// ---------------------------------------------------
-void ONEngine::GameECSGroupAddSystemFunction(ECSGroup* _ecs, DxManager* _dxm, Asset::AssetCollection* _assetCollection) {
+void ONEngine::GameECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Asset::AssetCollection* assetCollection) {
 
 	/// 初期化に使うsystem
-	_ecs->AddSystem<TerrainColliderVertexGenerator>(_dxm);
-	_ecs->AddSystem<GrassBufferCreateSystem>(_dxm);
+	ecs->AddSystem<TerrainColliderVertexGenerator>(dxm);
+	ecs->AddSystem<GrassBufferCreateSystem>(dxm);
 
 	/// 更新に使うsystem
-	_ecs->AddSystem<TransformUpdateSystem>();
-	_ecs->AddSystem<AnimationSystem>();
-	_ecs->AddSystem<AnimatorUpdateSystem>();
-	_ecs->AddSystem<SkinMeshUpdateSystem>(_dxm, _assetCollection);
-	_ecs->AddSystem<ScriptUpdateSystem>(_ecs);
-	_ecs->AddSystem<AISystem>();
-	_ecs->AddSystem<MovementSystem>();
-	_ecs->AddSystem<AudioPlaybackSystem>(_assetCollection);
-	_ecs->AddSystem<EffectUpdateSystem>();
-	_ecs->AddSystem<ParticleSystemUpdateSystem>();
-	_ecs->AddSystem<TransformUpdateSystem>();
+	ecs->AddSystem<TransformUpdateSystem>();
+	ecs->AddSystem<AnimationSystem>();
+	ecs->AddSystem<AnimatorUpdateSystem>();
+	ecs->AddSystem<SkinMeshUpdateSystem>(dxm, assetCollection);
+	ecs->AddSystem<ScriptUpdateSystem>(ecs);
+	ecs->AddSystem<AISystem>();
+	ecs->AddSystem<MovementSystem>();
+	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);
+	ecs->AddSystem<EffectUpdateSystem>();
+	ecs->AddSystem<ParticleSystemUpdateSystem>();
+	ecs->AddSystem<TransformUpdateSystem>();
 
 	/// 衝突判定に使うsystem
-	_ecs->AddSystem<TerrainCollision>();
-	_ecs->AddSystem<CollisionSystem>();
-	_ecs->AddSystem<TransformUpdateSystem>();
+	ecs->AddSystem<TerrainCollision>();
+	ecs->AddSystem<CollisionSystem>();
+	ecs->AddSystem<TransformUpdateSystem>();
 
-	_ecs->AddSystem<CameraUpdateSystem>(_dxm->GetDxDevice());
-	_ecs->AddSystem<ShadowCasterUpdateSystem>();
+	ecs->AddSystem<CameraUpdateSystem>(dxm->GetDxDevice());
+	ecs->AddSystem<ShadowCasterUpdateSystem>();
 
 
 	/// 描画に使うsystem
-	_ecs->AddSystem<MeshBufferRecreate>(_dxm->GetDxDevice());
-	_ecs->AddSystem<ColliderRenderQueueSystem>();
+	ecs->AddSystem<MeshBufferRecreate>(dxm->GetDxDevice());
+	ecs->AddSystem<ColliderRenderQueueSystem>();
 }
 
 
 /// ---------------------------------------------------
 /// DebugGroup用のシステム追加関数 (Debugでしか用いないシステムをここに追加する)
 /// ---------------------------------------------------
-void ONEngine::DebugECSGroupAddSystemFunction(ECSGroup* _ecs, DxManager* _dxm, Asset::AssetCollection* _assetCollection) {
+void ONEngine::DebugECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Asset::AssetCollection* assetCollection) {
 
 	/// 初期化に使うsystem
-	_ecs->AddSystem<TerrainColliderVertexGenerator>(_dxm);
-	_ecs->AddSystem<GrassBufferCreateSystem>(_dxm);
+	ecs->AddSystem<TerrainColliderVertexGenerator>(dxm);
+	ecs->AddSystem<GrassBufferCreateSystem>(dxm);
 
 	/// 更新に使うsystem
-	_ecs->AddSystem<AnimationSystem>();
-	_ecs->AddSystem<CameraUpdateSystem>(_dxm->GetDxDevice());
-	_ecs->AddSystem<AnimatorUpdateSystem>();
-	_ecs->AddSystem<SkinMeshUpdateSystem>(_dxm, _assetCollection);
-	_ecs->AddSystem<DebugScriptUpdateSystem>(_ecs);
-	_ecs->AddSystem<AISystem>();
-	_ecs->AddSystem<MovementSystem>();
-	_ecs->AddSystem<AudioPlaybackSystem>(_assetCollection);
-	_ecs->AddSystem<EffectUpdateSystem>();
-	_ecs->AddSystem<ParticleSystemUpdateSystem>();
-	_ecs->AddSystem<TransformUpdateSystem>();
-	_ecs->AddSystem<ShadowCasterUpdateSystem>();
+	ecs->AddSystem<AnimationSystem>();
+	ecs->AddSystem<CameraUpdateSystem>(dxm->GetDxDevice());
+	ecs->AddSystem<AnimatorUpdateSystem>();
+	ecs->AddSystem<SkinMeshUpdateSystem>(dxm, assetCollection);
+	ecs->AddSystem<DebugScriptUpdateSystem>(ecs);
+	ecs->AddSystem<AISystem>();
+	ecs->AddSystem<MovementSystem>();
+	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);
+	ecs->AddSystem<EffectUpdateSystem>();
+	ecs->AddSystem<ParticleSystemUpdateSystem>();
+	ecs->AddSystem<TransformUpdateSystem>();
+	ecs->AddSystem<ShadowCasterUpdateSystem>();
 
 	/// 衝突判定に使うsystem
-	_ecs->AddSystem<TerrainCollision>();
-	_ecs->AddSystem<CollisionSystem>();
-	_ecs->AddSystem<TransformUpdateSystem>();
+	ecs->AddSystem<TerrainCollision>();
+	ecs->AddSystem<CollisionSystem>();
+	ecs->AddSystem<TransformUpdateSystem>();
 
 	/// 描画に使うsystem
-	_ecs->AddSystem<MeshBufferRecreate>(_dxm->GetDxDevice());
-	_ecs->AddSystem<ColliderRenderQueueSystem>();
+	ecs->AddSystem<MeshBufferRecreate>(dxm->GetDxDevice());
+	ecs->AddSystem<ColliderRenderQueueSystem>();
 }

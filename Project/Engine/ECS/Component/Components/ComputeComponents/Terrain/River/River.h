@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -36,16 +36,16 @@ struct RiverVertex {
 /// spline曲線の計算関数
 /// ///////////////////////////////////////////////////
 RiverControlPoint CatmullRom(
-	const RiverControlPoint& _p0,
-	const RiverControlPoint& _p1,
-	const RiverControlPoint& _p2,
-	const RiverControlPoint& _p3,
-	float _t
+	const RiverControlPoint& p0,
+	const RiverControlPoint& p1,
+	const RiverControlPoint& p2,
+	const RiverControlPoint& p3,
+	float t
 );
 
 std::vector<RiverControlPoint> SampleRiverSpline(
-	const std::vector<RiverControlPoint>& _points,
-	int _samplePerSegment
+	const std::vector<RiverControlPoint>& points,
+	int samplePerSegment
 );
 
 
@@ -71,37 +71,37 @@ public:
 	~River();
 
 	/// ----- edit ----- ///
-	void Edit(class EntityComponentSystem* _ecs);
-	void SaveToJson(const std::string& _name);
-	void LoadFromJson(const std::string& _name);
+	void Edit(class EntityComponentSystem* ecs);
+	void SaveToJson(const std::string& name);
+	void LoadFromJson(const std::string& name);
 
 
 	/// @brief Spline曲線をGizmoで描画する
 	void DrawSplineCurve();
 
 	/// @brief Bufferを生成する
-	/// @param _dxDevice DxDeviceへのポインタ
-	/// @param _dxSRVHeap DxSRVHeapへのポインタ
-	/// @param _dxCommand DxCommandへのポインタ
-	void CreateBuffers(class DxDevice* _dxDevice, class DxSRVHeap* _dxSRVHeap, class DxCommand* _dxCommand);
+	/// @param dxDevice DxDeviceへのポインタ
+	/// @param dxSRVHeap DxSRVHeapへのポインタ
+	/// @param dxCommand DxCommandへのポインタ
+	void CreateBuffers(class DxDevice* dxDevice, class DxSRVHeap* dxSRVHeap, class DxCommand* dxCommand);
 
 	/// @brief Bufferデータをセットする
 	void SetBufferData();
 
 
 	/// @brief MaterialDataをセットする
-	/// @param _entityId OwnerEntityのID
-	/// @param _texIndex 川に使用するテクスチャのIndex
-	void SetMaterialData(int32_t _entityId, int32_t _texIndex);
+	/// @param entityId OwnerEntityのID
+	/// @param texIndex 川に使用するテクスチャのIndex
+	void SetMaterialData(int32_t entityId, int32_t texIndex);
 
 
 	/// @brief VBVとIBVのバリアを生成する(描画用に)
-	/// @param _dxCommand DxCommandへのポインタ
-	void CreateRenderingBarriers(class DxCommand* _dxCommand);
+	/// @param dxCommand DxCommandへのポインタ
+	void CreateRenderingBarriers(class DxCommand* dxCommand);
 
 	/// @brief VBVとIBVのバリアを復元する(計算用に)
-	/// @param _dxCommand DxCommandへのポインタ
-	void RestoreResourceBarriers(class DxCommand* _dxCommand);
+	/// @param dxCommand DxCommandへのポインタ
+	void RestoreResourceBarriers(class DxCommand* dxCommand);
 
 
 	/// @brief 描画用にVBVを生成する
@@ -140,7 +140,7 @@ public:
 	int GetSamplePerSegment() const;
 	int GetNumControlPoint() const;
 	bool GetIsGenerateMeshRequest() const;
-	void SetIsGenerateMeshRequest(bool _request);
+	void SetIsGenerateMeshRequest(bool request);
 
 	const ConstantBuffer<Param>& GetParamBuffer() const;
 	const ConstantBuffer<GPUMaterial>& GetMaterialBuffer() const;

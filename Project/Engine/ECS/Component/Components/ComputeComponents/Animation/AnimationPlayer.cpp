@@ -1,4 +1,4 @@
-﻿#include "AnimationPlayer.h"
+#include "AnimationPlayer.h"
 
 /// external
 #include <imgui.h>
@@ -188,13 +188,13 @@ void AnimationPlayer::Stop() {
     shouldApplyOnce = true;
 }
 
-void AnimationPlayer::SetClip(const std::string& _path) {
-    std::string path = _path;
-    std::replace(path.begin(), path.end(), '\\', '/');
-    if (!path.starts_with("./") && !path.starts_with("/") && (path.starts_with("Assets") || path.starts_with("Packages"))) {
-        path = "./" + path;
+void AnimationPlayer::SetClip(const std::string& path) {
+    std::string pathStr = path;
+    std::replace(pathStr.begin(), pathStr.end(), '\\', '/');
+    if (!pathStr.starts_with("./") && !pathStr.starts_with("/") && (pathStr.starts_with("Assets") || pathStr.starts_with("Packages"))) {
+        pathStr = "./" + pathStr;
     }
-    clipPath = path;
+    clipPath = pathStr;
     ClearBindings(); // クリップが変わったらバインドをやり直す
 }
 
@@ -282,36 +282,36 @@ void AnimationPlayer::Bind() {
     }
 }
 
-void ONEngine::from_json(const nlohmann::json& _j, AnimationPlayer& _a) {
-    _a.clipPath = _j.value("clipPath", "");
-    _a.currentTime = _j.value("currentTime", 0.0f);
-    _a.speed = _j.value("speed", 1.0f);
-    _a.isPlaying = _j.value("isPlaying", false);
-    _a.isLooping = _j.value("isLooping", true);
-    _a.autoPlay = _j.value("autoPlay", true);
+void ONEngine::from_json(const nlohmann::json& j, AnimationPlayer& a) {
+    a.clipPath = j.value("clipPath", "");
+    a.currentTime = j.value("currentTime", 0.0f);
+    a.speed = j.value("speed", 1.0f);
+    a.isPlaying = j.value("isPlaying", false);
+    a.isLooping = j.value("isLooping", true);
+    a.autoPlay = j.value("autoPlay", true);
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const AnimationPlayer& _a) {
-    _j = nlohmann::json{
+void ONEngine::to_json(nlohmann::json& j, const AnimationPlayer& a) {
+    j = nlohmann::json{
         { "type", "AnimationPlayer" },
-        { "clipPath", _a.clipPath },
-        { "currentTime", _a.currentTime },
-        { "speed", _a.speed },
-        { "isPlaying", _a.isPlaying },
-        { "isLooping", _a.isLooping },
-        { "autoPlay", _a.autoPlay }
+        { "clipPath", a.clipPath },
+        { "currentTime", a.currentTime },
+        { "speed", a.speed },
+        { "isPlaying", a.isPlaying },
+        { "isLooping", a.isLooping },
+        { "autoPlay", a.autoPlay }
     };
 }
 
-void ComponentDebug::AnimationPlayerDebug(AnimationPlayer* _player) {
-    if (!_player) return;
+void ComponentDebug::AnimationPlayerDebug(AnimationPlayer* player) {
+    if (!player) return;
 
     ImGui::Text("Animation Player");
     
     char pathBuf[256];
-    strncpy_s(pathBuf, _player->clipPath.c_str(), sizeof(pathBuf));
+    strncpy_s(pathBuf, player->clipPath.c_str(), sizeof(pathBuf));
     if (ImGui::InputText("Clip Path", pathBuf, sizeof(pathBuf))) {
-        _player->SetClip(pathBuf);
+        player->SetClip(pathBuf);
     }
 
     if (ImGui::BeginDragDropTarget()) {
@@ -319,23 +319,23 @@ void ComponentDebug::AnimationPlayerDebug(AnimationPlayer* _player) {
             if (payload->Data) {
                 Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
                 std::string path = assetPayload->filePath;
-                _player->SetClip(path);
+                player->SetClip(path);
             }
         }
         ImGui::EndDragDropTarget();
     }
 
-    ImGui::DragFloat("Current Time", &_player->currentTime, 0.01f);
-    ImGui::DragFloat("Speed", &_player->speed, 0.1f);
-    ImGui::Checkbox("Is Playing", &_player->isPlaying);
-    ImGui::Checkbox("Is Looping", &_player->isLooping);
-    ImGui::Checkbox("Auto Play", &_player->autoPlay);
+    ImGui::DragFloat("Current Time", &player->currentTime, 0.01f);
+    ImGui::DragFloat("Speed", &player->speed, 0.1f);
+    ImGui::Checkbox("Is Playing", &player->isPlaying);
+    ImGui::Checkbox("Is Looping", &player->isLooping);
+    ImGui::Checkbox("Auto Play", &player->autoPlay);
 
-    if (ImGui::Button("Play")) _player->Play();
+    if (ImGui::Button("Play")) player->Play();
     ImGui::SameLine();
-    if (ImGui::Button("Pause")) _player->Pause();
+    if (ImGui::Button("Pause")) player->Pause();
     ImGui::SameLine();
-    if (ImGui::Button("Stop")) _player->Stop();
+    if (ImGui::Button("Stop")) player->Stop();
 
-    if (ImGui::Button("Force Bind")) _player->Bind();
+    if (ImGui::Button("Force Bind")) player->Bind();
 }

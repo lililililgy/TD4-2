@@ -1,4 +1,4 @@
-﻿#include "ByteAddressBuffer.h"
+#include "ByteAddressBuffer.h"
 
 using namespace ONEngine;
 
@@ -13,16 +13,16 @@ ByteAddressBuffer::~ByteAddressBuffer() {
 	}
 }
 
-void ByteAddressBuffer::Create(uint32_t _size, DxDevice* _dxDevice, DxSRVHeap* _dxSRVHeap) {
+void ByteAddressBuffer::Create(uint32_t size, DxDevice* dxDevice, DxSRVHeap* dxSRVHeap) {
 	/// ----- Bufferを作成する ----- ///
 
 	/// bufferのサイズを計算
 	size_t bitSize = sizeof(uint32_t);
-	bufferSize_ = _size;
+	bufferSize_ = size;
 	totalSize_ = bitSize * bufferSize_;
 
 	/// bufferの生成
-	bufferResource_.CreateResource(_dxDevice, totalSize_);
+	bufferResource_.CreateResource(dxDevice, totalSize_);
 
 	/// desc setting
 	D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
@@ -35,24 +35,24 @@ void ByteAddressBuffer::Create(uint32_t _size, DxDevice* _dxDevice, DxSRVHeap* _
 	desc.Buffer.StructureByteStride =0;
 
 	/// cpu, gpu handle initialize
-	pDxSRVHeap_ = _dxSRVHeap;
+	pDxSRVHeap_ = dxSRVHeap;
 	srvDescriptorIndex_ = pDxSRVHeap_->AllocateBuffer();
 	cpuHandle_ = pDxSRVHeap_->GetCPUDescriptorHandel(srvDescriptorIndex_);
 	gpuHandle_ = pDxSRVHeap_->GetGPUDescriptorHandel(srvDescriptorIndex_);
 
 	/// resource create
-	_dxDevice->GetDevice()->CreateShaderResourceView(bufferResource_.Get(), &desc, cpuHandle_);
+	dxDevice->GetDevice()->CreateShaderResourceView(bufferResource_.Get(), &desc, cpuHandle_);
 
 	/// mapping
 	bufferResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappedData_));
 	mappedDataArray_ = { mappedData_, bufferSize_ };
 }
 
-void ByteAddressBuffer::SetMappedData(size_t _index, uint32_t _value) {
-	Assert(_index < bufferSize_, "out of range");
-	mappedDataArray_[_index] = _value;
+void ByteAddressBuffer::SetMappedData(size_t index, uint32_t value) {
+	Assert(index < bufferSize_, "out of range");
+	mappedDataArray_[index] = value;
 }
 
-void ByteAddressBuffer::BindToCommandList(UINT _rootParameterIndex, ID3D12GraphicsCommandList* _commandList) {
-	_commandList->SetGraphicsRootDescriptorTable(_rootParameterIndex, gpuHandle_);
+void ByteAddressBuffer::BindToCommandList(UINT rootParameterIndex, ID3D12GraphicsCommandList* commandList) {
+	commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, gpuHandle_);
 }

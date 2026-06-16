@@ -1,4 +1,4 @@
-﻿#include "VoxelTerrainBrushPreviewRenderingPipeline.h"
+#include "VoxelTerrainBrushPreviewRenderingPipeline.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -15,13 +15,13 @@ VoxelTerrainBrushPreviewRenderingPipeline::VoxelTerrainBrushPreviewRenderingPipe
 	: pAssetCollection_(assetCollection) {}
 VoxelTerrainBrushPreviewRenderingPipeline::~VoxelTerrainBrushPreviewRenderingPipeline() = default;
 
-void VoxelTerrainBrushPreviewRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void VoxelTerrainBrushPreviewRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
-	pDxm_ = _dxm;
+	pDxm_ = dxm;
 
 	{	/// shader 
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrain/BrushPreview.as.hlsl", L"as_6_5", Shader::Type::as);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrain/BrushPreview.ms.hlsl", L"ms_6_5", Shader::Type::ms);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrain/BrushPreview.ps.hlsl", L"ps_6_0", Shader::Type::ps);
@@ -60,18 +60,18 @@ void VoxelTerrainBrushPreviewRenderingPipeline::Initialize(ShaderCompiler* _shad
 		pipeline_->SetCullMode(D3D12_CULL_MODE_BACK);
 		pipeline_->SetFillMode(D3D12_FILL_MODE_SOLID);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 	{	/// Buffer
-		cBufferBrushInfo_.Create(_dxm->GetDxDevice());
+		cBufferBrushInfo_.Create(dxm->GetDxDevice());
 		cBufferBrushInfo_.SetMappedData(BrushInfo{ Vector2(0.0f, 0.0f), 5, 0.5f });
 	}
 }
 
-void VoxelTerrainBrushPreviewRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void VoxelTerrainBrushPreviewRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
-	ComponentArray<VoxelTerrain>* voxelTerrains = _ecs->GetComponentArray<VoxelTerrain>();
+	ComponentArray<VoxelTerrain>* voxelTerrains = ecs->GetComponentArray<VoxelTerrain>();
 	if(!CheckComponentArrayEnable(voxelTerrains)) {
 		return;
 	}
@@ -106,20 +106,20 @@ void VoxelTerrainBrushPreviewRenderingPipeline::Draw(ECSGroup* _ecs, CameraCompo
 	/// --------------- パイプラインの設定 --------------- ///
 	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::VoxelTerrainEditorBrushPreview);
 
-	auto cmdList = _dxCommand->GetCommandList();
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 	pDxm_->HeapBindToCommandList();
 
 
 	/// --------------- バッファの設定 --------------- ///
 
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_VIEW_PROJECTION);
-	_camera->GetCameraPosBuffer().BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
-	vt->cBufferTerrainInfo_.BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_VOXEL_TERRAIN_INFO);
-	vt->cBufferLODInfo_.BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_LOD_INFO);
-	vt->cBufferMaterial_.BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_MATERIAL);
-	vt->sBufferChunks_.SRVBindForGraphicsCommandList(_dxCommand->GetCommandList(), SRV_CHUNKS);
-	cBufferBrushInfo_.BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_BRUSH_INFO);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_VIEW_PROJECTION);
+	camera->GetCameraPosBuffer().BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
+	vt->cBufferTerrainInfo_.BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_VOXEL_TERRAIN_INFO);
+	vt->cBufferLODInfo_.BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_LOD_INFO);
+	vt->cBufferMaterial_.BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_MATERIAL);
+	vt->sBufferChunks_.SRVBindForGraphicsCommandList(dxCommand->GetCommandList(), SRV_CHUNKS);
+	cBufferBrushInfo_.BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_BRUSH_INFO);
 
 
 	/// WorldPositionTexture

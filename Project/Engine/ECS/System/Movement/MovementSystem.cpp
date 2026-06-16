@@ -11,14 +11,14 @@ namespace ONEngine {
 
 MovementSystem::MovementSystem() {}
 
-void MovementSystem::RuntimeUpdate(ECSGroup* _ecs) {
+void MovementSystem::RuntimeUpdate(ECSGroup* ecs) {
     CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::PhysicsUpdate);
-    if (!_ecs) {
+    if (!ecs) {
         return;
     }
 
     // AIの意図に基づいて移動を処理する
-    auto* intentArray = _ecs->GetComponentArray<AgentIntentComponent>();
+    auto* intentArray = ecs->GetComponentArray<AgentIntentComponent>();
     if (!intentArray) {
         return;
     }

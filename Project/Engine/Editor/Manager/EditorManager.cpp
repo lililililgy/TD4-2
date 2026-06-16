@@ -1,4 +1,4 @@
-﻿#include "EditorManager.h"
+#include "EditorManager.h"
 
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
@@ -25,7 +25,7 @@
 
 using namespace Editor;
 
-EditorManager::EditorManager(ONEngine::EntityComponentSystem* _ecs) : pEcs_(_ecs) {}
+EditorManager::EditorManager(ONEngine::EntityComponentSystem* ecs) : pEcs_(ecs) {}
 EditorManager::~EditorManager() = default;
 
 void EditorManager::Initialize(ONEngine::DxManager* dxm, ONEngine::ShaderCompiler* sc, ONEngine::SceneManager* sm) {

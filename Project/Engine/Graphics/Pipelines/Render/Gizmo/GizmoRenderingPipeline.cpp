@@ -1,4 +1,4 @@
-﻿#include "GizmoRenderingPipeline.h"
+#include "GizmoRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -17,12 +17,12 @@ using namespace GizmoPrimitive;
 
 GizmoRenderingPipeline::GizmoRenderingPipeline() {}
 
-void GizmoRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void GizmoRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 	Gizmo::Initialize(static_cast<size_t>(std::pow(2, 20))); /// gizmoの初期化
 
 	{	/// wire frame pipeline
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/Line/Gizmo3D.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"./Packages/Shader/Render/Line/Gizmo3D.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -48,7 +48,7 @@ void GizmoRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManag
 		pipeline->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
 		/// create pipeline
-		pipeline->CreatePipeline(_dxm->GetDxDevice());
+		pipeline->CreatePipeline(dxm->GetDxDevice());
 	}
 
 
@@ -58,7 +58,7 @@ void GizmoRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManag
 		vertices_.reserve(maxVertexNum_);
 
 		/// vertex bufferの作成
-		vertexBuffer_.CreateResource(_dxm->GetDxDevice(), sizeof(VertexData) * maxVertexNum_);
+		vertexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(VertexData) * maxVertexNum_);
 		vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
 
 		vbv_.BufferLocation = vertexBuffer_.Get()->GetGPUVirtualAddress();
@@ -68,11 +68,11 @@ void GizmoRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManag
 	}
 }
 
-void GizmoRenderingPipeline::Draw(class ECSGroup* /*_ecsGroup*/, [[maybe_unused]] CameraComponent* _camera, [[maybe_unused]] DxCommand* _dxCommand) {
+void GizmoRenderingPipeline::Draw(class ECSGroup* /*ecsGroup*/, [[maybe_unused]] CameraComponent* camera, [[maybe_unused]] DxCommand* dxCommand) {
 #ifdef DEBUG_MODE
 		/* 
 		// 特定のカメラグループのみに限定すると見えない可能性があるため一旦コメントアウト
-		if (_camera->GetOwner()->GetECSGroup()->GetGroupName() != "Debug") {
+		if (camera->GetOwner()->GetECSGroup()->GetGroupName() != "Debug") {
 			return;
 		}
 		*/
@@ -143,13 +143,13 @@ void GizmoRenderingPipeline::Draw(class ECSGroup* /*_ecsGroup*/, [[maybe_unused]
 	std::memcpy(mappingData_, vertices_.data(), sizeof(VertexData) * vertices_.size());
 
 	/// 描画命令を行う
-	auto commandList = _dxCommand->GetCommandList();
+	auto commandList = dxCommand->GetCommandList();
 	auto wirePipeline = pipelines_[Wire].get();
-	wirePipeline->SetPipelineStateForCommandList(_dxCommand);
+	wirePipeline->SetPipelineStateForCommandList(dxCommand);
 
 	commandList->IASetVertexBuffers(0, 1, &vbv_);
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(commandList, 0);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(commandList, 0);
 
 	/// draw call
 	commandList->DrawInstanced(static_cast<UINT>(vertices_.size()), 1, 0, 0);

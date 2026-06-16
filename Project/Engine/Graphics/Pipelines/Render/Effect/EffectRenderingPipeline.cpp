@@ -1,4 +1,4 @@
-﻿#include "EffectRenderingPipeline.h"
+#include "EffectRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -13,17 +13,17 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 
 
-EffectRenderingPipeline::EffectRenderingPipeline(Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {
+EffectRenderingPipeline::EffectRenderingPipeline(Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {
 }
 EffectRenderingPipeline::~EffectRenderingPipeline() {}
 
-void EffectRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void EffectRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{
 		/// shader compile
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/Render/Effect/Effect.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"Packages/Shader/Render/Effect/Effect.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -71,7 +71,7 @@ void EffectRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 
 			pipeline->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
-			pipeline->CreatePipeline(_dxm->GetDxDevice());
+			pipeline->CreatePipeline(dxm->GetDxDevice());
 
 		}
 	}
@@ -79,23 +79,23 @@ void EffectRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 
 	{	/// buffer create
 
-		transformBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-		materialBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-		textureIdBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
+		transformBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+		materialBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+		textureIdBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
 
 	}
 }
 
 
-void EffectRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void EffectRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
-	ComponentArray<Effect>* effectArray = _ecs->GetComponentArray<Effect>();
+	ComponentArray<Effect>* effectArray = ecs->GetComponentArray<Effect>();
 	if (!effectArray || effectArray->GetUsedComponents().empty()) {
 		return;
 	}
 
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
 	transformIndex_ = 0;
 	instanceIndex_ = 0;
@@ -119,11 +119,11 @@ void EffectRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxC
 	for (auto& [blendMode, meshPerComp] : meshEffectsByBlendMode) {
 
 		/// 対応するBlendModeのパイプラインをセット
-		pipelines_[blendMode]->SetPipelineStateForCommandList(_dxCommand);
+		pipelines_[blendMode]->SetPipelineStateForCommandList(dxCommand);
 
 		/// 形状、ビュー射影行列のセット
 		cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
+		camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
 
 		/// テクスチャの先頭を設定
 		auto& textures = pAssetCollection_->GetTextures();

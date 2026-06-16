@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 
@@ -11,16 +11,16 @@ public struct Vector3 {
 	/// =================================
 	/// constructor
 	/// =================================
-	public Vector3(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) {
-		this.x = _x;
-		this.y = _y;
-		this.z = _z;
+	public Vector3(float x = 0.0f, float y = 0.0f, float z = 0.0f) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
-	public Vector3(Vector3 _other) {
-		this.x = _other.x;
-		this.y = _other.y;
-		this.z = _other.z;
+	public Vector3(Vector3 other) {
+		this.x = other.x;
+		this.y = other.y;
+		this.z = other.z;
 	}
 
 	/// =================================
@@ -39,16 +39,16 @@ public struct Vector3 {
 	/// =================================
 	/// static methods
 	/// =================================
-	static public float Length(Vector3 _v) {
-		return _v.Length();
+	static public float Length(Vector3 v) {
+		return v.Length();
 	}
 
-	static public Vector3 Normalize(Vector3 _v) {
-		return _v.Normalized();
+	static public Vector3 Normalize(Vector3 v) {
+		return v.Normalized();
 	}
 
-	static public string ToSimpleString(Vector3 _v) {
-		return "(" + _v.x + ", " + _v.y + ", " + _v.z + ")";
+	static public string ToSimpleString(Vector3 v) {
+		return "(" + v.x + ", " + v.y + ", " + v.z + ")";
 	}
 
 	static public Vector3 LookAt(Vector3 from, Vector3 to) {
@@ -60,28 +60,28 @@ public struct Vector3 {
 		return new Vector3(pitch * Mathf.Rad2Deg, yaw * Mathf.Rad2Deg, 0f);
 	}
 
-	static public float Distance(Vector3 _start, Vector3 _end) {
-		Vector3 dist = _end - _start;
+	static public float Distance(Vector3 start, Vector3 end) {
+		Vector3 dist = end - start;
 		return dist.Length();
 	}
 
-	static public float Dot(Vector3 _a, Vector3 _b) {
-		return _a.x * _b.x + _a.y * _b.y + _a.z * _b.z;
+	static public float Dot(Vector3 a, Vector3 b) {
+		return a.x * b.x + a.y * b.y + a.z * b.z;
 	}
 
-	static public Vector3 Cross(Vector3 _a, Vector3 _b) {
+	static public Vector3 Cross(Vector3 a, Vector3 b) {
 		return new Vector3(
-			_a.y * _b.z - _a.z * _b.y,
-			_a.z * _b.x - _a.x * _b.z,
-			_a.x * _b.y - _a.y * _b.x
+			a.y * b.z - a.z * b.y,
+			a.z * b.x - a.x * b.z,
+			a.x * b.y - a.y * b.x
 		);
 	}
 
-	static public Vector3 Lerp(Vector3 _a, Vector3 _b, float _t) {
+	static public Vector3 Lerp(Vector3 a, Vector3 b, float t) {
 		return new Vector3(
-			_a.x + (_b.x - _a.x) * _t,
-			_a.y + (_b.y - _a.y) * _t,
-			_a.z + (_b.z - _a.z) * _t
+			a.x + (b.x - a.x) * t,
+			a.y + (b.y - a.y) * t,
+			a.z + (b.z - a.z) * t
 		);
 	}
 

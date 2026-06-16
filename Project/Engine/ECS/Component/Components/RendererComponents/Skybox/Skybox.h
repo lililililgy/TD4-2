@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -25,8 +25,8 @@ public:
 
 
 	/// @brief DDSテクスチャのパスを設定する
-	/// @param _texturePath テクスチャのパス
-	void SetDDSTexturePath(const std::string& _texturePath);
+	/// @param texturePath テクスチャのパス
+	void SetDDSTexturePath(const std::string& texturePath);
 
 	/// @brief DDSテクスチャのパスを返す
 	const std::string& GetDDSTexturePath() const;
@@ -42,11 +42,11 @@ private:
 
 
 namespace ComponentDebug {
-	void SkyboxDebug(const Skybox* _skybox);
+	void SkyboxDebug(const Skybox* skybox);
 }
 
 /// Json変換
-void from_json(const nlohmann::json& _j, Skybox& _s);
-void to_json(nlohmann::json& _j, const Skybox& _s);
+void from_json(const nlohmann::json& j, Skybox& s);
+void to_json(nlohmann::json& j, const Skybox& s);
 
 } /// ONEngine

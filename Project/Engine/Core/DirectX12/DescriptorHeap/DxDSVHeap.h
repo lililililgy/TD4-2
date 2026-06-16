@@ -14,7 +14,7 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	DxDSVHeap(DxDevice* _dxDevice, uint32_t _maxHeapSize);
+	DxDSVHeap(DxDevice* dxDevice, uint32_t maxHeapSize);
 	~DxDSVHeap();
 
 	/// @brief 初期化

@@ -1,4 +1,4 @@
-﻿#include "AudioSource.h"
+#include "AudioSource.h"
 
 /// external
 #include <imgui.h>
@@ -31,28 +31,28 @@ void AudioSource::Stop() {
 	isStopRequest_ = true;
 }
 
-void AudioSource::PlayOneShot(float _volume, float _pitch, const std::string& _path) {
-	oneShotAudioRequests_.push_back({ _path, _volume, _pitch });
+void AudioSource::PlayOneShot(float volume, float pitch, const std::string& path) {
+	oneShotAudioRequests_.push_back({ path, volume, pitch });
 }
 
-void AudioSource::AddSourceVoice(IXAudio2SourceVoice* _sourceVoice) {
-	sourceVoices_.push_back(_sourceVoice);
+void AudioSource::AddSourceVoice(IXAudio2SourceVoice* sourceVoice) {
+	sourceVoices_.push_back(sourceVoice);
 }
 
-void AudioSource::SetVolume(float _volume) {
-	volume_ = _volume;
+void AudioSource::SetVolume(float volume) {
+	volume_ = volume;
 }
 
-void AudioSource::SetPitch(float _pitch) {
-	pitch_ = _pitch;
+void AudioSource::SetPitch(float pitch) {
+	pitch_ = pitch;
 }
 
-void AudioSource::SetAudioPath(const std::string& _path) {
-	path_ = _path;
+void AudioSource::SetAudioPath(const std::string& path) {
+	path_ = path;
 }
 
-void AudioSource::SetAudioClip(Asset::AudioClip* _clip) {
-	pAudioClip_ = _clip;
+void AudioSource::SetAudioClip(Asset::AudioClip* clip) {
+	pAudioClip_ = clip;
 }
 
 float AudioSource::GetVolume() const {
@@ -78,12 +78,12 @@ int AudioSource::GetState() const {
 
 /// 
 
-void ComponentDebug::AudioSourceDebug(AudioSource* _as) {
-	if (!_as) {
+void ComponentDebug::AudioSourceDebug(AudioSource* as) {
+	if (!as) {
 		return;
 	}
 
-	std::string audioPath = _as->GetAudioPath();
+	std::string audioPath = as->GetAudioPath();
 
 	/// audio clipの編集
 	ImGui::Text("Audio Source");
@@ -99,7 +99,7 @@ void ComponentDebug::AudioSourceDebug(AudioSource* _as) {
 				if (extension == ".mp3" ||
 					extension == ".wav" ||
 					extension == ".ogg") {
-					_as->SetAudioPath(path);
+					as->SetAudioPath(path);
 
 					Console::Log(std::format("Audio path set to: {}", path));
 				} else {
@@ -113,107 +113,107 @@ void ComponentDebug::AudioSourceDebug(AudioSource* _as) {
 	ImGui::Spacing();
 
 	/// 音量の編集
-	float volume = _as->GetVolume();
+	float volume = as->GetVolume();
 	ImGui::Text("Volume");
 	if (ImGui::SliderFloat("##Volume", &volume, 0.0f, 1.0f, "%.2f")) {
-		_as->SetVolume(volume);
+		as->SetVolume(volume);
 	}
 
 	/// ピッチの編集
-	float pitch = _as->GetPitch();
+	float pitch = as->GetPitch();
 	ImGui::Text("Pitch");
 	if (ImGui::SliderFloat("##Pitch", &pitch, 0.0f, 3.0f, "%.2f")) {
-		_as->SetPitch(pitch);
+		as->SetPitch(pitch);
 	}
 
 	ImGui::Spacing();
 
 	/// 再生ボタン
 	if (ImGui::Button("Play")) {
-		_as->Play();
+		as->Play();
 	}
 
 	ImGui::Spacing();
 
 	/// 再生状態の表示
-	int state = _as->GetState();
+	int state = as->GetState();
 	std::string stateStr = static_cast<std::string>(magic_enum::enum_name(static_cast<AudioState>(state)));
 	ImGui::Text("State: %s", stateStr.c_str());
 
 }
 
-void MonoInternalMethods::InternalGetParams(uint64_t _nativeHandle, float* _volume, float* _pitch) {
-	AudioSource* audioSource = reinterpret_cast<AudioSource*>(_nativeHandle);
+void MonoInternalMethods::InternalGetParams(uint64_t nativeHandle, float* volume, float* pitch) {
+	AudioSource* audioSource = reinterpret_cast<AudioSource*>(nativeHandle);
 	if (!audioSource) {
 		Console::LogError("AudioSource pointer is null");
 		return;
 	}
 
-	*_volume = audioSource->GetVolume();
-	*_pitch = audioSource->GetPitch();
+	*volume = audioSource->GetVolume();
+	*pitch = audioSource->GetPitch();
 
 }
 
-void ONEngine::MonoInternalMethods::InternalSetParams(uint64_t _nativeHandle, float _volume, float _pitch) {
-	AudioSource* audioSource = reinterpret_cast<AudioSource*>(_nativeHandle);
+void ONEngine::MonoInternalMethods::InternalSetParams(uint64_t nativeHandle, float volume, float pitch) {
+	AudioSource* audioSource = reinterpret_cast<AudioSource*>(nativeHandle);
 	if (!audioSource) {
 		Console::LogError("AudioSource pointer is null in InternalSetParams");
 		return;
 	}
 
-	Console::Log(std::format("[CPP Audio] SetParams - Vol: {}, Pitch: {}", _volume, _pitch));
-	audioSource->SetVolume(_volume);
-	audioSource->SetPitch(_pitch);
+	Console::Log(std::format("[CPP Audio] SetParams - Vol: {}, Pitch: {}", volume, pitch));
+	audioSource->SetVolume(volume);
+	audioSource->SetPitch(pitch);
 }
 
-void ONEngine::MonoInternalMethods::InternalPlay(uint64_t _nativeHandle) {
-	AudioSource* audioSource = reinterpret_cast<AudioSource*>(_nativeHandle);
+void ONEngine::MonoInternalMethods::InternalPlay(uint64_t nativeHandle) {
+	AudioSource* audioSource = reinterpret_cast<AudioSource*>(nativeHandle);
 	if (audioSource) {
 		Console::Log("[CPP Audio] Play Requested");
 		audioSource->Play();
 	}
 }
 
-void ONEngine::MonoInternalMethods::InternalStop(uint64_t _nativeHandle) {
-	AudioSource* audioSource = reinterpret_cast<AudioSource*>(_nativeHandle);
+void ONEngine::MonoInternalMethods::InternalStop(uint64_t nativeHandle) {
+	AudioSource* audioSource = reinterpret_cast<AudioSource*>(nativeHandle);
 	if (audioSource) {
 		Console::Log("[CPP Audio] Stop Requested");
 		audioSource->Stop();
 	}
 }
 
-void ONEngine::MonoInternalMethods::InternalPlayOneShot(uint64_t _nativeHandle, float _volume, float _pitch, MonoString* _path) {
+void ONEngine::MonoInternalMethods::InternalPlayOneShot(uint64_t nativeHandle, float volume, float pitch, MonoString* path) {
 	/// 音の再生
-	AudioSource* audioSource = reinterpret_cast<AudioSource*>(_nativeHandle);
+	AudioSource* audioSource = reinterpret_cast<AudioSource*>(nativeHandle);
 	if (!audioSource) {
 		Console::LogError("AudioSource pointer is null in InternalPlayOneShot");
 		return;
 	}
 
 	/// pathの変換
-	char* path = mono_string_to_utf8(_path);
+	char* pathCStr = mono_string_to_utf8(path);
 
-	Console::Log(std::format("[CPP Audio] OneShot Requested - Path: {}, Vol: {}, Pitch: {}", path, _volume, _pitch));
-	audioSource->PlayOneShot(_volume, _pitch, std::string(path));
+	Console::Log(std::format("[CPP Audio] OneShot Requested - Path: {}, Vol: {}, Pitch: {}", pathCStr, volume, pitch));
+	audioSource->PlayOneShot(volume, pitch, std::string(pathCStr));
 
-	mono_free(path);
+	mono_free(pathCStr);
 }
 
 
 /// json serialize
-void ONEngine::from_json(const nlohmann::json& _j, AudioSource& _a) {
-	_a.enable = _j.value("enable", 1);
-	_a.SetVolume(_j.value("volume", 1.0f));
-	_a.SetPitch(_j.value("pitch", 1.0f));
-	_a.SetAudioPath(_j.value("path", std::string("")));
+void ONEngine::from_json(const nlohmann::json& j, AudioSource& a) {
+	a.enable = j.value("enable", 1);
+	a.SetVolume(j.value("volume", 1.0f));
+	a.SetPitch(j.value("pitch", 1.0f));
+	a.SetAudioPath(j.value("path", std::string("")));
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const AudioSource& _a) {
-	_j = nlohmann::json{
+void ONEngine::to_json(nlohmann::json& j, const AudioSource& a) {
+	j = nlohmann::json{
 		{ "type", "AudioSource" },
-		{ "enable", _a.enable },
-		{ "volume", _a.GetVolume() },
-		{ "pitch", _a.GetPitch() },
-		{ "path", _a.GetAudioPath() }
+		{ "enable", a.enable },
+		{ "volume", a.GetVolume() },
+		{ "pitch", a.GetPitch() },
+		{ "path", a.GetAudioPath() }
 	};
 }

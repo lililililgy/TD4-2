@@ -21,8 +21,8 @@ using namespace Editor;
 using namespace ONEngine;
 
 namespace {
-    std::string NormalizePath(const std::string& _path) {
-        std::string path = _path;
+    std::string NormalizePath(const std::string& pathStr) {
+        std::string path = pathStr;
         std::replace(path.begin(), path.end(), '\\', '/');
         // エンジン内部では "./Assets/..." 形式が多いため、それに合わせる
         if (!path.starts_with("./") && !path.starts_with("/") && (path.starts_with("Assets") || path.starts_with("Packages"))) {
@@ -38,8 +38,8 @@ namespace {
     // AnimationClip全体の変更を記録するコマンド
     class ModifyAnimationClipCommand : public IEditCommand {
     public:
-        ModifyAnimationClipCommand(ONEngine::Asset::AnimationClip* _clip, const ONEngine::Asset::AnimationClip& _old, const ONEngine::Asset::AnimationClip& _new)
-            : pClip_(_clip), oldClip_(_old), newClip_(_new) {}
+        ModifyAnimationClipCommand(ONEngine::Asset::AnimationClip* clip, const ONEngine::Asset::AnimationClip& oldClip, const ONEngine::Asset::AnimationClip& newClip)
+            : pClip_(clip), oldClip_(oldClip), newClip_(newClip) {}
         
         EDITOR_STATE Execute() override {
             if (pClip_) *pClip_ = newClip_;

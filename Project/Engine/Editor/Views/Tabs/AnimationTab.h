@@ -10,7 +10,7 @@ namespace Editor {
 /// ///////////////////////////////////////////////////
 class AnimationTab : public IEditorWindowContainer {
 public:
-    AnimationTab(class ONEngine::Asset::AssetCollection* _assetCollection);
+    AnimationTab(class ONEngine::Asset::AssetCollection* assetCollection);
     ~AnimationTab() override = default;
 };
 

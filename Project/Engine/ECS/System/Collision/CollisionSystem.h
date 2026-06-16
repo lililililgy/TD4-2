@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <deque>
@@ -34,23 +34,23 @@ public:
 	CollisionSystem();
 	virtual ~CollisionSystem() = default;
 
-	void RuntimeUpdate(class ECSGroup* _ecs);
+	void RuntimeUpdate(class ECSGroup* ecs);
 
 	/// コールバック関数の呼び出し
-	void CallEnterFunc(const std::string& _ecsGroupName);
-	void CallStayFunc(const std::string& _ecsGroupName);
-	void CallExitFunc(const std::string& _ecsGroupName);
+	void CallEnterFunc(const std::string& ecsGroupName);
+	void CallStayFunc(const std::string& ecsGroupName);
+	void CallExitFunc(const std::string& ecsGroupName);
 
 	/// @brief AとBの押し戻しを行う
-	/// @param _a Aエンティティのポインタ
-	/// @param _aState Aエンティティのコリジョン状態
-	/// @param _b Bエンティティのポインタ
-	/// @param _bState Bエンティティのコリジョン状態
-	/// @param _info AとBの衝突情報
+	/// @param a Aエンティティのポインタ
+	/// @param aState Aエンティティのコリジョン状態
+	/// @param b Bエンティティのポインタ
+	/// @param bState Bエンティティのコリジョン状態
+	/// @param info AとBの衝突情報
 	void PushBack(
-		class GameEntity* _a, CollisionState _aState,
-		class GameEntity* _b, CollisionState _bState,
-		const CollisionInfo& _info
+		class GameEntity* a, CollisionState aState,
+		class GameEntity* b, CollisionState bState,
+		const CollisionInfo& info
 	);
 private:
 	/// =======================================
@@ -84,10 +84,10 @@ class BoxCollider;
 */
 
 namespace CheckMethod {
-	bool CollisionCheckSphereVsSphere(SphereCollider* _s1, SphereCollider* _s2, CollisionInfo* _info);
-	bool CollisionCheckSphereVsBox(SphereCollider* _s, BoxCollider* _b, CollisionInfo* _info);
-	bool CollisionCheckBoxVsSphere(BoxCollider* _b, SphereCollider* _s, CollisionInfo* _info);
-	bool CollisionCheckBoxVsBox(BoxCollider* _b1, BoxCollider* _b2, CollisionInfo* _info);
+	bool CollisionCheckSphereVsSphere(SphereCollider* s1, SphereCollider* s2, CollisionInfo* info);
+	bool CollisionCheckSphereVsBox(SphereCollider* s, BoxCollider* b, CollisionInfo* info);
+	bool CollisionCheckBoxVsSphere(BoxCollider* b, SphereCollider* s, CollisionInfo* info);
+	bool CollisionCheckBoxVsBox(BoxCollider* b1, BoxCollider* b2, CollisionInfo* info);
 }
 
 } /// ONEngine

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../../Interface/IRenderingPipeline.h"
@@ -26,12 +26,12 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	VoxelTerrainVertexCreatePipeline(AssetCollection* _ac);
+	VoxelTerrainVertexCreatePipeline(AssetCollection* ac);
 	~VoxelTerrainVertexCreatePipeline();
 
 	/// --------------- override methods --------------- ///
-	void Initialize(ShaderCompiler* _shaderCompiler, class DxManager* _dxm) override;
-	void PreDraw(class ECSGroup* _ecs, class CameraComponent* _camera, DxCommand* _dxCommand) override;
+	void Initialize(ShaderCompiler* shaderCompiler, class DxManager* dxm) override;
+	void PreDraw(class ECSGroup* ecs, class CameraComponent* camera, DxCommand* dxCommand) override;
 	void Draw(class ECSGroup*, class CameraComponent*, DxCommand*) override {}
 
 private:

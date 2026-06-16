@@ -59,7 +59,7 @@ struct Vector2T final {
 	/// ===================================================
 
 	Vector2T() : x(static_cast<T>(0)), y(static_cast<T>(0)) {}
-	Vector2T(T _x, T _y) : x(_x), y(_y) {}
+	Vector2T(T x, T y) : x(x), y(y) {}
 	Vector2T(const Vector2T&) = default;
 	Vector2T(Vector2T&&) = default;
 
@@ -72,70 +72,70 @@ struct Vector2T final {
 	/// ===================================================
 
 	/// @brief ベクトルの長さを取得
-	/// @param _v ベクトル
+	/// @param v ベクトル
 	/// @return ベクトルの長さ
-	static T Length(const Vector2T<T>& _v) {
-		return static_cast<T>(std::sqrt(_v.x * _v.x + _v.y * _v.y));
+	static T Length(const Vector2T<T>& v) {
+		return static_cast<T>(std::sqrt(v.x * v.x + v.y * v.y));
 	}
 
 	/// @brief ベクトルの長さの二乗を取得
-	/// @param _v ベクトル
+	/// @param v ベクトル
 	/// @return ベクトルの長さの二乗
-	static T LengthSquared(const Vector2T<T>& _v) {
-		return _v.x * _v.x + _v.y * _v.y;
+	static T LengthSquared(const Vector2T<T>& v) {
+		return v.x * v.x + v.y * v.y;
 	}
 
 	/// @brief ベクトルの正規化
-	/// @param _v ベクトル
+	/// @param v ベクトル
 	/// @return 正規化されたベクトル
-	static Vector2T<T> Normalize(const Vector2T<T>& _v) {
-		T length = Length(_v);
+	static Vector2T<T> Normalize(const Vector2T<T>& v) {
+		T length = Length(v);
 		if (length == static_cast<T>(0)) {
 			return Vector2T<T>(static_cast<T>(0), static_cast<T>(0));
 		}
-		return Vector2T<T>(_v.x / length, _v.y / length);
+		return Vector2T<T>(v.x / length, v.y / length);
 	}
 
 	/// @brief ベクトルの内積を取得
-	/// @param _a ベクトルA
-	/// @param _b ベクトルB
+	/// @param a ベクトルA
+	/// @param b ベクトルB
 	/// @return ベクトルの内積
-	static T Dot(const Vector2T<T>& _a, const Vector2T<T>& _b) {
-		return _a.x * _b.x + _a.y * _b.y;
+	static T Dot(const Vector2T<T>& a, const Vector2T<T>& b) {
+		return a.x * b.x + a.y * b.y;
 	}
 
 	/// @brief ベクトルの外積
-	/// @param _a ベクトルA
-	/// @param _b ベクトルB
+	/// @param a ベクトルA
+	/// @param b ベクトルB
 	/// @return ベクトルの外積
-	static T Cross(const Vector2T<T>& _a, const Vector2T<T>& _b) {
-		return _a.x * _b.y - _a.y * _b.x;
+	static T Cross(const Vector2T<T>& a, const Vector2T<T>& b) {
+		return a.x * b.y - a.y * b.x;
 	}
 
 	/// @brief ベクトルの線形補完
-	/// @param _a ベクトルA
-	/// @param _b ベクトルB
-	/// @param _t 補間係数
+	/// @param a ベクトルA
+	/// @param b ベクトルB
+	/// @param t 補間係数
 	/// @return 補間されたベクトル
-	static Vector2T<T> Lerp(const Vector2T<T>& _a, const Vector2T<T>& _b, T _t) {
+	static Vector2T<T> Lerp(const Vector2T<T>& a, const Vector2T<T>& b, T t) {
 		return Vector2T<T>(
-			_a.x + (_b.x - _a.x) * _t,
-			_a.y + (_b.y - _a.y) * _t
+			a.x + (b.x - a.x) * t,
+			a.y + (b.y - a.y) * t
 		);
 	}
 
 	/// @brief ベクトルの球面線形補完
-	/// @param _a ベクトルA
-	/// @param _b ベクトルB
-	/// @param _t 補間係数
+	/// @param a ベクトルA
+	/// @param b ベクトルB
+	/// @param t 補間係数
 	/// @return 補間されたベクトル
-	static Vector2T<T> Slerp(const Vector2T<T>& _a, const Vector2T<T>& _b, T _t) {
-		T dot = Dot(Normalize(_a), Normalize(_b));
+	static Vector2T<T> Slerp(const Vector2T<T>& a, const Vector2T<T>& b, T t) {
+		T dot = Dot(Normalize(a), Normalize(b));
 		dot = std::clamp(dot, static_cast<T>(-1), static_cast<T>(1));
-		T theta = std::acos(dot) * _t;
-		Vector2T<T> relativeVec = _b - _a * dot;
+		T theta = std::acos(dot) * t;
+		Vector2T<T> relativeVec = b - a * dot;
 		relativeVec = Normalize(relativeVec);
-		return (_a * std::cos(theta)) + (relativeVec * std::sin(theta));
+		return (a * std::cos(theta)) + (relativeVec * std::sin(theta));
 	}
 
 
@@ -162,17 +162,17 @@ struct Vector2T final {
 	}
 
 	/// @brief ベクトルの内積を取得
-	/// @param _other もう一つのベクトル
+	/// @param other もう一つのベクトル
 	/// @return ベクトルの内積
-	float Dot(const Vector2T<T>& _other) const {
-		return Dot(*this, _other);
+	float Dot(const Vector2T<T>& other) const {
+		return Dot(*this, other);
 	}
 
 	/// @brief ベクトルの外積を取得
-	/// @param _other もう一つのベクトル
+	/// @param other もう一つのベクトル
 	/// @return ベクトルの外積
-	float Cross(const Vector2T<T>& _other) const {
-		return Cross(*this, _other);
+	float Cross(const Vector2T<T>& other) const {
+		return Cross(*this, other);
 	}
 
 
@@ -180,39 +180,39 @@ struct Vector2T final {
 	/// public : operators
 	/// ===================================================
 
-	Vector2T<T>& operator+=(const Vector2T<T>& _other) {
-		x += _other.x;
-		y += _other.y;
+	Vector2T<T>& operator+=(const Vector2T<T>& other) {
+		x += other.x;
+		y += other.y;
 		return *this;
 	}
 
-	Vector2T<T>& operator-=(const Vector2T<T>& _other) {
-		x -= _other.x;
-		y -= _other.y;
+	Vector2T<T>& operator-=(const Vector2T<T>& other) {
+		x -= other.x;
+		y -= other.y;
 		return *this;
 	}
 
-	Vector2T<T>& operator*=(const Vector2T<T>& _other) {
-		x *= _other.x;
-		y *= _other.y;
+	Vector2T<T>& operator*=(const Vector2T<T>& other) {
+		x *= other.x;
+		y *= other.y;
 		return *this;
 	}
 
-	Vector2T<T>& operator*=(T _scalar) {
-		x *= _scalar;
-		y *= _scalar;
+	Vector2T<T>& operator*=(T scalar) {
+		x *= scalar;
+		y *= scalar;
 		return *this;
 	}
 
-	Vector2T<T>& operator/=(const Vector2T<T>& _other) {
-		x /= _other.x;
-		y /= _other.y;
+	Vector2T<T>& operator/=(const Vector2T<T>& other) {
+		x /= other.x;
+		y /= other.y;
 		return *this;
 	}
 
-	Vector2T<T>& operator/=(T _scalar) {
-		x /= _scalar;
-		y /= _scalar;
+	Vector2T<T>& operator/=(T scalar) {
+		x /= scalar;
+		y /= scalar;
 		return *this;
 	}
 
@@ -266,63 +266,63 @@ const Vector2T<T> Vector2T<T>::Half = Vector2T<T>(static_cast<T>(0.5), static_ca
 /// ///////////////////////////////////////////////////
 
 template <typename T>
-inline Vector2T<T> operator+(const Vector2T<T>& _a, const Vector2T<T>& _b) {
-	return Vector2T<T>(_a.x + _b.x, _a.y + _b.y);
+inline Vector2T<T> operator+(const Vector2T<T>& a, const Vector2T<T>& b) {
+	return Vector2T<T>(a.x + b.x, a.y + b.y);
 }
 
 template <typename T>
-inline Vector2T<T> operator-(const Vector2T<T>& _a, const Vector2T<T>& _b) {
-	return Vector2T<T>(_a.x - _b.x, _a.y - _b.y);
+inline Vector2T<T> operator-(const Vector2T<T>& a, const Vector2T<T>& b) {
+	return Vector2T<T>(a.x - b.x, a.y - b.y);
 }
 
 template <typename T>
-inline Vector2T<T> operator*(const Vector2T<T>& _a, const Vector2T<T>& _b) {
-	return Vector2T<T>(_a.x * _b.x, _a.y * _b.y);
+inline Vector2T<T> operator*(const Vector2T<T>& a, const Vector2T<T>& b) {
+	return Vector2T<T>(a.x * b.x, a.y * b.y);
 }
 
 template <typename T>
-inline Vector2T<T> operator*(const Vector2T<T>& _v, T _scalar) {
-	return Vector2T<T>(_v.x * _scalar, _v.y * _scalar);
+inline Vector2T<T> operator*(const Vector2T<T>& v, T scalar) {
+	return Vector2T<T>(v.x * scalar, v.y * scalar);
 }
 
 template <typename T>
-inline Vector2T<T> operator*(T _scalar, const Vector2T<T>& _v) {
-	return Vector2T<T>(_v.x * _scalar, _v.y * _scalar);
+inline Vector2T<T> operator*(T scalar, const Vector2T<T>& v) {
+	return Vector2T<T>(v.x * scalar, v.y * scalar);
 }
 
 template <typename T>
-inline Vector2T<T> operator/(const Vector2T<T>& _a, const Vector2T<T>& _b) {
-	return Vector2T<T>(_a.x / _b.x, _a.y / _b.y);
+inline Vector2T<T> operator/(const Vector2T<T>& a, const Vector2T<T>& b) {
+	return Vector2T<T>(a.x / b.x, a.y / b.y);
 }
 
 template <typename T>
-inline Vector2T<T> operator/(const Vector2T<T>& _v, T _scalar) {
-	return Vector2T<T>(_v.x / _scalar, _v.y / _scalar);
+inline Vector2T<T> operator/(const Vector2T<T>& v, T scalar) {
+	return Vector2T<T>(v.x / scalar, v.y / scalar);
 }
 
 template <typename T>
-inline Vector2T<T> operator-(const Vector2T<T>& _v) {
-	return Vector2T<T>(-_v.x, -_v.y);
+inline Vector2T<T> operator-(const Vector2T<T>& v) {
+	return Vector2T<T>(-v.x, -v.y);
 }
 
 template <typename T>
-inline Vector2T<T> operator+(const Vector2T<T>& _v) {
-	return _v;
+inline Vector2T<T> operator+(const Vector2T<T>& v) {
+	return v;
 }
 
 
 
 template <typename T>
-void from_json(const nlohmann::json& _j, Vector2T<T>& _v) {
-	_v.x = _j.at("x").get<T>();
-	_v.y = _j.at("y").get<T>();
+void from_json(const nlohmann::json& j, Vector2T<T>& v) {
+	v.x = j.at("x").get<T>();
+	v.y = j.at("y").get<T>();
 }
 
 template <typename T>
-void to_json(nlohmann::json& _j, const Vector2T<T>& _v) {
-	_j = nlohmann::json{
-		{ "x", _v.x },
-		{ "y", _v.y }
+void to_json(nlohmann::json& j, const Vector2T<T>& v) {
+	j = nlohmann::json{
+		{ "x", v.x },
+		{ "y", v.y }
 	};
 }
 

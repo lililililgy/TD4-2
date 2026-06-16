@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -43,13 +43,13 @@ public:
 	~RenderingFramework();
 
 	/// @brief 初期化
-	void Initialize(DxManager* _dxm, WindowManager* _windowManager, class EntityComponentSystem* _pEntityComponentSystem);
+	void Initialize(DxManager* dxm, WindowManager* windowManager, class EntityComponentSystem* pEntityComponentSystem);
 
 	/// @brief 作成された順番に描画を行う
 	void Draw();
 
 	/// @brief 描画前処理
-	void PreDraw(ECSGroup* _ecsGroup);
+	void PreDraw(ECSGroup* ecsGroup);
 
 	/// @brief 各シーンの描画
 	void DrawScene();
@@ -103,8 +103,8 @@ public:
 
 #ifdef DEBUG_MODE
 	/// @brief ImGuiManagerへのポインタを設定
-	/// @param _imGuiManager ImGuiManagerへのポインタ
-	void SetImGuiManager(Editor::ImGuiManager* _imGuiManager);
+	/// @param imGuiManager ImGuiManagerへのポインタ
+	void SetImGuiManager(Editor::ImGuiManager* imGuiManager);
 #endif // DEBUG_MODE
 
 	/// @brief ShaderCompilerの取得

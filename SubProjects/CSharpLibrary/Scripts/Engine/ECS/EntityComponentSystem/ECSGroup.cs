@@ -26,10 +26,10 @@ public class ECSGroup {
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	/// <param name="_groupName"></param>
-	public ECSGroup(string _groupName) {
+	/// <param name="groupName"></param>
+	public ECSGroup(string groupName) {
 		ComponentBatchManager.Initialize();
-		groupName = _groupName;
+		this.groupName = groupName;
 		enable_ = true;
 	}
 
@@ -40,16 +40,16 @@ public class ECSGroup {
 	/// <summary>
 	/// c/c++側から呼び出すエンティティの追加関数
 	/// </summary>
-	public void AddEntity(int _id) {
-		//Debug.LogInfo("ECSGroup.AddEntity - Adding entity with ID: " + _id + ", Group Name: " + groupName);
-		if(entities_.ContainsKey(_id)) {
-			//Debug.LogError("ECSGroup.AddEntity - Entity already exists with ID: " + _id + ", Group Name: " + groupName);
+	public void AddEntity(int id) {
+		//Debug.LogInfo("ECSGroup.AddEntity - Adding entity with ID: " + id + ", Group Name: " + groupName);
+		if(entities_.ContainsKey(id)) {
+			//Debug.LogError("ECSGroup.AddEntity - Entity already exists with ID: " + id + ", Group Name: " + groupName);
 			return;
 		}
 
 
-		Entity entity = new Entity(_id, this);
-		entities_.Add(_id, entity);
+		Entity entity = new Entity(id, this);
+		entities_.Add(id, entity);
 
 		/// 生成、初期化の呼び出し用リストに追加
 		awakeList_.Add(entity);
@@ -59,26 +59,26 @@ public class ECSGroup {
 	/// <summary>
 	/// C/C++側から呼び出すコンポーネントの追加関数
 	/// </summary>
-	public void AddScript(int _entityId, MonoScript _behavior, bool _enable) {
+	public void AddScript(int entityId, MonoScript behavior, bool enable) {
 		Entity entity;
-		if (entities_.TryGetValue(_entityId, out entity)) {
-			//Debug.LogInfo("ECSGroup.AddScript - Adding script to Entity ID: " + _entityId + ", Script Name: " + _behavior.GetType().Name);
-			_behavior.CreateBehavior(_entityId, _behavior.GetType().Name, this);
-			_behavior.enable = _enable;
-			entity.AddScript(_behavior);
+		if (entities_.TryGetValue(entityId, out entity)) {
+			//Debug.LogInfo("ECSGroup.AddScript - Adding script to Entity ID: " + entityId + ", Script Name: " + behavior.GetType().Name);
+			behavior.CreateBehavior(entityId, behavior.GetType().Name, this);
+			behavior.enable = enable;
+			entity.AddScript(behavior);
 		} else {
-			//Debug.LogError("Entity.AddScript - Entity not found with ID: " + _entityId);
+			//Debug.LogError("Entity.AddScript - Entity not found with ID: " + entityId);
 		}
 	}
 
 	/// <summary>
 	/// c#側から呼び出すエンティティの生成関数
 	/// </summary>
-	public Entity CreateEntity(string _prefabName) {
-		//Debug.LogInfo("ECSGroup.CreateEntity - Creating entity with prefab: " + _prefabName + ", Group Name: " + groupName);
+	public Entity CreateEntity(string prefabName) {
+		//Debug.LogInfo("ECSGroup.CreateEntity - Creating entity with prefab: " + prefabName + ", Group Name: " + groupName);
 
 		int id = 0;
-		InternalCreateEntity(out id, _prefabName, groupName);
+		InternalCreateEntity(out id, prefabName, groupName);
 		Entity entity = new Entity(id, this);
 		entities_.Add(id, entity);
 
@@ -195,8 +195,8 @@ public class ECSGroup {
 	/// <summary>
 	/// Entityの取得
 	/// </summary>
-	public Entity GetEntity(int _id) {
-		if (entities_.TryGetValue(_id, out Entity entity)) {
+	public Entity GetEntity(int id) {
+		if (entities_.TryGetValue(id, out Entity entity)) {
 #if DEBUG
 			//Debug.Log("ECSGroup.GetEntity - Entity found with ID: " + entity.Id + ", Entity Name: " + entity.name);
 #endif
@@ -204,7 +204,7 @@ public class ECSGroup {
 		}
 
 #if DEBUG
-		//Debug.LogError("ECSGroup.GetEntity - Entity not found with ID: " + _id + ", Group Name: " + groupName);
+		//Debug.LogError("ECSGroup.GetEntity - Entity not found with ID: " + id + ", Group Name: " + groupName);
 #endif
 		return null;
 	}
@@ -212,14 +212,14 @@ public class ECSGroup {
 	/// <summary>
 	/// エンティティの削除
 	/// </summary>
-	public void DestroyEntity(int _id) {
-		if (entities_.TryGetValue(_id, out Entity entity)) {
-			entities_.Remove(_id);
-			InternalDestroyEntity(groupName, _id);
+	public void DestroyEntity(int id) {
+		if (entities_.TryGetValue(id, out Entity entity)) {
+			entities_.Remove(id);
+			InternalDestroyEntity(groupName, id);
 #if DEBUG
-			Debug.Log("Entity destroyed with ID: " + _id);
+			Debug.Log("Entity destroyed with ID: " + id);
 		} else {
-			Debug.LogError("Entity not found with ID: " + _id);
+			Debug.LogError("Entity not found with ID: " + id);
 #endif
 		}
 	}
@@ -242,30 +242,30 @@ public class ECSGroup {
 	/// <summary>
 	/// エンティティの探索
 	/// </summary>
-	public Entity FindEntity(string _name) {
+	public Entity FindEntity(string name) {
 		foreach (var entity in entities_.Values) {
-			if (entity.name == _name) {
+			if (entity.name == name) {
 				return entity;
 			}
 		}
 
 #if DEBUG
-		Debug.LogError("Entity not found with name: " + _name);
+		Debug.LogError("Entity not found with name: " + name);
 #endif
 		return null;
 	}
 
 
-	bool CheckEnable(Entity _entity) {
-		if (!_entity) {
+	bool CheckEnable(Entity entity) {
+		if (!entity) {
 			return false;
 		}
 
-		if (!_entity.enable) {
+		if (!entity.enable) {
 			return false;
 		}
 
-		Entity parent = _entity.parent;
+		Entity parent = entity.parent;
 		if (parent) {
 			return CheckEnable(parent);
 		}
@@ -279,23 +279,23 @@ public class ECSGroup {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalCreateEntity(out int _id, string _prefabName, string _groupName);
+	static extern void InternalCreateEntity(out int id, string prefabName, string groupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalDestroyEntity(string _ecsGroupName, int _id);
+	static extern void InternalDestroyEntity(string ecsGroupName, int id);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalSetEnable();
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalFindEntity(string _ecsGroupName, string _entityName);
+	static extern void InternalFindEntity(string ecsGroupName, string entityName);
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// operators
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	public static implicit operator bool(ECSGroup _group) {
-		return _group != null;
+	public static implicit operator bool(ECSGroup group) {
+		return group != null;
 	}
 }

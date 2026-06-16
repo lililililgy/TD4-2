@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EntityComponentSystem.h"
 #include "Engine/ECS/Component/Collection/ComponentCollection.h"
@@ -34,40 +34,40 @@
 
 namespace ONEngine {
 
-inline void AddComponentFactoryFunction(ComponentCollection* _compCollection) {
+inline void AddComponentFactoryFunction(ComponentCollection* compCollection) {
 	/// compute
-	_compCollection->RegisterComponentFactory<Script>();
-	_compCollection->RegisterComponentFactory<Transform>();
-	_compCollection->RegisterComponentFactory<DirectionalLight>();
-	_compCollection->RegisterComponentFactory<AudioSource>();
-	_compCollection->RegisterComponentFactory<Variables>();
-	_compCollection->RegisterComponentFactory<Effect>();
-	_compCollection->RegisterComponentFactory<ParticleSystem>();
-	_compCollection->RegisterComponentFactory<Terrain>();
-	_compCollection->RegisterComponentFactory<GrassField>();
-	_compCollection->RegisterComponentFactory<TerrainCollider>();
-	_compCollection->RegisterComponentFactory<CameraComponent>();
-	_compCollection->RegisterComponentFactory<ShadowCaster>();
-	_compCollection->RegisterComponentFactory<VoxelTerrain>();
-	_compCollection->RegisterComponentFactory<AgentIntentComponent>();
-	_compCollection->RegisterComponentFactory<Animator>();
-	_compCollection->RegisterComponentFactory<AnimationPlayer>();
+	compCollection->RegisterComponentFactory<Script>();
+	compCollection->RegisterComponentFactory<Transform>();
+	compCollection->RegisterComponentFactory<DirectionalLight>();
+	compCollection->RegisterComponentFactory<AudioSource>();
+	compCollection->RegisterComponentFactory<Variables>();
+	compCollection->RegisterComponentFactory<Effect>();
+	compCollection->RegisterComponentFactory<ParticleSystem>();
+	compCollection->RegisterComponentFactory<Terrain>();
+	compCollection->RegisterComponentFactory<GrassField>();
+	compCollection->RegisterComponentFactory<TerrainCollider>();
+	compCollection->RegisterComponentFactory<CameraComponent>();
+	compCollection->RegisterComponentFactory<ShadowCaster>();
+	compCollection->RegisterComponentFactory<VoxelTerrain>();
+	compCollection->RegisterComponentFactory<AgentIntentComponent>();
+	compCollection->RegisterComponentFactory<Animator>();
+	compCollection->RegisterComponentFactory<AnimationPlayer>();
 
 
 	/// renderer
-	_compCollection->RegisterComponentFactory<MeshRenderer>();
-	_compCollection->RegisterComponentFactory<DissolveMeshRenderer>();
-	_compCollection->RegisterComponentFactory<CustomMeshRenderer>();
-	_compCollection->RegisterComponentFactory<SkinMeshRenderer>();
-	_compCollection->RegisterComponentFactory<SpriteRenderer>();
-	_compCollection->RegisterComponentFactory<Line2DRenderer>();
-	_compCollection->RegisterComponentFactory<Line3DRenderer>();
-	_compCollection->RegisterComponentFactory<ScreenPostEffectTag>();
-	_compCollection->RegisterComponentFactory<Skybox>();
+	compCollection->RegisterComponentFactory<MeshRenderer>();
+	compCollection->RegisterComponentFactory<DissolveMeshRenderer>();
+	compCollection->RegisterComponentFactory<CustomMeshRenderer>();
+	compCollection->RegisterComponentFactory<SkinMeshRenderer>();
+	compCollection->RegisterComponentFactory<SpriteRenderer>();
+	compCollection->RegisterComponentFactory<Line2DRenderer>();
+	compCollection->RegisterComponentFactory<Line3DRenderer>();
+	compCollection->RegisterComponentFactory<ScreenPostEffectTag>();
+	compCollection->RegisterComponentFactory<Skybox>();
 
 	/// collider
-	_compCollection->RegisterComponentFactory<SphereCollider>();
-	_compCollection->RegisterComponentFactory<BoxCollider>();
+	compCollection->RegisterComponentFactory<SphereCollider>();
+	compCollection->RegisterComponentFactory<BoxCollider>();
 }
 
 } /// namespace ONEngine

@@ -17,37 +17,37 @@ namespace ONEngine {
 
 std::unordered_map<uint32_t, BoneMask> AnimatorUpdateSystem::boneMasks_;
 
-void AnimatorUpdateSystem::RegisterBoneMask(const BoneMask& _boneMask) {
-    boneMasks_[_boneMask.nameHash] = _boneMask;
+void AnimatorUpdateSystem::RegisterBoneMask(const BoneMask& boneMask) {
+    boneMasks_[boneMask.nameHash] = boneMask;
 }
 
-void AnimatorUpdateSystem::UpdateSkeletonRecursive(SkinMeshRenderer* _smr, int32_t _jointIndex, const std::optional<int32_t>& _parentIndex) {
-    Skeleton& skeleton = _smr->skeleton_;
-    Joint& joint = skeleton.joints[_jointIndex];
+void AnimatorUpdateSystem::UpdateSkeletonRecursive(SkinMeshRenderer* smr, int32_t jointIndex, const std::optional<int32_t>& parentIndex) {
+    Skeleton& skeleton = smr->skeleton_;
+    Joint& joint = skeleton.joints[jointIndex];
 
     joint.transform.Update();
 
     // スケルトン空間行列の計算 (Local * Parent)
-    if (_parentIndex) {
-        joint.matSkeletonSpace = joint.transform.matWorld * skeleton.joints[*_parentIndex].matSkeletonSpace;
+    if (parentIndex) {
+        joint.matSkeletonSpace = joint.transform.matWorld * skeleton.joints[*parentIndex].matSkeletonSpace;
     } else {
         joint.matSkeletonSpace = joint.transform.matWorld;
     }
 
     // ワールド行列の計算
-    joint.matWorld = joint.matSkeletonSpace * _smr->GetOwner()->GetTransform()->matWorld;
+    joint.matWorld = joint.matSkeletonSpace * smr->GetOwner()->GetTransform()->matWorld;
 
     // 子の更新
     for (int32_t childIndex : joint.children) {
-        UpdateSkeletonRecursive(_smr, childIndex, _jointIndex);
+        UpdateSkeletonRecursive(smr, childIndex, jointIndex);
     }
 }
 
-void AnimatorUpdateSystem::UpdateSkinCluster(SkinMeshRenderer* _smr) {
-    if (!_smr->skinCluster_) return;
+void AnimatorUpdateSystem::UpdateSkinCluster(SkinMeshRenderer* smr) {
+    if (!smr->skinCluster_) return;
     
-    Skeleton& skeleton = _smr->skeleton_;
-    SkinCluster& skinCluster = _smr->skinCluster_.value();
+    Skeleton& skeleton = smr->skeleton_;
+    SkinCluster& skinCluster = smr->skinCluster_.value();
 
     for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex) {
         if (jointIndex >= skinCluster.matBindPoseInverseArray.size()) continue;
@@ -60,13 +60,13 @@ void AnimatorUpdateSystem::UpdateSkinCluster(SkinMeshRenderer* _smr) {
     }
 }
 
-void AnimatorUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
-    if (!_ecs) return;
+void AnimatorUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
+    if (!ecs) return;
 
-    ComponentArray<Animator>* animatorArray = _ecs->GetComponentArray<Animator>();
+    ComponentArray<Animator>* animatorArray = ecs->GetComponentArray<Animator>();
     if (!animatorArray || animatorArray->GetUsedComponents().empty()) return;
 
-    ComponentArray<SkinMeshRenderer>* skinMeshArray = _ecs->GetComponentArray<SkinMeshRenderer>();
+    ComponentArray<SkinMeshRenderer>* skinMeshArray = ecs->GetComponentArray<SkinMeshRenderer>();
     Asset::AssetCollection* assetCollection = Asset::AssetCollection::GetInstance();
 
     for (auto& animator : animatorArray->GetUsedComponents()) {

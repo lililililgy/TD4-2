@@ -1,4 +1,4 @@
-﻿#include "RiverRenderingPipeline.h"
+#include "RiverRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -10,15 +10,15 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
 
-RiverRenderingPipeline::RiverRenderingPipeline(Asset::AssetCollection* _assetCollection) : pAssetCollection_(_assetCollection) {}
+RiverRenderingPipeline::RiverRenderingPipeline(Asset::AssetCollection* assetCollection) : pAssetCollection_(assetCollection) {}
 RiverRenderingPipeline::~RiverRenderingPipeline() = default;
 
-void RiverRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void RiverRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{	/// shader
 
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/River/River.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"./Packages/Shader/Render/River/River.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -47,18 +47,18 @@ void RiverRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManag
 		pipeline_->SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 }
 
-void RiverRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void RiverRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
 	/// --------------------------------------------------------------------
 	/// 早期リターンチェック
 	/// --------------------------------------------------------------------
 
-	ComponentArray<Terrain>* terrainArray = _ecs->GetComponentArray<Terrain>();
+	ComponentArray<Terrain>* terrainArray = ecs->GetComponentArray<Terrain>();
 	if (!terrainArray || terrainArray->GetUsedComponents().empty()) {
 		// Console::LogError("RiverRenderingPipeline::Draw: Terrain component array is null");
 		return;
@@ -79,13 +79,13 @@ void RiverRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCo
 	/// bufferの設定
 	/// --------------------------------------------------------------------
 
-	auto cmdList = _dxCommand->GetCommandList();
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 	/// CBV_VIEW_PROJECTION
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
 
 	/// SRV_TEXTURE
 	auto frontTex = pAssetCollection_->GetTextures().begin();
@@ -97,7 +97,7 @@ void RiverRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCo
 
 
 	/// VBVとIBVのリソースバリアーを変える
-	river->CreateRenderingBarriers(_dxCommand);
+	river->CreateRenderingBarriers(dxCommand);
 
 	/// VBVとIBVの設定
 	D3D12_VERTEX_BUFFER_VIEW vbv = river->CreateVBV();
@@ -112,7 +112,7 @@ void RiverRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCo
 	);
 
 	/// 元の状態に戻す
-	river->RestoreResourceBarriers(_dxCommand);
+	river->RestoreResourceBarriers(dxCommand);
 
 }
 

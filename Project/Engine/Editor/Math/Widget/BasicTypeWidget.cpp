@@ -1,4 +1,4 @@
-﻿#include "BasicTypeWidget.h"
+#include "BasicTypeWidget.h"
 
 /// externals
 #include <imgui.h>
@@ -13,16 +13,16 @@ using namespace Editor;
 namespace {
 
 // レイアウト開始
-bool BeginPropertyRow(const std::string& _label, float _columnWidth) {
-	ImGui::PushID(_label.c_str());
+bool BeginPropertyRow(const std::string& label, float columnWidth) {
+	ImGui::PushID(label.c_str());
 	ImGuiTableFlags tableFlags = ImGuiTableFlags_NoSavedSettings;
 	if(ImGui::BeginTable("##PropertyTable", 2, tableFlags)) {
-		ImGui::TableSetupColumn("##Label", ImGuiTableColumnFlags_WidthFixed, _columnWidth);
+		ImGui::TableSetupColumn("##Label", ImGuiTableColumnFlags_WidthFixed, columnWidth);
 		ImGui::TableSetupColumn("##Value", ImGuiTableColumnFlags_WidthStretch);
 		ImGui::TableNextRow();
 		ImGui::TableNextColumn();
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text("%s", _label.c_str());
+		ImGui::Text("%s", label.c_str());
 		ImGui::TableNextColumn();
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		return true;
@@ -37,23 +37,23 @@ void EndPropertyRow() {
 }
 
 // Undo/Redo処理用ヘルパー
-// _pVal         : 変数へのポインタ
-// _preVal       : ImGui関数を呼ぶ前の値
-// _staticStartVal: 操作開始時の値を保持する静的変数の参照
+// pVal         : 変数へのポインタ
+// preVal       : ImGui関数を呼ぶ前の値
+// staticStartVal: 操作開始時の値を保持する静的変数の参照
 template<typename T>
-void HandleUndo(T* _pVal, const T& _preVal, T& _staticStartVal) {
+void HandleUndo(T* pVal, const T& preVal, T& staticStartVal) {
 	// アイテムがアクティブになった瞬間（クリックした瞬間など）
 	// ImGuiの関数実行ですでに値が変わっている可能性があるため、
-	// 事前に退避しておいた _preVal を開始値として保存する
+	// 事前に退避しておいた preVal を開始値として保存する
 	if(ImGui::IsItemActivated()) {
-		_staticStartVal = _preVal;
+		staticStartVal = preVal;
 	}
 
 	// 編集終了後（マウスリリース、Enter確定など）
 	if(ImGui::IsItemDeactivatedAfterEdit()) {
 		// 値が実際に変わっていたらコマンド発行
-		if(*_pVal != _staticStartVal) {
-			EditCommand::Execute<ModifyValueCommand<T>>(_pVal, _staticStartVal, *_pVal);
+		if(*pVal != staticStartVal) {
+			EditCommand::Execute<ModifyValueCommand<T>>(pVal, staticStartVal, *pVal);
 		}
 	}
 }
@@ -65,55 +65,55 @@ void HandleUndo(T* _pVal, const T& _preVal, T& _staticStartVal) {
 // Int Implementation
 // ==================================================================================
 
-bool Editor::DragInt(const std::string& _label, int& _v, float _v_speed, int _v_min, int _v_max, const char* _format, ImGuiSliderFlags _flags, float _columnWidth) {
+bool Editor::DragInt(const std::string& label, int& v, float v_speed, int v_min, int v_max, const char* format, ImGuiSliderFlags flags, float columnWidth) {
 	bool changed = false;
 	static int s_startVal = 0; // 操作開始時の値を保持
 
-	if(BeginPropertyRow(_label, _columnWidth)) {
-		int preVal = _v; // ImGui呼び出し前の値を保存
+	if(BeginPropertyRow(label, columnWidth)) {
+		int preVal = v; // ImGui呼び出し前の値を保存
 
-		if(ImGui::DragInt("##v", &_v, _v_speed, _v_min, _v_max, _format, _flags)) {
+		if(ImGui::DragInt("##v", &v, v_speed, v_min, v_max, format, flags)) {
 			changed = true;
 		}
 
 		// Undo処理
-		HandleUndo(&_v, preVal, s_startVal);
+		HandleUndo(&v, preVal, s_startVal);
 
 		EndPropertyRow();
 	}
 	return changed;
 }
 
-bool Editor::SliderInt(const std::string& _label, int& _v, int _v_min, int _v_max, const char* _format, ImGuiSliderFlags _flags, float _columnWidth) {
+bool Editor::SliderInt(const std::string& label, int& v, int v_min, int v_max, const char* format, ImGuiSliderFlags flags, float columnWidth) {
 	bool changed = false;
 	static int s_startVal = 0;
 
-	if(BeginPropertyRow(_label, _columnWidth)) {
-		int preVal = _v;
+	if(BeginPropertyRow(label, columnWidth)) {
+		int preVal = v;
 
-		if(ImGui::SliderInt("##v", &_v, _v_min, _v_max, _format, _flags)) {
+		if(ImGui::SliderInt("##v", &v, v_min, v_max, format, flags)) {
 			changed = true;
 		}
 
-		HandleUndo(&_v, preVal, s_startVal);
+		HandleUndo(&v, preVal, s_startVal);
 
 		EndPropertyRow();
 	}
 	return changed;
 }
 
-bool Editor::InputInt(const std::string& _label, int& _v, int _step, int _step_fast, ImGuiInputTextFlags _flags, float _columnWidth) {
+bool Editor::InputInt(const std::string& label, int& v, int step, int step_fast, ImGuiInputTextFlags flags, float columnWidth) {
 	bool changed = false;
 	static int s_startVal = 0;
 
-	if(BeginPropertyRow(_label, _columnWidth)) {
-		int preVal = _v;
+	if(BeginPropertyRow(label, columnWidth)) {
+		int preVal = v;
 
-		if(ImGui::InputInt("##v", &_v, _step, _step_fast, _flags)) {
+		if(ImGui::InputInt("##v", &v, step, step_fast, flags)) {
 			changed = true;
 		}
 
-		HandleUndo(&_v, preVal, s_startVal);
+		HandleUndo(&v, preVal, s_startVal);
 
 		EndPropertyRow();
 	}
@@ -124,54 +124,54 @@ bool Editor::InputInt(const std::string& _label, int& _v, int _step, int _step_f
 // Float Implementation
 // ==================================================================================
 
-bool Editor::DragFloat(const std::string& _label, float& _v, float _v_speed, float _v_min, float _v_max, const char* _format, ImGuiSliderFlags _flags, float _columnWidth) {
+bool Editor::DragFloat(const std::string& label, float& v, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags, float columnWidth) {
 	bool changed = false;
 	static float s_startVal = 0.0f;
 
-	if(BeginPropertyRow(_label, _columnWidth)) {
-		float preVal = _v;
+	if(BeginPropertyRow(label, columnWidth)) {
+		float preVal = v;
 
-		if(ImGui::DragFloat("##v", &_v, _v_speed, _v_min, _v_max, _format, _flags)) {
+		if(ImGui::DragFloat("##v", &v, v_speed, v_min, v_max, format, flags)) {
 			changed = true;
 		}
 
-		HandleUndo(&_v, preVal, s_startVal);
+		HandleUndo(&v, preVal, s_startVal);
 
 		EndPropertyRow();
 	}
 	return changed;
 }
 
-bool Editor::SliderFloat(const std::string& _label, float& _v, float _v_min, float _v_max, const char* _format, ImGuiSliderFlags _flags, float _columnWidth) {
+bool Editor::SliderFloat(const std::string& label, float& v, float v_min, float v_max, const char* format, ImGuiSliderFlags flags, float columnWidth) {
 	bool changed = false;
 	static float s_startVal = 0.0f;
 
-	if(BeginPropertyRow(_label, _columnWidth)) {
-		float preVal = _v;
+	if(BeginPropertyRow(label, columnWidth)) {
+		float preVal = v;
 
-		if(ImGui::SliderFloat("##v", &_v, _v_min, _v_max, _format, _flags)) {
+		if(ImGui::SliderFloat("##v", &v, v_min, v_max, format, flags)) {
 			changed = true;
 		}
 
-		HandleUndo(&_v, preVal, s_startVal);
+		HandleUndo(&v, preVal, s_startVal);
 
 		EndPropertyRow();
 	}
 	return changed;
 }
 
-bool Editor::InputFloat(const std::string& _label, float& _v, float _step, float _step_fast, const char* _format, ImGuiInputTextFlags _flags, float _columnWidth) {
+bool Editor::InputFloat(const std::string& label, float& v, float step, float step_fast, const char* format, ImGuiInputTextFlags flags, float columnWidth) {
 	bool changed = false;
 	static float s_startVal = 0.0f;
 
-	if(BeginPropertyRow(_label, _columnWidth)) {
-		float preVal = _v;
+	if(BeginPropertyRow(label, columnWidth)) {
+		float preVal = v;
 
-		if(ImGui::InputFloat("##v", &_v, _step, _step_fast, _format, _flags)) {
+		if(ImGui::InputFloat("##v", &v, step, step_fast, format, flags)) {
 			changed = true;
 		}
 
-		HandleUndo(&_v, preVal, s_startVal);
+		HandleUndo(&v, preVal, s_startVal);
 
 		EndPropertyRow();
 	}

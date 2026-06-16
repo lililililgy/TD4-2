@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/ECS/System/Interface/ECSISystem.h"
@@ -14,11 +14,11 @@ public:
 	/// public : methods
 	/// ==================================================
 
-	GrassBufferCreateSystem(class DxManager* _dxm);
+	GrassBufferCreateSystem(class DxManager* dxm);
 	~GrassBufferCreateSystem() override;
 
-	void OutsideOfRuntimeUpdate(ECSGroup* _ecs) override;
-	void RuntimeUpdate(ECSGroup* _ecs) override;
+	void OutsideOfRuntimeUpdate(ECSGroup* ecs) override;
+	void RuntimeUpdate(ECSGroup* ecs) override;
 
 private:
 	/// ==================================================

@@ -1,4 +1,4 @@
-﻿#include "SceneManager.h"
+#include "SceneManager.h"
 
 using namespace ONEngine;
 
@@ -42,10 +42,10 @@ SceneManager::~SceneManager() {
 }
 
 
-void SceneManager::Initialize(Asset::AssetCollection* _assetCollection) {
+void SceneManager::Initialize(Asset::AssetCollection* assetCollection) {
 	gSceneManager = this;
 
-	pAssetCollection_ = _assetCollection;
+	pAssetCollection_ = assetCollection;
 
 	sceneIO_ = std::make_unique<SceneIO>(pEcs_);
 
@@ -67,17 +67,17 @@ void SceneManager::Update() {
 	}
 }
 
-void SceneManager::SetNextScene(const std::string& _sceneName) {
-	nextScene_ = _sceneName;
+void SceneManager::SetNextScene(const std::string& sceneName) {
+	nextScene_ = sceneName;
 }
 
-void SceneManager::SaveScene(const std::string& _name, ECSGroup* _ecsGroup) {
-	if (_name.empty() || !_ecsGroup) {
+void SceneManager::SaveScene(const std::string& name, ECSGroup* ecsGroup) {
+	if (name.empty() || !ecsGroup) {
 		Console::LogError("Invalid scene name or ECS group.");
 		return;
 	}
 
-	sceneIO_->Output(_name, _ecsGroup);
+	sceneIO_->Output(name, ecsGroup);
 	SetDirty(false);
 }
 
@@ -95,17 +95,17 @@ void SceneManager::SaveCurrentSceneTemporary() {
 	sceneIO_->OutputTemporary(pEcs_->GetCurrentGroup());
 }
 
-void SceneManager::LoadScene(const std::string& _sceneName) {
-	SetNextScene(_sceneName);
+void SceneManager::LoadScene(const std::string& sceneName) {
+	SetNextScene(sceneName);
 	if (nextScene_.empty()) {
-		Console::LogError("Failed to load scene: " + _sceneName);
+		Console::LogError("Failed to load scene: " + sceneName);
 		return;
 	}
 
 	MoveNextToCurrentScene(false);
 }
 
-void SceneManager::ReloadScene(bool _isTemporary) {
+void SceneManager::ReloadScene(bool isTemporary) {
 	if (currentScene_.empty()) {
 		Console::LogError("No current scene to reload.");
 		return;
@@ -116,7 +116,7 @@ void SceneManager::ReloadScene(bool _isTemporary) {
 		Console::LogError("Failed to reload scene: " + currentScene_);
 		return;
 	}
-	MoveNextToCurrentScene(_isTemporary);
+	MoveNextToCurrentScene(isTemporary);
 }
 
 SceneIO* SceneManager::GetSceneIO() {
@@ -150,11 +150,11 @@ bool SceneManager::IsDirty() const {
 	return isDirty_;
 }
 
-void SceneManager::SetDirty(bool _isDirty) {
-	isDirty_ = _isDirty;
+void SceneManager::SetDirty(bool isDirty) {
+	isDirty_ = isDirty;
 }
 
-void SceneManager::MoveNextToCurrentScene(bool _isTemporary) {
+void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 	/// GPUの処理が終わるまで待つ（リソース破棄中のアクセスを防ぐ）
 	pEcs_->GetDxManager()->GetDxCommand()->WaitForGpuComplete();
 
@@ -172,7 +172,7 @@ void SceneManager::MoveNextToCurrentScene(bool _isTemporary) {
 	pEcs_->SetCurrentGroupName(sceneName);
 
 	/// sceneに必要な情報を渡して初期化
-	if (_isTemporary) {
+	if (isTemporary) {
 		sceneIO_->InputTemporary(nextSceneGroup);
 		return;
 	}
@@ -191,8 +191,8 @@ const std::string& SceneManager::GetCurrentSceneName() const {
 
 
 
-void MonoInternalMethods::InternalLoadScene(MonoString* _sceneName) {
-	char* cstr = mono_string_to_utf8(_sceneName);
+void MonoInternalMethods::InternalLoadScene(MonoString* sceneName) {
+	char* cstr = mono_string_to_utf8(sceneName);
 	if (gSceneManager) {
 		gSceneManager->LoadScene(cstr);
 	}

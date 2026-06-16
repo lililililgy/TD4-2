@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 static public class Input {
 
@@ -68,16 +68,16 @@ static public class Input {
 	// マウス入力
 	// ===================================================================
 
-	static public bool TriggerMouse(Mouse _mouse) {
-		return InternalTriggerMouse((int)_mouse);
+	static public bool TriggerMouse(Mouse mouse) {
+		return InternalTriggerMouse((int)mouse);
 	}
 
-	static public bool PressMouse(Mouse _mouse) {
-		return InternalPressMouse((int)_mouse);
+	static public bool PressMouse(Mouse mouse) {
+		return InternalPressMouse((int)mouse);
 	}
 
-	static public bool ReleaseMouse(Mouse _mouse) {
-		return InternalReleaseMouse((int)_mouse);
+	static public bool ReleaseMouse(Mouse mouse) {
+		return InternalReleaseMouse((int)mouse);
 	}
 
 	static public Vector2 MouseVelocity() {
@@ -122,24 +122,24 @@ static public class Input {
 	static private extern bool InternalReleaseGamepad(int gamepad);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalGetGamepadThumb(int axisIndex, out float _x, out float _y);
+	static extern void InternalGetGamepadThumb(int axisIndex, out float x, out float y);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern bool InternalTriggerMouse(int _mouse);
+	static extern bool InternalTriggerMouse(int mouse);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern bool InternalPressMouse(int _mouse);
+	static extern bool InternalPressMouse(int mouse);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern bool InternalReleaseMouse(int _mouse);
+	static extern bool InternalReleaseMouse(int mouse);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalGetMouseVelocity(out float _x, out float _y);
+	static extern void InternalGetMouseVelocity(out float x, out float y);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalGetMouseWheel(out float _w);
+	static extern void InternalGetMouseWheel(out float w);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalGetMousePosition(out float _x, out float _y);
+	static extern void InternalGetMousePosition(out float x, out float y);
 
 }

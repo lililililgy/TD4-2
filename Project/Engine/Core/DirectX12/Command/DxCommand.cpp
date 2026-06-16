@@ -20,10 +20,10 @@ DxCommand::DxCommand()
 DxCommand::~DxCommand() = default;
 
 
-void DxCommand::Initialize(DxDevice* _dxDevice) {
+void DxCommand::Initialize(DxDevice* dxDevice) {
 	HRESULT result = S_FALSE;
 
-	ID3D12Device* device = _dxDevice->GetDevice();
+	ID3D12Device* device = dxDevice->GetDevice();
 
 	/// ---------------------------------------------------
 	/// command queue

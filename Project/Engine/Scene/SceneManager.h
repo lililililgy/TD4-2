@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -32,23 +32,23 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	SceneManager(EntityComponentSystem* _entityCompnentSystem);
+	SceneManager(EntityComponentSystem* entityCompnentSystem);
 	~SceneManager();
 
 	/// @brief このクラスの初期化
-	void Initialize(Asset::AssetCollection* _assetCollection);
+	void Initialize(Asset::AssetCollection* assetCollection);
 
 	/// @brief シーンの更新
 	void Update();
 
 	/// @brief 次のシーンを設定する
-	/// @param _sceneName 次のシーンの名前
-	void SetNextScene(const std::string& _sceneName);
+	/// @param sceneName 次のシーンの名前
+	void SetNextScene(const std::string& sceneName);
 
 	/// @brief シーンの保存
-	/// @param _name シーン名
-	/// @param _ecsGroup 保存対象のECSGroup
-	void SaveScene(const std::string& _name, class ECSGroup* _ecsGroup);
+	/// @param name シーン名
+	/// @param ecsGroup 保存対象のECSGroup
+	void SaveScene(const std::string& name, class ECSGroup* ecsGroup);
 
 	/// @brief 現在のシーンを保存する
 	void SaveCurrentScene();
@@ -57,12 +57,12 @@ public:
 
 
 	/// @brief シーンを読み込む
-	/// @param _sceneName シーンの名前
-	void LoadScene(const std::string& _sceneName);
+	/// @param sceneName シーンの名前
+	void LoadScene(const std::string& sceneName);
 
 	/// @brief 現在のシーンをリロードする
-	/// @param _isTemporary 一時的なシーンかどうか
-	void ReloadScene(bool _isTemporary);
+	/// @param isTemporary 一時的なシーンかどうか
+	void ReloadScene(bool isTemporary);
 
 
 	/// @brief シーンIOの取得
@@ -79,7 +79,7 @@ public:
 	bool IsDirty() const;
 
 	/// @brief シーンの変更フラグを設定
-	void SetDirty(bool _isDirty);
+	void SetDirty(bool isDirty);
 
 private:
 	/// ===================================================
@@ -87,8 +87,8 @@ private:
 	/// ===================================================
 
 	/// @brief シーンを現在のシーンに移動する
-	/// @param _isTemporary 一時的なシーンかどうか
-	void MoveNextToCurrentScene(bool _isTemporary);
+	/// @param isTemporary 一時的なシーンかどうか
+	void MoveNextToCurrentScene(bool isTemporary);
 
 
 private:
@@ -121,7 +121,7 @@ public:
 
 namespace MonoInternalMethods {
 
-void InternalLoadScene(MonoString* _sceneName);
+void InternalLoadScene(MonoString* sceneName);
 }
 
 } /// ONEngine

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -22,22 +22,22 @@ public:
 	~IndexBuffer();
 
 	/// @brief Bufferを作成する
-	/// @param _indicesSize Indexの数
-	/// @param _dxDevice DxDeviceへのポインタ
-	void Create(size_t _indicesSize, class DxDevice* _dxDevice);
+	/// @param indicesSize Indexの数
+	/// @param dxDevice DxDeviceへのポインタ
+	void Create(size_t indicesSize, class DxDevice* dxDevice);
 
 	/// @brief Indices用のメモリを確保する
-	/// @param _value サイズ
-	void Reserve(size_t _value);
+	/// @param value サイズ
+	void Reserve(size_t value);
 
 	/// @brief Indices用のサイズを変更する
-	/// @param _value サイズ
-	void Resize(size_t _value);
+	/// @param value サイズ
+	void Resize(size_t value);
 
 
 	/// @brief コマンドリストにバインドする
-	/// @param _commandList バインド対象のコマンドリスト
-	void BindForCommandList(ID3D12GraphicsCommandList* _commandList);
+	/// @param commandList バインド対象のコマンドリスト
+	void BindForCommandList(ID3D12GraphicsCommandList* commandList);
 
 
 	/// @brief GPU用にマッピングする
@@ -60,8 +60,8 @@ public:
 
 	const std::vector<uint32_t>& GetIndices() const;
 
-	void SetIndex(size_t _indexIndex, uint32_t _indexValue);
-	void SetIndices(const std::vector<uint32_t>& _indices);
+	void SetIndex(size_t indexIndex, uint32_t indexValue);
+	void SetIndices(const std::vector<uint32_t>& indices);
 
 };
 

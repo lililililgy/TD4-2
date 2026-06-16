@@ -12,9 +12,9 @@ using namespace ONEngine;
 Gamepad::Gamepad() {}
 Gamepad::~Gamepad() {}
 
-void Gamepad::Initialize(IDirectInput8* _directInput, WindowManager* _windowManager) {
+void Gamepad::Initialize(IDirectInput8* directInput, WindowManager* windowManager) {
 
-	HRESULT hr = _directInput->CreateDevice(GUID_SysKeyboard, &gamepadDevice_, NULL);
+	HRESULT hr = directInput->CreateDevice(GUID_SysKeyboard, &gamepadDevice_, NULL);
 	Assert(SUCCEEDED(hr), "Failed to create gamepad device");
 
 	/// 入力データ形式のセット
@@ -28,13 +28,13 @@ void Gamepad::Initialize(IDirectInput8* _directInput, WindowManager* _windowMana
 	*/
 
 	hr = gamepadDevice_->SetCooperativeLevel(
-		_windowManager->GetMainWindow()->GetHwnd(),
+		windowManager->GetMainWindow()->GetHwnd(),
 		DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
 	);
 	Assert(SUCCEEDED(hr), "Failed to set cooperative level for gamepad device");
 }
 
-void Gamepad::Update(Window* /*_window*/) {
+void Gamepad::Update(Window* /*window*/) {
 
 	/// 前フレームの状態を保存
 	prevState_ = state_;

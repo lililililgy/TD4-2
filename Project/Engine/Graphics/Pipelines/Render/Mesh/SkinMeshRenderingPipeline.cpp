@@ -1,4 +1,4 @@
-﻿#include "SkinMeshRenderingPipeline.h"
+#include "SkinMeshRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -13,18 +13,18 @@ using namespace ONEngine;
 #include "Engine/Core/DirectX12/GPUTimeStamp/GPUTimeStamp.h"
 
 
-SkinMeshRenderingPipeline::SkinMeshRenderingPipeline(Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {
+SkinMeshRenderingPipeline::SkinMeshRenderingPipeline(Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {
 }
 
-void SkinMeshRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void SkinMeshRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{
 		/// pipeline create
 
 		/// shader compile
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/Mesh/SkinMesh.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"./Packages/Shader/Render/Mesh/SkinMesh.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -73,33 +73,33 @@ void SkinMeshRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMa
 
 		pipeline_->SetBlendDesc(BlendMode::Normal());
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 
 
 	{
 		/// Buffer
-		instanceDataBuffer_.Create(static_cast<uint32_t>(kMaxInstances), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
+		instanceDataBuffer_.Create(static_cast<uint32_t>(kMaxInstances), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
 		instanceDataCPU_.resize(kMaxInstances);
 	}
 
 
 }
 
-void SkinMeshRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void SkinMeshRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
-	ComponentArray<SkinMeshRenderer>* skinMeshArray = _ecs->GetComponentArray<SkinMeshRenderer>();
+	ComponentArray<SkinMeshRenderer>* skinMeshArray = ecs->GetComponentArray<SkinMeshRenderer>();
 	if (!skinMeshArray || skinMeshArray->GetUsedComponents().empty()) {
 		return;
 	}
 
 	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::SkinMeshRendering);
 
-	ID3D12GraphicsCommandList* cmdList = _dxCommand->GetCommandList();
+	ID3D12GraphicsCommandList* cmdList = dxCommand->GetCommandList();
 	auto& textures = pAssetCollection_->GetTextures();
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	/// 1. インスタンスデータの集約と転送
@@ -135,7 +135,7 @@ void SkinMeshRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _cam
 
 	/// 2. 描画
 	/// ViewProjection Bind
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, ViewProjectionCBV);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, ViewProjectionCBV);
 	
 	/// InstanceData Buffer Bind
 	instanceDataBuffer_.SRVBindForGraphicsCommandList(cmdList, InstanceDataSRV);

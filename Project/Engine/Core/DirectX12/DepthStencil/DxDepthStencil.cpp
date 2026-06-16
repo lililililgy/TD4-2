@@ -17,7 +17,7 @@ DxDepthStencil::DxDepthStencil() {}
 DxDepthStencil::~DxDepthStencil() {}
 
 
-void DxDepthStencil::Initialize(DxDevice* _dxDevice, DxDSVHeap* _dxDsvHeap, DxSRVHeap* _dxSrvHeap) {
+void DxDepthStencil::Initialize(DxDevice* dxDevice, DxDSVHeap* dxDsvHeap, DxSRVHeap* dxSrvHeap) {
 	/// ----- depth stencil 作成 ----- ///
 	
 	{	/// depth stencil resource
@@ -40,7 +40,7 @@ void DxDepthStencil::Initialize(DxDevice* _dxDevice, DxDSVHeap* _dxDsvHeap, DxSR
 		depthClearValue.DepthStencil.Depth        = 1.0f;
 		depthClearValue.Format                    = DXGI_FORMAT_D32_FLOAT;
 
-		HRESULT hr = _dxDevice->GetDevice()->CreateCommittedResource(
+		HRESULT hr = dxDevice->GetDevice()->CreateCommittedResource(
 			&heapProperties,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
@@ -59,10 +59,10 @@ void DxDepthStencil::Initialize(DxDevice* _dxDevice, DxDSVHeap* _dxDsvHeap, DxSR
 		desc.ViewDimension       = D3D12_DSV_DIMENSION_TEXTURE2D;
 		desc.Flags               = D3D12_DSV_FLAG_NONE;
 
-		depthDsvHandle_ = _dxDsvHeap->Allocate();
-		_dxDevice->GetDevice()->CreateDepthStencilView(
+		depthDsvHandle_ = dxDsvHeap->Allocate();
+		dxDevice->GetDevice()->CreateDepthStencilView(
 			depthStencilResource_.Get(), &desc, 
-			_dxDsvHeap->GetCPUDescriptorHandel(depthDsvHandle_)
+			dxDsvHeap->GetCPUDescriptorHandel(depthDsvHandle_)
 		);
 	}
 
@@ -73,10 +73,10 @@ void DxDepthStencil::Initialize(DxDevice* _dxDevice, DxDSVHeap* _dxDsvHeap, DxSR
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		desc.Texture2D.MipLevels = 1;
 	
-		depthSrvHandle_ = _dxSrvHeap->AllocateBuffer();
-		_dxDevice->GetDevice()->CreateShaderResourceView(
+		depthSrvHandle_ = dxSrvHeap->AllocateBuffer();
+		dxDevice->GetDevice()->CreateShaderResourceView(
 			depthStencilResource_.Get(), &desc,
-			_dxSrvHeap->GetCPUDescriptorHandel(depthSrvHandle_)
+			dxSrvHeap->GetCPUDescriptorHandel(depthSrvHandle_)
 		);
 
 	}
@@ -85,7 +85,7 @@ void DxDepthStencil::Initialize(DxDevice* _dxDevice, DxDSVHeap* _dxDsvHeap, DxSR
 	Console::Log("dx depth stencil create success!!");
 }
 
-void DxDepthStencil::CreateBarrierPixelShaderResource(ID3D12GraphicsCommandList* _cmdList) {
+void DxDepthStencil::CreateBarrierPixelShaderResource(ID3D12GraphicsCommandList* cmdList) {
 
 	/// すでにpixel shader resourceなら何もしない
 	if(currentResourceState_ == D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE) {
@@ -101,11 +101,11 @@ void DxDepthStencil::CreateBarrierPixelShaderResource(ID3D12GraphicsCommandList*
 		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE
 	);
 
-	_cmdList->ResourceBarrier(1, &barrier);
+	cmdList->ResourceBarrier(1, &barrier);
 	currentResourceState_ = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
 }
 
-void DxDepthStencil::CreateBarrierDepthWrite(ID3D12GraphicsCommandList* _cmdList) {
+void DxDepthStencil::CreateBarrierDepthWrite(ID3D12GraphicsCommandList* cmdList) {
 
 	/// すでにdepth writeなら何もしない
 	if(currentResourceState_ == D3D12_RESOURCE_STATE_DEPTH_WRITE) {
@@ -120,7 +120,7 @@ void DxDepthStencil::CreateBarrierDepthWrite(ID3D12GraphicsCommandList* _cmdList
 		D3D12_RESOURCE_STATE_DEPTH_WRITE
 	);
 
-	_cmdList->ResourceBarrier(1, &barrier);
+	cmdList->ResourceBarrier(1, &barrier);
 	currentResourceState_ = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 
 }

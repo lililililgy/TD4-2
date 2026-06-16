@@ -26,14 +26,14 @@ class ModifyScriptVariableCommand : public IEditCommand {
 public:
     using VariantValue = std::variant<int, float, double, bool, std::string, ONEngine::Vector2, ONEngine::Vector3, ONEngine::Vector4>;
 
-    ModifyScriptVariableCommand(ONEngine::GameEntity* _entity, const std::string& _scriptName, const std::string& _fieldName, int _monoType, const VariantValue& _oldValue, const VariantValue& _newValue);
+    ModifyScriptVariableCommand(ONEngine::GameEntity* entity, const std::string& scriptName, const std::string& fieldName, int monoType, const VariantValue& oldValue, const VariantValue& newValue);
     ~ModifyScriptVariableCommand() override = default;
 
     EDITOR_STATE Execute() override;
     EDITOR_STATE Undo() override;
 
 private:
-    void ApplyValue(const VariantValue& _value);
+    void ApplyValue(const VariantValue& value);
 
     ONEngine::Guid entityGuid_;
     std::string scriptName_;

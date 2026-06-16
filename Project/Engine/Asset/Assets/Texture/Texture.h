@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <optional>
@@ -74,7 +74,7 @@ public:
 	/// ===================================================
 
 	Texture();
-	Texture(const Vector2& _textureSize);
+	Texture(const Vector2& textureSize);
 	~Texture() override = default;
 
 	/// @brief SRVHandleの空の状態を作成する
@@ -85,40 +85,40 @@ public:
 
 
 	/// @brief UAVTextureとして作成する
-	/// @param _width テクスチャの幅
-	/// @param _height テクスチャの高さ
-	/// @param _dxDevice DxDeviceへのポインタ
-	/// @param _dxSRVHeap DxSRVHeapへのポインタ
-	/// @param _dxgiFormat DXGI_FORMAT
-	void CreateUAVTexture(UINT _width, UINT _height, DxDevice* _dxDevice, DxSRVHeap* _dxSRVHeap, DXGI_FORMAT _dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT);
+	/// @param width テクスチャの幅
+	/// @param height テクスチャの高さ
+	/// @param dxDevice DxDeviceへのポインタ
+	/// @param dxSRVHeap DxSRVHeapへのポインタ
+	/// @param dxgiFormat DXGI_FORMAT
+	void CreateUAVTexture(UINT width, UINT height, DxDevice* dxDevice, DxSRVHeap* dxSRVHeap, DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	/// @brief UAVTexture3Dとして作成する
-	/// @param _width テクスチャの幅
-	/// @param _height テクスチャの高さ
-	/// @param _depth テクスチャの奥行き
-	/// @param _dxDevice DxDeviceへのポインタ
-	/// @param _dxSRVHeap DxSRVHeapへのポインタ
-	/// @param _dxgiFormat DXGI_FORMAT
-	void CreateUAVTexture3DWithUAV(UINT _width, UINT _height, UINT _depth, DxDevice* _dxDevice, DxSRVHeap* _dxSRVHeap, DXGI_FORMAT _dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT);
+	/// @param width テクスチャの幅
+	/// @param height テクスチャの高さ
+	/// @param depth テクスチャの奥行き
+	/// @param dxDevice DxDeviceへのポインタ
+	/// @param dxSRVHeap DxSRVHeapへのポインタ
+	/// @param dxgiFormat DXGI_FORMAT
+	void CreateUAVTexture3DWithUAV(UINT width, UINT height, UINT depth, DxDevice* dxDevice, DxSRVHeap* dxSRVHeap, DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	/// @brief 3Dテクスチャに対してUAVの状態を追加する
-	/// @param _width テクスチャの幅
-	/// @param _height テクスチャの高さ
-	/// @param _depth テクスチャの奥行き
-	/// @param _dxDevice DxDeviceへのポインタ
-	/// @param _dxSRVHeap DxSRVHeapへのポインタ
-	/// @param _dxgiFormat DXGI_FORMAT
-	void CreateUAVTexture3D(UINT _width, UINT _height, UINT _depth, DxDevice* _dxDevice, DxSRVHeap* _dxSRVHeap, DXGI_FORMAT _dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT);
+	/// @param width テクスチャの幅
+	/// @param height テクスチャの高さ
+	/// @param depth テクスチャの奥行き
+	/// @param dxDevice DxDeviceへのポインタ
+	/// @param dxSRVHeap DxSRVHeapへのポインタ
+	/// @param dxgiFormat DXGI_FORMAT
+	void CreateUAVTexture3D(UINT width, UINT height, UINT depth, DxDevice* dxDevice, DxSRVHeap* dxSRVHeap, DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 
 	/// @brief テクスチャをファイルに出力する
-	/// @param _filename ファイル名(パス、拡張子込み)
-	/// @param _dxDevice DxDeviceへのポインタ
-	/// @param _dxCommand DxCommandへのポインタ
-	void OutputTexture(const std::wstring& _filename, DxDevice* _dxDevice, DxCommand* _dxCommand);
-	void OutputTexture3D(const std::wstring& _filename, DxDevice* _dxDevice, DxCommand* _dxCommand);
+	/// @param filename ファイル名(パス、拡張子込み)
+	/// @param dxDevice DxDeviceへのポインタ
+	/// @param dxCommand DxCommandへのポインタ
+	void OutputTexture(const std::wstring& filename, DxDevice* dxDevice, DxCommand* dxCommand);
+	void OutputTexture3D(const std::wstring& filename, DxDevice* dxDevice, DxCommand* dxCommand);
 
-	void ResizeTexture3D(const Vector2& _newSize, UINT _newDepth, DxDevice* _dxDevice, DxCommand* _dxCommand, DxSRVHeap* _dxSRVHeap);
+	void ResizeTexture3D(const Vector2& newSize, UINT newDepth, DxDevice* dxDevice, DxCommand* dxCommand, DxSRVHeap* dxSRVHeap);
 
 private:
 	/// ===================================================
@@ -149,25 +149,25 @@ public:
 
 	/// ----- setters ----- ///
 
-	void SetName(const std::string& _name);
+	void SetName(const std::string& name);
 
 	/// Handle(cpu, gpu, heap index) を設定
-	void SetSRVHandle(const Handle& _handle);
-	void SetUAVHandle(const Handle& _handle);
+	void SetSRVHandle(const Handle& handle);
+	void SetUAVHandle(const Handle& handle);
 
 	/// Handle(cpu, gpu, heap index) を設定
-	void SetSRVHandle(uint32_t _descriptorIndex, D3D12_CPU_DESCRIPTOR_HANDLE _cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle);
-	void SetUAVHandle(uint32_t _descriptorIndex, D3D12_CPU_DESCRIPTOR_HANDLE _cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle);
+	void SetSRVHandle(uint32_t descriptorIndex, D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
+	void SetUAVHandle(uint32_t descriptorIndex, D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
 
 	/// descriptor index, cpu handle, gpu handle を個別に設定
-	void SetSRVDescriptorIndex(uint32_t _index);
-	void SetSRVCPUHandle(D3D12_CPU_DESCRIPTOR_HANDLE _cpuHandle);
-	void SetSRVGPUHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle);
+	void SetSRVDescriptorIndex(uint32_t index);
+	void SetSRVCPUHandle(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle);
+	void SetSRVGPUHandle(D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
 
 	/// descriptor index, cpu handle, gpu handle を個別に設定
-	void SetUAVDescriptorIndex(uint32_t _index);
-	void SetUAVCPUHandle(D3D12_CPU_DESCRIPTOR_HANDLE _cpuHandle);
-	void SetUAVGPUHandle(D3D12_GPU_DESCRIPTOR_HANDLE _gpuHandle);
+	void SetUAVDescriptorIndex(uint32_t index);
+	void SetUAVCPUHandle(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle);
+	void SetUAVGPUHandle(D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
 
 
 	/// ----- getters ----- ///
@@ -197,18 +197,18 @@ public:
 
 
 /// @brief TextureをPNG形式で保存する
-/// @param _filename ファイル名
-/// @param _width テクスチャの幅
-/// @param _height テクスチャの高さ
-/// @param _overwrite 上書き保存するかどうか
-void SaveTextureToPNG(const std::wstring& _filename, size_t _width, size_t _height, bool _overwrite);
+/// @param filename ファイル名
+/// @param width テクスチャの幅
+/// @param height テクスチャの高さ
+/// @param overwrite 上書き保存するかどうか
+void SaveTextureToPNG(const std::wstring& filename, size_t width, size_t height, bool overwrite);
 
 /// @brief テクスチャをDDS形式で保存する
-/// @param _filename ファイル名
-/// @param _width テクスチャの幅
-/// @param _height テクスチャの高さ
-/// @param _depth テクスチャの奥行き
-/// @param _overwrite 上書き保存するかどうか
-void SaveTextureToDDS(const std::wstring& _filename, size_t _width, size_t _height, size_t _depth, bool _overwrite);
+/// @param filename ファイル名
+/// @param width テクスチャの幅
+/// @param height テクスチャの高さ
+/// @param depth テクスチャの奥行き
+/// @param overwrite 上書き保存するかどうか
+void SaveTextureToDDS(const std::wstring& filename, size_t width, size_t height, size_t depth, bool overwrite);
 
 } /// ONEngine

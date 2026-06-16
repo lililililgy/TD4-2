@@ -1,4 +1,4 @@
-﻿#include "Skybox.h"
+#include "Skybox.h"
 
 /// externals
 #include <imgui.h>
@@ -14,8 +14,8 @@ Skybox::Skybox() {
 Skybox::~Skybox() {}
 
 
-void Skybox::SetDDSTexturePath(const std::string& _texturePath) {
-	texturePath_ = _texturePath;
+void Skybox::SetDDSTexturePath(const std::string& texturePath) {
+	texturePath_ = texturePath;
 }
 
 const std::string& Skybox::GetDDSTexturePath() const {
@@ -24,34 +24,34 @@ const std::string& Skybox::GetDDSTexturePath() const {
 
 
 
-void ComponentDebug::SkyboxDebug(const Skybox* _skybox) {
-	if (!_skybox) {
+void ComponentDebug::SkyboxDebug(const Skybox* skybox) {
+	if (!skybox) {
 		return;
 	}
 
-	std::string texturePath = _skybox->GetDDSTexturePath();
+	std::string texturePath = skybox->GetDDSTexturePath();
 	Editor::ImMathf::InputText("Skybox Texture Path", &texturePath, ImGuiInputTextFlags_ReadOnly);
 
 }
 
 
-void ONEngine::from_json(const nlohmann::json& _j, Skybox& _s) {
-	if (_j.contains("enable")) {
-		_s.enable = _j.at("enable").get<int>();
+void ONEngine::from_json(const nlohmann::json& j, Skybox& s) {
+	if (j.contains("enable")) {
+		s.enable = j.at("enable").get<int>();
 	}
 
-	if (_j.contains("texturePath")) {
-		_s.SetDDSTexturePath(_j.at("texturePath").get<std::string>());
+	if (j.contains("texturePath")) {
+		s.SetDDSTexturePath(j.at("texturePath").get<std::string>());
 	} else {
-		_s.SetDDSTexturePath("./Packages/Textures/kloofendal_48d_partly_cloudy_puresky_2k.dds");
+		s.SetDDSTexturePath("./Packages/Textures/kloofendal_48d_partly_cloudy_puresky_2k.dds");
 	}
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const Skybox& _s) {
-	_j = nlohmann::json{
+void ONEngine::to_json(nlohmann::json& j, const Skybox& s) {
+	j = nlohmann::json{
 		{ "type", "Skybox" },
-		{ "enable", _s.enable },
-		{ "texturePath", _s.GetDDSTexturePath() },
+		{ "enable", s.enable },
+		{ "texturePath", s.GetDDSTexturePath() },
 	};
 }
 

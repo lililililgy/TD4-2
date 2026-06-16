@@ -22,11 +22,11 @@ Mouse::Mouse()
 Mouse::~Mouse() = default;
 
 
-void Mouse::Initialize(IDirectInput8* _directInput, WindowManager* _windowManager, Editor::ImGuiManager* _imGuiManager) {
-	pImGuiManager_ = _imGuiManager;
+void Mouse::Initialize(IDirectInput8* directInput, WindowManager* windowManager, Editor::ImGuiManager* imGuiManager) {
+	pImGuiManager_ = imGuiManager;
 	Assert(pImGuiManager_ != nullptr, "pImGuiManager_ == nullptr");
 
-	HRESULT hr = _directInput->CreateDevice(
+	HRESULT hr = directInput->CreateDevice(
 		GUID_SysMouse, &mouse_, NULL);
 
 	Assert(SUCCEEDED(hr), "マウスデバイスの生成に失敗しました");
@@ -43,15 +43,15 @@ void Mouse::Initialize(IDirectInput8* _directInput, WindowManager* _windowManage
 	*/
 
 	hr = mouse_->SetCooperativeLevel(
-		_windowManager->GetMainWindow()->GetHwnd(),
+		windowManager->GetMainWindow()->GetHwnd(),
 		DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
 	);
 	Assert(SUCCEEDED(hr), "マウスデバイスの生成に失敗しました");
 }
 
-void Mouse::Update(Window* _window) {
+void Mouse::Update(Window* window) {
 	mouse_->SetCooperativeLevel(
-		_window->GetHwnd(),
+		window->GetHwnd(),
 		DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
 	);
 
@@ -62,7 +62,7 @@ void Mouse::Update(Window* _window) {
 
 	POINT mousePos{};
 	GetCursorPos(&mousePos);
-	ScreenToClient(_window->GetHwnd(), &mousePos);
+	ScreenToClient(window->GetHwnd(), &mousePos);
 
 	position_ = Vector2(
 		static_cast<float>(mousePos.x),
@@ -77,8 +77,8 @@ void Mouse::Update(Window* _window) {
 	wheel_ = static_cast<float>(state_.lZ);
 }
 
-const Vector2& Mouse::GetImGuiImageMousePosNormalized(const std::string& _name) {
-	const Editor::ImGuiSceneImageInfo* imageInfo = pImGuiManager_->GetSceneImageInfo(_name);
+const Vector2& Mouse::GetImGuiImageMousePosNormalized(const std::string& name) {
+	const Editor::ImGuiSceneImageInfo* imageInfo = pImGuiManager_->GetSceneImageInfo(name);
 	/// imageInfoが見つからない場合は、デフォルトの位置を返す
 	if (!imageInfo) {
 		static Vector2 defaultPosition(0.0f, 0.0f);
@@ -108,8 +108,8 @@ const Vector2& Mouse::GetImGuiImageMousePosNormalized(const std::string& _name) 
 	return imageMousePosition;
 }
 
-const Vector2& Mouse::GetImGuiImagePos(const std::string& _name) {
-	const Editor::ImGuiSceneImageInfo* imageInfo = pImGuiManager_->GetSceneImageInfo(_name);
+const Vector2& Mouse::GetImGuiImagePos(const std::string& name) {
+	const Editor::ImGuiSceneImageInfo* imageInfo = pImGuiManager_->GetSceneImageInfo(name);
 	/// imageInfoが見つからない場合は、デフォルトの位置を返す
 	if (!imageInfo) {
 		static Vector2 defaultPosition(0.0f, 0.0f);
@@ -122,8 +122,8 @@ const Vector2& Mouse::GetImGuiImagePos(const std::string& _name) {
 	return imageMousePosition;
 }
 
-const Vector2& Mouse::GetImGuiImageSize(const std::string& _name) {
-	const Editor::ImGuiSceneImageInfo* imageInfo = pImGuiManager_->GetSceneImageInfo(_name);
+const Vector2& Mouse::GetImGuiImageSize(const std::string& name) {
+	const Editor::ImGuiSceneImageInfo* imageInfo = pImGuiManager_->GetSceneImageInfo(name);
 	/// imageInfoが見つからない場合は、デフォルトのサイズを返す
 	if (!imageInfo) {
 		static Vector2 defaultSize(0.0f, 0.0f);

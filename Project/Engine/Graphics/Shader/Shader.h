@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// windows
 #include <Windows.h>
@@ -39,16 +39,16 @@ public:
 	Shader();
 	~Shader();
 
-	void Initialize(class ShaderCompiler* _compiler);
+	void Initialize(class ShaderCompiler* compiler);
 
 
 	/// <summary>
 	/// shaderのコンパイル
 	/// </summary>
-	/// <param name="_filePath"></param>
-	/// <param name="_profile"></param>
+	/// <param name="filePath"></param>
+	/// <param name="profile"></param>
 	/// <returns></returns>
-	bool CompileShader(const std::wstring& _filePath, const wchar_t* _profile, Type _type, const std::wstring& _entryPoint = L"main");
+	bool CompileShader(const std::wstring& filePath, const wchar_t* profile, Type type, const std::wstring& entryPoint = L"main");
 
 
 public:

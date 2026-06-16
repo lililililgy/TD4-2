@@ -1,4 +1,4 @@
-﻿#include "ShaderLoader.h"
+#include "ShaderLoader.h"
 
 /// std
 #include <fstream>
@@ -27,11 +27,11 @@ std::optional<Shader> AssetLoader<Shader>::Reload(const std::string& filepath, S
 	return Load(filepath, meta);
 }
 
-Meta<Shader::MetaData> AssetLoader<Shader>::GetMetaData(const std::string& _filepath) {
+Meta<Shader::MetaData> AssetLoader<Shader>::GetMetaData(const std::string& filepath) {
 	Meta<Shader::MetaData> res{};
 
-	const std::string metaPath = _filepath + ".meta";
-	res.base = LoadOrGenerateMetaBase(metaPath, _filepath);
+	const std::string metaPath = filepath + ".meta";
+	res.base = LoadOrGenerateMetaBase(metaPath, filepath);
 
 	nlohmann::json j;
 	std::ifstream ifs(metaPath);

@@ -1,4 +1,4 @@
-﻿#include "DragDrop.h"
+#include "DragDrop.h"
 
 /// externals
 #include <imgui.h>
@@ -9,16 +9,16 @@
 
 using namespace Editor;
 
-void Editor::DragDrop::SetDragDropPayload(const std::string& _filepath, const ONEngine::Guid& _guid, ONEngine::Asset::AssetCollection* _ac) {
+void Editor::DragDrop::SetDragDropPayload(const std::string& filepath, const ONEngine::Guid& guid, ONEngine::Asset::AssetCollection* ac) {
 	if(ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
 		static AssetPayload payload;
-		payload.filePath = _filepath;
-		payload.guid = _ac->GetAssetGuidFromPath(payload.filePath);
+		payload.filePath = filepath;
+		payload.guid = ac->GetAssetGuidFromPath(payload.filePath);
 
 		/// 持っているアセットのタイプに応じてプレビューを表示
-		ONEngine::Asset::AssetType type = _ac->GetAssetTypeFromGuid(payload.guid);
+		ONEngine::Asset::AssetType type = ac->GetAssetTypeFromGuid(payload.guid);
 		if(type == ONEngine::Asset::AssetType::Texture) {
-			ONEngine::Asset::Texture* tex = _ac->GetTexture(payload.filePath);
+			ONEngine::Asset::Texture* tex = ac->GetTexture(payload.filePath);
 			if(tex) {
 				const float previewSize = 64.0f;
 

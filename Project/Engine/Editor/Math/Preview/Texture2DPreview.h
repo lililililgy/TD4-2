@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/Asset/Assets/Texture/Texture.h"
@@ -6,6 +6,6 @@
 
 namespace Editor {
 
-void ShowTexture2DPreview(const std::string& _name, ONEngine::Asset::Texture* _texture, const ONEngine::Vector2& _textureSize, float _previewFactor);
+void ShowTexture2DPreview(const std::string& name, ONEngine::Asset::Texture* texture, const ONEngine::Vector2& textureSize, float previewFactor);
 
 } /// namespace Editor

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/TerrainVertex.h"
@@ -44,11 +44,11 @@ public:
 	TerrainVertexEditorCompute();
 	~TerrainVertexEditorCompute() override;
 
-	void Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) override;
+	void Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) override;
 	void Execute(
-		ONEngine::EntityComponentSystem* _ecs,
-		ONEngine::DxCommand* _dxCommand,
-		ONEngine::Asset::AssetCollection* _assetCollection
+		ONEngine::EntityComponentSystem* ecs,
+		ONEngine::DxCommand* dxCommand,
+		ONEngine::Asset::AssetCollection* assetCollection
 	) override;
 
 private:

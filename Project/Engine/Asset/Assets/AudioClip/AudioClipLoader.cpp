@@ -1,4 +1,4 @@
-﻿#include "AudioClipLoader.h"
+#include "AudioClipLoader.h"
 
 /// std
 #include <fstream>
@@ -22,7 +22,7 @@
 
 namespace ONEngine::Asset {
 
-std::optional<AudioClip> AssetLoader<AudioClip>::Load(const std::string& _filepath, Meta<AudioClip::MetaData> meta) {
+std::optional<AudioClip> AssetLoader<AudioClip>::Load(const std::string& filepath, Meta<AudioClip::MetaData> meta) {
 	/// ----- オーディオクリップの読み込み ----- ///
 
 	/// Media Foundationの初期化 (一度だけ実行)
@@ -33,13 +33,13 @@ std::optional<AudioClip> AssetLoader<AudioClip>::Load(const std::string& _filepa
 	}
 
 	/// ファイルが存在するのかチェックする
-	if(!std::filesystem::exists(_filepath)) {
-		Console::LogError("[Load Failed] [AudioClip] - File not found: \"" + _filepath + "\"");
+	if(!std::filesystem::exists(filepath)) {
+		Console::LogError("[Load Failed] [AudioClip] - File not found: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
 	/// パスをWindows形式（バックスラッシュ）に変換
-	std::string fixedPath = _filepath;
+	std::string fixedPath = filepath;
 	std::replace(fixedPath.begin(), fixedPath.end(), '/', '\\');
 
 	/// wstringに変換
@@ -50,7 +50,7 @@ std::optional<AudioClip> AssetLoader<AudioClip>::Load(const std::string& _filepa
 	ComPtr<IMFSourceReader> sourceReader;
 	result = MFCreateSourceReaderFromURL(filePathW.c_str(), nullptr, &sourceReader);
 	if(!SUCCEEDED(result)) {
-		Console::LogError(std::format("[Load Failed] [AudioClip] - MFCreateSourceReaderFromURL failed (HRESULT: 0x{:08X}): \"{}\"", (uint32_t)result, _filepath));
+		Console::LogError(std::format("[Load Failed] [AudioClip] - MFCreateSourceReaderFromURL failed (HRESULT: 0x{:08X}): \"{}\"", (uint32_t)result, filepath));
 		return std::nullopt;
 	}
 
@@ -61,7 +61,7 @@ std::optional<AudioClip> AssetLoader<AudioClip>::Load(const std::string& _filepa
 	audioType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
 	result = sourceReader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, audioType.Get());
 	if(!SUCCEEDED(result)) {
-		Console::LogError("[Load Failed] [AudioClip] - SetCurrentMediaType failed: \"" + _filepath + "\"");
+		Console::LogError("[Load Failed] [AudioClip] - SetCurrentMediaType failed: \"" + filepath + "\"");
 		return std::nullopt;
 	}
 
@@ -123,21 +123,21 @@ std::optional<AudioClip> AssetLoader<AudioClip>::Load(const std::string& _filepa
 	audioClip.guid = meta.base.guid;
 	audioClip.soundData_ = std::move(soundData);
 
-	Console::Log("[Load] [AudioClip] - path:\"" + _filepath + "\"");
+	Console::Log("[Load] [AudioClip] - path:\"" + filepath + "\"");
 
 	return std::move(audioClip);
 }
 
-std::optional<AudioClip> AssetLoader<AudioClip>::Reload(const std::string& _filepath, AudioClip* /*_src*/, Meta<AudioClip::MetaData> meta) {
-	return std::move(Load(_filepath, meta));
+std::optional<AudioClip> AssetLoader<AudioClip>::Reload(const std::string& filepath, AudioClip* /*src*/, Meta<AudioClip::MetaData> meta) {
+	return std::move(Load(filepath, meta));
 }
 
 
-Meta<AudioClip::MetaData> AssetLoader<AudioClip>::GetMetaData(const std::string& _filepath) {
+Meta<AudioClip::MetaData> AssetLoader<AudioClip>::GetMetaData(const std::string& filepath) {
 	Meta<AudioClip::MetaData> res{};
 
-	const std::string metaPath = _filepath + ".meta";
-	res.base = LoadOrGenerateMetaBase(metaPath, _filepath);
+	const std::string metaPath = filepath + ".meta";
+	res.base = LoadOrGenerateMetaBase(metaPath, filepath);
 
 	nlohmann::json j;
 	std::ifstream ifs(metaPath);

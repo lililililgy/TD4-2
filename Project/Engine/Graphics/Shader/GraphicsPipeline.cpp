@@ -1,4 +1,4 @@
-﻿#include "GraphicsPipeline.h"
+#include "GraphicsPipeline.h"
 
 using namespace ONEngine;
 
@@ -41,97 +41,97 @@ GraphicsPipeline::GraphicsPipeline() {
 }
 GraphicsPipeline::~GraphicsPipeline() {}
 
-void GraphicsPipeline::CreatePipeline(DxDevice* _dxDevice) {
+void GraphicsPipeline::CreatePipeline(DxDevice* dxDevice) {
 	/// root signatureとpipeline state objectを生成する
-	CreateRootSignature(_dxDevice);
+	CreateRootSignature(dxDevice);
 
 	if (pShader_->GetMS() != nullptr) {
-		CreateMeshPipelineStateObject(_dxDevice);
+		CreateMeshPipelineStateObject(dxDevice);
 	} else {
-		CreatePipelineStateObject(_dxDevice);
+		CreatePipelineStateObject(dxDevice);
 	}
 }
 
 
-void GraphicsPipeline::SetShader(Shader* _shader) {
-	pShader_ = _shader;
+void GraphicsPipeline::SetShader(Shader* shader) {
+	pShader_ = shader;
 }
 
-void GraphicsPipeline::AddInputElement(const std::string& _semanticName, uint32_t _semanticIndex, DXGI_FORMAT _format, UINT _inputSlot) {
+void GraphicsPipeline::AddInputElement(const std::string& semanticName, uint32_t semanticIndex, DXGI_FORMAT format, UINT inputSlot) {
 	/// ----- Input Elementを追加 ----- ///
 
 	D3D12_INPUT_ELEMENT_DESC element = {};
-	element.SemanticName = _semanticName.c_str();
-	element.SemanticIndex = _semanticIndex;
-	element.Format = _format;
+	element.SemanticName = semanticName.c_str();
+	element.SemanticIndex = semanticIndex;
+	element.Format = format;
 	element.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	element.InputSlot = _inputSlot;
+	element.InputSlot = inputSlot;
 
 	inputElements_.push_back(element);
-	semanticNames_.push_back(_semanticName);
+	semanticNames_.push_back(semanticName);
 }
 
-void GraphicsPipeline::AddCBV(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister) {
+void GraphicsPipeline::AddCBV(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister) {
 	/// ----- Constant Buffer Viewを追加 ----- ///
 
 	D3D12_ROOT_PARAMETER parameter{};
 	parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	parameter.ShaderVisibility = _shaderVisibility;
-	parameter.Descriptor.ShaderRegister = _shaderRegister;
+	parameter.ShaderVisibility = shaderVisibility;
+	parameter.Descriptor.ShaderRegister = shaderRegister;
 
 	rootParameters_.push_back(parameter);
 }
 
-void GraphicsPipeline::AddSRV(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister) {
+void GraphicsPipeline::AddSRV(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister) {
 	/// ----- Shader Resource Viewを追加 ----- ///
 
 	D3D12_ROOT_PARAMETER parameter{};
 	parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
-	parameter.ShaderVisibility = _shaderVisibility;
-	parameter.Descriptor.ShaderRegister = _shaderRegister;
+	parameter.ShaderVisibility = shaderVisibility;
+	parameter.Descriptor.ShaderRegister = shaderRegister;
 
 	rootParameters_.push_back(parameter);
 }
 
-void GraphicsPipeline::Add32BitConstant(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister, uint32_t _num32bitValue) {
+void GraphicsPipeline::Add32BitConstant(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister, uint32_t num32bitValue) {
 	/// ----- 32bit定数を追加 ----- ///
 
 	D3D12_ROOT_PARAMETER parameter{};
 	parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
-	parameter.ShaderVisibility = _shaderVisibility;
-	parameter.Descriptor.ShaderRegister = _shaderRegister;
-	parameter.Constants.Num32BitValues = _num32bitValue;
+	parameter.ShaderVisibility = shaderVisibility;
+	parameter.Descriptor.ShaderRegister = shaderRegister;
+	parameter.Constants.Num32BitValues = num32bitValue;
 
 	rootParameters_.push_back(parameter);
 }
 
-void GraphicsPipeline::AddDescriptorRange(uint32_t _baseShaderRegister, uint32_t _numDescriptor, D3D12_DESCRIPTOR_RANGE_TYPE  _rangeType) {
+void GraphicsPipeline::AddDescriptorRange(uint32_t baseShaderRegister, uint32_t numDescriptor, D3D12_DESCRIPTOR_RANGE_TYPE  rangeType) {
 	/// ----- Descriptor Rangeを追加 ----- ///
 
 	D3D12_DESCRIPTOR_RANGE range{};
-	range.BaseShaderRegister = _baseShaderRegister;
-	range.NumDescriptors = _numDescriptor;
-	range.RangeType = _rangeType;
+	range.BaseShaderRegister = baseShaderRegister;
+	range.NumDescriptors = numDescriptor;
+	range.RangeType = rangeType;
 	range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	descriptorRanges_.push_back(range);
 }
 
-void GraphicsPipeline::AddDescriptorTable(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _descriptorIndex) {
+void GraphicsPipeline::AddDescriptorTable(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t descriptorIndex) {
 	/// ----- Descriptor Tableを追加 ----- ///
 
-	Assert(descriptorRanges_.size() >= _descriptorIndex, "out of range...");
+	Assert(descriptorRanges_.size() >= descriptorIndex, "out of range...");
 
 	D3D12_ROOT_PARAMETER parameter{};
 	parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	parameter.ShaderVisibility = _shaderVisibility;
-	parameter.DescriptorTable.pDescriptorRanges = &descriptorRanges_[_descriptorIndex];
+	parameter.ShaderVisibility = shaderVisibility;
+	parameter.DescriptorTable.pDescriptorRanges = &descriptorRanges_[descriptorIndex];
 	parameter.DescriptorTable.NumDescriptorRanges = 1;
 
 	rootParameters_.push_back(parameter);
 }
 
-void GraphicsPipeline::AddStaticSampler(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister) {
+void GraphicsPipeline::AddStaticSampler(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister) {
 	/// ----- Static Samplerを追加 ----- ///
 
 	D3D12_STATIC_SAMPLER_DESC sampler{};
@@ -141,73 +141,73 @@ void GraphicsPipeline::AddStaticSampler(D3D12_SHADER_VISIBILITY _shaderVisibilit
 	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;     /// 比較しない
 	sampler.MaxLOD = D3D12_FLOAT32_MAX;               /// ありったけのMipMapを使う
-	sampler.ShaderRegister = _shaderRegister;                 /// 使用するRegister番号
-	sampler.ShaderVisibility = _shaderVisibility;
+	sampler.ShaderRegister = shaderRegister;                 /// 使用するRegister番号
+	sampler.ShaderVisibility = shaderVisibility;
 
 	staticSamplers_.push_back(sampler);
 }
 
-void GraphicsPipeline::AddStaticSampler(const D3D12_STATIC_SAMPLER_DESC& _samplerDesc, D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister) {
+void GraphicsPipeline::AddStaticSampler(const D3D12_STATIC_SAMPLER_DESC& samplerDesc, D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister) {
 	/// ----- Static Samplerを追加 ----- ///
 
-	D3D12_STATIC_SAMPLER_DESC sampler = _samplerDesc;
-	sampler.ShaderRegister   = _shaderRegister;
-	sampler.ShaderVisibility = _shaderVisibility;
+	D3D12_STATIC_SAMPLER_DESC sampler = samplerDesc;
+	sampler.ShaderRegister   = shaderRegister;
+	sampler.ShaderVisibility = shaderVisibility;
 
 	staticSamplers_.push_back(sampler);
 }
 
-void GraphicsPipeline::SetFillMode(D3D12_FILL_MODE _fillMode) {
-	rasterizerDesc_.FillMode = _fillMode;
+void GraphicsPipeline::SetFillMode(D3D12_FILL_MODE fillMode) {
+	rasterizerDesc_.FillMode = fillMode;
 }
 
-void GraphicsPipeline::SetCullMode(D3D12_CULL_MODE _cullMode) {
-	rasterizerDesc_.CullMode = _cullMode;
+void GraphicsPipeline::SetCullMode(D3D12_CULL_MODE cullMode) {
+	rasterizerDesc_.CullMode = cullMode;
 }
 
-void GraphicsPipeline::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE _topologyType) {
-	primitiveTopologyType_ = _topologyType;
+void GraphicsPipeline::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType) {
+	primitiveTopologyType_ = topologyType;
 }
 
-void GraphicsPipeline::SetRasterizerDesc(const D3D12_RASTERIZER_DESC& _desc) {
-	rasterizerDesc_ = _desc;
+void GraphicsPipeline::SetRasterizerDesc(const D3D12_RASTERIZER_DESC& desc) {
+	rasterizerDesc_ = desc;
 }
 
-void GraphicsPipeline::SetDepthStencilDesc(const D3D12_DEPTH_STENCIL_DESC& _desc) {
-	depthStancilDesc_ = _desc;
+void GraphicsPipeline::SetDepthStencilDesc(const D3D12_DEPTH_STENCIL_DESC& desc) {
+	depthStancilDesc_ = desc;
 }
 
-void GraphicsPipeline::SetBlendDesc(const D3D12_BLEND_DESC& _desc) {
-	blendDesc_ = _desc;
+void GraphicsPipeline::SetBlendDesc(const D3D12_BLEND_DESC& desc) {
+	blendDesc_ = desc;
 }
 
-void GraphicsPipeline::SetRTVNum(uint32_t _rtvNum) {
-	Assert(_rtvNum <= 8, "the number of rtv is less than 8"); /// RTVの数は8以下
-	rtvNum_ = _rtvNum;
+void GraphicsPipeline::SetRTVNum(uint32_t rtvNum) {
+	Assert(rtvNum <= 8, "the number of rtv is less than 8"); /// RTVの数は8以下
+	rtvNum_ = rtvNum;
 }
 
-void GraphicsPipeline::SetRTVFormats(const std::vector<DXGI_FORMAT>& _rtvFormats) {
-	Assert(_rtvFormats.size() <= 8, "the number of rtv is less than 8"); /// RTVの数は8以下
-	rtvFormats_ = _rtvFormats;
+void GraphicsPipeline::SetRTVFormats(const std::vector<DXGI_FORMAT>& rtvFormats) {
+	Assert(rtvFormats.size() <= 8, "the number of rtv is less than 8"); /// RTVの数は8以下
+	rtvFormats_ = rtvFormats;
 }
 
-void GraphicsPipeline::SetRTVFormat(DXGI_FORMAT _rtvFormat, uint32_t _rtvIndex) {
-	Assert(_rtvIndex < rtvNum_, "out of range...");
-	if (rtvFormats_.size() <= _rtvIndex) {
-		rtvFormats_.resize(_rtvIndex + 1);
+void GraphicsPipeline::SetRTVFormat(DXGI_FORMAT rtvFormat, uint32_t rtvIndex) {
+	Assert(rtvIndex < rtvNum_, "out of range...");
+	if (rtvFormats_.size() <= rtvIndex) {
+		rtvFormats_.resize(rtvIndex + 1);
 	}
-	rtvFormats_[_rtvIndex] = _rtvFormat;
+	rtvFormats_[rtvIndex] = rtvFormat;
 }
 
-void GraphicsPipeline::SetPipelineStateForCommandList(DxCommand* _dxCommand) {
-	_dxCommand->GetCommandList()->SetPipelineState(pipelineState_.Get());
-	_dxCommand->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
+void GraphicsPipeline::SetPipelineStateForCommandList(DxCommand* dxCommand) {
+	dxCommand->GetCommandList()->SetPipelineState(pipelineState_.Get());
+	dxCommand->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
 }
 
 
 
 
-void GraphicsPipeline::CreateRootSignature(DxDevice* _dxDevice) {
+void GraphicsPipeline::CreateRootSignature(DxDevice* dxDevice) {
 	/// ----- root signatureの生成 ----- ///
 
 	HRESULT hr = S_FALSE;
@@ -232,7 +232,7 @@ void GraphicsPipeline::CreateRootSignature(DxDevice* _dxDevice) {
 	}
 
 	/// バイナリを元に生成
-	hr = _dxDevice->GetDevice()->CreateRootSignature(
+	hr = dxDevice->GetDevice()->CreateRootSignature(
 		0, signatureBlob->GetBufferPointer(),
 		signatureBlob->GetBufferSize(),
 		IID_PPV_ARGS(&rootSignature_)
@@ -241,7 +241,7 @@ void GraphicsPipeline::CreateRootSignature(DxDevice* _dxDevice) {
 	Assert(SUCCEEDED(hr), "error...");
 }
 
-void GraphicsPipeline::CreatePipelineStateObject(DxDevice* _dxDevice) {
+void GraphicsPipeline::CreatePipelineStateObject(DxDevice* dxDevice) {
 	/// ----- pipeline state objectの生成 ----- ///
 
 	/// input layoutの設定
@@ -290,7 +290,7 @@ void GraphicsPipeline::CreatePipelineStateObject(DxDevice* _dxDevice) {
 
 
 	/// pipeline state objectの生成
-	HRESULT result = _dxDevice->GetDevice()->CreateGraphicsPipelineState(
+	HRESULT result = dxDevice->GetDevice()->CreateGraphicsPipelineState(
 		&desc, IID_PPV_ARGS(&pipelineState_)
 	);
 
@@ -300,7 +300,7 @@ void GraphicsPipeline::CreatePipelineStateObject(DxDevice* _dxDevice) {
 	}
 }
 
-void GraphicsPipeline::CreateMeshPipelineStateObject(DxDevice* _dxDevice) {
+void GraphicsPipeline::CreateMeshPipelineStateObject(DxDevice* dxDevice) {
 	/// ----- pipeline state objectの生成(MeshShader用) ----- ///
 
 	D3DX12_MESH_SHADER_PIPELINE_STATE_DESC meshDesc = {};
@@ -350,7 +350,7 @@ void GraphicsPipeline::CreateMeshPipelineStateObject(DxDevice* _dxDevice) {
 	streamDesc.SizeInBytes = sizeof(psoStream);
 
 	/// pipeline state objectの生成
-	HRESULT result = _dxDevice->GetDevice10()->CreatePipelineState(
+	HRESULT result = dxDevice->GetDevice10()->CreatePipelineState(
 		&streamDesc, IID_PPV_ARGS(&pipelineState_)
 	);
 

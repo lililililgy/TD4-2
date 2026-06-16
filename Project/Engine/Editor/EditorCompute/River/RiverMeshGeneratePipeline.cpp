@@ -1,4 +1,4 @@
-﻿#include "RiverMeshGeneratePipeline.h"
+#include "RiverMeshGeneratePipeline.h"
 
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
@@ -11,13 +11,13 @@ using namespace Editor;
 RiverMeshGeneratePipeline::RiverMeshGeneratePipeline() = default;
 RiverMeshGeneratePipeline::~RiverMeshGeneratePipeline() = default;
 
-void RiverMeshGeneratePipeline::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) {
+void RiverMeshGeneratePipeline::Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) {
 
-	pDxManager_ = _dxm;
+	pDxManager_ = dxm;
 
 	{	/// shader
 		ONEngine::Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Editor/RiverMeshGenerator.cs.hlsl", L"cs_6_6", ONEngine::Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ONEngine::ComputePipeline>();
@@ -34,17 +34,17 @@ void RiverMeshGeneratePipeline::Initialize(ONEngine::ShaderCompiler* _shaderComp
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1); /// UAV_VERTICES
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2); /// UAV_INDICES
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 }
 
-void RiverMeshGeneratePipeline::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* /*_assetCollection*/) {
+void RiverMeshGeneratePipeline::Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* /*assetCollection*/) {
 	/// --------------------------------------------------------------------
 	/// 早期リターンチェック
 	/// --------------------------------------------------------------------
 
-	ONEngine::ECSGroup* ecsGroup = _ecs->GetCurrentGroup();
+	ONEngine::ECSGroup* ecsGroup = ecs->GetCurrentGroup();
 	if (!ecsGroup) {
 		//ONEngine::Console::LogError("RiverMeshGeneratePipeline::Execute: ECSGroup is null");
 		return;
@@ -74,14 +74,14 @@ void RiverMeshGeneratePipeline::Execute(ONEngine::EntityComponentSystem* _ecs, O
 	}
 
 	/// バッファは生成時に毎回作る
-	river->CreateBuffers(pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap(), _dxCommand);
+	river->CreateBuffers(pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap(), dxCommand);
 	river->SetBufferData();
 
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
 	/// bufferの設定
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 	river->GetParamBuffer().BindForComputeCommandList(cmdList, CBV_PARAMS);
 	river->GetControlPointBuffer().SRVBindForComputeCommandList(cmdList, SRV_CONTROL_POINTS);
 	river->GetRwVertices().UAVBindForComputeCommandList(cmdList, UAV_VERTICES);

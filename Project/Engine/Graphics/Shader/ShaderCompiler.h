@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// windows
 #include <Windows.h>
@@ -32,11 +32,11 @@ public:
 	void Initialize();	
 
 	/// @brief HLSLシェーダーのコンパイル
-	/// @param _filePath HLSLファイルのパス
-	/// @param _profile HLSLプロファイル
-	/// @param _entryPoint エントリーポイント関数名 
+	/// @param filePath HLSLファイルのパス
+	/// @param profile HLSLプロファイル
+	/// @param entryPoint エントリーポイント関数名 
 	/// @return コンパイル後のシェーダーブロブ
-	ComPtr<IDxcBlob> CompileShader(const std::wstring& _filePath, const wchar_t* _profile, const std::wstring& _entryPoint);
+	ComPtr<IDxcBlob> CompileShader(const std::wstring& filePath, const wchar_t* profile, const std::wstring& entryPoint);
 
 
 private:

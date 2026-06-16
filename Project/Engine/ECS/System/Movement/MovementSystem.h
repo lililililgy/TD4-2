@@ -9,7 +9,7 @@ public:
     MovementSystem();
     ~MovementSystem() override = default;
 
-    void RuntimeUpdate(class ECSGroup* _ecs) override;
+    void RuntimeUpdate(class ECSGroup* ecs) override;
 };
 
 }

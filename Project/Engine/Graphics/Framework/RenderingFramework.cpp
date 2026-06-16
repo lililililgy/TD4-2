@@ -1,4 +1,4 @@
-﻿#include "RenderingFramework.h"
+#include "RenderingFramework.h"
 
 using namespace ONEngine;
 
@@ -17,15 +17,15 @@ using namespace ONEngine;
 RenderingFramework::RenderingFramework() {}
 RenderingFramework::~RenderingFramework() {}
 
-void RenderingFramework::Initialize(DxManager* _dxm, WindowManager* _windowManager, EntityComponentSystem* _pEntityComponentSystem) {
+void RenderingFramework::Initialize(DxManager* dxm, WindowManager* windowManager, EntityComponentSystem* pEntityComponentSystem) {
 
 	/// shader compilerの初期化
 	shaderCompiler_ = std::make_unique<ShaderCompiler>();
 	shaderCompiler_->Initialize();
 
-	pDxManager_ = _dxm;
-	pWindowManager_ = _windowManager;
-	pEntityComponentSystem_ = _pEntityComponentSystem;
+	pDxManager_ = dxm;
+	pWindowManager_ = windowManager;
+	pEntityComponentSystem_ = pEntityComponentSystem;
 
 	assetCollection_ = std::make_unique<Asset::AssetCollection>();
 	renderingPipelineCollection_ = std::make_unique<RenderingPipelineCollection>(shaderCompiler_.get(), pDxManager_, pEntityComponentSystem_, assetCollection_.get());
@@ -130,9 +130,9 @@ void RenderingFramework::Draw() {
 	DxCommandExeAndReset();
 }
 
-void RenderingFramework::PreDraw(ECSGroup* _ecsGroup) {
-	CameraComponent* camera = _ecsGroup->GetMainCamera();
-	CameraComponent* camera2d = _ecsGroup->GetMainCamera2D();
+void RenderingFramework::PreDraw(ECSGroup* ecsGroup) {
+	CameraComponent* camera = ecsGroup->GetMainCamera();
+	CameraComponent* camera2d = ecsGroup->GetMainCamera2D();
 	renderingPipelineCollection_->PreDrawEntities(camera, camera2d);
 }
 
@@ -376,8 +376,8 @@ Asset::AssetCollection* RenderingFramework::GetAssetCollection() const {
 }
 
 #ifdef DEBUG_MODE
-void RenderingFramework::SetImGuiManager(Editor::ImGuiManager* _imGuiManager) {
-	pImGuiManager_ = _imGuiManager;
+void RenderingFramework::SetImGuiManager(Editor::ImGuiManager* imGuiManager) {
+	pImGuiManager_ = imGuiManager;
 }
 #endif // DEBUG_MODE
 

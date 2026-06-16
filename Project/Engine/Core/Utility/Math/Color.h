@@ -17,11 +17,11 @@ struct Color final {
 	/// ===================================================  
 
 	/// @brief HSVからRGBに変換する
-	/// @param _h 色相
-	/// @param _s 彩度
-	/// @param _v 明度
+	/// @param h 色相
+	/// @param s 彩度
+	/// @param v 明度
 	/// @return RGB
-	static Vector4 HSVtoRGB(float _h, float _s, float _v);
+	static Vector4 HSVtoRGB(float h, float s, float v);
 
 	static const Color kWhite; ///< 白
 	static const Color kBlack; ///< 黒
@@ -33,21 +33,21 @@ struct Color final {
 	/// public : methods  
 	/// ===================================================  
 	Color() = default;
-	Color(const Vector4& _color) : r(_color.x), g(_color.y), b(_color.z), a(_color.w) {}
-	Color(float _r, float _g, float _b, float _a) : r(_r), g(_g), b(_b), a(_a) {}
-	Color(uint32_t _colorCode);
+	Color(const Vector4& color) : r(color.x), g(color.y), b(color.z), a(color.w) {}
+	Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
+	Color(uint32_t colorCode);
 	~Color() = default;
 
 
 	/// @brief HSVからRGBに変換してセットする
-	/// @param _h 色相
-	/// @param _s 彩度
-	/// @param _v 明度
-	void SetHSVtoRGB(float _h, float _s, float _v);
+	/// @param h 色相
+	/// @param s 彩度
+	/// @param v 明度
+	void SetHSVtoRGB(float h, float s, float v);
 
 	/// @brief カラーコードからRGBAに変換してセットする
-	/// @param _colorCode カラーコード 
-	void SetColorCode(uint32_t _colorCode);
+	/// @param colorCode カラーコード 
+	void SetColorCode(uint32_t colorCode);
 
 	/// ===================================================  
 	/// public : objects  

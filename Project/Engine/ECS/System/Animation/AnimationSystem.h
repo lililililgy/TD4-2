@@ -13,11 +13,11 @@ public:
     AnimationSystem() = default;
     ~AnimationSystem() override = default;
 
-    void OutsideOfRuntimeUpdate(class ECSGroup* _ecs) override;
-    void RuntimeUpdate(class ECSGroup* _ecs) override;
+    void OutsideOfRuntimeUpdate(class ECSGroup* ecs) override;
+    void RuntimeUpdate(class ECSGroup* ecs) override;
 
 private:
-    void Update(class ECSGroup* _ecs, float _deltaTime);
+    void Update(class ECSGroup* ecs, float deltaTime);
 };
 
 } /// namespace ONEngine

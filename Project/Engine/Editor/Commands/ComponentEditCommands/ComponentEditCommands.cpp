@@ -1,4 +1,4 @@
-﻿#include "ComponentEditCommands.h"
+#include "ComponentEditCommands.h"
 
 
 /// std
@@ -23,8 +23,8 @@ using namespace Editor;
 /// エンティティのデータ出力コマンド
 /// ////////////////////////////////////////////////
 
-EntityDataOutputCommand::EntityDataOutputCommand(GameEntity* _entity) {
-	pEntity_ = _entity;
+EntityDataOutputCommand::EntityDataOutputCommand(GameEntity* entity) {
+	pEntity_ = entity;
 	outputFilePath_ = "Assets/Entities/" + pEntity_->GetName() + ".entity";
 }
 
@@ -56,7 +56,7 @@ EDITOR_STATE EntityDataOutputCommand::Undo() {
 /// エンティティのデータ入力コマンド
 /// ///////////////////////////////////////////////
 
-EntityDataInputCommand::EntityDataInputCommand(GameEntity* _entity) : pEntity_(_entity) {
+EntityDataInputCommand::EntityDataInputCommand(GameEntity* entity) : pEntity_(entity) {
 	inputFilePath_ = "Assets/Entities/" + pEntity_->GetName() + ".entity";
 }
 
@@ -85,8 +85,8 @@ EDITOR_STATE EntityDataInputCommand::Undo() {
 	return EDITOR_STATE::EDITOR_STATE_FINISH;
 }
 
-void EntityDataInputCommand::SetEntity(GameEntity* _entity) {
-	pEntity_ = _entity;
+void EntityDataInputCommand::SetEntity(GameEntity* entity) {
+	pEntity_ = entity;
 	inputFilePath_ = "Assets/Jsons/" + pEntity_->GetName() + "Components.json";
 }
 
@@ -95,9 +95,9 @@ void EntityDataInputCommand::SetEntity(GameEntity* _entity) {
 /// Componentの追加
 /// ///////////////////////////////////////////////
 
-AddComponentCommand::AddComponentCommand(GameEntity* _entity, const std::string& _componentName) {
-	pEntity_ = _entity;
-	componentName_ = _componentName;
+AddComponentCommand::AddComponentCommand(GameEntity* entity, const std::string& componentName) {
+	pEntity_ = entity;
+	componentName_ = componentName;
 }
 
 EDITOR_STATE AddComponentCommand::Execute() {
@@ -125,8 +125,8 @@ EDITOR_STATE AddComponentCommand::Undo() {
 /// Componentの削除
 /// ///////////////////////////////////////////////
 
-RemoveComponentCommand::RemoveComponentCommand(GameEntity* _entity, const std::string& _componentName, std::unordered_map<size_t, IComponent*>::iterator* _resultItr)
-	: pEntity_(_entity), componentName_(_componentName), pIterator_(_resultItr) {}
+RemoveComponentCommand::RemoveComponentCommand(GameEntity* entity, const std::string& componentName, std::unordered_map<size_t, IComponent*>::iterator* resultItr)
+	: pEntity_(entity), componentName_(componentName), pIterator_(resultItr) {}
 
 
 EDITOR_STATE RemoveComponentCommand::Execute() {
@@ -163,8 +163,8 @@ EDITOR_STATE RemoveComponentCommand::Undo() {
 /// ReloadAllScriptsCommand
 /// ////////////////////////////////////////////////
 
-ReloadAllScriptsCommand::ReloadAllScriptsCommand(ECSGroup* _ecs, SceneManager* _sceneManager)
-	: pEcsGroup_(_ecs), pSceneManager_(_sceneManager) {}
+ReloadAllScriptsCommand::ReloadAllScriptsCommand(ECSGroup* ecs, SceneManager* sceneManager)
+	: pEcsGroup_(ecs), pSceneManager_(sceneManager) {}
 
 EDITOR_STATE ReloadAllScriptsCommand::Execute() {
 

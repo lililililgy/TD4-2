@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -48,7 +48,7 @@ public:
 	static AssetCollection* GetInstance();
 
 	/// @brief 初期化関数
-	/// @param _dxm DxManagerのポインタ
+	/// @param dxm DxManagerのポインタ
 	void Initialize(DxManager* dxm);
 
 	/// 読み込み
@@ -65,14 +65,14 @@ public:
 
 	/// @brief アセットを取得する
 	/// @tparam T 取得したアセットの型
-	/// @param _guid アセットのGuid
+	/// @param guid アセットのGuid
 	/// @return 所得できたアセットのポインタ、見つからなかった場合はnullptr
 	template <IsAsset T>
 	const T* GetAsset(const Guid& guid) const;
 
 	/// @brief アセットのパスを取得する
 	/// @tparam T 取得したアセットの型
-	/// @param _guid アセットのGuid
+	/// @param guid アセットのGuid
 	/// @return 取得出来たアセットのパスの参照
 	template <IsAsset T>
 	const std::string& GetAssetPath(const Guid& guid) const;
@@ -80,24 +80,24 @@ public:
 
 	/// @brief アセットの追加
 	/// @tparam T 追加するアセットの型
-	/// @param _filepath アセットへのファイルパス
-	/// @param _asset 追加するアセットのインスタンス
+	/// @param filepath アセットへのファイルパス
+	/// @param asset 追加するアセットのインスタンス
 	template <IsAsset T>
 	void AddAsset(const std::string& filepath, T&& asset);
 
 	/// @brief guidがアセットの物かチェックする
-	/// @param _guid Guid
+	/// @param guid Guid
 	/// @return true: アセット, false: アセットではない
 	bool IsAsset(const Guid& guid) const;
 
 
 	/// @brief アセットを持っているのかチェックする
-	/// @param _filepath アセットのファイルパス
+	/// @param filepath アセットのファイルパス
 	/// @return true: 持っている, false: 持っていない
 	bool HasAsset(const std::string& filepath);
 
 	/// @brief アセットのリロード
-	/// @param _filepath リロード対象のアセットパス
+	/// @param filepath リロード対象のアセットパス
 	/// @return true: リロード成功, false: リロード失敗
 	bool ReloadAsset(const std::string& filepath);
 
@@ -139,12 +139,12 @@ public:
 	/// ===================================================
 
 	/// @brief アセットのパスからGuidを取得する
-	/// @param _filepath ファイルパス
+	/// @param filepath ファイルパス
 	/// @return 取得したGuidの参照
 	const Guid& GetAssetGuidFromPath(const std::string& filepath) const;
 
 	/// @brief Guidからアセットのタイプを取得する
-	/// @param _guid AssetのGuid
+	/// @param guid AssetのGuid
 	/// @return Assetのタイプ
 	AssetType GetAssetTypeFromGuid(const Guid& guid) const;
 
@@ -166,17 +166,17 @@ public:
 	const std::vector<Texture>& GetTextures() const;
 
 	/// @brief GuidからTextureのインデックスを取得する
-	/// @param _guid 探索対象のGuid
+	/// @param guid 探索対象のGuid
 	/// @return 見つかった場合のインデックス、見つからなかった場合は無効値
 	int32_t GetTextureIndexFromGuid(const Guid& guid) const;
 
 	/// @brief GuidからTextureのパスを取得する
-	/// @param _guid 探索対象のGuid
+	/// @param guid 探索対象のGuid
 	/// @return 見つかった場合のパス、見つからなかった場合は空文字
 	const std::string& GetTexturePath(const Guid& guid) const;
 
 	/// @brief GuidからTextureを取得する
-	/// @param _guid TextureのGuid
+	/// @param guid TextureのGuid
 	/// @return Textureのポインタ、見つからなかった場合はnullptr
 	Texture* GetTextureFromGuid(const Guid& guid) const;
 
@@ -192,14 +192,14 @@ public:
 };
 
 template<IsAsset T>
-inline const T* AssetCollection::GetAsset(const Guid& _guid) const {
-	auto* bundle = GetBundle<T>(GetAssetTypeFromGuid(_guid));
+inline const T* AssetCollection::GetAsset(const Guid& guid) const {
+	auto* bundle = GetBundle<T>(GetAssetTypeFromGuid(guid));
 	if(!bundle) {
 		return nullptr;
 	}
 
 	auto* container = bundle->container.get();
-	int32_t index = container->GetIndex(_guid);
+	int32_t index = container->GetIndex(guid);
 	if(index != -1) {
 		return container->Get(index);
 	}
@@ -208,15 +208,15 @@ inline const T* AssetCollection::GetAsset(const Guid& _guid) const {
 }
 
 template<IsAsset T>
-inline const std::string& AssetCollection::GetAssetPath(const Guid& _guid) const {
-	auto* bundle = GetBundle<T>(GetAssetTypeFromGuid(_guid));
+inline const std::string& AssetCollection::GetAssetPath(const Guid& guid) const {
+	auto* bundle = GetBundle<T>(GetAssetTypeFromGuid(guid));
 	if(!bundle) {
 		static std::string emptyString = "";
 		return emptyString;
 	}
 
 	auto* container = bundle->container.get();
-	int32_t index = container->GetIndex(_guid);
+	int32_t index = container->GetIndex(guid);
 	return container->GetKey(index);
 }
 

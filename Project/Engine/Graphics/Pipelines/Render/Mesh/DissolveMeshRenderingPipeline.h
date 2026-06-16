@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../../Interface/IRenderingPipeline.h"
@@ -49,11 +49,11 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	DissolveMeshRenderingPipeline(Asset::AssetCollection* _ac);
+	DissolveMeshRenderingPipeline(Asset::AssetCollection* ac);
 	~DissolveMeshRenderingPipeline() override = default;
 
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
-	void Draw(ECSGroup* _ecsGroup, CameraComponent* _camera, DxCommand* _dxCommand) override;
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
+	void Draw(ECSGroup* ecsGroup, CameraComponent* camera, DxCommand* dxCommand) override;
 
 
 private:

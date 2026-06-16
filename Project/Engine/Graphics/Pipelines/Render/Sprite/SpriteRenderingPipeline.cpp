@@ -1,4 +1,4 @@
-﻿#include "SpriteRenderingPipeline.h"
+#include "SpriteRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -15,18 +15,18 @@ using namespace ONEngine;
 
 
 
-SpriteRenderingPipeline::SpriteRenderingPipeline(Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {
+SpriteRenderingPipeline::SpriteRenderingPipeline(Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {
 }
 SpriteRenderingPipeline::~SpriteRenderingPipeline() {}
 
 
-void SpriteRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
-	pDxManager_ = _dxm;
+void SpriteRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
+	pDxManager_ = dxm;
 	{	/// pipeline 
 
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 
 		shader.CompileShader(L"Packages/Shader/Render/Sprite/Sprite.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"Packages/Shader/Render/Sprite/Sprite.ps.hlsl", L"ps_6_0", Shader::Type::ps);
@@ -62,7 +62,7 @@ void SpriteRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 
 		pipeline_->SetDepthStencilDesc(DepthNone()); // 2D UIなので深度テストを無効化
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
@@ -86,14 +86,14 @@ void SpriteRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 		const size_t kVertexDataSize = sizeof(VertexData);
 
 		/// vertex buffer
-		vertexBuffer_.CreateResource(_dxm->GetDxDevice(), kVertexDataSize * vertices_.size());
+		vertexBuffer_.CreateResource(dxm->GetDxDevice(), kVertexDataSize * vertices_.size());
 
 		vbv_.BufferLocation = vertexBuffer_.Get()->GetGPUVirtualAddress();
 		vbv_.SizeInBytes = static_cast<UINT>(kVertexDataSize * vertices_.size());
 		vbv_.StrideInBytes = static_cast<UINT>(kVertexDataSize);
 
 		/// index buffer
-		indexBuffer_.CreateResource(_dxm->GetDxDevice(), sizeof(uint32_t) * indices_.size());
+		indexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(uint32_t) * indices_.size());
 
 		ibv_.BufferLocation = indexBuffer_.Get()->GetGPUVirtualAddress();
 		ibv_.SizeInBytes = static_cast<UINT>(sizeof(uint32_t) * indices_.size());
@@ -113,17 +113,17 @@ void SpriteRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 
 
 	{	/// structured buffer
-		transformsBuffer_.Create(static_cast<uint32_t>(kMaxRenderingSpriteCount_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-		materialsBuffer.Create(static_cast<uint32_t>(kMaxRenderingSpriteCount_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
+		transformsBuffer_.Create(static_cast<uint32_t>(kMaxRenderingSpriteCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+		materialsBuffer.Create(static_cast<uint32_t>(kMaxRenderingSpriteCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
 	}
 
 
 }
 
-void SpriteRenderingPipeline::Draw(class ECSGroup* _ecsGroup, CameraComponent* _camera, DxCommand* _dxCommand) {
+void SpriteRenderingPipeline::Draw(class ECSGroup* ecsGroup, CameraComponent* camera, DxCommand* dxCommand) {
 
 	/// SpriteRendererの配列の取得&存在チェック
-	ComponentArray<SpriteRenderer>* spriteRendererArray = _ecsGroup->GetComponentArray<SpriteRenderer>();
+	ComponentArray<SpriteRenderer>* spriteRendererArray = ecsGroup->GetComponentArray<SpriteRenderer>();
 	if (!spriteRendererArray || spriteRendererArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -184,10 +184,10 @@ void SpriteRenderingPipeline::Draw(class ECSGroup* _ecsGroup, CameraComponent* _
 	}
 
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
 	/// settings
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
 	/// vbv, ivb setting
 	cmdList->IASetVertexBuffers(0, 1, &vbv_);
@@ -196,7 +196,7 @@ void SpriteRenderingPipeline::Draw(class ECSGroup* _ecsGroup, CameraComponent* _
 
 
 	/// ROOT_PARAM_VIEW_PROJECTION : 0
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, ROOT_PARAM_VIEW_PROJECTION);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, ROOT_PARAM_VIEW_PROJECTION);
 
 	/// テクスチャ記述子ヒープの開始ハンドルをセットする
 	/// (Shader側で textures[material.baseTextureId] としてアクセスするため)

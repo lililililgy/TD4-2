@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -164,7 +164,7 @@ public:
 	void AssetInspector();
 
 	/// @brief テクスチャのInspector表示
-	/// @param _texture 
+	/// @param texture 
 	void TextureAssetInspector(ONEngine::Asset::Texture* tex);
 
 private:

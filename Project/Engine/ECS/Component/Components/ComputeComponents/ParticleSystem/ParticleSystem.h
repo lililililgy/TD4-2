@@ -33,8 +33,8 @@ namespace ONEngine {
         void Clear();
         void Pause();
 
-        void UpdateTime(float _dt) { playbackTime_ += _dt; }
-        void ResetTime(float _t = 0.0f) { playbackTime_ = _t; }
+        void UpdateTime(float dt) { playbackTime_ += dt; }
+        void ResetTime(float t = 0.0f) { playbackTime_ = t; }
 
         // --- Getters ---
         bool IsPlaying() const { return isPlaying_; }

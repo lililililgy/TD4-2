@@ -7,14 +7,14 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Array/ComponentArray.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
 
-SkinMeshUpdateSystem::SkinMeshUpdateSystem(DxManager* _dxm, Asset::AssetCollection* _assetCollection)
-	: pDxManager_(_dxm), pAssetCollection_(_assetCollection) {
+SkinMeshUpdateSystem::SkinMeshUpdateSystem(DxManager* dxm, Asset::AssetCollection* assetCollection)
+	: pDxManager_(dxm), pAssetCollection_(assetCollection) {
 }
 
-void SkinMeshUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
+void SkinMeshUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 	/// Compの配列を取得＆使用中のCompがなければ終了
-	ComponentArray<SkinMeshRenderer>* skinMeshArray = _ecs->GetComponentArray<SkinMeshRenderer>();
+	ComponentArray<SkinMeshRenderer>* skinMeshArray = ecs->GetComponentArray<SkinMeshRenderer>();
 	if (!skinMeshArray || skinMeshArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -96,46 +96,46 @@ void SkinMeshUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
 
 }
 
-void SkinMeshUpdateSystem::UpdateSkeleton(SkinMeshRenderer* _smr) {
+void SkinMeshUpdateSystem::UpdateSkeleton(SkinMeshRenderer* smr) {
 	/// ------------------------------------
 	/// スケルトンの更新
 	/// ------------------------------------
-	UpdateSkeletonRecursive(_smr, _smr->skeleton_.root, std::nullopt);
+	UpdateSkeletonRecursive(smr, smr->skeleton_.root, std::nullopt);
 }
 
-void SkinMeshUpdateSystem::UpdateSkeletonRecursive(SkinMeshRenderer* _smr, int32_t _jointIndex, const std::optional<int32_t>& _parentIndex) {
-	Skeleton& skeleton = _smr->skeleton_;
-	Joint& joint = skeleton.joints[_jointIndex];
+void SkinMeshUpdateSystem::UpdateSkeletonRecursive(SkinMeshRenderer* smr, int32_t jointIndex, const std::optional<int32_t>& parentIndex) {
+	Skeleton& skeleton = smr->skeleton_;
+	Joint& joint = skeleton.joints[jointIndex];
 
 	/// アニメーションの適用
-	auto it = _smr->nodeAnimationMap_.find(joint.nameHash);
-	if (it != _smr->nodeAnimationMap_.end()) {
+	auto it = smr->nodeAnimationMap_.find(joint.nameHash);
+	if (it != smr->nodeAnimationMap_.end()) {
 		NodeAnimation& animation = it->second;
-		if (!animation.translate.empty()) { joint.transform.position = ANIME_MATH::CalculateValue(animation.translate, _smr->animationTime_); }
-		if (!animation.rotate.empty()) { joint.transform.rotate = ANIME_MATH::CalculateValue(animation.rotate, _smr->animationTime_); }
-		if (!animation.scale.empty()) { joint.transform.scale = ANIME_MATH::CalculateValue(animation.scale, _smr->animationTime_); }
+		if (!animation.translate.empty()) { joint.transform.position = ANIME_MATH::CalculateValue(animation.translate, smr->animationTime_); }
+		if (!animation.rotate.empty()) { joint.transform.rotate = ANIME_MATH::CalculateValue(animation.rotate, smr->animationTime_); }
+		if (!animation.scale.empty()) { joint.transform.scale = ANIME_MATH::CalculateValue(animation.scale, smr->animationTime_); }
 	}
 	joint.transform.Update();
 
 	/// スケルトン空間行列の計算 (Local * Parent)
-	if (_parentIndex) {
-		joint.matSkeletonSpace = joint.transform.matWorld * skeleton.joints[*_parentIndex].matSkeletonSpace;
+	if (parentIndex) {
+		joint.matSkeletonSpace = joint.transform.matWorld * skeleton.joints[*parentIndex].matSkeletonSpace;
 	} else {
 		joint.matSkeletonSpace = joint.transform.matWorld;
 	}
 
 	/// ワールド行列の計算
-	joint.matWorld = joint.matSkeletonSpace * _smr->GetOwner()->GetTransform()->matWorld;
+	joint.matWorld = joint.matSkeletonSpace * smr->GetOwner()->GetTransform()->matWorld;
 
 	/// 子の更新
 	for (int32_t childIndex : joint.children) {
-		UpdateSkeletonRecursive(_smr, childIndex, _jointIndex);
+		UpdateSkeletonRecursive(smr, childIndex, jointIndex);
 	}
 }
 
-void SkinMeshUpdateSystem::UpdateSkinCluster(SkinMeshRenderer* _smr) {
-	Skeleton& skeleton = _smr->skeleton_;
-	SkinCluster& skinCluster = _smr->skinCluster_.value();
+void SkinMeshUpdateSystem::UpdateSkinCluster(SkinMeshRenderer* smr) {
+	Skeleton& skeleton = smr->skeleton_;
+	SkinCluster& skinCluster = smr->skinCluster_.value();
 
 
 	/// ------------------------------------

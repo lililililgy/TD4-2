@@ -1,4 +1,4 @@
-﻿#include "EntityCollection.h"
+#include "EntityCollection.h"
 #include <nlohmann/json.hpp>
 
 using namespace ONEngine;
@@ -15,8 +15,8 @@ using namespace ONEngine;
 /// ecs
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 
-EntityCollection::EntityCollection(ECSGroup* _ecsGroup, DxManager* _dxm)
-	: pEcsGroup_(_ecsGroup), pDxManager_(_dxm) {
+EntityCollection::EntityCollection(ECSGroup* ecsGroup, DxManager* dxm)
+	: pEcsGroup_(ecsGroup), pDxManager_(dxm) {
 	mainCamera_ = nullptr;
 	mainCamera2D_ = nullptr;
 	pDxDevice_ = pDxManager_->GetDxDevice();
@@ -27,7 +27,7 @@ EntityCollection::EntityCollection(ECSGroup* _ecsGroup, DxManager* _dxm)
 
 EntityCollection::~EntityCollection() {}
 
-GameEntity* EntityCollection::GenerateEntity(const Guid& _guid, bool _isRuntime) {
+GameEntity* EntityCollection::GenerateEntity(const Guid& guid, bool isRuntime) {
 	Console::LogInfo("[SOURCE_DETECTOR] Engine creating Entity (Internal)");
 	auto entity = std::make_unique<GameEntity>();
 	if (entity) {
@@ -36,20 +36,20 @@ GameEntity* EntityCollection::GenerateEntity(const Guid& _guid, bool _isRuntime)
 		/// 初期化
 		GameEntity* entityPtr = entities_.back().get();
 		entityPtr->pEcsGroup_ = pEcsGroup_;
-		entityPtr->id_ = NewEntityID(_isRuntime);
-		entityPtr->guid_ = _guid;
+		entityPtr->id_ = NewEntityID(isRuntime);
+		entityPtr->guid_ = guid;
 		entityPtr->Awake();
 
-		guidEntityMap_[_guid] = entityPtr;
+		guidEntityMap_[guid] = entityPtr;
 
 		return entities_.back().get();
 	}
 	return nullptr;
 }
 
-void EntityCollection::RemoveEntity(GameEntity* _entity, bool _deleteChildren) {
+void EntityCollection::RemoveEntity(GameEntity* entity, bool deleteChildren) {
 
-	if (_entity == nullptr) {
+	if (entity == nullptr) {
 		return;
 	}
 
@@ -57,13 +57,13 @@ void EntityCollection::RemoveEntity(GameEntity* _entity, bool _deleteChildren) {
 	/// 破棄可能かチェック
 	/// ------------------------------
 	auto doNotDestroyEntityItr = std::find_if(doNotDestroyEntities_.begin(), doNotDestroyEntities_.end(),
-		[&_entity](GameEntity* entity) {
-			return entity == _entity;
+		[&entity](GameEntity* e) {
+			return e == entity;
 		}
 	);
 
 	if (doNotDestroyEntityItr != doNotDestroyEntities_.end()) {
-		Console::Log("Cannot remove entity: " + _entity->GetName() + " because it is marked as do not destroy.");
+		Console::Log("Cannot remove entity: " + entity->GetName() + " because it is marked as do not destroy.");
 		return;
 	}
 
@@ -73,31 +73,31 @@ void EntityCollection::RemoveEntity(GameEntity* _entity, bool _deleteChildren) {
 	/// ------------------------------
 
 	/// Componentの破棄
-	_entity->RemoveComponentAll();
+	entity->RemoveComponentAll();
 
-	guidEntityMap_.erase(_entity->GetGuid());
-	RemoveEntityId(_entity->GetId());
+	guidEntityMap_.erase(entity->GetGuid());
+	RemoveEntityId(entity->GetId());
 
 	/// 親子関係の解除
-	_entity->RemoveParent();
-	if (_deleteChildren) {
+	entity->RemoveParent();
+	if (deleteChildren) {
 
-		if (_entity->GetChildren().size() > 0) {
-			auto children = _entity->GetChildren();
+		if (entity->GetChildren().size() > 0) {
+			auto children = entity->GetChildren();
 			for (auto& child : children) {
-				RemoveEntity(child, _deleteChildren); ///< 子供の親子関係を解除した後に再帰的に削除
+				RemoveEntity(child, deleteChildren); ///< 子供の親子関係を解除した後に再帰的に削除
 			}
 		}
 	} else {
-		for (auto& child : _entity->GetChildren()) {
+		for (auto& child : entity->GetChildren()) {
 			child->RemoveParent();
 		}
 	}
 
 	/// entityの削除
 	auto entityItr = std::remove_if(entities_.begin(), entities_.end(),
-		[_entity](const std::unique_ptr<GameEntity>& entity) {
-			return entity.get() == _entity;
+		[entity](const std::unique_ptr<GameEntity>& e) {
+			return e.get() == entity;
 		}
 	);
 
@@ -107,17 +107,17 @@ void EntityCollection::RemoveEntity(GameEntity* _entity, bool _deleteChildren) {
 
 }
 
-void EntityCollection::RemoveEntityId(int32_t _id) {
-	if (_id > 0) {
+void EntityCollection::RemoveEntityId(int32_t id) {
+	if (id > 0) {
 		/// 初期化時のidから削除
-		initEntityIDs_.usedIds.erase(std::remove(initEntityIDs_.usedIds.begin(), initEntityIDs_.usedIds.end(), _id), initEntityIDs_.usedIds.end());
-		initEntityIDs_.removedIds.push_back(_id);
-	} else if (_id < 0) {
+		initEntityIDs_.usedIds.erase(std::remove(initEntityIDs_.usedIds.begin(), initEntityIDs_.usedIds.end(), id), initEntityIDs_.usedIds.end());
+		initEntityIDs_.removedIds.push_back(id);
+	} else if (id < 0) {
 		/// 実行時のidから削除
-		runtimeEntityIDs_.usedIds.erase(std::remove(runtimeEntityIDs_.usedIds.begin(), runtimeEntityIDs_.usedIds.end(), _id), runtimeEntityIDs_.usedIds.end());
-		runtimeEntityIDs_.removedIds.push_back(_id);
+		runtimeEntityIDs_.usedIds.erase(std::remove(runtimeEntityIDs_.usedIds.begin(), runtimeEntityIDs_.usedIds.end(), id), runtimeEntityIDs_.usedIds.end());
+		runtimeEntityIDs_.removedIds.push_back(id);
 	} else {
-		Console::LogWarning("Invalid entity ID: " + std::to_string(_id));
+		Console::LogWarning("Invalid entity ID: " + std::to_string(id));
 		return;
 	}
 }
@@ -141,46 +141,46 @@ void EntityCollection::RemoveEntityAll() {
 
 }
 
-void EntityCollection::AddDoNotDestroyEntity(GameEntity* _entity) {
-	if (_entity == nullptr) {
+void EntityCollection::AddDoNotDestroyEntity(GameEntity* entity) {
+	if (entity == nullptr) {
 		return;
 	}
 
 	/// 既に存在する場合は追加しない
-	if (std::find(doNotDestroyEntities_.begin(), doNotDestroyEntities_.end(), _entity) != doNotDestroyEntities_.end()) {
+	if (std::find(doNotDestroyEntities_.begin(), doNotDestroyEntities_.end(), entity) != doNotDestroyEntities_.end()) {
 		return;
 	}
 
-	doNotDestroyEntities_.push_back(_entity);
+	doNotDestroyEntities_.push_back(entity);
 }
 
-void EntityCollection::RemoveDoNotDestroyEntity(GameEntity* _entity) {
-	auto itr = std::remove(doNotDestroyEntities_.begin(), doNotDestroyEntities_.end(), _entity);
+void EntityCollection::RemoveDoNotDestroyEntity(GameEntity* entity) {
+	auto itr = std::remove(doNotDestroyEntities_.begin(), doNotDestroyEntities_.end(), entity);
 	if (itr != doNotDestroyEntities_.end()) {
 		doNotDestroyEntities_.erase(itr);
 	}
 }
 
-void EntityCollection::MoveEntity(GameEntity* _entity, size_t _newIndex) {
-	auto it = std::find_if(entities_.begin(), entities_.end(), [_entity](const std::unique_ptr<GameEntity>& e) {
-		return e.get() == _entity;
+void EntityCollection::MoveEntity(GameEntity* entity, size_t newIndex) {
+	auto it = std::find_if(entities_.begin(), entities_.end(), [entity](const std::unique_ptr<GameEntity>& e) {
+		return e.get() == entity;
 	});
 
 	if (it != entities_.end()) {
 		std::unique_ptr<GameEntity> entityPtr = std::move(*it);
 		entities_.erase(it);
 
-		if (_newIndex > entities_.size()) {
-			_newIndex = entities_.size();
+		if (newIndex > entities_.size()) {
+			newIndex = entities_.size();
 		}
-		entities_.insert(entities_.begin() + _newIndex, std::move(entityPtr));
+		entities_.insert(entities_.begin() + newIndex, std::move(entityPtr));
 	}
 }
 
-int32_t EntityCollection::NewEntityID(bool _isRuntime) {
+int32_t EntityCollection::NewEntityID(bool isRuntime) {
 	int32_t resultId = 0;
 
-	if (_isRuntime) {
+	if (isRuntime) {
 		/// Runtime起動後のID生成
 
 		// 削除されたIDがあればそれを使用
@@ -211,9 +211,9 @@ int32_t EntityCollection::NewEntityID(bool _isRuntime) {
 	return resultId;
 }
 
-uint32_t EntityCollection::GetEntityId(const std::string& _name) {
+uint32_t EntityCollection::GetEntityId(const std::string& name) {
 	for (auto& entity : entities_) {
-		if (entity->name_ == _name) {
+		if (entity->name_ == name) {
 			return static_cast<uint32_t>(entity->GetId());
 		}
 	}
@@ -221,10 +221,10 @@ uint32_t EntityCollection::GetEntityId(const std::string& _name) {
 	return 0;
 }
 
-GameEntity* EntityCollection::GetEntity(int32_t _entityId) {
+GameEntity* EntityCollection::GetEntity(int32_t entityId) {
 	auto itr = std::find_if(entities_.begin(), entities_.end(),
-		[_entityId](const std::unique_ptr<GameEntity>& entity) {
-			return entity->GetId() == _entityId;
+		[entityId](const std::unique_ptr<GameEntity>& entity) {
+			return entity->GetId() == entityId;
 		}
 	);
 
@@ -235,12 +235,12 @@ GameEntity* EntityCollection::GetEntity(int32_t _entityId) {
 	return nullptr;
 }
 
-GameEntity* EntityCollection::GetEntityFromGuid(const Guid& _guid) {
-	auto itr = guidEntityMap_.find(_guid);
+GameEntity* EntityCollection::GetEntityFromGuid(const Guid& guid) {
+	auto itr = guidEntityMap_.find(guid);
 	if (itr != guidEntityMap_.end()) {
 		return itr->second;
 	}
-	Console::LogWarning("Entity not found for Guid: " + _guid.ToString());
+	Console::LogWarning("Entity not found for Guid: " + guid.ToString());
 	return nullptr;
 }
 
@@ -261,20 +261,20 @@ void EntityCollection::LoadPrefabAll() {
 	}
 }
 
-void EntityCollection::ReloadPrefab(const std::string& _prefabName) {
-	auto itr = prefabs_.find(_prefabName);
+void EntityCollection::ReloadPrefab(const std::string& prefabName) {
+	auto itr = prefabs_.find(prefabName);
 	if (itr == prefabs_.end()) {
 		// 拡張子なしで検索された場合に備えて ".prefab" を付けて再試行
-		std::string nameWithExt = _prefabName + ".prefab";
+		std::string nameWithExt = prefabName + ".prefab";
 		itr = prefabs_.find(nameWithExt);
 	}
 
 	if (itr == prefabs_.end()) {
 		/// もう一度Fileを探索して確認
-		File file = FileSystem::GetFile("./Assets/Prefabs/", _prefabName);
+		File file = FileSystem::GetFile("./Assets/Prefabs/", prefabName);
 
 		if (file.first.empty()) {
-			Console::LogWarning("Prefab not found: " + _prefabName);
+			Console::LogWarning("Prefab not found: " + prefabName);
 			return;
 		}
 
@@ -309,16 +309,16 @@ void EntityCollection::ReloadPrefab(const std::string& _prefabName) {
 	}
 }
 
-GameEntity* EntityCollection::GenerateEntityFromPrefab(const std::string& _prefabName, bool _isRuntime) {
+GameEntity* EntityCollection::GenerateEntityFromPrefab(const std::string& prefabName, bool isRuntime) {
 	/// prefabが存在するかチェック
-	auto prefabItr = prefabs_.find(_prefabName);
+	auto prefabItr = prefabs_.find(prefabName);
 	if (prefabItr == prefabs_.end()) {
 		// 拡張子なしで検索された場合に備えて ".prefab" を付けて再試行
-		std::string nameWithExt = _prefabName + ".prefab";
+		std::string nameWithExt = prefabName + ".prefab";
 		prefabItr = prefabs_.find(nameWithExt);
 
 		if (prefabItr == prefabs_.end()) {
-			Console::LogError("Prefab not found: " + _prefabName);
+			Console::LogError("Prefab not found: " + prefabName);
 			return nullptr;
 		}
 	}
@@ -327,16 +327,16 @@ GameEntity* EntityCollection::GenerateEntityFromPrefab(const std::string& _prefa
 	EntityPrefab* prefab = prefabItr->second.get();
 
 	/// entityを生成する
-	return GenerateEntityRecursive(prefab->GetJson(), nullptr, _isRuntime);
+	return GenerateEntityRecursive(prefab->GetJson(), nullptr, isRuntime);
 }
 
-EntityPrefab* EntityCollection::GetPrefab(const std::string& _fileName) {
-	if (prefabs_.contains(_fileName)) {
-		return prefabs_[_fileName].get();
+EntityPrefab* EntityCollection::GetPrefab(const std::string& fileName) {
+	if (prefabs_.contains(fileName)) {
+		return prefabs_[fileName].get();
 	}
 
 	// 拡張子なしで検索された場合に備えて ".prefab" を付けて再試行
-	std::string nameWithExt = _fileName + ".prefab";
+	std::string nameWithExt = fileName + ".prefab";
 	if (prefabs_.contains(nameWithExt)) {
 		return prefabs_[nameWithExt].get();
 	}
@@ -344,21 +344,21 @@ EntityPrefab* EntityCollection::GetPrefab(const std::string& _fileName) {
 	return nullptr;
 }
 
-void EntityCollection::ApplyPrefabToEntity(GameEntity* _entity, const std::string& _prefabName) {
-	if (!_entity) {
-		Console::LogError("Entity is null when applying prefab: " + _prefabName);
+void EntityCollection::ApplyPrefabToEntity(GameEntity* entity, const std::string& prefabName) {
+	if (!entity) {
+		Console::LogError("Entity is null when applying prefab: " + prefabName);
 		return;
 	}
 
 	/// prefabが存在するかチェック
-	auto prefabItr = prefabs_.find(_prefabName);
+	auto prefabItr = prefabs_.find(prefabName);
 	if (prefabItr == prefabs_.end()) {
 		// 拡張子なしで検索された場合に備えて ".prefab" を付けて再試行
-		std::string nameWithExt = _prefabName + ".prefab";
+		std::string nameWithExt = prefabName + ".prefab";
 		prefabItr = prefabs_.find(nameWithExt);
 
 		if (prefabItr == prefabs_.end()) {
-			Console::LogError("Prefab not found: " + _prefabName);
+			Console::LogError("Prefab not found: " + prefabName);
 			return;
 		}
 	}
@@ -367,10 +367,10 @@ void EntityCollection::ApplyPrefabToEntity(GameEntity* _entity, const std::strin
 	EntityPrefab* prefab = prefabItr->second.get();
 
 	/// Jsonからコンポーネントを生成 (Prefab適用時はマージではなく上書き)
-	EntityJsonConverter::FromJson(prefab->GetJson(), _entity, pEcsGroup_->GetGroupName(), false);
+	EntityJsonConverter::FromJson(prefab->GetJson(), entity, pEcsGroup_->GetGroupName(), false);
 	}
 
-GameEntity* EntityCollection::GenerateEntityRecursive(const nlohmann::json& _json, GameEntity* _parent, bool _isRuntime) {
+GameEntity* EntityCollection::GenerateEntityRecursive(const nlohmann::json& json, GameEntity* parent, bool isRuntime) {
 
 	/*
 	* Guidはファイル内のものではなく新規生成する
@@ -378,26 +378,26 @@ GameEntity* EntityCollection::GenerateEntityRecursive(const nlohmann::json& _jso
 	*/
 
 	/// entityを生成する
-	GameEntity* entity = GenerateEntity(GenerateGuid(), _isRuntime);
+	GameEntity* entity = GenerateEntity(GenerateGuid(), isRuntime);
 	if (!entity) {
 		Console::LogError("Failed to generate entity from JSON.");
 		return nullptr;
 	}
 
 	/// 親子関係の設定
-	if (_parent) {
-		entity->SetParent(_parent);
+	if (parent) {
+		entity->SetParent(parent);
 	}
 
 	/// 名前とPrefab名を設定
-	const std::string prefabName = _json.value("prefabName", "");
+	const std::string prefabName = json.value("prefabName", "");
 	std::string name = FileSystem::FileNameWithoutExtension(prefabName);
 	if (prefabName.empty()) {
-		name = _json.value("name", "New Entity");
+		name = json.value("name", "New Entity");
 	}
 
 	/// runtime中かどうかで名前を変更
-	if (_isRuntime) {
+	if (isRuntime) {
 		entity->SetName(name + "(Clone)");
 	} else {
 		entity->SetName(name);
@@ -406,12 +406,12 @@ GameEntity* EntityCollection::GenerateEntityRecursive(const nlohmann::json& _jso
 	entity->SetPrefabName(prefabName);
 
 	/// Jsonからコンポーネントを生成
-	EntityJsonConverter::FromJson(_json, entity, pEcsGroup_->GetGroupName());
+	EntityJsonConverter::FromJson(json, entity, pEcsGroup_->GetGroupName());
 
 	/// 子エンティティの生成
-	if (_json.contains("children")) {
-		for (auto& childJson : _json["children"]) {
-			GenerateEntityRecursive(childJson, entity, _isRuntime);
+	if (json.contains("children")) {
+		for (auto& childJson : json["children"]) {
+			GenerateEntityRecursive(childJson, entity, isRuntime);
 		}
 	}
 
@@ -420,12 +420,12 @@ GameEntity* EntityCollection::GenerateEntityRecursive(const nlohmann::json& _jso
 
 
 
-void EntityCollection::SetMainCamera(CameraComponent* _camera) {
-	mainCamera_ = _camera;
+void EntityCollection::SetMainCamera(CameraComponent* camera) {
+	mainCamera_ = camera;
 }
 
-void EntityCollection::SetMainCamera2D(CameraComponent* _camera) {
-	mainCamera2D_ = _camera;
+void EntityCollection::SetMainCamera2D(CameraComponent* camera) {
+	mainCamera2D_ = camera;
 }
 
 CameraComponent* EntityCollection::GetMainCamera() {

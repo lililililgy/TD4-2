@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -16,14 +16,14 @@ class EntityComponentSystem;
 
 namespace Editor {
 
-void UpdatePivot(ONEngine::EntityComponentSystem* _ecs);
+void UpdatePivot(ONEngine::EntityComponentSystem* ecs);
 
-void SetEntity(const ONEngine::Guid& _guid);
+void SetEntity(const ONEngine::Guid& guid);
 void ClearEntity();
 
-void SetDrawRect(const ONEngine::Vector2& _pos, const ONEngine::Vector2& _size);
+void SetDrawRect(const ONEngine::Vector2& pos, const ONEngine::Vector2& size);
 
-void Set2DMode(bool _is2DMode);
+void Set2DMode(bool is2DMode);
 bool Is2DMode();
 
 
@@ -32,12 +32,12 @@ bool Is2DMode();
 //const std::vector<ONEngine::Guid>& GetSelectedEntityGuids();
 //
 ///// @brief 操作したいエンティティのGuidを追加する
-///// @param _guid エンティティのGuid
-//void AddSelectedEntityGuid(const ONEngine::Guid& _guid);
+///// @param guid エンティティのGuid
+//void AddSelectedEntityGuid(const ONEngine::Guid& guid);
 //
 ///// @brief 操作したいエンティティのGuidリストを設定する
-///// @param _guids 操作対象のエンティティのGuidリスト
-//void SetSelectedEntityGuids(const std::vector<ONEngine::Guid>& _guids);
+///// @param guids 操作対象のエンティティのGuidリスト
+//void SetSelectedEntityGuids(const std::vector<ONEngine::Guid>& guids);
 //
 ///// @brief 選択しているエンティティを解除
 //void ClearSelectedEntityGuids();

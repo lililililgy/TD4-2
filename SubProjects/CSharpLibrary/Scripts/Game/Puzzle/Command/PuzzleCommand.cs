@@ -124,10 +124,10 @@ namespace PuzzleCommands {
 		int moveStep_ = 0; /// 移動ステップ数
 		int maxMoveStep_ = 1; /// 最大移動ステップ数
 
-		public void Awake(Entity _puzzle, Entity _target, Vector2Int _dir) {
-			puzzle_ = _puzzle;
-			operateTarget_ = _target;
-			moveDir_ = _dir;
+		public void Awake(Entity puzzle, Entity target, Vector2Int dir) {
+			puzzle_ = puzzle;
+			operateTarget_ = target;
+			moveDir_ = dir;
 
 			prevAddress_ = operateTarget_.GetScript<PuzzlePlayer>().blockData.address;
 			nextAddress_ = CalcNextAddress();
@@ -255,18 +255,18 @@ namespace PuzzleCommands {
 		}
 
 
-		bool CheckCanMoveBlock(int _mapValue, Vector2Int _nextAddress) {
+		bool CheckCanMoveBlock(int mapValue, Vector2Int nextAddress) {
 			/// 移動可能なブロックかどうかをチェック
-			if (_mapValue == (int)MAPDATA.BLOCK_WHTIE ||
-				_mapValue == (int)MAPDATA.CONSTANT_BLOCK_WHITE ||
-				_mapValue == (int)MAPDATA.GOAL_WHITE) {
+			if (mapValue == (int)MAPDATA.BLOCK_WHTIE ||
+				mapValue == (int)MAPDATA.CONSTANT_BLOCK_WHITE ||
+				mapValue == (int)MAPDATA.GOAL_WHITE) {
 
 				/// もう１つ条件としてもう一人のプレイヤーがその位置にいないこと
 				List<Entity> players = puzzle_.GetScript<PuzzleStage>().GetPlayers();
 				foreach (var player in players) {
 					if (player != operateTarget_) {
 						Vector2Int otherAddress = player.GetScript<PuzzlePlayer>().blockData.address;
-						if (otherAddress == _nextAddress) {
+						if (otherAddress == nextAddress) {
 							return false;
 						}
 					}
@@ -292,10 +292,10 @@ namespace PuzzleCommands {
 		int moveStep_ = 0; /// 移動ステップ数
 		int maxMoveStep_ = 1; /// 最大移動ステップ数
 
-		public void Awake(Entity _puzzle, Entity _target, Vector2Int _dir) {
-			puzzle_ = _puzzle;
-			operateTarget_ = _target;
-			moveDir_ = _dir;
+		public void Awake(Entity puzzle, Entity target, Vector2Int dir) {
+			puzzle_ = puzzle;
+			operateTarget_ = target;
+			moveDir_ = dir;
 			prevAddress_ = operateTarget_.GetScript<PuzzlePlayer>().blockData.address;
 			nextAddress_ = CalcNextAddress();
 			maxMoveStep_ = Math.Abs(nextAddress_.x - prevAddress_.x) + Math.Abs(nextAddress_.y - prevAddress_.y);
@@ -377,17 +377,17 @@ namespace PuzzleCommands {
 			return address;
 		}
 
-		bool CheckCanMoveBlock(int _mapValue, Vector2Int _nextAddress) {
+		bool CheckCanMoveBlock(int mapValue, Vector2Int nextAddress) {
 			/// 移動可能なブロックかどうかをチェック
-			if (_mapValue == (int)MAPDATA.BLOCK_BLACK ||
-				_mapValue == (int)MAPDATA.CONSTANT_BLOCK_BLACK ||
-				_mapValue == (int)MAPDATA.GOAL_BLACK) {
+			if (mapValue == (int)MAPDATA.BLOCK_BLACK ||
+				mapValue == (int)MAPDATA.CONSTANT_BLOCK_BLACK ||
+				mapValue == (int)MAPDATA.GOAL_BLACK) {
 				/// もう１つ条件としてもう一人のプレイヤーがその位置にいないこと
 				List<Entity> players = puzzle_.GetScript<PuzzleStage>().GetPlayers();
 				foreach (var player in players) {
 					if (player != operateTarget_) {
 						Vector2Int otherAddress = player.GetScript<PuzzlePlayer>().blockData.address;
-						if (otherAddress == _nextAddress) {
+						if (otherAddress == nextAddress) {
 							return false;
 						}
 					}
@@ -403,8 +403,8 @@ namespace PuzzleCommands {
 	class SwitchActivePlayerCommand : PuzzleCommand {
 		Entity puzzle_; /// パズル自体のエンティティ
 
-		public void Awake(Entity _puzzle) {
-			puzzle_ = _puzzle;
+		public void Awake(Entity puzzle) {
+			puzzle_ = puzzle;
 		}
 
 		public override CommandState Execution() {

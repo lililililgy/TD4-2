@@ -35,20 +35,20 @@ public class AudioSource : Component {
 		isPlayRequest_ = true;
 	}
 
-	public void OneShotPlay(float _volume, float _pitch, string _path) {
-		Debug.Log("AudioSource.OneShotPlay - Playing " + _path);
-		InternalPlayOneShot(nativeHandle, _volume, _pitch, _path);
+	public void OneShotPlay(float volume, float pitch, string path) {
+		Debug.Log("AudioSource.OneShotPlay - Playing " + path);
+		InternalPlayOneShot(nativeHandle, volume, pitch, path);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/// internal methods
 	///////////////////////////////////////////////////////////////////////////////////////////
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static private extern void InternalGetParams(ulong _nativeHandle, out float _volume, out float _pitch);
+	static private extern void InternalGetParams(ulong nativeHandle, out float volume, out float pitch);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static private extern void InternalSetParams(ulong _nativeHandle, float volume, float pitch);
+	static private extern void InternalSetParams(ulong nativeHandle, float volume, float pitch);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static private extern void InternalPlayOneShot(ulong _nativeHandle, float _volume, float _pitch, string _path);
+	static private extern void InternalPlayOneShot(ulong nativeHandle, float volume, float pitch, string path);
 }

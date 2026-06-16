@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 namespace ONEngine {
@@ -14,9 +14,9 @@ class AssetCollection;
 namespace ONEngine {
 
 /// ゲーム用のECSGroupにシステムを追加する関数
-void GameECSGroupAddSystemFunction(ECSGroup* _ecs, DxManager* _dxm, Asset::AssetCollection* _assetCollection);
+void GameECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Asset::AssetCollection* assetCollection);
 
 /// デバッグ用のECSGroupにシステムを追加する関数
-void DebugECSGroupAddSystemFunction(ECSGroup* _ecs, DxManager* _dxm, Asset::AssetCollection* _assetCollection);
+void DebugECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Asset::AssetCollection* assetCollection);
 
 } /// namespace ONEngine

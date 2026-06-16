@@ -23,20 +23,20 @@ namespace ONEngine {
 class SkinMeshUpdateSystem : public ECSISystem {
 public:
 
-	SkinMeshUpdateSystem(DxManager* _dxm, Asset::AssetCollection* _assetCollection);
+	SkinMeshUpdateSystem(DxManager* dxm, Asset::AssetCollection* assetCollection);
 	~SkinMeshUpdateSystem() override = default;
 
-	void RuntimeUpdate(ECSGroup* _ecs) override;
+	void RuntimeUpdate(ECSGroup* ecs) override;
 
 	/// @brief スケルトンの更新
-	void UpdateSkeleton(SkinMeshRenderer* _smr);
+	void UpdateSkeleton(SkinMeshRenderer* smr);
 
 	/// @brief スキンクラスターの更新
-	void UpdateSkinCluster(SkinMeshRenderer* _smr);
+	void UpdateSkinCluster(SkinMeshRenderer* smr);
 
 private:
 	/// @brief 再帰的にスケルトンを更新
-	void UpdateSkeletonRecursive(SkinMeshRenderer* _smr, int32_t _jointIndex, const std::optional<int32_t>& _parentIndex);
+	void UpdateSkeletonRecursive(SkinMeshRenderer* smr, int32_t jointIndex, const std::optional<int32_t>& parentIndex);
 
 	/// =========================================
 	/// private : objects

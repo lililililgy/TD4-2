@@ -9,19 +9,19 @@
 namespace ONEngine {
 
 namespace EntityJsonConverter {
-nlohmann::json ToJson(const GameEntity* _entity, bool _forceFull = false);
+nlohmann::json ToJson(const GameEntity* entity, bool forceFull = false);
 
 
 /// @brief JsonからGameEntityを生成する
-/// @param _json GameEntityのJsonデータ
-/// @param _entity 生成に使用するGameEntityのポインタ
-/// @param _groupName 生成元のECSGroup名
-void FromJson(const nlohmann::json& _json, GameEntity* _entity, const std::string& _groupName, bool _merge = true);
+/// @param json GameEntityのJsonデータ
+/// @param entity 生成に使用するGameEntityのポインタ
+/// @param groupName 生成元のECSGroup名
+void FromJson(const nlohmann::json& json, GameEntity* entity, const std::string& groupName, bool merge = true);
 
 /// @brief Transform専用のJsonからGameEntityを生成する
-/// @param _json 生成元のJsonデータ
-/// @param _entity 生成先のGameEntityのポインタ
-void TransformFromJson(const nlohmann::json& _json, GameEntity* _entity);
+/// @param json 生成元のJsonデータ
+/// @param entity 生成先のGameEntityのポインタ
+void TransformFromJson(const nlohmann::json& json, GameEntity* entity);
 };
 
 } /// namespace ONEngine

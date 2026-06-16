@@ -16,8 +16,8 @@ namespace {
 	class GizmoSystem {
 		friend class Gizmo;
 	public:
-		GizmoSystem(const size_t _maxDrawInstanceCount)
-			: maxInstanceCount_(_maxDrawInstanceCount) {
+		GizmoSystem(const size_t maxDrawInstanceCount)
+			: maxInstanceCount_(maxDrawInstanceCount) {
 
 			/// 描画データのメモリを確保しておく
 			sphereData_.reserve(maxInstanceCount_);
@@ -51,8 +51,8 @@ namespace {
 
 
 
-void Gizmo::Initialize(const size_t _maxDrawInstanceCount) {
-	gGizmoSystem = std::make_unique<GizmoSystem>(_maxDrawInstanceCount);
+void Gizmo::Initialize(const size_t maxDrawInstanceCount) {
+	gGizmoSystem = std::make_unique<GizmoSystem>(maxDrawInstanceCount);
 }
 
 
@@ -88,30 +88,30 @@ void Gizmo::Reset() {
 
 #ifdef DEBUG_MODE
 
-void Gizmo::DrawSphere(const Vector3& _position, float _radius, const Vector4& _color) {
-	gGizmoSystem->sphereData_.push_back({ _position, _radius, _color });
+void Gizmo::DrawSphere(const Vector3& position, float radius, const Vector4& color) {
+	gGizmoSystem->sphereData_.push_back({ position, radius, color });
 }
 
-void Gizmo::DrawWireSphere(const Vector3& _position, float _radius, const Vector4& _color) {
-	gGizmoSystem->wireSphereData_.push_back({ _position, _radius, _color });
+void Gizmo::DrawWireSphere(const Vector3& position, float radius, const Vector4& color) {
+	gGizmoSystem->wireSphereData_.push_back({ position, radius, color });
 }
 
-void Gizmo::DrawCube(const Vector3& _position, const Vector3& _size, const Quaternion& _rotate, const Vector4& _color) {
-	gGizmoSystem->cubeData_.push_back({ _position, _size, _rotate, _color });
+void Gizmo::DrawCube(const Vector3& position, const Vector3& size, const Quaternion& rotate, const Vector4& color) {
+	gGizmoSystem->cubeData_.push_back({ position, size, rotate, color });
 }
 
-void Gizmo::DrawWireCube(const Vector3& _position, const Vector3& _size, const Quaternion& _rotate, const Vector4& _color) {
-	gGizmoSystem->wireCubeData_.push_back({ _position, _size, _rotate, _color });
+void Gizmo::DrawWireCube(const Vector3& position, const Vector3& size, const Quaternion& rotate, const Vector4& color) {
+	gGizmoSystem->wireCubeData_.push_back({ position, size, rotate, color });
 }
 
-void Gizmo::DrawLine(const Vector3& _startPosition, const Vector3& _endPosition, const Vector4& _color, float _thickness) {
+void Gizmo::DrawLine(const Vector3& startPosition, const Vector3& endPosition, const Vector4& color, float thickness) {
 	if (!gGizmoSystem) return;
-	gGizmoSystem->lineData_.push_back({ _startPosition, _endPosition, _color, _thickness });
+	gGizmoSystem->lineData_.push_back({ startPosition, endPosition, color, thickness });
 }
 
-void Gizmo::DrawRay(const Vector3& _position, const Vector3& _direction, const Vector4& _color, float _thickness) {
+void Gizmo::DrawRay(const Vector3& position, const Vector3& direction, const Vector4& color, float thickness) {
 	if (!gGizmoSystem) return;
-	gGizmoSystem->lineData_.push_back({ _position, _position + _direction, _color, _thickness });
+	gGizmoSystem->lineData_.push_back({ position, position + direction, color, thickness });
 }
 
 #else /// RELEASE_BUILD

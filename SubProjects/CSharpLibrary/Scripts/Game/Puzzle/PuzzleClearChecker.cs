@@ -99,14 +99,14 @@ public class PuzzleClearChecker : MonoScript {
 		}
 	}
 
-	private bool CheckIsGoaled(PuzzlePlayer _puzzlePlayer) {
+	private bool CheckIsGoaled(PuzzlePlayer puzzlePlayer) {
 		/// プレイヤーのアドレスを確認
-		if (!_puzzlePlayer) {
+		if (!puzzlePlayer) {
 			return false; //!< puzzle playerが null
 		}
 
 		var mapData = puzzleStage_.GetMapData();
-		Vector2Int address = _puzzlePlayer.blockData.address;
+		Vector2Int address = puzzlePlayer.blockData.address;
 		if (CheckIsGoal(mapData[address.y][address.x])) {
 			return true; //!< 現在いる場所がゴールだったら
 		}
@@ -114,8 +114,8 @@ public class PuzzleClearChecker : MonoScript {
 		return false;
 	}
 
-	private bool CheckIsGoal(int _mapValue) {
-		if (_mapValue == (int)MAPDATA.GOAL_BLACK || _mapValue == (int)MAPDATA.GOAL_WHITE) {
+	private bool CheckIsGoal(int mapValue) {
+		if (mapValue == (int)MAPDATA.GOAL_BLACK || mapValue == (int)MAPDATA.GOAL_WHITE) {
 			return true;
 		}
 

@@ -30,23 +30,23 @@ public:
 	~DxSwapChain();
 	
 	/// @brief 初期化
-	/// @param _dxm DxManagerのインスタンス
-	/// @param _window    このSwapChainを使用するWindowのインスタンス
-	void Initialize(class DxManager* _dxm, class Window* _window);
+	/// @param dxm DxManagerのインスタンス
+	/// @param window    このSwapChainを使用するWindowのインスタンス
+	void Initialize(class DxManager* dxm, class Window* window);
 
 	/// @brief CommandListにViewportとScissorRectをセットする
-	/// @param _commandList CommandListのポインター
-	void BindViewportAndScissorRectForCommandList(ID3D12GraphicsCommandList* _commandList) const;
+	/// @param commandList CommandListのポインター
+	void BindViewportAndScissorRectForCommandList(ID3D12GraphicsCommandList* commandList) const;
 
 	/// @brief バリアを作成する
-	/// @param _commandList CommandListのポインター
-	/// @param _before Resourceの現在の状態
-	/// @param _after Resourceの変更後の状態
-	void CreateBarrier(ID3D12GraphicsCommandList* _commandList, D3D12_RESOURCE_STATES _before, D3D12_RESOURCE_STATES _after);
+	/// @param commandList CommandListのポインター
+	/// @param before Resourceの現在の状態
+	/// @param after Resourceの変更後の状態
+	void CreateBarrier(ID3D12GraphicsCommandList* commandList, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
 
 	/// @brief BackBufferをクリアする
-	/// @param _commandList CommandListのポインター
-	void ClearBackBuffer(ID3D12GraphicsCommandList* _commandList);
+	/// @param commandList CommandListのポインター
+	void ClearBackBuffer(ID3D12GraphicsCommandList* commandList);
 
 	/// @brief FrontBufferとBackBufferの交換
 	void Present();

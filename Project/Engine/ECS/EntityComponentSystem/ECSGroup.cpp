@@ -1,47 +1,47 @@
-﻿#include "ECSGroup.h"
+#include "ECSGroup.h"
 
 using namespace ONEngine;
 
 /// engine
 #include "AddECSComponentFactoryFunction.h"
 
-ECSGroup::ECSGroup(DxManager* _dxm) {
+ECSGroup::ECSGroup(DxManager* dxm) {
 	/// インスタンスの生成
-	entityCollection_ = std::make_unique<EntityCollection>(this, _dxm);
+	entityCollection_ = std::make_unique<EntityCollection>(this, dxm);
 	componentCollection_ = std::make_unique<ComponentCollection>();
 	systemCollection_ = std::make_unique<SystemCollection>();
 }
 
 ECSGroup::~ECSGroup() {}
 
-void ECSGroup::Initialize(const std::string& _groupName) {
+void ECSGroup::Initialize(const std::string& groupName) {
 	/// このECSGroupの名前を決める
-	groupName_ = _groupName;
+	groupName_ = groupName;
 
 	AddComponentFactoryFunction(componentCollection_.get());
 }
 
 void ECSGroup::Update() {}
 
-GameEntity* ECSGroup::GenerateEntity(const Guid& _guid, bool _isRuntime) {
-	return entityCollection_->GenerateEntity(_guid, _isRuntime);
+GameEntity* ECSGroup::GenerateEntity(const Guid& guid, bool isRuntime) {
+	return entityCollection_->GenerateEntity(guid, isRuntime);
 }
 
-GameEntity* ECSGroup::GenerateEntityFromPrefab(const std::string& _prefabName, bool _isRuntime) {
-	return entityCollection_->GenerateEntityFromPrefab(_prefabName, _isRuntime);
+GameEntity* ECSGroup::GenerateEntityFromPrefab(const std::string& prefabName, bool isRuntime) {
+	return entityCollection_->GenerateEntityFromPrefab(prefabName, isRuntime);
 }
 
 
-GameEntity* ECSGroup::GetEntityFromGuid(const Guid& _guid) {
+GameEntity* ECSGroup::GetEntityFromGuid(const Guid& guid) {
 	/// 例外チェック(無効値なら nullptr を返す)
-	if (!_guid.CheckValid()) {
+	if (!guid.CheckValid()) {
 		Console::LogError("ECSGroup::GetEntityFromGuid: Invalid Guid provided.");
 		return nullptr;
 	}
 
 	const auto& entities = entityCollection_->GetEntities();
 	for (const auto& entity : entities) {
-		if (entity->GetGuid() == _guid) {
+		if (entity->GetGuid() == guid) {
 			return entity.get();
 		}
 	}
@@ -49,75 +49,75 @@ GameEntity* ECSGroup::GetEntityFromGuid(const Guid& _guid) {
 	return nullptr;
 }
 
-void ECSGroup::RemoveEntity(GameEntity* _entity, bool _deleteChildren) {
+void ECSGroup::RemoveEntity(GameEntity* entity, bool deleteChildren) {
 	/// 例外チェック
-	if (_entity == nullptr) {
+	if (entity == nullptr) {
 		Console::LogError("ECSGroup::RemoveEntity: Null entity provided.");
 		return;
 	}
 
-	entityCollection_->RemoveEntity(_entity, _deleteChildren);
+	entityCollection_->RemoveEntity(entity, deleteChildren);
 }
 
 void ECSGroup::RemoveEntityAll() {
 	entityCollection_->RemoveEntityAll();
 }
 
-void ECSGroup::AddDoNotDestroyEntity(GameEntity* _entity) {
-	if (_entity == nullptr) {
+void ECSGroup::AddDoNotDestroyEntity(GameEntity* entity) {
+	if (entity == nullptr) {
 		Console::LogError("ECSGroup::AddDoNotDestroyEntity: Null entity provided.");
 		return;
 	}
 
-	entityCollection_->AddDoNotDestroyEntity(_entity);
+	entityCollection_->AddDoNotDestroyEntity(entity);
 }
 
-void ECSGroup::RemoveDoNotDestroyEntity(GameEntity* _entity) {
-	if (_entity == nullptr) {
+void ECSGroup::RemoveDoNotDestroyEntity(GameEntity* entity) {
+	if (entity == nullptr) {
 		Console::LogError("ECSGroup::RemoveDoNotDestroyEntity: Null entity provided.");
 		return;
 	}
 
-	entityCollection_->RemoveDoNotDestroyEntity(_entity);
+	entityCollection_->RemoveDoNotDestroyEntity(entity);
 }
 
-uint32_t ECSGroup::GetEntityId(const std::string& _name) {
-	return entityCollection_->GetEntityId(_name);
+uint32_t ECSGroup::GetEntityId(const std::string& name) {
+	return entityCollection_->GetEntityId(name);
 }
 
-uint32_t ECSGroup::CountEntity(const std::string& _name) {
+uint32_t ECSGroup::CountEntity(const std::string& name) {
 	const auto& entities = entityCollection_->GetEntities();
 	return static_cast<uint32_t>(std::count_if(entities.begin(), entities.end(),
-		[&_name](const std::unique_ptr<GameEntity>& entity) {
+		[&name](const std::unique_ptr<GameEntity>& entity) {
 			std::string name = entity->GetName();
 			/// 後ろから"_"を検索、"_"を含む場合はその前までを比較する
 			if (name.find_last_of('_') != std::string::npos) {
-				return name.substr(0, name.find_last_of('_')) == _name;
+				return name.substr(0, name.find_last_of('_')) == name;
 			}
 
-			return name == _name;
+			return name == name;
 		}
 	));
 }
 
-IComponent* ECSGroup::AddComponent(const std::string& _compName) {
-	return componentCollection_->AddComponent(_compName);
+IComponent* ECSGroup::AddComponent(const std::string& compName) {
+	return componentCollection_->AddComponent(compName);
 }
 
-void ECSGroup::RemoveComponent(size_t _hash, uint32_t _compId) {
-	componentCollection_->RemoveComponent(_hash, _compId);
+void ECSGroup::RemoveComponent(size_t hash, uint32_t compId) {
+	componentCollection_->RemoveComponent(hash, compId);
 }
 
-void ECSGroup::RemoveComponentAll(GameEntity* _entity) {
-	if (_entity == nullptr) {
+void ECSGroup::RemoveComponentAll(GameEntity* entity) {
+	if (entity == nullptr) {
 		return;
 	}
 
-	componentCollection_->RemoveComponentAll(_entity);
+	componentCollection_->RemoveComponentAll(entity);
 }
 
-void ECSGroup::LoadComponent(GameEntity* _entity) {
-	componentInputCommand_.SetEntity(_entity);
+void ECSGroup::LoadComponent(GameEntity* entity) {
+	componentInputCommand_.SetEntity(entity);
 	componentInputCommand_.Execute();
 }
 
@@ -129,12 +129,12 @@ void ECSGroup::RuntimeUpdateSystems() {
 	systemCollection_->RuntimeUpdate(this);
 }
 
-void ECSGroup::SetMainCamera(CameraComponent* _camera) {
-	entityCollection_->SetMainCamera(_camera);
+void ECSGroup::SetMainCamera(CameraComponent* camera) {
+	entityCollection_->SetMainCamera(camera);
 }
 
-void ECSGroup::SetMainCamera2D(CameraComponent* _camera) {
-	entityCollection_->SetMainCamera2D(_camera);
+void ECSGroup::SetMainCamera2D(CameraComponent* camera) {
+	entityCollection_->SetMainCamera2D(camera);
 }
 
 EntityCollection* ECSGroup::GetEntityCollection() {
@@ -145,8 +145,8 @@ const std::vector<std::unique_ptr<GameEntity>>& ECSGroup::GetEntities() const {
 	return entityCollection_->GetEntities();
 }
 
-GameEntity* ECSGroup::GetEntity(int32_t _id) const {
-	return entityCollection_->GetEntity(_id);
+GameEntity* ECSGroup::GetEntity(int32_t id) const {
+	return entityCollection_->GetEntity(id);
 }
 
 const CameraComponent* ECSGroup::GetMainCamera() const {

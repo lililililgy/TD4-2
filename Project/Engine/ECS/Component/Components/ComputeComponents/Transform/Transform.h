@@ -81,10 +81,10 @@ public:
 	/// public : accessor
 	/// ===============================================
 
-	void SetPosition(const Vector3& _v);
-	void SetRotate(const Vector3& _v);
-	void SetRotate(const Quaternion& _q);
-	void SetScale(const Vector3& _v);
+	void SetPosition(const Vector3& v);
+	void SetRotate(const Vector3& v);
+	void SetRotate(const Quaternion& q);
+	void SetScale(const Vector3& v);
 
 	const Vector3& GetPosition() const;
 	const Quaternion& GetRotate() const;
@@ -95,28 +95,28 @@ public:
 
 
 namespace ComponentDebug {
-	void TransformDebug(Transform* _transform);
-	void TransformDebug(const std::vector<Transform*>& _transforms);
+	void TransformDebug(Transform* transform);
+	void TransformDebug(const std::vector<Transform*>& transforms);
 }
 
 /// =================================================
 /// mono からのTransform取得用関数
 /// =================================================
 
-void UpdateTransform(Transform* _transform);
+void UpdateTransform(Transform* transform);
 
-void InternalGetPosition(uint64_t _nativeHandle, float* _x, float* _y, float* _z);
-void InternalGetLocalPosition(uint64_t _nativeHandle, float* _x, float* _y, float* _z);
-void InternalGetRotate(uint64_t _nativeHandle, float* _x, float* _y, float* _z, float* _w);
-void InternalGetScale(uint64_t _nativeHandle, float* _x, float* _y, float* _z);
-void InternalSetPosition(uint64_t _nativeHandle, float _x, float _y, float _z);
-void InternalSetLocalPosition(uint64_t _nativeHandle, float _x, float _y, float _z);
-void InternalSetRotate(uint64_t _nativeHandle, float _x, float _y, float _z, float _w);
-void InternalSetScale(uint64_t _nativeHandle, float _x, float _y, float _z);
+void InternalGetPosition(uint64_t nativeHandle, float* x, float* y, float* z);
+void InternalGetLocalPosition(uint64_t nativeHandle, float* x, float* y, float* z);
+void InternalGetRotate(uint64_t nativeHandle, float* x, float* y, float* z, float* w);
+void InternalGetScale(uint64_t nativeHandle, float* x, float* y, float* z);
+void InternalSetPosition(uint64_t nativeHandle, float x, float y, float z);
+void InternalSetLocalPosition(uint64_t nativeHandle, float x, float y, float z);
+void InternalSetRotate(uint64_t nativeHandle, float x, float y, float z, float w);
+void InternalSetScale(uint64_t nativeHandle, float x, float y, float z);
 
 
 
-void from_json(const nlohmann::json& _j, Transform& _t);
-void to_json(nlohmann::json& _j, const Transform& _t);
+void from_json(const nlohmann::json& j, Transform& t);
+void to_json(nlohmann::json& j, const Transform& t);
 
 } /// ONEngine

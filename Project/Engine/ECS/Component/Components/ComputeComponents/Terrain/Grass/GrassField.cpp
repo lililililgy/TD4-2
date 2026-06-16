@@ -1,4 +1,4 @@
-﻿#include "GrassField.h"
+#include "GrassField.h"
 
 /// externals
 #include <imgui.h>
@@ -20,22 +20,22 @@ using namespace ONEngine;
 /// Json Serialization
 /// ////////////////////////////////////////////////////////
 
-void ONEngine::to_json(nlohmann::json& _j, const GrassField& _p) {
+void ONEngine::to_json(nlohmann::json& j, const GrassField& p) {
 	/// GrassField -> Json
-	_j = {
+	j = {
 		{ "type", "GrassField" },
-		{ "maxGrassCount", _p.maxGrassCount_ },
-		{ "distributionTexturePath", _p.distributionTexturePath_ },
-		{ "material", _p.material_ }
+		{ "maxGrassCount", p.maxGrassCount_ },
+		{ "distributionTexturePath", p.distributionTexturePath_ },
+		{ "material", p.material_ }
 	};
 }
 
-void ONEngine::from_json(const nlohmann::json& _j, GrassField& _p) {
+void ONEngine::from_json(const nlohmann::json& j, GrassField& p) {
 	/// Json -> GrassField
-	_p.maxGrassCount_ = _j.value("maxGrassCount", 128);
-	_p.distributionTexturePath_ = _j.value("distributionTexturePath", "");
+	p.maxGrassCount_ = j.value("maxGrassCount", 128);
+	p.distributionTexturePath_ = j.value("distributionTexturePath", "");
 
-	_p.material_ = _j.value("material", Asset::Material{});
+	p.material_ = j.value("material", Asset::Material{});
 }
 
 
@@ -43,13 +43,13 @@ void ONEngine::from_json(const nlohmann::json& _j, GrassField& _p) {
 /// ImGuiデバッグ関数
 /// ////////////////////////////////////////////////////////
 
-void ComponentDebug::GrassFieldDebug(GrassField* _grassField, Asset::AssetCollection* _assetCollection) {
+void ComponentDebug::GrassFieldDebug(GrassField* grassField, Asset::AssetCollection* assetCollection) {
 
 	/// 草の最大本数
-	ImGui::Text("Max Blade Count : %d", _grassField->GetMaxGrassCount());
+	ImGui::Text("Max Blade Count : %d", grassField->GetMaxGrassCount());
 
 	/// 配置に使うテクスチャのパス
-	ImGui::Text("Distribution Texture Path : %s", _grassField->distributionTexturePath_.c_str());
+	ImGui::Text("Distribution Texture Path : %s", grassField->distributionTexturePath_.c_str());
 
 	/// 配置対象のTerrainComponentのDrag&Drop
 	ImGui::CollapsingHeader("Drag & Drop Terrain Component here");
@@ -72,7 +72,7 @@ void ComponentDebug::GrassFieldDebug(GrassField* _grassField, Asset::AssetCollec
 
 
 	/// material debug
-	Editor::ImMathf::MaterialEdit("material", &_grassField->material_, _assetCollection);
+	Editor::ImMathf::MaterialEdit("material", &grassField->material_, assetCollection);
 
 }
 
@@ -86,7 +86,7 @@ GrassField::GrassField() :
 };
 GrassField::~GrassField() = default;
 
-void GrassField::Initialize(uint32_t _maxBladeCount, DxDevice* _dxDevice, DxCommand* _dxCommand, DxSRVHeap* _dxSRVHeap) {
+void GrassField::Initialize(uint32_t maxBladeCount, DxDevice* dxDevice, DxCommand* dxCommand, DxSRVHeap* dxSRVHeap) {
 	/// すでに生成されていたら何もしない
 	if (isCreated_) {
 		return;
@@ -94,19 +94,19 @@ void GrassField::Initialize(uint32_t _maxBladeCount, DxDevice* _dxDevice, DxComm
 		isCreated_ = true;
 	}
 
-	maxGrassCount_ = _maxBladeCount;
+	maxGrassCount_ = maxBladeCount;
 	/// 草のインスタンスバッファの作成
 	rwGrassInstanceBuffer_.CreateAppendBuffer(
-		maxGrassCount_, _dxDevice, _dxCommand, _dxSRVHeap
+		maxGrassCount_, dxDevice, dxCommand, dxSRVHeap
 	);
 
-	startIndexBuffer_.Create(2000, _dxDevice, _dxSRVHeap);
+	startIndexBuffer_.Create(2000, dxDevice, dxSRVHeap);
 
-	timeBuffer_.CreateUAV(maxGrassCount_, _dxDevice, _dxCommand, _dxSRVHeap);
-	materialBuffer_.Create(_dxDevice);
+	timeBuffer_.CreateUAV(maxGrassCount_, dxDevice, dxCommand, dxSRVHeap);
+	materialBuffer_.Create(dxDevice);
 }
 
-void GrassField::SetupRenderingData(Asset::AssetCollection* _assetCollection) {
+void GrassField::SetupRenderingData(Asset::AssetCollection* assetCollection) {
 
 	GPUMaterial gpuMaterial{};
 
@@ -119,14 +119,14 @@ void GrassField::SetupRenderingData(Asset::AssetCollection* _assetCollection) {
 	/// テクスチャの情報をセット
 	if (material_.HasBaseTexture()) {
 		const Guid& baseTextureGuid = material_.GetBaseTextureGuid();
-		gpuMaterial.baseTextureId = static_cast<int32_t>(_assetCollection->GetTextureIndexFromGuid(baseTextureGuid));
+		gpuMaterial.baseTextureId = static_cast<int32_t>(assetCollection->GetTextureIndexFromGuid(baseTextureGuid));
 	} else {
 		gpuMaterial.baseTextureId = 0;
 	}
 
 	if (material_.HasNormalTexture()) {
 		const Guid& normalTextureGuid = material_.GetNormalTextureGuid();
-		gpuMaterial.normalTextureId = static_cast<int32_t>(_assetCollection->GetTextureIndexFromGuid(normalTextureGuid));
+		gpuMaterial.normalTextureId = static_cast<int32_t>(assetCollection->GetTextureIndexFromGuid(normalTextureGuid));
 	} else {
 		gpuMaterial.normalTextureId = 0;
 	}
@@ -134,33 +134,33 @@ void GrassField::SetupRenderingData(Asset::AssetCollection* _assetCollection) {
 	materialBuffer_.SetMappedData(gpuMaterial);
 }
 
-void GrassField::StartIndexMapping(UINT _oneDrawInstanceCount) {
+void GrassField::StartIndexMapping(UINT oneDrawInstanceCount) {
 	//
 
-	UINT forLoopCount = (maxGrassCount_ + _oneDrawInstanceCount - 1) / _oneDrawInstanceCount;
+	UINT forLoopCount = (maxGrassCount_ + oneDrawInstanceCount - 1) / oneDrawInstanceCount;
 	for (UINT i = 0; i < forLoopCount; i++) {
-		uint32_t mappedData = i * _oneDrawInstanceCount;
+		uint32_t mappedData = i * oneDrawInstanceCount;
 		startIndexBuffer_.SetMappedData(i, mappedData);
 	}
 
 }
 
-void GrassField::AppendBufferReadCounter(DxManager* _dxm, DxCommand* _dxCommand) {
+void GrassField::AppendBufferReadCounter(DxManager* dxm, DxCommand* dxCommand) {
 	/// ----- GrassInstanceBufferのカウンターを呼んでインスタンス数を数える ----- ///
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
 	D3D12_RESOURCE_BARRIER uavBarrier = CD3DX12_RESOURCE_BARRIER::UAV(rwGrassInstanceBuffer_.GetResource().Get());
 	cmdList->ResourceBarrier(1, &uavBarrier);
-	rwGrassInstanceBuffer_.GetCounterResource().CreateBarrier(D3D12_RESOURCE_STATE_COPY_SOURCE, _dxCommand);
+	rwGrassInstanceBuffer_.GetCounterResource().CreateBarrier(D3D12_RESOURCE_STATE_COPY_SOURCE, dxCommand);
 
-	_dxCommand->CommandExecuteAndWait();
-	_dxCommand->CommandReset();
-	_dxCommand->WaitForGpuComplete();
+	dxCommand->CommandExecuteAndWait();
+	dxCommand->CommandReset();
+	dxCommand->WaitForGpuComplete();
 
-	instanceCount_ = rwGrassInstanceBuffer_.ReadCounter(_dxCommand);
+	instanceCount_ = rwGrassInstanceBuffer_.ReadCounter(dxCommand);
 
-	_dxm->HeapBindToCommandList();
+	dxm->HeapBindToCommandList();
 
 	/// 配置は一回しか行わないのでカウンターのリセットはしない(今後複数回配置するようになったらリセットする)
 

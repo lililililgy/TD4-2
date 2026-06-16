@@ -4,24 +4,24 @@ using namespace ONEngine;
 
 #include "Engine/ECS/EntityComponentSystem/ECSGroup.h"
 
-void SystemCollection::AddSystem(std::unique_ptr<ECSISystem> _system) {
-	if (_system) {
-		systems_.emplace_back(std::move(_system));
+void SystemCollection::AddSystem(std::unique_ptr<ECSISystem> system) {
+	if (system) {
+		systems_.emplace_back(std::move(system));
 	}
 }
 
-void SystemCollection::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
+void SystemCollection::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	for (auto& system : systems_) {
 		if (system) {
-			system->OutsideOfRuntimeUpdate(_ecs);
+			system->OutsideOfRuntimeUpdate(ecs);
 		}
 	}
 }
 
-void SystemCollection::RuntimeUpdate(ECSGroup* _ecs) {
+void SystemCollection::RuntimeUpdate(ECSGroup* ecs) {
 	for (auto& system : systems_) {
 		if (system) {
-			system->RuntimeUpdate(_ecs);
+			system->RuntimeUpdate(ecs);
 		}
 	}
 }

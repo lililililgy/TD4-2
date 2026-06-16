@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -35,15 +35,15 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	DebugSceneView(ONEngine::EntityComponentSystem* _ecs, ONEngine::Asset::AssetCollection* _assetCollection, ONEngine::SceneManager* _sceneManager, class InspectorWindow* _inspector);
+	DebugSceneView(ONEngine::EntityComponentSystem* ecs, ONEngine::Asset::AssetCollection* assetCollection, ONEngine::SceneManager* sceneManager, class InspectorWindow* inspector);
 	~DebugSceneView() {}
 
 	/// @brief imgui windowの描画処理
 	void ShowImGui() override;
 
 	/// @brief GamePlayモードの設定
-	/// @param _isGamePlay Runtime中かどうか
-	void SetGamePlay(bool _isGamePlay);
+	/// @param isGamePlay Runtime中かどうか
+	void SetGamePlay(bool isGamePlay);
 
 
 	void ShowDebugSceneView(const ImVec2& imagePos);

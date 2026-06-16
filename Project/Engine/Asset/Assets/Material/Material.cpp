@@ -1,4 +1,4 @@
-﻿#include "Material.h"
+#include "Material.h"
 
 /// std
 #include <fstream>
@@ -23,16 +23,16 @@ Material GenerateMaterial() {
 	return material;
 }
 
-void GenerateMaterialFile(const std::string& _filepath, Material* _material) {
-	/// _filepathにマテリアル情報を書き込む
+void GenerateMaterialFile(const std::string& filepath, Material* material) {
+	/// filepathにマテリアル情報を書き込む
 
-	/// _filepathがないなら生成する
-	if(std::filesystem::exists(_filepath) == false) {
-		std::ofstream ofs(_filepath);
+	/// filepathがないなら生成する
+	if(std::filesystem::exists(filepath) == false) {
+		std::ofstream ofs(filepath);
 		ofs.close();
 	}
 
-	std::ofstream ofs(_filepath);
+	std::ofstream ofs(filepath);
 	if(!ofs) {
 		return;
 	}
@@ -40,21 +40,21 @@ void GenerateMaterialFile(const std::string& _filepath, Material* _material) {
 
 	/// 引数のマテリアル情報を使用する
 	/// nullptrならデフォルト値で生成する
-	Material material;
-	if(_material) {
-		material = *_material;
+	Material mat;
+	if(material) {
+		mat = *material;
 	} else {
-		material = GenerateMaterial();
+		mat = GenerateMaterial();
 	}
 
 	/// ファイルに情報を書きこむ
 	ofs << "MaterialFileVersion: 1\n";
-	ofs << "guid: " << material.guid.ToString() << "\n";
-	ofs << "BaseColor: " << material.baseColor.x << " " << material.baseColor.y << " " << material.baseColor.z << " " << material.baseColor.w << "\n";
-	ofs << "PostEffectFlags: " << material.postEffectFlags << "\n";
-	ofs << "UVTransform_Position: " << material.uvTransform.position.x << " " << material.uvTransform.position.y << "\n";
-	ofs << "UVTransform_Scale: " << material.uvTransform.scale.x << " " << material.uvTransform.scale.y << "\n";
-	ofs << "UVTransform_Rotate: " << material.uvTransform.rotate << "\n";
+	ofs << "guid: " << mat.guid.ToString() << "\n";
+	ofs << "BaseColor: " << mat.baseColor.x << " " << mat.baseColor.y << " " << mat.baseColor.z << " " << mat.baseColor.w << "\n";
+	ofs << "PostEffectFlags: " << mat.postEffectFlags << "\n";
+	ofs << "UVTransform_Position: " << mat.uvTransform.position.x << " " << mat.uvTransform.position.y << "\n";
+	ofs << "UVTransform_Scale: " << mat.uvTransform.scale.x << " " << mat.uvTransform.scale.y << "\n";
+	ofs << "UVTransform_Rotate: " << mat.uvTransform.rotate << "\n";
 
 	ofs.close();
 }
@@ -64,40 +64,40 @@ void GenerateMaterialFile(const std::string& _filepath, Material* _material) {
 /// Json変換
 /// ---------------------------------------------------
 
-void from_json(const nlohmann::json& _j, Material& _material) {
+void from_json(const nlohmann::json& j, Material& material) {
 	/// ----- JsonデータをMaterialに変換する ----- ///
 
-	_j.at("baseColor").get<ONEngine::Vector4>();
+	j.at("baseColor").get<ONEngine::Vector4>();
 
-	_material.guid = _j.value("guid", Guid{});
-	_material.baseColor = _j.value("baseColor", Vector4::Red);
-	_material.postEffectFlags = _j.value("postEffectFlags", 1u);
-	_material.uvTransform = _j.value("uvTransform", UVTransform{});
+	material.guid = j.value("guid", Guid{});
+	material.baseColor = j.value("baseColor", Vector4::Red);
+	material.postEffectFlags = j.value("postEffectFlags", 1u);
+	material.uvTransform = j.value("uvTransform", UVTransform{});
 
-	Guid baseTextureGuid = _j.value("baseTextureGuid", Guid::kInvalid);
+	Guid baseTextureGuid = j.value("baseTextureGuid", Guid::kInvalid);
 	if(baseTextureGuid.CheckValid()) {
-		_material.baseTextureGuid_ = baseTextureGuid;
+		material.baseTextureGuid_ = baseTextureGuid;
 	} else {
-		_material.baseTextureGuid_ = std::nullopt;
+		material.baseTextureGuid_ = std::nullopt;
 	}
 
-	Guid normalTextureGuid = _j.value("normalTextureGuid", Guid::kInvalid);
+	Guid normalTextureGuid = j.value("normalTextureGuid", Guid::kInvalid);
 	if(normalTextureGuid.CheckValid()) {
-		_material.normalTextureGuid_ = normalTextureGuid;
+		material.normalTextureGuid_ = normalTextureGuid;
 	} else {
-		_material.normalTextureGuid_ = std::nullopt;
+		material.normalTextureGuid_ = std::nullopt;
 	}
 }
 
-void to_json(nlohmann::json& _j, const Material& _material) {
+void to_json(nlohmann::json& j, const Material& material) {
 	/// ----- MaterialデータをJsonに変換する ----- ///
-	_j = {
-		{ "guid", _material.guid },
-		{ "baseColor", _material.baseColor },
-		{ "postEffectFlags", _material.postEffectFlags },
-		{ "uvTransform", _material.uvTransform },
-		{ "baseTextureGuid", _material.baseTextureGuid_.has_value() ? _material.baseTextureGuid_.value() : Guid::kInvalid },
-		{ "normalTextureGuid", _material.normalTextureGuid_.has_value() ? _material.normalTextureGuid_.value() : Guid::kInvalid },
+	j = {
+		{ "guid", material.guid },
+		{ "baseColor", material.baseColor },
+		{ "postEffectFlags", material.postEffectFlags },
+		{ "uvTransform", material.uvTransform },
+		{ "baseTextureGuid", material.baseTextureGuid_.has_value() ? material.baseTextureGuid_.value() : Guid::kInvalid },
+		{ "normalTextureGuid", material.normalTextureGuid_.has_value() ? material.normalTextureGuid_.value() : Guid::kInvalid },
 	};
 }
 
@@ -123,13 +123,13 @@ const Guid& Material::GetBaseTextureGuid() const {
 	return baseTextureGuid_.value();
 }
 
-void Material::SetBaseTextureGuid(const Guid& _guid) {
+void Material::SetBaseTextureGuid(const Guid& guid) {
 	/// ----- base texture guidの設定 ----- ///
 	if(baseTextureGuid_.has_value()) {
-		baseTextureGuid_.value() = _guid;
+		baseTextureGuid_.value() = guid;
 	} else {
 		baseTextureGuid_ = std::make_optional<Guid>();
-		baseTextureGuid_ = _guid;
+		baseTextureGuid_ = guid;
 	}
 }
 
@@ -141,13 +141,13 @@ const Guid& Material::GetNormalTextureGuid() const {
 	return normalTextureGuid_.value();
 }
 
-void Material::SetNormalTextureGuid(const Guid& _guid) {
+void Material::SetNormalTextureGuid(const Guid& guid) {
 	/// ----- 法線 texture の guid を登録 ----- ///
 	if(normalTextureGuid_.has_value()) {
-		normalTextureGuid_.value() = _guid;
+		normalTextureGuid_.value() = guid;
 	} else {
 		normalTextureGuid_ = std::make_optional<Guid>();
-		normalTextureGuid_ = _guid;
+		normalTextureGuid_ = guid;
 	}
 }
 

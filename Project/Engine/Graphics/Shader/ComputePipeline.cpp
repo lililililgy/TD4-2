@@ -1,4 +1,4 @@
-﻿#include "ComputePipeline.h"
+#include "ComputePipeline.h"
 
 using namespace ONEngine;
 #include <iostream>
@@ -14,68 +14,68 @@ ComputePipeline::ComputePipeline() {
 }
 ComputePipeline::~ComputePipeline() = default;
 
-void ComputePipeline::CreatePipeline(DxDevice* _dxDevice) {
-	CreateRootSignature(_dxDevice);
-	CreatePipelineStateObject(_dxDevice);
+void ComputePipeline::CreatePipeline(DxDevice* dxDevice) {
+	CreateRootSignature(dxDevice);
+	CreatePipelineStateObject(dxDevice);
 }
 
 
 
-void ComputePipeline::SetShader(Shader* _shader) {
-	shader_ = _shader;
+void ComputePipeline::SetShader(Shader* shader) {
+	shader_ = shader;
 }
 
-void ComputePipeline::AddCBV(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister) {
+void ComputePipeline::AddCBV(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister) {
 	/// ----- CBVの追加 ----- ///
 
 	D3D12_ROOT_PARAMETER parameter{};
 	parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	parameter.ShaderVisibility = _shaderVisibility;
-	parameter.Descriptor.ShaderRegister = _shaderRegister;
+	parameter.ShaderVisibility = shaderVisibility;
+	parameter.Descriptor.ShaderRegister = shaderRegister;
 
 	rootParameters_.push_back(parameter);
 }
 
-void ComputePipeline::Add32BitConstant(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister, uint32_t _num32bitValue) {
+void ComputePipeline::Add32BitConstant(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister, uint32_t num32bitValue) {
 	/// ----- 32bit constantの追加 ----- ///
 
 	D3D12_ROOT_PARAMETER parameter{};
 	parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
-	parameter.ShaderVisibility = _shaderVisibility;
-	parameter.Descriptor.ShaderRegister = _shaderRegister;
-	parameter.Constants.Num32BitValues = _num32bitValue;
+	parameter.ShaderVisibility = shaderVisibility;
+	parameter.Descriptor.ShaderRegister = shaderRegister;
+	parameter.Constants.Num32BitValues = num32bitValue;
 
 	rootParameters_.push_back(parameter);
 }
 
-void ComputePipeline::AddDescriptorRange(uint32_t _baseShaderRegister, uint32_t _numDescriptor, D3D12_DESCRIPTOR_RANGE_TYPE  _rangeType) {
+void ComputePipeline::AddDescriptorRange(uint32_t baseShaderRegister, uint32_t numDescriptor, D3D12_DESCRIPTOR_RANGE_TYPE  rangeType) {
 	/// ----- descriptor rangeの追加 ----- ///
 
 	D3D12_DESCRIPTOR_RANGE range{};
-	range.BaseShaderRegister = _baseShaderRegister;
-	range.NumDescriptors = _numDescriptor;
-	range.RangeType = _rangeType;
+	range.BaseShaderRegister = baseShaderRegister;
+	range.NumDescriptors = numDescriptor;
+	range.RangeType = rangeType;
 	range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	descriptorRanges_.push_back(range);
 }
 
-void ComputePipeline::AddDescriptorTable(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _descriptorIndex) {
+void ComputePipeline::AddDescriptorTable(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t descriptorIndex) {
 	/// ----- descriptor tableの追加 ----- ///
 
 	/// 範囲外チェック
-	Assert(descriptorRanges_.size() > _descriptorIndex, "out of range...");
+	Assert(descriptorRanges_.size() > descriptorIndex, "out of range...");
 
 	D3D12_ROOT_PARAMETER parameter{};
 	parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	parameter.ShaderVisibility = _shaderVisibility;
-	parameter.DescriptorTable.pDescriptorRanges = &descriptorRanges_[_descriptorIndex];
+	parameter.ShaderVisibility = shaderVisibility;
+	parameter.DescriptorTable.pDescriptorRanges = &descriptorRanges_[descriptorIndex];
 	parameter.DescriptorTable.NumDescriptorRanges = 1;
 
 	rootParameters_.push_back(parameter);
 }
 
-void ComputePipeline::AddStaticSampler(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister, bool _isComparisonSampler) {
+void ComputePipeline::AddStaticSampler(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister, bool isComparisonSampler) {
 	/// ----- static samplerの追加 ----- ///
 
 	D3D12_STATIC_SAMPLER_DESC sampler{};
@@ -83,10 +83,10 @@ void ComputePipeline::AddStaticSampler(D3D12_SHADER_VISIBILITY _shaderVisibility
 	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	sampler.MaxLOD = D3D12_FLOAT32_MAX;               /// ありったけのMipMapを使う
-	sampler.ShaderRegister = _shaderRegister;                 /// 使用するRegister番号
-	sampler.ShaderVisibility = _shaderVisibility;
+	sampler.ShaderRegister = shaderRegister;                 /// 使用するRegister番号
+	sampler.ShaderVisibility = shaderVisibility;
 
-	if (_isComparisonSampler) {
+	if (isComparisonSampler) {
 		// 比較サンプラー（シャドウマップ用）
 		sampler.Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
 		sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
@@ -101,26 +101,26 @@ void ComputePipeline::AddStaticSampler(D3D12_SHADER_VISIBILITY _shaderVisibility
 	staticSamplers_.push_back(sampler);
 }
 
-void ComputePipeline::SetFillMode(D3D12_FILL_MODE _fillMode) {
-	rasterizerDesc_.FillMode = _fillMode;
+void ComputePipeline::SetFillMode(D3D12_FILL_MODE fillMode) {
+	rasterizerDesc_.FillMode = fillMode;
 }
 
-void ComputePipeline::SetCullMode(D3D12_CULL_MODE _cullMode) {
-	rasterizerDesc_.CullMode = _cullMode;
+void ComputePipeline::SetCullMode(D3D12_CULL_MODE cullMode) {
+	rasterizerDesc_.CullMode = cullMode;
 }
 
-void ComputePipeline::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE _topologyType) {
-	primitiveTopologyType_ = _topologyType;
+void ComputePipeline::SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType) {
+	primitiveTopologyType_ = topologyType;
 }
 
-void ComputePipeline::SetPipelineStateForCommandList(DxCommand* _dxCommand) {
-	_dxCommand->GetCommandList()->SetPipelineState(pipelineState_.Get());
-	_dxCommand->GetCommandList()->SetComputeRootSignature(rootSignature_.Get());
+void ComputePipeline::SetPipelineStateForCommandList(DxCommand* dxCommand) {
+	dxCommand->GetCommandList()->SetPipelineState(pipelineState_.Get());
+	dxCommand->GetCommandList()->SetComputeRootSignature(rootSignature_.Get());
 }
 
 
 
-void ComputePipeline::CreateRootSignature(DxDevice* _dxDevice) {
+void ComputePipeline::CreateRootSignature(DxDevice* dxDevice) {
 	/// ----- root signatureの生成 ----- ///
 
 	HRESULT hr = S_FALSE;
@@ -146,7 +146,7 @@ void ComputePipeline::CreateRootSignature(DxDevice* _dxDevice) {
 	}
 
 	/// バイナリを元に生成
-	hr = _dxDevice->GetDevice()->CreateRootSignature(
+	hr = dxDevice->GetDevice()->CreateRootSignature(
 		0, signatureBlob->GetBufferPointer(),
 		signatureBlob->GetBufferSize(),
 		IID_PPV_ARGS(&rootSignature_)
@@ -155,7 +155,7 @@ void ComputePipeline::CreateRootSignature(DxDevice* _dxDevice) {
 	Assert(SUCCEEDED(hr), "error...");
 }
 
-void ComputePipeline::CreatePipelineStateObject(DxDevice* _dxDevice) {
+void ComputePipeline::CreatePipelineStateObject(DxDevice* dxDevice) {
 	/// ----- pipeline state objectの生成 ----- ///
 
 	/// pipeline state desc
@@ -169,7 +169,7 @@ void ComputePipeline::CreatePipelineStateObject(DxDevice* _dxDevice) {
 	};
 
 	/// pipeline state objectの生成
-	HRESULT result = _dxDevice->GetDevice()->CreateComputePipelineState(
+	HRESULT result = dxDevice->GetDevice()->CreateComputePipelineState(
 		&desc, IID_PPV_ARGS(&pipelineState_)
 	);
 

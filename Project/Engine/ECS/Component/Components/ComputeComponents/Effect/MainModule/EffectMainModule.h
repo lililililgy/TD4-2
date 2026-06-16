@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <variant>
@@ -29,7 +29,7 @@ public:
 	template<typename T>
 	struct ConstantData {
 		ConstantData() = default;
-		ConstantData(const T& _data) : constant(_data) {}
+		ConstantData(const T& data) : constant(data) {}
 
 		T constant;
 	};
@@ -38,8 +38,8 @@ public:
 	template<typename T>
 	struct TwoConstantData {
 		TwoConstantData() = default;
-		TwoConstantData(const std::pair<T, T>& _data) : constant(_data) {}
-		TwoConstantData(const T& _data1, const T& _data2) : constant(std::make_pair(_data1, _data2)) {}
+		TwoConstantData(const std::pair<T, T>& data) : constant(data) {}
+		TwoConstantData(const T& data1, const T& data2) : constant(std::make_pair(data1, data2)) {}
 
 		std::pair<T, T> constant;
 	};
@@ -54,13 +54,13 @@ public:
 	/// @return 中の値  
 	template<typename T>
 	std::pair<T, T> GetValue(const Value<T>& value) const {
-		return std::visit([](auto&& _arg) -> std::pair<T, T> {
-			using ArgType = std::decay_t<decltype(_arg)>;
+		return std::visit([](auto&& arg) -> std::pair<T, T> {
+			using ArgType = std::decay_t<decltype(arg)>;
 			if constexpr (std::is_same_v<ArgType, ConstantData<T>>) {
-				return std::make_pair(_arg.constant, _arg.constant);
+				return std::make_pair(arg.constant, arg.constant);
 			} else if constexpr (std::is_same_v<ArgType, TwoConstantData<T>>) {
 				// 2つの定数の場合、最初の値を返す  
-				return _arg.constant;
+				return arg.constant;
 			}
 			},
 			value
@@ -102,21 +102,21 @@ public:
 	float GetStartSpeed() const { return startSpeed_; }
 	float GetGravityModifier() const { return gravityModifier_; }
 
-	void SetLifeLeftTime(float _time) { lifeLeftTime_ = _time; }
-	void SetStartSpeed(float _speed) { startSpeed_ = _speed; }
-	void SetGravityModifier(float _gravity) { gravityModifier_ = _gravity; }
+	void SetLifeLeftTime(float time) { lifeLeftTime_ = time; }
+	void SetStartSpeed(float speed) { startSpeed_ = speed; }
+	void SetGravityModifier(float gravity) { gravityModifier_ = gravity; }
 
-	void SetSpeedStartData(const ConstantData<float>& _data) { speedStartData_ = _data; }
-	void SetSpeedStartData(const TwoConstantData<float>& _data) { speedStartData_ = _data; }
+	void SetSpeedStartData(const ConstantData<float>& data) { speedStartData_ = data; }
+	void SetSpeedStartData(const TwoConstantData<float>& data) { speedStartData_ = data; }
 
-	void SetSizeStartData(const ConstantData<Vector3>& _data) { sizeStartData_ = _data; }
-	void SetSizeStartData(const TwoConstantData<Vector3>& _data) { sizeStartData_ = _data; }
+	void SetSizeStartData(const ConstantData<Vector3>& data) { sizeStartData_ = data; }
+	void SetSizeStartData(const TwoConstantData<Vector3>& data) { sizeStartData_ = data; }
 
-	void SetRotateStartData(const ConstantData<Vector3>& _data) { rotateStartData_ = _data; }
-	void SetRotateStartData(const TwoConstantData<Vector3>& _data) { rotateStartData_ = _data; }
+	void SetRotateStartData(const ConstantData<Vector3>& data) { rotateStartData_ = data; }
+	void SetRotateStartData(const TwoConstantData<Vector3>& data) { rotateStartData_ = data; }
 
-	void SetColorStartData(const ConstantData<Color>& _data) { colorStartData_ = _data; }
-	void SetColorStartData(const TwoConstantData<Color>& _data) { colorStartData_ = _data; }
+	void SetColorStartData(const ConstantData<Color>& data) { colorStartData_ = data; }
+	void SetColorStartData(const TwoConstantData<Color>& data) { colorStartData_ = data; }
 
 
 

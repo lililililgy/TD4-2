@@ -22,21 +22,21 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	ScriptUpdateSystem(class ECSGroup* _ecs);
+	ScriptUpdateSystem(class ECSGroup* ecs);
 	~ScriptUpdateSystem() override;
 
-	void OutsideOfRuntimeUpdate(class ECSGroup* _ecs) override;
-	void RuntimeUpdate(class ECSGroup* _ecs) override;
+	void OutsideOfRuntimeUpdate(class ECSGroup* ecs) override;
+	void RuntimeUpdate(class ECSGroup* ecs) override;
 
 	/// エンティティとコンポーネントをC#に追加
-	void AddAllEntitiesAndComponents(class ECSGroup* _ecsGroup);
-	bool AddEntityToScript(class GameEntity* _entity);
+	void AddAllEntitiesAndComponents(class ECSGroup* ecsGroup);
+	bool AddEntityToScript(class GameEntity* entity);
 
 	/// @brief EcsGroupの更新を呼び出す
 	void CallUpdateEcsGroup();
 
 	/// 生成
-	void MakeScriptMethod(MonoImage* _image, const std::string& _ecsGroupName);
+	void MakeScriptMethod(MonoImage* image, const std::string& ecsGroupName);
 
 	/// 解放
 	void ReleaseGCHandle();
@@ -65,11 +65,11 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	DebugScriptUpdateSystem(class ECSGroup* _ecs);
+	DebugScriptUpdateSystem(class ECSGroup* ecs);
 	~DebugScriptUpdateSystem() override;
 
-	void OutsideOfRuntimeUpdate(class ECSGroup* _ecs) override;
-	void RuntimeUpdate(class ECSGroup* _ecs) override;
+	void OutsideOfRuntimeUpdate(class ECSGroup* ecs) override;
+	void RuntimeUpdate(class ECSGroup* ecs) override;
 };
 
 } /// ONEngine

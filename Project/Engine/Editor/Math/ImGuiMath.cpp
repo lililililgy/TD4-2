@@ -262,64 +262,64 @@ void DrawAssetGuidField(const char* label, std::string& guidStr, ONEngine::Asset
 
 }	/// unnamed namespace
 
-ImVec4 ImMathf::ToImVec4(const ONEngine::Vector4& _vec) {
-	return ImVec4(_vec.x, _vec.y, _vec.z, _vec.w);
+ImVec4 ImMathf::ToImVec4(const ONEngine::Vector4& vec) {
+	return ImVec4(vec.x, vec.y, vec.z, vec.w);
 }
 
-ImVec2 ImMathf::ToImVec2(const ONEngine::Vector2& _vec) {
-	return ImVec2(_vec.x, _vec.y);
+ImVec2 ImMathf::ToImVec2(const ONEngine::Vector2& vec) {
+	return ImVec2(vec.x, vec.y);
 }
 
-bool ImMathf::ColorEdit(const char* _label, ONEngine::Vector4* _color, ImGuiColorEditFlags _flags) {
-	if(!_color) return false;
-	return ImGui::ColorEdit4(_label, &_color->x, _flags);
+bool ImMathf::ColorEdit(const char* label, ONEngine::Vector4* color, ImGuiColorEditFlags flags) {
+	if(!color) return false;
+	return ImGui::ColorEdit4(label, &color->x, flags);
 }
 
-bool ImMathf::InputText(const char* _label, std::string* _text, ImGuiInputTextFlags _flags) {
-	if(!_text) return false;
-	return Editor::ImGuiInputText(_label, _text, _flags);
+bool ImMathf::InputText(const char* label, std::string* text, ImGuiInputTextFlags flags) {
+	if(!text) return false;
+	return Editor::ImGuiInputText(label, text, flags);
 }
 
-bool ImMathf::InputFloat(const char* _label, float* _v, float _step, float _step_fast, const char* _format, ImGuiInputTextFlags _flags) {
-	return ImGui::InputFloat(_label, _v, _step, _step_fast, _format, _flags);
+bool ImMathf::InputFloat(const char* label, float* v, float step, float step_fast, const char* format, ImGuiInputTextFlags flags) {
+	return ImGui::InputFloat(label, v, step, step_fast, format, flags);
 }
 
-bool ImMathf::DragFloat(const char* _label, float* _v, float _speed, float _min, float _max, const char* _format, ImGuiInputTextFlags _flags) {
-	return ImGui::DragFloat(_label, _v, _speed, _min, _max, _format, _flags);
+bool ImMathf::DragFloat(const char* label, float* v, float speed, float min, float max, const char* format, ImGuiInputTextFlags flags) {
+	return ImGui::DragFloat(label, v, speed, min, max, format, flags);
 }
 
-bool ImMathf::DragFloat3(const char* _label, ONEngine::Vector3* _v, float _speed, float _min, float _max, const char* _format, ImGuiInputTextFlags _flags) {
-	return ImGui::DragFloat3(_label, &_v->x, _speed, _min, _max, _format, _flags);
+bool ImMathf::DragFloat3(const char* label, ONEngine::Vector3* v, float speed, float min, float max, const char* format, ImGuiInputTextFlags flags) {
+	return ImGui::DragFloat3(label, &v->x, speed, min, max, format, flags);
 }
 
-bool ImMathf::MaterialEdit(const char* _label, ONEngine::GPUMaterial* _material, ONEngine::Asset::AssetCollection* _assetCollection) {
-	if(!_material) return false;
+bool ImMathf::MaterialEdit(const char* label, ONEngine::GPUMaterial* material, ONEngine::Asset::AssetCollection* assetCollection) {
+	if(!material) return false;
 	bool isEdit = false;
-	if(ImGui::CollapsingHeader(_label)) {
-		if(ImGuiColorEdit("BaseColor", &_material->baseColor)) isEdit = true;
-		if(UVTransformEdit("UVTransform", &_material->uvTransform)) isEdit = true;
+	if(ImGui::CollapsingHeader(label)) {
+		if(ImGuiColorEdit("BaseColor", &material->baseColor)) isEdit = true;
+		if(UVTransformEdit("UVTransform", &material->uvTransform)) isEdit = true;
 		if(ImGui::CollapsingHeader("PostEffectFlags")) {
-			if(ImGui::CheckboxFlags("Lighting", &_material->postEffectFlags, PostEffectFlags_Lighting)) isEdit = true;
-			if(ImGui::CheckboxFlags("Grayscale", &_material->postEffectFlags, PostEffectFlags_Grayscale)) isEdit = true;
-			if(ImGui::CheckboxFlags("EnvironmentReflection", &_material->postEffectFlags, PostEffectFlags_EnvironmentReflection)) isEdit = true;
-			if(ImGui::CheckboxFlags("Shadow", &_material->postEffectFlags, PostEffectFlags_Shadow)) isEdit = true;
+			if(ImGui::CheckboxFlags("Lighting", &material->postEffectFlags, PostEffectFlags_Lighting)) isEdit = true;
+			if(ImGui::CheckboxFlags("Grayscale", &material->postEffectFlags, PostEffectFlags_Grayscale)) isEdit = true;
+			if(ImGui::CheckboxFlags("EnvironmentReflection", &material->postEffectFlags, PostEffectFlags_EnvironmentReflection)) isEdit = true;
+			if(ImGui::CheckboxFlags("Shadow", &material->postEffectFlags, PostEffectFlags_Shadow)) isEdit = true;
 		}
 		if(ImGui::CollapsingHeader("Texture")) {
-			const std::string& texturePath = _assetCollection->GetTexturePath(_material->baseTextureId);
+			const std::string& texturePath = assetCollection->GetTexturePath(material->baseTextureId);
 			std::string tempPath = texturePath;
 			if(ImMathf::InputText("Base Texture", &tempPath, ImGuiInputTextFlags_ReadOnly)) { /* handle change if needed */ }
             if(ImGui::BeginDragDropTarget()) {
                 if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
                     AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
                     if(ONEngine::Asset::GetAssetTypeFromExtension(ONEngine::FileSystem::FileExtension(assetPayload->filePath)) == ONEngine::Asset::AssetType::Texture) {
-                        _material->baseTextureId = static_cast<int32_t>(_assetCollection->GetTextureIndex(assetPayload->filePath));
+                        material->baseTextureId = static_cast<int32_t>(assetCollection->GetTextureIndex(assetPayload->filePath));
                         isEdit = true;
                     }
                 }
                 ImGui::EndDragDropTarget();
             }
-			if(_material->baseTextureId >= 0) {
-				const ONEngine::Asset::Texture* tex = _assetCollection->GetTexture(_assetCollection->GetTexturePath(_material->baseTextureId));
+			if(material->baseTextureId >= 0) {
+				const ONEngine::Asset::Texture* tex = assetCollection->GetTexture(assetCollection->GetTexturePath(material->baseTextureId));
 				if(tex) ImGui::Image((ImTextureID)tex->GetSRVGPUHandle().ptr, ImVec2(100, 100));
 			}
 		}
@@ -327,30 +327,30 @@ bool ImMathf::MaterialEdit(const char* _label, ONEngine::GPUMaterial* _material,
 	return isEdit;
 }
 
-bool ImMathf::UVTransformEdit(const char* _label, ONEngine::UVTransform* _uvTransform) {
-	if(!_uvTransform) return false;
+bool ImMathf::UVTransformEdit(const char* label, ONEngine::UVTransform* uvTransform) {
+	if(!uvTransform) return false;
 	bool isEdit = false;
-	if(ImGui::CollapsingHeader(_label)) {
-		if(ImGui::DragFloat2("offset", &_uvTransform->position.x, 0.01f)) isEdit = true;
-		if(ImGui::DragFloat2("scale", &_uvTransform->scale.x, 0.01f, 0.0f, FLT_MAX)) isEdit = true;
-		if(ImGui::DragFloat("rotate", &_uvTransform->rotate, 0.01f, -3.14159f, 3.14159f)) isEdit = true;
+	if(ImGui::CollapsingHeader(label)) {
+		if(ImGui::DragFloat2("offset", &uvTransform->position.x, 0.01f)) isEdit = true;
+		if(ImGui::DragFloat2("scale", &uvTransform->scale.x, 0.01f, 0.0f, FLT_MAX)) isEdit = true;
+		if(ImGui::DragFloat("rotate", &uvTransform->rotate, 0.01f, -3.14159f, 3.14159f)) isEdit = true;
 	}
 	return isEdit;
 }
 
-ImVec2 ImMathf::CalculateAspectFitSize(const ONEngine::Vector2& _textureSize, float _maxSize) {
-	float aspectRatio = _textureSize.x / _textureSize.y;
-	return (aspectRatio > 1.0f) ? ImVec2(_maxSize, _maxSize / aspectRatio) : ImVec2(_maxSize * aspectRatio, _maxSize);
+ImVec2 ImMathf::CalculateAspectFitSize(const ONEngine::Vector2& textureSize, float maxSize) {
+	float aspectRatio = textureSize.x / textureSize.y;
+	return (aspectRatio > 1.0f) ? ImVec2(maxSize, maxSize / aspectRatio) : ImVec2(maxSize * aspectRatio, maxSize);
 }
 
-ImVec2 ImMathf::CalculateAspectFitSize(const ONEngine::Vector2& _textureSize, const ImVec2& _maxSize) {
-	float aspectRatio = _textureSize.x / _textureSize.y;
-	return (aspectRatio > (_maxSize.x / _maxSize.y)) ? ImVec2(_maxSize.x, _maxSize.x / aspectRatio) : ImVec2(_maxSize.y * aspectRatio, _maxSize.y);
+ImVec2 ImMathf::CalculateAspectFitSize(const ONEngine::Vector2& textureSize, const ImVec2& maxSize) {
+	float aspectRatio = textureSize.x / textureSize.y;
+	return (aspectRatio > (maxSize.x / maxSize.y)) ? ImVec2(maxSize.x, maxSize.x / aspectRatio) : ImVec2(maxSize.y * aspectRatio, maxSize.y);
 }
 
-bool Editor::ImGuiInputText(const char* _label, std::string* _text, ImGuiInputTextFlags _flags) {
-	if(!_text) return false;
-	_flags |= ImGuiInputTextFlags_CallbackResize;
+bool Editor::ImGuiInputText(const char* label, std::string* text, ImGuiInputTextFlags flags) {
+	if(!text) return false;
+	flags |= ImGuiInputTextFlags_CallbackResize;
 	struct CallbackUserData { std::string* text; };
 	auto callback = [](ImGuiInputTextCallbackData* data) -> int {
 		if(data->EventFlag == ImGuiInputTextFlags_CallbackResize) {
@@ -360,13 +360,13 @@ bool Editor::ImGuiInputText(const char* _label, std::string* _text, ImGuiInputTe
 		}
 		return 0;
 	};
-	CallbackUserData userData = { _text };
-	return ImGui::InputText(_label, _text->data(), _text->capacity() + 1, _flags, callback, &userData);
+	CallbackUserData userData = { text };
+	return ImGui::InputText(label, text->data(), text->capacity() + 1, flags, callback, &userData);
 }
 
-bool Editor::ImGuiInputText(const char* _label, std::string* _text, ImGuiInputTextFlags _flags, const char* _hint) {
-	if(!_text) return false;
-	_flags |= ImGuiInputTextFlags_CallbackResize;
+bool Editor::ImGuiInputText(const char* label, std::string* text, ImGuiInputTextFlags flags, const char* hint) {
+	if(!text) return false;
+	flags |= ImGuiInputTextFlags_CallbackResize;
 	struct CallbackUserData { std::string* text; };
 	auto callback = [](ImGuiInputTextCallbackData* data) -> int {
 		if(data->EventFlag == ImGuiInputTextFlags_CallbackResize) {
@@ -376,49 +376,49 @@ bool Editor::ImGuiInputText(const char* _label, std::string* _text, ImGuiInputTe
 		}
 		return 0;
 	};
-	CallbackUserData userData = { _text };
-	return ImGui::InputTextWithHint(_label, _hint, _text->data(), _text->capacity() + 1, _flags, callback, &userData);
+	CallbackUserData userData = { text };
+	return ImGui::InputTextWithHint(label, hint, text->data(), text->capacity() + 1, flags, callback, &userData);
 }
 
-void Editor::ImGuiInputTextReadOnly(const char* _label, const std::string& _text) {
-	std::string temp = _text;
-	ImGuiInputText(_label, &temp, ImGuiInputTextFlags_ReadOnly);
+void Editor::ImGuiInputTextReadOnly(const char* label, const std::string& text) {
+	std::string temp = text;
+	ImGuiInputText(label, &temp, ImGuiInputTextFlags_ReadOnly);
 }
 
-bool Editor::ImGuiColorEdit(const char* _label, ONEngine::Vector4* _color) {
-	return ImMathf::ColorEdit(_label, _color);
+bool Editor::ImGuiColorEdit(const char* label, ONEngine::Vector4* color) {
+	return ImMathf::ColorEdit(label, color);
 }
 
-void ONEngine::DirectionalLightDebug(DirectionalLight* _light) {
-	if(!_light) return;
+void ONEngine::DirectionalLightDebug(DirectionalLight* light) {
+	if(!light) return;
 	if(ImGui::CollapsingHeader("DirectionalLight", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool enabled = (_light->enable != 0);
+		bool enabled = (light->enable != 0);
 		if (ImGui::Checkbox("enable", &enabled)) {
-			_light->enable = enabled ? 1 : 0;
+			light->enable = enabled ? 1 : 0;
 		}
 
-		ONEngine::Vector4 color = _light->GetColor();
+		ONEngine::Vector4 color = light->GetColor();
 		if (Editor::ImGuiColorEdit("color", &color)) {
-			_light->SetColor(color);
+			light->SetColor(color);
 		}
 
-		float intensity = _light->GetIntensity();
+		float intensity = light->GetIntensity();
 		if (ImGui::DragFloat("intensity", &intensity, 0.1f, 0.0f, 1000.0f)) {
-			_light->SetIntensity(intensity);
+			light->SetIntensity(intensity);
 		}
 	}
 }
 
-void ONEngine::AudioSourceDebug(AudioSource* _audioSource) {
-	if(!_audioSource) return;
+void ONEngine::AudioSourceDebug(AudioSource* audioSource) {
+	if(!audioSource) return;
 	if(ImGui::CollapsingHeader("AudioSource", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool enabled = (_audioSource->enable != 0);
+		bool enabled = (audioSource->enable != 0);
 		if (ImGui::Checkbox("enable", &enabled)) {
-			_audioSource->enable = enabled ? 1 : 0;
+			audioSource->enable = enabled ? 1 : 0;
 		}
 
 		// --- Audio Path with Drag & Drop Support ---
-		std::string path = _audioSource->GetAudioPath();
+		std::string path = audioSource->GetAudioPath();
 		ImGui::Text("audio path");
 		Editor::ImGuiInputTextReadOnly("##audio", path);
 		
@@ -432,7 +432,7 @@ void ONEngine::AudioSourceDebug(AudioSource* _audioSource) {
 					// 拡張子チェック (mp3, wav, etc...)
 					std::string ext = FileSystem::FileExtension(droppedPath);
 					if (ext == ".mp3" || ext == ".wav" || ext == ".ogg") {
-						_audioSource->SetAudioPath(droppedPath);
+						audioSource->SetAudioPath(droppedPath);
 						Console::Log(std::format("Audio path set to: {}", droppedPath));
 					} else {
 						Console::LogError("Invalid audio format. Please use .mp3, .wav, or .ogg.");
@@ -442,41 +442,41 @@ void ONEngine::AudioSourceDebug(AudioSource* _audioSource) {
 			ImGui::EndDragDropTarget();
 		}
 
-		float volume = _audioSource->GetVolume();
+		float volume = audioSource->GetVolume();
 		if (ImGui::DragFloat("volume", &volume, 0.01f, 0.0f, 1.0f)) {
-			_audioSource->SetVolume(volume);
+			audioSource->SetVolume(volume);
 		}
-        bool loop = _audioSource->GetLoop();
+        bool loop = audioSource->GetLoop();
         if (ImGui::Checkbox("loop", &loop)) {
-            _audioSource->SetLoop(loop);
+            audioSource->SetLoop(loop);
         }
 
 		if (ImGui::Button("Play")) {
-			_audioSource->Play();
+			audioSource->Play();
 		}
 	}
 }
 
-void ONEngine::CustomMeshRendererDebug(CustomMeshRenderer* _customMeshRenderer) {
-	if(!_customMeshRenderer) return;
+void ONEngine::CustomMeshRendererDebug(CustomMeshRenderer* customMeshRenderer) {
+	if(!customMeshRenderer) return;
 	if(ImGui::CollapsingHeader("CustomMeshRenderer", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool enabled = (_customMeshRenderer->enable != 0);
+		bool enabled = (customMeshRenderer->enable != 0);
 		if (ImGui::Checkbox("enable", &enabled)) {
-			_customMeshRenderer->enable = enabled ? 1 : 0;
+			customMeshRenderer->enable = enabled ? 1 : 0;
 		}
 	}
 }
 
-void ONEngine::EffectDebug(Effect* _effect) {
-	if(!_effect) return;
+void ONEngine::EffectDebug(Effect* effect) {
+	if(!effect) return;
 	if(ImGui::CollapsingHeader("Effect", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool enabled = (_effect->enable != 0);
+		bool enabled = (effect->enable != 0);
 		if (ImGui::Checkbox("enable", &enabled)) {
-			_effect->enable = enabled ? 1 : 0;
+			effect->enable = enabled ? 1 : 0;
 		}
-        bool isCreate = _effect->IsCreateParticle();
+        bool isCreate = effect->IsCreateParticle();
         if (ImGui::Checkbox("isCreateParticle", &isCreate)) {
-            _effect->SetIsCreateParticle(isCreate);
+            effect->SetIsCreateParticle(isCreate);
         }
 	}
 }
@@ -499,145 +499,145 @@ void ONEngine::EndModuleHeader() {
     ImGui::PopID();
 }
 
-void ONEngine::ParticleSystemDebug(ParticleSystem* _ps) {
-	if (!_ps) return;
+void ONEngine::ParticleSystemDebug(ParticleSystem* ps) {
+	if (!ps) return;
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen)) {
 		
 		// --- Editor Preview Controls ---
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "--- Editor Preview ---");
-		ImGui::Text("Status: %s", _ps->isEditorPreview_ ? (_ps->isEditorPaused_ ? "Paused" : "Playing") : "Stopped");
-		ImGui::Text("Time: %.2f / %.2f", _ps->GetTime(), _ps->main.duration);
-		ImGui::Text("Alive: %llu / %d", _ps->aliveCount, _ps->main.maxParticles);
+		ImGui::Text("Status: %s", ps->isEditorPreview_ ? (ps->isEditorPaused_ ? "Paused" : "Playing") : "Stopped");
+		ImGui::Text("Time: %.2f / %.2f", ps->GetTime(), ps->main.duration);
+		ImGui::Text("Alive: %llu / %d", ps->aliveCount, ps->main.maxParticles);
 
 		if (ImGui::Button("Preview Play")) {
-			_ps->isEditorPreview_ = true;
-			_ps->isEditorPaused_ = false;
-			if (!_ps->IsPlaying()) _ps->Play();
+			ps->isEditorPreview_ = true;
+			ps->isEditorPaused_ = false;
+			if (!ps->IsPlaying()) ps->Play();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Preview Pause")) {
-			_ps->isEditorPaused_ = !_ps->isEditorPaused_;
+			ps->isEditorPaused_ = !ps->isEditorPaused_;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Preview Stop")) {
-			_ps->isEditorPreview_ = false;
-			_ps->isEditorPaused_ = false;
-			_ps->Stop();
+			ps->isEditorPreview_ = false;
+			ps->isEditorPaused_ = false;
+			ps->Stop();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Preview Restart")) {
-			_ps->Stop();
-			_ps->Play();
-			_ps->ResetTime(0.0f); // 内部状態を強制リセット
-			_ps->isEditorPreview_ = true;
-			_ps->isEditorPaused_ = false;
+			ps->Stop();
+			ps->Play();
+			ps->ResetTime(0.0f); // 内部状態を強制リセット
+			ps->isEditorPreview_ = true;
+			ps->isEditorPaused_ = false;
 		}
 
 		ImGui::Separator();
 
 		// --- Playback Controls (Runtime) ---
-		ImGui::Text("Runtime Status: %s", _ps->IsPlaying() ? (_ps->IsPaused() ? "Paused" : "Playing") : "Stopped");
-		if (ImGui::Button("Play")) _ps->Play(); ImGui::SameLine();
-		if (ImGui::Button("Pause")) _ps->Pause(); ImGui::SameLine();
-		if (ImGui::Button("Stop")) _ps->Stop(); ImGui::SameLine();
-		if (ImGui::Button("Restart")) { _ps->Stop(); _ps->Play(); }
+		ImGui::Text("Runtime Status: %s", ps->IsPlaying() ? (ps->IsPaused() ? "Paused" : "Playing") : "Stopped");
+		if (ImGui::Button("Play")) ps->Play(); ImGui::SameLine();
+		if (ImGui::Button("Pause")) ps->Pause(); ImGui::SameLine();
+		if (ImGui::Button("Stop")) ps->Stop(); ImGui::SameLine();
+		if (ImGui::Button("Restart")) { ps->Stop(); ps->Play(); }
 		
 		ImGui::Separator();
 
-		Editor::ImMathf::DragFloat("Duration", &_ps->main.duration);
-		ImGui::Checkbox("Looping", &_ps->main.looping);
-		ImGui::Checkbox("Prewarm", &_ps->main.prewarm);
-		DrawMinMaxFloat("Start Delay", _ps->main.startDelay);
-		DrawMinMaxFloat("Start Lifetime", _ps->main.startLifetime);
-		DrawMinMaxFloat("Start Speed", _ps->main.startSpeed);
-		DrawMinMaxFloat("Start Size", _ps->main.startSize);
-		DrawMinMaxFloat("Start Rotation", _ps->main.startRotation);
-		DrawMinMaxColor("Start Color", _ps->main.startColor);
-		Editor::ImMathf::DragFloat("Gravity Modifier", &_ps->main.gravityModifier);
-		Editor::ImMathf::InputEnum<SimulationSpace>("Simulation Space", &_ps->main.simulationSpace);
-		ImGui::DragInt("Max Particles", &_ps->main.maxParticles, 1, 1, 1000000);
+		Editor::ImMathf::DragFloat("Duration", &ps->main.duration);
+		ImGui::Checkbox("Looping", &ps->main.looping);
+		ImGui::Checkbox("Prewarm", &ps->main.prewarm);
+		DrawMinMaxFloat("Start Delay", ps->main.startDelay);
+		DrawMinMaxFloat("Start Lifetime", ps->main.startLifetime);
+		DrawMinMaxFloat("Start Speed", ps->main.startSpeed);
+		DrawMinMaxFloat("Start Size", ps->main.startSize);
+		DrawMinMaxFloat("Start Rotation", ps->main.startRotation);
+		DrawMinMaxColor("Start Color", ps->main.startColor);
+		Editor::ImMathf::DragFloat("Gravity Modifier", &ps->main.gravityModifier);
+		Editor::ImMathf::InputEnum<SimulationSpace>("Simulation Space", &ps->main.simulationSpace);
+		ImGui::DragInt("Max Particles", &ps->main.maxParticles, 1, 1, 1000000);
 	}
-	if (BeginModuleHeader("Emission", &_ps->emission.enabled)) {
-		Editor::ImMathf::DragFloat("Rate over Time", &_ps->emission.rateOverTime);
+	if (BeginModuleHeader("Emission", &ps->emission.enabled)) {
+		Editor::ImMathf::DragFloat("Rate over Time", &ps->emission.rateOverTime);
 		if (ImGui::TreeNode("Bursts")) {
-			if (ImGui::Button("+")) _ps->emission.bursts.push_back({});
-			for (size_t i = 0; i < _ps->emission.bursts.size(); ++i) {
+			if (ImGui::Button("+")) ps->emission.bursts.push_back({});
+			for (size_t i = 0; i < ps->emission.bursts.size(); ++i) {
 				ImGui::PushID((int)i);
-				ImGui::DragFloat("Time", &_ps->emission.bursts[i].time, 0.01f); ImGui::SameLine();
-				ImGui::DragInt("Count", &_ps->emission.bursts[i].count); ImGui::SameLine();
-				if (ImGui::Button("x")) { _ps->emission.bursts.erase(_ps->emission.bursts.begin() + i); ImGui::PopID(); break; }
+				ImGui::DragFloat("Time", &ps->emission.bursts[i].time, 0.01f); ImGui::SameLine();
+				ImGui::DragInt("Count", &ps->emission.bursts[i].count); ImGui::SameLine();
+				if (ImGui::Button("x")) { ps->emission.bursts.erase(ps->emission.bursts.begin() + i); ImGui::PopID(); break; }
 				ImGui::PopID();
 			}
 			ImGui::TreePop();
 		}
-		if (!_ps->emission.enabled) ImGui::EndDisabled();
+		if (!ps->emission.enabled) ImGui::EndDisabled();
 	}
 	EndModuleHeader();
-	if (BeginModuleHeader("Shape", &_ps->shape.enabled)) {
-		Editor::ImMathf::InputEnum<ParticleSystemShapeType>("Shape Type", &_ps->shape.type);
+	if (BeginModuleHeader("Shape", &ps->shape.enabled)) {
+		Editor::ImMathf::InputEnum<ParticleSystemShapeType>("Shape Type", &ps->shape.type);
 
-		if (_ps->shape.type == ParticleSystemShapeType::Box) {
+		if (ps->shape.type == ParticleSystemShapeType::Box) {
 			// Boxの場合はスケールのみ表示
-			Editor::ImMathf::DragFloat3("Box Scale", &_ps->shape.boxScale);
+			Editor::ImMathf::DragFloat3("Box Scale", &ps->shape.boxScale);
 		} else {
 			// それ以外の形状はRadiusを基本とする
-			Editor::ImMathf::DragFloat("Radius", &_ps->shape.radius);
+			Editor::ImMathf::DragFloat("Radius", &ps->shape.radius);
 
 			// Edge以外は厚みの設定が可能
-			if (_ps->shape.type != ParticleSystemShapeType::Edge) {
-				Editor::ImMathf::DragFloat("Radius Thickness", &_ps->shape.radiusThickness);
+			if (ps->shape.type != ParticleSystemShapeType::Edge) {
+				Editor::ImMathf::DragFloat("Radius Thickness", &ps->shape.radiusThickness);
 			}
 
 			// ConeとCircleはArc（角度）の設定が可能
-			if (_ps->shape.type == ParticleSystemShapeType::Cone || _ps->shape.type == ParticleSystemShapeType::Circle) {
-				Editor::ImMathf::DragFloat("Arc", &_ps->shape.arc);
+			if (ps->shape.type == ParticleSystemShapeType::Cone || ps->shape.type == ParticleSystemShapeType::Circle) {
+				Editor::ImMathf::DragFloat("Arc", &ps->shape.arc);
 			}
 
 			// Cone特有のパラメータ
-			if (_ps->shape.type == ParticleSystemShapeType::Cone) {
-				Editor::ImMathf::DragFloat("Angle", &_ps->shape.angle);
+			if (ps->shape.type == ParticleSystemShapeType::Cone) {
+				Editor::ImMathf::DragFloat("Angle", &ps->shape.angle);
 			}
 		}
 
-		if (!_ps->shape.enabled) ImGui::EndDisabled();
+		if (!ps->shape.enabled) ImGui::EndDisabled();
 	}
 	EndModuleHeader();
 
-	if (BeginModuleHeader("Color over Lifetime", &_ps->colorOverLifetime.enabled)) {
-		DrawMinMaxGradient("Color", _ps->colorOverLifetime.color);
-		if (!_ps->colorOverLifetime.enabled) ImGui::EndDisabled();
+	if (BeginModuleHeader("Color over Lifetime", &ps->colorOverLifetime.enabled)) {
+		DrawMinMaxGradient("Color", ps->colorOverLifetime.color);
+		if (!ps->colorOverLifetime.enabled) ImGui::EndDisabled();
 	}
 	EndModuleHeader();
 
-	if (BeginModuleHeader("Size over Lifetime", &_ps->sizeOverLifetime.enabled)) {
-		DrawMinMaxCurve("Size", _ps->sizeOverLifetime.size);
-		if (!_ps->sizeOverLifetime.enabled) ImGui::EndDisabled();
+	if (BeginModuleHeader("Size over Lifetime", &ps->sizeOverLifetime.enabled)) {
+		DrawMinMaxCurve("Size", ps->sizeOverLifetime.size);
+		if (!ps->sizeOverLifetime.enabled) ImGui::EndDisabled();
 	}
 	EndModuleHeader();
 
-	if (BeginModuleHeader("Velocity over Lifetime", &_ps->velocityOverLifetime.enabled)) {
-		DrawMinMaxCurve("Linear X", _ps->velocityOverLifetime.x);
-		DrawMinMaxCurve("Linear Y", _ps->velocityOverLifetime.y);
-		DrawMinMaxCurve("Linear Z", _ps->velocityOverLifetime.z);
-		DrawMinMaxCurve("Speed Modifier", _ps->velocityOverLifetime.speedModifier);
-		Editor::ImMathf::InputEnum<SimulationSpace>("Space", &_ps->velocityOverLifetime.space);
-		if (!_ps->velocityOverLifetime.enabled) ImGui::EndDisabled();
+	if (BeginModuleHeader("Velocity over Lifetime", &ps->velocityOverLifetime.enabled)) {
+		DrawMinMaxCurve("Linear X", ps->velocityOverLifetime.x);
+		DrawMinMaxCurve("Linear Y", ps->velocityOverLifetime.y);
+		DrawMinMaxCurve("Linear Z", ps->velocityOverLifetime.z);
+		DrawMinMaxCurve("Speed Modifier", ps->velocityOverLifetime.speedModifier);
+		Editor::ImMathf::InputEnum<SimulationSpace>("Space", &ps->velocityOverLifetime.space);
+		if (!ps->velocityOverLifetime.enabled) ImGui::EndDisabled();
 	}
 	EndModuleHeader();
 
 	bool rendererEnabled = true;
 	if (BeginModuleHeader("Renderer", &rendererEnabled)) {
-		Editor::ImMathf::InputEnum<ParticleSystemRenderer::RenderMode>("Render Mode", &_ps->renderer.renderMode);
-		Editor::ImMathf::InputEnum<ParticleSystemRenderer::RenderAlignment>("Render Alignment", &_ps->renderer.alignment);
+		Editor::ImMathf::InputEnum<ParticleSystemRenderer::RenderMode>("Render Mode", &ps->renderer.renderMode);
+		Editor::ImMathf::InputEnum<ParticleSystemRenderer::RenderAlignment>("Render Alignment", &ps->renderer.alignment);
 		
-		if (_ps->renderer.renderMode == ParticleSystemRenderer::RenderMode::StretchedBillboard) {
-			Editor::ImMathf::DragFloat("Speed Scale", &_ps->renderer.speedScale);
-			Editor::ImMathf::DragFloat("Length Scale", &_ps->renderer.lengthScale);
+		if (ps->renderer.renderMode == ParticleSystemRenderer::RenderMode::StretchedBillboard) {
+			Editor::ImMathf::DragFloat("Speed Scale", &ps->renderer.speedScale);
+			Editor::ImMathf::DragFloat("Length Scale", &ps->renderer.lengthScale);
 		}
 
-		Editor::ImMathf::InputEnum<ParticleSystemRenderer::BlendMode>("Blend Mode", &_ps->renderer.blendMode);
-		DrawAssetGuidField("Material", _ps->renderer.materialGuid, Asset::AssetType::Material);
-		DrawAssetGuidField("Mesh", _ps->renderer.meshGuid, Asset::AssetType::Mesh);
+		Editor::ImMathf::InputEnum<ParticleSystemRenderer::BlendMode>("Blend Mode", &ps->renderer.blendMode);
+		DrawAssetGuidField("Material", ps->renderer.materialGuid, Asset::AssetType::Material);
+		DrawAssetGuidField("Mesh", ps->renderer.meshGuid, Asset::AssetType::Mesh);
 	}
 	EndModuleHeader();
 }

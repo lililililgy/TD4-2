@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../Interface/ECSISystem.h"
@@ -20,14 +20,14 @@ public:
 	ColliderRenderQueueSystem();
 	~ColliderRenderQueueSystem() override = default;
 
-	void OutsideOfRuntimeUpdate(class ECSGroup* _ecs) override;
+	void OutsideOfRuntimeUpdate(class ECSGroup* ecs) override;
 	void RuntimeUpdate(class ECSGroup*) override {};
 
 	/// @brief SphereのデータからGizmoを更新する
-	void UpdateSphereCollider(ComponentArray<SphereCollider>* _sphereColliderArray);
+	void UpdateSphereCollider(ComponentArray<SphereCollider>* sphereColliderArray);
 
 	/// @brief BoxのデータからGizmoを更新する
-	void UpdateBoxCollider(ComponentArray<BoxCollider>* _boxColliderArray);
+	void UpdateBoxCollider(ComponentArray<BoxCollider>* boxColliderArray);
 
 };
 

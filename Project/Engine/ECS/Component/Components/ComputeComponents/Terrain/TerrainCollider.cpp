@@ -1,4 +1,4 @@
-﻿#include "TerrainCollider.h"
+#include "TerrainCollider.h"
 
 /// externals
 #include <imgui.h>
@@ -11,12 +11,12 @@
 
 using namespace ONEngine;
 
-void ComponentDebug::TerrainColliderDebug(TerrainCollider* _collider) {
-	if (!_collider) {
+void ComponentDebug::TerrainColliderDebug(TerrainCollider* collider) {
+	if (!collider) {
 		return;
 	}
 
-	if (_collider->GetTerrain()) {
+	if (collider->GetTerrain()) {
 		ImGui::Text("attached terrain");
 	} else {
 		ImGui::Text("null terrain");
@@ -24,11 +24,11 @@ void ComponentDebug::TerrainColliderDebug(TerrainCollider* _collider) {
 
 
 	if (ImGui::Button("attach terrain")) {
-		_collider->AttachTerrain();
+		collider->AttachTerrain();
 	}
 
 	if (ImGui::Button("copy vertices")) {
-		_collider->SetIsVertexGenerationRequested(true);
+		collider->SetIsVertexGenerationRequested(true);
 	}
 
 
@@ -37,19 +37,19 @@ void ComponentDebug::TerrainColliderDebug(TerrainCollider* _collider) {
 	/// ---------------------------------------------------
 
 	/// 最大傾斜角
-	Editor::ImMathf::DragFloat("max slope angle", &_collider->maxSlopeAngle_, 0.1f, 0.0f, 90.0f, "%.2f rad");
+	Editor::ImMathf::DragFloat("max slope angle", &collider->maxSlopeAngle_, 0.1f, 0.0f, 90.0f, "%.2f rad");
 }
 
-void ONEngine::from_json(const nlohmann::json& _j, TerrainCollider& _c) {
-	_c.enable = _j.value("enable", 1);
-	_c.maxSlopeAngle_ = _j.value("maxSlopeAngle", 0.0f);
+void ONEngine::from_json(const nlohmann::json& j, TerrainCollider& c) {
+	c.enable = j.value("enable", 1);
+	c.maxSlopeAngle_ = j.value("maxSlopeAngle", 0.0f);
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const TerrainCollider& _c) {
-	_j = {
+void ONEngine::to_json(nlohmann::json& j, const TerrainCollider& c) {
+	j = {
 		{ "type", "TerrainCollider" },
-		{ "enable", _c.enable },
-		{ "maxSlopeAngle", _c.maxSlopeAngle_ },
+		{ "enable", c.enable },
+		{ "maxSlopeAngle", c.maxSlopeAngle_ },
 	};
 }
 
@@ -70,7 +70,7 @@ void TerrainCollider::AttachTerrain() {
 	}
 }
 
-void TerrainCollider::CopyVertices(DxManager* _dxm) {
+void TerrainCollider::CopyVertices(DxManager* dxm) {
 	/// terrainから RWVertices をコピーする
 	if (!pTerrain_) {
 		return;
@@ -94,12 +94,12 @@ void TerrainCollider::CopyVertices(DxManager* _dxm) {
 		bufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
 		dxReadbackBuffer.CreateCommittedResource(
-			_dxm->GetDxDevice(), &heapProperties, D3D12_HEAP_FLAG_NONE,
+			dxm->GetDxDevice(), &heapProperties, D3D12_HEAP_FLAG_NONE,
 			&bufferDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr
 		);
 	}
 
-	DxCommand* dxCommand = _dxm->GetDxCommand();
+	DxCommand* dxCommand = dxm->GetDxCommand();
 	auto cmdList = dxCommand->GetCommandList();
 
 	DxResource& dxResource = pTerrain_->GetVerticesResource();
@@ -110,7 +110,7 @@ void TerrainCollider::CopyVertices(DxManager* _dxm) {
 
 	dxCommand->CommandExecuteAndWait();
 	dxCommand->CommandReset();
-	_dxm->HeapBindToCommandList();
+	dxm->HeapBindToCommandList();
 
 	/// RWVertices をCPUにコピー
 	TerrainVertex* gpuData = nullptr;
@@ -133,12 +133,12 @@ void TerrainCollider::CopyVertices(DxManager* _dxm) {
 
 }
 
-float TerrainCollider::GetHeight(const Vector3& _position) {
+float TerrainCollider::GetHeight(const Vector3& position) {
 	/// 条件が満たされない場合は0を返す
 	if (!pTerrain_) {
 		return 0;
 	}
-	if (!IsInsideTerrain(_position)) {
+	if (!IsInsideTerrain(position)) {
 		return 0;
 	}
 	if (vertices_.empty()) {
@@ -150,7 +150,7 @@ float TerrainCollider::GetHeight(const Vector3& _position) {
 
 	// 地形のローカル座標に変換
 	const Matrix4x4&& kMatInverse = pTerrain_->GetOwner()->GetTransform()->matWorld.Inverse();
-	Vector3 localPosition = Matrix4x4::Transform(_position, kMatInverse);
+	Vector3 localPosition = Matrix4x4::Transform(position, kMatInverse);
 
 	// uv値 (0~1)
 	Vector2 uv = Vector2(localPosition.x, localPosition.z) / pTerrain_->GetSize();
@@ -190,10 +190,10 @@ float TerrainCollider::GetHeight(const Vector3& _position) {
 	return vertexPosition.y; // 補間後の高さ
 }
 
-Vector3 TerrainCollider::GetGradient(const Vector3& _position) {
+Vector3 TerrainCollider::GetGradient(const Vector3& position) {
 	/// 地形のローカル座標に変換
 	const Matrix4x4&& kMatInverse = pTerrain_->GetOwner()->GetTransform()->matWorld.Inverse();
-	Vector3 localPosition = Matrix4x4::Transform(_position, kMatInverse);
+	Vector3 localPosition = Matrix4x4::Transform(position, kMatInverse);
 
 	/// uv値に変換
 	Vector2 uv = Vector2(localPosition.x, localPosition.z) / pTerrain_->GetSize();
@@ -220,9 +220,9 @@ Vector3 TerrainCollider::GetGradient(const Vector3& _position) {
 	return { slopeX, 0.0f, slopeZ };
 }
 
-bool TerrainCollider::IsInsideTerrain(const Vector3& _position) {
+bool TerrainCollider::IsInsideTerrain(const Vector3& position) {
 	const Matrix4x4&& kMatInverse = pTerrain_->GetOwner()->GetTransform()->matWorld.Inverse();
-	Vector3 localPosition = Matrix4x4::Transform(_position, kMatInverse);
+	Vector3 localPosition = Matrix4x4::Transform(position, kMatInverse);
 
 	/// 地形のローカル座標上で範囲外にいるかチェック
 	if (localPosition.x < 0.0f || localPosition.x > pTerrain_->GetSize().x ||
@@ -249,8 +249,8 @@ bool TerrainCollider::GetIsCreated() const {
 	return isCreated_;
 }
 
-void TerrainCollider::SetIsVertexGenerationRequested(bool _isRequested) {
-	isVertexGenerationRequested_ = _isRequested;
+void TerrainCollider::SetIsVertexGenerationRequested(bool isRequested) {
+	isVertexGenerationRequested_ = isRequested;
 }
 
 float TerrainCollider::GetMaxSlopeAngle() const {

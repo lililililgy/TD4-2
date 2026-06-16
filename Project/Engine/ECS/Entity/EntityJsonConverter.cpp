@@ -10,10 +10,10 @@ using namespace ONEngine;
 
 namespace {
 	// コンポーネントのリストから指定したタイプのコンポーネントJSONを探す
-	nlohmann::json FindComponentByType(const nlohmann::json& _components, const std::string& _type) {
-		if (!_components.is_array()) return nlohmann::json();
-		for (const auto& comp : _components) {
-			if (comp.value("type", "") == _type) {
+	nlohmann::json FindComponentByType(const nlohmann::json& components, const std::string& type) {
+		if (!components.is_array()) return nlohmann::json();
+		for (const auto& comp : components) {
+			if (comp.value("type", "") == type) {
 				return comp;
 			}
 		}
@@ -29,12 +29,12 @@ namespace {
 	}
 
 	// 2つのJSONオブジェクトの差異を抽出する（再帰的）
-	nlohmann::json GetJsonDiff(const nlohmann::json& _current, const nlohmann::json& _base) {
-		if (IsJsonValueEqual(_current, _base)) return nlohmann::json();
-		if (!_current.is_object() || !_base.is_object()) return _current;
+	nlohmann::json GetJsonDiff(const nlohmann::json& current, const nlohmann::json& base) {
+		if (IsJsonValueEqual(current, base)) return nlohmann::json();
+		if (!current.is_object() || !base.is_object()) return current;
 
 		nlohmann::json diff = nlohmann::json::object();
-		for (auto it = _current.begin(); it != _current.end(); ++it) {
+		for (auto it = current.begin(); it != current.end(); ++it) {
 			const std::string& key = it.key();
 			// typeは常に含める（識別のため）
 			if (key == "type") {
@@ -42,11 +42,11 @@ namespace {
 				continue;
 			}
 
-			if (!_base.contains(key)) {
+			if (!base.contains(key)) {
 				diff[key] = it.value();
-			} else if (!IsJsonValueEqual(it.value(), _base[key])) {
-				if (it.value().is_object() && _base[key].is_object()) {
-					nlohmann::json subDiff = GetJsonDiff(it.value(), _base[key]);
+			} else if (!IsJsonValueEqual(it.value(), base[key])) {
+				if (it.value().is_object() && base[key].is_object()) {
+					nlohmann::json subDiff = GetJsonDiff(it.value(), base[key]);
 					// type以外の実質的な差異がある場合のみ追加
 					if (!subDiff.is_null() && subDiff.size() > (subDiff.contains("type") ? 1 : 0)) {
 						diff[key] = subDiff;
@@ -61,36 +61,36 @@ namespace {
 // ... (MergeJson remains same)
 
 	// パッチJSONをベースJSONにマージする（再帰的）
-	void MergeJson(nlohmann::json& _base, const nlohmann::json& _patch) {
-		if (!_patch.is_object() || !_base.is_object()) return;
-		for (auto it = _patch.begin(); it != _patch.end(); ++it) {
+	void MergeJson(nlohmann::json& base, const nlohmann::json& patch) {
+		if (!patch.is_object() || !base.is_object()) return;
+		for (auto it = patch.begin(); it != patch.end(); ++it) {
 			const std::string& key = it.key();
-			if (it.value().is_object() && _base.contains(key) && _base[key].is_object()) {
-				MergeJson(_base[key], it.value());
+			if (it.value().is_object() && base.contains(key) && base[key].is_object()) {
+				MergeJson(base[key], it.value());
 			} else {
-				_base[key] = it.value();
+				base[key] = it.value();
 			}
 		}
 	}
 }
 
-nlohmann::json EntityJsonConverter::ToJson(const GameEntity* _entity, bool _forceFull) {
-	if (!_entity) {
+nlohmann::json EntityJsonConverter::ToJson(const GameEntity* entity, bool forceFull) {
+	if (!entity) {
 		return nlohmann::json();
 	}
 	nlohmann::json entityJson = nlohmann::json::object();
-	entityJson["prefabName"] = _entity->GetPrefabName();
-	entityJson["name"] = _entity->GetName();
-	entityJson["active"] = _entity->active;
-	// entityJson["id"] = _entity->GetId(); // DEPRECATED: id is now runtime-only
-	entityJson["guid"] = _entity->GetGuid().ToString();
+	entityJson["prefabName"] = entity->GetPrefabName();
+	entityJson["name"] = entity->GetName();
+	entityJson["active"] = entity->active;
+	// entityJson["id"] = entity->GetId(); // DEPRECATED: id is now runtime-only
+	entityJson["guid"] = entity->GetGuid().ToString();
 
 	// Prefabがある場合は差分のみを書き出す (forceFullがfalseの場合のみ)
 	nlohmann::json prefabComponents;
 	bool hasPrefab = false;
-	if (!_forceFull && _entity->GetPrefabName() != "") {
-		auto* collection = _entity->GetECSGroup()->GetEntityCollection();
-		auto* prefab = collection->GetPrefab(_entity->GetPrefabName());
+	if (!forceFull && entity->GetPrefabName() != "") {
+		auto* collection = entity->GetECSGroup()->GetEntityCollection();
+		auto* prefab = collection->GetPrefab(entity->GetPrefabName());
 		if (prefab) {
 			prefabComponents = prefab->GetJson().value("components", nlohmann::json::array());
 			hasPrefab = true;
@@ -98,12 +98,12 @@ nlohmann::json EntityJsonConverter::ToJson(const GameEntity* _entity, bool _forc
 	}
 
 	// コンポーネントの情報を追加
-	auto& components = _entity->GetComponents();
+	auto& components = entity->GetComponents();
 	for (const auto& component : components) {
 		nlohmann::json compJson = ComponentJsonConverter::ToJson(component.second);
 		if (compJson.empty()) continue;
 
-		if (hasPrefab && !_forceFull) {
+		if (hasPrefab && !forceFull) {
 			std::string type = compJson.value("type", "");
 			nlohmann::json prefabComp = FindComponentByType(prefabComponents, type);
 
@@ -124,8 +124,8 @@ nlohmann::json EntityJsonConverter::ToJson(const GameEntity* _entity, bool _forc
 	}
 
 	/// 親子関係の情報を追加
-	if (_entity->GetParent()) {
-		entityJson["parentGuid"] = _entity->GetParent()->GetGuid().ToString();
+	if (entity->GetParent()) {
+		entityJson["parentGuid"] = entity->GetParent()->GetGuid().ToString();
 	} else {
 		entityJson["parentGuid"] = nullptr;
 	}
@@ -133,27 +133,27 @@ nlohmann::json EntityJsonConverter::ToJson(const GameEntity* _entity, bool _forc
 	return entityJson;
 }
 
-void EntityJsonConverter::FromJson(const nlohmann::json& _json, GameEntity* _entity, const std::string& _groupName, bool _merge) {
+void EntityJsonConverter::FromJson(const nlohmann::json& json, GameEntity* entity, const std::string& groupName, bool merge) {
 
 	/// name, prefabNameを設定
-	if (_json.contains("name")) {
-		_entity->SetName(_json.at("name").get<std::string>());
+	if (json.contains("name")) {
+		entity->SetName(json.at("name").get<std::string>());
 	}
 
-	if (_json.contains("prefabName")) {
-		const std::string& prefabName = _json.at("prefabName").get<std::string>();
+	if (json.contains("prefabName")) {
+		const std::string& prefabName = json.at("prefabName").get<std::string>();
 		if (prefabName != "") {
-			_entity->SetPrefabName(prefabName);
+			entity->SetPrefabName(prefabName);
 		}
 	}
 
-	if (_json.contains("active")) {
-		_entity->active = _json.at("active").get<bool>();
+	if (json.contains("active")) {
+		entity->active = json.at("active").get<bool>();
 	}
 
 	/// コンポーネントを追加
-	if (_json.contains("components")) {
-		for (const auto& componentJson : _json["components"]) {
+	if (json.contains("components")) {
+		for (const auto& componentJson : json["components"]) {
 
 			/// jsonにtypeが無ければスキップ
 			if (!componentJson.contains("type")) {
@@ -162,11 +162,11 @@ void EntityJsonConverter::FromJson(const nlohmann::json& _json, GameEntity* _ent
 
 			const std::string componentType = componentJson.at("type").get<std::string>();
 
-			Console::Log(std::format("[CPP ECS] FromJson - Adding component '{}' to entity '{}'", componentType, _entity->GetName()));
+			Console::Log(std::format("[CPP ECS] FromJson - Adding component '{}' to entity '{}'", componentType, entity->GetName()));
 
-			IComponent* comp = _entity->AddComponent(componentType);
+			IComponent* comp = entity->AddComponent(componentType);
 			if (comp) {
-				if (_merge) {
+				if (merge) {
 					// 現在の状態をベースにマージして適用
 					nlohmann::json base = ComponentJsonConverter::ToJson(comp);
 					MergeJson(base, componentJson);
@@ -175,7 +175,7 @@ void EntityJsonConverter::FromJson(const nlohmann::json& _json, GameEntity* _ent
 					// 直接上書き
 					ComponentJsonConverter::FromJson(componentJson, comp);
 				}
-				comp->SetOwner(_entity);
+				comp->SetOwner(entity);
 			} else {
 				// コンポーネントの追加に失敗した場合のログ
 				Console::LogError("failed add component: " + componentType);
@@ -184,12 +184,12 @@ void EntityJsonConverter::FromJson(const nlohmann::json& _json, GameEntity* _ent
 	}
 }
 
-void EntityJsonConverter::TransformFromJson(const nlohmann::json& _json, GameEntity* _entity) {
+void EntityJsonConverter::TransformFromJson(const nlohmann::json& json, GameEntity* entity) {
 	/// transformだけjsonから読み込む
 
 	/// コンポーネントを追加
-	if (_json.contains("components")) {
-		for (const auto& componentJson : _json["components"]) {
+	if (json.contains("components")) {
+		for (const auto& componentJson : json["components"]) {
 			/// jsonにtypeが無ければスキップ
 			if (!componentJson.contains("type")) {
 				continue;
@@ -201,10 +201,10 @@ void EntityJsonConverter::TransformFromJson(const nlohmann::json& _json, GameEnt
 			}
 
 
-			IComponent* comp = _entity->AddComponent(componentType);
+			IComponent* comp = entity->AddComponent(componentType);
 			if (comp) {
 				ComponentJsonConverter::FromJson(componentJson, comp);
-				comp->SetOwner(_entity);
+				comp->SetOwner(entity);
 			} else {
 				// コンポーネントの追加に失敗した場合のログ
 				Console::LogError("failed add component: " + componentType);

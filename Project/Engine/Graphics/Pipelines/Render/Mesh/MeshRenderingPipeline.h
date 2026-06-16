@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <list>
@@ -54,25 +54,25 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	MeshRenderingPipeline(Asset::AssetCollection* _assetCollection);
+	MeshRenderingPipeline(Asset::AssetCollection* assetCollection);
 	~MeshRenderingPipeline();
 
 	/// @brief 初期化関数
-	/// @param _shaderCompiler 
-	/// @param _dxDevice 
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
+	/// @param shaderCompiler 
+	/// @param dxDevice 
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
 
 	/// @brief 描画処理
-	/// @param _dxCommand DxCommandへのポインタ
-	/// @param _entityCollection EntityCollectionへのポインタ
-	void Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) override;
+	/// @param dxCommand DxCommandへのポインタ
+	/// @param entityCollection EntityCollectionへのポインタ
+	void Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
 
 private:
 	/// ===================================================
 	/// private : methods
 	/// ===================================================
 
-	void Drawing(ID3D12GraphicsCommandList* _cmdList, std::unordered_map<std::string, std::list<MeshRenderer*>>& _pathMeshMap, const std::vector<Asset::Texture>& _textures);
+	void Drawing(ID3D12GraphicsCommandList* cmdList, std::unordered_map<std::string, std::list<MeshRenderer*>>& pathMeshMap, const std::vector<Asset::Texture>& textures);
 
 private:
 

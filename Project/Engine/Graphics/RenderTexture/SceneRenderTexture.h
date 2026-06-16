@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -44,20 +44,20 @@ public:
 	~SceneRenderTexture() = default;
 
 	void Initialize(
-		const std::string& _name, const Vector4& _clearColor, const Vector2& _textureSize,
-		DxManager* _dxm, Asset::AssetCollection* _assetCollection
+		const std::string& name, const Vector4& clearColor, const Vector2& textureSize,
+		DxManager* dxm, Asset::AssetCollection* assetCollection
 	);
 
 
-	void SetRenderTarget(DxCommand* _dxCommand, DxDSVHeap* _dxDSVHeap, bool _clear = true);
+	void SetRenderTarget(DxCommand* dxCommand, DxDSVHeap* dxDSVHeap, bool clear = true);
 
-	void CreateBarrierRenderTarget(DxCommand* _dxCommand);
-	void CreateBarrierPixelShaderResource(DxCommand* _dxCommand);
+	void CreateBarrierRenderTarget(DxCommand* dxCommand);
+	void CreateBarrierPixelShaderResource(DxCommand* dxCommand);
 
-	const std::string& GetName(size_t _index) const;
+	const std::string& GetName(size_t index) const;
 	const std::string& GetName() const;
 
-	DxResource& GetDxResource(size_t _index);
+	DxResource& GetDxResource(size_t index);
 
 private:
 	/// ===================================================

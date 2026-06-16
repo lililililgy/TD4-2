@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -49,16 +49,16 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	SpriteRenderingPipeline(Asset::AssetCollection* _assetCollection);
+	SpriteRenderingPipeline(Asset::AssetCollection* assetCollection);
 	~SpriteRenderingPipeline();
 
 
 	/// @brief 初期化処理
-	/// @param _shaderCompiler ShaderCompilerへのポインタ
-	/// @param _dxm DxManagerへのポインタ
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
+	/// @param shaderCompiler ShaderCompilerへのポインタ
+	/// @param dxm DxManagerへのポインタ
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
 
-	void Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) override;
+	void Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
 
 private:
 	/// ===================================================

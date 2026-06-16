@@ -78,9 +78,9 @@ struct AnimatorBatch {
 } /// unnamed namespace
 
 
-void ComponentApplyFuncs::ApplyTransform(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<TransformBatch*>(_element);
-	auto* tArray = _ecsGroup->GetComponentArray<Transform>();
+void ComponentApplyFuncs::ApplyTransform(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<TransformBatch*>(element);
+	auto* tArray = ecsGroup->GetComponentArray<Transform>();
 	if(!CheckComponentArrayEnable(tArray)) {
 		return;
 	}
@@ -93,9 +93,9 @@ void ComponentApplyFuncs::ApplyTransform(void* _element, ECSGroup* _ecsGroup) {
 	}
 }
 
-void ComponentApplyFuncs::ApplyMeshRenderer(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<MeshRendererBatch*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<MeshRenderer>();
+void ComponentApplyFuncs::ApplyMeshRenderer(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<MeshRendererBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<MeshRenderer>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -107,9 +107,9 @@ void ComponentApplyFuncs::ApplyMeshRenderer(void* _element, ECSGroup* _ecsGroup)
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::ApplyDissolve(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<DissolveBatch*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<DissolveMeshRenderer>();
+void ONEngine::ComponentApplyFuncs::ApplyDissolve(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<DissolveBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<DissolveMeshRenderer>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -120,9 +120,9 @@ void ONEngine::ComponentApplyFuncs::ApplyDissolve(void* _element, ECSGroup* _ecs
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::ApplySprite(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<SpriteBatch*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<SpriteRenderer>();
+void ONEngine::ComponentApplyFuncs::ApplySprite(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<SpriteBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<SpriteRenderer>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -133,9 +133,9 @@ void ONEngine::ComponentApplyFuncs::ApplySprite(void* _element, ECSGroup* _ecsGr
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::ApplyAgentIntent(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<AgentIntentComponent::BatchData*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<AgentIntentComponent>();
+void ONEngine::ComponentApplyFuncs::ApplyAgentIntent(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<AgentIntentComponent::BatchData*>(element);
+	auto* array = ecsGroup->GetComponentArray<AgentIntentComponent>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -151,9 +151,9 @@ void ONEngine::ComponentApplyFuncs::ApplyAgentIntent(void* _element, ECSGroup* _
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::ApplyCamera(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<CameraBatch*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<CameraComponent>();
+void ONEngine::ComponentApplyFuncs::ApplyCamera(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<CameraBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<CameraComponent>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -170,9 +170,9 @@ void ONEngine::ComponentApplyFuncs::ApplyCamera(void* _element, ECSGroup* _ecsGr
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::ApplyAnimator(void* _element, ECSGroup* _ecsGroup) {
-    auto* data = static_cast<AnimatorBatch*>(_element);
-    auto* array = _ecsGroup->GetComponentArray<Animator>();
+void ONEngine::ComponentApplyFuncs::ApplyAnimator(void* element, ECSGroup* ecsGroup) {
+    auto* data = static_cast<AnimatorBatch*>(element);
+    auto* array = ecsGroup->GetComponentArray<Animator>();
     if (!CheckComponentArrayEnable(array)) return;
 
     if (Animator* animator = array->GetComponent(data->compId)) {
@@ -182,9 +182,9 @@ void ONEngine::ComponentApplyFuncs::ApplyAnimator(void* _element, ECSGroup* _ecs
     }
 }
 
-void ONEngine::ComponentApplyFuncs::FetchTransform(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<TransformBatch*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<Transform>();
+void ONEngine::ComponentApplyFuncs::FetchTransform(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<TransformBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<Transform>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -195,13 +195,13 @@ void ONEngine::ComponentApplyFuncs::FetchTransform(void* _element, ECSGroup* _ec
 		data->scale = t->GetScale();
 		data->matWorld = t->GetMatWorld();
 	} else {
-		Console::LogWarning("[SYNC_ERROR] FetchTransform: Component with ID " + std::to_string(data->compId) + " not found in group " + _ecsGroup->GetGroupName());
+		Console::LogWarning("[SYNC_ERROR] FetchTransform: Component with ID " + std::to_string(data->compId) + " not found in group " + ecsGroup->GetGroupName());
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::FetchMeshRenderer(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<MeshRendererBatch*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<MeshRenderer>();
+void ONEngine::ComponentApplyFuncs::FetchMeshRenderer(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<MeshRendererBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<MeshRenderer>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -213,9 +213,9 @@ void ONEngine::ComponentApplyFuncs::FetchMeshRenderer(void* _element, ECSGroup* 
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::FetchDissolve(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<DissolveBatch*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<DissolveMeshRenderer>();
+void ONEngine::ComponentApplyFuncs::FetchDissolve(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<DissolveBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<DissolveMeshRenderer>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -227,9 +227,9 @@ void ONEngine::ComponentApplyFuncs::FetchDissolve(void* _element, ECSGroup* _ecs
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::FetchSprite(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<SpriteBatch*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<SpriteRenderer>();
+void ONEngine::ComponentApplyFuncs::FetchSprite(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<SpriteBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<SpriteRenderer>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -241,9 +241,9 @@ void ONEngine::ComponentApplyFuncs::FetchSprite(void* _element, ECSGroup* _ecsGr
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::FetchAgentIntent(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<AgentIntentComponent::BatchData*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<AgentIntentComponent>();
+void ONEngine::ComponentApplyFuncs::FetchAgentIntent(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<AgentIntentComponent::BatchData*>(element);
+	auto* array = ecsGroup->GetComponentArray<AgentIntentComponent>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -257,13 +257,13 @@ void ONEngine::ComponentApplyFuncs::FetchAgentIntent(void* _element, ECSGroup* _
 		data->isAttacking = ai->isAttacking;
 		data->targetEntityId = ai->targetEntityId;
 	} else {
-		Console::LogWarning("[SYNC_ERROR] FetchAgentIntent: Component with ID " + std::to_string(data->compId) + " not found in group " + _ecsGroup->GetGroupName());
+		Console::LogWarning("[SYNC_ERROR] FetchAgentIntent: Component with ID " + std::to_string(data->compId) + " not found in group " + ecsGroup->GetGroupName());
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::FetchCamera(void* _element, ECSGroup* _ecsGroup) {
-	auto* data = static_cast<CameraBatch*>(_element);
-	auto* array = _ecsGroup->GetComponentArray<CameraComponent>();
+void ONEngine::ComponentApplyFuncs::FetchCamera(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<CameraBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<CameraComponent>();
 	if(!CheckComponentArrayEnable(array)) {
 		return;
 	}
@@ -288,9 +288,9 @@ void ONEngine::ComponentApplyFuncs::FetchCamera(void* _element, ECSGroup* _ecsGr
 	}
 }
 
-void ONEngine::ComponentApplyFuncs::FetchAnimator(void* _element, ECSGroup* _ecsGroup) {
-    auto* data = static_cast<AnimatorBatch*>(_element);
-    auto* array = _ecsGroup->GetComponentArray<Animator>();
+void ONEngine::ComponentApplyFuncs::FetchAnimator(void* element, ECSGroup* ecsGroup) {
+    auto* data = static_cast<AnimatorBatch*>(element);
+    auto* array = ecsGroup->GetComponentArray<Animator>();
     if (!CheckComponentArrayEnable(array)) return;
 
     if (Animator* animator = array->GetComponent(data->compId)) {
@@ -300,65 +300,65 @@ void ONEngine::ComponentApplyFuncs::FetchAnimator(void* _element, ECSGroup* _ecs
     }
 }
 
-ComponentApplyFunc ComponentApplyFuncs::GetApplyFunc(MonoClass* _monoClass) {
-	auto itr = gApplyFuncMap.find(_monoClass);
+ComponentApplyFunc ComponentApplyFuncs::GetApplyFunc(MonoClass* monoClass) {
+	auto itr = gApplyFuncMap.find(monoClass);
 	if(itr == gApplyFuncMap.end()) {
 		return nullptr;
 	}
 	return itr->second;
 }
 
-ComponentFetchFunc ONEngine::ComponentApplyFuncs::GetFetchFunc(MonoClass* _monoClass) {
-	auto itr = gFetchFuncMap.find(_monoClass);
+ComponentFetchFunc ONEngine::ComponentApplyFuncs::GetFetchFunc(MonoClass* monoClass) {
+	auto itr = gFetchFuncMap.find(monoClass);
 	if(itr == gFetchFuncMap.end()) {
 		return nullptr;
 	}
 	return itr->second;
 }
 
-size_t ONEngine::ComponentApplyFuncs::GetBatchElementSize(MonoClass* _monoClass) {
-	auto itr = gComponentBatchSize.find(_monoClass);
+size_t ONEngine::ComponentApplyFuncs::GetBatchElementSize(MonoClass* monoClass) {
+	auto itr = gComponentBatchSize.find(monoClass);
 	if(itr == gComponentBatchSize.end()) {
 		return 0;
 	}
 	return itr->second;
 }
 
-void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* _monoImage) {
+void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
 	gApplyFuncMap.clear();
 	gFetchFuncMap.clear();
 	gComponentBatchSize.clear();
 
 	{	/// Transform
-		MonoClass* monoClass = mono_class_from_name(_monoImage, "", "Transform");
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "Transform");
 		gApplyFuncMap[monoClass] = ApplyTransform;
 		gFetchFuncMap[monoClass] = FetchTransform;
 		gComponentBatchSize[monoClass] = sizeof(TransformBatch);
 	}
 
 	{	/// MeshRenderer
-		MonoClass* monoClass = mono_class_from_name(_monoImage, "", "MeshRenderer");
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "MeshRenderer");
 		gApplyFuncMap[monoClass] = ApplyMeshRenderer;
 		gFetchFuncMap[monoClass] = FetchMeshRenderer;
 		gComponentBatchSize[monoClass] = sizeof(MeshRendererBatch);
 	}
 
 	{	/// DissolveMeshRenderer
-		MonoClass* monoClass = mono_class_from_name(_monoImage, "", "DissolveMeshRenderer");
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "DissolveMeshRenderer");
 		gApplyFuncMap[monoClass] = ApplyDissolve;
 		gFetchFuncMap[monoClass] = FetchDissolve;
 		gComponentBatchSize[monoClass] = sizeof(DissolveBatch);
 	}
 
 	{	/// SpriteRenderer
-		MonoClass* monoClass = mono_class_from_name(_monoImage, "", "SpriteRenderer");
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "SpriteRenderer");
 		gApplyFuncMap[monoClass] = ApplySprite;
 		gFetchFuncMap[monoClass] = FetchSprite;
 		gComponentBatchSize[monoClass] = sizeof(SpriteBatch);
 	}
 
 	{	/// AgentIntentComponent
-		MonoClass* monoClass = mono_class_from_name(_monoImage, "", "AgentIntentComponent");
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "AgentIntentComponent");
 		if (monoClass) {
 			gApplyFuncMap[monoClass] = ApplyAgentIntent;
 			gFetchFuncMap[monoClass] = FetchAgentIntent;
@@ -367,7 +367,7 @@ void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* _monoImage) {
 	}
 
 	{	/// CameraComponent
-		MonoClass* monoClass = mono_class_from_name(_monoImage, "", "CameraComponent");
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "CameraComponent");
 		if (monoClass) {
 			gApplyFuncMap[monoClass] = ApplyCamera;
 			gFetchFuncMap[monoClass] = FetchCamera;
@@ -376,7 +376,7 @@ void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* _monoImage) {
 	}
 
 	{	/// Animator
-		MonoClass* monoClass = mono_class_from_name(_monoImage, "", "Animator");
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "Animator");
 		if (monoClass) {
 			gApplyFuncMap[monoClass] = ApplyAnimator;
 			gFetchFuncMap[monoClass] = FetchAnimator;

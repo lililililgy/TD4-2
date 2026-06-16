@@ -1,4 +1,4 @@
-﻿#include "GPUMaterial.h"
+#include "GPUMaterial.h"
 
 using namespace ONEngine;
 
@@ -13,22 +13,22 @@ using namespace ONEngine;
 /// GPUMaterial Json変換
 /// ------------------------------------------------
 
-void ONEngine::to_json(nlohmann::json& _j, const GPUMaterial& _material) {
-	_j = nlohmann::json{
-		{ "uvTransform", _material.uvTransform },
-		{ "baseColor", _material.baseColor },
-		{ "postEffectFlags", _material.postEffectFlags },
-		{ "entityId", _material.entityId },
-		{ "baseTextureId", _material.baseTextureId },
-		{ "normalTextureId", _material.normalTextureId }
+void ONEngine::to_json(nlohmann::json& j, const GPUMaterial& material) {
+	j = nlohmann::json{
+		{ "uvTransform", material.uvTransform },
+		{ "baseColor", material.baseColor },
+		{ "postEffectFlags", material.postEffectFlags },
+		{ "entityId", material.entityId },
+		{ "baseTextureId", material.baseTextureId },
+		{ "normalTextureId", material.normalTextureId }
 	};
 }
 
-void ONEngine::from_json(const nlohmann::json& _j, GPUMaterial& _material) {
-	_material.uvTransform     = _j.value("uvTransform", UVTransform{});
-	_material.baseColor       = _j.value("baseColor", Vector4::White);
-	_material.postEffectFlags = _j.value("postEffectFlags", PostEffectFlags_None);
-	_material.entityId        = _j.value("entityId", 0);
-	_material.baseTextureId   = _j.value("baseTextureId", -1);
-	_material.normalTextureId = _j.value("normalTextureId", -1);
+void ONEngine::from_json(const nlohmann::json& j, GPUMaterial& material) {
+	material.uvTransform     = j.value("uvTransform", UVTransform{});
+	material.baseColor       = j.value("baseColor", Vector4::White);
+	material.postEffectFlags = j.value("postEffectFlags", PostEffectFlags_None);
+	material.entityId        = j.value("entityId", 0);
+	material.baseTextureId   = j.value("baseTextureId", -1);
+	material.normalTextureId = j.value("normalTextureId", -1);
 }

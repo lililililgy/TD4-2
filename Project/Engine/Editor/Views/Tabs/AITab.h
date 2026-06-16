@@ -15,10 +15,10 @@ class EditorManager;
 class AITab : public IEditorWindowContainer {
 public:
 	AITab(
-		ONEngine::DxManager* _dxm,
-		ONEngine::EntityComponentSystem* _ecs,
-		EditorManager* _editorManager,
-		ONEngine::SceneManager* _sceneManager);
+		ONEngine::DxManager* dxm,
+		ONEngine::EntityComponentSystem* ecs,
+		EditorManager* editorManager,
+		ONEngine::SceneManager* sceneManager);
 	~AITab() override = default;
 };
 

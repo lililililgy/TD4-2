@@ -382,13 +382,13 @@ MonoString* ONEngine::InternalGetMeshPath(uint64_t _nativeHandle) {
 	return monoMeshPath;
 }
 
-void ONEngine::InternalSetMeshPath(uint64_t _nativeHandle, MonoString* _path) {
-	SkinMeshRenderer* smr = GetSkinMeshRenderer(_nativeHandle);
+void ONEngine::InternalSetMeshPath(uint64_t nativeHandle, MonoString* path) {
+	SkinMeshRenderer* smr = GetSkinMeshRenderer(nativeHandle);
 	/// MonoStringからstd::stringに変換
-	char* pathChars = mono_string_to_utf8(_path);
-	std::string path(pathChars);
+	char* pathChars = mono_string_to_utf8(path);
+	std::string pathStr(pathChars);
 	mono_free(pathChars);
-	smr->SetMeshPath(path);
+	smr->SetMeshPath(pathStr);
 }
 
 MonoString* ONEngine::InternalGetTexturePath(uint64_t _nativeHandle) {
@@ -399,13 +399,13 @@ MonoString* ONEngine::InternalGetTexturePath(uint64_t _nativeHandle) {
 	return monoTexturePath;
 }
 
-void ONEngine::InternalSetTexturePath(uint64_t _nativeHandle, MonoString* _path) {
-	SkinMeshRenderer* smr = GetSkinMeshRenderer(_nativeHandle);
+void ONEngine::InternalSetTexturePath(uint64_t nativeHandle, MonoString* path) {
+	SkinMeshRenderer* smr = GetSkinMeshRenderer(nativeHandle);
 	/// MonoStringからstd::stringに変換
-	char* pathChars = mono_string_to_utf8(_path);
-	std::string path(pathChars);
+	char* pathChars = mono_string_to_utf8(path);
+	std::string pathStr(pathChars);
 	mono_free(pathChars);
-	smr->SetTexturePath(path);
+	smr->SetTexturePath(pathStr);
 }
 
 bool ONEngine::InternalGetIsPlaying(uint64_t _nativeHandle) {

@@ -15,8 +15,8 @@ namespace ONEngine {
 class AgentIntentComponent;
 
 /// Json変換
-void from_json(const nlohmann::json& _j, AgentIntentComponent& _c);
-void to_json(nlohmann::json& _j, const AgentIntentComponent& _c);
+void from_json(const nlohmann::json& j, AgentIntentComponent& c);
+void to_json(nlohmann::json& j, const AgentIntentComponent& c);
 
 namespace ComponentDebug {
 void AgentIntentComponentDebug(AgentIntentComponent* comp);

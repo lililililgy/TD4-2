@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 /// engine
@@ -49,8 +49,8 @@ public:
 	VoxelTerrainBrushPreviewRenderingPipeline(Asset::AssetCollection* assetCollection);
 	~VoxelTerrainBrushPreviewRenderingPipeline() override;
 
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
-	void Draw(class ECSGroup* _ecs, class CameraComponent* _camera, DxCommand* _dxCommand) override;
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
+	void Draw(class ECSGroup* ecs, class CameraComponent* camera, DxCommand* dxCommand) override;
 
 	bool CheckVoxelTerrainBufferEnabled(class VoxelTerrain* vt);
 

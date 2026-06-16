@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/Core/Utility/Utility.h"
@@ -29,16 +29,16 @@ public:
 	/// ===================================================
 
 	/// @brief pipelineの初期化を行う
-	/// @param _shaderCompiler ShaderCompilerへのポインタ
-	/// @param _dxm DxManagerへのポインタ
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
+	/// @param shaderCompiler ShaderCompilerへのポインタ
+	/// @param dxm DxManagerへのポインタ
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
 	
 	/// @brief post processの実行
 	void Execute(
-		const std::string& _textureName,
-		DxCommand* _dxCommand,
-		Asset::AssetCollection* _assetCollection,
-		EntityComponentSystem* _ecs
+		const std::string& textureName,
+		DxCommand* dxCommand,
+		Asset::AssetCollection* assetCollection,
+		EntityComponentSystem* ecs
 	) override;
 
 private:

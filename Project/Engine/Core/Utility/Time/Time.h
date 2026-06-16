@@ -37,8 +37,8 @@ public:
 	static float TimeScale();
 
 	/// @brief TimeScaleを設定する
-	/// @param _timeScale scale値
-	static void SetTimeScale(float _timeScale);
+	/// @param timeScale scale値
+	static void SetTimeScale(float timeScale);
 };
 
 

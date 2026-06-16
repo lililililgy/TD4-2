@@ -1,4 +1,4 @@
-﻿#include "PostProcessGrayscalePerObject.h"
+#include "PostProcessGrayscalePerObject.h"
 
 using namespace ONEngine;
 
@@ -8,11 +8,11 @@ using namespace ONEngine;
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 
-void PostProcessGrayscalePerObject::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void PostProcessGrayscalePerObject::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/PostProcess/PerObject/Grayscale/Grayscale.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ComputePipeline>();
@@ -25,21 +25,21 @@ void PostProcessGrayscalePerObject::Initialize(ShaderCompiler* _shaderCompiler, 
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2);
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 
 	}
 
 }
 
-void PostProcessGrayscalePerObject::Execute(const std::string& _textureName, DxCommand* _dxCommand, Asset::AssetCollection* _assetCollection, [[maybe_unused]] EntityComponentSystem* _entityComponentSystem) {
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+void PostProcessGrayscalePerObject::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, [[maybe_unused]] EntityComponentSystem* entityComponentSystem) {
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
-	auto command = _dxCommand->GetCommandList();
-	auto& textures = _assetCollection->GetTextures();
-	textureIndices_[0] = _assetCollection->GetTextureIndex(_textureName + "Scene");
-	textureIndices_[1] = _assetCollection->GetTextureIndex(_textureName + "Flags");
-	textureIndices_[2] = _assetCollection->GetTextureIndex("postProcessResult");
+	auto command = dxCommand->GetCommandList();
+	auto& textures = assetCollection->GetTextures();
+	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
+	textureIndices_[1] = assetCollection->GetTextureIndex(textureName + "Flags");
+	textureIndices_[2] = assetCollection->GetTextureIndex("postProcessResult");
 
 	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetSRVGPUHandle());

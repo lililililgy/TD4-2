@@ -5,8 +5,8 @@ using namespace ONEngine;
 
 std::mt19937 Random::generator_(std::random_device{}());
 
-int Random::Int(int _min, int _max) {
-	std::uniform_int_distribution<int> distribution(_min, _max);
+int Random::Int(int min, int max) {
+	std::uniform_int_distribution<int> distribution(min, max);
 	return distribution(generator_);
 }
 
@@ -14,8 +14,8 @@ int Random::Int() {
 	return Int((std::numeric_limits<int>::min)(), (std::numeric_limits<int>::max)());
 }
 
-uint64_t Random::UInt64(uint64_t _min, uint64_t _max) {
-	std::uniform_int_distribution<uint64_t> distribution(_min, _max);
+uint64_t Random::UInt64(uint64_t min, uint64_t max) {
+	std::uniform_int_distribution<uint64_t> distribution(min, max);
 	return distribution(generator_);
 }
 
@@ -23,11 +23,11 @@ uint64_t Random::UInt64() {
 	return UInt64((std::numeric_limits<uint64_t>::min)(), (std::numeric_limits<uint64_t>::max)());
 }
 
-float Random::Float(float _min, float _max) {
-	if (_min > _max) {
-		std::swap(_min, _max);
+float Random::Float(float min, float max) {
+	if (min > max) {
+		std::swap(min, max);
 	}
-	std::uniform_real_distribution<float> distribution(_min, _max);
+	std::uniform_real_distribution<float> distribution(min, max);
 	return distribution(generator_);
 }
 
@@ -35,27 +35,27 @@ float Random::Float() {
 	return Float((std::numeric_limits<float>::min)(), (std::numeric_limits<float>::max)());
 }
 
-Vector2 Random::Vec2(const Vector2& _min, const Vector2& _max) {
+Vector2 Random::Vec2(const Vector2& min, const Vector2& max) {
 	return Vector2(
-		Float(_min.x, _max.x),
-		Float(_min.y, _max.y)
+		Float(min.x, max.x),
+		Float(min.y, max.y)
 	);
 }
 
-Vector3 Random::Vec3(const Vector3& _min, const Vector3& _max) {
+Vector3 Random::Vec3(const Vector3& min, const Vector3& max) {
 	return Vector3(
-		Float(_min.x, _max.x),
-		Float(_min.y, _max.y),
-		Float(_min.z, _max.z)
+		Float(min.x, max.x),
+		Float(min.y, max.y),
+		Float(min.z, max.z)
 	);
 }
 
-Vector4 Random::Vec4(const Vector4& _min, const Vector4& _max) {
+Vector4 Random::Vec4(const Vector4& min, const Vector4& max) {
 	return Vector4(
-		Float(_min.x, _max.x),
-		Float(_min.y, _max.y),
-		Float(_min.z, _max.z),
-		Float(_min.w, _max.w)
+		Float(min.x, max.x),
+		Float(min.y, max.y),
+		Float(min.z, max.z),
+		Float(min.w, max.w)
 	);
 }
 

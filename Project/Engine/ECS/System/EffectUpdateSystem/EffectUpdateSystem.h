@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../Interface/ECSISystem.h"
@@ -18,7 +18,7 @@ public:
 	EffectUpdateSystem() = default;
 	~EffectUpdateSystem() = default;
 
-	void RuntimeUpdate(class ECSGroup* _ecs) override;
+	void RuntimeUpdate(class ECSGroup* ecs) override;
 
 private:
 	/// ==================================================
@@ -34,7 +34,7 @@ private:
 	/// ==================================================
 
 	/// @brief エフェクトの要素を更新する
-	void UpdateElement(Effect* _effect, Effect::Element* _element);
+	void UpdateElement(Effect* effect, Effect::Element* element);
 
 
 };

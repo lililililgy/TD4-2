@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -32,8 +32,8 @@ public:
 	IEditorCompute() = default;
 	virtual ~IEditorCompute() = default;
 
-	virtual void Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) = 0;
-	virtual void Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* _assetCollection) = 0;
+	virtual void Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) = 0;
+	virtual void Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* assetCollection) = 0;
 
 
 protected:

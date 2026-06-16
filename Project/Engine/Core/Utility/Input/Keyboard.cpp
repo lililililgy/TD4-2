@@ -14,8 +14,8 @@ using namespace ONEngine;
 Keyboard::Keyboard() = default;
 Keyboard::~Keyboard() = default;
 
-void Keyboard::Initialize(IDirectInput8* _directInput, WindowManager* _windowManager) {
-	HRESULT hr = _directInput->CreateDevice(
+void Keyboard::Initialize(IDirectInput8* directInput, WindowManager* windowManager) {
+	HRESULT hr = directInput->CreateDevice(
 		GUID_SysKeyboard, &keyboard_, NULL);
 
 	Assert(SUCCEEDED(hr), "キーボードデバイスの生成に失敗しました");
@@ -31,16 +31,16 @@ void Keyboard::Initialize(IDirectInput8* _directInput, WindowManager* _windowMan
 	*/
 
 	hr = keyboard_->SetCooperativeLevel(
-		_windowManager->GetMainWindow()->GetHwnd(),
+		windowManager->GetMainWindow()->GetHwnd(),
 		DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
 	);
 	Assert(SUCCEEDED(hr), "キーボードデバイスの生成に失敗しました");
 }
 
 
-void Keyboard::Update(Window* _window) {
+void Keyboard::Update(Window* window) {
 	keyboard_->SetCooperativeLevel(
-		_window->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
+		window->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
 	);
 
 	/// キーボード情報の取得開始

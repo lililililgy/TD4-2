@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/Core/Utility/Utility.h"
@@ -27,21 +27,21 @@ public:
 	/// =================================================
 
 	EffectEmitShape();
-	EffectEmitShape(const EffectEmitShape& _shape);
+	EffectEmitShape(const EffectEmitShape& shape);
 	~EffectEmitShape() = default;
 
 	/// @brief エミッターの形状の代入演算子
-	/// @param _shape エミッターの形状
+	/// @param shape エミッターの形状
 	/// @return 形状の参照
-	EffectEmitShape& operator= (const EffectEmitShape& _shape);
+	EffectEmitShape& operator= (const EffectEmitShape& shape);
 
 	/// @brief エミッターの座標
 	Vector3 GetEmitPosition();
 
 	/// @brief エミット後の方向ベクトルを取得する
-	/// @param _emitedPosition 出力後の座標
+	/// @param emitedPosition 出力後の座標
 	/// @return エミット後の方向ベクトル
-	Vector3 GetEmitDirection(const Vector3& _emitedPosition);
+	Vector3 GetEmitDirection(const Vector3& emitedPosition);
 
 private:
 	/// =================================================
@@ -60,16 +60,16 @@ public:
 	/// public : accessors
 	///	===========================================
 
-	void SetShapeType(ShapeType _type);
+	void SetShapeType(ShapeType type);
 
-	void SetSphere(const Vector3& _center, float _radius);
-	void SetSphere(const Sphere& _sphere);
+	void SetSphere(const Vector3& center, float radius);
+	void SetSphere(const Sphere& sphere);
 
-	void SetCube(const Vector3& _center, const Vector3& _size);
-	void SetCube(const Cube& _cube);
+	void SetCube(const Vector3& center, const Vector3& size);
+	void SetCube(const Cube& cube);
 
-	void SetCone(const Vector3& _center, float _angle, float _radius, float _height);
-	void SetCone(const Cone& _cone);
+	void SetCone(const Vector3& center, float angle, float radius, float height);
+	void SetCone(const Cone& cone);
 
 	Vector3 GetCenter() const;
 
@@ -82,12 +82,12 @@ public:
 };
 
 
-inline EffectEmitShape& EffectEmitShape::operator=(const EffectEmitShape& _shape) {
-	shapeType_ = _shape.shapeType_;
+inline EffectEmitShape& EffectEmitShape::operator=(const EffectEmitShape& shape) {
+	shapeType_ = shape.shapeType_;
 	switch (shapeType_) {
-	case ShapeType::Sphere: sphere_ = _shape.sphere_; break;
-	case ShapeType::Cube: cube_ = _shape.cube_; break;
-	case ShapeType::Cone: cone_ = _shape.cone_; break;
+	case ShapeType::Sphere: sphere_ = shape.sphere_; break;
+	case ShapeType::Cube: cube_ = shape.cube_; break;
+	case ShapeType::Cone: cone_ = shape.cone_; break;
 	}
 
 	return *this;

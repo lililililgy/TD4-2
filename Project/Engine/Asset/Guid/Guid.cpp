@@ -1,4 +1,4 @@
-﻿#include "Guid.h"
+#include "Guid.h"
 
 /// std
 #include <iomanip>
@@ -20,12 +20,12 @@ constexpr size_t kGuidHexSegmentLength = 16;
 } /// namespace
 
 
-void ONEngine::from_json(const nlohmann::json& _j, Guid& _guid) {
-    _guid = Guid::FromString(_j.get<std::string>());
+void ONEngine::from_json(const nlohmann::json& j, Guid& guid) {
+    guid = Guid::FromString(j.get<std::string>());
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const Guid& _guid) {
-    _j = _guid.ToString();
+void ONEngine::to_json(nlohmann::json& j, const Guid& guid) {
+    j = guid.ToString();
 }
 
 
@@ -34,7 +34,7 @@ const Guid Guid::kInvalid = Guid{ 0, 0 };
 
 
 Guid::Guid() : high(0), low(0) {}
-Guid::Guid(uint64_t _high, uint64_t _low) : high(_high), low(_low) {}
+Guid::Guid(uint64_t high, uint64_t low) : high(high), low(low) {}
 
 std::string Guid::ToString() const {
 	/// ----- GuidをStringに変換する ----- ///
@@ -50,20 +50,20 @@ bool Guid::CheckValid() const {
 	return (high != 0) || (low != 0);
 }
 
-std::string Guid::ToString(const Guid& _guid) {
-	return _guid.ToString();
+std::string Guid::ToString(const Guid& guid) {
+	return guid.ToString();
 }
 
-Guid Guid::FromString(const std::string& _str) {
+Guid Guid::FromString(const std::string& str) {
 	/// ----- StringをGuidに変換して返す ----- ///
 
-	/// _str が32文字でない場合は無効なGuidを返す
-	if (_str.size() != kGuidStringLength) {
+	/// str が32文字でない場合は無効なGuidを返す
+	if (str.size() != kGuidStringLength) {
 		return Guid{};
 	}
 
-	uint64_t hi = std::stoull(_str.substr(0, kGuidHexSegmentLength), nullptr, kGuidHexSegmentLength);
-	uint64_t lo = std::stoull(_str.substr(kGuidHexSegmentLength, kGuidHexSegmentLength), nullptr, kGuidHexSegmentLength);
+	uint64_t hi = std::stoull(str.substr(0, kGuidHexSegmentLength), nullptr, kGuidHexSegmentLength);
+	uint64_t lo = std::stoull(str.substr(kGuidHexSegmentLength, kGuidHexSegmentLength), nullptr, kGuidHexSegmentLength);
 	return Guid(hi, lo);
 }
 

@@ -9,8 +9,8 @@
 
 using namespace ONEngine::Asset;
 
-std::optional<AnimationClip> AssetLoader<AnimationClip>::Load(const std::string& _filepath, typename Meta<AnimationClip::MetaData> meta) {
-    std::ifstream file(_filepath);
+std::optional<AnimationClip> AssetLoader<AnimationClip>::Load(const std::string& filepath, typename Meta<AnimationClip::MetaData> meta) {
+    std::ifstream file(filepath);
     if (!file.is_open()) return std::nullopt;
 
     nlohmann::json j;
@@ -73,12 +73,12 @@ std::optional<AnimationClip> AssetLoader<AnimationClip>::Load(const std::string&
     return clip;
 }
 
-std::optional<AnimationClip> AssetLoader<AnimationClip>::Reload(const std::string& _filepath, AnimationClip* /*_src*/, typename Meta<AnimationClip::MetaData> meta) {
-    return Load(_filepath, meta);
+std::optional<AnimationClip> AssetLoader<AnimationClip>::Reload(const std::string& filepath, AnimationClip* /*src*/, typename Meta<AnimationClip::MetaData> meta) {
+    return Load(filepath, meta);
 }
 
-Meta<typename AnimationClip::MetaData> AssetLoader<AnimationClip>::GetMetaData(const std::string& _filepath) {
-    std::string metaPath = _filepath + ".meta";
-    MetaBase base = LoadOrGenerateMetaBase(metaPath, _filepath);
+Meta<typename AnimationClip::MetaData> AssetLoader<AnimationClip>::GetMetaData(const std::string& filepath) {
+    std::string metaPath = filepath + ".meta";
+    MetaBase base = LoadOrGenerateMetaBase(metaPath, filepath);
     return { base, AnimationClip::MetaData{} };
 }

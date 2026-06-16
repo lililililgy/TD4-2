@@ -1,4 +1,4 @@
-﻿#include "CameraUpdateSystem.h"
+#include "CameraUpdateSystem.h"
 
 using namespace ONEngine;
 
@@ -11,7 +11,7 @@ using namespace ONEngine;
 
 namespace {
 
-	void DrawFrustumDebug(const CameraComponent* _camera, float _size = 1.0f) {
+	void DrawFrustumDebug(const CameraComponent* camera, float size = 1.0f) {
 		/// ----- 試錐台のデバッグ表示 ----- ///
 
 
@@ -32,8 +32,8 @@ namespace {
 
 
 		/// ViewProjectionの逆行列を計算
-		Matrix4x4 invVP = _camera->GetViewProjection().matVP.Inverse();
-		const Vector3 camPos = _camera->GetOwner()->GetPosition();
+		Matrix4x4 invVP = camera->GetViewProjection().matVP.Inverse();
+		const Vector3 camPos = camera->GetOwner()->GetPosition();
 
 		std::array<Vector4, kNDCCornerCount> worldCorners;
 		for (size_t i = 0; i < kNDCCornerCount; i++) {
@@ -50,9 +50,9 @@ namespace {
 				wc.z - camPos.z
 			};
 
-			wc.x = camPos.x + dir.x * _size;
-			wc.y = camPos.y + dir.y * _size;
-			wc.z = camPos.z + dir.z * _size;
+			wc.x = camPos.x + dir.x * size;
+			wc.y = camPos.y + dir.y * size;
+			wc.z = camPos.z + dir.z * size;
 
 			worldCorners[i] = wc;
 		}
@@ -85,28 +85,28 @@ namespace {
 }	/// namespace
 
 
-CameraUpdateSystem::CameraUpdateSystem(DxDevice* _dxDevice) : pDxDevice_(_dxDevice) {
+CameraUpdateSystem::CameraUpdateSystem(DxDevice* dxDevice) : pDxDevice_(dxDevice) {
 	pMainCamera_ = nullptr;
 	pMainCamera2D_ = nullptr;
 }
 
-void CameraUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
+void CameraUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	if (!DebugConfig::isDebugging) {
-		Update(_ecs);
+		Update(ecs);
 	}
 
 }
 
-void CameraUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
+void CameraUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 	if(DebugConfig::isDebugging) {
-		Update(_ecs);
+		Update(ecs);
 	}
 }
 
-void CameraUpdateSystem::Update(ECSGroup* _ecs) {
+void CameraUpdateSystem::Update(ECSGroup* ecs) {
 
 	/// カメラのComponentを集める
-	ComponentArray<CameraComponent>* cameraArray = _ecs->GetComponentArray<CameraComponent>();
+	ComponentArray<CameraComponent>* cameraArray = ecs->GetComponentArray<CameraComponent>();
 	if (!cameraArray || cameraArray->GetUsedComponents().empty()) {
 		return; /// カメラのコンポーネント配列が存在しない場合は何もしない
 	}
@@ -156,7 +156,7 @@ void CameraUpdateSystem::Update(ECSGroup* _ecs) {
 	}
 
 	/// ecsにmain cameraを設定
-	_ecs->SetMainCamera(pMainCamera_);
-	_ecs->SetMainCamera2D(pMainCamera2D_);
+	ecs->SetMainCamera(pMainCamera_);
+	ecs->SetMainCamera2D(pMainCamera2D_);
 
 }

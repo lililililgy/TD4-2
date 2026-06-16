@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <cstdint>
@@ -69,7 +69,7 @@ public:
 	~AudioClip();
 
 	/// サウンドデータの作成
-	IXAudio2SourceVoice* CreateSourceVoice(IXAudio2* _audio);
+	IXAudio2SourceVoice* CreateSourceVoice(IXAudio2* audio);
 
 	/// サウンドデータの取得
 	const AudioStructs::SoundData& GetSoundData();
@@ -84,7 +84,7 @@ private:
 };
 
 
-void SoundDataUnload(AudioStructs::SoundData* _soundData);
+void SoundDataUnload(AudioStructs::SoundData* soundData);
 
 
 } /// namespace ONEngine::Asset

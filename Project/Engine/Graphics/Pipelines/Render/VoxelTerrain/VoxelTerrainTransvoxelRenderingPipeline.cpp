@@ -1,4 +1,4 @@
-﻿#include "VoxelTerrainTransvoxelRenderingPipeline.h"
+#include "VoxelTerrainTransvoxelRenderingPipeline.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -17,18 +17,18 @@ ConstantBuffer<Vector4> cBufPos;
 
 
 
-VoxelTerrainTransvoxelRenderingPipeline::VoxelTerrainTransvoxelRenderingPipeline(Asset::AssetCollection* _ac)
-	: pAssetCollection_(_ac) {
+VoxelTerrainTransvoxelRenderingPipeline::VoxelTerrainTransvoxelRenderingPipeline(Asset::AssetCollection* ac)
+	: pAssetCollection_(ac) {
 }
 
 VoxelTerrainTransvoxelRenderingPipeline::~VoxelTerrainTransvoxelRenderingPipeline() = default;
 
-void VoxelTerrainTransvoxelRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
-	pDxManager_ = _dxm;
+void VoxelTerrainTransvoxelRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
+	pDxManager_ = dxm;
 
 	{	/// shader
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrain/Transvoxel.as.hlsl", L"as_6_5", Shader::Type::as);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrain/Transvoxel.ms.hlsl", L"ms_6_5", Shader::Type::ms);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrain/Transvoxel.ps.hlsl", L"ps_6_0", Shader::Type::ps);
@@ -57,12 +57,12 @@ void VoxelTerrainTransvoxelRenderingPipeline::Initialize(ShaderCompiler* _shader
 		pipeline_->SetCullMode(D3D12_CULL_MODE_NONE);
 		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 	{
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrain/Transvoxel.as.hlsl", L"as_6_5", Shader::Type::as);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrain/TransvoxelDebug.ms.hlsl", L"ms_6_5", Shader::Type::ms);
 		shader.CompileShader(L"./Packages/Shader/Render/VoxelTerrain/Transvoxel.ps.hlsl", L"ps_6_0", Shader::Type::ps);
@@ -84,18 +84,18 @@ void VoxelTerrainTransvoxelRenderingPipeline::Initialize(ShaderCompiler* _shader
 		debugPipeline_->SetFillMode(D3D12_FILL_MODE_SOLID);
 		debugPipeline_->SetCullMode(D3D12_CULL_MODE_NONE);
 		debugPipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
-		debugPipeline_->CreatePipeline(_dxm->GetDxDevice());
+		debugPipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
-	cBufPos.Create(_dxm->GetDxDevice());
+	cBufPos.Create(dxm->GetDxDevice());
 	cBufPos.SetMappedData(Vector4(180.0f, 465.0f, 182.0f, 1.0f));
 
 }
 
-void VoxelTerrainTransvoxelRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void VoxelTerrainTransvoxelRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
-	ComponentArray<VoxelTerrain>* voxelTerrainArray = _ecs->GetComponentArray<VoxelTerrain>();
+	ComponentArray<VoxelTerrain>* voxelTerrainArray = ecs->GetComponentArray<VoxelTerrain>();
 	if(!CheckComponentArrayEnable(voxelTerrainArray)) {
 		return;
 	}
@@ -114,7 +114,7 @@ void VoxelTerrainTransvoxelRenderingPipeline::Draw(ECSGroup* _ecs, CameraCompone
 
 
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 	if(!vt->CheckCreatedBuffers()) {
 		vt->SettingChunksGuid(pAssetCollection_);
 		vt->CreateBuffers(pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap(), pAssetCollection_);
@@ -132,15 +132,15 @@ void VoxelTerrainTransvoxelRenderingPipeline::Draw(ECSGroup* _ecs, CameraCompone
 	/// --------------- パイプラインの設定 --------------- ///
 	if(vt->isRenderingTransvoxel_) {
 
-		pipeline_->SetPipelineStateForCommandList(_dxCommand);
+		pipeline_->SetPipelineStateForCommandList(dxCommand);
 		pDxManager_->HeapBindToCommandList();
 
 		/// --------------- バッファの設定 --------------- ///
 		vt->SetupGraphicBuffers(cmdList, { CBV_VOXEL_TERRAIN_INFO, CBV_MATERIAL, SRV_CHUNK_ARRAY, CBV_LOD_INFO }, pAssetCollection_);
 
-		_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_VIEW_PROJECTION);
-		//_camera->GetCameraPosBuffer().BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
-		cBufPos.BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
+		camera->GetViewProjectionBuffer().BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_VIEW_PROJECTION);
+		//camera->GetCameraPosBuffer().BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
+		cBufPos.BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
 
 		D3D12_GPU_DESCRIPTOR_HANDLE frontSRVHandle = pDxManager_->GetDxSRVHeap()->GetSRVStartGPUHandle();
 		cmdList->SetGraphicsRootDescriptorTable(
@@ -160,15 +160,15 @@ void VoxelTerrainTransvoxelRenderingPipeline::Draw(ECSGroup* _ecs, CameraCompone
 
 
 
-		debugPipeline_->SetPipelineStateForCommandList(_dxCommand);
+		debugPipeline_->SetPipelineStateForCommandList(dxCommand);
 		pDxManager_->HeapBindToCommandList();
 
 		/// --------------- バッファの設定 --------------- ///
 		vt->SetupGraphicBuffers(cmdList, { CBV_VOXEL_TERRAIN_INFO, CBV_MATERIAL, SRV_CHUNK_ARRAY, CBV_LOD_INFO }, pAssetCollection_);
 
-		_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_VIEW_PROJECTION);
-		//_camera->GetCameraPosBuffer().BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
-		cBufPos.BindForGraphicsCommandList(_dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
+		camera->GetViewProjectionBuffer().BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_VIEW_PROJECTION);
+		//camera->GetCameraPosBuffer().BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
+		cBufPos.BindForGraphicsCommandList(dxCommand->GetCommandList(), CBV_CAMERA_POSITION);
 
 		cmdList->SetGraphicsRootDescriptorTable(
 			SRV_VOXEL_TERRAIN_TEXTURE3D, frontSRVHandle

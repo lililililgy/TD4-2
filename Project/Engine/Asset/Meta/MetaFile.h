@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <unordered_map>
@@ -25,14 +25,14 @@ namespace ONEngine::Asset {
 //	~MetaFile();
 //
 //	/// @brief ファイルの読み込み
-//	/// @param _metaFilePath .mataファイルのパス
+//	/// @param metaFilePath .mataファイルのパス
 //	/// @return true: 読み込み成功, false: 読み込み失敗
-//	bool LoadFromFile(const std::string& _metaFilePath);
+//	bool LoadFromFile(const std::string& metaFilePath);
 //
 //	/// @brief ファイルの保存
-//	/// @param _metaFilePath 保存先の.metaファイルパス
+//	/// @param metaFilePath 保存先の.metaファイルパス
 //	/// @return true: 保存成功, false: 保存失敗
-//	bool SaveToFile(const std::string& _metaFilePath) const;
+//	bool SaveToFile(const std::string& metaFilePath) const;
 //
 //	/// ==================================================
 //	/// public : objects
@@ -47,9 +47,9 @@ namespace ONEngine::Asset {
 
 
 /// @brief MetaFileを生成する
-/// @param _refFile .pngなどの参照ファイルパス
+/// @param refFile .pngなどの参照ファイルパス
 /// @return 生成されたMetaFileオブジェクト
-//MetaFile GenerateMetaFile(const std::string& _refFile);
+//MetaFile GenerateMetaFile(const std::string& refFile);
 
 
 /*

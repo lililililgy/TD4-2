@@ -10,19 +10,19 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
 
 
-void TerrainCollision::OutsideOfRuntimeUpdate(ECSGroup*) {}
+void TerrainCollision::OutsideOfRuntimeUpdate(ECSGroup* /*ecs*/) {}
 
-void TerrainCollision::RuntimeUpdate(ECSGroup* _ecs) {
+void TerrainCollision::RuntimeUpdate(ECSGroup* ecs) {
 
 	/// TerrainColliderの配列を取得＆使用中のコンポーネントがなければ終了
-	ComponentArray<TerrainCollider>* terrainColliderArray = _ecs->GetComponentArray<TerrainCollider>();
+	ComponentArray<TerrainCollider>* terrainColliderArray = ecs->GetComponentArray<TerrainCollider>();
 	if (!terrainColliderArray || terrainColliderArray->GetUsedComponents().empty()) {
 		return;
 	}
 
 	/// 他のコライダーの配列を取得
-	ComponentArray<BoxCollider>* boxColliderArray = _ecs->GetComponentArray<BoxCollider>();
-	ComponentArray<SphereCollider>* sphereColliderArray = _ecs->GetComponentArray<SphereCollider>();
+	ComponentArray<BoxCollider>* boxColliderArray = ecs->GetComponentArray<BoxCollider>();
+	ComponentArray<SphereCollider>* sphereColliderArray = ecs->GetComponentArray<SphereCollider>();
 
 	for (auto& terrainCollider : terrainColliderArray->GetUsedComponents()) {
 		if (!terrainCollider || !terrainCollider->enable) {
@@ -125,8 +125,8 @@ void TerrainCollision::RuntimeUpdate(ECSGroup* _ecs) {
 	}
 }
 
-float TerrainCollision::GetSlopeAngle(TerrainCollider* _tCollider, const Vector3& _position) {
-	Vector3 grad = _tCollider->GetGradient(_position);
+float TerrainCollision::GetSlopeAngle(TerrainCollider* tCollider, const Vector3& position) {
+	Vector3 grad = tCollider->GetGradient(position);
 	float magnitude = std::sqrt(grad.x * grad.x + grad.z * grad.z);
 	return std::atan(magnitude);
 }

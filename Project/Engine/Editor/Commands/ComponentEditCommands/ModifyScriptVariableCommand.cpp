@@ -12,8 +12,8 @@
 
 namespace Editor {
 
-ModifyScriptVariableCommand::ModifyScriptVariableCommand(ONEngine::GameEntity* _entity, const std::string& _scriptName, const std::string& _fieldName, int _monoType, const VariantValue& _oldValue, const VariantValue& _newValue)
-    : entityGuid_(_entity->GetGuid()), scriptName_(_scriptName), fieldName_(_fieldName), monoType_(_monoType), oldValue_(_oldValue), newValue_(_newValue) {
+ModifyScriptVariableCommand::ModifyScriptVariableCommand(ONEngine::GameEntity* entity, const std::string& scriptName, const std::string& fieldName, int monoType, const VariantValue& oldValue, const VariantValue& newValue)
+    : entityGuid_(entity->GetGuid()), scriptName_(scriptName), fieldName_(fieldName), monoType_(monoType), oldValue_(oldValue), newValue_(newValue) {
 }
 
 EDITOR_STATE ModifyScriptVariableCommand::Execute() {
@@ -26,7 +26,7 @@ EDITOR_STATE ModifyScriptVariableCommand::Undo() {
     return EDITOR_STATE_FINISH;
 }
 
-void ModifyScriptVariableCommand::ApplyValue(const VariantValue& _value) {
+void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
     auto& monoEngine = ONEngine::MonoScriptEngine::GetInstance();
     
     ONEngine::GameEntity* entity = monoEngine.GetOwnerEntity(entityGuid_);
@@ -54,7 +54,7 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& _value) {
                     mono_field_set_value(obj, field, (void*)&arg);
                 }
                 appliedToMono = true;
-            }, _value);
+            }, value);
         }
     }
 
@@ -76,7 +76,7 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& _value) {
             }
             
             vars->SetVariable(scriptName_, fieldName_, v);
-        }, _value);
+        }, value);
         
         if (!appliedToMono) {
             ONEngine::Console::Log(std::format("[UndoDebug] SUCCESS: Applied to Variables component for '{}' (Mono instance not ready)", fieldName_));

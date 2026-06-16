@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "../../EditorViewCollection.h"
 
@@ -22,7 +22,7 @@ public:
 	/// public : methods
 	/// =====================================================
 
-	PrefabViewWindow(ONEngine::EntityComponentSystem* _ecs, ONEngine::Asset::AssetCollection* _assetCollection);
+	PrefabViewWindow(ONEngine::EntityComponentSystem* ecs, ONEngine::Asset::AssetCollection* assetCollection);
 	~PrefabViewWindow() {}
 
 	void ShowImGui() override;

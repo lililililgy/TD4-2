@@ -1,12 +1,12 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct Vector2 {
 	public float x, y;
 
-	public Vector2(float _x, float _y) {
-		this.x = _x;
-		this.y = _y;
+	public Vector2(float x, float y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	public Vector2(Vector2 other) {

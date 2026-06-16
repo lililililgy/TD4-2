@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System;
 using System.Runtime.InteropServices;
 using System.IO;
@@ -220,17 +220,17 @@ public class Player : MonoScript {
 
 
 	/// 進行方向に回転する
-	private void RotateFromMoveDirection(Vector3 _dir) {
-		/// _dirを参照して入力をしているのかどうかを確認する
+	private void RotateFromMoveDirection(Vector3 dir) {
+		/// dirを参照して入力をしているのかどうかを確認する
 		prevIsOperating_ = isOperating_;
-		if (_dir.Length() > 0.1f) {
+		if (dir.Length() > 0.1f) {
 			isOperating_ = true;
 		} else {
 			isOperating_ = false;
 		}
 
 		/// 移動していないのであれば最後の回転を維持する
-		float rotateY = Mathf.Atan2(_dir.z, _dir.x);
+		float rotateY = Mathf.Atan2(dir.z, dir.x);
 		if (!isOperating_) {
 			rotateY = lastRotationY_;
 		}

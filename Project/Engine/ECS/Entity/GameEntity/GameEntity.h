@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/Asset/Guid/Guid.h"
@@ -38,9 +38,9 @@ public:
 	Comp* AddComponent();
 
 	/// @brief stringから component を追加する
-	/// @param _name componentの名前
+	/// @param name componentの名前
 	/// @return 追加した component のポインタ
-	IComponent* AddComponent(const std::string& _name);
+	IComponent* AddComponent(const std::string& name);
 
 	/// @brief component の取得
 	/// @tparam T ゲットする component の型
@@ -49,8 +49,8 @@ public:
 	Comp* GetComponent() const;
 
 	/// @brief Componentの名前から取得する
-	/// @param _compName Componentの名前
-	IComponent* GetComponent(const std::string& _compName) const;
+	/// @param compName Componentの名前
+	IComponent* GetComponent(const std::string& compName) const;
 
 	/// @brief Componentの削除
 	/// @tparam Comp 削除するComponentの型
@@ -58,8 +58,8 @@ public:
 	void RemoveComponent();
 
 	/// @brief Componentの名前から削除する
-	/// @param _compName Componentの名前
-	void RemoveComponent(const std::string& _compName);
+	/// @param compName Componentの名前
+	void RemoveComponent(const std::string& compName);
 
 	/// @brief すべてのComponentの削除
 	void RemoveComponentAll();
@@ -81,20 +81,20 @@ public:
 	void UpdateTransform();
 
 	/// @brief local position の設定
-	/// @param _v 座標
-	void SetPosition(const Vector3& _v);
+	/// @param v 座標
+	void SetPosition(const Vector3& v);
 
 	/// @brief local rotation の設定
-	/// @param _v Euler角度
-	void SetRotate(const Vector3& _v);
+	/// @param v Euler角度
+	void SetRotate(const Vector3& v);
 
 	/// @brief local rotation の設定
-	/// @param _q Quaternion回転
-	void SetRotate(const Quaternion& _q);
+	/// @param q Quaternion回転
+	void SetRotate(const Quaternion& q);
 
 	/// @brief local scale の設定
-	/// @param _v 拡縮度
-	void SetScale(const Vector3& _v);
+	/// @param v 拡縮度
+	void SetScale(const Vector3& v);
 
 	/// @brief local position の取得
 	const Vector3& GetLocalPosition() const;
@@ -138,8 +138,8 @@ public:
 	/// --------------------------------------------------
 
 	/// @brief 親エンティティの設定
-	/// @param _parent 親エンティティのポインタ
-	void SetParent(GameEntity* _parent);
+	/// @param parent 親エンティティのポインタ
+	void SetParent(GameEntity* parent);
 
 	/// @brief 親エンティティの解除
 	void RemoveParent();
@@ -154,23 +154,23 @@ public:
 
 
 	/// @brief 子エンティティの削除
-	/// @param _child 子エンティティのポインタ
+	/// @param child 子エンティティのポインタ
 	/// @return true: 削除成功, false: 削除失敗
-	bool RemoveChild(GameEntity* _child);
+	bool RemoveChild(GameEntity* child);
 
 	/// @brief 子エンティティの配列を取得する
 	/// @return Entityへのポインタ配列
 	const std::vector<GameEntity*>& GetChildren() const;
 
 	/// @brief 子エンティティの取得
-	/// @param _index 配列のインデックス
+	/// @param index 配列のインデックス
 	/// @return 子エンティティのポインタ
-	GameEntity* GetChild(size_t _index);
+	GameEntity* GetChild(size_t index);
 
 	/// @brief 子エンティティの順番を入れ替える
-	/// @param _child 入れ替えたい子エンティティ
-	/// @param _newIndex 新しいインデックス
-	void MoveChild(GameEntity* _child, size_t _newIndex);
+	/// @param child 入れ替えたい子エンティティ
+	/// @param newIndex 新しいインデックス
+	void MoveChild(GameEntity* child, size_t newIndex);
 
 
 	/// --------------------------------------------------
@@ -178,7 +178,7 @@ public:
 	/// --------------------------------------------------
 
 	/// @brief エンティティの名前の設定
-	void SetName(const std::string& _name);
+	void SetName(const std::string& name);
 
 	/// @brief エンティティの名前の取得
 	/// @return name のconst参照
@@ -186,7 +186,7 @@ public:
 
 
 	/// @brief thisに対応するprefabの名前を設定する
-	void SetPrefabName(const std::string& _name);
+	void SetPrefabName(const std::string& name);
 
 	/// @brief prefabの名前の取得
 	const std::string& GetPrefabName() const;
@@ -266,7 +266,7 @@ inline void GameEntity::RemoveComponent() {
 }
 
 /// json 変換
-void to_json(nlohmann::json& _j, const GameEntity& _entity);
-void from_json(const nlohmann::json& _j, GameEntity& _entity);
+void to_json(nlohmann::json& j, const GameEntity& entity);
+void from_json(const nlohmann::json& j, GameEntity& entity);
 
 } /// ONEngine

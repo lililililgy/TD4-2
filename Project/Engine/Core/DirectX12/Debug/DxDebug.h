@@ -24,8 +24,8 @@ public:
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
-	/// <param name="_dxDevice"></param>
-	void Initialize(class DxDevice* _dxDevice);
+	/// <param name="dxDevice"></param>
+	void Initialize(class DxDevice* dxDevice);
 
 	/// <summary>
 	/// debug layerをセットする

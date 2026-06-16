@@ -24,17 +24,17 @@ Window::~Window() {
 }
 
 
-void Window::Initialize(const std::wstring& _windowName, const Vector2& _windowSize, DxManager* _dxm) {
+void Window::Initialize(const std::wstring& windowName, const Vector2& windowSize, DxManager* dxm) {
 
-	pDxManager_ = _dxm;
+	pDxManager_ = dxm;
 
-	windowName_ = _windowName;  /// 名前
-	windowSize_ = _windowSize;  /// サイズ
+	windowName_ = windowName;  /// 名前
+	windowSize_ = windowSize;  /// サイズ
 
 	processMessage_ = false;
 
 	dxSwapChain_ = std::make_unique<DxSwapChain>();
-	dxSwapChain_->Initialize(_dxm, this);
+	dxSwapChain_->Initialize(dxm, this);
 
 	isFullScreen_ = false;
 }

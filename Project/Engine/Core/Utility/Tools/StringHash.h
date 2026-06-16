@@ -7,10 +7,10 @@ namespace ONEngine {
 
 class StringHash {
 public:
-    static uint32_t Get(const std::string& _str) {
+    static uint32_t Get(const std::string& str) {
         // FNV-1a hash
         uint32_t hash = 2166136261u;
-        for (char c : _str) {
+        for (char c : str) {
             hash ^= static_cast<uint32_t>(c);
             hash *= 16777619u;
         }

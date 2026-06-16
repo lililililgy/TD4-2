@@ -1,4 +1,4 @@
-﻿#include "TerrainRenderingPipeline.h"
+#include "TerrainRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -10,19 +10,19 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/Terrain.h"
 
 
-TerrainRenderingPipeline::TerrainRenderingPipeline(Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {
+TerrainRenderingPipeline::TerrainRenderingPipeline(Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {
 }
 TerrainRenderingPipeline::~TerrainRenderingPipeline() {}
 
 
 
-void TerrainRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void TerrainRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{	/// shader
 
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/Render/Terrain/Terrain.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"Packages/Shader/Render/Terrain/Terrain.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -70,24 +70,24 @@ void TerrainRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMan
 		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
 		/// pipeline create
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 
 	{	/// buffer
-		transformBuffer_.Create(_dxm->GetDxDevice());
-		materialBuffer_.Create(1, _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
+		transformBuffer_.Create(dxm->GetDxDevice());
+		materialBuffer_.Create(1, dxm->GetDxDevice(), dxm->GetDxSRVHeap());
 	}
 
 	pTerrain_ = nullptr;
 }
 
-void TerrainRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void TerrainRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
 
 	/// 地形を取得
 	pTerrain_ = nullptr;
-	ComponentArray<Terrain>* terrainArray = _ecs->GetComponentArray<Terrain>();
+	ComponentArray<Terrain>* terrainArray = ecs->GetComponentArray<Terrain>();
 	if (!terrainArray) {
 		return;
 	}
@@ -123,14 +123,14 @@ void TerrainRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _came
 
 
 	/// 描画する
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
-	auto cmdList = _dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
 
 	/// 形状設定
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	/// Buffer設定
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, ROOT_PARAM_VIEW_PROJECTION);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, ROOT_PARAM_VIEW_PROJECTION);
 	transformBuffer_.BindForGraphicsCommandList(cmdList, ROOT_PARAM_TRANSFORM);
 	materialBuffer_.SRVBindForGraphicsCommandList(cmdList, ROOT_PARAM_MATERIAL);
 
@@ -152,7 +152,7 @@ void TerrainRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _came
 
 
 	/// バリア設定
-	pTerrain_->CreateRenderingBarriers(_dxCommand);
+	pTerrain_->CreateRenderingBarriers(dxCommand);
 
 	/// VBV, IBV設定
 	D3D12_VERTEX_BUFFER_VIEW vbv = pTerrain_->CreateVBV();
@@ -170,7 +170,7 @@ void TerrainRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _came
 
 
 	/// バリア復元
-	pTerrain_->RestoreResourceBarriers(_dxCommand);
+	pTerrain_->RestoreResourceBarriers(dxCommand);
 
 }
 

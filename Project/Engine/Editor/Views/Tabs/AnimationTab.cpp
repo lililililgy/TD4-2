@@ -3,7 +3,7 @@
 
 using namespace Editor;
 
-AnimationTab::AnimationTab(ONEngine::Asset::AssetCollection* /*_assetCollection*/)
+AnimationTab::AnimationTab(ONEngine::Asset::AssetCollection* /*assetCollection*/)
     : IEditorWindowContainer("Animation") {
     AddView(std::make_unique<AnimationEditorWindow>());
 }

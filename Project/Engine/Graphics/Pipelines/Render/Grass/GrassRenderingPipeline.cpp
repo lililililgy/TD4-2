@@ -1,4 +1,4 @@
-﻿#include "GrassRenderingPipeline.h"
+#include "GrassRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -12,15 +12,15 @@ using namespace ONEngine;
 #include "Engine/Asset/Collection/AssetCollection.h"
 
 
-GrassRenderingPipeline::GrassRenderingPipeline(Asset::AssetCollection* _assetCollection) : pAssetCollection_(_assetCollection) {};
+GrassRenderingPipeline::GrassRenderingPipeline(Asset::AssetCollection* assetCollection) : pAssetCollection_(assetCollection) {};
 GrassRenderingPipeline::~GrassRenderingPipeline() = default;
 
-void GrassRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
-	pDxManager_ = _dxm;
+void GrassRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
+	pDxManager_ = dxm;
 
 	{	/// Shader
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 
 		/// mesh shader
 		shader.CompileShader(L"./Packages/Shader/Render/Grass/Grass.as.hlsl", L"as_6_5", Shader::Type::as, L"ASMain");
@@ -53,18 +53,18 @@ void GrassRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManag
 		pipeline_->SetCullMode(D3D12_CULL_MODE_NONE);
 		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
 }
 
 
-void GrassRenderingPipeline::PreDraw(ECSGroup* _ecs, CameraComponent* /*_camera*/, DxCommand* _dxCommand) {
+void GrassRenderingPipeline::PreDraw(ECSGroup* ecs, CameraComponent* /*camera*/, DxCommand* dxCommand) {
 	/// ================================================
 	/// 早期リターンの条件チェック
 	/// ================================================
-	ComponentArray<GrassField>* grassArray = _ecs->GetComponentArray<GrassField>();
+	ComponentArray<GrassField>* grassArray = ecs->GetComponentArray<GrassField>();
 	if (!grassArray) {
 		return;
 	}
@@ -81,17 +81,17 @@ void GrassRenderingPipeline::PreDraw(ECSGroup* _ecs, CameraComponent* /*_camera*
 			continue;
 		}
 
-		grass->AppendBufferReadCounter(pDxManager_, _dxCommand);
+		grass->AppendBufferReadCounter(pDxManager_, dxCommand);
 	}
 }
 
 
-void GrassRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void GrassRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
 	/// ================================================
 	/// 早期リターンの条件チェック
 	/// ================================================
-	ComponentArray<GrassField>* grassArray = _ecs->GetComponentArray<GrassField>();
+	ComponentArray<GrassField>* grassArray = ecs->GetComponentArray<GrassField>();
 	if (!grassArray) {
 		return;
 	}
@@ -107,15 +107,15 @@ void GrassRenderingPipeline::Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCo
 	/// ================================================
 
 	/// 描画コマンドをセット
-	auto cmdList = _dxCommand->GetCommandList();
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
 	const auto& textures = pAssetCollection_->GetTextures();
 	cmdList->SetGraphicsRootDescriptorTable(SRV_TEXTURES, textures[0].GetSRVHandle().gpuHandle);
 
 
 	/// カメラのBufferを設定
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
 
 
 	for (auto& grass : grassArray->GetUsedComponents()) {

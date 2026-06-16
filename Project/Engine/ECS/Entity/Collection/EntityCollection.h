@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <unordered_map>
@@ -37,29 +37,29 @@ public:
 	/// public : methods
 	/// =========================================
 
-	EntityCollection(class ECSGroup* _ecsGroup, class DxManager* _dxm);
+	EntityCollection(class ECSGroup* ecsGroup, class DxManager* dxm);
 	~EntityCollection();
 
 	/// 生成
-	GameEntity* GenerateEntity(const Guid& _guid, bool _isRuntime = false);
-	int32_t NewEntityID(bool _isRuntime);
+	GameEntity* GenerateEntity(const Guid& guid, bool isRuntime = false);
+	int32_t NewEntityID(bool isRuntime);
 
 	/// 取得
-	uint32_t GetEntityId(const std::string& _name);
-	GameEntity* GetEntity(int32_t _entityId);
-	GameEntity* GetEntityFromGuid(const Guid& _guid);
+	uint32_t GetEntityId(const std::string& name);
+	GameEntity* GetEntity(int32_t entityId);
+	GameEntity* GetEntityFromGuid(const Guid& guid);
 
 	/// 削除
-	void RemoveEntity(GameEntity* _entity, bool _deleteChildren = true);
-	void RemoveEntityId(int32_t _id);
+	void RemoveEntity(GameEntity* entity, bool deleteChildren = true);
+	void RemoveEntityId(int32_t id);
 	void RemoveEntityAll();
 
 	/// 非破棄エンティティの追加と削除
-	void AddDoNotDestroyEntity(GameEntity* _entity);
-	void RemoveDoNotDestroyEntity(GameEntity* _entity);
+	void AddDoNotDestroyEntity(GameEntity* entity);
+	void RemoveDoNotDestroyEntity(GameEntity* entity);
 
 	/// エンティティの順番を入れ替える
-	void MoveEntity(GameEntity* _entity, size_t _newIndex);
+	void MoveEntity(GameEntity* entity, size_t newIndex);
 
 
 
@@ -67,19 +67,19 @@ public:
 	/* ----- prefab ----- */
 
 	void LoadPrefabAll();
-	void ReloadPrefab(const std::string& _prefabName);
+	void ReloadPrefab(const std::string& prefabName);
 
-	GameEntity* GenerateEntityFromPrefab(const std::string& _prefabName, bool _isRuntime = true);
-	EntityPrefab* GetPrefab(const std::string& _fileName);
+	GameEntity* GenerateEntityFromPrefab(const std::string& prefabName, bool isRuntime = true);
+	EntityPrefab* GetPrefab(const std::string& fileName);
 
 	/// prefabの内容をEntityに反映する
-	void ApplyPrefabToEntity(GameEntity* _entity, const std::string& _prefabName);
+	void ApplyPrefabToEntity(GameEntity* entity, const std::string& prefabName);
 
 private:
 
 
 	/// @brief 再帰的にEntityを生成する
-	GameEntity* GenerateEntityRecursive(const nlohmann::json& _json, GameEntity* _entity, bool _isRuntime);
+	GameEntity* GenerateEntityRecursive(const nlohmann::json& json, GameEntity* entity, bool isRuntime);
 
 
 private:
@@ -111,8 +111,8 @@ public:
 	/// public : accessor
 	/// =========================================
 
-	void SetMainCamera(CameraComponent* _cameraComponent);
-	void SetMainCamera2D(CameraComponent* _cameraComponent);
+	void SetMainCamera(CameraComponent* cameraComponent);
+	void SetMainCamera2D(CameraComponent* cameraComponent);
 
 	CameraComponent* GetMainCamera();
 	CameraComponent* GetMainCamera2D();

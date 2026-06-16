@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <algorithm>
@@ -15,8 +15,8 @@ struct AssetPayload {
 	ONEngine::Guid guid;
 
 	AssetPayload() = default;
-	AssetPayload(const std::string& _path, const ONEngine::Guid& _guid)
-		: filePath(_path), guid(_guid) {
+	AssetPayload(const std::string& path, const ONEngine::Guid& guid)
+		: filePath(path), guid(guid) {
 	}
 
 };

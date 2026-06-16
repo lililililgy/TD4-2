@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../Interface/ECSISystem.h"
@@ -14,13 +14,13 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	CameraUpdateSystem(class DxDevice* _dxDevice);
+	CameraUpdateSystem(class DxDevice* dxDevice);
 	~CameraUpdateSystem() override = default;
 
-	void OutsideOfRuntimeUpdate(class ECSGroup* _ecs) override;
-	void RuntimeUpdate(class ECSGroup* _ecs) override;
+	void OutsideOfRuntimeUpdate(class ECSGroup* ecs) override;
+	void RuntimeUpdate(class ECSGroup* ecs) override;
 
-	void Update(class ECSGroup* _ecs);
+	void Update(class ECSGroup* ecs);
 
 private:
 	/// ===================================================

@@ -1,4 +1,4 @@
-﻿#include "SkyboxRenderingPipeline.h"
+#include "SkyboxRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -10,16 +10,16 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 
 
-SkyboxRenderingPipeline::SkyboxRenderingPipeline(Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {
+SkyboxRenderingPipeline::SkyboxRenderingPipeline(Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {
 }
 SkyboxRenderingPipeline::~SkyboxRenderingPipeline() {}
 
-void SkyboxRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void SkyboxRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{	/// shader
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/Render/Skybox/Skybox.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"Packages/Shader/Render/Skybox/Skybox.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -44,13 +44,13 @@ void SkyboxRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 		pipeline_->SetBlendDesc(BlendMode::Normal());
 		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 	{	/// buffer
 
-		texIndex_.Create(_dxm->GetDxDevice());
-		transformMatrix_.Create(_dxm->GetDxDevice());
+		texIndex_.Create(dxm->GetDxDevice());
+		transformMatrix_.Create(dxm->GetDxDevice());
 
 		/// SkyBox用に頂点データを作成
 		for (int x = -1; x <= 1; x += 2) {
@@ -80,7 +80,7 @@ void SkyboxRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 		const size_t kVertexDataSize = sizeof(VSInput);
 
 		/// vertex buffer
-		vertexBuffer_.CreateResource(_dxm->GetDxDevice(), kVertexDataSize * vertices_.size());
+		vertexBuffer_.CreateResource(dxm->GetDxDevice(), kVertexDataSize * vertices_.size());
 
 		vbv_.BufferLocation = vertexBuffer_.Get()->GetGPUVirtualAddress();
 		vbv_.SizeInBytes = static_cast<UINT>(kVertexDataSize * vertices_.size());
@@ -93,7 +93,7 @@ void SkyboxRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 		vertexBuffer_.Get()->Unmap(0, nullptr);
 
 		/// index buffer
-		indexBuffer_.CreateResource(_dxm->GetDxDevice(), sizeof(uint32_t) * indices_.size());
+		indexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(uint32_t) * indices_.size());
 
 		ibv_.BufferLocation = indexBuffer_.Get()->GetGPUVirtualAddress();
 		ibv_.SizeInBytes = static_cast<UINT>(sizeof(uint32_t) * indices_.size());
@@ -109,10 +109,10 @@ void SkyboxRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 	}
 }
 
-void SkyboxRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void SkyboxRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
 	/// Skybox配列を取得、配列がからなら処理を抜ける
-	ComponentArray<Skybox>* skyboxArray = _ecs->GetComponentArray<Skybox>();
+	ComponentArray<Skybox>* skyboxArray = ecs->GetComponentArray<Skybox>();
 	if (!skyboxArray || skyboxArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -138,14 +138,14 @@ void SkyboxRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camer
 	transformMatrix_.SetMappedData(skybox->GetOwner()->GetTransform()->GetMatWorld());
 
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
-	auto cmdList = _dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
 
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	cmdList->IASetVertexBuffers(0, 1, &vbv_);
 	cmdList->IASetIndexBuffer(&ibv_);
 
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
 	transformMatrix_.BindForGraphicsCommandList(cmdList, CBV_TRANSFORM);
 	texIndex_.BindForGraphicsCommandList(cmdList, CBV_TEX_INDEX);
 	cmdList->SetGraphicsRootDescriptorTable(SRV_TEXTURE, (*textures.begin()).GetSRVGPUHandle());

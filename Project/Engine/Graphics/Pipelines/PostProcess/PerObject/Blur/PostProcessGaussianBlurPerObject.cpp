@@ -1,4 +1,4 @@
-﻿#include "PostProcessGaussianBlurPerObject.h"
+#include "PostProcessGaussianBlurPerObject.h"
 
 using namespace ONEngine;
 
@@ -7,11 +7,11 @@ using namespace ONEngine;
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
 
-void PostProcessGaussianBlurPerObject::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void PostProcessGaussianBlurPerObject::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/PostProcess/PerObject/GaussianBlur/GaussianBlur.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ComputePipeline>();
@@ -23,7 +23,7 @@ void PostProcessGaussianBlurPerObject::Initialize(ShaderCompiler* _shaderCompile
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
@@ -31,13 +31,13 @@ void PostProcessGaussianBlurPerObject::Initialize(ShaderCompiler* _shaderCompile
 
 }
 
-void PostProcessGaussianBlurPerObject::Execute(const std::string& _textureName, DxCommand* _dxCommand, Asset::AssetCollection* _assetCollection, EntityComponentSystem* /*_entityComponentSystem*/) {
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+void PostProcessGaussianBlurPerObject::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* /*entityComponentSystem*/) {
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
-	auto command = _dxCommand->GetCommandList();
-	auto& textures = _assetCollection->GetTextures();
-	textureIndices_[0] = _assetCollection->GetTextureIndex(_textureName + "Scene");
-	textureIndices_[1] = _assetCollection->GetTextureIndex("postProcessResult");
+	auto command = dxCommand->GetCommandList();
+	auto& textures = assetCollection->GetTextures();
+	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
+	textureIndices_[1] = assetCollection->GetTextureIndex("postProcessResult");
 
 	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetUAVGPUHandle());

@@ -116,46 +116,46 @@ namespace ONEngine {
         }
     }
 
-    const AttackDefinition* GameEventManager::GetAttack(const std::string& _name) const {
-        auto it = attacks_.find(_name);
+    const AttackDefinition* GameEventManager::GetAttack(const std::string& name) const {
+        auto it = attacks_.find(name);
         if (it != attacks_.end()) return &it->second;
         return nullptr;
     }
 
-    void GameEventManager::AddAttack(const AttackDefinition& _attack) {
-        attacks_[_attack.name] = _attack;
+    void GameEventManager::AddAttack(const AttackDefinition& attack) {
+        attacks_[attack.name] = attack;
     }
 
-    void GameEventManager::RemoveAttack(const std::string& _name) {
-        attacks_.erase(_name);
+    void GameEventManager::RemoveAttack(const std::string& name) {
+        attacks_.erase(name);
     }
 
-    const AnimationDefinition* GameEventManager::GetAnimation(const std::string& _name) const {
-        auto it = animations_.find(_name);
+    const AnimationDefinition* GameEventManager::GetAnimation(const std::string& name) const {
+        auto it = animations_.find(name);
         if (it != animations_.end()) return &it->second;
         return nullptr;
     }
 
-    void GameEventManager::AddAnimation(const AnimationDefinition& _anim) {
-        animations_[_anim.name] = _anim;
+    void GameEventManager::AddAnimation(const AnimationDefinition& anim) {
+        animations_[anim.name] = anim;
     }
 
-    void GameEventManager::RemoveAnimation(const std::string& _name) {
-        animations_.erase(_name);
+    void GameEventManager::RemoveAnimation(const std::string& name) {
+        animations_.erase(name);
     }
 
-    const EffectDefinition* GameEventManager::GetEffect(const std::string& _name) const {
-        auto it = effects_.find(_name);
+    const EffectDefinition* GameEventManager::GetEffect(const std::string& name) const {
+        auto it = effects_.find(name);
         if (it != effects_.end()) return &it->second;
         return nullptr;
     }
 
-    void GameEventManager::AddEffect(const EffectDefinition& _effect) {
-        effects_[_effect.name] = _effect;
+    void GameEventManager::AddEffect(const EffectDefinition& effect) {
+        effects_[effect.name] = effect;
     }
 
-    void GameEventManager::RemoveEffect(const std::string& _name) {
-        effects_.erase(_name);
+    void GameEventManager::RemoveEffect(const std::string& name) {
+        effects_.erase(name);
     }
 
 }

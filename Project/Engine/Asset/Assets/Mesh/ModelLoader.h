@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../IAssetLoader.h"
@@ -17,41 +17,41 @@ public:
 	/// public : methods
 	/// ====================================================
 
-	AssetLoader(DxManager* _dxm);
+	AssetLoader(DxManager* dxm);
 	~AssetLoader() override = default;
 
 	/// @brief モデルファイルの読み込みを行う
-	/// @param _filepath 対象のファイルパス
+	/// @param filepath 対象のファイルパス
 	/// @return 読み込んだモデル
 	[[nodiscard]]
-	std::optional<Model> Load(const std::string& _filepath, typename Meta<Model::MetaData> meta);
+	std::optional<Model> Load(const std::string& filepath, typename Meta<Model::MetaData> meta);
 
 	/// @brief モデルファイルの再読み込みを行う
-	/// @param _filepath 対象のファイルパス
-	/// @param _src 元のモデル
+	/// @param filepath 対象のファイルパス
+	/// @param src 元のモデル
 	/// @return 再読み込みしたモデル
 	[[nodiscard]]
-	std::optional<Model> Reload(const std::string& _filepath, Model* _src = nullptr, typename Meta<Model::MetaData> meta = {});
+	std::optional<Model> Reload(const std::string& filepath, Model* src = nullptr, typename Meta<Model::MetaData> meta = {});
 
 
-	Meta<typename Model::MetaData> GetMetaData(const std::string& _filepath);
+	Meta<typename Model::MetaData> GetMetaData(const std::string& filepath);
 
 private:
 
 	/// @brief アニメーションのNodeを読み込む
-	/// @param _node 読み込み対象のaiNodeポインタ
+	/// @param node 読み込み対象のaiNodeポインタ
 	/// @return 読み込まれたNode構造体
-	Node ReadNode(aiNode* _node);
+	Node ReadNode(aiNode* node);
 
 	/// @brief アニメーションの読み込み
-	/// @param _model 読み込み対象のModelポインタ
-	/// @param _scene AssimpのaiScene
-	void LoadAnimation(Model* _model, const aiScene* _scene);
+	/// @param model 読み込み対象のModelポインタ
+	/// @param scene AssimpのaiScene
+	void LoadAnimation(Model* model, const aiScene* scene);
 
 	/// @brief 読み込めるモデルであるのかチェックする
-	/// @param _aiScene チェック対象のモデル
+	/// @param aiScene チェック対象のモデル
 	/// @return true: 読み込める / false: 読み込めない
-	bool ValidateModel(const aiScene* _aiScene);
+	bool ValidateModel(const aiScene* aiScene);
 
 private:
 	/// ====================================================

@@ -13,10 +13,10 @@ public:
 	/// ===================================================
 	/// public : methods
 	/// ===================================================
-	MeshBufferRecreate(class DxDevice* _dxDevice);
+	MeshBufferRecreate(class DxDevice* dxDevice);
 	~MeshBufferRecreate() = default;
 
-	void RuntimeUpdate(class ECSGroup* _ecs) override;
+	void RuntimeUpdate(class ECSGroup* ecs) override;
 
 
 private:

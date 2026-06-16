@@ -24,18 +24,18 @@ public:
 	~DxDepthStencil();
 
 	/// @brief 初期化処理
-	/// @param _dxDevice  DxDeviceのインスタンス
-	/// @param _dxDsvHeap DxDSVHeapのインスタンス
-	void Initialize(class DxDevice* _dxDevice, class DxDSVHeap* _dxDsvHeap, class DxSRVHeap* _dxSrvHeap);
+	/// @param dxDevice  DxDeviceのインスタンス
+	/// @param dxDsvHeap DxDSVHeapのインスタンス
+	void Initialize(class DxDevice* dxDevice, class DxDSVHeap* dxDsvHeap, class DxSRVHeap* dxSrvHeap);
 
 
 	/// @brief リソースの状態をPixelShaderResourceへバリアする
-	/// @param _cmdList CommandListのインスタンス
-	void CreateBarrierPixelShaderResource(ID3D12GraphicsCommandList* _cmdList);
+	/// @param cmdList CommandListのインスタンス
+	void CreateBarrierPixelShaderResource(ID3D12GraphicsCommandList* cmdList);
 
 	/// @brief リソースの状態をDepthWriteへバリアする
-	/// @param _cmdList CommandListのインスタンス
-	void CreateBarrierDepthWrite(ID3D12GraphicsCommandList* _cmdList);
+	/// @param cmdList CommandListのインスタンス
+	void CreateBarrierDepthWrite(ID3D12GraphicsCommandList* cmdList);
 
 
 	/// @brief SRVハンドルの取得

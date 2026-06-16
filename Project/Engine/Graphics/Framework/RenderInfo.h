@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <array>
@@ -55,8 +55,8 @@ inline const std::array<std::string, kRenderTextureTypeCount> kRenderTargetType 
 };
 
 
-inline std::string GetRenderTextureFullName(RenderTexture _renderTexture, RenderTextureType _type) {
-	return kRenderTargetDir + kRenderTargetNames[static_cast<size_t>(_renderTexture)] + kRenderTargetType[static_cast<size_t>(_type)];
+inline std::string GetRenderTextureFullName(RenderTexture renderTexture, RenderTextureType type) {
+	return kRenderTargetDir + kRenderTargetNames[static_cast<size_t>(renderTexture)] + kRenderTargetType[static_cast<size_t>(type)];
 }
 
 } /// namespace RenderInfo

@@ -9,9 +9,9 @@ namespace {
 	std::unique_ptr<InputSystem> gInputSystem_;
 } /// namespace
 
-void Input::Initialize(WindowManager* _windowManager, Editor::ImGuiManager* _imguiManager) {
+void Input::Initialize(WindowManager* windowManager, Editor::ImGuiManager* imguiManager) {
 	gInputSystem_ = std::make_unique<InputSystem>();
-	gInputSystem_->Initialize(_windowManager, _imguiManager);
+	gInputSystem_->Initialize(windowManager, imguiManager);
 }
 
 void Input::Update() {
@@ -22,40 +22,40 @@ void Input::Finalize() {
 	gInputSystem_.reset();
 }
 
-bool Input::PressKey(int _key) {
-	return gInputSystem_->keyboard_->keys_[_key];
+bool Input::PressKey(int key) {
+	return gInputSystem_->keyboard_->keys_[key];
 }
 
-bool Input::TriggerKey(int _key) {
-	return gInputSystem_->keyboard_->keys_[_key] && !gInputSystem_->keyboard_->preKeys_[_key];
+bool Input::TriggerKey(int key) {
+	return gInputSystem_->keyboard_->keys_[key] && !gInputSystem_->keyboard_->preKeys_[key];
 }
 
-bool Input::ReleaseKey(int _key) {
-	return !gInputSystem_->keyboard_->keys_[_key] && gInputSystem_->keyboard_->preKeys_[_key];
+bool Input::ReleaseKey(int key) {
+	return !gInputSystem_->keyboard_->keys_[key] && gInputSystem_->keyboard_->preKeys_[key];
 }
 
-bool Input::PressMouse(int _button) {
-	return gInputSystem_->mouse_->state_.rgbButtons[_button];
+bool Input::PressMouse(int button) {
+	return gInputSystem_->mouse_->state_.rgbButtons[button];
 }
 
-bool Input::TriggerMouse(int _button) {
-	return gInputSystem_->mouse_->state_.rgbButtons[_button] && !gInputSystem_->mouse_->preState_.rgbButtons[_button];
+bool Input::TriggerMouse(int button) {
+	return gInputSystem_->mouse_->state_.rgbButtons[button] && !gInputSystem_->mouse_->preState_.rgbButtons[button];
 }
 
-bool Input::ReleaseMouse(int _button) {
-	return !gInputSystem_->mouse_->state_.rgbButtons[_button] && gInputSystem_->mouse_->preState_.rgbButtons[_button];
+bool Input::ReleaseMouse(int button) {
+	return !gInputSystem_->mouse_->state_.rgbButtons[button] && gInputSystem_->mouse_->preState_.rgbButtons[button];
 }
 
-bool Input::PressGamepad(int _button) {
-	return (gInputSystem_->gamepad_->state_.Gamepad.wButtons & static_cast<WORD>(_button)) != 0;
+bool Input::PressGamepad(int button) {
+	return (gInputSystem_->gamepad_->state_.Gamepad.wButtons & static_cast<WORD>(button)) != 0;
 }
 
-bool Input::TriggerGamepad(int _button) {
-	return PressGamepad(_button) && (gInputSystem_->gamepad_->prevState_.Gamepad.wButtons & static_cast<WORD>(_button)) == 0;
+bool Input::TriggerGamepad(int button) {
+	return PressGamepad(button) && (gInputSystem_->gamepad_->prevState_.Gamepad.wButtons & static_cast<WORD>(button)) == 0;
 }
 
-bool Input::ReleaseGamepad(int _button) {
-	return !PressGamepad(_button) && (gInputSystem_->gamepad_->prevState_.Gamepad.wButtons & static_cast<WORD>(_button)) != 0;
+bool Input::ReleaseGamepad(int button) {
+	return !PressGamepad(button) && (gInputSystem_->gamepad_->prevState_.Gamepad.wButtons & static_cast<WORD>(button)) != 0;
 }
 
 Vector2 Input::GetGamepadLeftThumb() {
@@ -96,14 +96,14 @@ const Vector2& Input::GetMouseVelocity() {
 	return gInputSystem_->mouse_->velocity_;
 }
 
-const Vector2& Input::GetImGuiImageMousePosNormalized(const std::string& _imageName) {
-	return gInputSystem_->mouse_->GetImGuiImageMousePosNormalized(_imageName);
+const Vector2& Input::GetImGuiImageMousePosNormalized(const std::string& imageName) {
+	return gInputSystem_->mouse_->GetImGuiImageMousePosNormalized(imageName);
 }
 
-const Vector2& Input::GetImGuiImagePos(const std::string& _imageName) {
-	return gInputSystem_->mouse_->GetImGuiImagePos(_imageName);
+const Vector2& Input::GetImGuiImagePos(const std::string& imageName) {
+	return gInputSystem_->mouse_->GetImGuiImagePos(imageName);
 }
 
-const Vector2& Input::GetImGuiImageSize(const std::string& _imageName) {
-	return gInputSystem_->mouse_->GetImGuiImageSize(_imageName);
+const Vector2& Input::GetImGuiImageSize(const std::string& imageName) {
+	return gInputSystem_->mouse_->GetImGuiImageSize(imageName);
 }

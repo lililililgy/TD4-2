@@ -1,4 +1,4 @@
-﻿#include "EditorViewCollection.h"
+#include "EditorViewCollection.h"
 
 /// external
 #include <imgui.h>
@@ -23,22 +23,22 @@ using namespace Editor;
 /// ImGuiWindowCollection
 /// ///////////////////////////////////////////////////
 EditorViewCollection::EditorViewCollection(
-	ONEngine::DxManager* _dxm,
-	ONEngine::EntityComponentSystem* _ecs,
-	ONEngine::Asset::AssetCollection* _assetCollection,
-	ImGuiManager* _imGuiManager,
-	EditorManager* _editorManager,
-	ONEngine::SceneManager* _sceneManager)
-	: pImGuiManager_(_imGuiManager), pSceneManager_(_sceneManager) {
+	ONEngine::DxManager* dxm,
+	ONEngine::EntityComponentSystem* ecs,
+	ONEngine::Asset::AssetCollection* assetCollection,
+	ImGuiManager* imGuiManager,
+	EditorManager* editorManager,
+	ONEngine::SceneManager* sceneManager)
+	: pImGuiManager_(imGuiManager), pSceneManager_(sceneManager) {
 
 	/// ここでwindowを生成する
-	AddViewContainer("Develop", std::make_unique<DevelopTab>(_dxm, _ecs, _assetCollection, _editorManager, _sceneManager));
-	AddViewContainer("Game", std::make_unique<GameTab>(_assetCollection));
-	AddViewContainer("Prefab", std::make_unique<PrefabTab>(_dxm, _ecs, _assetCollection, _editorManager, _sceneManager));
+	AddViewContainer("Develop", std::make_unique<DevelopTab>(dxm, ecs, assetCollection, editorManager, sceneManager));
+	AddViewContainer("Game", std::make_unique<GameTab>(assetCollection));
+	AddViewContainer("Prefab", std::make_unique<PrefabTab>(dxm, ecs, assetCollection, editorManager, sceneManager));
 	AddViewContainer("Editor", std::make_unique<EditorTab>());
-	AddViewContainer("AI", std::make_unique<AITab>(_dxm, _ecs, _editorManager, _sceneManager));
+	AddViewContainer("AI", std::make_unique<AITab>(dxm, ecs, editorManager, sceneManager));
 	AddViewContainer("Event", std::make_unique<EventTab>());
-	AddViewContainer("Animation", std::make_unique<AnimationTab>(_assetCollection));
+	AddViewContainer("Animation", std::make_unique<AnimationTab>(assetCollection));
 
 	// game windowで開始
 	selectedMenuIndex_ = 0;
@@ -95,14 +95,14 @@ void EditorViewCollection::Update() {
 
 }
 
-void EditorViewCollection::AddViewContainer(const std::string& _name, std::unique_ptr<class IEditorWindowContainer> _window) {
-	parentWindowNames_.push_back(_name);
-	_window->pImGuiManager_ = pImGuiManager_;
-	for(auto& child : _window->children_) {
+void EditorViewCollection::AddViewContainer(const std::string& name, std::unique_ptr<class IEditorWindowContainer> window) {
+	parentWindowNames_.push_back(name);
+	window->pImGuiManager_ = pImGuiManager_;
+	for(auto& child : window->children_) {
 		child->pImGuiManager_ = pImGuiManager_;
 	}
 
-	parentWindows_.push_back(std::move(_window));
+	parentWindows_.push_back(std::move(window));
 }
 
 void EditorViewCollection::MainMenuUpdate() {
@@ -140,8 +140,8 @@ void EditorViewCollection::MainMenuUpdate() {
 /// ImGuiの親windowクラス
 /// ///////////////////////////////////////////////////
 
-Editor::IEditorWindowContainer::IEditorWindowContainer(const std::string& _windowName)
-	: windowName_(_windowName) {
+Editor::IEditorWindowContainer::IEditorWindowContainer(const std::string& windowName)
+	: windowName_(windowName) {
 }
 
 void Editor::IEditorWindowContainer::ShowImGui() {
@@ -172,8 +172,8 @@ void IEditorWindowContainer::UpdateViews() {
 	}
 }
 
-IEditorWindow* IEditorWindowContainer::AddView(std::unique_ptr<class IEditorWindow> _child) {
-	class IEditorWindow* child = _child.get();
-	children_.push_back(std::move(_child));
-	return child;
+IEditorWindow* IEditorWindowContainer::AddView(std::unique_ptr<class IEditorWindow> child) {
+	class IEditorWindow* childPtr = child.get();
+	children_.push_back(std::move(child));
+	return childPtr;
 }

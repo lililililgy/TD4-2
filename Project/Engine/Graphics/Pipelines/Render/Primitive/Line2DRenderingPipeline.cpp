@@ -1,4 +1,4 @@
-﻿#include "Line2DRenderingPipeline.h"
+#include "Line2DRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -14,13 +14,13 @@ using namespace ONEngine;
 Line2DRenderingPipeline::Line2DRenderingPipeline() {}
 Line2DRenderingPipeline::~Line2DRenderingPipeline() {}
 
-void Line2DRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void Line2DRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{	/// pipelineの作成
 
 		/// shaderをコンパイル
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/Line/Line2D.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"./Packages/Shader/Render/Line/Line2D.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -48,7 +48,7 @@ void Line2DRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 		pipeline_->SetRTVFormat(static_cast<DXGI_FORMAT>(RTVFormat::Flags), static_cast<int>(RTVIndex::Flags));
 
 		/// create pipeline
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 
@@ -56,7 +56,7 @@ void Line2DRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 	vertices_.reserve(kMaxVertexNum_);
 
 	/// vertex bufferの作成
-	vertexBuffer_.CreateResource(_dxm->GetDxDevice(), sizeof(VertexData) * kMaxVertexNum_);
+	vertexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(VertexData) * kMaxVertexNum_);
 	vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
 
 	vbv_.BufferLocation = vertexBuffer_.Get()->GetGPUVirtualAddress();
@@ -65,9 +65,9 @@ void Line2DRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxMana
 
 }
 
-void Line2DRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void Line2DRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
-	ComponentArray<Line2DRenderer>* line2DRendererArray = _ecs->GetComponentArray<Line2DRenderer>();
+	ComponentArray<Line2DRenderer>* line2DRendererArray = ecs->GetComponentArray<Line2DRenderer>();
 	if (!line2DRendererArray || line2DRendererArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -100,15 +100,15 @@ void Line2DRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camer
 
 
 	/// draw settings
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
 	cmdList->IASetVertexBuffers(0, 1, &vbv_);
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	/// buffer
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
 
 	/// 描画
 	cmdList->DrawInstanced(static_cast<UINT>(vertices_.size()), 1, 0, 0);

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../../Interface/IComponent.h"
@@ -36,16 +36,16 @@ public:
 	/// ===================================================
 	
 	/// @brief 光の強度の設定
-	/// @param _intensity 光の強度
-	void SetIntensity(float _intensity) { intensity_ = _intensity; }
+	/// @param intensity 光の強度
+	void SetIntensity(float intensity) { intensity_ = intensity; }
 	
 	/// @brief 光の方向の設定
-	/// @param _direction 光の方向
-	void SetDirection(const Vector3& _direction) { direction_ = _direction; }
+	/// @param direction 光の方向
+	void SetDirection(const Vector3& direction) { direction_ = direction; }
 	
 	/// @brief 光の色の設定
-	/// @param _color 光の色
-	void SetColor(const Vector4& _color) { color_ = _color; }
+	/// @param color 光の色
+	void SetColor(const Vector4& color) { color_ = color; }
 
 
 	/// @brief 光の強度の取得

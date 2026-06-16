@@ -1,4 +1,4 @@
-﻿#include "GrassBufferCreateSystem.h"
+#include "GrassBufferCreateSystem.h"
 
 using namespace ONEngine;
 
@@ -8,17 +8,17 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Array/ComponentArray.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/Grass/GrassField.h"
 
-GrassBufferCreateSystem::GrassBufferCreateSystem(DxManager* _dxm) : pDxManager_(_dxm) {}
+GrassBufferCreateSystem::GrassBufferCreateSystem(DxManager* dxm) : pDxManager_(dxm) {}
 GrassBufferCreateSystem::~GrassBufferCreateSystem() = default;
 
-void GrassBufferCreateSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
+void GrassBufferCreateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	/// ----- ランタイム外で生成する(デバッグ時にRuntimeを起動していなくてもよいように) ----- ///
 
 	/// -------------------------------------------------
 	/// 早期リターン条件のチェック
 	/// -------------------------------------------------
 
-	ComponentArray<GrassField>* grassArray = _ecs->GetComponentArray<GrassField>();
+	ComponentArray<GrassField>* grassArray = ecs->GetComponentArray<GrassField>();
 	if (!grassArray) {
 		return;
 	}
@@ -44,7 +44,7 @@ void GrassBufferCreateSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
 	}
 }
 
-void GrassBufferCreateSystem::RuntimeUpdate(ECSGroup* /*_ecs*/) {
+void GrassBufferCreateSystem::RuntimeUpdate(ECSGroup* /*ecs*/) {
 	// ランタイム中の更新処理をここに実装
 }
 

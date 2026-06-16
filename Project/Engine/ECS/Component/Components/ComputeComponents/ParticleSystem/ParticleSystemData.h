@@ -24,8 +24,8 @@ namespace ONEngine {
         // AnimationCurve curve; // Future
 
         MinMaxFloat() : state(MinMaxState::Constant), constant(0.0f), minVal(0.0f), maxVal(1.0f) {}
-        MinMaxFloat(float _c) : state(MinMaxState::Constant), constant(_c), minVal(0.0f), maxVal(1.0f) {}
-        MinMaxFloat(float _min, float _max) : state(MinMaxState::RandomBetweenTwoConstants), constant(0.0f), minVal(_min), maxVal(_max) {}
+        MinMaxFloat(float c) : state(MinMaxState::Constant), constant(c), minVal(0.0f), maxVal(1.0f) {}
+        MinMaxFloat(float min, float max) : state(MinMaxState::RandomBetweenTwoConstants), constant(0.0f), minVal(min), maxVal(max) {}
     };
 
     struct MinMaxColor {
@@ -35,8 +35,8 @@ namespace ONEngine {
         Color maxVal;
 
         MinMaxColor() : state(MinMaxState::Constant), constant(Color::kWhite), minVal(Color::kWhite), maxVal(Color::kWhite) {}
-        MinMaxColor(const Color& _c) : state(MinMaxState::Constant), constant(_c), minVal(Color::kWhite), maxVal(Color::kWhite) {}
-        MinMaxColor(const Color& _min, const Color& _max) : state(MinMaxState::RandomBetweenTwoConstants), constant(Color::kWhite), minVal(_min), maxVal(_max) {}
+        MinMaxColor(const Color& c) : state(MinMaxState::Constant), constant(c), minVal(Color::kWhite), maxVal(Color::kWhite) {}
+        MinMaxColor(const Color& min, const Color& max) : state(MinMaxState::RandomBetweenTwoConstants), constant(Color::kWhite), minVal(min), maxVal(max) {}
     };
 
     struct GradientColorKey {

@@ -1,4 +1,4 @@
-﻿#include "DxSwapChain.h"
+#include "DxSwapChain.h"
 
 using namespace ONEngine;
 
@@ -24,11 +24,11 @@ DxSwapChain::~DxSwapChain() {
 }
 
 
-void DxSwapChain::Initialize(DxManager* _dxm, Window* _window) {
+void DxSwapChain::Initialize(DxManager* dxm, Window* window) {
 
 	/// 引数を保存
-	pDxManager_ = _dxm;
-	pWindow_    = _window;
+	pDxManager_ = dxm;
+	pWindow_    = window;
 
 	const Vector2& size = EngineConfig::kWindowSize;
 
@@ -112,32 +112,32 @@ void DxSwapChain::Initialize(DxManager* _dxm, Window* _window) {
 	Console::Log("dx swap chain create success!!");
 }
 
-void DxSwapChain::BindViewportAndScissorRectForCommandList(ID3D12GraphicsCommandList* _commandList) const {
+void DxSwapChain::BindViewportAndScissorRectForCommandList(ID3D12GraphicsCommandList* commandList) const {
 	/// ビューポートとシザー矩形の設定
-	_commandList->RSSetViewports(1, &viewport_);
-	_commandList->RSSetScissorRects(1, &scissorRect_);
+	commandList->RSSetViewports(1, &viewport_);
+	commandList->RSSetScissorRects(1, &scissorRect_);
 }
 
-void DxSwapChain::CreateBarrier(ID3D12GraphicsCommandList* _commandList, D3D12_RESOURCE_STATES _before, D3D12_RESOURCE_STATES _after) {
+void DxSwapChain::CreateBarrier(ID3D12GraphicsCommandList* commandList, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) {
 	D3D12_RESOURCE_BARRIER barrier{};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource   = buffers_[swapChain_->GetCurrentBackBufferIndex()].Get();
-	barrier.Transition.StateBefore = _before;
-	barrier.Transition.StateAfter  = _after;
-	_commandList->ResourceBarrier(1, &barrier);
+	barrier.Transition.StateBefore = before;
+	barrier.Transition.StateAfter  = after;
+	commandList->ResourceBarrier(1, &barrier);
 }
 
-void DxSwapChain::ClearBackBuffer(ID3D12GraphicsCommandList* _commandList) {
+void DxSwapChain::ClearBackBuffer(ID3D12GraphicsCommandList* commandList) {
 	UINT bbIndex = swapChain_->GetCurrentBackBufferIndex();
 
 	DxDSVHeap*                  dxDSVHeap = pDxManager_->GetDxDSVHeap();
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dxDSVHeap->GetCPUDescriptorHandel(0);
 
-	_commandList->OMSetRenderTargets(1, &rtvHandles_[bbIndex], false, &dsvHandle);
-	_commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	commandList->OMSetRenderTargets(1, &rtvHandles_[bbIndex], false, &dsvHandle);
+	commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };
-	_commandList->ClearRenderTargetView(rtvHandles_[bbIndex], clearColor, 0, nullptr);
+	commandList->ClearRenderTargetView(rtvHandles_[bbIndex], clearColor, 0, nullptr);
 }
 
 void DxSwapChain::Present() {

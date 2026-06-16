@@ -1,4 +1,4 @@
-﻿#include "DxManager.h"
+#include "DxManager.h"
 
 using namespace ONEngine;
 
@@ -52,7 +52,7 @@ void DxManager::HeapBindToCommandList() {
 	);
 }
 
-DxDepthStencil* DxManager::AddDepthStencil(const std::string& _name) {
+DxDepthStencil* DxManager::AddDepthStencil(const std::string& name) {
 	/// ----- 新規のDxDepthStencilを作成 ----- ///
 
 	std::unique_ptr<DxDepthStencil> newDepthStencil = std::make_unique<DxDepthStencil>();
@@ -60,7 +60,7 @@ DxDepthStencil* DxManager::AddDepthStencil(const std::string& _name) {
 	dxDepthStencils_.emplace_back(std::move(newDepthStencil));
 
 	/// 名前とインデックスの紐付け
-	depthStencilNameMap_[_name] = dxDepthStencils_.size() - 1;
+	depthStencilNameMap_[name] = dxDepthStencils_.size() - 1;
 
 	/// 最後に追加したDepthStencilを返す
 	return dxDepthStencils_.back().get();
@@ -88,11 +88,12 @@ DxDSVHeap* DxManager::GetDxDSVHeap() const {
 	return static_cast<DxDSVHeap*>(dxDescriptorHeaps_[DescriptorHeapType_DSV].get());
 }
 
-DxDepthStencil* DxManager::GetDxDepthStencil(const std::string& _name) const {
-	if(depthStencilNameMap_.contains(_name)) {
-		size_t index = depthStencilNameMap_.at(_name);
+DxDepthStencil* DxManager::GetDxDepthStencil(const std::string& name) const {
+	if(depthStencilNameMap_.contains(name)) {
+		size_t index = depthStencilNameMap_.at(name);
 		return dxDepthStencils_[index].get();
 	}
 
 	return nullptr;
 }
+

@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct Vector4 {
 	public float x, y, z, w;
 
-	public Vector4(float _x, float _y, float _z, float _w) {
-		x = _x;
-		y = _y;
-		z = _z;
-		w = _w;
+	public Vector4(float x, float y, float z, float w) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
 	}
 
 	/// -----------------------------------------------
@@ -31,28 +31,28 @@ public struct Vector4 {
 	/// static public methods
 	/// -----------------------------------------------
 
-	static public Vector4 Normalized(Vector4 _v) {
-		return _v.Normalized();
+	static public Vector4 Normalized(Vector4 v) {
+		return v.Normalized();
 	}
 
-	static public float Length(Vector4 _v) {
-		return _v.Length();
+	static public float Length(Vector4 v) {
+		return v.Length();
 	}
 
-	static public Vector4 Lerp(Vector4 _v1, Vector4 _v2, float _t) {
+	static public Vector4 Lerp(Vector4 v1, Vector4 v2, float t) {
 		Vector4 result = new Vector4();
-		result.x = Mathf.Lerp(_v1.x, _v2.x, _t);
-		result.y = Mathf.Lerp(_v1.y, _v2.y, _t);
-		result.z = Mathf.Lerp(_v1.z, _v2.z, _t);
-		result.w = Mathf.Lerp(_v1.w, _v2.w, _t);
+		result.x = Mathf.Lerp(v1.x, v2.x, t);
+		result.y = Mathf.Lerp(v1.y, v2.y, t);
+		result.z = Mathf.Lerp(v1.z, v2.z, t);
+		result.w = Mathf.Lerp(v1.w, v2.w, t);
 		return result;
 	}
 
-	static public Vector4 ColorCodeToVector4(uint _color) {
-		float r = ((_color >> 16) & 0xFF) / 255.0f;
-		float g = ((_color >> 8) & 0xFF) / 255.0f;
-		float b = (_color & 0xFF) / 255.0f;
-		float a = ((_color >> 24) & 0xFF) / 255.0f;
+	static public Vector4 ColorCodeToVector4(uint color) {
+		float r = ((color >> 16) & 0xFF) / 255.0f;
+		float g = ((color >> 8) & 0xFF) / 255.0f;
+		float b = (color & 0xFF) / 255.0f;
+		float a = ((color >> 24) & 0xFF) / 255.0f;
 		return new Vector4(r, g, b, a);
 	}
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// editor
 #include "../EditorViewCollection.h"
@@ -29,11 +29,11 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	DevelopTab(ONEngine::DxManager* _dxm,
-		ONEngine::EntityComponentSystem* _ecs,
-		ONEngine::Asset::AssetCollection* _assetCollection,
-		EditorManager* _editorManager,
-		ONEngine::SceneManager* _sceneManager);
+	DevelopTab(ONEngine::DxManager* dxm,
+		ONEngine::EntityComponentSystem* ecs,
+		ONEngine::Asset::AssetCollection* assetCollection,
+		EditorManager* editorManager,
+		ONEngine::SceneManager* sceneManager);
 	~DevelopTab() {}
 
 };

@@ -1,4 +1,4 @@
-﻿#include "ShaderCompiler.h"
+#include "ShaderCompiler.h"
 
 using namespace ONEngine;
 
@@ -35,12 +35,12 @@ void ShaderCompiler::Initialize() {
 }
 
 
-ComPtr<IDxcBlob> ShaderCompiler::CompileShader(const std::wstring& _filePath, const wchar_t* _profile, const std::wstring& _entryPoint) {
+ComPtr<IDxcBlob> ShaderCompiler::CompileShader(const std::wstring& filePath, const wchar_t* profile, const std::wstring& entryPoint) {
 	HRESULT hr = S_FALSE;
 
 	/// hlslを読み込む
 	ComPtr<IDxcBlobEncoding> shaderSource = nullptr;
-	hr = dxcUtils_->LoadFile(_filePath.c_str(), nullptr, &shaderSource);
+	hr = dxcUtils_->LoadFile(filePath.c_str(), nullptr, &shaderSource);
 	Assert(SUCCEEDED(hr), "Compile Not Succeended");
 
 	/// ファイルの内容を設定する
@@ -52,9 +52,9 @@ ComPtr<IDxcBlob> ShaderCompiler::CompileShader(const std::wstring& _filePath, co
 #ifdef _DEBUG
 	/// Compileの設定
 	LPCWSTR arguments[] = {
-		_filePath.c_str(),			/// Compile対象のhlslファイル名
-		L"-E", _entryPoint.c_str(),	/// エントリーポイントの指定; 基本的にmain以外にはしない
-		L"-T", _profile,			/// ShaderProfileの設定
+		filePath.c_str(),			/// Compile対象のhlslファイル名
+		L"-E", entryPoint.c_str(),	/// エントリーポイントの指定; 基本的にmain以外にはしない
+		L"-T", profile,			/// ShaderProfileの設定
 		L"-Zi", L"-Qembed_debug",	/// デバッグ用の情報を埋め込む
 		L"-Od",						/// 最適化を外す
 		L"-Zpr",					/// メモリレイアウトは行優先
@@ -62,9 +62,9 @@ ComPtr<IDxcBlob> ShaderCompiler::CompileShader(const std::wstring& _filePath, co
 #else
 	/// Releaseモード
 	LPCWSTR arguments[] = {
-		_filePath.c_str(),			/// Compile対象のhlslファイル名
-		L"-E", _entryPoint.c_str(),	/// エントリーポイントの指定; 基本的にmain以外にはしない
-		L"-T", _profile,			/// ShaderProfileの設定
+		filePath.c_str(),			/// Compile対象のhlslファイル名
+		L"-E", entryPoint.c_str(),	/// エントリーポイントの指定; 基本的にmain以外にはしない
+		L"-T", profile,			/// ShaderProfileの設定
 		L"-O3",						/// 最適化レベル3
 		L"-Zpr",					/// メモリレイアウトは行優先
 	};
@@ -96,7 +96,7 @@ ComPtr<IDxcBlob> ShaderCompiler::CompileShader(const std::wstring& _filePath, co
 	Assert(SUCCEEDED(hr), "compile Not succeeded");
 
 	/// 成功したログ出力
-	Console::Log(std::format(L"[Load Resource] type:Shader, path:\"{}\", profile:\"{}\"", _filePath, _profile));
+	Console::Log(std::format(L"[Load Resource] type:Shader, path:\"{}\", profile:\"{}\"", filePath, profile));
 
 	return shaderBlob;
 }

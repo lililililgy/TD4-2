@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// externals
 #include <nlohmann/json.hpp>
@@ -24,17 +24,17 @@ enum class CameraType {
 
 /// @brief Componentのデバッグ関数
 namespace ComponentDebug {
-void CameraDebug(CameraComponent* _camera);
+void CameraDebug(CameraComponent* camera);
 }
 
 namespace ComponentApplyFuncs {
-void ApplyCamera(void* _element, class ECSGroup* _ecsGroup);
-void FetchCamera(void* _element, class ECSGroup* _ecsGroup);
+void ApplyCamera(void* element, class ECSGroup* ecsGroup);
+void FetchCamera(void* element, class ECSGroup* ecsGroup);
 }
 
 /// Json変換
-void from_json(const nlohmann::json& _j, CameraComponent& _c);
-void to_json(nlohmann::json& _j, const CameraComponent& _c);
+void from_json(const nlohmann::json& j, CameraComponent& c);
+void to_json(nlohmann::json& j, const CameraComponent& c);
 
 
 /// ///////////////////////////////////////////////////
@@ -45,11 +45,11 @@ class CameraComponent : public IComponent {
 	friend class CameraUpdateSystem;
 
 	/// ----- friend function ----- ///
-	friend void ComponentDebug::CameraDebug(CameraComponent* _camera);
-	friend void ComponentApplyFuncs::ApplyCamera(void* _element, class ECSGroup* _ecsGroup);
-	friend void ComponentApplyFuncs::FetchCamera(void* _element, class ECSGroup* _ecsGroup);
-	friend void from_json(const nlohmann::json& _j, CameraComponent& _c);
-	friend void to_json(nlohmann::json& _j, const CameraComponent& _c);
+	friend void ComponentDebug::CameraDebug(CameraComponent* camera);
+	friend void ComponentApplyFuncs::ApplyCamera(void* element, class ECSGroup* ecsGroup);
+	friend void ComponentApplyFuncs::FetchCamera(void* element, class ECSGroup* ecsGroup);
+	friend void from_json(const nlohmann::json& j, CameraComponent& c);
+	friend void to_json(nlohmann::json& j, const CameraComponent& c);
 
 public:
 
@@ -87,8 +87,8 @@ private:
 	/// ===================================================
 
 	/// @brief ViewProjectionのBufferを作成
-	/// @param _dxDevice Buffer作成に使うDxDevice
-	void MakeViewProjection(class DxDevice* _dxDevice);
+	/// @param dxDevice Buffer作成に使うDxDevice
+	void MakeViewProjection(class DxDevice* dxDevice);
 
 
 private:
@@ -121,9 +121,9 @@ public:
 	/// public : accessor
 	/// ====================================================
 
-	void SetIsMainCameraRequest(bool _isMainCamera);
-	void SetCameraType(int _cameraType);
-	void SetOrthographicSize(const Vector2& _size);
+	void SetIsMainCameraRequest(bool isMainCamera);
+	void SetCameraType(int cameraType);
+	void SetOrthographicSize(const Vector2& size);
 
 
 	bool GetIsMainCameraRequest() const;
@@ -148,22 +148,22 @@ public:
 namespace CameraMath {
 
 /// @brief perspective matrix の作成
-/// @param _fovY 視野角
-/// @param _aspectRatio アスペクト比 
-/// @param _nearClip 最小描画距離
-/// @param _farClip 最大描画距離
+/// @param fovY 視野角
+/// @param aspectRatio アスペクト比 
+/// @param nearClip 最小描画距離
+/// @param farClip 最大描画距離
 /// @return 作成された perspective matrix
-Matrix4x4 MakePerspectiveFovMatrix(float _fovY, float _aspectRatio, float _nearClip, float _farClip);
+Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 
 /// @brief 平行投影行列の作成
-/// @param _left 左
-/// @param _right 右
-/// @param _bottom 下
-/// @param _top 上
-/// @param _znear 手前
-/// @param _zfar 奥行き
+/// @param left 左
+/// @param right 右
+/// @param bottom 下
+/// @param top 上
+/// @param znear 手前
+/// @param zfar 奥行き
 /// @return 平行投影行列
-Matrix4x4 MakeOrthographicMatrix(float _left, float _right, float _bottom, float _top, float _znear, float _zfar);
+Matrix4x4 MakeOrthographicMatrix(float left, float right, float bottom, float top, float znear, float zfar);
 
 }
 

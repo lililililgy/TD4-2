@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 /// std
@@ -34,8 +34,8 @@ public:
 	~CustomMeshRenderer();
 
 	/// @brief meshの再作成
-	/// @param _pDxDevice DxDeviceへのポインタ
-	void MeshRecreate(class DxDevice* _pDxDevice);
+	/// @param pDxDevice DxDeviceへのポインタ
+	void MeshRecreate(class DxDevice* pDxDevice);
 
 	/// @brief 頂点をGPUに転送する
 	void VertexMemcpy();
@@ -58,28 +58,28 @@ public:
 	/// ====================================================
 
 	/// @brief verticesのセッタ
-	/// @param _vertices meshの頂点データ
-	void SetVertices(const std::vector<Vertex>& _vertices);
+	/// @param vertices meshの頂点データ
+	void SetVertices(const std::vector<Vertex>& vertices);
 
 	/// @brief indicesのセッタ
-	/// @param _indices 頂点インデックスデータ
-	void SetIndices(const std::vector<uint32_t>& _indices);
+	/// @param indices 頂点インデックスデータ
+	void SetIndices(const std::vector<uint32_t>& indices);
 
 	/// @brief textureのpathのセッタ
-	/// @param _path Textureのpath
-	void SetTexturePath(const std::string& _path);
+	/// @param path Textureのpath
+	void SetTexturePath(const std::string& path);
 
 	/// @brief 色の設定
-	/// @param _color RGBAの色を設定する
-	void SetColor(const Vector4& _color);
+	/// @param color RGBAの色を設定する
+	void SetColor(const Vector4& color);
 
 	/// @brief 描画するかどうかのセッタ
-	/// @param _isVisible 描画フラグ
-	void SetIsVisible(bool _isVisible);
+	/// @param isVisible 描画フラグ
+	void SetIsVisible(bool isVisible);
 
 	/// @brief bufferを再作成するかどうかのセッタ
-	/// @param _isBufferRecreate bufferを再作成するフラグ
-	void SetIsBufferRecreate(bool _isBufferRecreate);
+	/// @param isBufferRecreate bufferを再作成するフラグ
+	void SetIsBufferRecreate(bool isBufferRecreate);
 
 
 

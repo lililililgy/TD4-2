@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -52,10 +52,10 @@ public:
 	/// 再生
 	void Play();
 	void Stop();
-	void PlayOneShot(float _volume, float _pitch, const std::string& _path);
+	void PlayOneShot(float volume, float pitch, const std::string& path);
 
 	/// 追加
-	void AddSourceVoice(IXAudio2SourceVoice* _sourceVoice);
+	void AddSourceVoice(IXAudio2SourceVoice* sourceVoice);
 
 private:
 	/// ===================================================
@@ -84,16 +84,16 @@ public:
 	/// ===================================================
 
 	/// ----- setter ----- ///
-	void SetVolume(float _volume);
-	void SetPitch(float _pitch);
-	void SetAudioPath(const std::string& _path);
-	void SetAudioClip(Asset::AudioClip* _clip);
+	void SetVolume(float volume);
+	void SetPitch(float pitch);
+	void SetAudioPath(const std::string& path);
+	void SetAudioClip(Asset::AudioClip* clip);
 
 	/// ----- getter ----- ///
 	float GetVolume() const;
 	float GetPitch() const;
 	bool GetLoop() const { return isLoop_; }
-	void SetLoop(bool _loop) { isLoop_ = _loop; }
+	void SetLoop(bool loop) { isLoop_ = loop; }
 	const std::string& GetAudioPath() const;
 	Asset::AudioClip* GetAudioClip() const;
 	int GetState() const;
@@ -101,20 +101,20 @@ public:
 };
 
 namespace ComponentDebug {
-void AudioSourceDebug(AudioSource* _as);
+void AudioSourceDebug(AudioSource* as);
 }
 
 namespace MonoInternalMethods {
-void InternalGetParams(uint64_t _nativeHandle, float* _volume, float* _pitch);
-void InternalSetParams(uint64_t _nativeHandle, float _volume, float _pitch);
-void InternalPlay(uint64_t _nativeHandle);
-void InternalStop(uint64_t _nativeHandle);
-void InternalPlayOneShot(uint64_t _nativeHandle, float _volume, float _pitch, MonoString* _path);
+void InternalGetParams(uint64_t nativeHandle, float* volume, float* pitch);
+void InternalSetParams(uint64_t nativeHandle, float volume, float pitch);
+void InternalPlay(uint64_t nativeHandle);
+void InternalStop(uint64_t nativeHandle);
+void InternalPlayOneShot(uint64_t nativeHandle, float volume, float pitch, MonoString* path);
 }
 
 
 
-void from_json(const nlohmann::json& _j, AudioSource& _a);
-void to_json(nlohmann::json& _j, const AudioSource& _a);
+void from_json(const nlohmann::json& j, AudioSource& a);
+void to_json(nlohmann::json& j, const AudioSource& a);
 
 } /// ONEngine

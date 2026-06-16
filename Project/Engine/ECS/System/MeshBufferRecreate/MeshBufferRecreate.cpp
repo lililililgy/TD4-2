@@ -6,12 +6,12 @@ using namespace ONEngine;
 #include "../../EntityComponentSystem/EntityComponentSystem.h"
 #include "../../Component/Components/RendererComponents/Mesh/CustomMeshRenderer.h"
 
-MeshBufferRecreate::MeshBufferRecreate(DxDevice* _dxDevice) : pDxDevice_(_dxDevice) {}
+MeshBufferRecreate::MeshBufferRecreate(DxDevice* dxDevice) : pDxDevice_(dxDevice) {}
 
-void MeshBufferRecreate::RuntimeUpdate(ECSGroup* _ecs) {
+void MeshBufferRecreate::RuntimeUpdate(ECSGroup* ecs) {
 	/// ----- MeshRendererでBufferの再生成要求が出た場合Bufferを生成しなおす処理 ----- ///
 
-	ComponentArray<CustomMeshRenderer>* meshRendererArray = _ecs->GetComponentArray<CustomMeshRenderer>();
+	ComponentArray<CustomMeshRenderer>* meshRendererArray = ecs->GetComponentArray<CustomMeshRenderer>();
 	if (!meshRendererArray || meshRendererArray->GetUsedComponents().empty()) {
 		return; // メッシュレンダラーが存在しない場合は何もしない
 	}

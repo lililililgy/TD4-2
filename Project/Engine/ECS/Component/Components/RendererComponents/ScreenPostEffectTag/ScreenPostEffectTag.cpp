@@ -1,4 +1,4 @@
-﻿#include "ScreenPostEffectTag.h"
+#include "ScreenPostEffectTag.h"
 
 /// std
 #include <vector>
@@ -25,18 +25,18 @@ namespace {
 
 } /// namespace
 
-void ScreenPostEffectTag::SetPostEffectEnable(PostEffectType _type, bool _enable) {
-	gFlags.flags[static_cast<size_t>(_type)] = _enable;
+void ScreenPostEffectTag::SetPostEffectEnable(PostEffectType type, bool enable) {
+	gFlags.flags[static_cast<size_t>(type)] = enable;
 }
 
-bool ScreenPostEffectTag::GetPostEffectEnable(PostEffectType _type) const {
-	return gFlags.flags[static_cast<size_t>(_type)];
+bool ScreenPostEffectTag::GetPostEffectEnable(PostEffectType type) const {
+	return gFlags.flags[static_cast<size_t>(type)];
 }
 
 
 
-void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* _component) {
-	if (!_component) {
+void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* component) {
+	if (!component) {
 		return;
 	}
 
@@ -50,30 +50,30 @@ void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* _component) {
 
 }
 
-void ONEngine::from_json(const nlohmann::json& _j, ScreenPostEffectTag& _c) {
-	if (_j.contains("enable")) {
-		_c.enable = _j["enable"].get<int>();
+void ONEngine::from_json(const nlohmann::json& j, ScreenPostEffectTag& c) {
+	if (j.contains("enable")) {
+		c.enable = j["enable"].get<int>();
 	}
-	if (_j.contains("id")) {
-		_c.id = _j["id"].get<uint32_t>();
+	if (j.contains("id")) {
+		c.id = j["id"].get<uint32_t>();
 	}
 	// Handle post effect flags if they are present in the JSON
-	if (_j.contains("postEffects")) {
-		for (const auto& effect : _j["postEffects"]) {
+	if (j.contains("postEffects")) {
+		for (const auto& effect : j["postEffects"]) {
 			auto type = effect["type"].get<int>();
 			bool enabled = effect["enabled"].get<bool>();
-			_c.SetPostEffectEnable(PostEffectType(type), enabled);
+			c.SetPostEffectEnable(PostEffectType(type), enabled);
 		}
 	}
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const ScreenPostEffectTag& _c) {
-	_j["type"] = "ScreenPostEffectTag";
-	_j["enable"] = _c.enable;
-	_j["id"] = _c.id;
+void ONEngine::to_json(nlohmann::json& j, const ScreenPostEffectTag& c) {
+	j["type"] = "ScreenPostEffectTag";
+	j["enable"] = c.enable;
+	j["id"] = c.id;
 	// Serialize post effect flags
 	for (size_t i = 0; i < gFlags.flags.size(); ++i) {
-		_j["postEffects"].push_back({
+		j["postEffects"].push_back({
 			{ "type", i },
 			{ "enabled", gFlags.flags[i] }
 			});

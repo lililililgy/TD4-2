@@ -1,4 +1,4 @@
-﻿#include "DevelopTab.h"
+#include "DevelopTab.h"
 
 
 /// external
@@ -21,18 +21,18 @@ using namespace ONEngine;
 using namespace Editor;
 
 DevelopTab::DevelopTab(
-	DxManager* _dxm,
-	EntityComponentSystem* _ecs, Asset::AssetCollection* _assetCollection,
-	EditorManager* _editorManager, SceneManager* _sceneManager)
+	DxManager* dxm,
+	EntityComponentSystem* ecs, Asset::AssetCollection* assetCollection,
+	EditorManager* editorManager, SceneManager* sceneManager)
 	: IEditorWindowContainer("Game") {
 
 	/// 子windowの追加
-	InspectorWindow* inspector = static_cast<InspectorWindow*>(AddView(std::make_unique<InspectorWindow>("Inspector##Game", _dxm, _ecs, _assetCollection, _editorManager)));
-	AddView(std::make_unique<ProjectWindow>(_assetCollection));
-	AddView(std::make_unique<GameSceneView>(_assetCollection, "GameScene"));
-	AddView(std::make_unique<NormalHierarchyWindow>("Hierarchy", _ecs, _editorManager, _sceneManager));
-	AddView(std::make_unique<HierarchyWindow>("DebugHierarchy", _ecs, _ecs->GetECSGroup("Debug"), _editorManager, _sceneManager));
-	AddView(std::make_unique<DebugSceneView>(_ecs, _assetCollection, _sceneManager, inspector));
+	InspectorWindow* inspector = static_cast<InspectorWindow*>(AddView(std::make_unique<InspectorWindow>("Inspector##Game", dxm, ecs, assetCollection, editorManager)));
+	AddView(std::make_unique<ProjectWindow>(assetCollection));
+	AddView(std::make_unique<GameSceneView>(assetCollection, "GameScene"));
+	AddView(std::make_unique<NormalHierarchyWindow>("Hierarchy", ecs, editorManager, sceneManager));
+	AddView(std::make_unique<HierarchyWindow>("DebugHierarchy", ecs, ecs->GetECSGroup("Debug"), editorManager, sceneManager));
+	AddView(std::make_unique<DebugSceneView>(ecs, assetCollection, sceneManager, inspector));
 	AddView(std::make_unique<ConsoleWindow>());
-	AddView(std::make_unique<TexturePreviewWindow>(_assetCollection));
+	AddView(std::make_unique<TexturePreviewWindow>(assetCollection));
 }

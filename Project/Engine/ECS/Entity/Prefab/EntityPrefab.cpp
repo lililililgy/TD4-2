@@ -1,4 +1,4 @@
-﻿#include "EntityPrefab.h"
+#include "EntityPrefab.h"
 
 using namespace ONEngine;
 
@@ -9,8 +9,8 @@ using namespace ONEngine;
 /// engine
 #include "Engine/Core/Utility/Utility.h"
 
-EntityPrefab::EntityPrefab(const std::string& _path)
-	: path_(_path) {
+EntityPrefab::EntityPrefab(const std::string& path)
+	: path_(path) {
 
 	/* --- pathのJSONを読む --- */
 

@@ -1,12 +1,12 @@
-﻿#include "GameTab.h"
+#include "GameTab.h"
 
 /// editor
 #include "../Windows/Develop/GameSceneView.h"
 
 using namespace Editor;
 
-GameTab::GameTab(ONEngine::Asset::AssetCollection* _ac)
+GameTab::GameTab(ONEngine::Asset::AssetCollection* ac)
 	: IEditorWindowContainer("Game") {
 
-	AddView(std::make_unique<GameSceneView>(_ac, "GameView##GameSceneView"));
+	AddView(std::make_unique<GameSceneView>(ac, "GameView##GameSceneView"));
 }

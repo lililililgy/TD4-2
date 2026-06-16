@@ -1,4 +1,4 @@
-﻿#include "RenderingPipelineCollection.h"
+#include "RenderingPipelineCollection.h"
 
 using namespace ONEngine;
 
@@ -44,8 +44,8 @@ using namespace ONEngine;
 #include "../PostProcess/PerObject/TerrainBrush/PostProcessTerrainBrush.h"
 #include "../PostProcess/PerObject/VoxelTerrainBrush/PostProcessVoxelTerrainBrush.h"
 
-RenderingPipelineCollection::RenderingPipelineCollection(ShaderCompiler* _shaderCompiler, DxManager* _dxm, EntityComponentSystem* _pEntityComponentSystem, Asset::AssetCollection* _assetCollection)
-	: pShaderCompiler_(_shaderCompiler), pDxManager_(_dxm), pEntityComponentSystem_(_pEntityComponentSystem), pAssetCollection_(_assetCollection) {
+RenderingPipelineCollection::RenderingPipelineCollection(ShaderCompiler* shaderCompiler, DxManager* dxm, EntityComponentSystem* pEntityComponentSystem, Asset::AssetCollection* assetCollection)
+	: pShaderCompiler_(shaderCompiler), pDxManager_(dxm), pEntityComponentSystem_(pEntityComponentSystem), pAssetCollection_(assetCollection) {
 }
 
 RenderingPipelineCollection::~RenderingPipelineCollection() {}
@@ -152,9 +152,9 @@ void RenderingPipelineCollection::DrawGizmos(CameraComponent* _3dCamera) {
 	//}
 }
 
-void RenderingPipelineCollection::DrawEntities2D(CameraComponent* _2dCamera, const std::string& _groupName) {
+void RenderingPipelineCollection::DrawEntities2D(CameraComponent* _2dCamera, const std::string& groupName) {
 	/// 対象のGroupを取得
-	ECSGroup* ecsGroup = _groupName.empty() ? pEntityComponentSystem_->GetCurrentGroup() : pEntityComponentSystem_->GetECSGroup(_groupName);
+	ECSGroup* ecsGroup = groupName.empty() ? pEntityComponentSystem_->GetCurrentGroup() : pEntityComponentSystem_->GetECSGroup(groupName);
 	if (!ecsGroup) return;
 
 	/// 2dカメラが有効なら2D描画を実行
@@ -193,9 +193,9 @@ void RenderingPipelineCollection::DrawSelectedPrefab(CameraComponent* _3dCamera,
 	}
 }
 
-void RenderingPipelineCollection::DrawSelectedPrefab2D(CameraComponent* _2dCamera, const std::string& _groupName) {
+void RenderingPipelineCollection::DrawSelectedPrefab2D(CameraComponent* _2dCamera, const std::string& groupName) {
 	/// デバッグ用のGroupを使用する
-	std::string targetGroup = _groupName.empty() ? "Debug" : _groupName;
+	std::string targetGroup = groupName.empty() ? "Debug" : groupName;
 	ECSGroup* ecsGroup = pEntityComponentSystem_->GetECSGroup(targetGroup);
 	if (!ecsGroup) return;
 
@@ -208,20 +208,20 @@ void RenderingPipelineCollection::DrawSelectedPrefab2D(CameraComponent* _2dCamer
 }
 
 
-void RenderingPipelineCollection::ExecutePostProcess(const std::string& _sceneTextureName) {
+void RenderingPipelineCollection::ExecutePostProcess(const std::string& sceneTextureName) {
 	// 検証用ログ
 	static int postLogCount = 0;
 	if (postLogCount < 10) {
-		Console::Log("[RenderingCollection] ExecutePostProcess for scene: " + _sceneTextureName, LogCategory::Engine);
+		Console::Log("[RenderingCollection] ExecutePostProcess for scene: " + sceneTextureName, LogCategory::Engine);
 		postLogCount++;
 	}
 
 	for (auto& postProcess : postProcesses_) {
-		postProcess->Execute(_sceneTextureName, pDxManager_->GetDxCommand(), pAssetCollection_, pEntityComponentSystem_);
+		postProcess->Execute(sceneTextureName, pDxManager_->GetDxCommand(), pAssetCollection_, pEntityComponentSystem_);
 	}
 }
 
-bool RenderingPipelineCollection::IsEnableCamera(const CameraComponent* _camera) const {
+bool RenderingPipelineCollection::IsEnableCamera(const CameraComponent* camera) const {
 	/*
 	* チェック項目
 	* 1, カメラのポインタが有効
@@ -229,19 +229,19 @@ bool RenderingPipelineCollection::IsEnableCamera(const CameraComponent* _camera)
 	* 3, Bufferとして利用できるViewProjectionがあるか
 	*/
 
-	if (!_camera) {
+	if (!camera) {
 		// static int nullCamLog = 0;
 		// if (nullCamLog < 1) { Console::Log("[RenderingCollection] IsEnableCamera: Camera is null", LogCategory::Engine); nullCamLog++; }
 		return false;
 	}
 
-	if (!_camera->enable) {
+	if (!camera->enable) {
 		static int disableCamLog = 0;
 		if (disableCamLog < 10) { Console::Log("[RenderingCollection] IsEnableCamera: Camera is disabled", LogCategory::Engine); disableCamLog++; }
 		return false;
 	}
 
-	if (!_camera->IsMakeViewProjection()) {
+	if (!camera->IsMakeViewProjection()) {
 		static int noVPLog = 0;
 		if (noVPLog < 10) { Console::Log("[RenderingCollection] IsEnableCamera: Camera ViewProjection is not ready", LogCategory::Engine); noVPLog++; }
 		return false;

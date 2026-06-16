@@ -16,21 +16,21 @@ using namespace ONEngine;
 namespace fs = std::filesystem;
 
 
-std::vector<File> FileSystem::GetFiles(const std::string& _fileDirectory, const std::string& _fileExtension) {
+std::vector<File> FileSystem::GetFiles(const std::string& fileDirectory, const std::string& fileExtension) {
 	/// ----- 指定されたディレクトリ内のファイルを全て探索 ----- ///
 
 	std::vector<File> result{};
 	// ディレクトリが存在するか確認
-	if (!fs::exists(_fileDirectory) || !fs::is_directory(_fileDirectory)) {
+	if (!fs::exists(fileDirectory) || !fs::is_directory(fileDirectory)) {
 		return result; // 空のベクターを返す
 	}
 
 
 	/// 拡張子がある場合とない場合で処理を分ける
-	if (_fileExtension.empty()) {
+	if (fileExtension.empty()) {
 
 		/// ディレクトリ内のファイルを全て探索
-		for (const auto& entry : fs::recursive_directory_iterator(_fileDirectory)) {
+		for (const auto& entry : fs::recursive_directory_iterator(fileDirectory)) {
 			if (fs::is_regular_file(entry)) {
 				result.emplace_back(entry.path().string(), entry.path().filename().string());
 			}
@@ -39,8 +39,8 @@ std::vector<File> FileSystem::GetFiles(const std::string& _fileDirectory, const 
 	} else {
 
 		/// 指定された拡張子を持つファイルのみを探索
-		for (const auto& entry : fs::recursive_directory_iterator(_fileDirectory)) {
-			if (fs::is_regular_file(entry) && entry.path().extension() == _fileExtension) {
+		for (const auto& entry : fs::recursive_directory_iterator(fileDirectory)) {
+			if (fs::is_regular_file(entry) && entry.path().extension() == fileExtension) {
 				result.emplace_back(entry.path().string(), entry.path().filename().string());
 			}
 		}
@@ -54,16 +54,16 @@ std::vector<File> FileSystem::GetFiles(const std::string& _fileDirectory, const 
 	return result;
 }
 
-File FileSystem::GetFile(const std::string& _fileDirectory, const std::string& _filename) {
+File FileSystem::GetFile(const std::string& fileDirectory, const std::string& filename) {
 	// ディレクトリが存在するか確認
-	if (!fs::exists(_fileDirectory) || !fs::is_directory(_fileDirectory)) {
-		Console::LogError("Directory does not exist: " + _fileDirectory);
+	if (!fs::exists(fileDirectory) || !fs::is_directory(fileDirectory)) {
+		Console::LogError("Directory does not exist: " + fileDirectory);
 		return File(); // 空のFileを返す
 	}
 
 	/// ディレクトリ内のファイルを探索
-	for (const auto& entry : fs::recursive_directory_iterator(_fileDirectory)) {
-		if (fs::is_regular_file(entry) && entry.path().filename() == _filename) {
+	for (const auto& entry : fs::recursive_directory_iterator(fileDirectory)) {
+		if (fs::is_regular_file(entry) && entry.path().filename() == filename) {
 			std::string filePath = entry.path().string();
 			ReplaceAll(&filePath, "\\", "/"); // パスの区切り文字を統一
 			return File(filePath, entry.path().filename().string());
@@ -73,15 +73,15 @@ File FileSystem::GetFile(const std::string& _fileDirectory, const std::string& _
 	return File();
 }
 
-bool FileSystem::FileExists(const std::string& _fileDirectory, const std::string& _filename) {
+bool FileSystem::FileExists(const std::string& fileDirectory, const std::string& filename) {
 	/// ディレクトリが存在するか確認
-	if (!fs::exists(_fileDirectory) || !fs::is_directory(_fileDirectory)) {
+	if (!fs::exists(fileDirectory) || !fs::is_directory(fileDirectory)) {
 		return false;
 	}
 
 	/// ディレクトリ内のファイルを探索、ファイル名が一致したらtrueを返す
-	for (const auto& entry : fs::recursive_directory_iterator(_fileDirectory)) {
-		if (fs::is_regular_file(entry) && entry.path().filename() == _filename) {
+	for (const auto& entry : fs::recursive_directory_iterator(fileDirectory)) {
+		if (fs::is_regular_file(entry) && entry.path().filename() == filename) {
 			return true;
 		}
 	}
@@ -90,58 +90,58 @@ bool FileSystem::FileExists(const std::string& _fileDirectory, const std::string
 	return false;
 }
 
-bool FileSystem::FileExists(const std::string& _path) {
-	return std::filesystem::exists(_path);
+bool FileSystem::FileExists(const std::string& path) {
+	return std::filesystem::exists(path);
 }
 
-void FileSystem::ReplaceAll(std::string* _str, const std::string& _from, const std::string& _to) {
-	if (!_str) {
+void FileSystem::ReplaceAll(std::string* str, const std::string& from, const std::string& to) {
+	if (!str) {
 		return; // nullptrチェック
 	}
 
 	/// 対象が空なら何もしない
-	if (_from.empty()) {
+	if (from.empty()) {
 		return;
 	}
 
 	size_t pos = 0;
-	while ((pos = _str->find(_from, pos)) != std::string::npos) {
-		_str->replace(pos, _from.length(), _to);
-		pos += _to.length(); // 次の検索位置を更新
+	while ((pos = str->find(from, pos)) != std::string::npos) {
+		str->replace(pos, from.length(), to);
+		pos += to.length(); // 次の検索位置を更新
 	}
 }
 
-std::string ONEngine::FileSystem::ReplaceAll(const std::string& _str, const std::string& _from, const std::string& _to) {
-	std::string result = _str;
-	ReplaceAll(&result, _from, _to);
+std::string ONEngine::FileSystem::ReplaceAll(const std::string& str, const std::string& from, const std::string& to) {
+	std::string result = str;
+	ReplaceAll(&result, from, to);
 	return result;
 }
 
-std::string FileSystem::FileNameWithoutExtension(const std::string& _filename) {
-	size_t lastDot = _filename.find_last_of('.');
+std::string FileSystem::FileNameWithoutExtension(const std::string& filename) {
+	size_t lastDot = filename.find_last_of('.');
 	if (lastDot == std::string::npos) {
-		return _filename;  // 拡張子がなければそのまま返す
+		return filename;  // 拡張子がなければそのまま返す
 	}
-	return _filename.substr(0, lastDot);
+	return filename.substr(0, lastDot);
 }
 
-std::string FileSystem::FileExtension(const std::string& _filename) {
-	size_t lastDot = _filename.find_last_of('.');
+std::string FileSystem::FileExtension(const std::string& filename) {
+	size_t lastDot = filename.find_last_of('.');
 	if (lastDot == std::string::npos) {
 		return "";  // 拡張子がなければ空文字を返す
 	}
-	return _filename.substr(lastDot); // 拡張子を返す
+	return filename.substr(lastDot); // 拡張子を返す
 }
 
-std::vector<std::vector<int>> FileSystem::LoadCSV(const std::string& _filePath) {
+std::vector<std::vector<int>> FileSystem::LoadCSV(const std::string& filePath) {
 	/// ----- CSVファイルを読み込む ----- ///
 
 	std::vector<std::vector<int>> data;
 
 	/// ファイルを開く
-	std::ifstream file(_filePath);
+	std::ifstream file(filePath);
 	if (!file.is_open()) {
-		Console::LogError("Mathf::LoadCSV: Could not open file " + _filePath);
+		Console::LogError("Mathf::LoadCSV: Could not open file " + filePath);
 		return data; // 空のベクターを返す
 	}
 
@@ -157,7 +157,7 @@ std::vector<std::vector<int>> FileSystem::LoadCSV(const std::string& _filePath) 
 				int value = std::stoi(cell);
 				row.push_back(value);
 			} catch (const std::invalid_argument&) {
-				Console::LogError("Mathf::LoadCSV: Invalid integer in file " + _filePath + ": " + cell);
+				Console::LogError("Mathf::LoadCSV: Invalid integer in file " + filePath + ": " + cell);
 			}
 		}
 
@@ -168,31 +168,31 @@ std::vector<std::vector<int>> FileSystem::LoadCSV(const std::string& _filePath) 
 	return data;
 }
 
-bool FileSystem::StartsWith(const std::string& _str, const std::string& _prefix) {
-	return _str.rfind(_prefix, 0) == 0;
+bool FileSystem::StartsWith(const std::string& str, const std::string& prefix) {
+	return str.rfind(prefix, 0) == 0;
 }
 
 
-std::string FileSystem::LoadFile(const std::string& _directory, const std::string& _filename) {
+std::string FileSystem::LoadFile(const std::string& directory, const std::string& filename) {
 	/// ----- ファイルを読み込む ----- ///
 
-	if (!FileExists(_directory, _filename)) {
+	if (!FileExists(directory, filename)) {
 		return "";
 	}
 
 	/// パスをフルパスに変換
-	std::filesystem::path dir(_directory);
-	std::filesystem::path filename(_filename);
-	std::filesystem::path fullPath = dir / filename;
+	std::filesystem::path dir(directory);
+	std::filesystem::path filePath(filename);
+	std::filesystem::path fullPath = dir / filePath;
 
 	return LoadFile(fullPath.string());
 }
 
-std::string FileSystem::LoadFile(const std::string& _path) {
+std::string FileSystem::LoadFile(const std::string& path) {
 	/// ----- ファイルを読み込む ----- ///
 
 	// ファイルストリームで読み込み
-	std::ifstream file(_path);
+	std::ifstream file(path);
 	if (!file.is_open()) {
 		return ""; // 開けなかった場合も空文字列
 	}
@@ -207,10 +207,10 @@ std::string FileSystem::LoadFile(const std::string& _path) {
 
 
 
-MonoString* MonoInternalMethods::LoadFile(MonoString* _path) {
+MonoString* MonoInternalMethods::LoadFile(MonoString* path) {
 
 	/// スクリプト名をUTF-8に変換
-	char* cstr = mono_string_to_utf8(_path);
+	char* cstr = mono_string_to_utf8(path);
 	std::string pathStr(cstr);
 	mono_free(cstr);
 

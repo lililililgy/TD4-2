@@ -1,4 +1,4 @@
-﻿#include "Pivot.h"
+#include "Pivot.h"
 
 /// externals
 #include <imgui.h>
@@ -30,16 +30,16 @@ class ModifyPivotCommand : public IEditCommand {
 public:
 
 	ModifyPivotCommand(
-		const ONEngine::Guid& _entityGuid,
-		const CommandTransform& _before,
-		const CommandTransform& _after,
-		ONEngine::EntityComponentSystem* _ecs,
-		const std::string& _sceneName)
-		: entityGuid_(_entityGuid),
-		before_(_before),
-		after_(_after),
-		pEcs_(_ecs),
-		sceneName_(_sceneName) {
+		const ONEngine::Guid& entityGuid,
+		const CommandTransform& before,
+		const CommandTransform& after,
+		ONEngine::EntityComponentSystem* ecs,
+		const std::string& sceneName)
+		: entityGuid_(entityGuid),
+		before_(before),
+		after_(after),
+		pEcs_(ecs),
+		sceneName_(sceneName) {
 
 	}
 
@@ -132,11 +132,11 @@ PivotInstance gPivotInstance;
 } /// unnamed namespace
 
 
-void Editor::UpdatePivot(ONEngine::EntityComponentSystem* _ecs) {
+void Editor::UpdatePivot(ONEngine::EntityComponentSystem* ecs) {
 
 	ONEngine::GameEntity* entity = nullptr;
 	if(gPivotInstance.selectedEntityGuid_ != ONEngine::Guid::kInvalid) {
-		ONEngine::ECSGroup* currentGroup = _ecs->GetCurrentGroup();
+		ONEngine::ECSGroup* currentGroup = ecs->GetCurrentGroup();
 		entity = currentGroup->GetEntityFromGuid(gPivotInstance.selectedEntityGuid_);
 	}
 
@@ -144,7 +144,7 @@ void Editor::UpdatePivot(ONEngine::EntityComponentSystem* _ecs) {
 		return;
 	}
 
-	ONEngine::CameraComponent* cameraComp = _ecs->GetECSGroup("Debug")->GetMainCamera();
+	ONEngine::CameraComponent* cameraComp = ecs->GetECSGroup("Debug")->GetMainCamera();
 	if(!cameraComp) {
 		return;
 	}
@@ -282,27 +282,27 @@ void Editor::UpdatePivot(ONEngine::EntityComponentSystem* _ecs) {
 		EditCommand::Execute<ModifyPivotCommand>(
 			gPivotInstance.selectedEntityGuid_,
 			before, after,
-			_ecs, _ecs->GetCurrentGroupName()
+			ecs, ecs->GetCurrentGroupName()
 		);
 	}
 
 	wasUsing = isUsing;
 }
 
-void Editor::SetEntity(const ONEngine::Guid& _guid) {
-	gPivotInstance.selectedEntityGuid_ = _guid;
+void Editor::SetEntity(const ONEngine::Guid& guid) {
+	gPivotInstance.selectedEntityGuid_ = guid;
 }
 void Editor::ClearEntity() {
 	gPivotInstance.selectedEntityGuid_ = ONEngine::Guid::kInvalid;
 }
 
-void Editor::SetDrawRect(const ONEngine::Vector2& _pos, const ONEngine::Vector2& _size) {
-	gPivotInstance.drawRectPos_ = _pos;
-	gPivotInstance.drawRectSize_ = _size;
+void Editor::SetDrawRect(const ONEngine::Vector2& pos, const ONEngine::Vector2& size) {
+	gPivotInstance.drawRectPos_ = pos;
+	gPivotInstance.drawRectSize_ = size;
 }
 
-void Editor::Set2DMode(bool _is2DMode) {
-	gPivotInstance.is2DMode_ = _is2DMode;
+void Editor::Set2DMode(bool is2DMode) {
+	gPivotInstance.is2DMode_ = is2DMode;
 }
 
 bool Editor::Is2DMode() {

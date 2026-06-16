@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -25,21 +25,21 @@ public:
 	~ByteAddressBuffer();
 
 	/// @brief Bufferを作成する
-	/// @param _size Bufferのサイズ
-	/// @param _dxDevice DxDeviceのポインタ
-	/// @param _dxSRVHeap DxSRVHeapのポインタ
-	void Create(uint32_t _size, DxDevice* _dxDevice, DxSRVHeap* _dxSRVHeap);
+	/// @param size Bufferのサイズ
+	/// @param dxDevice DxDeviceのポインタ
+	/// @param dxSRVHeap DxSRVHeapのポインタ
+	void Create(uint32_t size, DxDevice* dxDevice, DxSRVHeap* dxSRVHeap);
 
 
 	/// @brief 指定したインデックスに対応するマップされたデータの値を設定する
-	/// @param _index 設定対象のデータのインデックス
-	/// @param _value 設定する値（32ビット符号なし整数）
-	void SetMappedData(size_t _index, uint32_t _value);
+	/// @param index 設定対象のデータのインデックス
+	/// @param value 設定する値（32ビット符号なし整数）
+	void SetMappedData(size_t index, uint32_t value);
 
 	/// @brief コマンドリストにバインドする
-	/// @param _rootParameterIndex パラメータインデックス
-	/// @param _commandList CommandListのポインタ
-	void BindToCommandList(UINT _rootParameterIndex, ID3D12GraphicsCommandList* _commandList);
+	/// @param rootParameterIndex パラメータインデックス
+	/// @param commandList CommandListのポインタ
+	void BindToCommandList(UINT rootParameterIndex, ID3D12GraphicsCommandList* commandList);
 
 private:
 	/// ===================================================

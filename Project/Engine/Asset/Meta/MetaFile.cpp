@@ -1,4 +1,4 @@
-﻿#include "MetaFile.h"
+#include "MetaFile.h"
 
 /// std
 #include <fstream>
@@ -24,11 +24,11 @@ namespace ONEngine::Asset {
 //MetaFile::MetaFile() : guid(), assetType(AssetType::None) {}
 //MetaFile::~MetaFile() = default;
 //
-//bool MetaFile::LoadFromFile(const std::string& _metaFilePath) {
+//bool MetaFile::LoadFromFile(const std::string& metaFilePath) {
 //	/// ----- .metaファイルを読み込む ----- ///
 //
 //	/// FilePathから.metaを開く
-//	std::ifstream ifs(_metaFilePath);
+//	std::ifstream ifs(metaFilePath);
 //	if(!ifs) {
 //		return false;
 //	}
@@ -45,7 +45,7 @@ namespace ONEngine::Asset {
 //			uint32_t version = static_cast<uint32_t>(std::stoul(versionStr));
 //			if(version != kCurrentMetaFileVersion) {
 //				/// バージョンが異なる場合は警告
-//				Console::LogWarning("MetaFile version mismatch in: " + _metaFilePath);
+//				Console::LogWarning("MetaFile version mismatch in: " + metaFilePath);
 //			}
 //
 //		} else if(FileSystem::StartsWith(line, "guid: ")) {
@@ -76,16 +76,16 @@ namespace ONEngine::Asset {
 //	return true;
 //}
 //
-//bool MetaFile::SaveToFile(const std::string& _metaFilePath) const {
+//bool MetaFile::SaveToFile(const std::string& metaFilePath) const {
 //	/// --------------------------------------------------
 //	/// ファイルの生成
 //	/// --------------------------------------------------
 //
-//	std::ofstream ofs(_metaFilePath);
+//	std::ofstream ofs(metaFilePath);
 //
 //	/// ファイルが見つからない場合は生成する
-//	if(std::filesystem::exists(_metaFilePath) == false) {
-//		std::ofstream createOfs(_metaFilePath);
+//	if(std::filesystem::exists(metaFilePath) == false) {
+//		std::ofstream createOfs(metaFilePath);
 //		createOfs.close();
 //	}
 //
@@ -115,7 +115,7 @@ namespace ONEngine::Asset {
 //	return true;
 //}
 //
-//MetaFile GenerateMetaFile(const std::string& _refFile) {
+//MetaFile GenerateMetaFile(const std::string& refFile) {
 //	/// ----- 新規の.metaファイルを作成する ----- ///
 //
 //	MetaFile metaFile;
@@ -124,7 +124,7 @@ namespace ONEngine::Asset {
 //	metaFile.guid = GenerateGuid();
 //
 //	/// 拡張子からアセットタイプを決定
-//	std::string extension = FileSystem::FileExtension(_refFile);
+//	std::string extension = FileSystem::FileExtension(refFile);
 //	metaFile.assetType = GetAssetTypeFromExtension(extension);
 //
 //	/// デフォルトのプロパティを設定
@@ -137,7 +137,7 @@ namespace ONEngine::Asset {
 //	}
 //
 //	/// 一度ファイルに保存しておく
-//	metaFile.SaveToFile(_refFile + ".meta");
+//	metaFile.SaveToFile(refFile + ".meta");
 //
 //	return metaFile;
 //}

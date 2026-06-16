@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -31,8 +31,8 @@ public:
 	/// public : methods
 	/// ==============================================
 
-	ClipboardData(const T& _data) {
-		jsonData = _data;
+	ClipboardData(const T& data) {
+		jsonData = data;
 	}
 
 	/// type_infoを取得
@@ -70,8 +70,8 @@ public:
 
 	/// クリップボードにデータをセット
 	template <typename T>
-	void Set(const T& _value) {
-		data_ = std::make_unique<ClipboardData<T>>(_value);
+	void Set(const T& value) {
+		data_ = std::make_unique<ClipboardData<T>>(value);
 	}
 
 	/// クリップボードからデータを取得

@@ -1,4 +1,4 @@
-﻿#include "VectorWidget.h"
+#include "VectorWidget.h"
 
 /// std
 #include <concepts>
@@ -35,17 +35,17 @@ std::same_as<T, ONEngine::Vector4Int>;
 // 内部用テンプレート関数
 // ==========================================================
 template<IsVector TVector, typename TValue, int N>
-static bool DrawVecControlT(const std::string& _label, TVector& _values, float _speed, TValue _min, TValue _max, float _columnWidth, bool* _unified, bool _useUndo, bool* _outActivated, bool* _outDeactivated) {
+static bool DrawVecControlT(const std::string& label, TVector& values, float speed, TValue min, TValue max, float columnWidth, bool* unified, bool useUndo, bool* outActivated, bool* outDeactivated) {
 
 	constexpr bool kIsFloat = std::is_floating_point_v<TValue>;
-	bool* unifiedPtr = kIsFloat ? _unified : nullptr;
+	bool* unifiedPtr = kIsFloat ? unified : nullptr;
 	bool valueChanged = false;
 
-	if(_outActivated)   *_outActivated = false;
-	if(_outDeactivated) *_outDeactivated = false;
+	if(outActivated)   *outActivated = false;
+	if(outDeactivated) *outDeactivated = false;
 
 	// 制限有効かどうかの判定 (minもmaxも0なら制限なし)
-	bool hasLimits = (_min != static_cast<TValue>(0) || _max != static_cast<TValue>(0));
+	bool hasLimits = (min != static_cast<TValue>(0) || max != static_cast<TValue>(0));
 
 	// --- 定数定義 ---
 	constexpr float kSafetyMarginWidth = 1.0f;
@@ -68,15 +68,15 @@ static bool DrawVecControlT(const std::string& _label, TVector& _values, float _
 
 	static TVector sStartValue;
 
-	ImGui::PushID(_label.c_str());
+	ImGui::PushID(label.c_str());
 
-	TVector beforeValues = _values;
+	TVector beforeValues = values;
 
 	// リサイズ不可など
 	ImGuiTableFlags tableFlags = ImGuiTableFlags_NoSavedSettings;
 
 	if(ImGui::BeginTable("##VecControlTable", kNumColumns, tableFlags)) {
-		ImGui::TableSetupColumn("##Label", ImGuiTableColumnFlags_WidthFixed, _columnWidth);
+		ImGui::TableSetupColumn("##Label", ImGuiTableColumnFlags_WidthFixed, columnWidth);
 		ImGui::TableSetupColumn("##Values", ImGuiTableColumnFlags_WidthStretch);
 
 		ImGui::TableNextRow();
@@ -84,7 +84,7 @@ static bool DrawVecControlT(const std::string& _label, TVector& _values, float _
 		// ラベル列
 		ImGui::TableNextColumn();
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text("%s", _label.c_str());
+		ImGui::Text("%s", label.c_str());
 
 		// 値操作列
 		ImGui::TableNextColumn();
@@ -114,10 +114,10 @@ static bool DrawVecControlT(const std::string& _label, TVector& _values, float _
 		TValue* axisValues[4] = { nullptr, nullptr, nullptr, nullptr };
 		TValue beforeAxisValues[4] = { 0, 0, 0, 0 };
 
-		axisValues[0] = &_values.x; beforeAxisValues[0] = beforeValues.x;
-		axisValues[1] = &_values.y; beforeAxisValues[1] = beforeValues.y;
-		if constexpr(N >= 3) { axisValues[2] = &_values.z; beforeAxisValues[2] = beforeValues.z; }
-		if constexpr(N >= 4) { axisValues[3] = &_values.w; beforeAxisValues[3] = beforeValues.w; }
+		axisValues[0] = &values.x; beforeAxisValues[0] = beforeValues.x;
+		axisValues[1] = &values.y; beforeAxisValues[1] = beforeValues.y;
+		if constexpr(N >= 3) { axisValues[2] = &values.z; beforeAxisValues[2] = beforeValues.z; }
+		if constexpr(N >= 4) { axisValues[3] = &values.w; beforeAxisValues[3] = beforeValues.w; }
 
 		const char* axisLabels[] = { "X", "Y", "Z", "W" };
 		const ImVec4 axisColors[] = { kColorX, kColorY, kColorZ, kColorW };
@@ -169,14 +169,14 @@ static bool DrawVecControlT(const std::string& _label, TVector& _values, float _
 			ImGui::Button(axisLabels[i], buttonSize);
 
 			if(ImGui::IsItemActivated()) { 
-				sStartValue = _values; 
-				if(_outActivated) *_outActivated = true;
+				sStartValue = values; 
+				if(outActivated) *outActivated = true;
 			}
 			if(ImGui::IsItemDeactivated()) {
-				if(_outDeactivated) *_outDeactivated = true;
-				if(_useUndo) {
-					const TVector endValue = _values;
-					EditCommand::Execute<ModifyValueCommand<TVector>>(&_values, sStartValue, endValue);
+				if(outDeactivated) *outDeactivated = true;
+				if(useUndo) {
+					const TVector endValue = values;
+					EditCommand::Execute<ModifyValueCommand<TVector>>(&values, sStartValue, endValue);
 				}
 			}
 
@@ -216,19 +216,19 @@ static bool DrawVecControlT(const std::string& _label, TVector& _values, float _
 				}
 
 				if(ImGui::IsItemActivated()) { 
-					sStartValue = _values; 
-					if(_outActivated) *_outActivated = true;
+					sStartValue = values; 
+					if(outActivated) *outActivated = true;
 				}
 				if(ImGui::IsItemDeactivatedAfterEdit()) {
-					if(_outDeactivated) *_outDeactivated = true;
-					if(_useUndo) {
-						const TVector endValue = _values;
-						EditCommand::Execute<ModifyValueCommand<TVector>>(&_values, sStartValue, endValue);
+					if(outDeactivated) *outDeactivated = true;
+					if(useUndo) {
+						const TVector endValue = values;
+						EditCommand::Execute<ModifyValueCommand<TVector>>(&values, sStartValue, endValue);
 					}
 				}
 
 				if(inputChanged && hasLimits) {
-					*axisValues[i] = std::clamp(*axisValues[i], _min, _max);
+					*axisValues[i] = std::clamp(*axisValues[i], min, max);
 				}
 
 				bool tabPressed = ImGui::IsKeyPressed(ImGuiKey_Tab);
@@ -276,7 +276,7 @@ static bool DrawVecControlT(const std::string& _label, TVector& _values, float _
 
 			if(!isLocked) {
 				if(buttonDragged) {
-					float dragDelta = ImGui::GetIO().MouseDelta.x * _speed;
+					float dragDelta = ImGui::GetIO().MouseDelta.x * speed;
 					if(ImGui::GetIO().KeyShift || ImGui::GetIO().KeyAlt) {
 						dragDelta *= (kIsFloat ? 0.01f : 0.1f);
 					}
@@ -288,7 +288,7 @@ static bool DrawVecControlT(const std::string& _label, TVector& _values, float _
 					}
 
 					if(hasLimits) {
-						*axisValues[i] = std::clamp(*axisValues[i], _min, _max);
+						*axisValues[i] = std::clamp(*axisValues[i], min, max);
 					}
 
 					currentAxisChanged = true;
@@ -324,7 +324,7 @@ static bool DrawVecControlT(const std::string& _label, TVector& _values, float _
 
 						if(hasLimits) {
 							for(int j = 0; j < N; ++j) {
-								*axisValues[j] = std::clamp(*axisValues[j], _min, _max);
+								*axisValues[j] = std::clamp(*axisValues[j], min, max);
 							}
 						}
 					}
@@ -346,26 +346,26 @@ static bool DrawVecControlT(const std::string& _label, TVector& _values, float _
 } /// namespace
 
 
-bool Editor::DrawVec2Control(const std::string& _label, ONEngine::Vector2& _values, float _speed, float _min, float _max, float _columnWidth, bool* _unified, bool _useUndo, bool* _outActivated, bool* _outDeactivated) {
-	return DrawVecControlT<ONEngine::Vector2, float, 2>(_label, _values, _speed, _min, _max, _columnWidth, _unified, _useUndo, _outActivated, _outDeactivated);
+bool Editor::DrawVec2Control(const std::string& label, ONEngine::Vector2& values, float speed, float min, float max, float columnWidth, bool* unified, bool useUndo, bool* outActivated, bool* outDeactivated) {
+	return DrawVecControlT<ONEngine::Vector2, float, 2>(label, values, speed, min, max, columnWidth, unified, useUndo, outActivated, outDeactivated);
 }
 
-bool Editor::DrawVec3Control(const std::string& _label, ONEngine::Vector3& _values, float _speed, float _min, float _max, float _columnWidth, bool* _unified, bool _useUndo, bool* _outActivated, bool* _outDeactivated) {
-	return DrawVecControlT<ONEngine::Vector3, float, 3>(_label, _values, _speed, _min, _max, _columnWidth, _unified, _useUndo, _outActivated, _outDeactivated);
+bool Editor::DrawVec3Control(const std::string& label, ONEngine::Vector3& values, float speed, float min, float max, float columnWidth, bool* unified, bool useUndo, bool* outActivated, bool* outDeactivated) {
+	return DrawVecControlT<ONEngine::Vector3, float, 3>(label, values, speed, min, max, columnWidth, unified, useUndo, outActivated, outDeactivated);
 }
 
-bool Editor::DrawVec4Control(const std::string& _label, ONEngine::Vector4& _values, float _speed, float _min, float _max, float _columnWidth, bool* _unified, bool _useUndo, bool* _outActivated, bool* _outDeactivated) {
-	return DrawVecControlT<ONEngine::Vector4, float, 4>(_label, _values, _speed, _min, _max, _columnWidth, _unified, _useUndo, _outActivated, _outDeactivated);
+bool Editor::DrawVec4Control(const std::string& label, ONEngine::Vector4& values, float speed, float min, float max, float columnWidth, bool* unified, bool useUndo, bool* outActivated, bool* outDeactivated) {
+	return DrawVecControlT<ONEngine::Vector4, float, 4>(label, values, speed, min, max, columnWidth, unified, useUndo, outActivated, outDeactivated);
 }
 
-bool Editor::DrawVec2IntControl(const std::string& _label, ONEngine::Vector2Int& _values, float _speed, int _min, int _max, float _columnWidth, bool _useUndo, bool* _outActivated, bool* _outDeactivated) {
-	return DrawVecControlT<ONEngine::Vector2Int, int32_t, 2>(_label, _values, _speed, _min, _max, _columnWidth, nullptr, _useUndo, _outActivated, _outDeactivated);
+bool Editor::DrawVec2IntControl(const std::string& label, ONEngine::Vector2Int& values, float speed, int min, int max, float columnWidth, bool useUndo, bool* outActivated, bool* outDeactivated) {
+	return DrawVecControlT<ONEngine::Vector2Int, int32_t, 2>(label, values, speed, min, max, columnWidth, nullptr, useUndo, outActivated, outDeactivated);
 }
 
-bool Editor::DrawVec3IntControl(const std::string& _label, ONEngine::Vector3Int& _values, float _speed, int _min, int _max, float _columnWidth, bool _useUndo, bool* _outActivated, bool* _outDeactivated) {
-	return DrawVecControlT<ONEngine::Vector3Int, int32_t, 3>(_label, _values, _speed, _min, _max, _columnWidth, nullptr, _useUndo, _outActivated, _outDeactivated);
+bool Editor::DrawVec3IntControl(const std::string& label, ONEngine::Vector3Int& values, float speed, int min, int max, float columnWidth, bool useUndo, bool* outActivated, bool* outDeactivated) {
+	return DrawVecControlT<ONEngine::Vector3Int, int32_t, 3>(label, values, speed, min, max, columnWidth, nullptr, useUndo, outActivated, outDeactivated);
 }
 
-bool Editor::DrawVec4IntControl(const std::string& _label, ONEngine::Vector4Int& _values, float _speed, int _min, int _max, float _columnWidth, bool _useUndo, bool* _outActivated, bool* _outDeactivated) {
-	return DrawVecControlT<ONEngine::Vector4Int, int32_t, 4>(_label, _values, _speed, _min, _max, _columnWidth, nullptr, _useUndo, _outActivated, _outDeactivated);
+bool Editor::DrawVec4IntControl(const std::string& label, ONEngine::Vector4Int& values, float speed, int min, int max, float columnWidth, bool useUndo, bool* outActivated, bool* outDeactivated) {
+	return DrawVecControlT<ONEngine::Vector4Int, int32_t, 4>(label, values, speed, min, max, columnWidth, nullptr, useUndo, outActivated, outDeactivated);
 }

@@ -22,13 +22,13 @@ public:
 	~SystemCollection() = default;
 
 	/// @brief 新規systemを追加する
-	void AddSystem(std::unique_ptr<ECSISystem> _system);
+	void AddSystem(std::unique_ptr<ECSISystem> system);
 
 	/// @brief runtime外の更新処理を行う (runtime中でも処理される)
-	void OutsideOfRuntimeUpdate(class ECSGroup* _ecs);
+	void OutsideOfRuntimeUpdate(class ECSGroup* ecs);
 
 	/// @brief runtime中の更新処理を行う
-	void RuntimeUpdate(class ECSGroup* _ecs);
+	void RuntimeUpdate(class ECSGroup* ecs);
 
 private:
 	/// ===================================================

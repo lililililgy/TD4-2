@@ -24,8 +24,8 @@ public:
 	~DxCommand();
 
 	/// @brief DxCommandの初期化
-	/// @param _dxDevice DxDeviceのインスタンス
-	void Initialize(class DxDevice* _dxDevice);
+	/// @param dxDevice DxDeviceのインスタンス
+	void Initialize(class DxDevice* dxDevice);
 
 	/// @brief CommandListを実行
 	void CommandExecute();

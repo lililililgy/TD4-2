@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -18,12 +18,12 @@ class TerrainCollider;
 
 /// @brief Componentのデバッグ表示
 namespace ComponentDebug {
-void TerrainColliderDebug(TerrainCollider* _collider);
+void TerrainColliderDebug(TerrainCollider* collider);
 }
 
 /// Json変換関数
-void from_json(const nlohmann::json& _j, TerrainCollider& _c);
-void to_json(nlohmann::json& _j, const TerrainCollider& _c);
+void from_json(const nlohmann::json& j, TerrainCollider& c);
+void to_json(nlohmann::json& j, const TerrainCollider& c);
 
 /// ///////////////////////////////////////////////////
 /// 地形のコライダーコンポーネント
@@ -33,9 +33,9 @@ class TerrainCollider : public IComponent {
 	friend class TerrainColliderVertexGenerator;
 
 	/// ----- friend functions ----- ///
-	friend void ComponentDebug::TerrainColliderDebug(TerrainCollider* _collider);
-	friend void from_json(const nlohmann::json& _j, TerrainCollider& _c);
-	friend void to_json(nlohmann::json& _j, const TerrainCollider& _c);
+	friend void ComponentDebug::TerrainColliderDebug(TerrainCollider* collider);
+	friend void from_json(const nlohmann::json& j, TerrainCollider& c);
+	friend void to_json(nlohmann::json& j, const TerrainCollider& c);
 
 public:
 	/// =========================================
@@ -49,21 +49,21 @@ public:
 	void AttachTerrain();
 
 	/// @brief 地形の頂点情報をコピーする
-	void CopyVertices(class DxManager* _dxm);
+	void CopyVertices(class DxManager* dxm);
 
 	/// @brief 地形の高さを取得する
-	/// @param _position 取得したい場所
+	/// @param position 取得したい場所
 	/// @return 高さ
-	float GetHeight(const Vector3& _position);
+	float GetHeight(const Vector3& position);
 
 	/// @brief 引数座標の勾配を取得する
-	/// @param _position ワールド座標
-	Vector3 GetGradient(const Vector3& _position);
+	/// @param position ワールド座標
+	Vector3 GetGradient(const Vector3& position);
 
 	/// @brief 地形の内側にいるかどうかを判定する
-	/// @param _position 判定したい座標
+	/// @param position 判定したい座標
 	/// @return true: 内側 false: 外側
-	bool IsInsideTerrain(const Vector3& _position);
+	bool IsInsideTerrain(const Vector3& position);
 
 
 private:
@@ -97,7 +97,7 @@ public:
 	bool GetIsCreated() const;
 
 
-	void SetIsVertexGenerationRequested(bool _isRequested);
+	void SetIsVertexGenerationRequested(bool isRequested);
 
 	/// @brief 地形の移動制限に用いる最大傾斜各を得る
 	/// @return 最大傾斜角

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <cstdint>
@@ -38,7 +38,7 @@ struct GPUMaterial {
 
 
 /// material
-void to_json(nlohmann::json& _j, const GPUMaterial& _material);
-void from_json(const nlohmann::json& _j, GPUMaterial& _material);
+void to_json(nlohmann::json& j, const GPUMaterial& material);
+void from_json(const nlohmann::json& j, GPUMaterial& material);
 
 } /// ONEngine

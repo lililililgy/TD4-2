@@ -1,4 +1,4 @@
-﻿#include "DebugSceneView.h"
+#include "DebugSceneView.h"
 
 /// std
 #include <array>
@@ -39,8 +39,8 @@ std::string Format(const char* fmt, Args... args) {
 
 namespace Editor {
 
-DebugSceneView::DebugSceneView(ONEngine::EntityComponentSystem* _ecs, ONEngine::Asset::AssetCollection* _assetCollection, ONEngine::SceneManager* _sceneManager, InspectorWindow* _inspector)
-	: pEcs_(_ecs), pAssetCollection_(_assetCollection), pSceneManager_(_sceneManager), pInspector_(_inspector) {
+DebugSceneView::DebugSceneView(ONEngine::EntityComponentSystem* ecs, ONEngine::Asset::AssetCollection* assetCollection, ONEngine::SceneManager* sceneManager, InspectorWindow* inspector)
+	: pEcs_(ecs), pAssetCollection_(assetCollection), pSceneManager_(sceneManager), pInspector_(inspector) {
 
 }
 
@@ -64,8 +64,8 @@ void DebugSceneView::ShowImGui() {
 	ImGui::End();
 }
 
-void DebugSceneView::SetGamePlay(bool _isGamePlay) {
-	ONEngine::DebugConfig::isDebugging = _isGamePlay;
+void DebugSceneView::SetGamePlay(bool isGamePlay) {
+	ONEngine::DebugConfig::isDebugging = isGamePlay;
 
 	/// ゲームの開始処理
 	if(ONEngine::DebugConfig::isDebugging) {
@@ -212,14 +212,14 @@ void Editor::DebugSceneView::ShowDebugSceneView(const ImVec2& imagePos) {
 				auto* gcClass = mono_class_from_name(image, "", "GameController");
 				if (gcClass) {
 					auto* statusField = mono_class_get_field_from_name(gcClass, "currentStatus");
-					auto* phaseField = mono_class_get_field_from_name(gcClass, "currentPhase");
-					auto* vtable = mono_class_vtable(domain, gcClass);
+					auto* gcPhaseField = mono_class_get_field_from_name(gcClass, "currentPhase");
+					auto* gcVtable = mono_class_vtable(domain, gcClass);
 
-					if (vtable && statusField && phaseField) {
+					if (gcVtable && statusField && gcPhaseField) {
 						MonoString* statusStr = nullptr;
 						MonoString* phaseStr = nullptr;
-						mono_field_static_get_value(vtable, statusField, &statusStr);
-						mono_field_static_get_value(vtable, phaseField, &phaseStr);
+						mono_field_static_get_value(gcVtable, statusField, &statusStr);
+						mono_field_static_get_value(gcVtable, gcPhaseField, &phaseStr);
 
 						std::string gameStatus = "N/A";
 						if (statusStr) {

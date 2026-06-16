@@ -48,11 +48,11 @@ class ParticleSystemRenderingPipeline : public IRenderingPipeline {
     };
 
 public:
-    ParticleSystemRenderingPipeline(Asset::AssetCollection* _assetCollection);
+    ParticleSystemRenderingPipeline(Asset::AssetCollection* assetCollection);
     ~ParticleSystemRenderingPipeline() override;
 
-    void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
-    void Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) override;
+    void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
+    void Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
 
 private:
     Asset::AssetCollection* pAssetCollection_ = nullptr;

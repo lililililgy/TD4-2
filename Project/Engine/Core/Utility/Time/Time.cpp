@@ -107,7 +107,7 @@ float Time::TimeScale() {
 	return gTimeController->timeScale_;
 }
 
-void Time::SetTimeScale(float _timeScale) {
-	gTimeController->timeScale_ = _timeScale;
+void Time::SetTimeScale(float timeScale) {
+	gTimeController->timeScale_ = timeScale;
 }
 

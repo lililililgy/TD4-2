@@ -1,11 +1,11 @@
-﻿#include "IComponent.h"
+#include "IComponent.h"
 
 using namespace ONEngine;
 
 void IComponent::Reset() {}
 
-void IComponent::SetOwner(GameEntity* _owner) {
-	owner_ = _owner;
+void IComponent::SetOwner(GameEntity* owner) {
+	owner_ = owner;
 }
 
 GameEntity* IComponent::GetOwner() const {

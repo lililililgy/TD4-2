@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -9,10 +9,10 @@
 namespace ONEngine {
 
 /// @brief componentのポインタから名前を取得する
-/// @param _component Componentのポインタ
+/// @param component Componentのポインタ
 /// @return クラス名
-inline std::string GetComponentTypeName(const IComponent* _component) {
-	std::string name = typeid(*_component).name();
+inline std::string GetComponentTypeName(const IComponent* component) {
+	std::string name = typeid(*component).name();
 	size_t pos = name.find_last_of(':');
 	if (pos != std::string::npos) {
 		name = name.substr(pos + 1);
@@ -45,10 +45,10 @@ inline std::string GetComponentTypeName() {
 }
 
 /// @brief Componentの名前からハッシュ値を取得する
-/// @param _name Componentの名前
+/// @param name Componentの名前
 /// @return Hash値
-inline size_t GetComponentHash(const std::string& _name) {
-	return std::hash<std::string>()(_name);
+inline size_t GetComponentHash(const std::string& name) {
+	return std::hash<std::string>()(name);
 }
 
 /// @brief Componentの型からハッシュ値を取得する

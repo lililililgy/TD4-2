@@ -1,4 +1,4 @@
-﻿#include "PostProcessFog.h"
+#include "PostProcessFog.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -8,11 +8,11 @@
 
 namespace ONEngine {
 
-void PostProcessFog::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void PostProcessFog::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{	/// shader
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/PostProcess/Screen/Fog/Fog.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ComputePipeline>();
@@ -29,14 +29,14 @@ void PostProcessFog::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm
 
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 }
 
-void PostProcessFog::Execute(const std::string& _textureName, DxCommand* _dxCommand, Asset::AssetCollection* _assetCollection, EntityComponentSystem* _entityComponentSystem) {
+void PostProcessFog::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem) {
 
-	ECSGroup* currentGroup = _entityComponentSystem->GetCurrentGroup();
+	ECSGroup* currentGroup = entityComponentSystem->GetCurrentGroup();
 	if(!currentGroup) {
 		ONEngine::Console::LogError("PostProcessFog::Execute: current ECS group is null");
 		return;
@@ -49,9 +49,9 @@ void PostProcessFog::Execute(const std::string& _textureName, DxCommand* _dxComm
 	}
 
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
 	// バッファが生成されているかチェック（シーン遷移直後などは未生成の可能性がある）
 	if (!mainCamera->GetCameraPosBuffer().Get() || !mainCamera->GetFogParamsBuffer().Get()) {
@@ -63,8 +63,8 @@ void PostProcessFog::Execute(const std::string& _textureName, DxCommand* _dxComm
 	mainCamera->GetFogParamsBuffer().BindForComputeCommandList(cmdList, CBV_FOG_PARAMS);
 
 #ifdef DEBUG_MODE
-	if(_textureName.find_last_of("debug") != std::string::npos) {
-		if(ECSGroup* debugGroup = _entityComponentSystem->GetECSGroup("Debug")) {
+	if(textureName.find_last_of("debug") != std::string::npos) {
+		if(ECSGroup* debugGroup = entityComponentSystem->GetECSGroup("Debug")) {
 			if(CameraComponent* debugCamera = debugGroup->GetMainCamera()) {
 				if (debugCamera->GetCameraPosBuffer().Get()) {
 					debugCamera->GetCameraPosBuffer().BindForComputeCommandList(cmdList, CBV_CAMERA_POS);
@@ -76,11 +76,11 @@ void PostProcessFog::Execute(const std::string& _textureName, DxCommand* _dxComm
 
 
 
-	auto& textures = _assetCollection->GetTextures();
+	auto& textures = assetCollection->GetTextures();
 
-	textureIndices_[0] = _assetCollection->GetTextureIndex(_textureName + "Scene");
-	textureIndices_[1] = _assetCollection->GetTextureIndex(_textureName + "WorldPosition");
-	textureIndices_[2] = _assetCollection->GetTextureIndex("postProcessResult");
+	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
+	textureIndices_[1] = assetCollection->GetTextureIndex(textureName + "WorldPosition");
+	textureIndices_[2] = assetCollection->GetTextureIndex("postProcessResult");
 
 	// 全て存在するかチェック
 	if (textureIndices_[0] == -1 || textureIndices_[1] == -1 || textureIndices_[2] == -1) {

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// editor
 #include "Engine/Editor/Math/AssetPayload.h"
@@ -13,9 +13,9 @@ namespace DragDrop {
 
 
 /// @brief ドラッグ用のペイロードにデータを設定する
-/// @param _filepath 持っているファイルパス
-/// @param _guid 持っているアセットのGuid
-void SetDragDropPayload(const std::string& _filepath, const ONEngine::Guid& _guid, ONEngine::Asset::AssetCollection* _ac);
+/// @param filepath 持っているファイルパス
+/// @param guid 持っているアセットのGuid
+void SetDragDropPayload(const std::string& filepath, const ONEngine::Guid& guid, ONEngine::Asset::AssetCollection* ac);
 
 
 /// @brief ドラッグしているペイロードを取得する

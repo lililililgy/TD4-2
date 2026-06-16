@@ -18,14 +18,14 @@ public:
 	TerrainCollision() = default;
 	~TerrainCollision() override = default;
 
-	void OutsideOfRuntimeUpdate(class ECSGroup* _ecs) override;
-	void RuntimeUpdate(class ECSGroup* _ecs) override;
+	void OutsideOfRuntimeUpdate(class ECSGroup* ecs) override;
+	void RuntimeUpdate(class ECSGroup* ecs) override;
 
 	/// @brief 今いる地点の傾斜角を取得する
-	/// @param _tCollider TerrainColliderのポインタ
-	/// @param _position world座標
+	/// @param tCollider TerrainColliderのポインタ
+	/// @param position world座標
 	/// @return 勾配
-	float GetSlopeAngle(class TerrainCollider* _tCollider, const Vector3& _position);
+	float GetSlopeAngle(class TerrainCollider* tCollider, const Vector3& position);
 
 private:
 	/// ========================================

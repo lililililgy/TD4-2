@@ -1,4 +1,4 @@
-﻿#include "MeshRenderer.h"
+#include "MeshRenderer.h"
 #include <nlohmann/json.hpp>
 
 /// std
@@ -25,37 +25,37 @@ MeshRenderer::MeshRenderer() {
 
 MeshRenderer::~MeshRenderer() = default;
 
-void MeshRenderer::SetupRenderData(Asset::AssetCollection* _assetCollection) {
+void MeshRenderer::SetupRenderData(Asset::AssetCollection* assetCollection) {
 	gpuMaterial_.postEffectFlags = material_.postEffectFlags;
 	gpuMaterial_.baseColor = material_.baseColor;
 	gpuMaterial_.uvTransform = material_.uvTransform;
 	gpuMaterial_.entityId = GetOwner() ? GetOwner()->GetId() : 0;
 
 	if (material_.HasBaseTexture()) {
-		gpuMaterial_.baseTextureId = _assetCollection->GetTextureIndexFromGuid(material_.GetBaseTextureGuid());
+		gpuMaterial_.baseTextureId = assetCollection->GetTextureIndexFromGuid(material_.GetBaseTextureGuid());
 	} else {
 		gpuMaterial_.baseTextureId = 0;
 	}
 }
 
-void MeshRenderer::SetMeshPath(const std::string& _path) {
-	meshPath_ = _path;
+void MeshRenderer::SetMeshPath(const std::string& path) {
+	meshPath_ = path;
 }
 
-void MeshRenderer::SetColor(const Vector4& _color) {
-	material_.baseColor = _color;
+void MeshRenderer::SetColor(const Vector4& color) {
+	material_.baseColor = color;
 }
 
-void MeshRenderer::SetPostEffectFlags(uint32_t _flags) {
-	material_.postEffectFlags = _flags;
+void MeshRenderer::SetPostEffectFlags(uint32_t flags) {
+	material_.postEffectFlags = flags;
 }
 
-void MeshRenderer::SetUVTransform(const UVTransform& _uvTransform) {
-	material_.uvTransform = _uvTransform;
+void MeshRenderer::SetUVTransform(const UVTransform& uvTransform) {
+	material_.uvTransform = uvTransform;
 }
 
-void MeshRenderer::SetRenderQueue(RenderQueue _queue) {
-	renderQueue_ = _queue;
+void MeshRenderer::SetRenderQueue(RenderQueue queue) {
+	renderQueue_ = queue;
 }
 
 RenderQueue MeshRenderer::GetRenderQueue() const {
@@ -87,9 +87,9 @@ const Guid& MeshRenderer::GetTextureGuid() const {
 }
 
 
-MonoString* ONEngine::InternalGetMeshName(uint64_t _nativeHandle) {
+MonoString* ONEngine::InternalGetMeshName(uint64_t nativeHandle) {
 	/// ptrから MeshRenderer を取得
-	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(_nativeHandle);
+	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(nativeHandle);
 	if (!renderer) {
 		Console::Log("MeshRenderer pointer is null");
 		return nullptr;
@@ -98,26 +98,26 @@ MonoString* ONEngine::InternalGetMeshName(uint64_t _nativeHandle) {
 	return mono_string_new(mono_domain_get(), renderer->GetMeshPath().c_str());
 }
 
-void ONEngine::InternalSetMeshName(uint64_t _nativeHandle, MonoString* _meshName) {
+void ONEngine::InternalSetMeshName(uint64_t nativeHandle, MonoString* meshName) {
 	/// ptrから MeshRenderer を取得
-	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(_nativeHandle);
+	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(nativeHandle);
 	if (!renderer) {
 		Console::Log("MeshRenderer pointer is null");
 		return;
 	}
 
 	/// stringに変換&設定
-	char* meshName = mono_string_to_utf8(_meshName);
-	if(meshName) {
-		std::string meshNameStr(meshName);
+	char* meshNameCStr = mono_string_to_utf8(meshName);
+	if(meshNameCStr) {
+		std::string meshNameStr(meshNameCStr);
 		renderer->SetMeshPath(meshNameStr);
-		mono_free(meshName);
+		mono_free(meshNameCStr);
 	}
 }
 
-Vector4 ONEngine::InternalGetMeshColor(uint64_t _nativeHandle) {
+Vector4 ONEngine::InternalGetMeshColor(uint64_t nativeHandle) {
 	/// ptrから MeshRenderer を取得
-	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(_nativeHandle);
+	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(nativeHandle);
 	if (!renderer) {
 		Console::Log("MeshRenderer pointer is null");
 		return Vector4::Zero;
@@ -126,19 +126,19 @@ Vector4 ONEngine::InternalGetMeshColor(uint64_t _nativeHandle) {
 	return renderer->GetColor();
 }
 
-void ONEngine::InternalSetMeshColor(uint64_t _nativeHandle, Vector4 _color) {
+void ONEngine::InternalSetMeshColor(uint64_t nativeHandle, Vector4 color) {
 	/// ptrから MeshRenderer を取得
-	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(_nativeHandle);
+	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(nativeHandle);
 	if (renderer) {
-		renderer->SetColor(_color);
+		renderer->SetColor(color);
 	} else {
 		Console::Log("MeshRenderer pointer is null");
 	}
 }
 
-uint32_t ONEngine::InternalGetPostEffectFlags(uint64_t _nativeHandle) {
+uint32_t ONEngine::InternalGetPostEffectFlags(uint64_t nativeHandle) {
 	/// ptrから MeshRenderer を取得
-	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(_nativeHandle);
+	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(nativeHandle);
 	if (!renderer) {
 		Console::LogError("MeshRenderer pointer is null");
 		return PostEffectFlags_None;
@@ -146,44 +146,44 @@ uint32_t ONEngine::InternalGetPostEffectFlags(uint64_t _nativeHandle) {
 	return renderer->GetPostEffectFlags();
 }
 
-void ONEngine::InternalSetPostEffectFlags(uint64_t _nativeHandle, uint32_t _flags) {
+void ONEngine::InternalSetPostEffectFlags(uint64_t nativeHandle, uint32_t flags) {
 	/// ptrから MeshRenderer を取得
-	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(_nativeHandle);
+	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(nativeHandle);
 	if (renderer) {
-		renderer->SetPostEffectFlags(_flags);
+		renderer->SetPostEffectFlags(flags);
 	} else {
 		Console::LogError("MeshRenderer pointer is null");
 	}
 }
 
-uint32_t ONEngine::InternalGetRenderQueue(uint64_t _nativeHandle) {
-	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(_nativeHandle);
+uint32_t ONEngine::InternalGetRenderQueue(uint64_t nativeHandle) {
+	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(nativeHandle);
 	return renderer ? static_cast<uint32_t>(renderer->GetRenderQueue()) : 2;
 }
 
-void ONEngine::InternalSetRenderQueue(uint64_t _nativeHandle, uint32_t _queue) {
-	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(_nativeHandle);
-	if (renderer) renderer->SetRenderQueue(static_cast<RenderQueue>(_queue));
+void ONEngine::InternalSetRenderQueue(uint64_t nativeHandle, uint32_t queue) {
+	MeshRenderer* renderer = reinterpret_cast<MeshRenderer*>(nativeHandle);
+	if (renderer) renderer->SetRenderQueue(static_cast<RenderQueue>(queue));
 }
 
-void ComponentDebug::MeshRendererDebug(MeshRenderer* _mr, Asset::AssetCollection* _assetCollection) {
-	if (!_mr) {
+void ComponentDebug::MeshRendererDebug(MeshRenderer* mr, Asset::AssetCollection* assetCollection) {
+	if (!mr) {
 		return;
 	}
 
 	/// param get
-	Vector4& color = _mr->material_.baseColor;
-	std::string& meshPath = _mr->meshPath_;
+	Vector4& color = mr->material_.baseColor;
+	std::string& meshPath = mr->meshPath_;
 
 	/// edit
 	if (Editor::ImGuiColorEdit("color", &color)) {
-		_mr->SetColor(color);
+		mr->SetColor(color);
 	}
 
 	const char* queueNames[] = { "Background", "Telegraph", "Default" };
-	int currentQueue = static_cast<int>(_mr->renderQueue_);
+	int currentQueue = static_cast<int>(mr->renderQueue_);
 	if (ImGui::Combo("Render Queue", &currentQueue, queueNames, 3)) {
-		_mr->renderQueue_ = static_cast<RenderQueue>(currentQueue);
+		mr->renderQueue_ = static_cast<RenderQueue>(currentQueue);
 	}
 
 	ImGui::Spacing();
@@ -201,7 +201,7 @@ void ComponentDebug::MeshRendererDebug(MeshRenderer* _mr, Asset::AssetCollection
 
 				/// メッシュのパスが有効な形式か確認
 				if (type == Asset::AssetType::Mesh) {
-					_mr->SetMeshPath(path);
+					mr->SetMeshPath(path);
 
 					Console::Log(std::format("Mesh path set to: {}", path));
 				} else {
@@ -220,9 +220,9 @@ void ComponentDebug::MeshRendererDebug(MeshRenderer* _mr, Asset::AssetCollection
 	/// テクスチャのプレビュー表示
 	/// ----------------------------------------------
 
-	bool hasTextureGuid = _mr->material_.HasBaseTexture();
+	bool hasTextureGuid = mr->material_.HasBaseTexture();
 	if (hasTextureGuid) {
-		if (Asset::Texture* tex = _assetCollection->GetTexture(_assetCollection->GetTexturePath(_mr->material_.GetBaseTextureGuid()))) {
+		if (Asset::Texture* tex = assetCollection->GetTexture(assetCollection->GetTexturePath(mr->material_.GetBaseTextureGuid()))) {
 			Vector2 aspectRatio = tex->GetTextureSize();
 			aspectRatio /= (std::max)(aspectRatio.x, aspectRatio.y);
 
@@ -261,7 +261,7 @@ void ComponentDebug::MeshRendererDebug(MeshRenderer* _mr, Asset::AssetCollection
 				/// テクスチャのパスが有効な形式か確認
 				const Asset::AssetType type = Asset::GetAssetTypeFromExtension(FileSystem::FileExtension(path));
 				if (type == Asset::AssetType::Texture) {
-					_mr->material_.SetBaseTextureGuid(assetPayload->guid);
+					mr->material_.SetBaseTextureGuid(assetPayload->guid);
 
 					Console::Log(std::format("Texture path set to: {}", path));
 				} else {
@@ -277,36 +277,36 @@ void ComponentDebug::MeshRendererDebug(MeshRenderer* _mr, Asset::AssetCollection
 	/// ----------------------------------------------
 	/// materialの設定
 	/// ----------------------------------------------
-	Editor::ImMathf::MaterialEdit("Material##MeshRenderer", &_mr->material_, _assetCollection);
+	Editor::ImMathf::MaterialEdit("Material##MeshRenderer", &mr->material_, assetCollection);
 
 }
 
 
-void ONEngine::from_json(const nlohmann::json& _j, MeshRenderer& _m) {
-	if (_j.contains("enable")) {
-		_m.enable = _j.at("enable").get<int>();
+void ONEngine::from_json(const nlohmann::json& j, MeshRenderer& m) {
+	if (j.contains("enable")) {
+		m.enable = j.at("enable").get<int>();
 	}
 
-	_m.SetMeshPath(_j.at("meshPath").get<std::string>());
+	m.SetMeshPath(j.at("meshPath").get<std::string>());
 
 
 	/// デバッグのためにvalueではなくcontainsでチェック
-	if (_j.contains("material")) {
-		_m.material_ = _j.at("material").get<Asset::Material>();
+	if (j.contains("material")) {
+		m.material_ = j.at("material").get<Asset::Material>();
 	}
 
-	if (_j.contains("renderQueue")) {
-		_m.renderQueue_ = static_cast<RenderQueue>(_j.at("renderQueue").get<uint32_t>());
+	if (j.contains("renderQueue")) {
+		m.renderQueue_ = static_cast<RenderQueue>(j.at("renderQueue").get<uint32_t>());
 	}
 
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const MeshRenderer& _m) {
-	_j = nlohmann::json{
+void ONEngine::to_json(nlohmann::json& j, const MeshRenderer& m) {
+	j = nlohmann::json{
 		{ "type", "MeshRenderer" },
-		{ "enable", _m.enable },
-		{ "meshPath", _m.GetMeshPath() },
-		{ "material", _m.material_ },
-		{ "renderQueue", static_cast<uint32_t>(_m.renderQueue_) },
+		{ "enable", m.enable },
+		{ "meshPath", m.GetMeshPath() },
+		{ "material", m.material_ },
+		{ "renderQueue", static_cast<uint32_t>(m.renderQueue_) },
 	};
 }

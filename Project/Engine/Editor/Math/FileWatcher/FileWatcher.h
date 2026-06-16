@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 /// windows
@@ -58,7 +58,7 @@ public:
 	FileWatcher();
 	~FileWatcher();
 
-	bool Start(const std::vector<std::wstring>& _dirs);
+	bool Start(const std::vector<std::wstring>& dirs);
 	void Stop();
 
 	std::vector<FileEvent> ConsumeEvents();
@@ -68,7 +68,7 @@ private:
 	/// private : methods
 	/// ===================================================
 
-	void WatchDirectory(std::shared_ptr<WatchTarget> _ctx);
+	void WatchDirectory(std::shared_ptr<WatchTarget> ctx);
 
 	
 	/// ===================================================

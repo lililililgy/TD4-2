@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// directX
 #include <d3d12.h>
@@ -33,8 +33,8 @@ public:
 	~Mesh() = default;
 
 	/// @brief vertex buffer, index bufferの作成
-	/// @param _dxDevice DxDeviceクラスへのポインタ
-	void CreateBuffer(DxDevice* _dxDevice);
+	/// @param dxDevice DxDeviceクラスへのポインタ
+	void CreateBuffer(DxDevice* dxDevice);
 
 	/// @brief vertex bufferをマッピング
 	void VertexBufferMapping();
@@ -67,12 +67,12 @@ public:
 	/// ===================================================
 
 	/// @brief vertices_をセット
-	/// @param _vertices 頂点データ配列
-	void SetVertices(const std::vector<Vertex>& _vertices);
+	/// @param vertices 頂点データ配列
+	void SetVertices(const std::vector<Vertex>& vertices);
 
 	/// @brief 頂点のインデックスをセット
-	/// @param _indices 頂点インデックス配列
-	void SetIndices(const std::vector<uint32_t>& _indices);
+	/// @param indices 頂点インデックス配列
+	void SetIndices(const std::vector<uint32_t>& indices);
 
 
 	/// @brief 頂点データを取得
@@ -96,19 +96,19 @@ public:
 
 
 template<typename Vertex>
-void Mesh<Vertex>::CreateBuffer(DxDevice* _dxDevice) {
+void Mesh<Vertex>::CreateBuffer(DxDevice* dxDevice) {
 	/// ----- vbv, ibv のBufferを生成、Mapする ----- ///
 
 	const size_t kVertexDataSize = sizeof(Vertex);
 
 	/// vertex buffer
-	vertexBuffer_.CreateResource(_dxDevice, kVertexDataSize * vertices_.size());
+	vertexBuffer_.CreateResource(dxDevice, kVertexDataSize * vertices_.size());
 	vbv_.BufferLocation = vertexBuffer_.Get()->GetGPUVirtualAddress();
 	vbv_.SizeInBytes = static_cast<UINT>(kVertexDataSize * vertices_.size());
 	vbv_.StrideInBytes = static_cast<UINT>(kVertexDataSize);
 
 	/// index buffer
-	indexBuffer_.CreateResource(_dxDevice, sizeof(uint32_t) * indices_.size());
+	indexBuffer_.CreateResource(dxDevice, sizeof(uint32_t) * indices_.size());
 	ibv_.BufferLocation = indexBuffer_.Get()->GetGPUVirtualAddress();
 	ibv_.SizeInBytes = static_cast<UINT>(sizeof(uint32_t) * indices_.size());
 	ibv_.Format = DXGI_FORMAT_R32_UINT;
@@ -144,13 +144,13 @@ void Mesh<Vertex>::MemcpyVertexData() {
 
 
 template<typename Vertex>
-void Mesh<Vertex>::SetVertices(const std::vector<Vertex>& _vertices) {
-	vertices_ = _vertices;
+void Mesh<Vertex>::SetVertices(const std::vector<Vertex>& vertices) {
+	vertices_ = vertices;
 }
 
 template<typename Vertex>
-void Mesh<Vertex>::SetIndices(const std::vector<uint32_t>& _indices) {
-	indices_ = _indices;
+void Mesh<Vertex>::SetIndices(const std::vector<uint32_t>& indices) {
+	indices_ = indices;
 }
 
 template<typename Vertex>

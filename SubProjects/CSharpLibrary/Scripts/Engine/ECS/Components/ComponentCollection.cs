@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,8 +16,8 @@ public class ComponentArray<T> : IComponentArray where T : Component {
 
 	public int Count => components.Count;
 
-	public T Get(int _index) {
-		return components[_index];
+	public T Get(int index) {
+		return components[index];
 	}
 }
 
@@ -25,26 +25,26 @@ public class ComponentCollection {
 	Dictionary<Type, IComponentArray> arrays_ = new Dictionary<Type, IComponentArray>();
 
 
-	public void AddComponent<T>(T _component) where T : Component {
+	public void AddComponent<T>(T component) where T : Component {
 		if (!arrays_.ContainsKey(typeof(T))) {
 			arrays_[typeof(T)] = new ComponentArray<T>();
 		}
 
 		ComponentArray<T> array = (ComponentArray<T>)arrays_[typeof(T)];
-		array.components.Add(_component);
+		array.components.Add(component);
 	}
 
-	public void RemoveComponent<T>(T _component) where T : Component {
+	public void RemoveComponent<T>(T component) where T : Component {
 		if (!arrays_.ContainsKey(typeof(T))) {
 			return;
 		}
 
 		ComponentArray<T> array = (ComponentArray<T>)arrays_[typeof(T)];
-		array.components.Remove(_component);
+		array.components.Remove(component);
 	}
 
-	public bool TryGetArray(Type _type, out IComponentArray _array) {
-		return arrays_.TryGetValue(_type, out _array);
+	public bool TryGetArray(Type type, out IComponentArray array) {
+		return arrays_.TryGetValue(type, out array);
 	}
 
 }

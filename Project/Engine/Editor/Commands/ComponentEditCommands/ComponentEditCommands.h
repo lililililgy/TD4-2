@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <typeindex>
@@ -26,7 +26,7 @@ namespace Editor {
 
 class EntityDataOutputCommand : public IEditCommand {
 public:
-	EntityDataOutputCommand(ONEngine::GameEntity* _entity);
+	EntityDataOutputCommand(ONEngine::GameEntity* entity);
 	~EntityDataOutputCommand() override = default;
 
 	/// @brief コマンドの実行
@@ -44,14 +44,14 @@ private:
 class EntityDataInputCommand : public IEditCommand {
 public:
 	EntityDataInputCommand() = default;
-	EntityDataInputCommand(ONEngine::GameEntity* _entity);
+	EntityDataInputCommand(ONEngine::GameEntity* entity);
 	~EntityDataInputCommand() override = default;
 
 	/// @brief コマンドの実行
 	EDITOR_STATE Execute() override;
 	EDITOR_STATE Undo() override;
 
-	void SetEntity(ONEngine::GameEntity* _entity);
+	void SetEntity(ONEngine::GameEntity* entity);
 
 private:
 	ONEngine::GameEntity* pEntity_ = nullptr;
@@ -64,7 +64,7 @@ private:
 /// ///////////////////////////////////////////////
 class AddComponentCommand : public IEditCommand {
 public:
-	AddComponentCommand(ONEngine::GameEntity* _entity, const std::string& _componentName);
+	AddComponentCommand(ONEngine::GameEntity* entity, const std::string& componentName);
 	~AddComponentCommand() override = default;
 	/// @brief コマンドの実行
 	EDITOR_STATE Execute() override;
@@ -81,7 +81,7 @@ private:
 /// ///////////////////////////////////////////////
 class RemoveComponentCommand : public IEditCommand {
 public:
-	RemoveComponentCommand(ONEngine::GameEntity* _entity, const std::string& _componentName, std::unordered_map<size_t, ONEngine::IComponent*>::iterator* _resultItr);
+	RemoveComponentCommand(ONEngine::GameEntity* entity, const std::string& componentName, std::unordered_map<size_t, ONEngine::IComponent*>::iterator* resultItr);
 	~RemoveComponentCommand() override = default;
 
 	/// @brief コマンドの実行
@@ -100,7 +100,7 @@ private:
 /// ///////////////////////////////////////////////
 class ReloadAllScriptsCommand : public IEditCommand {
 public:
-	ReloadAllScriptsCommand(ONEngine::ECSGroup* _ecs, ONEngine::SceneManager* _sceneManager);
+	ReloadAllScriptsCommand(ONEngine::ECSGroup* ecs, ONEngine::SceneManager* sceneManager);
 	~ReloadAllScriptsCommand() override = default;
 	/// @brief コマンドの実行
 	EDITOR_STATE Execute() override;

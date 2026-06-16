@@ -9,12 +9,12 @@ namespace ONEngine {
 
 AISystem::AISystem() {}
 
-void AISystem::RuntimeUpdate(ECSGroup* _ecs) {
-    if (!_ecs) {
+void AISystem::RuntimeUpdate(ECSGroup* ecs) {
+    if (!ecs) {
         return;
     }
 
-    auto* compArray = _ecs->GetComponentArray<AgentIntentComponent>();
+    auto* compArray = ecs->GetComponentArray<AgentIntentComponent>();
     if (!compArray) {
         return;
     }
@@ -33,7 +33,7 @@ void AISystem::RuntimeUpdate(ECSGroup* _ecs) {
     }
 
     // 2. Call C# to let it fill the batchData buffer
-    MonoScriptEngine::GetInstance().UpdateAiIntents(batchData.data(), static_cast<int>(batchData.size()), Time::DeltaTime(), _ecs->GetGroupName());
+    MonoScriptEngine::GetInstance().UpdateAiIntents(batchData.data(), static_cast<int>(batchData.size()), Time::DeltaTime(), ecs->GetGroupName());
 
     // 3. Apply the results from the buffer back to the main component array
     for (size_t i = 0; i < usedComponents.size(); ++i) {

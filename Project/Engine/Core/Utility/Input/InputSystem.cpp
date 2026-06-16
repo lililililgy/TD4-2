@@ -16,8 +16,8 @@ using namespace ONEngine;
 InputSystem::InputSystem() = default;
 InputSystem::~InputSystem() = default;
 
-void InputSystem::Initialize(WindowManager* _windowManager, Editor::ImGuiManager* _imGuiManager) {
-	pWindowManager_ = _windowManager;
+void InputSystem::Initialize(WindowManager* windowManager, Editor::ImGuiManager* imGuiManager) {
+	pWindowManager_ = windowManager;
 
 
 	HRESULT hr = DirectInput8Create(
@@ -38,7 +38,7 @@ void InputSystem::Initialize(WindowManager* _windowManager, Editor::ImGuiManager
 	keyboard_->Initialize(directInput_.Get(), pWindowManager_);
 
 	mouse_ = std::make_unique<Mouse>();
-	mouse_->Initialize(directInput_.Get(), pWindowManager_, _imGuiManager);
+	mouse_->Initialize(directInput_.Get(), pWindowManager_, imGuiManager);
 
 	gamepad_ = std::make_unique<Gamepad>();
 	gamepad_->Initialize(directInput_.Get(), pWindowManager_);
@@ -50,9 +50,9 @@ void InputSystem::Update() {
 	gamepad_->Update(pWindowManager_->GetActiveWindow());
 }
 
-void MonoInternalMethods::InternalGetGamepadThumb(int _axisIndex, float* _x, float* _y) {
+void MonoInternalMethods::InternalGetGamepadThumb(int axisIndex, float* x, float* y) {
 	Vector2 v = {};
-	switch (_axisIndex) {
+	switch (axisIndex) {
 	case Gamepad::Axis::Left: // Left
 		v = Input::GetGamepadLeftThumb();
 		break;
@@ -61,25 +61,25 @@ void MonoInternalMethods::InternalGetGamepadThumb(int _axisIndex, float* _x, flo
 		break;
 	}
 
-	*_x = v.x;
-	*_y = v.y;
+	*x = v.x;
+	*y = v.y;
 }
 
-void MonoInternalMethods::InternalGetMouseVelocity(float* _x, float* _y) {
+void MonoInternalMethods::InternalGetMouseVelocity(float* x, float* y) {
 	const Vector2& velocity = Input::GetMouseVelocity();
-	*_x = velocity.x;
-	*_y = velocity.y;
+	*x = velocity.x;
+	*y = velocity.y;
 }
 
-void MonoInternalMethods::InternalGetMousePosition(float* _x, float* _y) {
+void MonoInternalMethods::InternalGetMousePosition(float* x, float* y) {
 	const Vector2& position = Input::GetMousePosition();
-	*_x = position.x;
-	*_y = position.y;
+	*x = position.x;
+	*y = position.y;
 }
 
-void ONEngine::MonoInternalMethods::InternalGetMouseWheel(float* _wheel) {
+void ONEngine::MonoInternalMethods::InternalGetMouseWheel(float* wheelVal) {
 	float wheel = Input::GetMouseWheel();
-	if(_wheel) {
-		*_wheel = wheel;
+	if(wheel) {
+		*wheelVal = wheel;
 	}
 }

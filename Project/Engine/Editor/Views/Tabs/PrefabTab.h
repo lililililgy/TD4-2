@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../EditorViewCollection.h"	
@@ -15,11 +15,11 @@ public:
 	/// ===================================================
 
 	PrefabTab(
-		ONEngine::DxManager* _dxm,
-		ONEngine::EntityComponentSystem* _ecs, 
-		ONEngine::Asset::AssetCollection* _assetCollection,
-		EditorManager* _editorManager, 
-		ONEngine::SceneManager* _sceneManager
+		ONEngine::DxManager* dxm,
+		ONEngine::EntityComponentSystem* ecs, 
+		ONEngine::Asset::AssetCollection* assetCollection,
+		EditorManager* editorManager, 
+		ONEngine::SceneManager* sceneManager
 	);
 	~PrefabTab() {}
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -25,7 +25,7 @@ namespace Editor {
 
 class CreateGameObjectCommand : public IEditCommand {
 public:
-	CreateGameObjectCommand(ONEngine::ECSGroup* _ecs, const std::string& _name = "NewEntity", ONEngine::GameEntity* _parentEntity = nullptr);
+	CreateGameObjectCommand(ONEngine::ECSGroup* ecs, const std::string& name = "NewEntity", ONEngine::GameEntity* parentEntity = nullptr);
 	~CreateGameObjectCommand();
 
 	EDITOR_STATE Execute() override;
@@ -51,7 +51,7 @@ public:
 		Mesh,
 	};
 
-	CreatePrimitiveCommand(ONEngine::ECSGroup* _ecs, Type _type, ONEngine::GameEntity* _parentEntity = nullptr);
+	CreatePrimitiveCommand(ONEngine::ECSGroup* ecs, Type type, ONEngine::GameEntity* parentEntity = nullptr);
 	~CreatePrimitiveCommand() = default;
 
 	EDITOR_STATE Execute() override;
@@ -71,7 +71,7 @@ private:
 /// ///////////////////////////////////////////////////
 class EntityRenameCommand : public IEditCommand {
 public:
-	EntityRenameCommand(ONEngine::GameEntity* _entity, const std::string& _newName);
+	EntityRenameCommand(ONEngine::GameEntity* entity, const std::string& newName);
 	~EntityRenameCommand() = default;
 
 	EDITOR_STATE Execute() override;
@@ -89,13 +89,13 @@ private:
 /// ///////////////////////////////////////////////////
 class CreateNewEntityClassCommand : public IEditCommand {
 public:
-	CreateNewEntityClassCommand(ONEngine::GameEntity* _entity, const std::string& _outputFilePath);
+	CreateNewEntityClassCommand(ONEngine::GameEntity* entity, const std::string& outputFilePath);
 	~CreateNewEntityClassCommand() = default;
 
 	EDITOR_STATE Execute() override;
 	EDITOR_STATE Undo() override;
 
-	EDITOR_STATE CreateNewClassFile(const std::string& _srcFilePath, const std::string& _outputFileName, const std::string& _newClassName);
+	EDITOR_STATE CreateNewClassFile(const std::string& srcFilePath, const std::string& outputFileName, const std::string& newClassName);
 
 private:
 	ONEngine::GameEntity* pEntity_ = nullptr;
@@ -111,14 +111,14 @@ private:
 /// ///////////////////////////////////////////////////
 class CreatePrefabCommand : public IEditCommand {
 public:
-	CreatePrefabCommand(ONEngine::GameEntity* _entity);
+	CreatePrefabCommand(ONEngine::GameEntity* entity);
 	~CreatePrefabCommand() = default;
 
 	EDITOR_STATE Execute() override;
 	EDITOR_STATE Undo() override;
 
 	/// @brief 再帰的にエンティティをシリアライズする
-	void SerializeRecursive(ONEngine::GameEntity* _entity, nlohmann::json& _json);
+	void SerializeRecursive(ONEngine::GameEntity* entity, nlohmann::json& json);
 
 private:
 	ONEngine::GameEntity* pEntity_ = nullptr;
@@ -132,7 +132,7 @@ private:
 /// ///////////////////////////////////////////////////
 class DeleteEntityCommand : public IEditCommand {
 public:
-	DeleteEntityCommand(ONEngine::ECSGroup* _ecs, ONEngine::GameEntity* _entity);
+	DeleteEntityCommand(ONEngine::ECSGroup* ecs, ONEngine::GameEntity* entity);
 	~DeleteEntityCommand() = default;
 
 	EDITOR_STATE Execute() override;
@@ -149,7 +149,7 @@ private:
 /// ///////////////////////////////////////////////////
 class CopyEntityCommand : public IEditCommand {
 public:
-	CopyEntityCommand(ONEngine::GameEntity* _entity);
+	CopyEntityCommand(ONEngine::GameEntity* entity);
 	~CopyEntityCommand() = default;
 
 	EDITOR_STATE Execute() override;
@@ -165,7 +165,7 @@ private:
 /// ///////////////////////////////////////////////////
 class PasteEntityCommand : public IEditCommand {
 public:
-	PasteEntityCommand(ONEngine::ECSGroup* _ecs, ONEngine::GameEntity* _selectedEntity);
+	PasteEntityCommand(ONEngine::ECSGroup* ecs, ONEngine::GameEntity* selectedEntity);
 	~PasteEntityCommand() = default;
 
 	EDITOR_STATE Execute() override;
@@ -182,7 +182,7 @@ private:
 /// ///////////////////////////////////////////////////
 class ChangeEntityParentCommand : public IEditCommand {
 public:
-	ChangeEntityParentCommand(ONEngine::GameEntity* _entity, ONEngine::GameEntity* _newParent);
+	ChangeEntityParentCommand(ONEngine::GameEntity* entity, ONEngine::GameEntity* newParent);
 	~ChangeEntityParentCommand() = default;
 	EDITOR_STATE Execute() override;
 	EDITOR_STATE Undo() override;
@@ -197,7 +197,7 @@ private:
 /// ///////////////////////////////////////////////////
 class ReorderEntityCommand : public IEditCommand {
 public:
-	ReorderEntityCommand(ONEngine::ECSGroup* _ecsGroup, ONEngine::GameEntity* _entity, ONEngine::GameEntity* _newParent, uint32_t _newIndex);
+	ReorderEntityCommand(ONEngine::ECSGroup* ecsGroup, ONEngine::GameEntity* entity, ONEngine::GameEntity* newParent, uint32_t newIndex);
 	~ReorderEntityCommand() = default;
 
 	EDITOR_STATE Execute() override;
@@ -217,7 +217,7 @@ private:
 /// ///////////////////////////////////////////////////
 class InstantiatePrefabCommand : public IEditCommand {
 public:
-	InstantiatePrefabCommand(ONEngine::ECSGroup* _ecs, const std::string& _prefabPath, ONEngine::GameEntity* _parentEntity = nullptr);
+	InstantiatePrefabCommand(ONEngine::ECSGroup* ecs, const std::string& prefabPath, ONEngine::GameEntity* parentEntity = nullptr);
 	~InstantiatePrefabCommand() = default;
 
 	EDITOR_STATE Execute() override;

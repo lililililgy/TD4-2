@@ -1,4 +1,4 @@
-﻿#include "Terrain.h"
+#include "Terrain.h"
 
 /// std
 #include <array>
@@ -24,8 +24,8 @@ using namespace ONEngine;
 /// 地形のComponentのデバッグ用関数
 /// ///////////////////////////////////////////////////
 
-void ComponentDebug::TerrainDebug(Terrain* _terrain, EntityComponentSystem* _ecs, Asset::AssetCollection * _assetCollection) {
-	if (!_terrain) {
+void ComponentDebug::TerrainDebug(Terrain* terrain, EntityComponentSystem* ecs, Asset::AssetCollection * assetCollection) {
+	if (!terrain) {
 		return;
 	}
 
@@ -38,9 +38,9 @@ void ComponentDebug::TerrainDebug(Terrain* _terrain, EntityComponentSystem* _ecs
 	/// ボタンの数だけテクスチャを用意
 	const size_t kMaxButtonNum = static_cast<size_t>(Terrain::EditMode::Count);
 	std::array<Asset::Texture*, kMaxButtonNum> buttonTextures;
-	buttonTextures[static_cast<size_t>(Terrain::EditMode::None)] = _assetCollection->GetTexture("./Packages/Textures/ImGui/TerrainEditTextures/BrushModeIcon.png");
-	buttonTextures[static_cast<size_t>(Terrain::EditMode::Vertex)] = _assetCollection->GetTexture("./Packages/Textures/ImGui/TerrainEditTextures/BrushModeIcon.png");
-	buttonTextures[static_cast<size_t>(Terrain::EditMode::Texture)] = _assetCollection->GetTexture("./Packages/Textures/ImGui/TerrainEditTextures/BrushModeIcon.png");
+	buttonTextures[static_cast<size_t>(Terrain::EditMode::None)] = assetCollection->GetTexture("./Packages/Textures/ImGui/TerrainEditTextures/BrushModeIcon.png");
+	buttonTextures[static_cast<size_t>(Terrain::EditMode::Vertex)] = assetCollection->GetTexture("./Packages/Textures/ImGui/TerrainEditTextures/BrushModeIcon.png");
+	buttonTextures[static_cast<size_t>(Terrain::EditMode::Texture)] = assetCollection->GetTexture("./Packages/Textures/ImGui/TerrainEditTextures/BrushModeIcon.png");
 
 	/// ボタンの説明文
 	const std::array<const char*, kMaxButtonNum> descriptions = {
@@ -57,14 +57,14 @@ void ComponentDebug::TerrainDebug(Terrain* _terrain, EntityComponentSystem* _ecs
 		if (i != 0) { ImGui::SameLine(); }
 
 		/// 非選択時は半透明にする
-		int32_t saveEditMode = _terrain->editorInfo_.editMode;
+		int32_t saveEditMode = terrain->editorInfo_.editMode;
 		if (saveEditMode != static_cast<int32_t>(i)) {
 			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.2f);
 		}
 
 		ImTextureID textureId = reinterpret_cast<ImTextureID>(buttonTextures[i]->GetSRVGPUHandle().ptr);
 		if (ImGui::ImageButton("##Button", textureId, ImVec2(32, 32))) {
-			_terrain->editorInfo_.editMode = static_cast<int32_t>(i);
+			terrain->editorInfo_.editMode = static_cast<int32_t>(i);
 		}
 
 		/// 非選択時はスタイルを戻す
@@ -85,9 +85,9 @@ void ComponentDebug::TerrainDebug(Terrain* _terrain, EntityComponentSystem* _ecs
 
 	/// 編集モードの変更
 	if (Input::PressKey(DIK_LCONTROL) && !Input::PressKey(DIK_LSHIFT)) {
-		if (Input::TriggerKey(DIK_N)) { _terrain->editorInfo_.editMode = static_cast<int32_t>(Terrain::EditMode::None); }
-		if (Input::TriggerKey(DIK_V)) { _terrain->editorInfo_.editMode = static_cast<int32_t>(Terrain::EditMode::Vertex); }
-		if (Input::TriggerKey(DIK_B)) { _terrain->editorInfo_.editMode = static_cast<int32_t>(Terrain::EditMode::Texture); }
+		if (Input::TriggerKey(DIK_N)) { terrain->editorInfo_.editMode = static_cast<int32_t>(Terrain::EditMode::None); }
+		if (Input::TriggerKey(DIK_V)) { terrain->editorInfo_.editMode = static_cast<int32_t>(Terrain::EditMode::Vertex); }
+		if (Input::TriggerKey(DIK_B)) { terrain->editorInfo_.editMode = static_cast<int32_t>(Terrain::EditMode::Texture); }
 	}
 
 
@@ -95,24 +95,24 @@ void ComponentDebug::TerrainDebug(Terrain* _terrain, EntityComponentSystem* _ecs
 	/// Modeごとの編集内容を表示
 	/// ---------------------------------------------------
 
-	const std::string enumStr = std::string(magic_enum::enum_name(static_cast<Terrain::EditMode>(_terrain->editorInfo_.editMode)));
+	const std::string enumStr = std::string(magic_enum::enum_name(static_cast<Terrain::EditMode>(terrain->editorInfo_.editMode)));
 	ImGui::SeparatorText(enumStr.c_str());
-	switch (_terrain->editorInfo_.editMode) {
+	switch (terrain->editorInfo_.editMode) {
 	case static_cast<int32_t>(Terrain::EditMode::Vertex):
 
 		break;
 	case static_cast<int32_t>(Terrain::EditMode::Texture):
 
 		/// 編集するテクスチャのインデックスの変更
-		if (Input::TriggerKey(DIK_1)) { _terrain->editorInfo_.usedTextureIndex = 0; }
-		if (Input::TriggerKey(DIK_2)) { _terrain->editorInfo_.usedTextureIndex = 1; }
-		if (Input::TriggerKey(DIK_3)) { _terrain->editorInfo_.usedTextureIndex = 2; }
-		if (Input::TriggerKey(DIK_4)) { _terrain->editorInfo_.usedTextureIndex = 3; }
+		if (Input::TriggerKey(DIK_1)) { terrain->editorInfo_.usedTextureIndex = 0; }
+		if (Input::TriggerKey(DIK_2)) { terrain->editorInfo_.usedTextureIndex = 1; }
+		if (Input::TriggerKey(DIK_3)) { terrain->editorInfo_.usedTextureIndex = 2; }
+		if (Input::TriggerKey(DIK_4)) { terrain->editorInfo_.usedTextureIndex = 3; }
 
 		TerrainTextureEditModeDebug(
-			&_terrain->splattingTexPaths_,
-			&_terrain->editorInfo_.usedTextureIndex,
-			_assetCollection
+			&terrain->splattingTexPaths_,
+			&terrain->editorInfo_.usedTextureIndex,
+			assetCollection
 		);
 		break;
 	}
@@ -121,8 +121,8 @@ void ComponentDebug::TerrainDebug(Terrain* _terrain, EntityComponentSystem* _ecs
 	{	/// ----- 現在のエディタの情報をImGuiInfoに設定する ----- ///
 		std::string info = "Terrain Editor Info :   ";
 		info += "edit mode: " + enumStr;
-		if (_terrain->editorInfo_.editMode == static_cast<int32_t>(Terrain::EditMode::Texture)) {
-			info += "   :   used texture index: " + std::to_string(_terrain->editorInfo_.usedTextureIndex);
+		if (terrain->editorInfo_.editMode == static_cast<int32_t>(Terrain::EditMode::Texture)) {
+			info += "   :   used texture index: " + std::to_string(terrain->editorInfo_.usedTextureIndex);
 		}
 
 		Editor::ImGuiInfo::SetInfo(info);
@@ -135,23 +135,23 @@ void ComponentDebug::TerrainDebug(Terrain* _terrain, EntityComponentSystem* _ecs
 	ImGui::SeparatorText("Brush data");
 
 	/// brush の情報を変更
-	ImGui::SliderFloat("brush radius", &_terrain->editorInfo_.brushRadius, 0.1f, 100.0f);
-	ImGui::SliderFloat("brush strength", &_terrain->editorInfo_.brushStrength, 0.0f, 5.0f);
+	ImGui::SliderFloat("brush radius", &terrain->editorInfo_.brushRadius, 0.1f, 100.0f);
+	ImGui::SliderFloat("brush strength", &terrain->editorInfo_.brushStrength, 0.0f, 5.0f);
 
 
 
 	/// flags
-	ImGui::Checkbox("is rendering procedural", &_terrain->isRenderingProcedural_);
+	ImGui::Checkbox("is rendering procedural", &terrain->isRenderingProcedural_);
 
 	/// material
-	Editor::ImMathf::MaterialEdit("Material", &_terrain->material_, _assetCollection, false);
+	Editor::ImMathf::MaterialEdit("Material", &terrain->material_, assetCollection, false);
 
 
 	/// river
-	_terrain->river_.Edit(_ecs);
+	terrain->river_.Edit(ecs);
 }
 
-bool ComponentDebug::TerrainTextureEditModeDebug(std::array<std::string, 4>* _texturePaths, int32_t* _usedTextureIndex, Asset::AssetCollection* _assetCollection) {
+bool ComponentDebug::TerrainTextureEditModeDebug(std::array<std::string, 4>* texturePaths, int32_t* usedTextureIndex, Asset::AssetCollection* assetCollection) {
 	/// ----- テクスチャのパスを変更する処理 ----- ///
 
 	const std::vector<std::string> shortcutKeys = {
@@ -161,22 +161,22 @@ bool ComponentDebug::TerrainTextureEditModeDebug(std::array<std::string, 4>* _te
 
 
 	for (size_t i = 0; i < 4; i++) {
-		std::string& text = (*_texturePaths)[i];
+		std::string& text = (*texturePaths)[i];
 
 		ImGui::PushID(static_cast<int>(i));
 
 
-		Asset::Texture* texture = _assetCollection->GetTexture(text);
+		Asset::Texture* texture = assetCollection->GetTexture(text);
 		if (texture) {
 
 			/// このテクスチャを使用しているのかどうか
-			bool isUsing = (i == static_cast<size_t>(*_usedTextureIndex));
+			bool isUsing = (i == static_cast<size_t>(*usedTextureIndex));
 			bool isHovered = false;
 
 			/// 地形に使用しているテクスチャを表示
 			ImTextureID id = reinterpret_cast<ImTextureID>(texture->GetSRVGPUHandle().ptr);
 			if (ImGui::ImageButton("##imageButton", id, ImVec2(48, 48))) {
-				*_usedTextureIndex = static_cast<int32_t>(i);
+				*usedTextureIndex = static_cast<int32_t>(i);
 			}
 
 			isHovered |= ImGui::IsItemHovered();
@@ -208,7 +208,7 @@ bool ComponentDebug::TerrainTextureEditModeDebug(std::array<std::string, 4>* _te
 
 			/// チェックボックスで現在操作しているのか可視化する
 			if (ImGui::Checkbox("##using", &isUsing)) {
-				*_usedTextureIndex = static_cast<int32_t>(i);
+				*usedTextureIndex = static_cast<int32_t>(i);
 			}
 
 			isHovered |= ImGui::IsItemHovered();
@@ -237,32 +237,32 @@ bool ComponentDebug::TerrainTextureEditModeDebug(std::array<std::string, 4>* _te
 }
 
 
-void ONEngine::from_json(const nlohmann::json& _j, Terrain& _t) {
-	_t.enable = _j.value("enable", 1);
-	_t.editorInfo_.brushRadius = _j.value("brushRadius", 10.0f);
-	_t.editorInfo_.brushStrength = _j.value("brushStrength", 1.0f);
-	_t.isRenderingProcedural_ = _j.value("isRenderingProcedural", false);
-	_t.splattingTexPaths_[0] = _j.value("splattingTexPath0", std::string("./Packages/Textures/uvChecker.png"));
-	_t.splattingTexPaths_[1] = _j.value("splattingTexPath1", std::string("./Packages/Textures/uvChecker.png"));
-	_t.splattingTexPaths_[2] = _j.value("splattingTexPath2", std::string("./Packages/Textures/uvChecker.png"));
-	_t.splattingTexPaths_[3] = _j.value("splattingTexPath3", std::string("./Packages/Textures/uvChecker.png"));
-	_t.material_ = _j.value("material", Asset::Material());
-	_t.material_.uvTransform.scale = Vector2(100, 100);
-	_t.material_.postEffectFlags = PostEffectFlags_Lighting | PostEffectFlags_Shadow;
+void ONEngine::from_json(const nlohmann::json& j, Terrain& t) {
+	t.enable = j.value("enable", 1);
+	t.editorInfo_.brushRadius = j.value("brushRadius", 10.0f);
+	t.editorInfo_.brushStrength = j.value("brushStrength", 1.0f);
+	t.isRenderingProcedural_ = j.value("isRenderingProcedural", false);
+	t.splattingTexPaths_[0] = j.value("splattingTexPath0", std::string("./Packages/Textures/uvChecker.png"));
+	t.splattingTexPaths_[1] = j.value("splattingTexPath1", std::string("./Packages/Textures/uvChecker.png"));
+	t.splattingTexPaths_[2] = j.value("splattingTexPath2", std::string("./Packages/Textures/uvChecker.png"));
+	t.splattingTexPaths_[3] = j.value("splattingTexPath3", std::string("./Packages/Textures/uvChecker.png"));
+	t.material_ = j.value("material", Asset::Material());
+	t.material_.uvTransform.scale = Vector2(100, 100);
+	t.material_.postEffectFlags = PostEffectFlags_Lighting | PostEffectFlags_Shadow;
 }
 
-void ONEngine::to_json(nlohmann::json& _j, const Terrain& _t) {
-	_j = nlohmann::json{
+void ONEngine::to_json(nlohmann::json& j, const Terrain& t) {
+	j = nlohmann::json{
 		{ "type", "Terrain" },
-		{ "enable", _t.enable },
-		{ "brushRadius", _t.editorInfo_.brushRadius },
-		{ "brushStrength", _t.editorInfo_.brushStrength },
-		{ "isRenderingProcedural", _t.isRenderingProcedural_ },
-		{ "splattingTexPath0", _t.splattingTexPaths_[0] },
-		{ "splattingTexPath1", _t.splattingTexPaths_[1] },
-		{ "splattingTexPath2", _t.splattingTexPaths_[2] },
-		{ "splattingTexPath3", _t.splattingTexPaths_[3] },
-		{ "material", _t.material_ },
+		{ "enable", t.enable },
+		{ "brushRadius", t.editorInfo_.brushRadius },
+		{ "brushStrength", t.editorInfo_.brushStrength },
+		{ "isRenderingProcedural", t.isRenderingProcedural_ },
+		{ "splattingTexPath0", t.splattingTexPaths_[0] },
+		{ "splattingTexPath1", t.splattingTexPaths_[1] },
+		{ "splattingTexPath2", t.splattingTexPaths_[2] },
+		{ "splattingTexPath3", t.splattingTexPaths_[3] },
+		{ "material", t.material_ },
 	};
 }
 
@@ -310,37 +310,37 @@ Terrain::~Terrain() {}
 
 
 
-void Terrain::CreateVerticesAndIndicesBuffers(DxDevice* _dxDevice, DxCommand* _dxCommand, DxSRVHeap* _dxSrvHeap) {
+void Terrain::CreateVerticesAndIndicesBuffers(DxDevice* dxDevice, DxCommand* dxCommand, DxSRVHeap* dxSrvHeap) {
 	/// ----- UAV buffer の作成 ----- ///
-	rwVertices_.CreateUAV(GetMaxVertexNum(), _dxDevice, _dxCommand, _dxSrvHeap);
-	rwIndices_.CreateUAV(GetMaxIndexNum(), _dxDevice, _dxCommand, _dxSrvHeap);
+	rwVertices_.CreateUAV(GetMaxVertexNum(), dxDevice, dxCommand, dxSrvHeap);
+	rwIndices_.CreateUAV(GetMaxIndexNum(), dxDevice, dxCommand, dxSrvHeap);
 }
 
-void Terrain::CreateRenderingBarriers(DxCommand* _dxCommand) {
+void Terrain::CreateRenderingBarriers(DxCommand* dxCommand) {
 	rwVertices_.GetResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
-		_dxCommand
+		dxCommand
 	);
 
 	rwIndices_.GetResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_INDEX_BUFFER,
-		_dxCommand
+		dxCommand
 	);
 }
 
-void Terrain::RestoreResourceBarriers(DxCommand* _dxCommand) {
+void Terrain::RestoreResourceBarriers(DxCommand* dxCommand) {
 	rwVertices_.GetResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-		_dxCommand
+		dxCommand
 	);
 
 	rwIndices_.GetResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_INDEX_BUFFER,
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-		_dxCommand
+		dxCommand
 	);
 }
 
@@ -385,8 +385,8 @@ DxResource& Terrain::GetVerticesResource() {
 	return rwVertices_.GetResource();
 }
 
-void Terrain::SetIsCreated(bool _isCreated) {
-	isCreated_ = _isCreated;
+void Terrain::SetIsCreated(bool isCreated) {
+	isCreated_ = isCreated;
 }
 
 bool Terrain::GetIsCreated() const {
@@ -417,8 +417,8 @@ bool Terrain::GetIsRenderingProcedural() const {
 	return isRenderingProcedural_;
 }
 
-void Terrain::SetIsRenderingProcedural(bool _isRenderingProcedural) {
-	isRenderingProcedural_ = _isRenderingProcedural;
+void Terrain::SetIsRenderingProcedural(bool isRenderingProcedural) {
+	isRenderingProcedural_ = isRenderingProcedural;
 }
 
 

@@ -1,29 +1,29 @@
-﻿#include "DxSRVHeap.h"
+#include "DxSRVHeap.h"
 
 using namespace ONEngine;
 
 /// engine
 #include "Engine/Core/Utility/Utility.h"
 
-/// _bufferHeapSize + (_textureHeapSize * 2) 
+/// bufferHeapSize + (textureHeapSize * 2) 
 /// Texture用のSRVとUAVがそれぞれ必要になるため、textureHeapSizeは2倍する
 
-DxSRVHeap::DxSRVHeap(DxDevice* _dxDevice, uint32_t _bufferHeapSize, uint32_t _textureHeapSize) : 
-	IDxDescriptorHeap(_dxDevice, _bufferHeapSize + (_textureHeapSize * 2)) {
+DxSRVHeap::DxSRVHeap(DxDevice* dxDevice, uint32_t bufferHeapSize, uint32_t textureHeapSize) : 
+	IDxDescriptorHeap(dxDevice, bufferHeapSize + (textureHeapSize * 2)) {
 	/// SRV Texture用のHeapData初期化
 	srvTextureHeapData_.usedIndex = 0;
 	srvTextureHeapData_.startIndex = 0;
-	srvTextureHeapData_.heapSize = _textureHeapSize;
+	srvTextureHeapData_.heapSize = textureHeapSize;
 
 	/// UAV Texture用のHeapData初期化
 	uavTextureHeapData_.usedIndex = 0;
-	uavTextureHeapData_.startIndex = _textureHeapSize;
-	uavTextureHeapData_.heapSize = _textureHeapSize;
+	uavTextureHeapData_.startIndex = textureHeapSize;
+	uavTextureHeapData_.heapSize = textureHeapSize;
 
 	/// Buffer用のHeapData初期化
 	bufferHeapData_.usedIndex = 0;
-	bufferHeapData_.startIndex = _textureHeapSize * 2;
-	bufferHeapData_.heapSize = _bufferHeapSize;
+	bufferHeapData_.startIndex = textureHeapSize * 2;
+	bufferHeapData_.heapSize = bufferHeapSize;
 }
 
 DxSRVHeap::~DxSRVHeap() = default;

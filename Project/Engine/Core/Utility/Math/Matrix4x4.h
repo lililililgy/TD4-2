@@ -21,13 +21,13 @@ struct Matrix4x4 final {
 	/// ===================================================
 
 	Matrix4x4();
-	Matrix4x4(const Matrix4x4& _matrix);
-	Matrix4x4(const float _matrix[4][4]);
+	Matrix4x4(const Matrix4x4& matrix);
+	Matrix4x4(const float matrix[4][4]);
 	Matrix4x4(
-		float _m00, float _m01, float _m02, float _m03,
-		float _m10, float _m11, float _m12, float _m13,
-		float _m20, float _m21, float _m22, float _m23,
-		float _m30, float _m31, float _m32, float _m33
+		float m00, float m01, float m02, float m03,
+		float m10, float m11, float m12, float m13,
+		float m20, float m21, float m22, float m23,
+		float m30, float m31, float m32, float m33
 	);
 
 
@@ -37,74 +37,74 @@ struct Matrix4x4 final {
 	/// ===================================================
 
 	/// @brief 拡縮行列の作成
-	/// @param _v 拡縮度
+	/// @param v 拡縮度
 	/// @return 拡縮行列
-	static Matrix4x4 MakeScale(const Vector3& _v);
+	static Matrix4x4 MakeScale(const Vector3& v);
 
 	/// @brief 回転行列の作成 X軸
-	/// @param _angle 回転角
+	/// @param angle 回転角
 	/// @return 回転行列
-	static Matrix4x4 MakeRotateX(float _angle);
+	static Matrix4x4 MakeRotateX(float angle);
 
 	/// @brief 回転行列の作成 Y軸
-	/// @param _angle 回転角
+	/// @param angle 回転角
 	/// @return 回転行列
-	static Matrix4x4 MakeRotateY(float _angle);
+	static Matrix4x4 MakeRotateY(float angle);
 
 	/// @brief 回転行列の作成 Z軸
-	/// @param _angle 回転角
+	/// @param angle 回転角
 	/// @return 回転行列
-	static Matrix4x4 MakeRotateZ(float _angle);
+	static Matrix4x4 MakeRotateZ(float angle);
 
 	/// @brief 回転行列の作成
-	/// @param _v 回転率
+	/// @param v 回転率
 	/// @return 回転行列
-	static Matrix4x4 MakeRotate(const Vector3& _v);
-	static Matrix4x4 MakeRotate(const struct Quaternion& _q);
+	static Matrix4x4 MakeRotate(const Vector3& v);
+	static Matrix4x4 MakeRotate(const struct Quaternion& q);
 
 	/// @brief 平行移動行列の作成
-	/// @param _v 平行移動成分
+	/// @param v 平行移動成分
 	/// @return 平行移動行列
-	static Matrix4x4 MakeTranslate(const Vector3& _v);
+	static Matrix4x4 MakeTranslate(const Vector3& v);
 
 	/// @brief アフィン行列の作成
-	/// @param _scale 拡縮度
-	/// @param _rotation 回転率
-	/// @param _translation 平行移動成分
+	/// @param scale 拡縮度
+	/// @param rotation 回転率
+	/// @param translation 平行移動成分
 	/// @return アフィン行列
-	static Matrix4x4 MakeAffine(const Vector3& _scale, const Vector3& _rotation, const Vector3& _translation);
+	static Matrix4x4 MakeAffine(const Vector3& scale, const Vector3& rotation, const Vector3& translation);
 
 	/// @brief 転置行列の作成
-	/// @param _matrix 他の行列
+	/// @param matrix 他の行列
 	/// @return 転置行列
-	static Matrix4x4 MakeTranspose(const Matrix4x4& _matrix);
+	static Matrix4x4 MakeTranspose(const Matrix4x4& matrix);
 
 	/// @brief 逆行列の作成
-	/// @param _matrix 他の行列
+	/// @param matrix 他の行列
 	/// @return 逆行列
-	static Matrix4x4 MakeInverse(const Matrix4x4& _matrix);
+	static Matrix4x4 MakeInverse(const Matrix4x4& matrix);
 
 	/// @brief 左手座標系のビュー行列を作成する
-	/// @param _eye 視線の位置
-	/// @param _target 視線の注視点
-	/// @param _up 視線の上方向
+	/// @param eye 視線の位置
+	/// @param target 視線の注視点
+	/// @param up 視線の上方向
 	/// @return 計算したビュー行列
-	static Matrix4x4 MakeLookAtLH(const Vector3& _eye, const Vector3& _target, const Vector3& _up);
+	static Matrix4x4 MakeLookAtLH(const Vector3& eye, const Vector3& target, const Vector3& up);
 
 	/// @brief ベクトルに行列をかける
-	/// @param _v ベクトル
-	/// @param _m 行列
+	/// @param v ベクトル
+	/// @param m 行列
 	/// @return 変換後のベクトル
-	static Vector3 Transform(const Vector3& _v, const Matrix4x4& _m);
+	static Vector3 Transform(const Vector3& v, const Matrix4x4& m);
 
 	/// @brief ベクトルの向きだけを行列で変換する（平行移動を無視）
-	static Vector3 TransformNormal(const Vector3& _v, const Matrix4x4& _m);
+	static Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
 	/// @brief ベクトルに行列をかける
-	/// @param _v ベクトル
-	/// @param _m 行列
+	/// @param v ベクトル
+	/// @param m 行列
 	/// @return 変換後のベクトル
-	static Vector4 Transform(const Vector4& _v, const Matrix4x4& _m);
+	static Vector4 Transform(const Vector4& v, const Matrix4x4& m);
 
 	/// ===================================================
 	/// public : methods
@@ -149,14 +149,14 @@ struct Matrix4x4 final {
 	/// ===================================================
 
 	/// @brief 代入演算子 operator
-	/// @param _other 他行列
+	/// @param other 他行列
 	/// @return 代入結果
-	inline Matrix4x4& operator=(const Matrix4x4& _other);
+	inline Matrix4x4& operator=(const Matrix4x4& other);
 
 	/// @brief 乗算代入演算子 operator
-	/// @param _other 他行列
+	/// @param other 他行列
 	/// @return 乗算代入結果
-	inline Matrix4x4& operator*=(const Matrix4x4& _other);
+	inline Matrix4x4& operator*=(const Matrix4x4& other);
 
 };
 
@@ -165,12 +165,12 @@ namespace {
 
 
 	/// @brief DirectXの行列型から自作の行列型へ変換
-	/// @param _matrix DirectXの行列型
+	/// @param matrix DirectXの行列型
 	/// @return 自作の行列型
-	inline Matrix4x4 Convert(const XMMATRIX& _matrix) {
+	inline Matrix4x4 Convert(const XMMATRIX& matrix) {
 		Matrix4x4  result;
 		XMFLOAT4X4 tempMatrix;
-		XMStoreFloat4x4(&tempMatrix, _matrix);
+		XMStoreFloat4x4(&tempMatrix, matrix);
 
 		for (size_t i = 0; i < 4; ++i) {
 			for (size_t j = 0; j < 4; ++j) {
@@ -181,14 +181,14 @@ namespace {
 	}
 
 	/// @brief 自作の行列型からDirectXの行列型へ変換
-	/// @param _matrix 自作の行列型
+	/// @param matrix 自作の行列型
 	/// @return DirectXの行列型
-	inline XMMATRIX Convert(const Matrix4x4& _matrix) {
+	inline XMMATRIX Convert(const Matrix4x4& matrix) {
 		return XMMATRIX(
-			_matrix.m[0][0], _matrix.m[0][1], _matrix.m[0][2], _matrix.m[0][3],
-			_matrix.m[1][0], _matrix.m[1][1], _matrix.m[1][2], _matrix.m[1][3],
-			_matrix.m[2][0], _matrix.m[2][1], _matrix.m[2][2], _matrix.m[2][3],
-			_matrix.m[3][0], _matrix.m[3][1], _matrix.m[3][2], _matrix.m[3][3]
+			matrix.m[0][0], matrix.m[0][1], matrix.m[0][2], matrix.m[0][3],
+			matrix.m[1][0], matrix.m[1][1], matrix.m[1][2], matrix.m[1][3],
+			matrix.m[2][0], matrix.m[2][1], matrix.m[2][2], matrix.m[2][3],
+			matrix.m[3][0], matrix.m[3][1], matrix.m[3][2], matrix.m[3][3]
 		);
 	}
 }
@@ -200,33 +200,33 @@ namespace {
 /// operators
 /// ===================================================
 
-inline Matrix4x4 operator*(const Matrix4x4& _m1, const Matrix4x4& _m2) {
-	return Convert(Convert(_m1) * Convert(_m2));
+inline Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2) {
+	return Convert(Convert(m1) * Convert(m2));
 }
 
-inline Vector3 operator*(const Vector3& _v, const Matrix4x4& _m) {
-	return Matrix4x4::Transform(_v, _m);
+inline Vector3 operator*(const Vector3& v, const Matrix4x4& m) {
+	return Matrix4x4::Transform(v, m);
 }
 
-inline Vector4 operator*(const Vector4& _v, const Matrix4x4& _m) {
-	return Matrix4x4::Transform(_v, _m);
+inline Vector4 operator*(const Vector4& v, const Matrix4x4& m) {
+	return Matrix4x4::Transform(v, m);
 }
 
 /// ===================================================
 /// public : operators
 /// ===================================================
 
-inline Matrix4x4& Matrix4x4::operator=(const Matrix4x4& _other) {
+inline Matrix4x4& Matrix4x4::operator=(const Matrix4x4& other) {
 	for (size_t r = 0; r < 4; r++) {
 		for (size_t c = 0; c < 4; c++) {
-			m[r][c] = _other.m[r][c];
+			m[r][c] = other.m[r][c];
 		}
 	}
 	return *this;
 }
 
-inline Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& _other) {
-	*this = *this * _other;
+inline Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& other) {
+	*this = *this * other;
 	return *this;
 }
 

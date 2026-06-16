@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <functional>
@@ -81,9 +81,9 @@ public:
 	}
 
 	/// @brief Y軸の押し戻しを固定するかどうかを設定する
-	/// @param _freeze Y軸の押し戻しを固定するかどうか
-	void SetFreezeY(bool _freeze) {
-		freezeY_ = _freeze;
+	/// @param freeze Y軸の押し戻しを固定するかどうか
+	void SetFreezeY(bool freeze) {
+		freezeY_ = freeze;
 	}
 
 	/// @brief 質量を返す
@@ -93,9 +93,9 @@ public:
 	}
 
 	/// @brief 質量を設定する
-	/// @param _mass 質量
-	void SetMass(float _mass) {
-		mass_ = _mass;
+	/// @param mass 質量
+	void SetMass(float mass) {
+		mass_ = mass;
 	}
 
 
@@ -106,9 +106,9 @@ public:
 	}
 
 	/// @brief トリガーモードを設定する（trueなら押し戻しが発生しなくなる）
-	/// @param _trigger トリガーモードにするか
-	void SetTrigger(bool _trigger) {
-		isTrigger_ = _trigger;
+	/// @param trigger トリガーモードにするか
+	void SetTrigger(bool trigger) {
+		isTrigger_ = trigger;
 	}
 
 

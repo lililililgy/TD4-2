@@ -18,9 +18,9 @@ public class SceneLoader : MonoScript {
 		}
 	}
 
-	public void Load(string _sceneName) {
+	public void Load(string sceneName) {
 		isLoading_ = true;
-		sceneName = _sceneName;
+		this.sceneName = sceneName;
 	}
 	
 }

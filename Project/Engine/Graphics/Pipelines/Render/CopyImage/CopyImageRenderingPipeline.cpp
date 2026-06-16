@@ -1,4 +1,4 @@
-﻿#include "CopyImageRenderingPipeline.h"
+#include "CopyImageRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -8,14 +8,14 @@ using namespace ONEngine;
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
 
 
-CopyImageRenderingPipeline::CopyImageRenderingPipeline(Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {}
+CopyImageRenderingPipeline::CopyImageRenderingPipeline(Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {}
 
-void CopyImageRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void CopyImageRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 
 		shader.CompileShader(L"Packages/Shader/Render/CopyImage/CopyImage.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"Packages/Shader/Render/CopyImage/CopyImage.ps.hlsl", L"ps_6_0", Shader::Type::ps);
@@ -37,17 +37,17 @@ void CopyImageRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxM
 		pipeline_->SetRTVNum(1);
 		pipeline_->SetRTVFormat(DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
 }
 
 
-void CopyImageRenderingPipeline::Draw(ECSGroup* /*_ecs*/, CameraComponent*, DxCommand* _dxCommand) {
+void CopyImageRenderingPipeline::Draw(ECSGroup* /*ecs*/, CameraComponent*, DxCommand* dxCommand) {
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
-	ID3D12GraphicsCommandList* cmdList = _dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
+	ID3D12GraphicsCommandList* cmdList = dxCommand->GetCommandList();
 
 	/// settings
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

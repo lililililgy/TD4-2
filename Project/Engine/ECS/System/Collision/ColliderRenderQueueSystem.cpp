@@ -1,4 +1,4 @@
-﻿#include "ColliderRenderQueueSystem.h"
+#include "ColliderRenderQueueSystem.h"
 
 using namespace ONEngine;
 
@@ -8,21 +8,21 @@ using namespace ONEngine;
 
 ColliderRenderQueueSystem::ColliderRenderQueueSystem() {}
 
-void ColliderRenderQueueSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
-	UpdateSphereCollider(_ecs->GetComponentArray<SphereCollider>());
-	UpdateBoxCollider(_ecs->GetComponentArray<BoxCollider>());
+void ColliderRenderQueueSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
+	UpdateSphereCollider(ecs->GetComponentArray<SphereCollider>());
+	UpdateBoxCollider(ecs->GetComponentArray<BoxCollider>());
 }
 
 
-void ColliderRenderQueueSystem::UpdateSphereCollider(ComponentArray<SphereCollider>* _sphereColliderArray) {
+void ColliderRenderQueueSystem::UpdateSphereCollider(ComponentArray<SphereCollider>* sphereColliderArray) {
 
 	/// SphereColliderが存在するか確認(空ならreturn)
-	if (!_sphereColliderArray || _sphereColliderArray->GetUsedComponents().empty()) {
+	if (!sphereColliderArray || sphereColliderArray->GetUsedComponents().empty()) {
 		return;
 	}
 
 
-	for (auto& sphereCollider : _sphereColliderArray->GetUsedComponents()) {
+	for (auto& sphereCollider : sphereColliderArray->GetUsedComponents()) {
 		if (!sphereCollider) {
 			continue; // 無効なコライダーはスキップ
 		}
@@ -40,15 +40,15 @@ void ColliderRenderQueueSystem::UpdateSphereCollider(ComponentArray<SphereCollid
 
 }
 
-void ColliderRenderQueueSystem::UpdateBoxCollider(ComponentArray<BoxCollider>* _boxColliderArray) {
+void ColliderRenderQueueSystem::UpdateBoxCollider(ComponentArray<BoxCollider>* boxColliderArray) {
 
 	/// BoxColliderが存在するか確認(空ならreturn)
-	if (!_boxColliderArray || _boxColliderArray->GetUsedComponents().empty()) {
+	if (!boxColliderArray || boxColliderArray->GetUsedComponents().empty()) {
 		return;
 	}
 
 	/// gizmoを使って表示する
-	for (auto& boxCollider : _boxColliderArray->GetUsedComponents()) {
+	for (auto& boxCollider : boxColliderArray->GetUsedComponents()) {
 		if (!boxCollider) {
 			continue; // 無効なコライダーはスキップ
 		}

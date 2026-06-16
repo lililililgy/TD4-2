@@ -1,4 +1,4 @@
-﻿#include "ImGuiManager.h"
+#include "ImGuiManager.h"
 
 
 /// external
@@ -644,9 +644,9 @@ void SetupVS2026Style() {
 #pragma endregion
 
 
-ImGuiManager::ImGuiManager(ONEngine::DxManager* _dxm, ONEngine::WindowManager* _windowManager, ONEngine::EntityComponentSystem* _pEntityComponentSystem, EditorManager* _editorManager, ONEngine::SceneManager* _sceneManager)
-	: pDxManager_(_dxm), pWindowManager_(_windowManager), pEntityComponentSystem_(_pEntityComponentSystem),
-	pEditorManager_(_editorManager), pSceneManager_(_sceneManager) {
+ImGuiManager::ImGuiManager(ONEngine::DxManager* dxm, ONEngine::WindowManager* windowManager, ONEngine::EntityComponentSystem* pEntityComponentSystem, EditorManager* editorManager, ONEngine::SceneManager* sceneManager)
+	: pDxManager_(dxm), pWindowManager_(windowManager), pEntityComponentSystem_(pEntityComponentSystem),
+	pEditorManager_(editorManager), pSceneManager_(sceneManager) {
 }
 
 ImGuiManager::~ImGuiManager() {
@@ -659,9 +659,9 @@ ImGuiManager::~ImGuiManager() {
 
 
 
-void ImGuiManager::Initialize(ONEngine::Asset::AssetCollection* _assetCollection) {
+void ImGuiManager::Initialize(ONEngine::Asset::AssetCollection* assetCollection) {
 
-	pAssetCollection_ = _assetCollection;
+	pAssetCollection_ = assetCollection;
 
 	ONEngine::DxSRVHeap* dxSRVHeap = pDxManager_->GetDxSRVHeap();
 	uint32_t   srvDescriptorIndex = dxSRVHeap->AllocateBuffer();
@@ -736,18 +736,18 @@ void ImGuiManager::Draw() {
 	);
 }
 
-void ImGuiManager::AddSceneImageInfo(const std::string& _name, const ImGuiSceneImageInfo& _info) {
-	sceneImageInfos_[_name] = _info;
+void ImGuiManager::AddSceneImageInfo(const std::string& name, const ImGuiSceneImageInfo& info) {
+	sceneImageInfos_[name] = info;
 }
 
-void ImGuiManager::UpdateMousePosition(HWND _winHwnd, const ONEngine::Vector2& _renderTargetSize) {
+void ImGuiManager::UpdateMousePosition(HWND winHwnd, const ONEngine::Vector2& renderTargetSize) {
 	POINT point;
 	GetCursorPos(&point);
 
-	ScreenToClient(_winHwnd, &point);
+	ScreenToClient(winHwnd, &point);
 
 	RECT clientRect;
-	GetClientRect(_winHwnd, &clientRect);
+	GetClientRect(winHwnd, &clientRect);
 
 	ONEngine::Vector2 clientSize = {
 		static_cast<float>(clientRect.right - clientRect.left),
@@ -755,7 +755,7 @@ void ImGuiManager::UpdateMousePosition(HWND _winHwnd, const ONEngine::Vector2& _
 	};
 
 	/// 補正
-	ONEngine::Vector2 scale = _renderTargetSize / clientSize;
+	ONEngine::Vector2 scale = renderTargetSize / clientSize;
 	ONEngine::Vector2 corrected = {
 		point.x * scale.x,
 		point.y * scale.y
@@ -764,10 +764,10 @@ void ImGuiManager::UpdateMousePosition(HWND _winHwnd, const ONEngine::Vector2& _
 	ImGui::GetIO().AddMousePosEvent(corrected.x, corrected.y);
 }
 
-void ImGuiManager::OutputImGuiStyle(const std::string& _fileName) const {
+void ImGuiManager::OutputImGuiStyle(const std::string& fileName) const {
 	ImGuiStyle& style = ImGui::GetStyle();
 
-	std::ofstream file(_fileName);
+	std::ofstream file(fileName);
 	if (!file.is_open()) return;
 
 	for (int i = 0; i < ImGuiCol_COUNT; ++i) {
@@ -778,10 +778,10 @@ void ImGuiManager::OutputImGuiStyle(const std::string& _fileName) const {
 	file.close();
 }
 
-void ImGuiManager::InputImGuiStyle(const std::string& _fileName) const {
+void ImGuiManager::InputImGuiStyle(const std::string& fileName) const {
 	ImGuiStyle& style = ImGui::GetStyle();
 
-	std::ifstream file(_fileName);
+	std::ifstream file(fileName);
 	if (!file.is_open()) return;
 
 	std::string line;
@@ -799,16 +799,16 @@ void ImGuiManager::InputImGuiStyle(const std::string& _fileName) const {
 	file.close();
 }
 
-void ImGuiManager::SetImGuiWindow(ONEngine::Window* _window) {
-	pImGuiWindow_ = _window;
+void ImGuiManager::SetImGuiWindow(ONEngine::Window* window) {
+	pImGuiWindow_ = window;
 }
 
 ONEngine::Window* ImGuiManager::GetDebugGameWindow() const {
 	return pDebugGameWindow_;
 }
 
-const ImGuiSceneImageInfo* ImGuiManager::GetSceneImageInfo(const std::string& _name) const {
-	auto it = sceneImageInfos_.find(_name);
+const ImGuiSceneImageInfo* ImGuiManager::GetSceneImageInfo(const std::string& name) const {
+	auto it = sceneImageInfos_.find(name);
 	if (it != sceneImageInfos_.end()) {
 		return &it->second;
 	}

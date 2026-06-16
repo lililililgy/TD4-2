@@ -57,46 +57,46 @@ public:
 	/// CSのHotReloadを行う
 	void HotReload();
 
-	void SetEcsPtr(class EntityComponentSystem* _ecs);
+	void SetEcsPtr(class EntityComponentSystem* ecs);
 
 	/// DLLのパスを探す
-	std::optional<std::string> FindLatestDll(const std::string& _dirPath, const std::string& _baseName);
+	std::optional<std::string> FindLatestDll(const std::string& dirPath, const std::string& baseName);
 
 	/// C#側のリセット
 	void ResetCS();
 
 	/// @brief C#側の特定のECSGroupをクリアする
-	void ClearECSGroup(const std::string& _name);
+	void ClearECSGroup(const std::string& name);
 
 	/// @brief C++で初期化したコンポーネントデータをCS側に同期する
-	void SyncInitialComponentsToCS(ECSGroup* _ecsGroup);
+	void SyncInitialComponentsToCS(ECSGroup* ecsGroup);
 
 	/// C#側のEntityを取得
-	MonoObject* GetEntityFromCS(const std::string& _ecsGroupName, int32_t _entityId);
-	MonoObject* GetMonoBehaviorFromCS(const std::string& _ecsGroupName, int32_t _entityId, const std::string& _behaviorName);
+	MonoObject* GetEntityFromCS(const std::string& ecsGroupName, int32_t entityId);
+	MonoObject* GetMonoBehaviorFromCS(const std::string& ecsGroupName, int32_t entityId, const std::string& behaviorName);
 
 	/// @brief MonoObjectの所有者であるGameEntityを取得する
-	/// @param _obj 
+	/// @param obj 
 	/// @return 
-	class GameEntity* GetOwnerEntity(MonoObject* _obj);
+	class GameEntity* GetOwnerEntity(MonoObject* obj);
 
 	/// @brief GuidからGameEntityを取得する
-	/// @param _guid 
+	/// @param guid 
 	/// @return 
-	class GameEntity* GetOwnerEntity(const struct Guid& _guid);
+	class GameEntity* GetOwnerEntity(const struct Guid& guid);
 
 	/// @brief エンティティのGuidから所属しているECSグループ名を取得する
-	/// @param _guid 
+	/// @param guid 
 	/// @return 
-	std::string GetGroupNameByEntityGuid(const struct Guid& _guid);
+	std::string GetGroupNameByEntityGuid(const struct Guid& guid);
 
 	/// @brief C#側のメソッドを取得する
-	/// @param _namespace 名前空間
-	/// @param _className クラス名
-	/// @param _methodName 関数名
-	/// @param _argsCount 引数の数
+	/// @param namespace 名前空間
+	/// @param className クラス名
+	/// @param methodName 関数名
+	/// @param argsCount 引数の数
 	/// @return 関数へのポインタ
-	MonoMethod* GetMethodFromCS(const std::string& _namespace, const std::string& _className, const std::string& _methodName, int _argsCount);
+	MonoMethod* GetMethodFromCS(const std::string& nameSpace, const std::string& className, const std::string& methodName, int argsCount);
 
 	/// @brief Reload用のDomainを作成する
 	/// @return 作成したDomainへのポインタ
@@ -166,15 +166,15 @@ public:
 	MonoImage* Image() const;
 	MonoAssembly* Assembly() const;
 
-	void SetIsHotReloadRequest(bool _request);
+	void SetIsHotReloadRequest(bool request);
 	bool GetIsHotReloadRequest() const;
 
 };
 
 
 namespace MonoScriptEngineUtils {
-	MonoMethod* FindMethodInClassOrParents(MonoClass* _class, const char* _methodName, int _paramCount);
-	MonoClassField* FindFieldRecursive(MonoClass* _class, const char* _name);
+	MonoMethod* FindMethodInClassOrParents(MonoClass* monoClass, const char* methodName, int paramCount);
+	MonoClassField* FindFieldRecursive(MonoClass* monoClass, const char* name);
 } // namespace MonoScriptEngineUtils
 
 } /// ONEngine

@@ -29,9 +29,9 @@ public:
 	~InputSystem();
 
 	/// @brief 初期化
-	/// @param _windowManager WindowManagerのポインタ
-	/// @param _imGuiManager  ImGuiManagerのポインタ
-	void Initialize(class WindowManager* _windowManager, Editor::ImGuiManager* _imGuiManager);
+	/// @param windowManager WindowManagerのポインタ
+	/// @param imGuiManager  ImGuiManagerのポインタ
+	void Initialize(class WindowManager* windowManager, Editor::ImGuiManager* imGuiManager);
 
 	/// @brief 更新処理
 	void Update();
@@ -52,10 +52,10 @@ private:
 };
 
 namespace MonoInternalMethods {
-	void InternalGetGamepadThumb(int _axisIndex, float* _x, float* _y);
-	void InternalGetMouseVelocity(float* _x, float* _y);
-	void InternalGetMousePosition(float* _x, float* _y);
-	void InternalGetMouseWheel(float* _wheel);
+	void InternalGetGamepadThumb(int axisIndex, float* x, float* y);
+	void InternalGetMouseVelocity(float* x, float* y);
+	void InternalGetMousePosition(float* x, float* y);
+	void InternalGetMouseWheel(float* wheel);
 }
 
 } /// ONEngine

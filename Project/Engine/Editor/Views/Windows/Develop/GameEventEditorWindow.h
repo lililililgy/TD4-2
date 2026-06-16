@@ -8,7 +8,7 @@ namespace Editor {
 
     class GameEventEditorWindow : public IEditorWindow {
     public:
-        GameEventEditorWindow(const std::string& _name);
+        GameEventEditorWindow(const std::string& name);
         ~GameEventEditorWindow() override = default;
 
         void ShowImGui() override;

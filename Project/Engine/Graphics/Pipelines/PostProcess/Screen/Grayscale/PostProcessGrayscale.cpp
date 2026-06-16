@@ -1,4 +1,4 @@
-﻿#include "PostProcessGrayscale.h"
+#include "PostProcessGrayscale.h"
 
 using namespace ONEngine;
 
@@ -10,11 +10,11 @@ using namespace ONEngine;
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
 
-void PostProcessGrayscale::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void PostProcessGrayscale::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/PostProcess/Screen/Grayscale/Grayscale.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ComputePipeline>();
@@ -25,16 +25,16 @@ void PostProcessGrayscale::Initialize(ShaderCompiler* _shaderCompiler, DxManager
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
 }
 
-void PostProcessGrayscale::Execute(const std::string& _textureName, DxCommand* _dxCommand, Asset::AssetCollection* _assetCollection, [[maybe_unused]] EntityComponentSystem* _entityComponentSystem) {
+void PostProcessGrayscale::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, [[maybe_unused]] EntityComponentSystem* entityComponentSystem) {
 
 	/// 配列の取得とタグの確認
-	ComponentArray<ScreenPostEffectTag>* screenPostEffectTagArray = _entityComponentSystem->GetCurrentGroup()->GetComponentArray<ScreenPostEffectTag>();
+	ComponentArray<ScreenPostEffectTag>* screenPostEffectTagArray = entityComponentSystem->GetCurrentGroup()->GetComponentArray<ScreenPostEffectTag>();
 	if (!screenPostEffectTagArray || screenPostEffectTagArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -54,12 +54,12 @@ void PostProcessGrayscale::Execute(const std::string& _textureName, DxCommand* _
 	}
 
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
-	auto command = _dxCommand->GetCommandList();
-	auto& textures = _assetCollection->GetTextures();
-	textureIndices_[0] = _assetCollection->GetTextureIndex(_textureName + "Scene");
-	textureIndices_[1] = _assetCollection->GetTextureIndex("postProcessResult");
+	auto command = dxCommand->GetCommandList();
+	auto& textures = assetCollection->GetTextures();
+	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
+	textureIndices_[1] = assetCollection->GetTextureIndex("postProcessResult");
 
 	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetUAVGPUHandle());

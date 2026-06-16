@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <string>
@@ -60,8 +60,8 @@ protected:
 	void DrawHierarchy();
 
 	/// @brief Entityの名前変更処理
-	/// @param _entity 変更対象のEntity
-	void EntityRename(ONEngine::GameEntity* _entity);
+	/// @param entity 変更対象のEntity
+	void EntityRename(ONEngine::GameEntity* entity);
 
 	/// Dialogの表示
 	void DrawDialog();

@@ -1,4 +1,4 @@
-﻿#include "EffectEmitShape.h"
+#include "EffectEmitShape.h"
 
 using namespace ONEngine;
 
@@ -22,12 +22,12 @@ EffectEmitShape::EffectEmitShape() {
 	cone_.height = 1.0f;
 }
 
-EffectEmitShape::EffectEmitShape(const EffectEmitShape& _shape) {
-	shapeType_ = _shape.shapeType_;
+EffectEmitShape::EffectEmitShape(const EffectEmitShape& shape) {
+	shapeType_ = shape.shapeType_;
 	switch (shapeType_) {
-	case ShapeType::Sphere:   sphere_ = _shape.sphere_;     break;
-	case ShapeType::Cube:     cube_ = _shape.cube_;         break;
-	case ShapeType::Cone:     cone_ = _shape.cone_;         break;
+	case ShapeType::Sphere:   sphere_ = shape.sphere_;     break;
+	case ShapeType::Cube:     cube_ = shape.cube_;         break;
+	case ShapeType::Cone:     cone_ = shape.cone_;         break;
 	}
 }
 
@@ -72,61 +72,61 @@ Vector3 EffectEmitShape::GetEmitPosition() {
 	return Vector3();
 }
 
-Vector3 EffectEmitShape::GetEmitDirection(const Vector3& _emitedPosition) {
+Vector3 EffectEmitShape::GetEmitDirection(const Vector3& emitedPosition) {
 	Vector3 direction = Vector3::Zero;
 	/// 形状ごとに発生方向を取得する
 	switch (shapeType_) {
 	case ShapeType::Sphere:
-		direction = _emitedPosition - sphere_.center;
+		direction = emitedPosition - sphere_.center;
 		break;
 	case ShapeType::Cube:
-		direction = _emitedPosition - cube_.center;
+		direction = emitedPosition - cube_.center;
 		break;
 	case ShapeType::Cone:
-		direction = _emitedPosition - cone_.center;
+		direction = emitedPosition - cone_.center;
 		break;
 	};
 
 	return direction.Normalize();
 }
 
-void EffectEmitShape::SetShapeType(ShapeType _type) {
-	shapeType_ = _type;
+void EffectEmitShape::SetShapeType(ShapeType type) {
+	shapeType_ = type;
 }
 
-void EffectEmitShape::SetSphere(const Vector3& _center, float _radius) {
+void EffectEmitShape::SetSphere(const Vector3& center, float radius) {
 	shapeType_ = ShapeType::Sphere;
-	sphere_.center = _center;
-	sphere_.radius = _radius;
+	sphere_.center = center;
+	sphere_.radius = radius;
 }
 
-void EffectEmitShape::SetSphere(const Sphere& _sphere) {
+void EffectEmitShape::SetSphere(const Sphere& sphere) {
 	shapeType_ = ShapeType::Sphere;
-	sphere_ = _sphere;
+	sphere_ = sphere;
 }
 
-void EffectEmitShape::SetCube(const Vector3& _center, const Vector3& _size) {
+void EffectEmitShape::SetCube(const Vector3& center, const Vector3& size) {
 	shapeType_ = ShapeType::Cube;
-	cube_.center = _center;
-	cube_.size = _size;
+	cube_.center = center;
+	cube_.size = size;
 }
 
-void EffectEmitShape::SetCube(const Cube& _cube) {
+void EffectEmitShape::SetCube(const Cube& cube) {
 	shapeType_ = ShapeType::Cube;
-	cube_ = _cube;
+	cube_ = cube;
 }
 
-void EffectEmitShape::SetCone(const Vector3& _center, float _angle, float _radius, float _height) {
+void EffectEmitShape::SetCone(const Vector3& center, float angle, float radius, float height) {
 	shapeType_ = ShapeType::Cone;
-	cone_.center = _center;
-	cone_.angle = _angle;
-	cone_.radius = _radius;
-	cone_.height = _height;
+	cone_.center = center;
+	cone_.angle = angle;
+	cone_.radius = radius;
+	cone_.height = height;
 }
 
-void EffectEmitShape::SetCone(const Cone& _cone) {
+void EffectEmitShape::SetCone(const Cone& cone) {
 	shapeType_ = ShapeType::Cone;
-	cone_ = _cone;
+	cone_ = cone;
 }
 
 Vector3 EffectEmitShape::GetCenter() const {

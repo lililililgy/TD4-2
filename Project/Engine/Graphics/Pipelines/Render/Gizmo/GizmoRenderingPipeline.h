@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <unordered_map>
@@ -30,8 +30,8 @@ public:
 	GizmoRenderingPipeline();
 	~GizmoRenderingPipeline() = default;
 
-	void Initialize(ShaderCompiler* _shaderCompiler, class DxManager* _dxm) override;
-	void Draw(class ECSGroup* _ecs, class CameraComponent* _camera, DxCommand* _dxCommand) override;
+	void Initialize(ShaderCompiler* shaderCompiler, class DxManager* dxm) override;
+	void Draw(class ECSGroup* ecs, class CameraComponent* camera, DxCommand* dxCommand) override;
 
 private:
 	/// ===================================================

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// directX
 #include <d3d12.h>
@@ -36,23 +36,23 @@ public:
 	/// public : methods
 	/// ===================================================
 
-	IDxDescriptorHeap(DxDevice* _dxDevice, uint32_t _maxHeapSize);
+	IDxDescriptorHeap(DxDevice* dxDevice, uint32_t maxHeapSize);
 	virtual ~IDxDescriptorHeap() = default;
 
 	/// @brief 初期化
 	virtual void Initialize() = 0;
 
-	/// @brief _indexのDescriptorHeapを解放する
-	/// @param _index 解放したいDescriptorのIndex
-	void Free(uint32_t _index);
+	/// @brief indexのDescriptorHeapを解放する
+	/// @param index 解放したいDescriptorのIndex
+	void Free(uint32_t index);
 
 	/// @brief DescriptorHeapのindexを取得する
 	/// @return DescriptorHeapのindex
 	uint32_t Allocate();
 
 	/// @brief commandListにDescriptorHeapをバインドする
-	/// @param _commandList ID3D12GraphicsCommandListのポインタ
-	void BindToCommandList(ID3D12GraphicsCommandList* _commandList);
+	/// @param commandList ID3D12GraphicsCommandListのポインタ
+	void BindToCommandList(ID3D12GraphicsCommandList* commandList);
 
 
 protected:
@@ -77,14 +77,14 @@ public:
 	/// ===================================================
 
 	/// @brief cpu handleのゲッタ
-	/// @param _index ゲットしたいindex
+	/// @param index ゲットしたいindex
 	/// @return cpu handle
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandel(uint32_t _index) const;
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandel(uint32_t index) const;
 
 	/// @brief gpu handleのゲッタ
-	/// @param _index ゲットしたいindex
+	/// @param index ゲットしたいindex
 	/// @return gpu handle
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandel(uint32_t _index) const;
+	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandel(uint32_t index) const;
 
 	/// @brief descriptor heapのゲッタ
 	/// @return descriptor heapへのポインタ
@@ -113,11 +113,11 @@ private:
 
 
 /// @brief DescriptorHeapの生成
-/// @param _device device へのポインタ
-/// @param _type heapの種類
-/// @param _numDescriptors descriptorの個数 
-/// @param _isShaderVisible shader visibleかどうか
+/// @param device device へのポインタ
+/// @param type heapの種類
+/// @param numDescriptors descriptorの個数 
+/// @param isShaderVisible shader visibleかどうか
 /// @return 生成された DescriptorHeap
-ComPtr<ID3D12DescriptorHeap> CreateHeap(ID3D12Device* _device, D3D12_DESCRIPTOR_HEAP_TYPE _type, uint32_t _numDescriptors, bool _isShaderVisible);
+ComPtr<ID3D12DescriptorHeap> CreateHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors, bool isShaderVisible);
 
 } /// ONEngine

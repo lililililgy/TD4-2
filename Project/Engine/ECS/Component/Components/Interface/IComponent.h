@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <cstdint>
@@ -19,8 +19,8 @@ public:
 	virtual void Reset();
 
 	/// @brief Componentの保持対象の設定
-	/// @param _owner 対象
-	void SetOwner(class GameEntity* _owner);
+	/// @param owner 対象
+	void SetOwner(class GameEntity* owner);
 
 	/// @brief Componentの保持Entityを返す
 	GameEntity* GetOwner() const;

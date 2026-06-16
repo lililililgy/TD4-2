@@ -15,38 +15,38 @@
 
 using namespace ONEngine;
 
-void AnimationSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
-    Update(_ecs, Time::UnscaledDeltaTime());
+void AnimationSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
+    Update(ecs, Time::UnscaledDeltaTime());
 }
 
-void AnimationSystem::RuntimeUpdate(ECSGroup* _ecs) {
-    Update(_ecs, Time::DeltaTime());
+void AnimationSystem::RuntimeUpdate(ECSGroup* ecs) {
+    Update(ecs, Time::DeltaTime());
 }
 
 namespace {
     // 補間用ヘルパー
     template<typename T>
-    T EvaluateTrack(const std::vector<Asset::AnimationKeyframe>& _keyframes, float _time) {
-        if (_keyframes.empty()) return T{};
-        if (_time <= _keyframes.front().time) return std::get<T>(_keyframes.front().value);
-        if (_time >= _keyframes.back().time) return std::get<T>(_keyframes.back().value);
+    T EvaluateTrack(const std::vector<Asset::AnimationKeyframe>& keyframes, float time) {
+        if (keyframes.empty()) return T{};
+        if (time <= keyframes.front().time) return std::get<T>(keyframes.front().value);
+        if (time >= keyframes.back().time) return std::get<T>(keyframes.back().value);
 
-        for (size_t i = 0; i < (int)_keyframes.size() - 1; ++i) {
-            if (_time >= _keyframes[i].time && _time < _keyframes[i + 1].time) {
-                float t = (_time - _keyframes[i].time) / (_keyframes[i + 1].time - _keyframes[i].time);
-                const T& v0 = std::get<T>(_keyframes[i].value);
-                const T& v1 = std::get<T>(_keyframes[i + 1].value);
+        for (size_t i = 0; i < (int)keyframes.size() - 1; ++i) {
+            if (time >= keyframes[i].time && time < keyframes[i + 1].time) {
+                float t = (time - keyframes[i].time) / (keyframes[i + 1].time - keyframes[i].time);
+                const T& v0 = std::get<T>(keyframes[i].value);
+                const T& v1 = std::get<T>(keyframes[i + 1].value);
                 
-                if (_keyframes[i].interpolation == "Step") return Math::Step(v0, v1, t);
+                if (keyframes[i].interpolation == "Step") return Math::Step(v0, v1, t);
                 return Math::Lerp(v0, v1, t);
             }
         }
-        return std::get<T>(_keyframes.back().value);
+        return std::get<T>(keyframes.back().value);
     }
 }
 
-void AnimationSystem::Update(ECSGroup* _ecs, float _deltaTime) {
-    ComponentArray<AnimationPlayer>* playerArray = _ecs->GetComponentArray<AnimationPlayer>();
+void AnimationSystem::Update(ECSGroup* ecs, float deltaTime) {
+    ComponentArray<AnimationPlayer>* playerArray = ecs->GetComponentArray<AnimationPlayer>();
     if (!playerArray) return;
 
     auto* ac = Asset::AssetCollection::GetInstance();
@@ -59,7 +59,7 @@ void AnimationSystem::Update(ECSGroup* _ecs, float _deltaTime) {
 
         // 時間の進行（再生中のみ）
         if (player->isPlaying) {
-            player->currentTime += _deltaTime * player->speed;
+            player->currentTime += deltaTime * player->speed;
         }
 
         // クリップの取得

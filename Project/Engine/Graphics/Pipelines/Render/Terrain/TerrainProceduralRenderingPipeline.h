@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <cstdint>
@@ -74,12 +74,12 @@ public:
 	/// public : methods
 	/// =====================================
 
-	TerrainProceduralRenderingPipeline(Asset::AssetCollection* _assetCollection);
+	TerrainProceduralRenderingPipeline(Asset::AssetCollection* assetCollection);
 	~TerrainProceduralRenderingPipeline();
 
-	void Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) override;
-	void PreDraw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) override;
-	void Draw(ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) override;
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
+	void PreDraw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
+	void Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
 
 private:
 	/// =====================================

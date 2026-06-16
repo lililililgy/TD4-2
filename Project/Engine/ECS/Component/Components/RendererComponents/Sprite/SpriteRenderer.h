@@ -28,12 +28,12 @@ namespace ONEngine {
 
 
 namespace ComponentDebug {
-void SpriteDebug(SpriteRenderer* _sr, Asset::AssetCollection* _assetCollection);
+void SpriteDebug(SpriteRenderer* sr, Asset::AssetCollection* assetCollection);
 }
 
 /// json serialize
-void to_json(nlohmann::json& _j, const SpriteRenderer& _sr);
-void from_json(const nlohmann::json& _j, SpriteRenderer& _sr);
+void to_json(nlohmann::json& j, const SpriteRenderer& sr);
+void from_json(const nlohmann::json& j, SpriteRenderer& sr);
 
 /// ///////////////////////////////////////////////////
 /// sprite描画クラス
@@ -42,9 +42,9 @@ class SpriteRenderer final : public IComponent {
 	friend class SpriteUpdateSystem;
 	friend class AnimationPlayer;
 
-	friend void ComponentDebug::SpriteDebug(SpriteRenderer* _sr, Asset::AssetCollection* _assetCollection);
-	friend void to_json(nlohmann::json& _j, const SpriteRenderer& _sr);
-	friend void from_json(const nlohmann::json& _j, SpriteRenderer& _sr);
+	friend void ComponentDebug::SpriteDebug(SpriteRenderer* sr, Asset::AssetCollection* assetCollection);
+	friend void to_json(nlohmann::json& j, const SpriteRenderer& sr);
+	friend void from_json(const nlohmann::json& j, SpriteRenderer& sr);
 public:
 	/// ===================================================
 	/// public : methods
@@ -54,7 +54,7 @@ public:
 	~SpriteRenderer();
 
 	/// @brief 描画用データのセットアップ
-	void RenderingSetup(Asset::AssetCollection* _assetCollection);
+	void RenderingSetup(Asset::AssetCollection* assetCollection);
 
 private:
 	/// ===================================================
@@ -70,8 +70,8 @@ public:
 	/// ===================================================
 
 	/// ----- setter ----- ///
-	void SetColor(const Vector4& _color);
-	void SetUVTransform(const UVTransform& _uvTransform);
+	void SetColor(const Vector4& color);
+	void SetUVTransform(const UVTransform& uvTransform);
 
 	/// ----- getter ----- ///
 	const Vector4& GetColor() const;
@@ -80,7 +80,7 @@ public:
 
 	const UVTransform& GetUVTransform() const;
 
-	Vector2 GetTextureSize(Asset::AssetCollection* _assetCollection) const;
+	Vector2 GetTextureSize(Asset::AssetCollection* assetCollection) const;
 
 	/// @brief アニメーション制御用マテリアルへの参照取得
 	Asset::Material& GetMaterialForAnimation() { return material_; }
@@ -94,13 +94,13 @@ public:
 
 namespace MonoInternalMethods {
 	/// ここでコメントアウトしているのは今後実装する
-	//MonoString* InternalGetTexturePath(uint64_t _nativeHandle);
-	//void InternalSetTexturePath(uint64_t _nativeHandle, MonoString* _path);
+	//MonoString* InternalGetTexturePath(uint64_t nativeHandle);
+	//void InternalSetTexturePath(uint64_t nativeHandle, MonoString* path);
 
-	Vector4 InternalGetColor(uint64_t _nativeHandle);
-	void InternalSetColor(uint64_t _nativeHandle, Vector4 _color);
+	Vector4 InternalGetColor(uint64_t nativeHandle);
+	void InternalSetColor(uint64_t nativeHandle, Vector4 color);
 
-	Vector2 InternalGetTextureSize(uint64_t _nativeHandle);
+	Vector2 InternalGetTextureSize(uint64_t nativeHandle);
 }
 
 } /// ONEngine

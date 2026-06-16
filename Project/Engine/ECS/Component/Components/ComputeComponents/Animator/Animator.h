@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../../Interface/IComponent.h"
@@ -40,22 +40,22 @@ public:
     ~Animator() override = default;
 
     /// @brief アニメーションの再生
-    void Play(uint32_t _clipId, uint32_t _layerIndex = 0);
+    void Play(uint32_t clipId, uint32_t layerIndex = 0);
 
     /// @brief クロスフェード (Phase 2で詳細実装)
-    void CrossFade(uint32_t _clipId, float _duration, uint32_t _layerIndex = 0);
+    void CrossFade(uint32_t clipId, float duration, uint32_t layerIndex = 0);
 
     /// @brief 再生速度の設定
-    void SetPlaybackSpeed(float _speed, uint32_t _layerIndex = 0);
+    void SetPlaybackSpeed(float speed, uint32_t layerIndex = 0);
 
     /// @brief ループ設定
-    void SetLoop(bool _isLoop, uint32_t _layerIndex = 0);
+    void SetLoop(bool isLoop, uint32_t layerIndex = 0);
 
     /// @brief 指定したクリップの再生時間を取得
-    float GetAnimationDuration(uint32_t _clipId) const;
+    float GetAnimationDuration(uint32_t clipId) const;
 
     /// @brief デフォルトクリップの設定
-    void SetDefaultClip(uint32_t _clipId) { defaultClipId = _clipId; }
+    void SetDefaultClip(uint32_t clipId) { defaultClipId = clipId; }
     uint32_t GetDefaultClip() const { return defaultClipId; }
 
 public:
@@ -68,19 +68,19 @@ public:
 };
 
 /// @brief json変換
-void from_json(const nlohmann::json& _j, Animator& _animator);
-void to_json(nlohmann::json& _j, const Animator& _animator);
+void from_json(const nlohmann::json& j, Animator& animator);
+void to_json(nlohmann::json& j, const Animator& animator);
 
 namespace ComponentDebug {
-	void AnimatorDebug(Animator* _animator);
-	void AnimatorDebug(const std::vector<Animator*>& _animators);
+	void AnimatorDebug(Animator* animator);
+	void AnimatorDebug(const std::vector<Animator*>& animators);
 }
 
 /// @brief mono からのAnimator操作用関数
-void Internal_Play(uint64_t _nativeHandle, uint32_t _clipId, uint32_t _layerIndex);
-void Internal_CrossFade(uint64_t _nativeHandle, uint32_t _clipId, float _duration, uint32_t _layerIndex);
-void Internal_SetPlaybackSpeed(uint64_t _nativeHandle, float _speed, uint32_t _layerIndex);
-void Internal_SetLoop(uint64_t _nativeHandle, bool _isLoop, uint32_t _layerIndex);
-float Internal_GetAnimationDuration(uint64_t _nativeHandle, uint32_t _clipId);
+void Internal_Play(uint64_t nativeHandle, uint32_t clipId, uint32_t layerIndex);
+void Internal_CrossFade(uint64_t nativeHandle, uint32_t clipId, float duration, uint32_t layerIndex);
+void Internal_SetPlaybackSpeed(uint64_t nativeHandle, float speed, uint32_t layerIndex);
+void Internal_SetLoop(uint64_t nativeHandle, bool isLoop, uint32_t layerIndex);
+float Internal_GetAnimationDuration(uint64_t nativeHandle, uint32_t clipId);
 
 } // namespace ONEngine

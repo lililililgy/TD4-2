@@ -1,4 +1,4 @@
-﻿#include "SkinMeshSkeletonRenderingPipeline.h"
+#include "SkinMeshSkeletonRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -15,11 +15,11 @@ using namespace GizmoPrimitive;
 
 SkinMeshSkeletonRenderingPipeline::SkinMeshSkeletonRenderingPipeline() {}
 
-void SkinMeshSkeletonRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void SkinMeshSkeletonRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/Line/Line3D.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"./Packages/Shader/Render/Line/Line3D.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -47,7 +47,7 @@ void SkinMeshSkeletonRenderingPipeline::Initialize(ShaderCompiler* _shaderCompil
 		depthStencilDesc.StencilEnable = FALSE;
 		pipeline_->SetDepthStencilDesc(depthStencilDesc);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
@@ -59,7 +59,7 @@ void SkinMeshSkeletonRenderingPipeline::Initialize(ShaderCompiler* _shaderCompil
 		vertices_.reserve(maxVertexNum_);
 
 		/// vertex bufferの作成
-		vertexBuffer_.CreateResource(_dxm->GetDxDevice(), sizeof(VertexData) * maxVertexNum_);
+		vertexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(VertexData) * maxVertexNum_);
 		vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
 
 		vbv_.BufferLocation = vertexBuffer_.Get()->GetGPUVirtualAddress();
@@ -69,9 +69,9 @@ void SkinMeshSkeletonRenderingPipeline::Initialize(ShaderCompiler* _shaderCompil
 
 }
 
-void SkinMeshSkeletonRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void SkinMeshSkeletonRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
-	ComponentArray<SkinMeshRenderer>* skinMeshRendererArray = _ecs->GetComponentArray<SkinMeshRenderer>();
+	ComponentArray<SkinMeshRenderer>* skinMeshRendererArray = ecs->GetComponentArray<SkinMeshRenderer>();
 	if (!skinMeshRendererArray || skinMeshRendererArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -139,12 +139,12 @@ void SkinMeshSkeletonRenderingPipeline::Draw(class ECSGroup* _ecs, CameraCompone
 	std::memcpy(mappingData_, vertices_.data(), sizeof(VertexData) * vertices_.size());
 
 	/// 描画命令を行う
-	auto commandList = _dxCommand->GetCommandList();
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	auto commandList = dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
 	commandList->IASetVertexBuffers(0, 1, &vbv_);
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(commandList, 0);
+	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(commandList, 0);
 
 	/// draw call
 	commandList->DrawInstanced(static_cast<UINT>(vertices_.size()), 1, 0, 0);

@@ -1,4 +1,4 @@
-﻿#include "MeshRenderingPipeline.h"
+#include "MeshRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -13,19 +13,19 @@ using namespace ONEngine;
 #include "Engine/Core/DirectX12/GPUTimeStamp/GPUTimeStamp.h"
 
 
-MeshRenderingPipeline::MeshRenderingPipeline(Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {
+MeshRenderingPipeline::MeshRenderingPipeline(Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {
 }
 
 MeshRenderingPipeline::~MeshRenderingPipeline() {}
 
-void MeshRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void MeshRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 
 	{	/// pipeline create
 
 		/// shader compile
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Render/Mesh/Mesh.vs.hlsl", L"vs_6_0", Shader::Type::vs);
 		shader.CompileShader(L"./Packages/Shader/Render/Mesh/Mesh.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
@@ -60,7 +60,7 @@ void MeshRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManage
 		pipeline_->SetBlendDesc(BlendMode::Normal());
 		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 		// --- Telegraph専用パイプラインの生成 ---
 		telegraphPipeline_ = std::make_unique<GraphicsPipeline>();
@@ -86,24 +86,24 @@ void MeshRenderingPipeline::Initialize(ShaderCompiler* _shaderCompiler, DxManage
 		telegraphPipeline_->SetBlendDesc(BlendMode::Normal());
 		telegraphPipeline_->SetDepthStencilDesc(TelegraphDepthStencilDesc()); // Z-Test Always, Z-Write Off
 		
-		telegraphPipeline_->CreatePipeline(_dxm->GetDxDevice());
+		telegraphPipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 
 	{	/// buffer create
 
-		transformBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-		materialBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
-		textureIdBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
+		transformBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+		materialBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+		textureIdBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
 
 	}
 
 }
 
-void MeshRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera, DxCommand* _dxCommand) {
+void MeshRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
 
 	/// MeshRendererの取得＆存在チェック
-	ComponentArray<MeshRenderer>* meshRendererArray = _ecs->GetComponentArray<MeshRenderer>();
+	ComponentArray<MeshRenderer>* meshRendererArray = ecs->GetComponentArray<MeshRenderer>();
 	if (!meshRendererArray || meshRendererArray->GetUsedComponents().empty()) {
 		return;
 	}
@@ -128,7 +128,7 @@ void MeshRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera,
 	}
 
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	auto& textures = pAssetCollection_->GetTextures();
@@ -138,24 +138,24 @@ void MeshRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera,
 
 	/// 1. Backgroundの描画
 	if (queueMap.count(RenderQueue::Background)) {
-		pipeline_->SetPipelineStateForCommandList(_dxCommand);
-		_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
+		pipeline_->SetPipelineStateForCommandList(dxCommand);
+		camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
 		cmdList->SetGraphicsRootDescriptorTable(3, (*textures.begin()).GetSRVGPUHandle());
 		Drawing(cmdList, queueMap[RenderQueue::Background], textures);
 	}
 
 	/// 2. Telegraphの描画 (専用のZ-Test無視パイプライン)
 	if (queueMap.count(RenderQueue::Telegraph)) {
-		telegraphPipeline_->SetPipelineStateForCommandList(_dxCommand);
-		_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
+		telegraphPipeline_->SetPipelineStateForCommandList(dxCommand);
+		camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
 		cmdList->SetGraphicsRootDescriptorTable(3, (*textures.begin()).GetSRVGPUHandle());
 		Drawing(cmdList, queueMap[RenderQueue::Telegraph], textures);
 	}
 
 	/// 3. Defaultの描画 (通常のパイプライン)
 	if (queueMap.count(RenderQueue::Default)) {
-		pipeline_->SetPipelineStateForCommandList(_dxCommand);
-		_camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
+		pipeline_->SetPipelineStateForCommandList(dxCommand);
+		camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
 		cmdList->SetGraphicsRootDescriptorTable(3, (*textures.begin()).GetSRVGPUHandle());
 		Drawing(cmdList, queueMap[RenderQueue::Default], textures);
 	}
@@ -164,8 +164,8 @@ void MeshRenderingPipeline::Draw(class ECSGroup* _ecs, CameraComponent* _camera,
 	GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::MeshRendering);
 }
 
-void MeshRenderingPipeline::Drawing(ID3D12GraphicsCommandList* _cmdList, std::unordered_map<std::string, std::list<MeshRenderer*>>& _pathMeshMap, const std::vector<Asset::Texture>& _textures) {
-	for (auto& [meshPath, renderers] : _pathMeshMap) {
+void MeshRenderingPipeline::Drawing(ID3D12GraphicsCommandList* cmdList, std::unordered_map<std::string, std::list<MeshRenderer*>>& pathMeshMap, const std::vector<Asset::Texture>& textures) {
+	for (auto& [meshPath, renderers] : pathMeshMap) {
 
 		/// modelの取得、なければ次へ
 		const Asset::Model*&& model = pAssetCollection_->GetModel(meshPath);
@@ -179,7 +179,7 @@ void MeshRenderingPipeline::Drawing(ID3D12GraphicsCommandList* _cmdList, std::un
 			renderer->SetupRenderData(pAssetCollection_);
 
 			uint32_t id = renderer->GetGpuMaterial().baseTextureId;
-			if(id < 0 || id >= _textures.size()) {
+			if(id < 0 || id >= textures.size()) {
 				continue;
 			}
 
@@ -190,7 +190,7 @@ void MeshRenderingPipeline::Drawing(ID3D12GraphicsCommandList* _cmdList, std::un
 
 			textureIdBuffer_.SetMappedData(
 				transformIndex_,
-				_textures[renderer->GetGpuMaterial().baseTextureId].GetSRVDescriptorIndex()
+				textures[renderer->GetGpuMaterial().baseTextureId].GetSRVDescriptorIndex()
 			);
 
 			/// transform のセット
@@ -204,21 +204,21 @@ void MeshRenderingPipeline::Drawing(ID3D12GraphicsCommandList* _cmdList, std::un
 		}
 
 		/// 上でセットしたデータをバインド
-		materialBuffer_.SRVBindForGraphicsCommandList(_cmdList, 1);
-		textureIdBuffer_.SRVBindForGraphicsCommandList(_cmdList, 2);
-		transformBuffer_.SRVBindForGraphicsCommandList(_cmdList, 4);
+		materialBuffer_.SRVBindForGraphicsCommandList(cmdList, 1);
+		textureIdBuffer_.SRVBindForGraphicsCommandList(cmdList, 2);
+		transformBuffer_.SRVBindForGraphicsCommandList(cmdList, 4);
 
 		/// 現在のinstance idをセット
-		_cmdList->SetGraphicsRoot32BitConstant(5, instanceIndex_, 0);
+		cmdList->SetGraphicsRoot32BitConstant(5, instanceIndex_, 0);
 
 		/// mesh の描画
 		for (auto& mesh : model->GetMeshes()) {
 			/// vbv, ibvのセット
-			_cmdList->IASetVertexBuffers(0, 1, &mesh->GetVBV());
-			_cmdList->IASetIndexBuffer(&mesh->GetIBV());
+			cmdList->IASetVertexBuffers(0, 1, &mesh->GetVBV());
+			cmdList->IASetIndexBuffer(&mesh->GetIBV());
 
 			/// 描画
-			_cmdList->DrawIndexedInstanced(
+			cmdList->DrawIndexedInstanced(
 				static_cast<UINT>(mesh->GetIndices().size()),
 				static_cast<UINT>(renderers.size()),
 				0, 0, 0

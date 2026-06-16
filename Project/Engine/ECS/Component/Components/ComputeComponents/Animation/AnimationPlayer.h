@@ -27,7 +27,7 @@ public:
     void Stop();
 
     /// @brief 使用するアニメーションクリップを設定する
-    void SetClip(const std::string& _path);
+    void SetClip(const std::string& path);
 
     /// ===============================================
     /// public : objects
@@ -71,11 +71,11 @@ public:
     void ClearBindings();
 };
 
-void from_json(const nlohmann::json& _j, AnimationPlayer& _a);
-void to_json(nlohmann::json& _j, const AnimationPlayer& _a);
+void from_json(const nlohmann::json& j, AnimationPlayer& a);
+void to_json(nlohmann::json& j, const AnimationPlayer& a);
 
 namespace ComponentDebug {
-    void AnimationPlayerDebug(AnimationPlayer* _player);
+    void AnimationPlayerDebug(AnimationPlayer* player);
 }
 
 } /// namespace ONEngine

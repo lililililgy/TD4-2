@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <optional>
@@ -20,21 +20,21 @@ class Material;
 Material GenerateMaterial();
 
 /// @brief Materialファイルを生成
-/// @param _filepath 生成先のファイルパス
-/// @param _material 参照するマテリアル nullptrならデフォルト値で生成
-void GenerateMaterialFile(const std::string& _filepath, Material* _material);
+/// @param filepath 生成先のファイルパス
+/// @param material 参照するマテリアル nullptrならデフォルト値で生成
+void GenerateMaterialFile(const std::string& filepath, Material* material);
 
 /// Json変換
-void from_json(const nlohmann::json& _j, Material& _material);
-void to_json(nlohmann::json& _j, const Material& _material);
+void from_json(const nlohmann::json& j, Material& material);
+void to_json(nlohmann::json& j, const Material& material);
 
 /// ////////////////////////////////////////////////////////
 /// マテリアル
 /// ////////////////////////////////////////////////////////
 class Material final : public IAsset {
 	/// friend functions
-	friend void from_json(const nlohmann::json& _j, Material& _material);
-	friend void to_json(nlohmann::json& _j, const Material& _material);
+	friend void from_json(const nlohmann::json& j, Material& material);
+	friend void to_json(nlohmann::json& j, const Material& material);
 
 public:
 
@@ -65,8 +65,8 @@ public:
 	const Guid& GetBaseTextureGuid() const;
 
 	/// @brief base textureのGuidを設定
-	/// @param _guid base textureのGuid
-	void SetBaseTextureGuid(const Guid& _guid);
+	/// @param guid base textureのGuid
+	void SetBaseTextureGuid(const Guid& guid);
 
 
 	/// @brief 法線テクスチャのGuidを持っているかチェック
@@ -78,8 +78,8 @@ public:
 	const Guid& GetNormalTextureGuid() const;
 
 	/// @brief normal textureのGuidを設定
-	/// @param _guid normal textureのGuid
-	void SetNormalTextureGuid(const Guid& _guid);
+	/// @param guid normal textureのGuid
+	void SetNormalTextureGuid(const Guid& guid);
 
 private:
 	/// ==================================================

@@ -18,44 +18,44 @@ using namespace ONEngine;
 #include "Engine/Script/MonoScriptEngine.h"
 #include "Engine/Core/Utility/FileSystem/FileSystem.h"
 
-SceneIO::SceneIO(EntityComponentSystem* _ecs) : pEcs_(_ecs) {
+SceneIO::SceneIO(EntityComponentSystem* ecs) : pEcs_(ecs) {
 	fileName_ = "";
 	fileDirectory_ = "./Assets/Scene/";
 }
 SceneIO::~SceneIO() {}
 
-void SceneIO::Output(const std::string& _sceneName, ECSGroup* _ecsGroup) {
+void SceneIO::Output(const std::string& sceneName, ECSGroup* ecsGroup) {
 	/* sceneをjsonに保存する */
-	fileName_ = _sceneName + ".scene";
-	SaveScene(fileName_, _ecsGroup);
+	fileName_ = sceneName + ".scene";
+	SaveScene(fileName_, ecsGroup);
 }
 
-void SceneIO::Input(const std::string& _sceneName, ECSGroup* _ecsGroup) {
+void SceneIO::Input(const std::string& sceneName, ECSGroup* ecsGroup) {
 	/* jsonを読み込んでsceneに変換する */
-	fileName_ = _sceneName + ".scene";
-	LoadScene(fileName_, _ecsGroup);
+	fileName_ = sceneName + ".scene";
+	LoadScene(fileName_, ecsGroup);
 }
 
-void SceneIO::OutputTemporary(ECSGroup* _ecsGroup) {
+void SceneIO::OutputTemporary(ECSGroup* ecsGroup) {
 	tempSceneJson_.clear();
-	SaveSceneToJson(tempSceneJson_, _ecsGroup);
+	SaveSceneToJson(tempSceneJson_, ecsGroup);
 }
 
-void SceneIO::InputTemporary(ECSGroup* _ecsGroup) {
-	MonoScriptEngine::GetInstance().ClearECSGroup(_ecsGroup->GetGroupName());
-	LoadSceneFromJson(tempSceneJson_, _ecsGroup);
+void SceneIO::InputTemporary(ECSGroup* ecsGroup) {
+	MonoScriptEngine::GetInstance().ClearECSGroup(ecsGroup->GetGroupName());
+	LoadSceneFromJson(tempSceneJson_, ecsGroup);
 }
 
-void SceneIO::SaveScene(const std::string& _filename, ECSGroup* _ecsGroup) {
+void SceneIO::SaveScene(const std::string& filename, ECSGroup* ecsGroup) {
 	nlohmann::json sceneJson = nlohmann::json::object();
-	std::string sceneName = FileSystem::FileNameWithoutExtension(_filename);
+	std::string sceneName = FileSystem::FileNameWithoutExtension(filename);
 	std::string sceneDir = fileDirectory_ + sceneName + "/";
 	std::filesystem::create_directories(sceneDir);
 
 	// 現在のシーンに含まれるエンティティのファイル名リスト
 	std::unordered_set<std::string> currentEntityFiles;
 
-	auto& entities = _ecsGroup->GetEntities();
+	auto& entities = ecsGroup->GetEntities();
 	for (auto& entity : entities) {
 		if (entity->GetId() < 0) continue;
 
@@ -105,15 +105,15 @@ void SceneIO::SaveScene(const std::string& _filename, ECSGroup* _ecsGroup) {
 		}
 	}
 
-	OutputJson(sceneJson, _filename);
+	OutputJson(sceneJson, filename);
 }
 
-void SceneIO::LoadScene(const std::string& _filename, ECSGroup* _ecsGroup) {
-	MonoScriptEngine::GetInstance().ClearECSGroup(_ecsGroup->GetGroupName());
+void SceneIO::LoadScene(const std::string& filename, ECSGroup* ecsGroup) {
+	MonoScriptEngine::GetInstance().ClearECSGroup(ecsGroup->GetGroupName());
 
-	std::ifstream inputFile(fileDirectory_ + _filename);
+	std::ifstream inputFile(fileDirectory_ + filename);
 	if (!inputFile.is_open()) {
-		Console::Log("SceneIO: ファイルのオープンに失敗しました: " + fileDirectory_ + _filename);
+		Console::Log("SceneIO: ファイルのオープンに失敗しました: " + fileDirectory_ + filename);
 		return;
 	}
 
@@ -124,7 +124,7 @@ void SceneIO::LoadScene(const std::string& _filename, ECSGroup* _ecsGroup) {
 	if (!sceneJson.contains("entities")) return;
 
 	nlohmann::json fullSceneJson = nlohmann::json::object();
-	std::string sceneDirName = FileSystem::FileNameWithoutExtension(_filename);
+	std::string sceneDirName = FileSystem::FileNameWithoutExtension(filename);
 
 	for (const auto& entityRef : sceneJson["entities"]) {
 		if (entityRef.contains("path")) {
@@ -171,12 +171,12 @@ void SceneIO::LoadScene(const std::string& _filename, ECSGroup* _ecsGroup) {
 		}
 	}
 
-	LoadSceneFromJson(fullSceneJson, _ecsGroup);
+	LoadSceneFromJson(fullSceneJson, ecsGroup);
 }
 
-void SceneIO::SaveSceneToJson(nlohmann::json& _output, ECSGroup* _ecsGroup) {
+void SceneIO::SaveSceneToJson(nlohmann::json& output, ECSGroup* ecsGroup) {
 
-	auto& entities = _ecsGroup->GetEntities();
+	auto& entities = ecsGroup->GetEntities();
 	for (auto& entity : entities) {
 		/// マイナスIDはruntimeに生成されたエンティティなのでスキップ
 		if (entity->GetId() < 0) {
@@ -192,21 +192,21 @@ void SceneIO::SaveSceneToJson(nlohmann::json& _output, ECSGroup* _ecsGroup) {
 			continue; // エンティティの情報が空ならスキップ
 		}
 
-		_output["entities"].push_back(entityJson);
+		output["entities"].push_back(entityJson);
 	}
 
 }
 
-void SceneIO::LoadSceneFromJson(const nlohmann::json& _input, ECSGroup* _ecsGroup) {
+void SceneIO::LoadSceneFromJson(const nlohmann::json& input, ECSGroup* ecsGroup) {
 	std::unordered_map<Guid, GameEntity*> entityMap;
 	std::unordered_map<uint32_t, GameEntity*> oldIdMap; // 互換性用
 
-	if (!_input.contains("entities")) {
+	if (!input.contains("entities")) {
 		return;
 	}
 
 	/// 実際にシーンに変換する
-	for (const auto& entityJson : _input["entities"]) {
+	for (const auto& entityJson : input["entities"]) {
 		const std::string& prefabName = entityJson.value("prefabName", "");
 		const std::string& entityName = entityJson.value("name", "");
 		
@@ -220,9 +220,9 @@ void SceneIO::LoadSceneFromJson(const nlohmann::json& _input, ECSGroup* _ecsGrou
 			guid = GenerateGuid();
 		}
 
-		GameEntity* entity = _ecsGroup->GenerateEntity(guid, false);
+		GameEntity* entity = ecsGroup->GenerateEntity(guid, false);
 		if (!prefabName.empty()) {
-			_ecsGroup->GetEntityCollection()->ApplyPrefabToEntity(entity, prefabName);
+			ecsGroup->GetEntityCollection()->ApplyPrefabToEntity(entity, prefabName);
 		}
 
 		if (entity) {
@@ -230,7 +230,7 @@ void SceneIO::LoadSceneFromJson(const nlohmann::json& _input, ECSGroup* _ecsGrou
 			entity->name_ = entityName;
 
 			/// シーンに保存されたjsonからエンティティを復元
-			EntityJsonConverter::FromJson(entityJson, entity, _ecsGroup->GetGroupName());
+			EntityJsonConverter::FromJson(entityJson, entity, ecsGroup->GetGroupName());
 
 			entityMap[guid] = entity;
 			if (entityJson.contains("id")) {
@@ -241,7 +241,7 @@ void SceneIO::LoadSceneFromJson(const nlohmann::json& _input, ECSGroup* _ecsGrou
 
 
 	/// エンティティの親子関係を設定
-	for (const auto& entityJson : _input["entities"]) {
+	for (const auto& entityJson : input["entities"]) {
 		GameEntity* entity = nullptr;
 		if (entityJson.contains("guid")) {
 			entity = entityMap[Guid::FromString(entityJson["guid"])];
@@ -268,21 +268,21 @@ void SceneIO::LoadSceneFromJson(const nlohmann::json& _input, ECSGroup* _ecsGrou
 	}
 
 	// C++でロードしたデータをC#側に同期する
-	MonoScriptEngine::GetInstance().SyncInitialComponentsToCS(_ecsGroup);
+	MonoScriptEngine::GetInstance().SyncInitialComponentsToCS(ecsGroup);
 }
 
-void SceneIO::OutputJson(const nlohmann::json& _json, const std::string& _filename) {
+void SceneIO::OutputJson(const nlohmann::json& json, const std::string& filename) {
 	/// ファイルが無かったら生成する
-	if (!std::filesystem::exists(fileDirectory_ + _filename)) {
+	if (!std::filesystem::exists(fileDirectory_ + filename)) {
 		std::filesystem::create_directories(fileDirectory_);
 	}
 
 	/// ファイルに保存する
-	std::ofstream outputFile(fileDirectory_ + _filename);
+	std::ofstream outputFile(fileDirectory_ + filename);
 	if (!outputFile.is_open()) {
-		Console::LogError("SceneIO: ファイルのオープンに失敗しました: " + fileDirectory_ + _filename);
+		Console::LogError("SceneIO: ファイルのオープンに失敗しました: " + fileDirectory_ + filename);
 	}
 
-	outputFile << _json.dump(4);
+	outputFile << json.dump(4);
 	outputFile.close();
 }

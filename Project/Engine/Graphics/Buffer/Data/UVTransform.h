@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Engine/Core/Utility/Math/Vector2.h"
@@ -17,7 +17,7 @@ struct UVTransform {
 
 
 /// uv transform
-void to_json(nlohmann::json& _j, const UVTransform& _uvTransform);
-void from_json(const nlohmann::json& _j, UVTransform& _uvTransform);
+void to_json(nlohmann::json& j, const UVTransform& uvTransform);
+void from_json(const nlohmann::json& j, UVTransform& uvTransform);
 
 } /// ONEngine

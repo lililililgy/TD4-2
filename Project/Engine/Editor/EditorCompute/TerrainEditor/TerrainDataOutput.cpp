@@ -1,4 +1,4 @@
-﻿#include "TerrainDataOutput.h"
+#include "TerrainDataOutput.h"
 
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
@@ -12,13 +12,13 @@ using namespace Editor;
 TerrainDataOutput::TerrainDataOutput() {}
 TerrainDataOutput::~TerrainDataOutput() {}
 
-void TerrainDataOutput::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) {
+void TerrainDataOutput::Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) {
 
-	pDxManager_ = _dxm;
+	pDxManager_ = dxm;
 
 	{	/// shader
 		ONEngine::Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Editor/TerrainDataOutput.cs.hlsl", L"cs_6_6", ONEngine::Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ONEngine::ComputePipeline>();
@@ -32,27 +32,27 @@ void TerrainDataOutput::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ON
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);	/// UAV_OUTPUT_TEXTURE
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2);	/// UAV_OUTPUT_SPLAT_BLEND_TEXTURE
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
 	{	/// buffer
-		terrainSize_.Create(_dxm->GetDxDevice());
-		outputVertexTexture_.CreateUAVTexture(1000, 1000, _dxm->GetDxDevice(), _dxm->GetDxSRVHeap(), DXGI_FORMAT_R16G16B16A16_UNORM);
-		outputSplatBlendTexture_.CreateUAVTexture(1000, 1000, _dxm->GetDxDevice(), _dxm->GetDxSRVHeap());
+		terrainSize_.Create(dxm->GetDxDevice());
+		outputVertexTexture_.CreateUAVTexture(1000, 1000, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), DXGI_FORMAT_R16G16B16A16_UNORM);
+		outputSplatBlendTexture_.CreateUAVTexture(1000, 1000, dxm->GetDxDevice(), dxm->GetDxSRVHeap());
 	}
 
 
 }
 
-void TerrainDataOutput::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* /*_assetCollection*/) {
+void TerrainDataOutput::Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* /*assetCollection*/) {
 	/// 出力をするときしか処理しない
 	if (!(ONEngine::Input::PressKey(DIK_LCONTROL) && ONEngine::Input::TriggerKey(DIK_O))) {
 		return;
 	}
 
 	/// 地形の component があるのかチェック
-	ONEngine::ComponentArray<ONEngine::Terrain>* terrainArray = _ecs->GetCurrentGroup()->GetComponentArray<ONEngine::Terrain>();
+	ONEngine::ComponentArray<ONEngine::Terrain>* terrainArray = ecs->GetCurrentGroup()->GetComponentArray<ONEngine::Terrain>();
 	if (!terrainArray) {
 		return;
 	}
@@ -77,8 +77,8 @@ void TerrainDataOutput::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine:
 	terrainSize_.SetMappedData({ width, height });
 
 	/// pipelineの設定&実行
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
-	auto cmdList = _dxCommand->GetCommandList();
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
+	auto cmdList = dxCommand->GetCommandList();
 
 	terrainSize_.BindForComputeCommandList(cmdList, CBV_TERRAIN_SIZE);
 	pTerrain->GetRwVertices().UAVBindForComputeCommandList(cmdList, UAV_VERTICES);
@@ -92,8 +92,8 @@ void TerrainDataOutput::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine:
 		1
 	);
 
-	outputVertexTexture_.OutputTexture(L"./Packages/Textures/Terrain/TerrainVertex.png", pDxManager_->GetDxDevice(), _dxCommand);
-	outputSplatBlendTexture_.OutputTexture(L"./Packages/Textures/Terrain/TerrainSplatBlend.png", pDxManager_->GetDxDevice(), _dxCommand);
+	outputVertexTexture_.OutputTexture(L"./Packages/Textures/Terrain/TerrainVertex.png", pDxManager_->GetDxDevice(), dxCommand);
+	outputSplatBlendTexture_.OutputTexture(L"./Packages/Textures/Terrain/TerrainSplatBlend.png", pDxManager_->GetDxDevice(), dxCommand);
 	pDxManager_->GetDxSRVHeap()->BindToCommandList(
 		pDxManager_->GetDxCommand()->GetCommandList()
 	);

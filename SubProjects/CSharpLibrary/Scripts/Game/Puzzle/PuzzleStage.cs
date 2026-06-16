@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -294,9 +294,9 @@ public class PuzzleStage : MonoScript {
 	/// <summary>
 	/// プレイヤーが移動可能かどうかをチェックする
 	/// </summary>
-	private bool CheckPlayerMoving(Vector2Int _currentAddress, Vector2Int _moveDir) {
+	private bool CheckPlayerMoving(Vector2Int currentAddress, Vector2Int moveDir) {
 		/// 移動しないなら false
-		if (_moveDir == Vector2Int.zero) {
+		if (moveDir == Vector2Int.zero) {
 			return false;
 		}
 
@@ -306,7 +306,7 @@ public class PuzzleStage : MonoScript {
 		}
 
 		/// 移動方向が範囲外なら false
-		Vector2Int newAddress = _currentAddress + _moveDir;
+		Vector2Int newAddress = currentAddress + moveDir;
 		if (newAddress.x < 0 || newAddress.x >= mapData_[0].Count || newAddress.y < 0
 			|| newAddress.y >= mapData_.Count) {
 			return false;
@@ -329,33 +329,33 @@ public class PuzzleStage : MonoScript {
 	/// <summary>
 	/// 移動後のmap dataの更新を行う
 	/// </summary>
-	public void Moved(Vector2Int _currentAddress, Vector2Int _movedAddress) {
+	public void Moved(Vector2Int currentAddress, Vector2Int movedAddress) {
 		/// x,zのどちらに移動したのか確認
 
-		if (_currentAddress.x != _movedAddress.x) {
+		if (currentAddress.x != movedAddress.x) {
 			/// x軸に移動した
-			int yAddress = _currentAddress.y;
-			int subLenght = Mathf.Abs(_movedAddress.x - _currentAddress.x);
+			int yAddress = currentAddress.y;
+			int subLenght = Mathf.Abs(movedAddress.x - currentAddress.x);
 
 			for (int i = 0; i < subLenght; i++) {
-				int value = mapData_[yAddress][_currentAddress.x + i];
+				int value = mapData_[yAddress][currentAddress.x + i];
 				if (value == (int)MAPDATA.BLOCK_BLACK) {
-					mapData_[yAddress][_currentAddress.x + i] = (int)MAPDATA.BLOCK_WHTIE;
+					mapData_[yAddress][currentAddress.x + i] = (int)MAPDATA.BLOCK_WHTIE;
 				} else if (value == (int)MAPDATA.BLOCK_WHTIE) {
-					mapData_[yAddress][_currentAddress.x + i] = (int)MAPDATA.BLOCK_BLACK;
+					mapData_[yAddress][currentAddress.x + i] = (int)MAPDATA.BLOCK_BLACK;
 				}
 			}
-		} else if (_currentAddress.y != _movedAddress.y) {
+		} else if (currentAddress.y != movedAddress.y) {
 			/// y軸に移動した
-			int xAddress = _currentAddress.x;
-			int subLength = Mathf.Abs(_movedAddress.y - _currentAddress.y);
+			int xAddress = currentAddress.x;
+			int subLength = Mathf.Abs(movedAddress.y - currentAddress.y);
 
 			for (int i = 0; i < subLength; i++) {
-				int value = mapData_[_currentAddress.y + i][xAddress];
+				int value = mapData_[currentAddress.y + i][xAddress];
 				if (value == (int)MAPDATA.BLOCK_BLACK) {
-					mapData_[_currentAddress.y + i][xAddress] = (int)MAPDATA.BLOCK_WHTIE;
+					mapData_[currentAddress.y + i][xAddress] = (int)MAPDATA.BLOCK_WHTIE;
 				} else if (value == (int)MAPDATA.BLOCK_WHTIE) {
-					mapData_[_currentAddress.y + i][xAddress] = (int)MAPDATA.BLOCK_BLACK;
+					mapData_[currentAddress.y + i][xAddress] = (int)MAPDATA.BLOCK_BLACK;
 				}
 			}
 		}
@@ -364,13 +364,13 @@ public class PuzzleStage : MonoScript {
 
 
 
-	private bool CheckIsGoaled(PuzzlePlayer _puzzlePlayer) {
+	private bool CheckIsGoaled(PuzzlePlayer puzzlePlayer) {
 		/// プレイヤーのアドレスを確認
-		if (!_puzzlePlayer) {
+		if (!puzzlePlayer) {
 			return false; //!< puzzle playerが null
 		}
 
-		Vector2Int address = _puzzlePlayer.blockData.address;
+		Vector2Int address = puzzlePlayer.blockData.address;
 		if (CheckIsGoal(mapData_[address.y][address.x])) {
 			return true; //!< 現在いる場所がゴールだったら
 		}
@@ -506,40 +506,40 @@ public class PuzzleStage : MonoScript {
 		return blocks_;
 	}
 
-	public bool CheckIsBlock(int _mapValue) {
-		if (_mapValue == (int)MAPDATA.BLOCK_BLACK || _mapValue == (int)MAPDATA.BLOCK_WHTIE) {
+	public bool CheckIsBlock(int mapValue) {
+		if (mapValue == (int)MAPDATA.BLOCK_BLACK || mapValue == (int)MAPDATA.BLOCK_WHTIE) {
 			return true;
 		}
 		return false;
 	}
 
-	public bool CheckIsConstantBlock(int _mapValue) {
-		if (_mapValue == (int)MAPDATA.CONSTANT_BLOCK_BLACK || _mapValue == (int)MAPDATA.CONSTANT_BLOCK_WHITE) {
+	public bool CheckIsConstantBlock(int mapValue) {
+		if (mapValue == (int)MAPDATA.CONSTANT_BLOCK_BLACK || mapValue == (int)MAPDATA.CONSTANT_BLOCK_WHITE) {
 			return true;
 		}
 		return false;
 	}
 
-	public bool CheckIsGoal(int _mapValue) {
-		if (_mapValue == (int)MAPDATA.GOAL_BLACK || _mapValue == (int)MAPDATA.GOAL_WHITE) {
+	public bool CheckIsGoal(int mapValue) {
+		if (mapValue == (int)MAPDATA.GOAL_BLACK || mapValue == (int)MAPDATA.GOAL_WHITE) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public int GetMapValue(Vector2Int _address) {
-		if (_address.y < 0 || _address.y >= mapData_.Count || _address.x < 0 || _address.x >= mapData_[0].Count) {
+	public int GetMapValue(Vector2Int address) {
+		if (address.y < 0 || address.y >= mapData_.Count || address.x < 0 || address.x >= mapData_[0].Count) {
 			return -1;
 		}
-		return mapData_[_address.y][_address.x];
+		return mapData_[address.y][address.x];
 	}
 
-	public void SetMapValue(Vector2Int _address, int _mapValue) {
-		if (_address.y < 0 || _address.y >= mapData_.Count || _address.x < 0 || _address.x >= mapData_[0].Count) {
+	public void SetMapValue(Vector2Int address, int mapValue) {
+		if (address.y < 0 || address.y >= mapData_.Count || address.x < 0 || address.x >= mapData_[0].Count) {
 			return;
 		}
-		mapData_[_address.y][_address.x] = _mapValue;
+		mapData_[address.y][address.x] = mapValue;
 	}
 
 	public bool IsExecutingCommand() {

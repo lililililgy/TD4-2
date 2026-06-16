@@ -18,7 +18,7 @@ class Input final {
 	friend class GameFramework;
 	friend class MonoScriptEngine;
 
-	static void Initialize(class WindowManager* _windowManager, Editor::ImGuiManager* _imguiManager);
+	static void Initialize(class WindowManager* windowManager, Editor::ImGuiManager* imguiManager);
 	static void Update();
 	static void Finalize();
 
@@ -31,38 +31,38 @@ public:
 	/// ----- Keyboard ----- ///
 
 	/// @brief キーが押されているか
-	/// @param _key DIK_*** 定数
+	/// @param key DIK_*** 定数
 	/// @return true: 押されている, false: 押されていない
-	static bool PressKey(int _key);
+	static bool PressKey(int key);
 
 	/// @brief キーがトリガーされたか
-	/// @param _key DIK_*** 定数
+	/// @param key DIK_*** 定数
 	/// @return true: トリガーされた, false: トリガーされていない
-	static bool TriggerKey(int _key);
+	static bool TriggerKey(int key);
 
 	/// @brief キーが離されたか
-	/// @param _key DIK_*** 定数
+	/// @param key DIK_*** 定数
 	/// @return true: 離された, false: 離されていない
-	static bool ReleaseKey(int _key);
+	static bool ReleaseKey(int key);
 
 
 	
 	/// ----- mouse ----- ///
 
 	/// @brief マウスボタンが押されているか
-	/// @param _button Mouse::*** 定数
+	/// @param button Mouse::*** 定数
 	/// @return true: 押されている, false: 押されていない
-	static bool PressMouse(int _button);
+	static bool PressMouse(int button);
 
 	/// @brief マウスボタンがトリガーされたか
-	/// @param _button Mouse::*** 定数
+	/// @param button Mouse::*** 定数
 	/// @return true: トリガーされた, false: トリガーされていない
-	static bool TriggerMouse(int _button);
+	static bool TriggerMouse(int button);
 
 	/// @brief マウスボタンが離されたか
-	/// @param _button Mouse::*** 定数
+	/// @param button Mouse::*** 定数
 	/// @return true: 離された, false: 離されていない
-	static bool ReleaseMouse(int _button);
+	static bool ReleaseMouse(int button);
 
 
 	/// @brief マウスのホイールの回転量を取得
@@ -77,36 +77,36 @@ public:
 
 
 	/// @brief ImGuiImage状でのマウス位置を正規化した座標で取得
-	/// @param _imageName ImGuiImageの名前
+	/// @param imageName ImGuiImageの名前
 	/// @return 1280x720内でのマウス位置
-	static const Vector2& GetImGuiImageMousePosNormalized(const std::string& _imageName);
+	static const Vector2& GetImGuiImageMousePosNormalized(const std::string& imageName);
 
 	/// @brief ImGuiImageの位置を取得
-	/// @param _imageName Imageの名前
-	static const Vector2& GetImGuiImagePos(const std::string& _imageName);
+	/// @param imageName Imageの名前
+	static const Vector2& GetImGuiImagePos(const std::string& imageName);
 
 	/// @brief ImGuiImageのサイズを取得
-	/// @param _imageName Imageの名前
-	static const Vector2& GetImGuiImageSize(const std::string& _imageName);
+	/// @param imageName Imageの名前
+	static const Vector2& GetImGuiImageSize(const std::string& imageName);
 
 
 
 	/// ----- gamepad ----- ///
 
 	/// @brief Gamepadのボタンが押されているか
-	/// @param _button Gamepad::*** 定数
+	/// @param button Gamepad::*** 定数
 	/// @return true: 押されている, false: 押されていない
-	static bool PressGamepad(int _button);
+	static bool PressGamepad(int button);
 
 	/// @brief Gamepadのボタンがトリガーされたか
-	/// @param _button Gamepad::*** 定数
+	/// @param button Gamepad::*** 定数
 	/// @return true: トリガーされた, false: トリガーされていない
-	static bool TriggerGamepad(int _button);
+	static bool TriggerGamepad(int button);
 
 	/// @brief Gamepadのボタンが離されたか
-	/// @param _button Gamepad::*** 定数
+	/// @param button Gamepad::*** 定数
 	/// @return rue: 離された, false: 離されていない
-	static bool ReleaseGamepad(int _button);
+	static bool ReleaseGamepad(int button);
 
 
 	/// @brief Gamepadの左スティックの値を取得

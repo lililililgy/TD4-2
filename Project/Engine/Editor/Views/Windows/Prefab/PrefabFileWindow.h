@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../../EditorViewCollection.h"
@@ -28,7 +28,7 @@ public:
 	/// public : methods
 	/// =====================================================
 
-	PrefabFileWindow(ONEngine::EntityComponentSystem* _ecs, ONEngine::Asset::AssetCollection* _assetCollection, InspectorWindow* _inspector);
+	PrefabFileWindow(ONEngine::EntityComponentSystem* ecs, ONEngine::Asset::AssetCollection* assetCollection, InspectorWindow* inspector);
 	~PrefabFileWindow() override = default;
 
 	void ShowImGui() override;
@@ -38,8 +38,8 @@ public:
 	void ShowPrefabFileList();
 
 	/// @brief Prefabファイルを再読み込みする
-	/// @param _tex ImageButtonに使うテクスチャ
-	void ReloadPrefabFiles(const ONEngine::Asset::Texture* _tex);
+	/// @param tex ImageButtonに使うテクスチャ
+	void ReloadPrefabFiles(const ONEngine::Asset::Texture* tex);
 
 	/// @brief 新規Prefab作成ウィンドウ
 	void AddNewPrefabWindow();

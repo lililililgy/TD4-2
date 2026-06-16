@@ -1,4 +1,4 @@
-﻿#include "GameFramework.h"
+#include "GameFramework.h"
 
 using namespace ONEngine;
 
@@ -31,7 +31,7 @@ GameFramework::~GameFramework() {
 	windowManager_->Finalize();
 }
 
-void GameFramework::Initialize(const GameFrameworkConfig& _startSetting) {
+void GameFramework::Initialize(const GameFrameworkConfig& startSetting) {
 
 	/// 初期化にかかる時間の計測開始
 	auto startTime = std::chrono::high_resolution_clock::now();
@@ -39,61 +39,11 @@ void GameFramework::Initialize(const GameFrameworkConfig& _startSetting) {
 	/// ログ出力の初期化
 	Console::Initialize();
 
-	/// --------------------------------------------------
-	/// 各クラスのインスタンスを生成する
-	/// --------------------------------------------------
-	dxManager_ = std::make_unique<DxManager>();
-	windowManager_ = std::make_unique<WindowManager>(dxManager_.get());
-	entityComponentSystem_ = std::make_unique<EntityComponentSystem>(dxManager_.get());
-	renderingFramework_ = std::make_unique<RenderingFramework>();
-	sceneManager_ = std::make_unique<SceneManager>(entityComponentSystem_.get());
-
-	editorManager_ = std::make_unique<Editor::EditorManager>(entityComponentSystem_.get());
-	imGuiManager_ = std::make_unique<Editor::ImGuiManager>(dxManager_.get(), windowManager_.get(), entityComponentSystem_.get(), editorManager_.get(), sceneManager_.get());
-
-
-	/// --------------------------------------------------
-	/// 各クラスの初期化を行う
-	/// --------------------------------------------------
-
-	dxManager_->Initialize();
-	ThreadPool::Instance().Initialize(dxManager_->GetDxDevice(), 4);
-	windowManager_->Initialize();
-
-	/// main windowの生成
-#ifdef DEBUG_MODE
-	UINT style = WS_OVERLAPPEDWINDOW;
-	style &= ~WS_THICKFRAME;
-	windowManager_->GenerateWindow(_startSetting.windowName + L" : debug mode", DebugConfig::kDebugWindowSize, WindowManager::WindowType::Main, style);
-#else
-	windowManager_->GenerateWindow(_startSetting.windowName, _startSetting.windowSize, WindowManager::WindowType::Main);
-#endif // DEBUG_MODE
-
-	MonoScriptEngine::GetInstance().SetEcsPtr(entityComponentSystem_.get());
-	MonoScriptEngine::GetInstance().Initialize();
-
-	/// input systemの初期化
-	Input::Initialize(windowManager_.get(), imGuiManager_.get());
-	renderingFramework_->Initialize(dxManager_.get(), windowManager_.get(), entityComponentSystem_.get());
-	entityComponentSystem_->Initialize(renderingFramework_->GetAssetCollection());
-
-
-	/// timeの初期化
-	Time::Initialize();
-
-	/// scene managerの初期化
-	sceneManager_->Initialize(renderingFramework_->GetAssetCollection());
-	LoadDebugScene();
-
-#ifdef DEBUG_MODE
-	imGuiManager_->Initialize(renderingFramework_->GetAssetCollection());
-	imGuiManager_->SetImGuiWindow(windowManager_->GetMainWindow());
-	renderingFramework_->SetImGuiManager(imGuiManager_.get());
-#endif // DEBUG_MODE
-
-	editorManager_->Initialize(dxManager_.get(), renderingFramework_->GetShaderCompiler(), sceneManager_.get());
-	SetEntityComponentSystemPtr(entityComponentSystem_->GetECSGroup("GameScene"), entityComponentSystem_->GetECSGroup("Debug"));
-
+	CreateSubsystems();
+	InitializeCore(startSetting);
+	InitializeGraphics();
+	InitializeECS();
+	InitializeEditor(startSetting);
 
 	/// 初期化にかかった時間の計測終了と出力
 	auto endTime = std::chrono::high_resolution_clock::now();
@@ -106,48 +56,69 @@ void GameFramework::Initialize(const GameFrameworkConfig& _startSetting) {
 
 }
 
+void GameFramework::CreateSubsystems() {
+	dxManager_ = std::make_unique<DxManager>();
+	windowManager_ = std::make_unique<WindowManager>(dxManager_.get());
+	entityComponentSystem_ = std::make_unique<EntityComponentSystem>(dxManager_.get());
+	renderingFramework_ = std::make_unique<RenderingFramework>();
+	sceneManager_ = std::make_unique<SceneManager>(entityComponentSystem_.get());
+
+	editorManager_ = std::make_unique<Editor::EditorManager>(entityComponentSystem_.get());
+	imGuiManager_ = std::make_unique<Editor::ImGuiManager>(dxManager_.get(), windowManager_.get(), entityComponentSystem_.get(), editorManager_.get(), sceneManager_.get());
+}
+
+void GameFramework::InitializeCore(const GameFrameworkConfig& config) {
+	dxManager_->Initialize();
+	ThreadPool::Instance().Initialize(dxManager_->GetDxDevice(), 4);
+	windowManager_->Initialize();
+
+	/// main windowの生成
+#ifdef DEBUG_MODE
+	UINT style = WS_OVERLAPPEDWINDOW;
+	style &= ~WS_THICKFRAME;
+	windowManager_->GenerateWindow(config.windowName + L" : debug mode", DebugConfig::kDebugWindowSize, WindowManager::WindowType::Main, style);
+#else
+	windowManager_->GenerateWindow(config.windowName, config.windowSize, WindowManager::WindowType::Main);
+#endif // DEBUG_MODE
+
+	Time::Initialize();
+}
+
+void GameFramework::InitializeGraphics() {
+	renderingFramework_->Initialize(dxManager_.get(), windowManager_.get(), entityComponentSystem_.get());
+}
+
+void GameFramework::InitializeECS() {
+	MonoScriptEngine::GetInstance().SetEcsPtr(entityComponentSystem_.get());
+	MonoScriptEngine::GetInstance().Initialize();
+
+	entityComponentSystem_->Initialize(renderingFramework_->GetAssetCollection());
+
+	/// input systemの初期化
+	Input::Initialize(windowManager_.get(), imGuiManager_.get());
+
+	/// scene managerの初期化
+	sceneManager_->Initialize(renderingFramework_->GetAssetCollection());
+	LoadDebugScene();
+}
+
+void GameFramework::InitializeEditor(const GameFrameworkConfig& config) {
+#ifdef DEBUG_MODE
+	imGuiManager_->Initialize(renderingFramework_->GetAssetCollection());
+	imGuiManager_->SetImGuiWindow(windowManager_->GetMainWindow());
+	renderingFramework_->SetImGuiManager(imGuiManager_.get());
+#endif // DEBUG_MODE
+
+	editorManager_->Initialize(dxManager_.get(), renderingFramework_->GetShaderCompiler(), sceneManager_.get());
+	SetEntityComponentSystemPtr(entityComponentSystem_->GetECSGroup("GameScene"), entityComponentSystem_->GetECSGroup("Debug"));
+}
+
 void GameFramework::Run() {
 
 	/// game loopが終了するまで回す
 	while(true) {
-
-		/// 更新処理
-		Input::Update();
-		Time::Update();
-
-		renderingFramework_->HeapBindToCommandList();
-		windowManager_->Update();
-#ifdef DEBUG_MODE
-		editorManager_->Update(renderingFramework_->GetAssetCollection());
-		imGuiManager_->Update();
-
-		CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::ECSUpdate);
-		entityComponentSystem_->DebuggingUpdate();
-		entityComponentSystem_->OutsideOfUpdate();
-
-		///!< ゲームデバッグモードの場合は更新処理を行う
-		if(DebugConfig::isDebugging) {
-			sceneManager_->Update();
-			entityComponentSystem_->Update();
-		}
-		CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::ECSUpdate);
-#else
-		CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::ECSUpdate);
-		editorManager_->Update(renderingFramework_->GetAssetCollection());
-		entityComponentSystem_->DebuggingUpdate();
-		entityComponentSystem_->OutsideOfUpdate();
-		sceneManager_->Update();
-		entityComponentSystem_->Update();
-		CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::ECSUpdate);
-#endif // DEBUG_MODE
-
-		// Process all queued events for this frame
-		FrameEventQueue::GetInstance().Flush();
-
-		/// 描画処理
-		CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::RenderUpdate);
-		renderingFramework_->Draw();
-		CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::RenderUpdate);
+		Update();
+		Draw();
 
 		/// ウィンドウの終了リクエストを確認（非デバッグ時は即終了、デバッグ時はEditor側で処理）
 #ifndef DEBUG_MODE
@@ -162,6 +133,49 @@ void GameFramework::Run() {
 		}
 	}
 
+}
+
+void GameFramework::Update() {
+	/// 更新処理
+	Input::Update();
+	Time::Update();
+
+	renderingFramework_->HeapBindToCommandList();
+	windowManager_->Update();
+
+#ifdef DEBUG_MODE
+	editorManager_->Update(renderingFramework_->GetAssetCollection());
+	imGuiManager_->Update();
+
+	CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::ECSUpdate);
+	entityComponentSystem_->DebuggingUpdate();
+	entityComponentSystem_->OutsideOfUpdate();
+
+	///!< ゲームデバッグモードの場合は更新処理を行う
+	if(DebugConfig::isDebugging) {
+		sceneManager_->Update();
+		entityComponentSystem_->Update();
+	}
+	CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::ECSUpdate);
+#else
+	CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::ECSUpdate);
+	editorManager_->Update(renderingFramework_->GetAssetCollection());
+	entityComponentSystem_->DebuggingUpdate();
+	entityComponentSystem_->OutsideOfUpdate();
+	sceneManager_->Update();
+	entityComponentSystem_->Update();
+	CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::ECSUpdate);
+#endif // DEBUG_MODE
+
+	// Process all queued events for this frame
+	FrameEventQueue::GetInstance().Flush();
+}
+
+void GameFramework::Draw() {
+	/// 描画処理
+	CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::RenderUpdate);
+	renderingFramework_->Draw();
+	CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::RenderUpdate);
 }
 
 void GameFramework::LoadDebugScene() {

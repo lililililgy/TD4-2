@@ -1,4 +1,4 @@
-﻿#include "GameEntityPickingPipeline.h"
+#include "GameEntityPickingPipeline.h"
 
 /// externals
 #include <imgui.h>
@@ -20,13 +20,13 @@ using namespace ONEngine;
 GameEntityPickingPipeline::GameEntityPickingPipeline() = default;
 GameEntityPickingPipeline::~GameEntityPickingPipeline() = default;
 
-void GameEntityPickingPipeline::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) {
+void GameEntityPickingPipeline::Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) {
 
-	pDxm_ = _dxm;
+	pDxm_ = dxm;
 
 	{	/// shader/pipeline
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Editor/GameEntityPicking.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
 		pipeline_ = std::make_unique<ComputePipeline>();
@@ -42,20 +42,20 @@ void GameEntityPickingPipeline::Initialize(ONEngine::ShaderCompiler* _shaderComp
 
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0); // s0
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 	{	/// buffer
-		cbufPickingParams_.Create(_dxm->GetDxDevice());
-		sbufPicking_.CreateUAV(1, _dxm->GetDxDevice(), _dxm->GetDxCommand(), _dxm->GetDxSRVHeap());
+		cbufPickingParams_.Create(dxm->GetDxDevice());
+		sbufPicking_.CreateUAV(1, dxm->GetDxDevice(), dxm->GetDxCommand(), dxm->GetDxSRVHeap());
 	}
 
 }
 
 void GameEntityPickingPipeline::Execute(
-	ONEngine::EntityComponentSystem* _ecs,
-	ONEngine::DxCommand* _dxCommand,
-	ONEngine::Asset::AssetCollection* _assetCollection) {
+	ONEngine::EntityComponentSystem* ecs,
+	ONEngine::DxCommand* dxCommand,
+	ONEngine::Asset::AssetCollection* assetCollection) {
 
 	Vector2 mousePosNorm = Input::GetImGuiImageMousePosNormalized("Scene");
 	mousePosNorm /= Vector2::HD;
@@ -73,14 +73,14 @@ void GameEntityPickingPipeline::Execute(
 	/// パイプラインの設定・起動を行う
 	/// ---------------------------------------------------
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 
 	cbufPickingParams_.BindForComputeCommandList(cmdList, CBV_PICKING_PARAMS);
 	sbufPicking_.UAVBindForComputeCommandList(cmdList, UAV_PICKING);
 
-	const ONEngine::Asset::Texture* flagsTexture = _assetCollection->GetTexture(
+	const ONEngine::Asset::Texture* flagsTexture = assetCollection->GetTexture(
 		RenderInfo::kRenderTargetDir +
 		RenderInfo::kRenderTargetNames[static_cast<int>(RenderInfo::RenderTexture::Debug)] +
 		RenderInfo::kRenderTargetType[static_cast<int>(RenderInfo::RenderTextureType::Flags)]
@@ -93,7 +93,7 @@ void GameEntityPickingPipeline::Execute(
 	cmdList->Dispatch(1, 1, 1);
 
 	Picking out;
-	ReadbackPickingData(_dxCommand, out);
+	ReadbackPickingData(dxCommand, out);
 
 
 
@@ -102,7 +102,7 @@ void GameEntityPickingPipeline::Execute(
 
 	if(Input::ReleaseMouse(Mouse::Left)) {
 		if(!preUsingPivot && !usingPivot) {
-			if(ECSGroup* current = _ecs->GetCurrentGroup()) {
+			if(ECSGroup* current = ecs->GetCurrentGroup()) {
 				if(GameEntity* entity = current->GetEntity(out.entityId)) {
 					ImGuiSelection::SetSelectedObject(entity->GetGuid(), SelectionType::Entity);
 				}
@@ -114,17 +114,17 @@ void GameEntityPickingPipeline::Execute(
 
 }
 
-void Editor::GameEntityPickingPipeline::ReadbackPickingData(ONEngine::DxCommand* _dxCommand, Picking& _outPickingData) {
+void Editor::GameEntityPickingPipeline::ReadbackPickingData(ONEngine::DxCommand* dxCommand, Picking& outPickingData) {
 
 	// UAVバリアを設定してGPU書き込み完了を待機
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
 	barrier.UAV.pResource = sbufPicking_.GetResource().Get();
-	_dxCommand->GetCommandList()->ResourceBarrier(1, &barrier);
+	dxCommand->GetCommandList()->ResourceBarrier(1, &barrier);
 
 	// コマンドリストを実行してGPU処理を完了
-	_dxCommand->CommandExecute();
-	_dxCommand->WaitForGpuComplete();
+	dxCommand->CommandExecute();
+	dxCommand->WaitForGpuComplete();
 
 	// readbackバッファを作成
 	ID3D12Resource* readbackBuffer = nullptr;
@@ -148,16 +148,16 @@ void Editor::GameEntityPickingPipeline::ReadbackPickingData(ONEngine::DxCommand*
 	}
 
 	// コピー用のコマンドリストをリセット
-	_dxCommand->CommandReset();
+	dxCommand->CommandReset();
 
 	pDxm_->HeapBindToCommandList();
 
 	// UAVバッファからreadbackバッファへコピー
-	_dxCommand->GetCommandList()->CopyResource(readbackBuffer, sbufPicking_.GetResource().Get());
+	dxCommand->GetCommandList()->CopyResource(readbackBuffer, sbufPicking_.GetResource().Get());
 
 	// コマンド実行
-	_dxCommand->CommandExecute();
-	_dxCommand->WaitForGpuComplete();
+	dxCommand->CommandExecute();
+	dxCommand->WaitForGpuComplete();
 
 	// データをマップして読み取り
 	void* mappedData = nullptr;
@@ -165,7 +165,7 @@ void Editor::GameEntityPickingPipeline::ReadbackPickingData(ONEngine::DxCommand*
 	hr = readbackBuffer->Map(0, &readRange, &mappedData);
 
 	if(SUCCEEDED(hr)) {
-		memcpy(&_outPickingData, mappedData, sizeof(Picking));
+		memcpy(&outPickingData, mappedData, sizeof(Picking));
 		readbackBuffer->Unmap(0, nullptr);
 	}
 
@@ -173,7 +173,7 @@ void Editor::GameEntityPickingPipeline::ReadbackPickingData(ONEngine::DxCommand*
 	readbackBuffer->Release();
 
 	// コマンドリストをリセットして次の処理に備える
-	_dxCommand->CommandReset();
+	dxCommand->CommandReset();
 	pDxm_->HeapBindToCommandList();
 
 }

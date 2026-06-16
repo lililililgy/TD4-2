@@ -1,4 +1,4 @@
-﻿#include "DxDebug.h"
+#include "DxDebug.h"
 
 #include "../Device/DxDevice.h"
 
@@ -7,12 +7,12 @@ using namespace ONEngine;
 DxDebug::DxDebug() = default;
 DxDebug::~DxDebug() = default;
 
-void DxDebug::Initialize([[maybe_unused]] DxDevice* _dxDevice) {
+void DxDebug::Initialize([[maybe_unused]] DxDevice* dxDevice) {
 	/// ----- Debugモードとして起動させる ----- ///
 
 #ifdef _DEBUG
 	ComPtr<ID3D12InfoQueue> infoQueue;
-	if (SUCCEEDED(_dxDevice->GetDevice()->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+	if (SUCCEEDED(dxDevice->GetDevice()->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);

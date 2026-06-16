@@ -7,19 +7,19 @@ using namespace ONEngine;
 #include "Engine/ECS/EntityComponentSystem/ECSGroup.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
 
-void TransformUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
-	Update(_ecs);
+void TransformUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
+	Update(ecs);
 }
 
-void TransformUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
-	Update(_ecs);
+void TransformUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
+	Update(ecs);
 }
 
 
-void TransformUpdateSystem::Update(ECSGroup* _ecs) {
+void TransformUpdateSystem::Update(ECSGroup* ecs) {
 	/// ----- Transformの行列を更新する ----- ///
 
-	ComponentArray<Transform>* transformArray = _ecs->GetComponentArray<Transform>();
+	ComponentArray<Transform>* transformArray = ecs->GetComponentArray<Transform>();
 	if (!transformArray || transformArray->GetUsedComponents().empty()) {
 		Console::LogError("TransformUpdateSystem::OutsideOfRuntimeUpdate: Transform component array is null");
 		return;

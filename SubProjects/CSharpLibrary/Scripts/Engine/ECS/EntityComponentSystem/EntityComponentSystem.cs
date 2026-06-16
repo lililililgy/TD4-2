@@ -17,26 +17,40 @@ static public class EntityComponentSystem {
 	/// <summary>
 	/// 新規グループの追加
 	/// </summary>
-	static public ECSGroup AddECSGroup(string _name) {
-		ECSGroup group = new ECSGroup(_name);
-		groups.Add(_name, group);
+	static public ECSGroup AddECSGroup(string name) {
+		if (groups.TryGetValue(name, out ECSGroup existingGroup)) {
+			return existingGroup;
+		}
+		ECSGroup group = new ECSGroup(name);
+		groups.Add(name, group);
 		Debug.LogInfo("EntityComponentSystem.AddECSGroup - added: " + group.groupName + "  GroupCount " + groups.Count);
 		return group;
 	}
 
 	/// <summary>
+	/// 指定したグループをクリアする
+	/// </summary>
+	static public void ClearECSGroup(string name) {
+		if (groups.TryGetValue(name, out ECSGroup group)) {
+			group.DeleteEntityAll();
+			groups.Remove(name);
+			Debug.LogInfo("EntityComponentSystem.ClearECSGroup - cleared: " + name);
+		}
+	}
+
+	/// <summary>
 	/// ECSGroupの取得
 	/// </summary>
-	static public ECSGroup GetECSGroup(string _name) {
+	static public ECSGroup GetECSGroup(string name) {
 #if DEBUG
-		Debug.LogInfo("EntityComponentSystem.GetECSGroup - Getting ECSGroup: " + _name + "  GroupCount " + groups.Count);
+		Debug.LogInfo("EntityComponentSystem.GetECSGroup - Getting ECSGroup: " + name + "  GroupCount " + groups.Count);
 #endif
 
-		if (groups.TryGetValue(_name, out ECSGroup group)) {
+		if (groups.TryGetValue(name, out ECSGroup group)) {
 			return group;
 		} else {
 #if DEBUG
-			Debug.LogError("EntityComponentSystem.GetECSGroup - ECSGroup not found: " + _name + "  GroupCount " + groups.Count);
+			Debug.LogError("EntityComponentSystem.GetECSGroup - ECSGroup not found: " + name + "  GroupCount " + groups.Count);
 			foreach (var ecsGroup in groups) {
 				Debug.LogError("Available ECSGroups: " + ecsGroup.Key);
 			}
@@ -63,9 +77,9 @@ static public class EntityComponentSystem {
 	}
 	
 
-	static public Entity GetEntity(string _groupName, int _id) {
+	static public Entity GetEntity(string groupName, int id) {
 #if DEBUG
-		Debug.LogInfo("EntityComponentSystem.GetEntity - Getting Entity from group: " + _groupName + ", ID: " + _id);
+		Debug.LogInfo("EntityComponentSystem.GetEntity - Getting Entity from group: " + groupName + ", ID: " + id);
 		Debug.LogInfo("EntityComponentSystem.GetEntity - GroupCount: " + groups.Count);
 		foreach (var g in groups) {
 			Debug.LogInfo("EntityComponentSystem.GetEntity - Available ECSGroup: " + g.Key);
@@ -73,38 +87,38 @@ static public class EntityComponentSystem {
 #endif
 
 
-		if (groups.TryGetValue(_groupName, out ECSGroup group)) {
+		if (groups.TryGetValue(groupName, out ECSGroup group)) {
 #if DEBUG
 			Debug.LogInfo("EntityComponentSystem.GetEntity - ECSGroup found: " + group.groupName);
 #endif
-			return group.GetEntity(_id);
+			return group.GetEntity(id);
 		} else {
 #if DEBUG
-			Debug.LogError("EntityComponentSystem.GetEntity - ECSGroup not found: " + _groupName);
+			Debug.LogError("EntityComponentSystem.GetEntity - ECSGroup not found: " + groupName);
 #endif
 			return null;
 		}
 	}
 
-	static public MonoScript GetMonoBehavior(string _groupName, int _entityId, string _scriptName) {
+	static public MonoScript GetMonoBehavior(string groupName, int entityId, string scriptName) {
 #if DEBUG
-		Debug.LogInfo("EntityComponentSystem.GetMonoBehavior - Getting MonoBehavior from group: " + _groupName + ", Entity ID: " + _entityId + ", Script Name: " + _scriptName);
+		Debug.LogInfo("EntityComponentSystem.GetMonoBehavior - Getting MonoBehavior from group: " + groupName + ", Entity ID: " + entityId + ", Script Name: " + scriptName);
 		Debug.LogInfo("EntityComponentSystem.GetEntity - GroupCount: " + groups.Count);
 #endif
 		
-		if (groups.TryGetValue(_groupName, out ECSGroup group)) {
-			Entity entity = group.GetEntity(_entityId);
+		if (groups.TryGetValue(groupName, out ECSGroup group)) {
+			Entity entity = group.GetEntity(entityId);
 			if (entity != null) {
-				return entity.GetScript(_scriptName);
+				return entity.GetScript(scriptName);
 			} else {
 #if DEBUG
-				Debug.LogError("EntityComponentSystem.GetMonoBehavior - Entity not found with ID: " + _entityId);
+				Debug.LogError("EntityComponentSystem.GetMonoBehavior - Entity not found with ID: " + entityId);
 #endif
 				return null;
 			}
 		} else {
 #if DEBUG
-			Debug.LogError("EntityComponentSystem.GetMonoBehavior - ECSGroup not found: " + _groupName);
+			Debug.LogError("EntityComponentSystem.GetMonoBehavior - ECSGroup not found: " + groupName);
 #endif
 			return null;
 		}

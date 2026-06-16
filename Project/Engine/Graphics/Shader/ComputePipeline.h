@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// directX
 #include <d3d12.h>
@@ -26,61 +26,61 @@ public:
 	~ComputePipeline();
 
 	/// @brief pipelineを生成する
-	/// @param _dxDevice DxDeviceへのポインタ
-	void CreatePipeline(class DxDevice* _dxDevice);
+	/// @param dxDevice DxDeviceへのポインタ
+	void CreatePipeline(class DxDevice* dxDevice);
 
 
 	/*--- root signature ---*/
 
 	/// @brief 使用する shaderへのポインタをセットする
-	/// @param _shader 使用するshader
-	void SetShader(Shader* _shader);
+	/// @param shader 使用するshader
+	void SetShader(Shader* shader);
 
 	/// @brief constant buffer viewを追加する
-	/// @param _shaderVisibility shaderの種類
-	/// @param _shaderRegister  register(b0)の0の部分
-	void AddCBV(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister);
+	/// @param shaderVisibility shaderの種類
+	/// @param shaderRegister  register(b0)の0の部分
+	void AddCBV(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister);
 
 	/// @brief 32bit constantを追加する
-	/// @param _shaderVisibility shaderの種類
-	/// @param _shaderRegister   register(b0)の0の部分
-	void Add32BitConstant(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister, uint32_t _num32bitValue = 1u);
+	/// @param shaderVisibility shaderの種類
+	/// @param shaderRegister   register(b0)の0の部分
+	void Add32BitConstant(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister, uint32_t num32bitValue = 1u);
 
 	/// @brief descriptor rangeを追加する
-	/// @param _baseShaderRegister register(b0)の0の部分
-	/// @param _numDescriptor      descriptorの数
-	/// @param _rangeType          descriptorの種類(CBV, SRV, UAV)
-	void AddDescriptorRange(uint32_t _baseShaderRegister, uint32_t _numDescriptor, D3D12_DESCRIPTOR_RANGE_TYPE  _rangeType);
+	/// @param baseShaderRegister register(b0)の0の部分
+	/// @param numDescriptor      descriptorの数
+	/// @param rangeType          descriptorの種類(CBV, SRV, UAV)
+	void AddDescriptorRange(uint32_t baseShaderRegister, uint32_t numDescriptor, D3D12_DESCRIPTOR_RANGE_TYPE  rangeType);
 
 	/// @brief descriptor tableを追加する
-	/// @param _shaderVisibility 使用するshaderの種類(vs, ps)
-	/// @param _descriptorIndex descriptor rangeの配列のインデックス
-	void AddDescriptorTable(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _descriptorIndex);
+	/// @param shaderVisibility 使用するshaderの種類(vs, ps)
+	/// @param descriptorIndex descriptor rangeの配列のインデックス
+	void AddDescriptorTable(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t descriptorIndex);
 
 	/// @brief static samplerを追加する
-	/// @param _shaderVisibility 使用するshaderの種類(vs, ps)
-	/// @param _shaderRegister   shaderのregister(s0)の0の部分
-	/// @param _isComparisonSampler 比較サンプラーにするかどうか
-	void AddStaticSampler(D3D12_SHADER_VISIBILITY _shaderVisibility, uint32_t _shaderRegister, bool _isComparisonSampler = false);
+	/// @param shaderVisibility 使用するshaderの種類(vs, ps)
+	/// @param shaderRegister   shaderのregister(s0)の0の部分
+	/// @param isComparisonSampler 比較サンプラーにするかどうか
+	void AddStaticSampler(D3D12_SHADER_VISIBILITY shaderVisibility, uint32_t shaderRegister, bool isComparisonSampler = false);
 
 	/// @brief fill modeを設定する
-	/// @param _fillMode 設定するfill mode
-	void SetFillMode(D3D12_FILL_MODE _fillMode);
+	/// @param fillMode 設定するfill mode
+	void SetFillMode(D3D12_FILL_MODE fillMode);
 
 	/// @brief カリングの設定
-	/// @param _cullMode カリングモード
-	void SetCullMode(D3D12_CULL_MODE _cullMode);
+	/// @param cullMode カリングモード
+	void SetCullMode(D3D12_CULL_MODE cullMode);
 
 	/// @brief TopologyTypeを設定する
-	/// @param _topologyType 設定するtopology type
-	void SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE _topologyType);
+	/// @param topologyType 設定するtopology type
+	void SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType);
 
 
 	/*--- pipeline state ---*/
 
 	/// @brief コマンドリストにパイプラインステートをセットする
-	/// @param _dxCommand command listを管理しているクラスへのポインタ
-	void SetPipelineStateForCommandList(class DxCommand* _dxCommand);
+	/// @param dxCommand command listを管理しているクラスへのポインタ
+	void SetPipelineStateForCommandList(class DxCommand* dxCommand);
 
 
 private:
@@ -89,12 +89,12 @@ private:
 	/// ===================================================
 
 	/// @brief root signatureを生成する
-	/// @param _dxDevice DxDeviceへのポインタ
-	void CreateRootSignature(class DxDevice* _dxDevice);
+	/// @param dxDevice DxDeviceへのポインタ
+	void CreateRootSignature(class DxDevice* dxDevice);
 
 	/// @brief pipeline state objectを生成する
-	/// @param _dxDevice DxDeviceへのポインタ
-	void CreatePipelineStateObject(class DxDevice* _dxDevice);
+	/// @param dxDevice DxDeviceへのポインタ
+	void CreatePipelineStateObject(class DxDevice* dxDevice);
 
 private:
 	/// ===================================================

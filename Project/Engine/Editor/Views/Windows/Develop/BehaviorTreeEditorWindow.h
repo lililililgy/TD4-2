@@ -48,8 +48,8 @@ private:
         PinKind kind;
         Node* node;
 
-        Pin(int _id, const std::string& _name, PinKind _kind)
-            : id(_id), name(_name), kind(_kind), node(nullptr) {}
+        Pin(int id, const std::string& name, PinKind kind)
+            : id(id), name(name), kind(kind), node(nullptr) {}
     };
 
     struct Node {
@@ -80,8 +80,8 @@ private:
         std::string validationError;
         bool hasError = false;
 
-        Node(int _id, const std::string& _name, ImColor _color = ImColor(255, 255, 255))
-            : id(_id), name(_name), color(_color) {}
+        Node(int id, const std::string& name, ImColor color = ImColor(255, 255, 255))
+            : id(id), name(name), color(color) {}
     };
 
     struct Link {
@@ -90,8 +90,8 @@ private:
         ed::PinId endPinId;
         ImColor color;
 
-        Link(ed::LinkId _id, ed::PinId _start, ed::PinId _end)
-            : id(_id), startPinId(_start), endPinId(_end), color(255, 255, 255) {}
+        Link(ed::LinkId id, ed::PinId start, ed::PinId end)
+            : id(id), startPinId(start), endPinId(end), color(255, 255, 255) {}
     };
 
     struct CommentBox {

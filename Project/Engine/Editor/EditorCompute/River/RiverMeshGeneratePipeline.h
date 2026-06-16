@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "../Interface/IEditorCompute.h"
 
@@ -24,8 +24,8 @@ public:
 	RiverMeshGeneratePipeline();
 	~RiverMeshGeneratePipeline();
 
-	void Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) override;
-	void Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* _assetCollection) override;
+	void Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) override;
+	void Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* assetCollection) override;
 
 private:
 	/// =========================================

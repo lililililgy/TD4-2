@@ -7,14 +7,14 @@ using namespace ONEngine;
 #include "Engine/Core/Utility/Tools/Log.h"
 
 
-ComPtr<ID3D12DescriptorHeap> ONEngine::CreateHeap(ID3D12Device* _device, D3D12_DESCRIPTOR_HEAP_TYPE _heapType, uint32_t _numDescriptors, bool _isShaderVisible) {
+ComPtr<ID3D12DescriptorHeap> ONEngine::CreateHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, uint32_t numDescriptors, bool isShaderVisible) {
 	ComPtr<ID3D12DescriptorHeap> heap;
 	D3D12_DESCRIPTOR_HEAP_DESC desc{};
-	desc.Type = _heapType;
-	desc.NumDescriptors = _numDescriptors;
-	desc.Flags = _isShaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	desc.Type = heapType;
+	desc.NumDescriptors = numDescriptors;
+	desc.Flags = isShaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
-	HRESULT result = _device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap));
+	HRESULT result = device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap));
 	Assert(SUCCEEDED(result), "miss created descriptor heap");
 
 	return heap;
@@ -22,15 +22,15 @@ ComPtr<ID3D12DescriptorHeap> ONEngine::CreateHeap(ID3D12Device* _device, D3D12_D
 
 
 
-IDxDescriptorHeap::IDxDescriptorHeap(DxDevice* _dxDevice, uint32_t _maxHeapSize)
-	: pDxDevice_(_dxDevice), kMaxHeapSize_(_maxHeapSize) {}
+IDxDescriptorHeap::IDxDescriptorHeap(DxDevice* dxDevice, uint32_t maxHeapSize)
+	: pDxDevice_(dxDevice), kMaxHeapSize_(maxHeapSize) {}
 
 
-void IDxDescriptorHeap::Free(uint32_t _index) {
+void IDxDescriptorHeap::Free(uint32_t index) {
 	/// ----- すでに解放されているIndexでなければ解放 ----- ///
-	auto itr = std::find(spaceIndex_.begin(), spaceIndex_.end(), _index);
+	auto itr = std::find(spaceIndex_.begin(), spaceIndex_.end(), index);
 	if (itr == spaceIndex_.end()) {
-		spaceIndex_.push_back(_index);
+		spaceIndex_.push_back(index);
 	}
 }
 
@@ -51,21 +51,21 @@ uint32_t IDxDescriptorHeap::Allocate() {
 	return result;
 }
 
-void IDxDescriptorHeap::BindToCommandList(ID3D12GraphicsCommandList* _commandList) {
+void IDxDescriptorHeap::BindToCommandList(ID3D12GraphicsCommandList* commandList) {
 	ID3D12DescriptorHeap* heaps[] = { descriptorHeap_.Get() };
 	const UINT numHeaps = 1;
-	_commandList->SetDescriptorHeaps(numHeaps, heaps);
+	commandList->SetDescriptorHeaps(numHeaps, heaps);
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE IDxDescriptorHeap::GetCPUDescriptorHandel(uint32_t _index) const {
+D3D12_CPU_DESCRIPTOR_HANDLE IDxDescriptorHeap::GetCPUDescriptorHandel(uint32_t index) const {
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-	cpuHandle.ptr += (descriptorSize_ * _index);
+	cpuHandle.ptr += (descriptorSize_ * index);
 	return cpuHandle;
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE IDxDescriptorHeap::GetGPUDescriptorHandel(uint32_t _index) const {
+D3D12_GPU_DESCRIPTOR_HANDLE IDxDescriptorHeap::GetGPUDescriptorHandel(uint32_t index) const {
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = descriptorHeap_->GetGPUDescriptorHandleForHeapStart();
-	gpuHandle.ptr += (descriptorSize_ * _index);
+	gpuHandle.ptr += (descriptorSize_ * index);
 	return gpuHandle;
 }
 

@@ -1,4 +1,4 @@
-﻿#include "TexturePreviewWindow.h"
+#include "TexturePreviewWindow.h"
 
 /// external
 #include <imgui.h>
@@ -9,8 +9,8 @@
 
 using namespace Editor;
 
-TexturePreviewWindow::TexturePreviewWindow(ONEngine::Asset::AssetCollection* _assetCollection)
-	: pAssetCollection_(_assetCollection) {
+TexturePreviewWindow::TexturePreviewWindow(ONEngine::Asset::AssetCollection* assetCollection)
+	: pAssetCollection_(assetCollection) {
 	searchFilter_ = "./Assets/Scene/RenderTexture/shadowMapScene";
 }
 

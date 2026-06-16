@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <unordered_map>
@@ -34,31 +34,31 @@ public:
 	Comp* AddComponent();
 
 	/// @brief 新規Componentを追加する
-	/// @param _name Componentの名前
+	/// @param name Componentの名前
 	/// @return 追加されたComponentのポインタ、失敗したら nullptr
-	IComponent* AddComponent(const std::string& _name);
+	IComponent* AddComponent(const std::string& name);
 
 	/// @brief Componentを取得する
 	/// @tparam Comp Componentの型
-	/// @param _index Arrayのインデックス
+	/// @param index Arrayのインデックス
 	/// @return Componentのポインタ、失敗したら nullptr
 	template<IsComponent Comp>
-	Comp* GetComponent(size_t _index);
+	Comp* GetComponent(size_t index);
 
 	/// @brief Componentの削除
 	/// @tparam Comp 削除するComponentの型
-	/// @param _index Arrayのインデックス
+	/// @param index Arrayのインデックス
 	template<IsComponent Comp>
-	void RemoveComponent(size_t _index);
+	void RemoveComponent(size_t index);
 
 	/// @brief Componentの削除
-	/// @param _hash CompのHash
-	/// @param _id ArrayのIndex
-	void RemoveComponent(size_t _hash, size_t _id);
+	/// @param hash CompのHash
+	/// @param id ArrayのIndex
+	void RemoveComponent(size_t hash, size_t id);
 
-	/// @brief _entityのComponentをすべて削除する
-	/// @param _entity 削除対象のEntity
-	void RemoveComponentAll(class GameEntity* _entity);
+	/// @brief entityのComponentをすべて削除する
+	/// @param entity 削除対象のEntity
+	void RemoveComponentAll(class GameEntity* entity);
 
 
 	/// @brief Componentの配列を取得する
@@ -108,23 +108,23 @@ inline Comp* ComponentCollection::AddComponent() {
 }
 
 template<IsComponent Comp>
-inline Comp* ComponentCollection::GetComponent(size_t _index) {
+inline Comp* ComponentCollection::GetComponent(size_t index) {
 	size_t hash = GetComponentHash<Comp>();
 	ComponentArray<Comp>* componentArray = static_cast<ComponentArray<Comp>*>(arrayMap_[hash].get());
 
-	return &componentArray->components_[_index];
+	return &componentArray->components_[index];
 }
 
 template<IsComponent Comp>
-inline void ComponentCollection::RemoveComponent(size_t _index) {
+inline void ComponentCollection::RemoveComponent(size_t index) {
 	size_t hash = GetComponentHash<Comp>();
 	ComponentArray<Comp>* componentArray = static_cast<ComponentArray<Comp>*>(arrayMap_[hash].get());
-	componentArray->usedIndices_.erase(std::remove(componentArray->usedIndices_.begin(), componentArray->usedIndices_.end(), _index), componentArray->usedIndices_.end());
-	componentArray->removedIndices_.push_back(_index);
+	componentArray->usedIndices_.erase(std::remove(componentArray->usedIndices_.begin(), componentArray->usedIndices_.end(), index), componentArray->usedIndices_.end());
+	componentArray->removedIndices_.push_back(index);
 
 	componentArray->usedComponents_.erase(std::remove(
 		componentArray->usedComponents_.begin(), componentArray->usedComponents_.end(),
-		&componentArray->components_[_index]), componentArray->usedComponents_.end()
+		&componentArray->components_[index]), componentArray->usedComponents_.end()
 	);
 }
 

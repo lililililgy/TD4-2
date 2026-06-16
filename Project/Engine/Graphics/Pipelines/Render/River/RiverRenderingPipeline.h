@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "../../Interface/IRenderingPipeline.h"
@@ -25,11 +25,11 @@ public:
 	/// public : methods
 	/// =================================================
 
-	RiverRenderingPipeline(Asset::AssetCollection* _assetCollection);
+	RiverRenderingPipeline(Asset::AssetCollection* assetCollection);
 	~RiverRenderingPipeline() override;
 
-	void Initialize(ShaderCompiler* _shaderCompiler, class DxManager* _dxm) override;
-	void Draw(class ECSGroup* _ecs, class CameraComponent* _camera, DxCommand* _dxCommand) override;
+	void Initialize(ShaderCompiler* shaderCompiler, class DxManager* dxm) override;
+	void Draw(class ECSGroup* ecs, class CameraComponent* camera, DxCommand* dxCommand) override;
 
 private:
 	/// =================================================

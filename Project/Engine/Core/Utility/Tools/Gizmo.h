@@ -46,8 +46,8 @@ private:
 	~Gizmo() = default;
 
 	/// @brief 初期化関数、rendering pipelineクラスで呼び出す
-	/// @param _maxDrawInstanceCount 描画するインスタンスの最大数を返す
-	static void Initialize(const size_t _maxDrawInstanceCount);
+	/// @param maxDrawInstanceCount 描画するインスタンスの最大数を返す
+	static void Initialize(const size_t maxDrawInstanceCount);
 
 	/// ----- 各形状の配列を返す ----- ///
 	static const std::vector<SphereData>& GetSphereData();
@@ -65,44 +65,44 @@ public:
 	/// ====================================
 
 	/// @brief 球の描画
-	/// @param _position ワールド座標
-	/// @param _radius 球の半径
-	/// @param _color 球の色
-	static void DrawSphere(const Vector3& _position, float _radius, const Vector4& _color = Color::kWhite);
+	/// @param position ワールド座標
+	/// @param radius 球の半径
+	/// @param color 球の色
+	static void DrawSphere(const Vector3& position, float radius, const Vector4& color = Color::kWhite);
 
 	/// @brief ワイヤーフレームの球を描画
-	/// @param _position ワールド座標
-	/// @param _radius 球の半径
-	/// @param _color 球の色
-	static void DrawWireSphere(const Vector3& _position, float _radius, const Vector4& _color = Color::kWhite);
+	/// @param position ワールド座標
+	/// @param radius 球の半径
+	/// @param color 球の色
+	static void DrawWireSphere(const Vector3& position, float radius, const Vector4& color = Color::kWhite);
 
 	/// @brief 箱の描画
-	/// @param _position ワールド座標
-	/// @param _size 箱のサイズ
-	/// @param _rotate 箱の回転
-	/// @param _color 箱の色
-	static void DrawCube(const Vector3& _position, const Vector3& _size, const Quaternion& _rotate = Quaternion::kIdentity, const Vector4& _color = Color::kWhite);
+	/// @param position ワールド座標
+	/// @param size 箱のサイズ
+	/// @param rotate 箱の回転
+	/// @param color 箱の色
+	static void DrawCube(const Vector3& position, const Vector3& size, const Quaternion& rotate = Quaternion::kIdentity, const Vector4& color = Color::kWhite);
 
 	/// @brief ワイヤーフレームの箱を描画
-	/// @param _position ワールド座標
-	/// @param _size 箱의サイズ
-	/// @param _rotate 箱の回転
-	/// @param _color 箱の色 
-	static void DrawWireCube(const Vector3& _position, const Vector3& _size, const Quaternion& _rotate = Quaternion::kIdentity, const Vector4& _color = Color::kWhite);
+	/// @param position ワールド座標
+	/// @param size 箱의サイズ
+	/// @param rotate 箱の回転
+	/// @param color 箱の色 
+	static void DrawWireCube(const Vector3& position, const Vector3& size, const Quaternion& rotate = Quaternion::kIdentity, const Vector4& color = Color::kWhite);
 
 	/// @brief 線の描画
-	/// @param _startPosition 線の始点
-	/// @param _endPosition 線の終点
-	/// @param _color 線の色
-	/// @param _thickness 線の太さ
-	static void DrawLine(const Vector3& _startPosition, const Vector3& _endPosition, const Vector4& _color = Color::kWhite, float _thickness = 1.0f);
+	/// @param startPosition 線の始点
+	/// @param endPosition 線の終点
+	/// @param color 線の色
+	/// @param thickness 線の太さ
+	static void DrawLine(const Vector3& startPosition, const Vector3& endPosition, const Vector4& color = Color::kWhite, float thickness = 1.0f);
 
 	/// @brief Rayの描画
-	/// @param _position 線の始点 
-	/// @param _direction 線の方向
-	/// @param _color 線の色
-	/// @param _thickness 線の太さ
-	static void DrawRay(const Vector3& _position, const Vector3& _direction, const Vector4& _color = Color::kWhite, float _thickness = 1.0f);
+	/// @param position 線の始点 
+	/// @param direction 線の方向
+	/// @param color 線の色
+	/// @param thickness 線の太さ
+	static void DrawRay(const Vector3& position, const Vector3& direction, const Vector4& color = Color::kWhite, float thickness = 1.0f);
 
 };
 

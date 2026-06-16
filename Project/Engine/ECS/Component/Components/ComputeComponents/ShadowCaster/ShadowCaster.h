@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// externals
 #include <nlohmann/json.hpp>
@@ -18,11 +18,11 @@ namespace ONEngine {
 class ShadowCaster;
 
 namespace ComponentDebug {
-void ShadowCasterDebug(ShadowCaster* _shadowCaster);
+void ShadowCasterDebug(ShadowCaster* shadowCaster);
 }
 
-void from_json(const nlohmann::json& _j, ShadowCaster& _c);
-void to_json(nlohmann::json& _j, const ShadowCaster& _c);
+void from_json(const nlohmann::json& j, ShadowCaster& c);
+void to_json(nlohmann::json& j, const ShadowCaster& c);
 
 /// @brief 影に関するパラメータ構造体
 struct ShadowParameter {
@@ -38,9 +38,9 @@ struct ShadowParameter {
 /// 影の投影を行うためのコンポーネント
 /// ///////////////////////////////////////////////////
 class ShadowCaster : public IComponent {
-	friend void ComponentDebug::ShadowCasterDebug(ShadowCaster* _shadowCaster);
-	friend void from_json(const nlohmann::json& _j, ShadowCaster& _c);
-	friend void to_json(nlohmann::json& _j, const ShadowCaster& _c);
+	friend void ComponentDebug::ShadowCasterDebug(ShadowCaster* shadowCaster);
+	friend void from_json(const nlohmann::json& j, ShadowCaster& c);
+	friend void to_json(nlohmann::json& j, const ShadowCaster& c);
 public:
 	/// ===========================================
 	/// public : methods
@@ -54,8 +54,8 @@ public:
 	void CreateShadowCaster();
 
 	/// @brief DirectionalLightからライトビュー行列を設定
-	/// @param _directionLight DirectionalLightへのポインタ
-	void CalculationLightViewMatrix(class ECSGroup* _ecsGroup, class DirectionalLight* _directionLight);
+	/// @param directionLight DirectionalLightへのポインタ
+	void CalculationLightViewMatrix(class ECSGroup* ecsGroup, class DirectionalLight* directionLight);
 
 
 	/// @brief 影の投影用のカメラを取得する

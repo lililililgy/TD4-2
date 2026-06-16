@@ -1,4 +1,4 @@
-﻿#include "PostProcessLighting.h"
+#include "PostProcessLighting.h"
 
 using namespace ONEngine;
 
@@ -17,13 +17,13 @@ PostProcessLighting::PostProcessLighting() {}
 PostProcessLighting::~PostProcessLighting() {}
 
 
-void PostProcessLighting::Initialize(ShaderCompiler* _shaderCompiler, DxManager* _dxm) {
+void PostProcessLighting::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 	pipeline_ = std::make_unique<ComputePipeline>();
 
 	{	/// shader
 
 		Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/PostProcess/PerObject/Lighting/Lighting.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
 		pipeline_->SetShader(&shader);
@@ -47,32 +47,32 @@ void PostProcessLighting::Initialize(ShaderCompiler* _shaderCompiler, DxManager*
 
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 
-		pipeline_->CreatePipeline(_dxm->GetDxDevice());
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 
 	{
 		/// constant buffer
 		directionalLightBufferData_ = std::make_unique<ConstantBuffer<DirectionalLightBufferData>>();
-		directionalLightBufferData_->Create(_dxm->GetDxDevice());
+		directionalLightBufferData_->Create(dxm->GetDxDevice());
 
 		cameraBufferData_ = std::make_unique<ConstantBuffer<CameraBufferData>>();
-		cameraBufferData_->Create(_dxm->GetDxDevice());
+		cameraBufferData_->Create(dxm->GetDxDevice());
 
 	}
 
 }
 
-void PostProcessLighting::Execute(const std::string& _textureName, DxCommand* _dxCommand, Asset::AssetCollection* _assetCollection, EntityComponentSystem* _pEntityComponentSystem) {
+void PostProcessLighting::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* pEntityComponentSystem) {
 
-	pipeline_->SetPipelineStateForCommandList(_dxCommand);
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
-	auto command = _dxCommand->GetCommandList();
-	auto& textures = _assetCollection->GetTextures();
+	auto command = dxCommand->GetCommandList();
+	auto& textures = assetCollection->GetTextures();
 
 	{	/// set constant buffers
 
-		ECSGroup* ecsGroup = _pEntityComponentSystem->GetCurrentGroup();
+		ECSGroup* ecsGroup = pEntityComponentSystem->GetCurrentGroup();
 
 		std::list<DirectionalLight*> directionalLights;
 		for (auto& entity : ecsGroup->GetEntities()) {
@@ -121,13 +121,13 @@ void PostProcessLighting::Execute(const std::string& _textureName, DxCommand* _d
 
 	{	/// set textures
 
-		textureIndices_[0] = _assetCollection->GetTextureIndex(_textureName + "Scene");
-		textureIndices_[1] = _assetCollection->GetTextureIndex(_textureName + "WorldPosition");
-		textureIndices_[2] = _assetCollection->GetTextureIndex(_textureName + "Normal");
-		textureIndices_[3] = _assetCollection->GetTextureIndex(_textureName + "Flags");
+		textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
+		textureIndices_[1] = assetCollection->GetTextureIndex(textureName + "WorldPosition");
+		textureIndices_[2] = assetCollection->GetTextureIndex(textureName + "Normal");
+		textureIndices_[3] = assetCollection->GetTextureIndex(textureName + "Flags");
 
-		textureIndices_[4] = _assetCollection->GetTextureIndex("./Packages/Textures/kloofendal_48d_partly_cloudy_puresky_2k.dds");
-		textureIndices_[5] = _assetCollection->GetTextureIndex("postProcessResult");
+		textureIndices_[4] = assetCollection->GetTextureIndex("./Packages/Textures/kloofendal_48d_partly_cloudy_puresky_2k.dds");
+		textureIndices_[5] = assetCollection->GetTextureIndex("postProcessResult");
 
 		for (uint32_t index = 0; index < 5; ++index) {
 			command->SetComputeRootDescriptorTable(index + 2, textures[textureIndices_[index]].GetSRVGPUHandle());

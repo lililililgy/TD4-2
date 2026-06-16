@@ -12,32 +12,32 @@ using namespace ONEngine;
 ShadowCasterUpdateSystem::ShadowCasterUpdateSystem() = default;
 ShadowCasterUpdateSystem::~ShadowCasterUpdateSystem() = default;
 
-void ShadowCasterUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* _ecs) {
+void ShadowCasterUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	if (!DebugConfig::isDebugging) {
-		Update(_ecs);
+		Update(ecs);
 	}
 
 }
 
-void ShadowCasterUpdateSystem::RuntimeUpdate(ECSGroup* _ecs) {
+void ShadowCasterUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 	if (DebugConfig::isDebugging) {
-		Update(_ecs);
+		Update(ecs);
 	}
 }
 
-void ShadowCasterUpdateSystem::Update(ECSGroup* _ecs) {
+void ShadowCasterUpdateSystem::Update(ECSGroup* ecs) {
 	/// ----- ShadowCasterの更新 ----- ///
 
 
 	/// ShadowCasterの配列を取得&空ではないかチェック
-	ComponentArray<ShadowCaster>* shadowCasterArray = _ecs->GetComponentArray<ShadowCaster>();
+	ComponentArray<ShadowCaster>* shadowCasterArray = ecs->GetComponentArray<ShadowCaster>();
 	if (!shadowCasterArray || shadowCasterArray->GetUsedComponents().empty()) {
 		return;
 	}
 
 
 	/// DirectionalLightの配列を取得&空ではないかチェック
-	ComponentArray<DirectionalLight>* dirLightArray = _ecs->GetComponentArray<DirectionalLight>();
+	ComponentArray<DirectionalLight>* dirLightArray = ecs->GetComponentArray<DirectionalLight>();
 	DirectionalLight* dirLight = nullptr;
 	if (dirLightArray && !dirLightArray->GetUsedComponents().empty()) {
 		dirLight = dirLightArray->GetUsedComponents().front();
@@ -48,7 +48,7 @@ void ShadowCasterUpdateSystem::Update(ECSGroup* _ecs) {
 
 		/// DirectionalLightが存在する場合、ライトビュー行列を計算
 		if (dirLight) {
-			shadowCaster->CalculationLightViewMatrix(_ecs, dirLight);
+			shadowCaster->CalculationLightViewMatrix(ecs, dirLight);
 		}
 	}
 }

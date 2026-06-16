@@ -1,4 +1,4 @@
-﻿#include "VoxelTerrainEditorComputePipeline.h"
+#include "VoxelTerrainEditorComputePipeline.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -17,9 +17,9 @@ namespace Editor {
 VoxelTerrainEditorComputePipeline::VoxelTerrainEditorComputePipeline() = default;
 VoxelTerrainEditorComputePipeline::~VoxelTerrainEditorComputePipeline() = default;
 
-void VoxelTerrainEditorComputePipeline::Initialize(ONEngine::ShaderCompiler* _shaderCompiler, ONEngine::DxManager* _dxm) {
+void VoxelTerrainEditorComputePipeline::Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) {
 
-	pDxManager_ = _dxm;
+	pDxManager_ = dxm;
 
 
 	const std::vector<std::wstring> shaderPaths = {
@@ -35,17 +35,17 @@ void VoxelTerrainEditorComputePipeline::Initialize(ONEngine::ShaderCompiler* _sh
 
 	for(size_t i = 0; i < size; ++i) {
 		ONEngine::Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Editor/VoxelTerrain/" + shaderPaths[i], L"cs_6_6", ONEngine::Shader::Type::cs);
 		editPipelines_[i] = std::make_unique<ONEngine::ComputePipeline>();
-		CreatePipeline(editPipelines_[i].get(), shader, _dxm);
+		CreatePipeline(editPipelines_[i].get(), shader, dxm);
 	}
 
 
 
 	{
 		ONEngine::Shader shader;
-		shader.Initialize(_shaderCompiler);
+		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"./Packages/Shader/Editor/CalculationMouseWorldPosition.cs.hlsl", L"cs_6_6", ONEngine::Shader::Type::cs);
 
 		calculationMouseWorldPosPipeline_ = std::make_unique<ONEngine::ComputePipeline>();
@@ -61,7 +61,7 @@ void VoxelTerrainEditorComputePipeline::Initialize(ONEngine::ShaderCompiler* _sh
 
 		calculationMouseWorldPosPipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 
-		calculationMouseWorldPosPipeline_->CreatePipeline(_dxm->GetDxDevice());
+		calculationMouseWorldPosPipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
 
 
@@ -78,10 +78,10 @@ void VoxelTerrainEditorComputePipeline::Initialize(ONEngine::ShaderCompiler* _sh
 
 }
 
-void VoxelTerrainEditorComputePipeline::Execute(ONEngine::EntityComponentSystem* _ecs, ONEngine::DxCommand* _dxCommand, ONEngine::Asset::AssetCollection* _assetCollection) {
+void VoxelTerrainEditorComputePipeline::Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* assetCollection) {
 
 	/// 早期リターンの条件チェック
-	ONEngine::ComponentArray<ONEngine::VoxelTerrain>* voxelTerrainArray = _ecs->GetCurrentGroup()->GetComponentArray<ONEngine::VoxelTerrain>();
+	ONEngine::ComponentArray<ONEngine::VoxelTerrain>* voxelTerrainArray = ecs->GetCurrentGroup()->GetComponentArray<ONEngine::VoxelTerrain>();
 	if(!voxelTerrainArray || voxelTerrainArray->GetUsedComponents().empty()) {
 		ONEngine::Console::LogWarning("VoxelTerrainEditorComputePipeline::Execute: VoxelTerrain component array is null");
 		return;
@@ -106,13 +106,13 @@ void VoxelTerrainEditorComputePipeline::Execute(ONEngine::EntityComponentSystem*
 	pDxManager_->HeapBindToCommandList();
 	/// --------------- バッファの生成 --------------- ///
 	if(!voxelTerrain->CheckCreatedBuffers()) {
-		voxelTerrain->SettingChunksGuid(_assetCollection);
-		voxelTerrain->CreateBuffers(pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap(), _assetCollection);
+		voxelTerrain->SettingChunksGuid(assetCollection);
+		voxelTerrain->CreateBuffers(pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap(), assetCollection);
 	}
 
 	if(!voxelTerrain->CheckBufferCreatedForEditor()) {
 		voxelTerrain->CreateEditorBuffers(pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap());
-		voxelTerrain->CreateChunkTextureUAV(_dxCommand, pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap());
+		voxelTerrain->CreateChunkTextureUAV(dxCommand, pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap());
 		return;
 	}
 
@@ -140,9 +140,9 @@ void VoxelTerrainEditorComputePipeline::Execute(ONEngine::EntityComponentSystem*
 	/// =========================================
 	/// マウスのワールド座標を計算するためのパイプラインを実行
 	/// =========================================
-	ExecuteCalculateMouseWorldPos(_dxCommand, _assetCollection);
+	ExecuteCalculateMouseWorldPos(dxCommand, assetCollection);
 
-	auto cmdList = _dxCommand->GetCommandList();
+	auto cmdList = dxCommand->GetCommandList();
 	ONEngine::GPUData::InputInfo inputInfo{};
 	inputInfo.mouseLeftButton = ONEngine::Input::PressMouse(ONEngine::Mouse::Left);
 	inputInfo.keyboardKShift = ONEngine::Input::PressKey(DIK_LSHIFT);
@@ -158,7 +158,7 @@ void VoxelTerrainEditorComputePipeline::Execute(ONEngine::EntityComponentSystem*
 	}
 
 
-	ONEngine::CameraComponent* cameraComp = _ecs->GetECSGroup("Debug")->GetMainCamera();
+	ONEngine::CameraComponent* cameraComp = ecs->GetECSGroup("Debug")->GetMainCamera();
 	/// cameraBufferが生成済みでないなら終了
 	if(!cameraComp->IsMakeViewProjection()) {
 		ONEngine::Console::LogWarning("VoxelTerrainEditorComputePipeline::Execute: Camera viewProjection buffer is not created");
@@ -173,7 +173,7 @@ void VoxelTerrainEditorComputePipeline::Execute(ONEngine::EntityComponentSystem*
 	/// editModeを用いてパイプラインを参照、editModeのunkwon分を引いて合わせる
 	size_t index = voxelTerrain->GetEditMode() - 1;
 	if(index < editPipelines_.size()) {
-		editPipelines_[index]->SetPipelineStateForCommandList(_dxCommand);
+		editPipelines_[index]->SetPipelineStateForCommandList(dxCommand);
 	} else {
 		ONEngine::Console::LogWarning("VoxelTerrainEditorComputePipeline::Execute: Unknown edit mode");
 		return;
@@ -190,7 +190,7 @@ void VoxelTerrainEditorComputePipeline::Execute(ONEngine::EntityComponentSystem*
 	cameraComp->GetCameraPosBuffer().BindForComputeCommandList(cmdList, CBV_CAMERA);
 
 	/// WorldTexture
-	const ONEngine::Asset::Texture* worldTexture = _assetCollection->GetTexture("./Assets/Scene/RenderTexture/debugWorldPosition");
+	const ONEngine::Asset::Texture* worldTexture = assetCollection->GetTexture("./Assets/Scene/RenderTexture/debugWorldPosition");
 	cmdList->SetComputeRootDescriptorTable(SRV_WORLD_TEXTURE, worldTexture->GetSRVHandle().gpuHandle);
 
 	/// MousePosition
@@ -234,12 +234,12 @@ void VoxelTerrainEditorComputePipeline::Execute(ONEngine::EntityComponentSystem*
 	/// マウスの座標を元に編集したチャンクIDを取得し、SRVに対してコピーを行う
 	/// =========================================
 
-	mouseWorldPos_ = uavMousePosBuffer_.Readback(_dxCommand, 0);
+	mouseWorldPos_ = uavMousePosBuffer_.Readback(dxCommand, 0);
 	std::vector<int> editedChunkIDs = GetEditedChunkIDs(voxelTerrain);
 	voxelTerrain->PushBackEditChunkID(editedChunkIDs);
 
 	/// 編集したのであればSRVに対してコピーを行う
-	voxelTerrain->CopyEditorTextureToChunkTexture(_dxCommand, editedChunkIDs);
+	voxelTerrain->CopyEditorTextureToChunkTexture(dxCommand, editedChunkIDs);
 
 	ONEngine::GPUTimeStamp::GetInstance().EndTimeStamp(
 		ONEngine::GPUTimeStampID::VoxelTerrainEditorCompute

@@ -18,14 +18,14 @@ public:
     ~AnimatorUpdateSystem() override = default;
 
     /// @brief 更新
-    void RuntimeUpdate(class ECSGroup* _ecs) override;
+    void RuntimeUpdate(class ECSGroup* ecs) override;
 
     /// @brief ボーンマスクの登録
-    static void RegisterBoneMask(const BoneMask& _boneMask);
+    static void RegisterBoneMask(const BoneMask& boneMask);
 
 private:
-    void UpdateSkeletonRecursive(class SkinMeshRenderer* _smr, int32_t _jointIndex, const std::optional<int32_t>& _parentIndex);
-    void UpdateSkinCluster(class SkinMeshRenderer* _smr);
+    void UpdateSkeletonRecursive(class SkinMeshRenderer* smr, int32_t jointIndex, const std::optional<int32_t>& parentIndex);
+    void UpdateSkinCluster(class SkinMeshRenderer* smr);
 
     static std::unordered_map<uint32_t, BoneMask> boneMasks_;
 };

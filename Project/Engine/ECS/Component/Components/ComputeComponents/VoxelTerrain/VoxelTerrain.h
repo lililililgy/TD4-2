@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -74,11 +74,11 @@ struct Chunk {
 };
 
 namespace ComponentDebug {
-void VoxelTerrainDebug(VoxelTerrain* _voxelTerrain, DxManager* _dxm, Asset::AssetCollection* _ac);
+void VoxelTerrainDebug(VoxelTerrain* voxelTerrain, DxManager* dxm, Asset::AssetCollection* ac);
 }
 
-void from_json(const nlohmann::json& _j, std::vector<Chunk>& _chunk);
-void to_json(nlohmann::json& _j, const std::vector<Chunk>& _chunk);
+void from_json(const nlohmann::json& j, std::vector<Chunk>& chunk);
+void to_json(nlohmann::json& j, const std::vector<Chunk>& chunk);
 
 /// ///////////////////////////////////////////////////
 /// GPU用のデータ構造体
@@ -153,9 +153,9 @@ struct UsedTextureIds {
 /// ///////////////////////////////////////////////////
 class VoxelTerrain : public IComponent {
 	/// --------------- friend function --------------- ///
-	friend void ComponentDebug::VoxelTerrainDebug(VoxelTerrain* _voxelTerrain, DxManager* _dxm, Asset::AssetCollection* _ac);
-	friend void from_json(const nlohmann::json& _j, VoxelTerrain& _voxelTerrain);
-	friend void to_json(nlohmann::json& _j, const VoxelTerrain& _voxelTerrain);
+	friend void ComponentDebug::VoxelTerrainDebug(VoxelTerrain* voxelTerrain, DxManager* dxm, Asset::AssetCollection* ac);
+	friend void from_json(const nlohmann::json& j, VoxelTerrain& voxelTerrain);
+	friend void to_json(nlohmann::json& j, const VoxelTerrain& voxelTerrain);
 
 	/// --------------- friend class --------------- ///
 	friend class VoxelTerrainRenderingPipeline;
@@ -191,31 +191,31 @@ public:
 
 
 	/// @brief チャンクのGuid設定を行う
-	/// @param _assetCollection AssetCollectionのポインタ
-	void SettingChunksGuid(Asset::AssetCollection* _assetCollection);
+	/// @param assetCollection AssetCollectionのポインタ
+	void SettingChunksGuid(Asset::AssetCollection* assetCollection);
 
 	/// @brief Bufferが生成されているかチェックする
 	/// @return true: 生成済み, false: 未生成
 	bool CheckCreatedBuffers() const;
 
 	/// @brief Bufferの生成を行う
-	/// @param _dxDevice DxDeviceのポインタ
-	/// @param _dxSRVHeap DxSRVHeapのポインタ
-	void CreateBuffers(DxDevice* _dxDevice, DxSRVHeap* _dxSRVHeap, Asset::AssetCollection* _assetCollection);
+	/// @param dxDevice DxDeviceのポインタ
+	/// @param dxSRVHeap DxSRVHeapのポインタ
+	void CreateBuffers(DxDevice* dxDevice, DxSRVHeap* dxSRVHeap, Asset::AssetCollection* assetCollection);
 
 	/// @brief GraphicsPipeline用のバッファ設定を行う
-	/// @param _cmdList GraphicsCommandListのポインタ
-	/// @param _rootParamIndices 
+	/// @param cmdList GraphicsCommandListのポインタ
+	/// @param rootParamIndices 
 	/// [0]: VoxelTerrainInfo, 
 	/// [1]: ChunkArray, 
 	/// [2]: Material,
 	/// [3]: LODInfo,
 	/// [4]: CliffMaterial,
 	/// [5]: UsedTextureIds
-	void SetupGraphicBuffers(ID3D12GraphicsCommandList* _cmdList, const std::array<UINT, 6> _rootParamIndices, Asset::AssetCollection* _assetCollection);
+	void SetupGraphicBuffers(ID3D12GraphicsCommandList* cmdList, const std::array<UINT, 6> rootParamIndices, Asset::AssetCollection* assetCollection);
 
 	/// テクスチャのステートを変更する
-	void TransitionTextureStates(class DxCommand* _dxCommand, Asset::AssetCollection* _assetCollection, D3D12_RESOURCE_STATES _afterState);
+	void TransitionTextureStates(class DxCommand* dxCommand, Asset::AssetCollection* assetCollection, D3D12_RESOURCE_STATES afterState);
 
 	/// @brief 現在のチャンクの総数を取得する
 	/// @return 今あるチャンクの総数
@@ -241,27 +241,27 @@ public:
 	bool CheckBufferCreatedForEditor() const;
 
 	/// @brief エディタ用のバッファの生成を行う
-	/// @param _dxDevice DxDeviceのポインタ
-	void CreateEditorBuffers(DxDevice* _dxDevice, DxSRVHeap* _dxSRVHeap);
+	/// @param dxDevice DxDeviceのポインタ
+	void CreateEditorBuffers(DxDevice* dxDevice, DxSRVHeap* dxSRVHeap);
 
 	/// @brief エディタ用のバッファをパイプラインに設定する
-	/// @param _cmdList CommandListのポインタ
-	/// @param _rootParamIndices 設定するルートパラメータのインデックス配列 (0:InputInfo, 1:TerrainInfo, 2:EditInfo, 3:Chunks)
-	/// @param _inputInfo InputInfo構造体
-	/// @param _editInfo EditInfo構造体
-	void SetupEditorBuffers(ID3D12GraphicsCommandList* _cmdList, const std::array<UINT, 5> _rootParamIndices, const GPUData::InputInfo& _inputInfo);
+	/// @param cmdList CommandListのポインタ
+	/// @param rootParamIndices 設定するルートパラメータのインデックス配列 (0:InputInfo, 1:TerrainInfo, 2:EditInfo, 3:Chunks)
+	/// @param inputInfo InputInfo構造体
+	/// @param editInfo EditInfo構造体
+	void SetupEditorBuffers(ID3D12GraphicsCommandList* cmdList, const std::array<UINT, 5> rootParamIndices, const GPUData::InputInfo& inputInfo);
 
 	/// @brief チャンク用のTexture3D UAVを作成する
-	/// @param _dxDevice DxDeviceのポインタ
-	/// @param _dxSRVHeap DxSRVHeapのポインタ
-	/// @param _assetCollection AssetCollectionのポインタ
-	void CreateChunkTextureUAV(DxCommand* _dxCommand, DxDevice* _dxDevice, DxSRVHeap* _dxSRVHeap);
+	/// @param dxDevice DxDeviceのポインタ
+	/// @param dxSRVHeap DxSRVHeapのポインタ
+	/// @param assetCollection AssetCollectionのポインタ
+	void CreateChunkTextureUAV(DxCommand* dxCommand, DxDevice* dxDevice, DxSRVHeap* dxSRVHeap);
 
 	/// @brief 編集したエディタ用テクスチャをチャンク用テクスチャにコピーする
-	/// @param _dxCommand DxCommandのポインタ
-	/// @param _dxDevice DxDeviceのポインタ
-	/// @param _assetCollection 
-	void CopyEditorTextureToChunkTexture(DxCommand* _dxCommand);
+	/// @param dxCommand DxCommandのポインタ
+	/// @param dxDevice DxDeviceのポインタ
+	/// @param assetCollection 
+	void CopyEditorTextureToChunkTexture(DxCommand* dxCommand);
 	void CopyEditorTextureToChunkTexture(DxCommand* dxCommand, const std::vector<int>& copyChunkIDs);
 
 

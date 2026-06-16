@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,37 +70,37 @@ public class SkinMeshRenderer : Component {
 
 	/// MeshPathのAccessor
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern string InternalGetMeshName(ulong _nativeHandle);
+	static extern string InternalGetMeshName(ulong nativeHandle);
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetMeshName(ulong _nativeHandle, string _meshName);
+	static extern void InternalSetMeshName(ulong nativeHandle, string meshName);
 
 	/// TexturePathのAccessor
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern string InternalGetTexturePath(ulong _nativeHandle);
+	static extern string InternalGetTexturePath(ulong nativeHandle);
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetTexturePath(ulong _nativeHandle, string _texturePath);
+	static extern void InternalSetTexturePath(ulong nativeHandle, string texturePath);
 
 	/// IsPlayingのAccessor
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern bool InternalGetIsPlaying(ulong _nativeHandle);
+	static extern bool InternalGetIsPlaying(ulong nativeHandle);
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetIsPlaying(ulong _nativeHandle, bool _isPlaying);
+	static extern void InternalSetIsPlaying(ulong nativeHandle, bool isPlaying);
 
 	/// AnimationTimeのAccessor
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern float InternalGetAnimationTime(ulong _nativeHandle);
+	static extern float InternalGetAnimationTime(ulong nativeHandle);
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetAnimationTime(ulong _nativeHandle, float _animationTime);
+	static extern void InternalSetAnimationTime(ulong nativeHandle, float animationTime);
 
 	/// AnimationScaleのAccessor
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern float InternalGetAnimationScale(ulong _nativeHandle);
+	static extern float InternalGetAnimationScale(ulong nativeHandle);
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetAnimationScale(ulong _nativeHandle, float _animationScale);
+	static extern void InternalSetAnimationScale(ulong nativeHandle, float animationScale);
 
 	/// JointTransformを取得
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalGetJointTransform(ulong _nativeHandle, string jointName, out Vector3 _s, out Quaternion _q, out Vector3 _t);
+	static extern void InternalGetJointTransform(ulong nativeHandle, string jointName, out Vector3 s, out Quaternion q, out Vector3 t);
 
 
 }

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <Windows.h>
 
@@ -47,8 +47,8 @@ public:
 	~ImGuiManager();
 
 	/// @brief 初期化
-	/// @param _assetCollection AssetCollection 
-	void Initialize(ONEngine::Asset::AssetCollection* _assetCollection);
+	/// @param assetCollection AssetCollection 
+	void Initialize(ONEngine::Asset::AssetCollection* assetCollection);
 
 	/// @brief 終了処理
 	void Finalize();
@@ -61,23 +61,23 @@ public:
 
 
 	/// @brief SceneImageInfoを追加する
-	/// @param _name SceneImageInfoの名前
-	/// @param _info 追加するSceneImageInfo
-	void AddSceneImageInfo(const std::string& _name, const ImGuiSceneImageInfo& _info);
+	/// @param name SceneImageInfoの名前
+	/// @param info 追加するSceneImageInfo
+	void AddSceneImageInfo(const std::string& name, const ImGuiSceneImageInfo& info);
 
 	/// @brief ImGuiのマウス位置を更新する
-	/// @param _winHwnd ImGuiを描画しているWindowのHWND
-	/// @param _renderTargetSize RenderTargetのサイズ(px)
-	void UpdateMousePosition(HWND _winHwnd, const ONEngine::Vector2& _renderTargetSize);
+	/// @param winHwnd ImGuiを描画しているWindowのHWND
+	/// @param renderTargetSize RenderTargetのサイズ(px)
+	void UpdateMousePosition(HWND winHwnd, const ONEngine::Vector2& renderTargetSize);
 
 
 	/// @brief ImGuiのスタイルを出力する
-	/// @param _fileName ファイル名
-	void OutputImGuiStyle(const std::string& _fileName) const;
+	/// @param fileName ファイル名
+	void OutputImGuiStyle(const std::string& fileName) const;
 
 	/// @brief ImGuiのスタイルを入力する
-	/// @param _fileName ファイル名
-	void InputImGuiStyle(const std::string& _fileName) const;
+	/// @param fileName ファイル名
+	void InputImGuiStyle(const std::string& fileName) const;
 
 private:
 	/// ===================================================
@@ -104,17 +104,17 @@ public:
 	/// ===================================================
 
 	/// @brief imgui windowを設定する
-	/// @param _window Window
-	void SetImGuiWindow(ONEngine::Window* _window);
+	/// @param window Window
+	void SetImGuiWindow(ONEngine::Window* window);
 
 	/// @brief game debug windowを取得する
 	/// @return　Window
 	ONEngine::Window* GetDebugGameWindow() const;
 
 	/// @brief ImageInfoを取得する
-	/// @param _name ImageInfoの名前
+	/// @param name ImageInfoの名前
 	/// @return 見つかったImageInfoのポインタ、見つからなかった場合はnullptr
-	const ImGuiSceneImageInfo* GetSceneImageInfo(const std::string& _name) const;
+	const ImGuiSceneImageInfo* GetSceneImageInfo(const std::string& name) const;
 
 	/// @brief WindowManagerの取得
 	ONEngine::WindowManager* GetWindowManager() const { return pWindowManager_; }

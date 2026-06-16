@@ -5,7 +5,7 @@ using namespace ONEngine;
 /// engine
 #include "Engine/Core/Utility/Tools/Log.h"
 
-DxRTVHeap::DxRTVHeap(DxDevice* _dxDevice, uint32_t _maxHeapSize) : IDxDescriptorHeap(_dxDevice, _maxHeapSize) {}
+DxRTVHeap::DxRTVHeap(DxDevice* dxDevice, uint32_t maxHeapSize) : IDxDescriptorHeap(dxDevice, maxHeapSize) {}
 DxRTVHeap::~DxRTVHeap() = default;
 
 void DxRTVHeap::Initialize() {

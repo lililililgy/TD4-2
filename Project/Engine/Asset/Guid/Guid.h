@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <cstdint>
@@ -13,15 +13,15 @@
 namespace ONEngine {
 struct Guid;
 
-void from_json(const nlohmann::json& _j, Guid& _guid);
-void to_json(nlohmann::json& _j, const Guid& _guid);
+void from_json(const nlohmann::json& j, Guid& guid);
+void to_json(nlohmann::json& j, const Guid& guid);
 
 /// ////////////////////////////////////////////////////
 /// GUID 構造体
 /// ////////////////////////////////////////////////////
 struct Guid final {
 	Guid();
-	Guid(uint64_t _high, uint64_t _low);
+	Guid(uint64_t high, uint64_t low);
 
 	/// ==================================================
 	/// public : objects
@@ -52,10 +52,10 @@ struct Guid final {
 	/// ----- static methods ----- ///
 
 	/// @brief 文字列からGuidを生成する
-	static std::string ToString(const Guid& _guid);
+	static std::string ToString(const Guid& guid);
 
 	/// @brief 文字列からGuidを生成する
-	static Guid FromString(const std::string& _str);
+	static Guid FromString(const std::string& str);
 
 };
 
