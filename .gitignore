@@ -33,6 +33,10 @@ SubProjects/CSharpLibrary/*.sln
 SubProjects/CSharpLibrary/*.user
 SubProjects/CSharpLibrary/*.suo
 SubProjects/CSharpLibrary/*.userprefs
+
+# C# Binaries (Automated)
+Project/Packages/Scripts/CSharpLibrary*.dll
+Project/Packages/Scripts/CSharpLibrary*.pdb
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
