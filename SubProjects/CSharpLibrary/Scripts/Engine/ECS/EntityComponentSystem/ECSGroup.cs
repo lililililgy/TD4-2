@@ -104,11 +104,14 @@ public class ECSGroup {
 
 		var sw = Stopwatch.StartNew();
 
+		ComponentBatchManager.ReceiveAllBatches(componentCollection, groupName);
+
 		/// 生成、初期化の呼び出しを行う
 		CallAwake();
 		CallInitialize();
 
-		ComponentBatchManager.ReceiveAllBatches(componentCollection, groupName);
+		// 初期化後の座標を即座にC++に送信してリセットを防ぐ
+		ComponentBatchManager.SendAllBatches(componentCollection, groupName);
 
 		foreach (Entity entity in entities_.Values) {
 			if (!CheckEnable(entity)) {

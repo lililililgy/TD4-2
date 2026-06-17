@@ -1,4 +1,4 @@
-#include "ProjectWindow.h"
+﻿#include "ProjectWindow.h"
 
 /// std
 #include <filesystem>
@@ -100,7 +100,7 @@ void ProjectWindow::ShowImGui() {
 		// キャッシュの更新
 		std::filesystem::path parentPath = std::filesystem::path(ev.path).parent_path();
 		UpdateDirectoryCache(parentPath);
-		
+
 		if(currentPath_ == parentPath) {
 			UpdateFileCache(currentPath_);
 		}
@@ -122,37 +122,37 @@ void ProjectWindow::ShowImGui() {
 		ImGui::NextColumn();
 
 		// 空白部分で右クリックしたときに新規作成メニューを表示するための判定
-		if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && ImGui::IsMouseClicked(ImGuiMouseButton_Right) && !ImGui::IsAnyItemHovered()) {
+		if(ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && ImGui::IsMouseClicked(ImGuiMouseButton_Right) && !ImGui::IsAnyItemHovered()) {
 			ImGui::OpenPopup("ProjectWindow_GlobalContextMenu");
 		}
 
-		if (ImGui::BeginPopup("ProjectWindow_GlobalContextMenu")) {
-			if (ImGui::BeginMenu("Create")) {
-				if (ImGui::MenuItem("Folder")) {
+		if(ImGui::BeginPopup("ProjectWindow_GlobalContextMenu")) {
+			if(ImGui::BeginMenu("Create")) {
+				if(ImGui::MenuItem("Folder")) {
 					showCreateFolderPopup_ = true;
 					targetPath_ = currentPath_;
 					inputBuffer_ = "NewFolder";
 				}
-				
+
 				// C#スクリプトの作成場所を制限 (../SubProjects/CSharpLibrary/Scripts 以下のみ)
 				std::filesystem::path scriptsRoot = "../SubProjects/CSharpLibrary/Scripts";
 				std::string scriptsRootStr = std::filesystem::absolute(scriptsRoot).string();
 				std::string currentPathStr = std::filesystem::absolute(currentPath_).string();
 				bool isValidScriptPath = currentPathStr.find(scriptsRootStr) != std::string::npos;
 
-				if (ImGui::MenuItem("C# Script", nullptr, false, isValidScriptPath)) {
+				if(ImGui::MenuItem("C# Script", nullptr, false, isValidScriptPath)) {
 					showCreateScriptPopup_ = true;
 					targetPath_ = currentPath_;
 					inputBuffer_ = "NewScript";
 				}
-				if (!isValidScriptPath && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
+				if(!isValidScriptPath && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
 					ImGui::SetTooltip("C# scripts can only be created in the CSharpLibrary/Scripts folder.");
 				}
-				
+
 				ImGui::EndMenu();
 			}
 			ImGui::Separator();
-			if (ImGui::MenuItem("Show in Explorer")) {
+			if(ImGui::MenuItem("Show in Explorer")) {
 				std::filesystem::path absolutePath = std::filesystem::absolute(currentPath_);
 				ShellExecuteW(NULL, L"open", absolutePath.wstring().c_str(), NULL, NULL, SW_SHOWNORMAL);
 			}
@@ -168,69 +168,69 @@ void ProjectWindow::ShowImGui() {
 	// --- モーダルポップアップの描画 ---
 
 	// リネーム用
-	if (showRenamePopup_) ImGui::OpenPopup("Rename Item");
-	if (ImGui::BeginPopupModal("Rename Item", &showRenamePopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
+	if(showRenamePopup_) ImGui::OpenPopup("Rename Item");
+	if(ImGui::BeginPopupModal("Rename Item", &showRenamePopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
 		ImGui::Text("Enter new name:");
 		ImGuiInputText("##newName", &inputBuffer_);
 		ImGui::Spacing();
-		if (ImGui::Button("OK", ImVec2(120, 0))) {
+		if(ImGui::Button("OK", ImVec2(120, 0))) {
 			try {
 				std::filesystem::path newPath = targetPath_.parent_path() / inputBuffer_;
 				// 拡張子を保持（ファイルの場合）
-				if (!std::filesystem::is_directory(targetPath_)) {
-					if (!newPath.has_extension()) {
+				if(!std::filesystem::is_directory(targetPath_)) {
+					if(!newPath.has_extension()) {
 						newPath.replace_extension(targetPath_.extension());
 					}
 				}
 
-				if (!std::filesystem::exists(newPath)) {
+				if(!std::filesystem::exists(newPath)) {
 					std::filesystem::rename(targetPath_, newPath);
 					// .metaファイルもあればリネーム
 					std::filesystem::path oldMeta = targetPath_.string() + ".meta";
 					std::filesystem::path newMeta = newPath.string() + ".meta";
-					if (std::filesystem::exists(oldMeta)) {
+					if(std::filesystem::exists(oldMeta)) {
 						std::filesystem::rename(oldMeta, newMeta);
 					}
 					UpdateFileCache(currentPath_);
 					UpdateDirectoryCache(currentPath_.parent_path());
 				}
-			} catch (...) {}
+			} catch(...) {}
 			showRenamePopup_ = false;
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Cancel", ImVec2(120, 0))) { showRenamePopup_ = false; }
+		if(ImGui::Button("Cancel", ImVec2(120, 0))) { showRenamePopup_ = false; }
 		ImGui::EndPopup();
 	}
 
 	// フォルダ作成用
-	if (showCreateFolderPopup_) ImGui::OpenPopup("Create Folder");
-	if (ImGui::BeginPopupModal("Create Folder", &showCreateFolderPopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
+	if(showCreateFolderPopup_) ImGui::OpenPopup("Create Folder");
+	if(ImGui::BeginPopupModal("Create Folder", &showCreateFolderPopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
 		ImGui::Text("Enter folder name:");
 		ImGuiInputText("##folderName", &inputBuffer_);
-		if (ImGui::Button("OK", ImVec2(120, 0))) {
+		if(ImGui::Button("OK", ImVec2(120, 0))) {
 			try {
 				std::filesystem::path newDir = targetPath_ / inputBuffer_;
 				std::filesystem::create_directories(newDir);
 				UpdateFileCache(targetPath_);
 				UpdateDirectoryCache(targetPath_);
-			} catch (...) {}
+			} catch(...) {}
 			showCreateFolderPopup_ = false;
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Cancel", ImVec2(120, 0))) { showCreateFolderPopup_ = false; }
+		if(ImGui::Button("Cancel", ImVec2(120, 0))) { showCreateFolderPopup_ = false; }
 		ImGui::EndPopup();
 	}
 
 	// C#スクリプト作成用
-	if (showCreateScriptPopup_) ImGui::OpenPopup("Create C# Script");
-	if (ImGui::BeginPopupModal("Create C# Script", &showCreateScriptPopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
+	if(showCreateScriptPopup_) ImGui::OpenPopup("Create C# Script");
+	if(ImGui::BeginPopupModal("Create C# Script", &showCreateScriptPopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
 		ImGui::Text("Enter script name:");
 		ImGuiInputText("##scriptName", &inputBuffer_);
-		if (ImGui::Button("OK", ImVec2(120, 0))) {
+		if(ImGui::Button("OK", ImVec2(120, 0))) {
 			try {
 				std::string className = inputBuffer_;
 				std::filesystem::path newScript = targetPath_ / (className + ".cs");
-				if (!std::filesystem::exists(newScript)) {
+				if(!std::filesystem::exists(newScript)) {
 					std::ofstream ofs(newScript);
 					ofs << "using System;\n";
 					ofs << "using System.Collections.Generic;\n\n";
@@ -240,14 +240,18 @@ void ProjectWindow::ShowImGui() {
 					ofs << "}\n";
 					ofs.close();
 					UpdateFileCache(targetPath_);
-					// スクリプト作成時はホットリロードを要求
+
+					// スクリプト作成後にPremakeを実行してプロジェクトを更新 (Projectフォルダからの相対パス)
+					system("powershell.exe -ExecutionPolicy Bypass -File ../SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
+
+					// プロジェクトが更新されたのでホットリロードを要求（ビルドは手動または起動時に行われる想定）
 					HotReloadManager::GetInstance().RequestScriptHotReload();
 				}
-			} catch (...) {}
+			} catch(...) {}
 			showCreateScriptPopup_ = false;
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Cancel", ImVec2(120, 0))) { showCreateScriptPopup_ = false; }
+		if(ImGui::Button("Cancel", ImVec2(120, 0))) { showCreateScriptPopup_ = false; }
 		ImGui::EndPopup();
 	}
 
@@ -315,9 +319,9 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 	float totalWidth = ImGui::GetContentRegionAvail().x;
 
 	ImGui::PushItemWidth(totalWidth - filterWidth - spacing);
-	if (ImGuiInputText("##ProjectSearch", &searchBuffer_, ImGuiInputTextFlags_AutoSelectAll, "search file...")) {
+	if(ImGuiInputText("##ProjectSearch", &searchBuffer_, ImGuiInputTextFlags_AutoSelectAll, "search file...")) {
 	}
-	if (ImGui::IsItemDeactivatedAfterEdit() || !searchBuffer_.empty()) {
+	if(ImGui::IsItemDeactivatedAfterEdit() || !searchBuffer_.empty()) {
 		isSearching_ = !searchBuffer_.empty();
 	} else {
 		isSearching_ = false;
@@ -327,9 +331,9 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 	ImGui::SameLine(0, spacing);
 
 	ImGui::PushItemWidth(filterWidth);
-	if (ImGuiInputText("##ProjectFilter", &filterBuffer_, ImGuiInputTextFlags_AutoSelectAll, ".ext")) {
+	if(ImGuiInputText("##ProjectFilter", &filterBuffer_, ImGuiInputTextFlags_AutoSelectAll, ".ext")) {
 	}
-	if (ImGui::IsItemDeactivatedAfterEdit() || !filterBuffer_.empty()) {
+	if(ImGui::IsItemDeactivatedAfterEdit() || !filterBuffer_.empty()) {
 		isFiltering_ = !filterBuffer_.empty();
 	} else {
 		isFiltering_ = false;
@@ -337,19 +341,19 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 	ImGui::PopItemWidth();
 
 	// 検索文字列が空でない場合にグローバル検索を実行
-	if (isSearching_) {
+	if(isSearching_) {
 		searchedFiles_.clear();
 		std::string query = searchBuffer_;
 		std::transform(query.begin(), query.end(), query.begin(), ::tolower);
-		
+
 		std::string extQuery = filterBuffer_;
 		std::transform(extQuery.begin(), extQuery.end(), extQuery.begin(), ::tolower);
-		if (!extQuery.empty() && extQuery[0] != '.') extQuery = "." + extQuery;
+		if(!extQuery.empty() && extQuery[0] != '.') extQuery = "." + extQuery;
 
-		for (const auto& root : rootPaths_) {
-			if (!std::filesystem::exists(root)) continue;
-			for (const auto& entry : std::filesystem::recursive_directory_iterator(root)) {
-				if (entry.path().extension() == ".meta") continue;
+		for(const auto& root : rootPaths_) {
+			if(!std::filesystem::exists(root)) continue;
+			for(const auto& entry : std::filesystem::recursive_directory_iterator(root)) {
+				if(entry.path().extension() == ".meta") continue;
 
 				std::string filename = entry.path().filename().string();
 				std::string filenameLower = filename;
@@ -357,13 +361,13 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 
 				bool matchName = filenameLower.find(query) != std::string::npos;
 				bool matchExt = true;
-				if (isFiltering_) {
+				if(isFiltering_) {
 					std::string ext = entry.path().extension().string();
 					std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 					matchExt = (ext == extQuery);
 				}
 
-				if (matchName && matchExt) {
+				if(matchName && matchExt) {
 					FileItem item;
 					item.path = entry.path();
 					item.isDirectory = entry.is_directory();
@@ -372,10 +376,10 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 					// アイコン設定
 					std::string ext = item.path.extension().string();
 					std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-					if (item.isDirectory) {
+					if(item.isDirectory) {
 						item.displayTexture = pAssetCollection_->GetTexture("./Packages/Textures/ImGui/FileIcons/FolderIcon.png");
-						if (!item.displayTexture) item.displayTexture = pAssetCollection_->GetTexture("./Packages/Textures/ImGui/FileIcons/FolderIcon.dds");
-					} else if (ext == ".cs") {
+						if(!item.displayTexture) item.displayTexture = pAssetCollection_->GetTexture("./Packages/Textures/ImGui/FileIcons/FolderIcon.dds");
+					} else if(ext == ".cs") {
 						item.displayTexture = pAssetCollection_->GetTexture("./Packages/Textures/ImGui/FileIcons/ph-file-c-sharp-none-256.png");
 					} else {
 						item.displayTexture = pAssetCollection_->GetTexture("./Packages/Textures/ImGui/FileIcons/FileIcon.png");
@@ -391,7 +395,7 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 	bool requestChangeDir = false;
 	std::filesystem::path nextTargetDir;
 
-	if (isSearching_) {
+	if(isSearching_) {
 		ImGui::Text("Search Results for \"%s\"%s", searchBuffer_.c_str(), isFiltering_ ? (std::string(" (Type: ") + filterBuffer_ + ")").c_str() : "");
 		ImGui::Separator();
 	} else {
@@ -400,13 +404,13 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 	}
 
 	// ここから下をスクロール可能にする
-	if (ImGui::BeginChild("FileListScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar)) {
+	if(ImGui::BeginChild("FileListScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar)) {
 		DrawFileList(directory, requestChangeDir, nextTargetDir);
 	}
 	ImGui::EndChild();
 
 	// ディレクトリ移動リクエストの処理
-	if (requestChangeDir) {
+	if(requestChangeDir) {
 		currentPath_ = nextTargetDir;
 		UpdateFileCache(currentPath_);
 		searchBuffer_.clear();
@@ -444,7 +448,7 @@ void ProjectWindow::DrawBreadcrumbs(const std::filesystem::path& directory, bool
 		isFirst = false;
 	}
 	ImGui::PopStyleColor();
-	if (isFiltering_) {
+	if(isFiltering_) {
 		ImGui::SameLine();
 		ImGui::TextDisabled(" (Filter: %s)", filterBuffer_.c_str());
 	}
@@ -463,24 +467,24 @@ void ProjectWindow::DrawFileList(const std::filesystem::path& directory, bool& o
 	std::vector<FileItem> filteredFiles;
 	std::vector<FileItem>* pFiles = nullptr;
 
-	if (isSearching_) {
+	if(isSearching_) {
 		pFiles = &searchedFiles_;
 	} else {
-		if (!fileCache_.contains(dirStr) || fileCache_[dirStr].empty()) return;
-		
-		if (isFiltering_) {
+		if(!fileCache_.contains(dirStr) || fileCache_[dirStr].empty()) return;
+
+		if(isFiltering_) {
 			std::string extQuery = filterBuffer_;
 			std::transform(extQuery.begin(), extQuery.end(), extQuery.begin(), ::tolower);
-			if (!extQuery.empty() && extQuery[0] != '.') extQuery = "." + extQuery;
+			if(!extQuery.empty() && extQuery[0] != '.') extQuery = "." + extQuery;
 
-			for (const auto& file : fileCache_[dirStr]) {
-				if (file.isDirectory) {
+			for(const auto& file : fileCache_[dirStr]) {
+				if(file.isDirectory) {
 					filteredFiles.push_back(file);
 					continue;
 				}
 				std::string ext = file.path.extension().string();
 				std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-				if (ext == extQuery) {
+				if(ext == extQuery) {
 					filteredFiles.push_back(file);
 				}
 			}
@@ -491,8 +495,8 @@ void ProjectWindow::DrawFileList(const std::filesystem::path& directory, bool& o
 	}
 
 	auto& files = *pFiles;
-	if (files.empty()) {
-		if (isSearching_ || isFiltering_) ImGui::Text("No files match your criteria.");
+	if(files.empty()) {
+		if(isSearching_ || isFiltering_) ImGui::Text("No files match your criteria.");
 		return;
 	}
 
@@ -621,12 +625,12 @@ void ProjectWindow::PopupContextMenu(const std::filesystem::path& filepath, std:
 			HotReloadManager::GetInstance().RequestAssetReload(path);
 
 			// スクリプトならホットリロードも要求
-			if (path.ends_with(".cs")) {
+			if(path.ends_with(".cs")) {
 				HotReloadManager::GetInstance().RequestScriptHotReload();
 			}
 		}
 
-		if (ImGui::MenuItem("Rename")) {
+		if(ImGui::MenuItem("Rename")) {
 			showRenamePopup_ = true;
 			targetPath_ = filepath;
 			inputBuffer_ = filepath.stem().string();
@@ -634,13 +638,13 @@ void ProjectWindow::PopupContextMenu(const std::filesystem::path& filepath, std:
 
 		ImGui::Separator();
 
-		if (ImGui::MenuItem("Show in Explorer")) {
+		if(ImGui::MenuItem("Show in Explorer")) {
 			std::filesystem::path absolutePath = std::filesystem::absolute(filepath);
 			std::wstring params = L"/select,\"" + absolutePath.wstring() + L"\"";
 			ShellExecuteW(NULL, L"open", L"explorer.exe", params.c_str(), NULL, SW_SHOWNORMAL);
 		}
 
-		if (ImGui::MenuItem("Copy Path")) {
+		if(ImGui::MenuItem("Copy Path")) {
 			ImGui::SetClipboardText(filepath.string().c_str());
 		}
 
@@ -711,10 +715,10 @@ void ProjectWindow::UpdateFileCache(const std::filesystem::path& directory) {
 				if(!item.displayTexture) item.displayTexture = pAssetCollection_->GetTexture("./Packages/Textures/ImGui/FileIcons/FolderIcon.dds");
 			} else if(ONEngine::Asset::CheckAssetType(ext, ONEngine::Asset::AssetType::Texture)) {
 				item.displayTexture = pAssetCollection_->GetTexture(item.relativePath);
-				
+
 				// TextureCubeやTexture3Dの場合はプレビューを表示するとシェーダー側でクラッシュするため、
 				// プレビュー用テクスチャを無効にしてデフォルトアイコンを表示させる
-				if (item.displayTexture && !item.displayTexture->IsStandard2D()) {
+				if(item.displayTexture && !item.displayTexture->IsStandard2D()) {
 					item.displayTexture = nullptr;
 				}
 			} else if(ONEngine::Asset::CheckAssetType(ext, ONEngine::Asset::AssetType::Audio)) {

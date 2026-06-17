@@ -100,13 +100,10 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 	addEntityArgs[0] = &entityId;
 
 	MonoObject* exc = nullptr;
-	mono_runtime_invoke(addEntityMethod_, ecsGroupObj, addEntityArgs, &exc);
+	MonoScriptEngineUtils::SafeInvoke(addEntityMethod_, ecsGroupObj, addEntityArgs, &exc);
 
 	if (exc) {
-		/// 例外の処理
-		char* err = mono_string_to_utf8(mono_object_to_string(exc, nullptr));
-		Console::LogError(std::string("Exception thrown in UpdateEntities: ") + err);
-		mono_free(err);
+		MonoScriptEngineUtils::HandleException(exc);
 	}
 
 	Variables* vars = entity->GetComponent<Variables>();
@@ -145,13 +142,10 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			addScriptArgs[2] = &data.enable;
 
 			exc = nullptr;
-			mono_runtime_invoke(addScriptMethod_, ecsGroupObj, addScriptArgs, &exc);
+			MonoScriptEngineUtils::SafeInvoke(addScriptMethod_, ecsGroupObj, addScriptArgs, &exc);
 
 			if (exc) {
-				/// 例外の処理
-				char* err = mono_string_to_utf8(mono_object_to_string(exc, nullptr));
-				Console::LogError(std::string("Exception thrown in AddScript: ") + err);
-				mono_free(err);
+				MonoScriptEngineUtils::HandleException(exc);
 			}
 
 			/// variablesの設定
@@ -182,15 +176,11 @@ void ScriptUpdateSystem::CallUpdateEcsGroup() {
 			}
 
 			MonoObject* exc = nullptr;
-			mono_runtime_invoke(updateEntitiesMethod_, ecsGroupObj, nullptr, &exc);
+			MonoScriptEngineUtils::SafeInvoke(updateEntitiesMethod_, ecsGroupObj, nullptr, &exc);
 
 			if (exc) {
-				/// 例外の処理
-				char* err = mono_string_to_utf8(mono_object_to_string(exc, nullptr));
-				Console::LogError(std::string("Exception thrown in UpdateEntities: ") + err);
-				mono_free(err);
+				MonoScriptEngineUtils::HandleException(exc);
 			}
-
 		}
 	}
 }
@@ -217,12 +207,10 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 
 	/// 関数を呼び出す
 	MonoObject* exc = nullptr;
-	MonoObject* ecsGroup = mono_runtime_invoke(addGroupMethod, nullptr, args, &exc);
+	MonoObject* ecsGroup = MonoScriptEngineUtils::SafeInvoke(addGroupMethod, nullptr, args, &exc);
 
 	if (exc) {
-		char* err = mono_string_to_utf8(mono_object_to_string(exc, nullptr));
-		Console::LogError(std::string("Exception thrown: ") + err);
-		mono_free(err);
+		MonoScriptEngineUtils::HandleException(exc);
 	}
 
 

@@ -14,6 +14,11 @@
             "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
             "parentGuid": null,
             "path": "./GameScene/b0388d37fce8d21ff4d0f9668d6b4e26.entity"
+        },
+        {
+            "guid": "4148ba34b5b7fb548a89168f26c8b8e6",
+            "parentGuid": null,
+            "path": "./GameScene/4148ba34b5b7fb548a89168f26c8b8e6.entity"
         }
     ]
 }

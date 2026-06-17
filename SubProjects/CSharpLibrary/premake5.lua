@@ -6,7 +6,7 @@ workspace "CSharpLibrary"
 project "CSharpLibrary"
     kind "SharedLib"
     language "C#"
-    targetframework "v4.7.2"
+    dotnetframework "4.7.2"
     architecture "x64"
 
     targetdir "../../Project/Packages/Scripts"
@@ -14,8 +14,14 @@ project "CSharpLibrary"
 
     -- 全ての.csファイルを再帰的に含める
     files { 
-        "Scripts/**.cs",
-        "Properties/*.cs"
+        "**.cs"
+    }
+
+    -- 不要なフォルダを除外（あれば）
+    removefiles {
+        "bin/**",
+        "obj/**",
+        "packages/**"
     }
 
     -- 参照設定

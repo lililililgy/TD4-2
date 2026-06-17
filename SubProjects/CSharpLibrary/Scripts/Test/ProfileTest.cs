@@ -6,24 +6,19 @@ using System.Threading.Tasks;
 
 public class ProfileTest : MonoScript {
 
-	float time = 0f;
-	//Matrix4x4[] mat;
-
-	public override void Initialize() {
-		//mat = new Matrix4x4[1024];
-	}
-
 	public override void Update() {
-		time += 1.0f / 60.0f;
-		for (int i = 0; i < 1024; i++) {
-			Rotate();
-			//mat[i] = Matrix4x4.Rotate(transform.rotate);
+		//MeshRenderer renderer = entity.GetComponent<MeshRenderer>();
+		//renderer.color = new Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+
+		if (Input.TriggerKey(KeyCode.Space)) {
+
+
+			Entity create = ecsGroup.CreateEntity("Test");
+			create.transform.position = new Vector3(10, 10, 10);
+
 		}
-		//Rotate();
 	}
 
-	public void Rotate() {
-		float rotateY = time * 20.0f;
-		transform.rotate = Quaternion.FromEuler(new Vector3(0f, rotateY, 0f));
-	}
+
+
 }

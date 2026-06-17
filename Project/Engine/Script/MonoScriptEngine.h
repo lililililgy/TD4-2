@@ -175,6 +175,18 @@ public:
 namespace MonoScriptEngineUtils {
 	MonoMethod* FindMethodInClassOrParents(MonoClass* monoClass, const char* methodName, int paramCount);
 	MonoClassField* FindFieldRecursive(MonoClass* monoClass, const char* name);
+	
+	/// @brief Monoの例外を処理し、ログに出力する
+	/// @param exc 例外オブジェクト
+	void HandleException(MonoObject* exc);
+
+	/// @brief 安全にC#のメソッドを呼び出す（C++レベルの例外も捕捉する）
+	/// @param method メソッドポインタ
+	/// @param obj インスタンス（staticならnullptr）
+	/// @param params 引数配列
+	/// @param outExc 発生した例外を受け取るポインタ
+	/// @return 実行結果（エラー時はnullptr）
+	MonoObject* SafeInvoke(MonoMethod* method, void* obj, void** params, MonoObject** outExc);
 } // namespace MonoScriptEngineUtils
 
 } /// ONEngine
