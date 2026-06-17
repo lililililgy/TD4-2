@@ -23,8 +23,26 @@
             "type": "Transform"
         },
         {
-            "PlayerInputComponent": {},
-            "PlayerMoveComponent": {},
+            "PlayerInputComponent": {
+                "isShootButtonPressed_": false,
+                "isShot_": false,
+                "moveDir_": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "shootCooldownTime_": 0.0
+            },
+            "PlayerMoveComponent": {
+                "moveSpeed_": 20.0
+            },
+            "PlayerShotComponent": {
+                "bulletSpawnOffset_": {
+                    "x": 0.0,
+                    "y": -1.399999976158142
+                },
+                "isShot_": false,
+                "shootCooldownTime_": 0.18000000715255737
+            },
             "type": "Variables"
         },
         {
@@ -62,6 +80,10 @@
                 {
                     "enable": true,
                     "name": "PlayerInputComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerShotComponent"
                 },
                 {
                     "enable": true,

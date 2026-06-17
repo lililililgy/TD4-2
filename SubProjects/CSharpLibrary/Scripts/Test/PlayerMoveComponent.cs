@@ -14,7 +14,7 @@ public class PlayerMoveComponent
         PlayerInputComponent inputComp = entity.GetScript<PlayerInputComponent>();
 
         Vector3 moveDir = new Vector3(inputComp.moveDir_.x, 0.0f, inputComp.moveDir_.y);
-        transform.position = moveDir * moveSpeed_ * Time.deltaTime;
+        transform.position += moveDir * moveSpeed_ * Time.deltaTime;
     }
 
     [SerializeField] private float moveSpeed_ = 5.0f;

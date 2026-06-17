@@ -17,7 +17,6 @@ public class PlayerInputComponent
         moveDir_ = moveDir_.Normalized();
 
         //発射
-        isShot_ = false;
         isShootButtonPressed_ = false;
 
         foreach (var key in shootKeys_) {
@@ -36,29 +35,14 @@ public class PlayerInputComponent
             }
         }
 
-        shootCooldown_ -= Time.deltaTime;
-        shootCooldown_ = Math.Max(shootCooldown_, 0.0f);
-
-        if (!isShootButtonPressed_) {
-            return;
-        }
-
-        if (shootCooldown_ <= 0.0f) {
-            isShot_ = true;
-            shootCooldown_ = shootCooldownTime_;
-        }
     }
 
 
     public Vector2 moveDir_;
 
     public bool isShootButtonPressed_ = false;
-    public bool isShot_ = false;
 
     private KeyCode[] shootKeys_ = { KeyCode.Space, KeyCode.Z, KeyCode.X };
     private Gamepad[] shotButtons_ = { Gamepad.LeftShoulder, Gamepad.RightShoulder };
-
-    private float shootCooldown_ = 0.0f;
-    [SerializeField] private float shootCooldownTime_ = 0.2f;
 
 }

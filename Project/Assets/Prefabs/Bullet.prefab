@@ -16,14 +16,17 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 0.10000000149011612,
+                "y": 0.10000000149011612,
+                "z": 0.10000000149011612
             },
             "type": "Transform"
         },
         {
-            "ProfileTest": {},
+            "Bullet": {
+                "lifeTime_": 5.0,
+                "speed_": 32.0
+            },
             "type": "Variables"
         },
         {
@@ -56,18 +59,33 @@
             "type": "MeshRenderer"
         },
         {
+            "categoryBits": 4,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 4294967240,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider"
+        },
+        {
             "enable": 1,
             "scripts": [
                 {
                     "enable": true,
-                    "name": "ProfileTest"
+                    "name": "Bullet"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "4148ba34b5b7fb548a89168f26c8b8e6",
-    "name": "Mesh_4",
+    "guid": "3a1a5dc65fa8e81a0f9a91c93957cb63",
+    "name": "Bullet",
     "parentGuid": null,
     "prefabName": ""
 }
