@@ -23,26 +23,16 @@
             "type": "Transform"
         },
         {
-            "Test": {
-                "testBool": false,
-                "testFloat": 0.0,
-                "testInt": 0,
-                "testString": "",
-                "testVector2": {
+            "PlayerInputComponent": {},
+            "PlayerMoveComponent": {
+                "moveSpeed_": 0.0
+            },
+            "PlayerShotComponent": {
+                "bulletSpawnOffset_": {
                     "x": 0.0,
                     "y": 0.0
                 },
-                "testVector3": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "testVector4": {
-                    "w": 0.0,
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                }
+                "shootCooldownTime_": 0.0
             },
             "type": "Variables"
         },
@@ -52,8 +42,8 @@
                 "baseColor": {
                     "w": 1.0,
                     "x": 1.0,
-                    "y": 0.0,
-                    "z": 0.0
+                    "y": 1.0,
+                    "z": 1.0
                 },
                 "baseTextureGuid": "00000000000000000000000000000000",
                 "guid": "00000000000000000000000000000000",
@@ -80,14 +70,22 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "Test"
+                    "name": "PlayerInputComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerMoveComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerShotComponent"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "78a751aae02db1ea8b34fe6b045eceb4",
-    "name": "Mesh_1",
+    "guid": "02c6a58007198b6c2043c9fb7e6cd183",
+    "name": "Player",
     "parentGuid": null,
     "prefabName": ""
 }

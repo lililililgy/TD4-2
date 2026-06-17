@@ -34,7 +34,7 @@ public class Bullet : MonoScript {
 
     private bool isDead_ = false;
 
-    private Vector3 moveDir_ = new Vector3(0.0f, 0.0f, -1.0f);
+    private Vector3 moveDir_ = new Vector3(0.0f, 0.0f, 1.0f);
     [SerializeField] public float speed_ = 10.0f;
     [SerializeField] public float lifeTime_ = 5.0f;
     private float lifeTimer_ = 0.0f;
