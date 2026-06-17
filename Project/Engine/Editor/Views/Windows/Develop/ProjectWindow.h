@@ -98,6 +98,13 @@ private:
 	std::string filterBuffer_;
 	bool isFiltering_ = false;
 
+	/// ----- 新規作成・リネーム用 ----- ///
+	std::string inputBuffer_;
+	std::filesystem::path targetPath_;
+	bool showRenamePopup_ = false;
+	bool showCreateFolderPopup_ = false;
+	bool showCreateScriptPopup_ = false;
+
 	FileWatcher fileWatcher_;
 
 };

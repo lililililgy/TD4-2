@@ -9,6 +9,8 @@
 
 /// external
 #include <imgui.h>
+#include <shellapi.h>
+#include <fstream>
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -119,11 +121,136 @@ void ProjectWindow::ShowImGui() {
 
 		ImGui::NextColumn();
 
+		// 空白部分で右クリックしたときに新規作成メニューを表示するための判定
+		if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && ImGui::IsMouseClicked(ImGuiMouseButton_Right) && !ImGui::IsAnyItemHovered()) {
+			ImGui::OpenPopup("ProjectWindow_GlobalContextMenu");
+		}
+
+		if (ImGui::BeginPopup("ProjectWindow_GlobalContextMenu")) {
+			if (ImGui::BeginMenu("Create")) {
+				if (ImGui::MenuItem("Folder")) {
+					showCreateFolderPopup_ = true;
+					targetPath_ = currentPath_;
+					inputBuffer_ = "NewFolder";
+				}
+				
+				// C#スクリプトの作成場所を制限 (../SubProjects/CSharpLibrary/Scripts 以下のみ)
+				std::filesystem::path scriptsRoot = "../SubProjects/CSharpLibrary/Scripts";
+				std::string scriptsRootStr = std::filesystem::absolute(scriptsRoot).string();
+				std::string currentPathStr = std::filesystem::absolute(currentPath_).string();
+				bool isValidScriptPath = currentPathStr.find(scriptsRootStr) != std::string::npos;
+
+				if (ImGui::MenuItem("C# Script", nullptr, false, isValidScriptPath)) {
+					showCreateScriptPopup_ = true;
+					targetPath_ = currentPath_;
+					inputBuffer_ = "NewScript";
+				}
+				if (!isValidScriptPath && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
+					ImGui::SetTooltip("C# scripts can only be created in the CSharpLibrary/Scripts folder.");
+				}
+				
+				ImGui::EndMenu();
+			}
+			ImGui::Separator();
+			if (ImGui::MenuItem("Show in Explorer")) {
+				std::filesystem::path absolutePath = std::filesystem::absolute(currentPath_);
+				ShellExecuteW(NULL, L"open", absolutePath.wstring().c_str(), NULL, NULL, SW_SHOWNORMAL);
+			}
+			ImGui::EndPopup();
+		}
+
 		// 右側：ファイルビュー
 		DrawFileView(currentPath_);
 
 		ImGui::Columns(1);
 	}
+
+	// --- モーダルポップアップの描画 ---
+
+	// リネーム用
+	if (showRenamePopup_) ImGui::OpenPopup("Rename Item");
+	if (ImGui::BeginPopupModal("Rename Item", &showRenamePopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::Text("Enter new name:");
+		ImGuiInputText("##newName", &inputBuffer_);
+		ImGui::Spacing();
+		if (ImGui::Button("OK", ImVec2(120, 0))) {
+			try {
+				std::filesystem::path newPath = targetPath_.parent_path() / inputBuffer_;
+				// 拡張子を保持（ファイルの場合）
+				if (!std::filesystem::is_directory(targetPath_)) {
+					if (!newPath.has_extension()) {
+						newPath.replace_extension(targetPath_.extension());
+					}
+				}
+
+				if (!std::filesystem::exists(newPath)) {
+					std::filesystem::rename(targetPath_, newPath);
+					// .metaファイルもあればリネーム
+					std::filesystem::path oldMeta = targetPath_.string() + ".meta";
+					std::filesystem::path newMeta = newPath.string() + ".meta";
+					if (std::filesystem::exists(oldMeta)) {
+						std::filesystem::rename(oldMeta, newMeta);
+					}
+					UpdateFileCache(currentPath_);
+					UpdateDirectoryCache(currentPath_.parent_path());
+				}
+			} catch (...) {}
+			showRenamePopup_ = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0))) { showRenamePopup_ = false; }
+		ImGui::EndPopup();
+	}
+
+	// フォルダ作成用
+	if (showCreateFolderPopup_) ImGui::OpenPopup("Create Folder");
+	if (ImGui::BeginPopupModal("Create Folder", &showCreateFolderPopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::Text("Enter folder name:");
+		ImGuiInputText("##folderName", &inputBuffer_);
+		if (ImGui::Button("OK", ImVec2(120, 0))) {
+			try {
+				std::filesystem::path newDir = targetPath_ / inputBuffer_;
+				std::filesystem::create_directories(newDir);
+				UpdateFileCache(targetPath_);
+				UpdateDirectoryCache(targetPath_);
+			} catch (...) {}
+			showCreateFolderPopup_ = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0))) { showCreateFolderPopup_ = false; }
+		ImGui::EndPopup();
+	}
+
+	// C#スクリプト作成用
+	if (showCreateScriptPopup_) ImGui::OpenPopup("Create C# Script");
+	if (ImGui::BeginPopupModal("Create C# Script", &showCreateScriptPopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::Text("Enter script name:");
+		ImGuiInputText("##scriptName", &inputBuffer_);
+		if (ImGui::Button("OK", ImVec2(120, 0))) {
+			try {
+				std::string className = inputBuffer_;
+				std::filesystem::path newScript = targetPath_ / (className + ".cs");
+				if (!std::filesystem::exists(newScript)) {
+					std::ofstream ofs(newScript);
+					ofs << "using System;\n";
+					ofs << "using System.Collections.Generic;\n\n";
+					ofs << "public class " << className << " : MonoScript {\n";
+					ofs << "\tpublic override void Initialize() {\n\t\t\n\t}\n\n";
+					ofs << "\tpublic override void Update() {\n\t\t\n\t}\n";
+					ofs << "}\n";
+					ofs.close();
+					UpdateFileCache(targetPath_);
+					// スクリプト作成時はホットリロードを要求
+					HotReloadManager::GetInstance().RequestScriptHotReload();
+				}
+			} catch (...) {}
+			showCreateScriptPopup_ = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0))) { showCreateScriptPopup_ = false; }
+		ImGui::EndPopup();
+	}
+
 	ImGui::End();
 }
 
@@ -497,6 +624,24 @@ void ProjectWindow::PopupContextMenu(const std::filesystem::path& filepath, std:
 			if (path.ends_with(".cs")) {
 				HotReloadManager::GetInstance().RequestScriptHotReload();
 			}
+		}
+
+		if (ImGui::MenuItem("Rename")) {
+			showRenamePopup_ = true;
+			targetPath_ = filepath;
+			inputBuffer_ = filepath.stem().string();
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Show in Explorer")) {
+			std::filesystem::path absolutePath = std::filesystem::absolute(filepath);
+			std::wstring params = L"/select,\"" + absolutePath.wstring() + L"\"";
+			ShellExecuteW(NULL, L"open", L"explorer.exe", params.c_str(), NULL, SW_SHOWNORMAL);
+		}
+
+		if (ImGui::MenuItem("Copy Path")) {
+			ImGui::SetClipboardText(filepath.string().c_str());
 		}
 
 		// --- 削除機能の追加 ---
