@@ -56,18 +56,11 @@ public class DebugCamera : MonoScript {
 		if (transform) {
 			position_ = transform.position;
 
-			// ★ここが重要: C++側の最新のQuaternion(rotate)からForwardベクトルを作り、PitchとYawを計算し直す
-			// （もし transform.rotate.eulerAngles などの変換プロパティがエンジン側にある場合は、それを使っても構いません）
-			Vector3 forward = Matrix4x4.Transform(new Vector3(0f, 0f, 1f), Matrix4x4.Rotate(transform.rotate));
-
-			// 誤差で Asin に -1.0～1.0 以外の値が入るのを防ぐため Math.Max/Min でクランプ
-			float clampedY = Math.Max(-1.0f, Math.Min(1.0f, forward.y));
-
-			float yaw = (float)Math.Atan2(forward.x, forward.z);
-			float pitch = -(float)Math.Asin(clampedY);
-
 			// C++の回転状態をC#の変数に同期
-			eulerAngles_ = new Vector3(pitch, yaw, 0f);
+			// 右クリック中はマウス入力によって eulerAngles_ を更新するため、非入力時のみ同期する
+			if (!Input.PressMouse(Mouse.Right)) {
+				eulerAngles_ = transform.rotate.ToEuler();
+			}
 		}
 
 		/// 実際の移動・回転処理

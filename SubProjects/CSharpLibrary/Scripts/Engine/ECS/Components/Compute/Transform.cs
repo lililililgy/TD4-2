@@ -35,7 +35,7 @@ public class Transform : Component {
 		get => rotate_;
 		set {
 			rotate_ = value;
-			if (nativeHandle != 0) InternalSetRotate(nativeHandle, value.w, value.x, value.y, value.z);
+			if (nativeHandle != 0) InternalSetRotate(nativeHandle, value.x, value.y, value.z, value.w);
 		}
 	}
 
