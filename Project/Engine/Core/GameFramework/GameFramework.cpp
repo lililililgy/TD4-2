@@ -19,6 +19,11 @@ GameFramework::~GameFramework() {
 	/// gpuの処理が終わるまで待つ
 	dxManager_->GetDxCommand()->WaitForGpuComplete();
 
+	/// debug用のシーンを保存
+	if (sceneManager_ && entityComponentSystem_) {
+		sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
+	}
+
 	MonoScriptEngine::GetInstance().Finalize();
 
 	Time::Finalize();
