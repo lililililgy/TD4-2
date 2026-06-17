@@ -42,7 +42,7 @@ public class PlayerInputComponent
 
     public bool isShootButtonPressed_ = false;
 
-    private KeyCode[] shootKeys_ = { KeyCode.Space, KeyCode.Z, KeyCode.X };
-    private Gamepad[] shotButtons_ = { Gamepad.LeftShoulder, Gamepad.RightShoulder };
+    [SerializeField] private List<KeyCode> shootKeys_ = new List<KeyCode> { KeyCode.Space, KeyCode.Z, KeyCode.X };
+    [SerializeField] private List<Gamepad> shotButtons_ = new List<Gamepad> { Gamepad.LeftShoulder, Gamepad.RightShoulder };
 
 }
