@@ -86,34 +86,9 @@
     <Compile Include="Scripts\Engine\Graphics\UVTransform.cs" />
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Transform.cs" />
-    <Compile Include="Scripts\Game\AttachObjectToJoint.cs" />
-    <Compile Include="Scripts\Game\Billboard.cs" />
-    <Compile Include="Scripts\Game\Breathe.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
-    <Compile Include="Scripts\Game\Enemy.cs" />
     <Compile Include="Scripts\Engine\MonoScript.cs" />
-    <Compile Include="Scripts\Game\GameMath\GameMathf.cs" />
-    <Compile Include="Scripts\Game\Player.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Math\Vector3.cs" />
-    <Compile Include="Scripts\Game\PrefabTest.cs" />
-    <Compile Include="Scripts\Game\Puzzle\Block.cs" />
-    <Compile Include="Scripts\Game\Puzzle\Command\PuzzleCommand.cs" />
-    <Compile Include="Scripts\Game\Puzzle\GoalAlphaObject.cs" />
-    <Compile Include="Scripts\Game\Puzzle\Mapchip.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Scripts\Game\Puzzle\PuzzleBlockData.cs" />
-    <Compile Include="Scripts\Game\Puzzle\PuzzleCameraController.cs" />
-    <Compile Include="Scripts\Game\Puzzle\PuzzleClearChecker.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Scripts\Game\Puzzle\PuzzleClearEffect.cs" />
-    <Compile Include="Scripts\Game\Puzzle\PuzzleManager.cs" />
-    <Compile Include="Scripts\Game\Puzzle\PuzzlePlayer.cs" />
-    <Compile Include="Scripts\Game\Puzzle\PuzzleStage.cs" />
-    <Compile Include="Scripts\Game\Puzzle\PuzzleStartController.cs" />
-    <Compile Include="Scripts\Game\Scene\SceneLoader.cs" />
-    <Compile Include="Scripts\Game\Title\TitleScript.cs" />
     <Compile Include="Scripts\Test\PlayerInputComponent.cs" />
     <Compile Include="Scripts\Test\PlayerMoveComponent.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
