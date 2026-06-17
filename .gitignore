@@ -335,3 +335,4 @@ DirectXGame/imgui.ini
 # DirectXTex Compiled Shaders
 # **/DirectXTex/Shaders/Compiled/
 **/DirectXTex/Bin/
+*.slnx
