@@ -31,6 +31,12 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 
 	if (monoEngine.GetIsHotReloadRequest()) {
+		// 古いドメインのハンドルを解放
+		ReleaseGCHandle();
+
+		// 新しいドメインで再初期化
+		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+
 		/// C#側のECSGroupを取得、更新関数を呼ぶ
 		ComponentArray<Script>* scriptArray = ecs->GetComponentArray<Script>();
 		if (!scriptArray || scriptArray->GetUsedComponents().empty()) {

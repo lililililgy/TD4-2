@@ -3,9 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 class SpriteRenderer : Component {
+	[StructLayout(LayoutKind.Sequential)]
+	public struct BatchData {
+		public uint compId;
+		public Vector4 color;
+		public Vector2 textureSize;
+		public UVTransform uvTransform;
+	}
+
+	BatchData batchData;
+	public BatchData GetBatchData() {
+		return batchData;
+	}
 
 	//public string meshPath {
 	//	get {

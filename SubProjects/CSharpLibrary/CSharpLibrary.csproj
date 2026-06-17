@@ -72,7 +72,11 @@
     <Compile Include="Scripts\Engine\ECS\Components\ComponentBatchManager.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\ComponentCollection.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\AudioSource.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\CameraComponent.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\Animator.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\AgentIntentComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\MeshRenderer.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Renderer\DissolveMeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SkinMeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SpriteRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\EntityComponentSystem\ECSGroup.cs" />

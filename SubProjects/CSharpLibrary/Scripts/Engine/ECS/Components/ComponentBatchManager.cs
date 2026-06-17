@@ -44,33 +44,145 @@ static class ComponentBatchManager {
 
 
 		// --- MeshRenderer の登録 ---
-
-		// 送信用コンバータ
 		RegisterConverter<MeshRenderer, MeshRenderer.BatchData>((ComponentArray<MeshRenderer> array) => {
 			int count = array.Count;
 			MeshRenderer.BatchData[] batch = new MeshRenderer.BatchData[count];
 			for (int i = 0; i < count; i++) {
 				var comp = array.Get(i);
 				var batchData = comp.GetBatchData();
-
 				batch[i].compId = comp.compId;
 				batch[i].color = batchData.color;
 				batch[i].postEffectFlags = batchData.postEffectFlags;
+				batch[i].uvTransform = batchData.uvTransform;
 			}
 			return batch;
 		});
 
-		// 受信用アロケータ (変更点: Handleを事前に埋める)
 		RegisterAllocator<MeshRenderer, MeshRenderer.BatchData>((ComponentArray<MeshRenderer> array) => {
 			int count = array.Count;
 			MeshRenderer.BatchData[] batch = new MeshRenderer.BatchData[count];
-
-			// C++側での検索キーとなる nativeHandle (または compId) を設定する
 			for (int i = 0; i < count; i++) {
 				var comp = array.Get(i);
 				batch[i].compId = comp.compId;
-				//batch[i].color = comp.color;
-				//batch[i].postEffectFlags = comp.postEffectFlags;
+			}
+			return batch;
+		});
+
+		// --- SpriteRenderer の登録 ---
+		RegisterConverter<SpriteRenderer, SpriteRenderer.BatchData>((ComponentArray<SpriteRenderer> array) => {
+			int count = array.Count;
+			SpriteRenderer.BatchData[] batch = new SpriteRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				var batchData = comp.GetBatchData();
+				batch[i].compId = comp.compId;
+				batch[i].color = batchData.color;
+				batch[i].textureSize = batchData.textureSize;
+				batch[i].uvTransform = batchData.uvTransform;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<SpriteRenderer, SpriteRenderer.BatchData>((ComponentArray<SpriteRenderer> array) => {
+			int count = array.Count;
+			SpriteRenderer.BatchData[] batch = new SpriteRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
+
+		// --- DissolveMeshRenderer の登録 ---
+		RegisterConverter<DissolveMeshRenderer, DissolveMeshRenderer.BatchData>((ComponentArray<DissolveMeshRenderer> array) => {
+			int count = array.Count;
+			DissolveMeshRenderer.BatchData[] batch = new DissolveMeshRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+				batch[i].threshold = comp.threshold;
+				batch[i].uvTransform = comp.uvTransform;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<DissolveMeshRenderer, DissolveMeshRenderer.BatchData>((ComponentArray<DissolveMeshRenderer> array) => {
+			int count = array.Count;
+			DissolveMeshRenderer.BatchData[] batch = new DissolveMeshRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
+
+		// --- CameraComponent の登録 ---
+		RegisterConverter<CameraComponent, CameraComponent.BatchData>((ComponentArray<CameraComponent> array) => {
+			int count = array.Count;
+			CameraComponent.BatchData[] batch = new CameraComponent.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+				// 本来は各行列なども同期すべきだが、まずは構造体サイズの一致を優先
+			}
+			return batch;
+		});
+
+		RegisterAllocator<CameraComponent, CameraComponent.BatchData>((ComponentArray<CameraComponent> array) => {
+			int count = array.Count;
+			CameraComponent.BatchData[] batch = new CameraComponent.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
+
+		// --- AgentIntentComponent の登録 ---
+		RegisterConverter<AgentIntentComponent, AgentIntentComponent.BatchData>((ComponentArray<AgentIntentComponent> array) => {
+			int count = array.Count;
+			AgentIntentComponent.BatchData[] batch = new AgentIntentComponent.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+				batch[i].desiredMoveDirection = comp.desiredMoveDirection;
+				batch[i].desiredRotation = comp.desiredRotation;
+				batch[i].rotationSpeed = comp.rotationSpeed;
+				batch[i].maxSpeed = comp.maxSpeed;
+				batch[i].useDesiredRotation = (byte)(comp.useDesiredRotation ? 1 : 0);
+				batch[i].isAttacking = (byte)(comp.isAttacking ? 1 : 0);
+				batch[i].targetEntityId = comp.targetEntityId;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<AgentIntentComponent, AgentIntentComponent.BatchData>((ComponentArray<AgentIntentComponent> array) => {
+			int count = array.Count;
+			AgentIntentComponent.BatchData[] batch = new AgentIntentComponent.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
+
+		// --- Animator の登録 ---
+		RegisterConverter<Animator, Animator.BatchData>((ComponentArray<Animator> array) => {
+			int count = array.Count;
+			Animator.BatchData[] batch = new Animator.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<Animator, Animator.BatchData>((ComponentArray<Animator> array) => {
+			int count = array.Count;
+			Animator.BatchData[] batch = new Animator.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
 			}
 			return batch;
 		});
@@ -96,12 +208,12 @@ static class ComponentBatchManager {
 
 	// 一括送信
 	public static void SendAllBatches(ComponentCollection collection, string ecsGroupName) {
-		Debug.LogInfo("ComponentBatchManager.SendAllBatches: Start sending all batches.");
+		// Debug.LogInfo("ComponentBatchManager.SendAllBatches: Start sending all batches.");
 		// Debug.LogInfo($"ComponentBatchManager.SendAllBatches: Total converters registered: {converters.Count}.");
 
 		foreach (var kv in converters) {
 			if (!collection.TryGetArray(kv.Key, out IComponentArray array)) {
-				Debug.LogWarning($"ComponentBatchManager.SendAllBatches: ComponentArray for {kv.Key} not found.");
+				// Debug.LogWarning($"ComponentBatchManager.SendAllBatches: ComponentArray for {kv.Key} not found.");
 				continue;
 			}
 
@@ -115,7 +227,7 @@ static class ComponentBatchManager {
 	public static void ReceiveAllBatches(ComponentCollection collection, string ecsGroupName) {
 		foreach (var kv in allocators) {
 			if (!collection.TryGetArray(kv.Key, out IComponentArray array)) {
-				Debug.LogWarning($"ComponentBatchManager.ReceiveAllBatches: ComponentArray for {kv.Key} not found.");
+				// Debug.LogWarning($"ComponentBatchManager.ReceiveAllBatches: ComponentArray for {kv.Key} not found.");
 				continue;
 			}
 
@@ -128,7 +240,7 @@ static class ComponentBatchManager {
 			// 変更点: 配列そのもの(array)を渡して、ID設定済みのBatch配列を受け取る
 			Array batch = kv.Value(array);
 
-			Debug.LogInfo($"ComponentBatchManager.ReceiveAllBatches: Receiving batch for {kv.Key} with count {count}.");
+			// Debug.LogInfo($"ComponentBatchManager.ReceiveAllBatches: Receiving batch for {kv.Key} with count {count}.");
 
 			// batch内には既に compId/nativeHandle が入っているので、C++側で正しく処理可能
 			InternalGetBatch(kv.Key, batch, count, ecsGroupName);
@@ -146,28 +258,39 @@ static class ComponentBatchManager {
 
 			for (int i = 0; i < transformBatch.Length; i++) {
 				var comp = transformArray.Get(i);
-
-				// 念のためIDの一致を確認することも可能だが、
-				// Allocatorで順番通りに作成しているため、ここではそのまま適用する
-				// comp.compId = transformBatch[i].compId; // IDは変更しない
-
 				comp.position = transformBatch[i].position;
 				comp.rotate = transformBatch[i].rotate;
 				comp.scale = transformBatch[i].scale;
 			}
-		}
-
-		if (componentType == typeof(MeshRenderer)) {
+		} else if (componentType == typeof(MeshRenderer)) {
 			var meshArray = (ComponentArray<MeshRenderer>)array;
 			var meshBatch = (MeshRenderer.BatchData[])batch;
 
 			for (int i = 0; i < meshBatch.Length; i++) {
 				var comp = meshArray.Get(i);
+				// MeshRendererの個別のデータがあればここで適用
+			}
+		} else if (componentType == typeof(SpriteRenderer)) {
+			var spriteArray = (ComponentArray<SpriteRenderer>)array;
+			var spriteBatch = (SpriteRenderer.BatchData[])batch;
 
-				// Handleは変更せず、描画パラメータのみ更新
-				//comp.compId = meshBatch[i].compId;
-				comp.color = meshBatch[i].color;
-				comp.postEffectFlags = meshBatch[i].postEffectFlags;
+			for (int i = 0; i < spriteBatch.Length; i++) {
+				var comp = spriteArray.Get(i);
+				comp.color = spriteBatch[i].color;
+			}
+		} else if (componentType == typeof(AgentIntentComponent)) {
+			var agentArray = (ComponentArray<AgentIntentComponent>)array;
+			var agentBatch = (AgentIntentComponent.BatchData[])batch;
+
+			for (int i = 0; i < agentBatch.Length; i++) {
+				var comp = agentArray.Get(i);
+				comp.desiredMoveDirection = agentBatch[i].desiredMoveDirection;
+				comp.desiredRotation = agentBatch[i].desiredRotation;
+				comp.rotationSpeed = agentBatch[i].rotationSpeed;
+				comp.maxSpeed = agentBatch[i].maxSpeed;
+				comp.useDesiredRotation = agentBatch[i].useDesiredRotation != 0;
+				comp.isAttacking = agentBatch[i].isAttacking != 0;
+				comp.targetEntityId = agentBatch[i].targetEntityId;
 			}
 		}
 	}

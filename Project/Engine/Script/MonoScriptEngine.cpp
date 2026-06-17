@@ -55,6 +55,13 @@ MonoScriptEngine& MonoScriptEngine::GetInstance() {
 
 void MonoScriptEngine::Initialize() {
 
+	// C#プロジェクトの自動生成とビルド
+#ifdef _DEBUG
+	Console::Log("Auto-generating C# project and building DLL...", LogCategory::ScriptEngine);
+	system("powershell.exe -ExecutionPolicy Bypass -File SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
+	system("dotnet build SubProjects/CSharpLibrary/CSharpLibrary.sln -c Debug -p:Platform=x64");
+#endif
+
 	SetEnvironmentVariableA("PATH", "Packages/mono/bin;C:/Windows/System32");
 	SetEnvironmentVariableA("MONO_PATH", "Packages/mono/lib/4.5");
 
@@ -173,6 +180,14 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
+
+	// C#プロジェクトの再生成とビルド
+#ifdef _DEBUG
+	Console::Log("Rebuilding C# project...", LogCategory::ScriptEngine);
+	system("powershell.exe -ExecutionPolicy Bypass -File SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
+	system("dotnet build SubProjects/CSharpLibrary/CSharpLibrary.sln -c Debug -p:Platform=x64");
+#endif
+
 	MonoDomain* oldDomain = domain_;
 	std::string oldDllPath = currentDllPath_;
 
@@ -205,6 +220,18 @@ void MonoScriptEngine::HotReload() {
 
 	image_ = mono_assembly_get_image(assembly_);
 	RegisterFunctions();
+
+	// ComponentBatchManagerの再初期化
+	{
+		MonoClass* batchMgrClass = mono_class_from_name(image_, "", "ComponentBatchManager");
+		if (batchMgrClass) {
+			MonoMethod* initMethod = mono_class_get_method_from_name(batchMgrClass, "Initialize", 0);
+			if (initMethod) {
+				MonoObject* exc = nullptr;
+				mono_runtime_invoke(initMethod, nullptr, nullptr, &exc);
+			}
+		}
+	}
 
 	if (oldDomain != mono_get_root_domain()) {
 		mono_domain_unload(oldDomain);
