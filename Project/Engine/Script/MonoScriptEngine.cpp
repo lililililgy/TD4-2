@@ -1,4 +1,4 @@
-#include "MonoScriptEngine.h"
+﻿#include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
 
 using namespace ONEngine;
@@ -56,11 +56,11 @@ MonoScriptEngine& MonoScriptEngine::GetInstance() {
 void MonoScriptEngine::Initialize() {
 
 	// C#プロジェクトの自動生成とビルド
-#ifdef _DEBUG
-	Console::Log("Auto-generating C# project and building DLL...", LogCategory::ScriptEngine);
-	system("powershell.exe -ExecutionPolicy Bypass -File SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
-	system("dotnet build SubProjects/CSharpLibrary/CSharpLibrary.sln -c Debug -p:Platform=x64");
-#endif
+//#ifdef _DEBUG
+//	Console::Log("Auto-generating C# project and building DLL...", LogCategory::ScriptEngine);
+//	system("powershell.exe -ExecutionPolicy Bypass -File SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
+//	system("dotnet build SubProjects/CSharpLibrary/CSharpLibrary.sln -c Debug -p:Platform=x64");
+//#endif
 
 	SetEnvironmentVariableA("PATH", "Packages/mono/bin;C:/Windows/System32");
 	SetEnvironmentVariableA("MONO_PATH", "Packages/mono/lib/4.5");
@@ -180,13 +180,6 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
-
-	// C#プロジェクトの再生成とビルド
-#ifdef _DEBUG
-	Console::Log("Rebuilding C# project...", LogCategory::ScriptEngine);
-	system("powershell.exe -ExecutionPolicy Bypass -File SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
-	system("dotnet build SubProjects/CSharpLibrary/CSharpLibrary.sln -c Debug -p:Platform=x64");
-#endif
 
 	MonoDomain* oldDomain = domain_;
 	std::string oldDllPath = currentDllPath_;
