@@ -113,7 +113,13 @@ public class ECSGroup {
 		// 初期化後の座標を即座にC++に送信してリセットを防ぐ
 		ComponentBatchManager.SendAllBatches(componentCollection, groupName);
 
-		foreach (Entity entity in entities_.Values) {
+		// 生成・削除によるコレクション変更エラーを避けるため、配列にコピーして反復処理を行う
+		foreach (Entity entity in entities_.Values.ToArray()) {
+			// 処理中に自身または他のエンティティが削除された場合はスキップ
+			if (!entities_.ContainsKey(entity.Id)) {
+				continue;
+			}
+
 			if (!CheckEnable(entity)) {
 				continue;
 			}

@@ -23,6 +23,12 @@
             "type": "Transform"
         },
         {
+            "ProfileTest": {
+                "values": [
+                    0,
+                    0
+                ]
+            },
             "Test": {
                 "testBool": false,
                 "testFloat": 0.0,
@@ -81,6 +87,10 @@
                 {
                     "enable": true,
                     "name": "Test"
+                },
+                {
+                    "enable": true,
+                    "name": "ProfileTest"
                 }
             ],
             "type": "Script"

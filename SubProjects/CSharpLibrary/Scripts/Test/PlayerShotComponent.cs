@@ -23,7 +23,7 @@ public class PlayerShotComponent : MonoScript {
         if (shootCooldown_ <= 0.0f) {
             // Entity の 作成
             Entity bulletEnt = ecsGroup.CreateEntity("Bullet");
-            bullets_ .Add(bulletEnt);
+            bullets_.Add(bulletEnt);
 
             Transform bullTrans = bulletEnt.GetComponent<Transform>();
             Transform playerTrans = entity.GetComponent<Transform>();
