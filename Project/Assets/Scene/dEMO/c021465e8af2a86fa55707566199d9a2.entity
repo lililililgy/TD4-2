@@ -1,0 +1,45 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -2.1049418449401855,
+                "y": 3.1377124786376953,
+                "z": -5.475429534912109
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "color": {
+                "w": 1.0,
+                "x": 0.5843491554260254,
+                "y": 0.8745519518852234,
+                "z": 0.10344163328409195
+            },
+            "enable": 1,
+            "intensity": 4.0,
+            "radius": 10.0,
+            "type": "PointLight"
+        }
+    ],
+    "guid": "c021465e8af2a86fa55707566199d9a2",
+    "name": "Light_1",
+    "parentGuid": null,
+    "prefabName": ""
+}

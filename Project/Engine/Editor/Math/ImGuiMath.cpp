@@ -389,26 +389,6 @@ bool Editor::ImGuiColorEdit(const char* label, ONEngine::Vector4* color) {
 	return ImMathf::ColorEdit(label, color);
 }
 
-void ONEngine::DirectionalLightDebug(DirectionalLight* light) {
-	if(!light) return;
-	if(ImGui::CollapsingHeader("DirectionalLight", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool enabled = (light->enable != 0);
-		if (ImGui::Checkbox("enable", &enabled)) {
-			light->enable = enabled ? 1 : 0;
-		}
-
-		ONEngine::Vector4 color = light->GetColor();
-		if (Editor::ImGuiColorEdit("color", &color)) {
-			light->SetColor(color);
-		}
-
-		float intensity = light->GetIntensity();
-		if (ImGui::DragFloat("intensity", &intensity, 0.1f, 0.0f, 1000.0f)) {
-			light->SetIntensity(intensity);
-		}
-	}
-}
-
 void ONEngine::AudioSourceDebug(AudioSource* audioSource) {
 	if(!audioSource) return;
 	if(ImGui::CollapsingHeader("AudioSource", ImGuiTreeNodeFlags_DefaultOpen)) {

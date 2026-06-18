@@ -8,14 +8,44 @@ struct DirectionalLight {
     float intensity;
 };
 
-ConstantBuffer<DirectionalLight> light : register(b0);
+struct PointLight {
+    float4 position;
+    float4 color;
+    float intensity;
+    float radius;
+    float2 padding;
+};
+
+struct SpotLight {
+    float4 position;
+    float4 color;
+    float3 direction;
+    float intensity;
+    float radius;
+    float innerAngle;
+    float outerAngle;
+    float padding;
+};
+
+struct LightCount {
+    uint directionalLightCount;
+    uint pointLightCount;
+    uint spotLightCount;
+    uint padding;
+};
+
+ConstantBuffer<LightCount> lightCounts : register(b0);
 ConstantBuffer<Camera> camera : register(b1);
 
-Texture2D<float4> colorTex : register(t0);
-Texture2D<float4> positionTex : register(t1);
-Texture2D<float4> normalTex : register(t2);
-Texture2D<float4> flagsTex : register(t3);
-TextureCube<float4> environmentTexture : register(t4);
+StructuredBuffer<DirectionalLight> directionalLights : register(t0);
+StructuredBuffer<PointLight> pointLights : register(t1);
+StructuredBuffer<SpotLight> spotLights : register(t2);
+
+Texture2D<float4> colorTex : register(t3);
+Texture2D<float4> positionTex : register(t4);
+Texture2D<float4> normalTex : register(t5);
+Texture2D<float4> flagsTex : register(t6);
+TextureCube<float4> environmentTexture : register(t7);
 
 RWTexture2D<float4> outputTex : register(u0);
 SamplerState textureSampler : register(s0);
@@ -114,11 +144,48 @@ void main(uint3 DTid : SV_DispatchThreadID)
     //////////////////////////////////////////////////////////
     // Lighting
     //////////////////////////////////////////////////////////
-    float3 L = normalize(-light.direction);
-    float3 diffuse = HalfLambertDiffuse(albedo, N, L);
+    float3 lighting = 0.0f;
+    float3 V = normalize(camera.position.xyz - worldPos);
 
-    float3 lighting = diffuse * light.color.rgb * light.intensity;
+    // Directional Lights
+    for (uint i = 0; i < lightCounts.directionalLightCount; ++i)
+    {
+        float3 L = normalize(-directionalLights[i].direction);
+        float3 diffuse = HalfLambertDiffuse(albedo, N, L);
+        lighting += diffuse * directionalLights[i].color.rgb * directionalLights[i].intensity;
+    }
 
+    // Point Lights
+    for (uint j = 0; j < lightCounts.pointLightCount; ++j)
+    {
+        float3 L = pointLights[j].position.xyz - worldPos;
+        float dist = length(L);
+        if (dist < pointLights[j].radius)
+        {
+            L = normalize(L);
+            float attenuation = pow(saturate(1.0f - dist / pointLights[j].radius), 2.0f);
+            float3 diffuse = HalfLambertDiffuse(albedo, N, L);
+            lighting += diffuse * pointLights[j].color.rgb * pointLights[j].intensity * attenuation;
+        }
+    }
+
+    // Spot Lights
+    for (uint k = 0; k < lightCounts.spotLightCount; ++k)
+    {
+        float3 L = spotLights[k].position.xyz - worldPos;
+        float dist = length(L);
+        if (dist < spotLights[k].radius)
+        {
+            L = normalize(L);
+            float attenuation = pow(saturate(1.0f - dist / spotLights[k].radius), 2.0f);
+            
+            float cosAngle = dot(normalize(spotLights[k].direction), -L);
+            float spotAttenuation = saturate((cosAngle - spotLights[k].innerAngle) / (spotLights[k].outerAngle - spotLights[k].innerAngle));
+            
+            float3 diffuse = HalfLambertDiffuse(albedo, N, L);
+            lighting += diffuse * spotLights[k].color.rgb * spotLights[k].intensity * attenuation * spotAttenuation;
+        }
+    }
 
     //////////////////////////////////////////////////////////
     // Environment Reflection

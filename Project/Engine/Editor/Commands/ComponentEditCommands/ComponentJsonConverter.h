@@ -45,6 +45,14 @@ void to_json(nlohmann::json& j, const Color& c);
 void from_json(const nlohmann::json& j, DirectionalLight& l);
 void to_json(nlohmann::json& j, const DirectionalLight& l);
 
+// PointLight
+void from_json(const nlohmann::json& j, PointLight& l);
+void to_json(nlohmann::json& j, const PointLight& l);
+
+// SpotLight
+void from_json(const nlohmann::json& j, SpotLight& l);
+void to_json(nlohmann::json& j, const SpotLight& l);
+
 // Effect
 void from_json(const nlohmann::json& j, Effect& e);
 void to_json(nlohmann::json& j, const Effect& e);

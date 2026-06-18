@@ -50,6 +50,8 @@ namespace {
 			Register<Transform>();
 			Register<Variables>();
 			Register<DirectionalLight>();
+			Register<PointLight>();
+			Register<SpotLight>();
 			Register<AudioSource>();
 			Register<Effect>();
 			Register<ParticleSystem>();
@@ -164,6 +166,44 @@ void ONEngine::to_json(nlohmann::json& j, const DirectionalLight& l) {
 		{ "intensity", l.GetIntensity() },
 		{ "direction", l.GetDirection() },
 		{ "color", l.GetColor() }
+	};
+}
+
+void ONEngine::from_json(const nlohmann::json& j, PointLight& l) {
+	l.SetIntensity(j.at("intensity").get<float>());
+	l.SetRadius(j.at("radius").get<float>());
+	l.SetColor(j.at("color").get<Vector4>());
+}
+
+void ONEngine::to_json(nlohmann::json& j, const PointLight& l) {
+	j = nlohmann::json{
+		{ "type", "PointLight" },
+		{ "enable", l.enable },
+		{ "intensity", l.GetIntensity() },
+		{ "radius", l.GetRadius() },
+		{ "color", l.GetColor() }
+	};
+}
+
+void ONEngine::from_json(const nlohmann::json& j, SpotLight& l) {
+	l.SetIntensity(j.at("intensity").get<float>());
+	l.SetDirection(j.at("direction").get<Vector3>());
+	l.SetRadius(j.at("radius").get<float>());
+	l.SetColor(j.at("color").get<Vector4>());
+	l.SetInnerAngle(j.at("innerAngle").get<float>());
+	l.SetOuterAngle(j.at("outerAngle").get<float>());
+}
+
+void ONEngine::to_json(nlohmann::json& j, const SpotLight& l) {
+	j = nlohmann::json{
+		{ "type", "SpotLight" },
+		{ "enable", l.enable },
+		{ "intensity", l.GetIntensity() },
+		{ "direction", l.GetDirection() },
+		{ "radius", l.GetRadius() },
+		{ "color", l.GetColor() },
+		{ "innerAngle", l.GetInnerAngle() },
+		{ "outerAngle", l.GetOuterAngle() }
 	};
 }
 
