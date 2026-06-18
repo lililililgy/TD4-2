@@ -1,4 +1,4 @@
-#include "Light.h"
+﻿#include "Light.h"
 
 /// external
 #include <imgui.h>
@@ -32,11 +32,6 @@ SpotLight::SpotLight() {
 void ONEngine::DirectionalLightDebug(DirectionalLight* light) {
 	if(!light) return;
 	if(ImGui::CollapsingHeader("DirectionalLight", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool enabled = (light->enable != 0);
-		if (ImGui::Checkbox("enable", &enabled)) {
-			light->enable = enabled ? 1 : 0;
-		}
-
 		ONEngine::Vector4 color = light->GetColor();
 		if (Editor::ImGuiColorEdit("color", &color)) {
 			light->SetColor(color);
@@ -57,11 +52,6 @@ void ONEngine::DirectionalLightDebug(DirectionalLight* light) {
 void ONEngine::PointLightDebug(PointLight* light) {
 	if(!light) return;
 	if(ImGui::CollapsingHeader("PointLight", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool enabled = (light->enable != 0);
-		if (ImGui::Checkbox("enable", &enabled)) {
-			light->enable = enabled ? 1 : 0;
-		}
-
 		ONEngine::Vector4 color = light->GetColor();
 		if (Editor::ImGuiColorEdit("color", &color)) {
 			light->SetColor(color);
@@ -82,11 +72,6 @@ void ONEngine::PointLightDebug(PointLight* light) {
 void ONEngine::SpotLightDebug(SpotLight* light) {
 	if(!light) return;
 	if(ImGui::CollapsingHeader("SpotLight", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool enabled = (light->enable != 0);
-		if (ImGui::Checkbox("enable", &enabled)) {
-			light->enable = enabled ? 1 : 0;
-		}
-
 		ONEngine::Vector4 color = light->GetColor();
 		if (Editor::ImGuiColorEdit("color", &color)) {
 			light->SetColor(color);
