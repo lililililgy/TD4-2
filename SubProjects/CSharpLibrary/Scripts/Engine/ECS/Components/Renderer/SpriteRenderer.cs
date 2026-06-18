@@ -20,6 +20,18 @@ class SpriteRenderer : Component {
 		return batchData;
 	}
 
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
+
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(SpriteRenderer), batch, 1, ecsGroupName);
+
+		batchData.color = batch[0].color;
+		batchData.textureSize = batch[0].textureSize;
+		batchData.uvTransform = batch[0].uvTransform;
+	}
+
 	//public string meshPath {
 	//	get {
 	//		return InternalGetMeshName(nativeHandle);

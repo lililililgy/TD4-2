@@ -11,6 +11,8 @@ public class Component {
 	public uint compId;
 	public Entity entity;
 
+	public virtual void SyncFromNative(string ecsGroupName) { }
+
 	public static implicit operator bool(Component component) {
 		return component != null;
 	}

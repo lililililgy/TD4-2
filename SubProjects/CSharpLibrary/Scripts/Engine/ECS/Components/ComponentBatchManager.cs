@@ -297,8 +297,8 @@ static class ComponentBatchManager {
 
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetBatch(Type componentType, Array batch, int count, string ecsGroupName);
+	public static extern void InternalSetBatch(Type componentType, Array batch, int count, string ecsGroupName);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalGetBatch(Type componentType, Array batch_, int count, string ecsGroupName);
+	public static extern void InternalGetBatch(Type componentType, Array batch_, int count, string ecsGroupName);
 }

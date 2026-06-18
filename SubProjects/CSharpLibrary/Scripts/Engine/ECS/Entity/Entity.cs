@@ -146,6 +146,7 @@ public class Entity {
 		comp.entity = this;
 		comp.compId = compId;
 		components_[typeName] = comp;
+		comp.SyncFromNative(ecsGroupName_);
 
 		if (comp == null) {
 			Debug.LogError("Failed to create component: " + typeName + " (Entity ID: " + entityId_ + ")");
@@ -178,6 +179,7 @@ public class Entity {
 		comp.compId = compId;
 		comp.entity = this;
 		components_[typeName] = comp;
+		comp.SyncFromNative(ecsGroupName_);
 
 		ecsGroup_.componentCollection.AddComponent(comp);
 
