@@ -38,6 +38,7 @@ class InspectorWindow : public IEditorWindow {
 		Renderer,	/// MeshRendererを筆頭に描画に用いるコンポーネント
 		Collider,	/// BoxColliderを筆頭に衝突判定に用いるコンポーネント
 		Script,		/// Script
+		Light,		/// Light
 	};
 
 	using EditFunc = std::function<void(const std::vector<ONEngine::IComponent*>&)>;

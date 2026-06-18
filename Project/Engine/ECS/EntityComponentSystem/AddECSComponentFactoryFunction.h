@@ -39,6 +39,8 @@ inline void AddComponentFactoryFunction(ComponentCollection* compCollection) {
 	compCollection->RegisterComponentFactory<Script>();
 	compCollection->RegisterComponentFactory<Transform>();
 	compCollection->RegisterComponentFactory<DirectionalLight>();
+	compCollection->RegisterComponentFactory<PointLight>();
+	compCollection->RegisterComponentFactory<SpotLight>();
 	compCollection->RegisterComponentFactory<AudioSource>();
 	compCollection->RegisterComponentFactory<Variables>();
 	compCollection->RegisterComponentFactory<Effect>();

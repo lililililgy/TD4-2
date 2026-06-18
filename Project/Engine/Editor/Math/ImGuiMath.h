@@ -99,8 +99,6 @@ namespace ONEngine {
 /// componentのデバッグ表示関数を定義 (今後各Componentの.h .cppに移動予定)
 /// //////////////////////////////////////////////
 
-void DirectionalLightDebug(class DirectionalLight* light);
-
 void AudioSourceDebug(class AudioSource* audioSource);
 
 void CustomMeshRendererDebug(class CustomMeshRenderer* customMeshRenderer);

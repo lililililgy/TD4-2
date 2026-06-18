@@ -66,7 +66,6 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 
 	/// compute
 	RegisterComponentMulti<Transform>(ComponentType::Compute, [&](const std::vector<Transform*>& comps) { ComponentDebug::TransformDebug(comps); });
-	RegisterComponent<DirectionalLight>(ComponentType::Compute, [&](DirectionalLight* comp) { DirectionalLightDebug(comp); });
 	RegisterComponent<AudioSource>(ComponentType::Compute, [&](AudioSource* comp) { ComponentDebug::AudioSourceDebug(comp); });
 	RegisterComponent<Variables>(ComponentType::Compute, [&](Variables* comp) { ComponentDebug::VariablesDebug(comp); });
 	RegisterComponent<AnimationPlayer>(ComponentType::Compute, [&](AnimationPlayer* comp) { ComponentDebug::AnimationPlayerDebug(comp); });
@@ -79,6 +78,11 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 	RegisterComponent<ShadowCaster>(ComponentType::Compute, [&](ShadowCaster* comp) { ComponentDebug::ShadowCasterDebug(comp); });
 	RegisterComponent<AgentIntentComponent>(ComponentType::Compute, [&](AgentIntentComponent* comp) { ComponentDebug::AgentIntentComponentDebug(comp); });
 	RegisterComponentMulti<Animator>(ComponentType::Compute, [&](const std::vector<Animator*>& comps) { ComponentDebug::AnimatorDebug(comps); });
+
+	/// light
+	RegisterComponent<DirectionalLight>(ComponentType::Light, [&](DirectionalLight* comp) { DirectionalLightDebug(comp); });
+	RegisterComponent<PointLight>(ComponentType::Light, [&](PointLight* comp) { PointLightDebug(comp); });
+	RegisterComponent<SpotLight>(ComponentType::Light, [&](SpotLight* comp) { SpotLightDebug(comp); });
 
 	RegisterComponent<Script>(ComponentType::Script, [&](Script* comp) { ComponentDebug::ScriptDebug(comp); });
 
@@ -426,6 +430,7 @@ ImVec4 InspectorWindow::GetComponentBaseColor(ComponentType type) const {
 	case ComponentType::Compute:  return ImVec4(0.15f, 0.30f, 0.45f, 0.70f);
 	case ComponentType::Renderer: return ImVec4(0.20f, 0.40f, 0.25f, 0.70f);
 	case ComponentType::Collider: return ImVec4(0.50f, 0.30f, 0.15f, 0.70f);
+	case ComponentType::Light:    return ImVec4(0.50f, 0.40f, 0.10f, 0.70f);
 	default:                      return ImGui::GetStyleColorVec4(ImGuiCol_Header);
 	}
 	return ImVec4();
