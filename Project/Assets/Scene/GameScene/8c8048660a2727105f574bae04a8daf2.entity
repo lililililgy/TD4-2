@@ -2,7 +2,7 @@
     "active": true,
     "components": [
         {
-            "cameraType": 1,
+            "cameraType": 0,
             "enable": 1,
             "farClip": 1000.0,
             "fogColor": {
@@ -11,7 +11,7 @@
                 "z": 0.0
             },
             "fogEnd": 10000.0,
-            "fogStart": 8.407790785948902e-45,
+            "fogStart": 0.0,
             "fovY": 0.699999988079071,
             "isDrawFrustum": false,
             "isMainCamera": true,
@@ -24,10 +24,10 @@
             "position": {
                 "x": 0.0,
                 "y": 0.0,
-                "z": -144.30003356933594
+                "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -43,8 +43,8 @@
             "type": "Variables"
         }
     ],
-    "guid": "066cf8700e962fdd141e80666ddb8240",
-    "name": "Camera",
+    "guid": "8c8048660a2727105f574bae04a8daf2",
+    "name": "Camera_4",
     "parentGuid": null,
     "prefabName": ""
 }

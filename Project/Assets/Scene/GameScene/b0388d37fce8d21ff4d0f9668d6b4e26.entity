@@ -5,20 +5,20 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": -3.852370262145996,
+                "y": 4.235121726989746,
+                "z": 1.4156103134155273e-06
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": -0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 256.0,
+                "y": 255.9999542236328,
+                "z": 255.9999542236328
             },
             "type": "Transform"
         },
@@ -30,10 +30,32 @@
                     "x": 0.0,
                     "y": 0.0
                 },
-                "shootCooldownTime_": 0.0
+                "shootCooldownTime_": 0.0,
+                "shootKeys_": [
+                    57,
+                    44,
+                    45
+                ],
+                "shotButtons_": [
+                    256,
+                    512
+                ]
             },
             "PlayerMoveComponent": {
-                "moveSpeed_": 20.0
+                "accel_": 256.0,
+                "currentRotateMaxSmoothSpeed_": 64.0,
+                "currentRotateSmoothTime_": 3.0,
+                "decelMaxSmoothSpeed_": 12.0,
+                "decelSmoothTime_": 0.20000000298023224,
+                "maxSmoothSpeed_": 70.0,
+                "maxSpeed_": 512.0,
+                "moveSpeed_": 20.0,
+                "smoothTime_": 0.07999999821186066,
+                "velocity_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
             },
             "PlayerShotComponent": {
                 "bulletSpawnOffset_": {
@@ -44,35 +66,6 @@
                 "shootCooldownTime_": 0.18000000715255737
             },
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "material": {
-                "baseColor": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "baseTextureGuid": "00000000000000000000000000000000",
-                "guid": "00000000000000000000000000000000",
-                "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 1,
-                "uvTransform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "rotate": 0.0,
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                }
-            },
-            "meshPath": "./Packages/Models/primitive/cube.obj",
-            "renderQueue": 2,
-            "type": "MeshRenderer"
         },
         {
             "enable": 1,
@@ -91,6 +84,33 @@
                 }
             ],
             "type": "Script"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "98833aef331aafb2bfce860b634d7f4a",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
