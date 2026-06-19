@@ -1,0 +1,14 @@
+{
+    "entities": [
+        {
+            "guid": "28da50099110d89e1afd8c166267aac2",
+            "parentGuid": null,
+            "path": "./Workspace_youji/28da50099110d89e1afd8c166267aac2.entity"
+        },
+        {
+            "guid": "57715c5f0e7807ded7cf11c05c37e668",
+            "parentGuid": null,
+            "path": "./Workspace_youji/57715c5f0e7807ded7cf11c05c37e668.entity"
+        }
+    ]
+}
