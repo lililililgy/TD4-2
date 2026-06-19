@@ -57,5 +57,7 @@ bool InternalIsTriggerBox(uint64_t nativeHandle);
 void InternalSetTriggerBox(uint64_t nativeHandle, bool trigger);
 float InternalGetMassBox(uint64_t nativeHandle);
 void InternalSetMassBox(uint64_t nativeHandle, float mass);
+bool InternalIsUseOwnerScaleBox(uint64_t nativeHandle);
+void InternalSetUseOwnerScaleBox(uint64_t nativeHandle, bool use);
 
 } /// ONEngine

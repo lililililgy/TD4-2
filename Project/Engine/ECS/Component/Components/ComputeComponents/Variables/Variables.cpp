@@ -488,6 +488,36 @@ void Variables::SetScriptVariables(const std::string& scriptName) {
 		if (!ShouldSerialize(field)) continue;
 		const char* name = mono_field_get_name(field);
 		if (!group.Has(name)) continue;
+
+		// C#側の型情報に合わせてC++側のVariablesの型を自動補正する
+		MonoType* fieldType = mono_field_get_type(field);
+		int typeId = mono_type_get_type(fieldType);
+		auto& var = const_cast<Var&>(group.Get(name));
+
+		if (typeId == MONO_TYPE_R4 && std::holds_alternative<int>(var)) {
+			group.Add(name, static_cast<float>(std::get<int>(var)));
+		} else if (typeId == MONO_TYPE_I4 && std::holds_alternative<float>(var)) {
+			group.Add(name, static_cast<int>(std::get<float>(var)));
+		} else if (typeId == MONO_TYPE_BOOLEAN && std::holds_alternative<int>(var)) {
+			group.Add(name, std::get<int>(var) != 0);
+		} else if (typeId == MONO_TYPE_BOOLEAN && std::holds_alternative<float>(var)) {
+			group.Add(name, std::get<float>(var) != 0.0f);
+		} else if (typeId == MONO_TYPE_VALUETYPE || typeId == MONO_TYPE_CLASS) {
+			MonoClass* fieldClass = mono_class_from_mono_type(fieldType);
+			if (fieldClass) {
+				const char* className = mono_class_get_name(fieldClass);
+				if (strcmp(className, "Vector2") == 0 && !std::holds_alternative<Vector2>(var)) {
+					group.Add(name, Vector2::Zero);
+				} else if (strcmp(className, "Vector3") == 0 && !std::holds_alternative<Vector3>(var)) {
+					group.Add(name, Vector3::Zero);
+				} else if (strcmp(className, "Vector4") == 0 && !std::holds_alternative<Vector4>(var)) {
+					group.Add(name, Vector4::Zero);
+				}
+			}
+		} else if (typeId == MONO_TYPE_STRING && !std::holds_alternative<std::string>(var)) {
+			group.Add(name, std::string(""));
+		}
+
 		auto& val = group.Get(name);
 
 		std::visit([&](auto&& arg) {

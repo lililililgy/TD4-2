@@ -1,7 +1,8 @@
-#include "SphereCollider.h"
+#include "CircleCollider.h"
 
 /// std
 #include <bit>
+#include <vector>
 
 /// external
 #include <magic_enum/magic_enum.hpp>
@@ -13,7 +14,7 @@
 
 using namespace ONEngine;
 
-void ComponentDebug::SphereColliderDebug(SphereCollider* c) {
+void ComponentDebug::CircleColliderDebug(CircleCollider* c) {
 	if(!c) {
 		return;
 	}
@@ -38,7 +39,6 @@ void ComponentDebug::SphereColliderDebug(SphereCollider* c) {
 	}
 
 	{	/// CollisionFilter (ImGui側の処理)
-
 		constexpr auto entries = magic_enum::enum_entries<CollisionFilter>();
 		std::vector<const char*> items;
 		for(const auto& entry : entries) {
@@ -92,16 +92,12 @@ void ComponentDebug::SphereColliderDebug(SphereCollider* c) {
 		}
 	}
 
-
-
-	/// sphere parameter
-	ImGui::SeparatorText("sphere parameter");
+	/// circle parameter
+	ImGui::SeparatorText("circle parameter");
 	Editor::ImMathf::DragFloat("radius", &c->radius_, 0.1f, 0.0f, 100.0f);
-
 }
 
-
-void ONEngine::from_json(const nlohmann::json& j, SphereCollider& s) {
+void ONEngine::from_json(const nlohmann::json& j, CircleCollider& s) {
 	s.enable = j.value("enable", 1);
 	s.radius_ = j.value("radius", 1.0f);
 	s.isTrigger_ = j.value("isTrigger", false);
@@ -113,9 +109,9 @@ void ONEngine::from_json(const nlohmann::json& j, SphereCollider& s) {
 	s.maskBits_ = j.value("maskBits", static_cast<uint32_t>(CollisionFilter::ALL));
 }
 
-void ONEngine::to_json(nlohmann::json& j, const SphereCollider& s) {
+void ONEngine::to_json(nlohmann::json& j, const CircleCollider& s) {
 	j = nlohmann::json{
-		{ "type", "SphereCollider" },
+		{ "type", "CircleCollider" },
 		{ "enable", s.enable },
 		{ "radius", s.GetRadius() },
 		{ "isTrigger", s.IsTrigger() },
@@ -128,57 +124,54 @@ void ONEngine::to_json(nlohmann::json& j, const SphereCollider& s) {
 	};
 }
 
-
-SphereCollider::SphereCollider() {
-	// デフォルトの値をセット
+CircleCollider::CircleCollider() {
 	radius_ = 1.0f;
 }
 
-void SphereCollider::SetRadius(float radius) {
+void CircleCollider::SetRadius(float radius) {
 	radius_ = radius;
 }
 
-float SphereCollider::GetRadius() const {
+float CircleCollider::GetRadius() const {
 	return radius_;
 }
 
-float ONEngine::InternalGetRadius(uint64_t nativeHandle) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+float ONEngine::InternalGetRadiusCircle(uint64_t nativeHandle) {
+	CircleCollider* c = reinterpret_cast<CircleCollider*>(nativeHandle);
 	return c ? c->GetRadius() : 0.0f;
 }
 
-void ONEngine::InternalSetRadius(uint64_t nativeHandle, float radius) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+void ONEngine::InternalSetRadiusCircle(uint64_t nativeHandle, float radius) {
+	CircleCollider* c = reinterpret_cast<CircleCollider*>(nativeHandle);
 	if(c) c->SetRadius(radius);
 }
 
-bool ONEngine::InternalIsTriggerSphere(uint64_t nativeHandle) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+bool ONEngine::InternalIsTriggerCircle(uint64_t nativeHandle) {
+	CircleCollider* c = reinterpret_cast<CircleCollider*>(nativeHandle);
 	return c ? c->IsTrigger() : false;
 }
 
-void ONEngine::InternalSetTriggerSphere(uint64_t nativeHandle, bool trigger) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+void ONEngine::InternalSetTriggerCircle(uint64_t nativeHandle, bool trigger) {
+	CircleCollider* c = reinterpret_cast<CircleCollider*>(nativeHandle);
 	if(c) c->SetTrigger(trigger);
 }
 
-float ONEngine::InternalGetMass(uint64_t nativeHandle) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+float ONEngine::InternalGetMassCircle(uint64_t nativeHandle) {
+	CircleCollider* c = reinterpret_cast<CircleCollider*>(nativeHandle);
 	return c ? c->GetMass() : 1.0f;
 }
 
-void ONEngine::InternalSetMass(uint64_t nativeHandle, float mass) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+void ONEngine::InternalSetMassCircle(uint64_t nativeHandle, float mass) {
+	CircleCollider* c = reinterpret_cast<CircleCollider*>(nativeHandle);
 	if(c) c->SetMass(mass);
 }
 
-bool ONEngine::InternalIsUseOwnerScaleSphere(uint64_t nativeHandle) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+bool ONEngine::InternalIsUseOwnerScaleCircle(uint64_t nativeHandle) {
+	CircleCollider* c = reinterpret_cast<CircleCollider*>(nativeHandle);
 	return c ? c->IsUseOwnerScale() : true;
 }
 
-void ONEngine::InternalSetUseOwnerScaleSphere(uint64_t nativeHandle, bool use) {
-	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+void ONEngine::InternalSetUseOwnerScaleCircle(uint64_t nativeHandle, bool use) {
+	CircleCollider* c = reinterpret_cast<CircleCollider*>(nativeHandle);
 	if(c) c->SetUseOwnerScale(use);
 }
-

@@ -1,6 +1,7 @@
-#include "BoxCollider.h"
+#include "BoxCollider2D.h"
 
 #include <magic_enum/magic_enum.hpp>
+#include <vector>
 
 /// externals
 #include <imgui.h>
@@ -8,10 +9,9 @@
 /// engine
 #include "Engine/Editor/EditorUtils.h"
 
-
 using namespace ONEngine;
 
-void ComponentDebug::BoxColliderDebug(BoxCollider* bc) {
+void ComponentDebug::BoxCollider2DDebug(BoxCollider2D* bc) {
 	if(!bc) {
 		return;
 	}
@@ -89,16 +89,15 @@ void ComponentDebug::BoxColliderDebug(BoxCollider* bc) {
 		}
 	}
 
-
 	/// box parameter
 	ImGui::SeparatorText("box parameter");
 	static bool unified = false;
-	Editor::DrawVec3Control("size", bc->size_, 0.1f, 0.0f, 1024.0f, 100.0f, &unified);
+	Editor::DrawVec2Control("size", bc->size_, 0.1f, 0.0f, 1024.0f, 100.0f, &unified);
 }
 
-void ONEngine::from_json(const nlohmann::json& j, BoxCollider& b) {
+void ONEngine::from_json(const nlohmann::json& j, BoxCollider2D& b) {
 	b.enable = j.value("enable", 1);
-	b.size_ = j.value("size", Vector3::One);
+	b.size_ = j.value("size", Vector2::One);
 	b.isTrigger_ = j.value("isTrigger", false);
 	b.useOwnerScale_ = j.value("useOwnerScale", true);
 	b.freezeY_ = j.value("freezeY", false);
@@ -108,9 +107,9 @@ void ONEngine::from_json(const nlohmann::json& j, BoxCollider& b) {
 	b.maskBits_ = j.value("maskBits", static_cast<uint32_t>(CollisionFilter::ALL));
 }
 
-void ONEngine::to_json(nlohmann::json& j, const BoxCollider& b) {
+void ONEngine::to_json(nlohmann::json& j, const BoxCollider2D& b) {
 	j = nlohmann::json{
-		{ "type", "BoxCollider" },
+		{ "type", "BoxCollider2D" },
 		{ "enable", b.enable },
 		{ "size", b.size_ },
 		{ "isTrigger", b.IsTrigger() },
@@ -123,58 +122,54 @@ void ONEngine::to_json(nlohmann::json& j, const BoxCollider& b) {
 	};
 }
 
-
-BoxCollider::BoxCollider() {
-	// デフォルトの値をセット
-	size_ = Vector3::One; // サイズを1x1x1に初期化
+BoxCollider2D::BoxCollider2D() {
+	size_ = Vector2::One; // 1x1 に初期化
 }
 
-void BoxCollider::SetSize(const Vector3& size) {
+void BoxCollider2D::SetSize(const Vector2& size) {
 	size_ = size;
 }
 
-const Vector3& BoxCollider::GetSize() const {
+const Vector2& BoxCollider2D::GetSize() const {
 	return size_;
 }
 
-Vector3 ONEngine::InternalGetSize(uint64_t nativeHandle) {
-	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
-	return c ? c->GetSize() : Vector3::Zero;
+Vector2 ONEngine::InternalGetSizeBox2D(uint64_t nativeHandle) {
+	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
+	return c ? c->GetSize() : Vector2::Zero;
 }
 
-void ONEngine::InternalSetSize(uint64_t nativeHandle, Vector3 size) {
-	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
+void ONEngine::InternalSetSizeBox2D(uint64_t nativeHandle, Vector2 size) {
+	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
 	if(c) c->SetSize(size);
 }
 
-bool ONEngine::InternalIsTriggerBox(uint64_t nativeHandle) {
-	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
+bool ONEngine::InternalIsTriggerBox2D(uint64_t nativeHandle) {
+	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
 	return c ? c->IsTrigger() : false;
 }
 
-void ONEngine::InternalSetTriggerBox(uint64_t nativeHandle, bool trigger) {
-	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
+void ONEngine::InternalSetTriggerBox2D(uint64_t nativeHandle, bool trigger) {
+	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
 	if(c) c->SetTrigger(trigger);
 }
 
-float ONEngine::InternalGetMassBox(uint64_t nativeHandle) {
-	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
+float ONEngine::InternalGetMassBox2D(uint64_t nativeHandle) {
+	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
 	return c ? c->GetMass() : 1.0f;
 }
 
-void ONEngine::InternalSetMassBox(uint64_t nativeHandle, float mass) {
-	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
+void ONEngine::InternalSetMassBox2D(uint64_t nativeHandle, float mass) {
+	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
 	if(c) c->SetMass(mass);
 }
 
-bool ONEngine::InternalIsUseOwnerScaleBox(uint64_t nativeHandle) {
-	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
+bool ONEngine::InternalIsUseOwnerScaleBox2D(uint64_t nativeHandle) {
+	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
 	return c ? c->IsUseOwnerScale() : true;
 }
 
-void ONEngine::InternalSetUseOwnerScaleBox(uint64_t nativeHandle, bool use) {
-	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
+void ONEngine::InternalSetUseOwnerScaleBox2D(uint64_t nativeHandle, bool use) {
+	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
 	if(c) c->SetUseOwnerScale(use);
 }
-
-

@@ -23,15 +23,10 @@
             "type": "Transform"
         },
         {
-            "ProfileTest": {
-                "values": [
-                    0,
-                    0
-                ]
-            },
             "Test": {
                 "testBool": false,
-                "testFloat": 0.0,
+                "testFloat": 63.0,
+                "testFloats": 22.0,
                 "testInt": 0,
                 "testString": "",
                 "testVector2": {
@@ -54,50 +49,17 @@
         },
         {
             "enable": 1,
-            "material": {
-                "baseColor": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "baseTextureGuid": "00000000000000000000000000000000",
-                "guid": "00000000000000000000000000000000",
-                "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 1,
-                "uvTransform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "rotate": 0.0,
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                }
-            },
-            "meshPath": "./Packages/Models/primitive/cube.obj",
-            "renderQueue": 2,
-            "type": "MeshRenderer"
-        },
-        {
-            "enable": 1,
             "scripts": [
                 {
                     "enable": true,
                     "name": "Test"
-                },
-                {
-                    "enable": true,
-                    "name": "ProfileTest"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "78a751aae02db1ea8b34fe6b045eceb4",
-    "name": "Mesh_1",
+    "guid": "b10543cdb306d928aea89dbdfd288a13",
+    "name": "NewEntity",
     "parentGuid": null,
     "prefabName": ""
 }
