@@ -5,9 +5,9 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.8605549335479736,
+                "x": -1.521201252937317,
                 "y": 0.0,
-                "z": 0.0
+                "z": 1.8468332290649414
             },
             "rotate": {
                 "w": 1.0,
@@ -23,6 +23,13 @@
             "type": "Transform"
         },
         {
+            "HP": {
+                "MAX_HP": 10,
+                "currentHp": 10,
+                "disableAutoDestruction": false,
+                "isInvincible": false,
+                "regenPerSecond": 0.0
+            },
             "KingGeso": {
                 "treePath": ""
             },
@@ -63,9 +70,33 @@
                 {
                     "enable": true,
                     "name": "KingGeso"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
                 }
             ],
             "type": "Script"
+        },
+        {
+            "desiredMoveDirection": {
+                "x": -2.0999999046325684,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "desiredRotation": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "enable": 1,
+            "isAttacking": false,
+            "maxSpeed": 8.0,
+            "rotationSpeed": 0.0,
+            "targetEntityId": 0,
+            "type": "AgentIntentComponent",
+            "useDesiredRotation": false
         }
     ],
     "guid": "7c015a372e654c12115aa0cf542d8fda",
