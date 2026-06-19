@@ -143,6 +143,8 @@
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Test.cs" />
     <Compile Include="Scripts\Test\Bullet.cs" />
+    <Compile Include="Scripts\Test\ColliderTest1.cs" />
+    <Compile Include="Scripts\Test\ColliderTest2.cs" />
     <Compile Include="Scripts\Test\PlayerInputComponent.cs" />
     <Compile Include="Scripts\Test\PlayerMoveComponent.cs" />
     <Compile Include="Scripts\Test\PlayerShotComponent.cs" />
