@@ -1,4 +1,4 @@
-﻿#include "ProjectWindow.h"
+#include "ProjectWindow.h"
 
 /// std
 #include <filesystem>
@@ -90,8 +90,8 @@ void ProjectWindow::ShowImGui() {
 				// リロードリクエストをキューイング（即時実行するとD3D12のコマンドリスト競合でクラッシュするため）
 				HotReloadManager::GetInstance().RequestAssetReload(relPath);
 
-				// C#スクリプトの場合はホットリロードをリクエスト
-				if(relPath.ends_with(".cs")) {
+				// C#スクリプトまたはDLLが更新された場合はホットリロードをリクエスト
+				if(relPath.ends_with(".cs") || (relPath.ends_with(".dll") && relPath.find("CSharpLibrary") != std::string::npos)) {
 					HotReloadManager::GetInstance().RequestScriptHotReload();
 				}
 			}
