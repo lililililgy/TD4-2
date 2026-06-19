@@ -1,0 +1,75 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.8605549335479736,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.9999998807907104,
+                "y": 1.0,
+                "z": 0.9999998807907104
+            },
+            "type": "Transform"
+        },
+        {
+            "KingGeso": {
+                "treePath": ""
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "00000000000000000000000000000000",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 1,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "meshPath": "./Assets/Models/Bomb/bomb.obj",
+            "renderQueue": 2,
+            "type": "MeshRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KingGeso"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "7c015a372e654c12115aa0cf542d8fda",
+    "name": "Boss",
+    "parentGuid": null,
+    "prefabName": ""
+}

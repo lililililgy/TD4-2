@@ -135,6 +135,7 @@
     <Compile Include="Scripts\Engine\Graphics\UVTransform.cs" />
     <Compile Include="Scripts\Engine\MonoScript.cs" />
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso.cs" />
     <Compile Include="Scripts\Game\Common\HP.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />

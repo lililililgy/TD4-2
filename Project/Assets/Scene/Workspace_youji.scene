@@ -9,6 +9,11 @@
             "guid": "57715c5f0e7807ded7cf11c05c37e668",
             "parentGuid": null,
             "path": "./Workspace_youji/57715c5f0e7807ded7cf11c05c37e668.entity"
+        },
+        {
+            "guid": "7c015a372e654c12115aa0cf542d8fda",
+            "parentGuid": null,
+            "path": "./Workspace_youji/7c015a372e654c12115aa0cf542d8fda.entity"
         }
     ]
 }
