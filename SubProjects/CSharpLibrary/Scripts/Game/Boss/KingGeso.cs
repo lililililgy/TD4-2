@@ -18,6 +18,7 @@ public class KingGeso : MonoScript
     private readonly List<GesoHand> _hands = new List<GesoHand>();
     private Entity _targetEntity;
     private int _nextHandIndex;
+    [SerializeField]
     private bool _wasAttackRequested;
 
 

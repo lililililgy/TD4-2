@@ -5,7 +5,7 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -1.521201252937317,
+                "x": -3.0963923931121826,
                 "y": 0.0,
                 "z": 1.8468332290649414
             },
@@ -31,6 +31,8 @@
                 "regenPerSecond": 0.0
             },
             "KingGeso": {
+                "_wasAttackRequested": false,
+                "maxHp": 0,
                 "treePath": ""
             },
             "type": "Variables"
@@ -80,7 +82,7 @@
         },
         {
             "desiredMoveDirection": {
-                "x": -2.0999999046325684,
+                "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
