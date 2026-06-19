@@ -103,11 +103,12 @@
     <Compile Include="Scripts\Engine\MonoScript.cs" />
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
+    <Compile Include="Scripts\Math\SmoothDamp.cs" />
     <Compile Include="Scripts\Test.cs" />
-    <Compile Include="Scripts\Test\Bullet.cs" />
-    <Compile Include="Scripts\Test\PlayerInputComponent.cs" />
-    <Compile Include="Scripts\Test\PlayerMoveComponent.cs" />
-    <Compile Include="Scripts\Test\PlayerShotComponent.cs" />
+    <Compile Include="Scripts\Game\Bullet.cs" />
+    <Compile Include="Scripts\Game\Player\PlayerInputComponent.cs" />
+    <Compile Include="Scripts\Game\Player\PlayerMoveComponent.cs" />
+    <Compile Include="Scripts\Game\Player\PlayerShotComponent.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
   </ItemGroup>
   <ItemGroup>

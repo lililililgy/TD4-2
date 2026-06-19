@@ -220,12 +220,18 @@ public struct Quaternion {
 		return q;
 	}
 
+	static public Vector3 RotateVector(Quaternion q, Vector3 v) {
+        // クォータニオンを使ってベクトルを回転させる
+        Quaternion r = new Quaternion(v.x, v.y, v.z, 0.0f);
+        r = q * r * q.Conjugate();
+        return new Vector3(r.x, r.y, r.z);
+    }
 
-	/// -------------------------------------------
-	/// public operators
-	/// - -----------------------------------------
+    /// -------------------------------------------
+    /// public operators
+    /// - -----------------------------------------
 
-	static public Quaternion operator *(Quaternion q1, Quaternion q2) {
+    static public Quaternion operator *(Quaternion q1, Quaternion q2) {
 		return new Quaternion(
 			q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y,
 			q1.w * q2.y + q1.y * q2.w + q1.z * q2.x - q1.x * q2.z,
