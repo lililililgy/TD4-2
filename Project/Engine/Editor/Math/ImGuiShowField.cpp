@@ -125,7 +125,14 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 	case MONO_TYPE_I4:
 	case MONO_TYPE_ENUM:
 	{
-		if(!group.Has(name)) group.Add(name, 0);
+		if(!group.Has(name) || !std::holds_alternative<int>(group.Get(name))) {
+			int defaultValue = 0;
+			if (group.Has(name)) {
+				auto& var = group.Get(name);
+				if (std::holds_alternative<float>(var)) defaultValue = static_cast<int>(std::get<float>(var));
+			}
+			group.Add(name, defaultValue);
+		}
 		int value = group.Get<int>(name);
 		if(type == MONO_TYPE_ENUM) {
 			MonoClass* fieldClass = mono_class_from_mono_type(mono_field_get_type(field));
@@ -137,21 +144,38 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 	}
 	case MONO_TYPE_R4:
 	{
-		if(!group.Has(name)) group.Add(name, 0.0f);
+		if(!group.Has(name) || !std::holds_alternative<float>(group.Get(name))) {
+			float defaultValue = 0.0f;
+			if (group.Has(name)) {
+				auto& var = group.Get(name);
+				if (std::holds_alternative<int>(var)) defaultValue = static_cast<float>(std::get<int>(var));
+			}
+			group.Add(name, defaultValue);
+		}
 		float value = group.Get<float>(name);
 		if(ImGui::DragFloat(name, &value)) group.Add(name, value);
 		break;
 	}
 	case MONO_TYPE_BOOLEAN:
 	{
-		if(!group.Has(name)) group.Add(name, false);
+		if(!group.Has(name) || !std::holds_alternative<bool>(group.Get(name))) {
+			bool defaultValue = false;
+			if (group.Has(name)) {
+				auto& var = group.Get(name);
+				if (std::holds_alternative<int>(var)) defaultValue = (std::get<int>(var) != 0);
+				else if (std::holds_alternative<float>(var)) defaultValue = (std::get<float>(var) != 0.0f);
+			}
+			group.Add(name, defaultValue);
+		}
 		bool value = group.Get<bool>(name);
 		if(ImGui::Checkbox(name, &value)) group.Add(name, value);
 		break;
 	}
 	case MONO_TYPE_STRING:
 	{
-		if(!group.Has(name)) group.Add(name, std::string(""));
+		if(!group.Has(name) || !std::holds_alternative<std::string>(group.Get(name))) {
+			group.Add(name, std::string(""));
+		}
 		std::string value = group.Get<std::string>(name);
 		if(ImGuiInputText(name, &value)) group.Add(name, value);
 		break;
@@ -161,15 +185,21 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 		MonoClass* fieldClass = mono_class_from_mono_type(mono_field_get_type(field));
 		const char* className = mono_class_get_name(fieldClass);
 		if(strcmp(className, "Vector2") == 0) {
-			if(!group.Has(name)) group.Add(name, ONEngine::Vector2::Zero);
+			if(!group.Has(name) || !std::holds_alternative<ONEngine::Vector2>(group.Get(name))) {
+				group.Add(name, ONEngine::Vector2::Zero);
+			}
 			ONEngine::Vector2 value = group.Get<ONEngine::Vector2>(name);
 			if(ImGui::DragFloat2(name, &value.x)) group.Add(name, value);
 		} else if(strcmp(className, "Vector3") == 0) {
-			if(!group.Has(name)) group.Add(name, ONEngine::Vector3::Zero);
+			if(!group.Has(name) || !std::holds_alternative<ONEngine::Vector3>(group.Get(name))) {
+				group.Add(name, ONEngine::Vector3::Zero);
+			}
 			ONEngine::Vector3 value = group.Get<ONEngine::Vector3>(name);
 			if(ImGui::DragFloat3(name, &value.x)) group.Add(name, value);
 		} else if(strcmp(className, "Vector4") == 0) {
-			if(!group.Has(name)) group.Add(name, ONEngine::Vector4::Zero);
+			if(!group.Has(name) || !std::holds_alternative<ONEngine::Vector4>(group.Get(name))) {
+				group.Add(name, ONEngine::Vector4::Zero);
+			}
 			ONEngine::Vector4 value = group.Get<ONEngine::Vector4>(name);
 			if(ImGui::DragFloat4(name, &value.x)) group.Add(name, value);
 		}

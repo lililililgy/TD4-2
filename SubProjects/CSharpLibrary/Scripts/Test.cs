@@ -11,7 +11,7 @@ struct TestStruct {
 public class Test : MonoScript {
 
 
-	[SerializeField] float testFloat = 1f;
+	[SerializeField] float testFloats = 1f;
 	[SerializeField] int testInt = 1;
 	[SerializeField] bool testBool = false;
 	[SerializeField] string testString = "test";

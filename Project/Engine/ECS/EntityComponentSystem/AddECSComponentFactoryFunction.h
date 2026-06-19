@@ -15,6 +15,8 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ShadowCaster/ShadowCaster.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/VoxelTerrain/VoxelTerrain.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Agent/AgentIntentComponent.h"
@@ -70,6 +72,8 @@ inline void AddComponentFactoryFunction(ComponentCollection* compCollection) {
 	/// collider
 	compCollection->RegisterComponentFactory<SphereCollider>();
 	compCollection->RegisterComponentFactory<BoxCollider>();
+	compCollection->RegisterComponentFactory<CircleCollider>();
+	compCollection->RegisterComponentFactory<BoxCollider2D>();
 }
 
 } /// namespace ONEngine

@@ -6,6 +6,7 @@ workspace "CSharpLibrary"
 project "CSharpLibrary"
     kind "SharedLib"
     language "C#"
+    clr "Unsafe"
     dotnetframework "4.7.2"
     architecture "x64"
 
@@ -45,8 +46,10 @@ project "CSharpLibrary"
         optimize "On"
         defines { "TRACE" }
 
+    filter {}
+
     -- ビルド後イベント
     postbuildcommands {
-        "call \"$(SolutionDir)RenameDll.bat\"",
-        "call \"$(SolutionDir)KeepLatest.bat\""
+        "call \"$(ProjectDir)RenameDll.bat\"",
+        "call \"$(ProjectDir)KeepLatest.bat\""
     }

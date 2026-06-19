@@ -30,6 +30,7 @@ void ComponentDebug::BoxColliderDebug(BoxCollider* bc) {
 		}
 
 		ImGui::Checkbox("Is Trigger", &bc->isTrigger_);
+		ImGui::Checkbox("Use Owner Scale", &bc->useOwnerScale_);
 		ImGui::Checkbox("Freeze Y", &bc->freezeY_);
 		ImGui::DragFloat("Mass", &bc->mass_, 0.1f, 0.001f, 10000.0f);
 	}
@@ -99,6 +100,7 @@ void ONEngine::from_json(const nlohmann::json& j, BoxCollider& b) {
 	b.enable = j.value("enable", 1);
 	b.size_ = j.value("size", Vector3::One);
 	b.isTrigger_ = j.value("isTrigger", false);
+	b.useOwnerScale_ = j.value("useOwnerScale", true);
 	b.freezeY_ = j.value("freezeY", false);
 	b.mass_ = j.value("mass", 1.0f);
 	b.collisionState_ = magic_enum::enum_cast<CollisionState>(j.value("state", "Dynamic")).value_or(CollisionState::Dynamic);
@@ -112,6 +114,7 @@ void ONEngine::to_json(nlohmann::json& j, const BoxCollider& b) {
 		{ "enable", b.enable },
 		{ "size", b.size_ },
 		{ "isTrigger", b.IsTrigger() },
+		{ "useOwnerScale", b.IsUseOwnerScale() },
 		{ "freezeY", b.freezeY_ },
 		{ "mass", b.mass_ },
 		{ "state", magic_enum::enum_name(b.collisionState_) },
@@ -162,6 +165,16 @@ float ONEngine::InternalGetMassBox(uint64_t nativeHandle) {
 void ONEngine::InternalSetMassBox(uint64_t nativeHandle, float mass) {
 	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
 	if(c) c->SetMass(mass);
+}
+
+bool ONEngine::InternalIsUseOwnerScaleBox(uint64_t nativeHandle) {
+	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
+	return c ? c->IsUseOwnerScale() : true;
+}
+
+void ONEngine::InternalSetUseOwnerScaleBox(uint64_t nativeHandle, bool use) {
+	BoxCollider* c = reinterpret_cast<BoxCollider*>(nativeHandle);
+	if(c) c->SetUseOwnerScale(use);
 }
 
 

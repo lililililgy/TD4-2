@@ -28,6 +28,7 @@ public:
 		std::string scriptName;
 		bool isAdded = false; ///< スクリプトが追加されたかどうか
 		std::array<MonoMethod*, 3> collisionEventMethods = {};
+		std::array<MonoMethod*, 3> collisionEventMethods2D = {};
 
 		bool enable;
 		bool GetEnable(GameEntity* entity);

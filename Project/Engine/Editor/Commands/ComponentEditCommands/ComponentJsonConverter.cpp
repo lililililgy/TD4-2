@@ -15,6 +15,8 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
@@ -80,6 +82,8 @@ namespace {
 			/// collision
 			Register<SphereCollider>();
 			Register<BoxCollider>();
+			Register<CircleCollider>();
+			Register<BoxCollider2D>();
 		}
 
 		template <typename T>

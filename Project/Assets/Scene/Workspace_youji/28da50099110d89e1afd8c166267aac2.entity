@@ -2,27 +2,28 @@
     "active": true,
     "components": [
         {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "direction": {
+            "cameraType": 1,
+            "enable": 1,
+            "farClip": 1000.0,
+            "fogColor": {
                 "x": 0.0,
-                "y": -1.0,
+                "y": 0.0,
                 "z": 0.0
             },
-            "enable": 1,
-            "intensity": 1.0,
-            "type": "DirectionalLight"
+            "fogEnd": 100000.0,
+            "fogStart": 0.0,
+            "fovY": 0.699999988079071,
+            "isDrawFrustum": false,
+            "isMainCamera": false,
+            "nearClip": 0.10000000149011612,
+            "type": "CameraComponent"
         },
         {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 4.000001907348633,
                 "z": 0.0
             },
             "rotate": {
@@ -42,8 +43,8 @@
             "type": "Variables"
         }
     ],
-    "guid": "0ac0760bb5f6cf8f7ca07c2196d0404b",
-    "name": "DirectionalLight_1",
+    "guid": "28da50099110d89e1afd8c166267aac2",
+    "name": "Camera_1",
     "parentGuid": null,
     "prefabName": ""
 }

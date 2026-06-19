@@ -1,41 +1,56 @@
+using System;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
-[StructLayout(LayoutKind.Sequential)]
+/// <summary>
+/// AIの「意図」を格納するコンポーネント
+/// C#側で計算され、C++側で行動に変換される
+/// </summary>
 public class AgentIntentComponent : Component {
-	[StructLayout(LayoutKind.Sequential)]
-	public struct BatchData {
-		public uint compId;
-		public Vector3 desiredMoveDirection;
-		public Quaternion desiredRotation;
-		public float rotationSpeed;
-		public float maxSpeed;
-		public byte useDesiredRotation;
-		public byte isAttacking;
-		private byte pad1, pad2; // Alignment for targetEntityId
-		public int targetEntityId;
-	}
+    /// <summary>
+    /// C++とC#でデータを一括同期するための構造体
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct BatchData {
+        public uint compId;
+        public Vector3 desiredMoveDirection;
+        public Quaternion desiredRotation;
+        public float rotationSpeed;
+        public float maxSpeed;
+        public byte useDesiredRotation; // bool interop
+        public byte isAttacking; // Use byte for bool interop
+        public int targetEntityId;
+    }
 
-	public Vector3 desiredMoveDirection = Vector3.zero;
-	public Quaternion desiredRotation = Quaternion.identity;
-	public float rotationSpeed = 10.0f;
-	public float maxSpeed = 5.0f;
-	public bool useDesiredRotation = true;
-	public bool isAttacking = false;
-	public int targetEntityId = -1;
+    public Vector3 desiredMoveDirection = Vector3.zero;
+    public Quaternion desiredRotation = Quaternion.identity;
+    public float rotationSpeed = 5.0f;
+    public float maxSpeed = 8.0f;
+    public bool useDesiredRotation = false;
+    public bool isAttacking = false;
+    public int targetEntityId = 0; // 0 is considered an invalid ID
+    public bool isPaused = false; // New: Pause AI update during performances
 
-	public override void SyncFromNative(string ecsGroupName) {
-		if (nativeHandle == 0) return;
+    /// <summary>
+    /// このコンポーネントに関連付けられたビヘイビアツリー
+    /// </summary>
+    public BehaviorTree behaviorTree;
 
-		BatchData[] batch = new BatchData[1];
-		batch[0].compId = compId;
-		ComponentBatchManager.InternalGetBatch(typeof(AgentIntentComponent), batch, 1, ecsGroupName);
+    /// <summary>
+    /// ビヘイビアツリーを初期化する
+    /// </summary>
+    public void InitBehaviorTree(BehaviorNode root) {
+        behaviorTree = new BehaviorTree(this.entity);
+        behaviorTree.RootNode = root;
+    }
 
-		desiredMoveDirection = batch[0].desiredMoveDirection;
-		desiredRotation = batch[0].desiredRotation;
-		rotationSpeed = batch[0].rotationSpeed;
-		maxSpeed = batch[0].maxSpeed;
-		useDesiredRotation = batch[0].useDesiredRotation != 0;
-		isAttacking = batch[0].isAttacking != 0;
-		targetEntityId = batch[0].targetEntityId;
-	}
+    /// <summary>
+    /// JSONファイルからビヘイビアツリーを読み込む
+    /// </summary>
+    public void LoadBehaviorTree(string path) {
+        behaviorTree = BehaviorTreeLoader.LoadFromFile(path, this.entity);
+        if (behaviorTree != null) {
+        }
+    }
 }
+
