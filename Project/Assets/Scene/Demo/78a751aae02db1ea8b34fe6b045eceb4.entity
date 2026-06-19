@@ -23,7 +23,33 @@
             "type": "Transform"
         },
         {
-            "ProfileTest": {},
+            "ProfileTest": {
+                "values": [
+                    0,
+                    0
+                ]
+            },
+            "Test": {
+                "testBool": false,
+                "testFloat": 0.0,
+                "testInt": 0,
+                "testString": "",
+                "testVector2": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "testVector3": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "testVector4": {
+                    "w": 0.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
             "type": "Variables"
         },
         {
@@ -32,8 +58,8 @@
                 "baseColor": {
                     "w": 1.0,
                     "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "y": 0.0,
+                    "z": 0.0
                 },
                 "baseTextureGuid": "00000000000000000000000000000000",
                 "guid": "00000000000000000000000000000000",
@@ -60,14 +86,18 @@
             "scripts": [
                 {
                     "enable": true,
+                    "name": "Test"
+                },
+                {
+                    "enable": true,
                     "name": "ProfileTest"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "4148ba34b5b7fb548a89168f26c8b8e6",
-    "name": "Mesh_4",
+    "guid": "78a751aae02db1ea8b34fe6b045eceb4",
+    "name": "Mesh_1",
     "parentGuid": null,
     "prefabName": ""
 }

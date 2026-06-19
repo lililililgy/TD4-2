@@ -20,6 +20,18 @@ class MeshRenderer : Component {
 		return batchData;
 	}
 
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
+
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(MeshRenderer), batch, 1, ecsGroupName);
+
+		batchData.color = batch[0].color;
+		batchData.postEffectFlags = batch[0].postEffectFlags;
+		batchData.uvTransform = batch[0].uvTransform;
+	}
+
 
 	public string meshPath {
 		get {

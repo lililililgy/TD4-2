@@ -41,6 +41,26 @@ void RegisterFieldDrawers() {
 	gFieldDrawers[MONO_TYPE_GENERICINST] = std::make_unique<CSGui::ListField>();
 }
 
+bool DrawEnumCombo(MonoClass* enumClass, const char* name, int& value) {
+	void* iter = nullptr; MonoClassField* enumField; std::vector<std::string> names; std::vector<int> values; int currentIndex = -1, i = 0;
+	MonoVTable* vtable = mono_class_vtable(mono_domain_get(), enumClass);
+	while ((enumField = mono_class_get_fields(enumClass, &iter))) {
+		if (mono_field_get_flags(enumField) & MONO_FIELD_ATTR_STATIC) {
+			names.push_back(mono_field_get_name(enumField));
+			int val = 0; if (vtable) mono_field_static_get_value(vtable, enumField, &val); else mono_field_get_value(nullptr, enumField, &val);
+			values.push_back(val); if (val == value) currentIndex = i; i++;
+		}
+	}
+	if (names.empty()) return false;
+	if (currentIndex == -1) currentIndex = 0;
+	std::vector<const char*> namePtrs; for (const auto& str : names) namePtrs.push_back(str.c_str());
+	if (ImGui::Combo(name, &currentIndex, namePtrs.data(), (int)namePtrs.size())) {
+		value = values[currentIndex];
+		return true;
+	}
+	return false;
+}
+
 void DrawGenericObject(std::shared_ptr<ONEngine::Variables::GenericObject> obj) {
 	if (!obj) return;
 	for (auto& [name, val] : obj->fields) {
@@ -109,20 +129,8 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 		int value = group.Get<int>(name);
 		if(type == MONO_TYPE_ENUM) {
 			MonoClass* fieldClass = mono_class_from_mono_type(mono_field_get_type(field));
-			void* iter = nullptr; MonoClassField* enumField; std::vector<std::string> names; std::vector<int> values; int currentIndex = 0, i = 0;
-			MonoVTable* vtable = mono_class_vtable(mono_domain_get(), fieldClass);
-			while((enumField = mono_class_get_fields(fieldClass, &iter))) {
-				if(mono_field_get_flags(enumField) & MONO_FIELD_ATTR_STATIC) {
-					names.push_back(mono_field_get_name(enumField));
-					int val = 0; if(vtable) mono_field_static_get_value(vtable, enumField, &val); else mono_field_get_value(nullptr, enumField, &val);
-					values.push_back(val); if(val == value) currentIndex = i; i++;
-				}
-			}
-			if(!names.empty()) {
-				std::vector<const char*> namePtrs; for(const auto& str : names) namePtrs.push_back(str.c_str());
-				if(ImGui::Combo(name, &currentIndex, namePtrs.data(), (int)namePtrs.size())) group.Add(name, values[currentIndex]);
-				break;
-			}
+			if (DrawEnumCombo(fieldClass, name, value)) group.Add(name, value);
+			break;
 		}
 		if(ImGui::DragInt(name, &value)) group.Add(name, value);
 		break;
@@ -204,6 +212,11 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 					auto& list = std::get<std::vector<ONEngine::Vector3>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 					int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
 					for (int i = 0; i < (int)list.size(); ++i) ImGui::DragFloat3(std::format("[{}]", i).c_str(), &list[i].x);
+				} else if (mono_class_is_enum(elemClass)) {
+					if (!group.Has(name)) group.Add(name, std::vector<int>());
+					auto& list = std::get<std::vector<int>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
+					int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
+					for (int i = 0; i < (int)list.size(); ++i) DrawEnumCombo(elemClass, std::format("[{}]", i).c_str(), list[i]);
 				} else {
 					if (!group.Has(name)) group.Add(name, std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>());
 					auto& list = std::get<std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
@@ -316,6 +329,7 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 					else if(elemTypeId == MONO_TYPE_VALUETYPE || elemTypeId == MONO_TYPE_CLASS) {
 						MonoClass* ek = mono_class_from_mono_type(elemType);
 						if(strcmp(mono_class_get_name(ek), "Vector3") == 0) { ONEngine::Vector3 v = ONEngine::Vector3::Zero; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+						else if(mono_class_is_enum(ek)) { int v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
 						else { MonoObject* item = mono_object_new(domain, ek); mono_runtime_object_init(item); void* args[1] = { item }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
 					}
 				}
@@ -334,6 +348,7 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 			else if(elemTypeId == MONO_TYPE_VALUETYPE || elemTypeId == MONO_TYPE_CLASS) {
 				MonoClass* ek = mono_class_from_mono_type(elemType);
 				if(strcmp(mono_class_get_name(ek), "Vector3") == 0) { ONEngine::Vector3 v = *(ONEngine::Vector3*)mono_object_unbox(itemObj); if(ImGui::DragFloat3(itemName.c_str(), &v.x)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
+				else if(mono_class_is_enum(ek)) { int v = *(int*)mono_object_unbox(itemObj); if(DrawEnumCombo(ek, itemName.c_str(), v)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
 				else {
 					if (ImGui::CollapsingHeader(itemName.c_str())) {
 						ImGui::Indent(); void* iter = nullptr; MonoClassField* f;
@@ -351,22 +366,10 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 void CSGui::EnumField::Draw(const std::string& scriptName, MonoObject* obj, MonoClassField* field, const char* name) {
 	MonoClass* fieldClass = mono_class_from_mono_type(mono_field_get_type(field));
 	int currentValue = 0; mono_field_get_value(obj, field, &currentValue); int oldValue = currentValue;
-	void* iter = nullptr; MonoClassField* enumField; std::vector<std::string> names; std::vector<int> values; int currentIndex = 0, i = 0;
-	MonoVTable* vtable = mono_class_vtable(mono_domain_get(), fieldClass);
-	while((enumField = mono_class_get_fields(fieldClass, &iter))) {
-		if(mono_field_get_flags(enumField) & MONO_FIELD_ATTR_STATIC) {
-			names.push_back(mono_field_get_name(enumField));
-			int val = 0; if(vtable) mono_field_static_get_value(vtable, enumField, &val); else mono_field_get_value(nullptr, enumField, &val);
-			values.push_back(val); if(val == currentValue) currentIndex = i; i++;
-		}
-	}
-	if(names.empty()) return;
-	std::vector<const char*> namePtrs; for(const auto& str : names) namePtrs.push_back(str.c_str());
-	if(ImGui::Combo(name, &currentIndex, namePtrs.data(), (int)namePtrs.size())) {
-		int newValue = values[currentIndex];
+	if (DrawEnumCombo(fieldClass, name, currentValue)) {
 		ONEngine::GameEntity* entity = ONEngine::MonoScriptEngine::GetInstance().GetOwnerEntity(obj);
-		if (entity) EditCommand::Execute<ModifyScriptVariableCommand>(entity, scriptName, name, MONO_TYPE_ENUM, oldValue, newValue);
-		else mono_field_set_value(obj, field, &newValue);
+		if (entity) EditCommand::Execute<ModifyScriptVariableCommand>(entity, scriptName, name, MONO_TYPE_ENUM, oldValue, currentValue);
+		else mono_field_set_value(obj, field, &currentValue);
 	}
 }
 

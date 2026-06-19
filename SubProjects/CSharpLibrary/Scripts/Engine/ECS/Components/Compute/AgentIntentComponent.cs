@@ -22,4 +22,20 @@ public class AgentIntentComponent : Component {
 	public bool useDesiredRotation = true;
 	public bool isAttacking = false;
 	public int targetEntityId = -1;
+
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
+
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(AgentIntentComponent), batch, 1, ecsGroupName);
+
+		desiredMoveDirection = batch[0].desiredMoveDirection;
+		desiredRotation = batch[0].desiredRotation;
+		rotationSpeed = batch[0].rotationSpeed;
+		maxSpeed = batch[0].maxSpeed;
+		useDesiredRotation = batch[0].useDesiredRotation != 0;
+		isAttacking = batch[0].isAttacking != 0;
+		targetEntityId = batch[0].targetEntityId;
+	}
 }

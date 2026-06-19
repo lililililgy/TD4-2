@@ -239,6 +239,11 @@ Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 				for (int i = 0; i < count; ++i) { void* a[1] = { &i }; l[i] = *(Vector3*)mono_object_unbox(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); }
 				return l;
 			}
+			if (mono_class_is_enum(ek)) {
+				std::vector<int> l(count);
+				for (int i = 0; i < count; ++i) { void* a[1] = { &i }; l[i] = *(int*)mono_object_unbox(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); }
+				return l;
+			}
 			std::vector<std::shared_ptr<Variables::GenericObject>> l(count);
 			for (int i = 0; i < count; ++i) { void* a[1] = { &i }; l[i] = MonoObjectToGeneric(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); }
 			return l;
@@ -285,6 +290,26 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 			} else if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
 				MonoObject* child = mono_field_get_value_object(mono_domain_get(), field, (MonoObject*)obj);
 				if (child) VarToMonoObject(child, mono_object_get_class(child), val);
+			} else if constexpr (std::is_same_v<T, std::vector<int>> || std::is_same_v<T, std::vector<float>> || std::is_same_v<T, std::vector<bool>> || std::is_same_v<T, std::vector<std::string>> || std::is_same_v<T, std::vector<Vector3>>) {
+				MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, (MonoObject*)obj);
+				if (list) {
+					MonoClass* lc = mono_object_get_class(list);
+					MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
+					if (clear) mono_runtime_invoke(clear, list, nullptr, nullptr);
+					MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
+					if (add) {
+						for (auto itemVal : arg) {
+							if constexpr (std::is_same_v<T, std::vector<std::string>>) {
+								MonoString* s = mono_string_new(mono_domain_get(), itemVal.c_str());
+								void* args[1] = { s };
+								mono_runtime_invoke(add, list, args, nullptr);
+							} else {
+								void* args[1] = { (void*)&itemVal };
+								mono_runtime_invoke(add, list, args, nullptr);
+							}
+						}
+					}
+				}
 			} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
 				MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, (MonoObject*)obj);
 				if (list) {
@@ -474,6 +499,26 @@ void Variables::SetScriptVariables(const std::string& scriptName) {
 			} else if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
 				MonoObject* obj = mono_field_get_value_object(mono_domain_get(), field, safeObj);
 				if (obj) VarToMonoObject(obj, mono_object_get_class(obj), val);
+			} else if constexpr (std::is_same_v<T, std::vector<int>> || std::is_same_v<T, std::vector<float>> || std::is_same_v<T, std::vector<bool>> || std::is_same_v<T, std::vector<std::string>> || std::is_same_v<T, std::vector<Vector3>>) {
+				MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, safeObj);
+				if (list) {
+					MonoClass* lc = mono_object_get_class(list);
+					MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
+					if (clear) mono_runtime_invoke(clear, list, nullptr, nullptr);
+					MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
+					if (add) {
+						for (auto itemVal : arg) {
+							if constexpr (std::is_same_v<T, std::vector<std::string>>) {
+								MonoString* s = mono_string_new(mono_domain_get(), itemVal.c_str());
+								void* args[1] = { s };
+								mono_runtime_invoke(add, list, args, nullptr);
+							} else {
+								void* args[1] = { (void*)&itemVal };
+								mono_runtime_invoke(add, list, args, nullptr);
+							}
+						}
+					}
+				}
 			} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
 				MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, safeObj);
 				if (list) {

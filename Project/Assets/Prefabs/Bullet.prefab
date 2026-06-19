@@ -16,32 +16,16 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 0.10000000149011612,
+                "y": 0.10000000149011612,
+                "z": 0.10000000149011612
             },
             "type": "Transform"
         },
         {
-            "PlayerInputComponent": {
-                "isShootButtonPressed_": false,
-                "isShot_": false,
-                "moveDir_": {
-                    "x": 0.0,
-                    "y": 0.0
-                },
-                "shootCooldownTime_": 0.0
-            },
-            "PlayerMoveComponent": {
-                "moveSpeed_": 20.0
-            },
-            "PlayerShotComponent": {
-                "bulletSpawnOffset_": {
-                    "x": 0.0,
-                    "y": -1.399999976158142
-                },
-                "isShot_": false,
-                "shootCooldownTime_": 0.18000000715255737
+            "Bullet": {
+                "lifeTime_": 5.0,
+                "speed_": 32.0
             },
             "type": "Variables"
         },
@@ -75,26 +59,33 @@
             "type": "MeshRenderer"
         },
         {
+            "categoryBits": 4,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 4294967240,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider"
+        },
+        {
             "enable": 1,
             "scripts": [
                 {
                     "enable": true,
-                    "name": "PlayerInputComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerShotComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerMoveComponent"
+                    "name": "Bullet"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
-    "name": "Player",
+    "guid": "3a1a5dc65fa8e81a0f9a91c93957cb63",
+    "name": "Bullet",
     "parentGuid": null,
     "prefabName": ""
 }

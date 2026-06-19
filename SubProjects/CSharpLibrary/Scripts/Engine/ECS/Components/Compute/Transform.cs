@@ -48,6 +48,18 @@ public class Transform : Component {
 		}
 	}
 
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
+
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(Transform), batch, 1, ecsGroupName);
+
+		position_ = batch[0].position;
+		rotate_ = batch[0].rotate;
+		scale_ = batch[0].scale;
+	}
+
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalSetPosition(ulong nativeHandle, float x, float y, float z);
 

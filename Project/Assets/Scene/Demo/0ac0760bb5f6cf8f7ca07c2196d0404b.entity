@@ -26,7 +26,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -42,8 +42,8 @@
             "type": "Variables"
         }
     ],
-    "guid": "c4259d42735d744b39e01525b7247d66",
-    "name": "DirectionalLight",
+    "guid": "0ac0760bb5f6cf8f7ca07c2196d0404b",
+    "name": "DirectionalLight_1",
     "parentGuid": null,
     "prefabName": ""
 }

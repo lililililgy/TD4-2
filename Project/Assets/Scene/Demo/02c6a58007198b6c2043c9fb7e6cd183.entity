@@ -1,0 +1,21 @@
+{
+    "active": true,
+    "components": [
+        {
+            "PlayerMoveComponent": {
+                "moveSpeed_": 20.0
+            },
+            "PlayerShotComponent": {
+                "bulletSpawnOffset_": {
+                    "y": 1.0
+                },
+                "shootCooldownTime_": 0.0010000000474974513
+            },
+            "type": "Variables"
+        }
+    ],
+    "guid": "02c6a58007198b6c2043c9fb7e6cd183",
+    "name": "Player",
+    "parentGuid": null,
+    "prefabName": "Player"
+}
