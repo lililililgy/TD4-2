@@ -59,7 +59,11 @@ public class DebugCamera : MonoScript {
 			// C++の回転状態をC#の変数に同期
 			// 右クリック中はマウス入力によって eulerAngles_ を更新するため、非入力時のみ同期する
 			if (!Input.PressMouse(Mouse.Right)) {
-				eulerAngles_ = transform.rotate.ToEuler();
+				Vector3 forward = Matrix4x4.Transform(new Vector3(0f, 0f, 1f), Matrix4x4.Rotate(transform.rotate));
+				float clampedY = Math.Max(-1.0f, Math.Min(1.0f, forward.y));
+				float yaw = (float)Math.Atan2(forward.x, forward.z);
+				float pitch = -(float)Math.Asin(clampedY);
+				eulerAngles_ = new Vector3(pitch, yaw, 0f);
 			}
 		}
 
