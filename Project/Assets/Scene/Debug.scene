@@ -4,6 +4,11 @@
             "guid": "00000000000000000000000000000001",
             "parentGuid": null,
             "path": "./Debug/00000000000000000000000000000001.entity"
+        },
+        {
+            "guid": "7374d127863dc76808badfb5b9b8caad",
+            "parentGuid": null,
+            "path": "./Debug/7374d127863dc76808badfb5b9b8caad.entity"
         }
     ]
 }

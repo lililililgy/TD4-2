@@ -88,6 +88,7 @@
     <Compile Include="Scripts\Engine\Core\Utility\Math\Vector3.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Math\Vector4.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Time\Time.cs" />
+    <Compile Include="Scripts\Engine\Core\Utility\Tools\GizmoBatch.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Component.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\ComponentBatchManager.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\ComponentCollection.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEel.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEelPot.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\SpawnFromPot\MorayEelMovement.cs" />
     <Compile Include="Scripts\Test.cs" />
     <Compile Include="Scripts\Test\Bullet.cs" />
     <Compile Include="Scripts\Test\PlayerInputComponent.cs" />
