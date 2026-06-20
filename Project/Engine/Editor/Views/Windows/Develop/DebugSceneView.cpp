@@ -387,7 +387,6 @@ void DebugSceneView::DrawToolbar() {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.125f, 0.263f, 0.388f, 1.0f));
 	}
 
-	ONEngine::MonoScriptEngine::GetInstance().SetIsHotReloadRequest(false);
 	if(ImGui::ImageButton("##play", ImTextureID(buttons[0]->GetSRVGPUHandle().ptr), buttonSize)) {
 		SetGamePlay(!isGameDebug);
 	}

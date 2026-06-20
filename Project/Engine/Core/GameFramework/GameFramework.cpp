@@ -1,4 +1,4 @@
-﻿#include "GameFramework.h"
+#include "GameFramework.h"
 
 using namespace ONEngine;
 
@@ -171,6 +171,12 @@ void GameFramework::Update() {
 	entityComponentSystem_->Update();
 	CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::ECSUpdate);
 #endif // DEBUG_MODE
+
+	// 古いMonoドメインが残っていれば安全にアンロード（解放）する
+	MonoScriptEngine::GetInstance().ClearPendingDomains();
+
+	// ホットリロード要求フラグをクリアする
+	MonoScriptEngine::GetInstance().SetIsHotReloadRequest(false);
 
 	// Process all queued events for this frame
 	FrameEventQueue::GetInstance().Flush();

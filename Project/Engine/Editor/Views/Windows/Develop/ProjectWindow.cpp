@@ -86,7 +86,7 @@ void ProjectWindow::ShowImGui() {
 	for(const auto& ev : fileWatcher_.ConsumeEvents()) {
 		if(ev.type == FileEvent::Type::File) {
 			std::string relPath = GetRelativePath(ev.path);
-			if(ev.action == FileEvent::Action::Modified || ev.action == FileEvent::Action::RenamedNew) {
+			if(ev.action == FileEvent::Action::Added || ev.action == FileEvent::Action::Modified || ev.action == FileEvent::Action::RenamedNew) {
 				// リロードリクエストをキューイング（即時実行するとD3D12のコマンドリスト競合でクラッシュするため）
 				HotReloadManager::GetInstance().RequestAssetReload(relPath);
 

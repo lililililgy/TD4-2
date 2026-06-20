@@ -52,10 +52,7 @@ namespace {
 		MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
 		if (!attrs) return false;
 
-		static MonoClass* serializeFieldAttr = nullptr;
-		if (!serializeFieldAttr) {
-			serializeFieldAttr = mono_class_from_name(MonoScriptEngine::GetInstance().Image(), "", "SerializeField");
-		}
+		MonoClass* serializeFieldAttr = mono_class_from_name(MonoScriptEngine::GetInstance().Image(), "", "SerializeField");
 
 		bool has = serializeFieldAttr && mono_custom_attrs_has_attr(attrs, serializeFieldAttr);
 		mono_custom_attrs_free(attrs);
