@@ -5,7 +5,7 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
+                "x": 212.3354949951172,
                 "y": 0.0,
                 "z": 0.0
             },
@@ -57,12 +57,12 @@
             "categoryBits": 1,
             "enable": 1,
             "freezeY": false,
-            "isTrigger": false,
+            "isTrigger": true,
             "maskBits": 4294967295,
             "mass": 1.0,
             "size": {
-                "x": 23.600000381469727,
-                "y": 23.600000381469727
+                "x": 1.3999977111816406,
+                "y": 1.3999978303909302
             },
             "state": "Dynamic",
             "type": "BoxCollider2D",

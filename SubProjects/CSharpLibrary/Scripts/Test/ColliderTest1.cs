@@ -7,7 +7,7 @@ public class ColliderTest1 : MonoScript {
 	}
 
 	public override void Update() {
-		MeshRenderer renderer = entity.GetComponent<MeshRenderer>();
+		SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
 		if(renderer) {
 			renderer.color = Vector4.one;
 		}
@@ -15,7 +15,7 @@ public class ColliderTest1 : MonoScript {
 
 
 	public override void OnCollisionStay(Entity entity) {
-		MeshRenderer renderer = entity.GetComponent<MeshRenderer>();
+		SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
 		if (renderer) {
 			renderer.color = Vector4.red;
 		}

@@ -5,7 +5,7 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 203.41275024414063,
+                "x": 42.377262115478516,
                 "y": 0.0,
                 "z": 0.0
             },
@@ -17,10 +17,22 @@
             },
             "scale": {
                 "x": 100.0,
-                "y": 100.0,
-                "z": 100.0
+                "y": 100.00001525878906,
+                "z": 100.00001525878906
             },
             "type": "Transform"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 4294967295,
+            "mass": 1.0,
+            "radius": 1.0,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
         },
         {
             "ColliderTest1": {},
@@ -52,18 +64,6 @@
                 }
             },
             "type": "SpriteRenderer"
-        },
-        {
-            "categoryBits": 1,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 4294967295,
-            "mass": 1.0,
-            "radius": 33.20000076293945,
-            "state": "Dynamic",
-            "type": "SphereCollider",
-            "useOwnerScale": true
         },
         {
             "enable": 1,

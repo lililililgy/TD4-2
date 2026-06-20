@@ -42,7 +42,7 @@ namespace {
 	}
 }
 
-std::vector<VertexData> ONEngine::GetSphereVertices(const Vector3& center, float radius, const Vector4& color, float thickness, size_t segment) {
+std::vector<VertexData> ONEngine::GetSphereVertices(const Vector3& center, float radius, const Vector4& color, float thickness, size_t segment, bool is2D) {
 	const float deltaAngle = 2.0f * std::numbers::pi_v<float> / (float)segment;
 	std::vector<VertexData> outVertices;
 
@@ -59,44 +59,68 @@ std::vector<VertexData> ONEngine::GetSphereVertices(const Vector3& center, float
 	};
 
 	addCircle(Vector3::Right, Vector3::Up);
-	addCircle(Vector3::Up, Vector3::Forward);
-	addCircle(Vector3::Forward, Vector3::Right);
+	if (!is2D) {
+		addCircle(Vector3::Up, Vector3::Forward);
+		addCircle(Vector3::Forward, Vector3::Right);
+	}
 
 	return outVertices;
 }
 
-std::vector<VertexData> ONEngine::GetCubeVertices(const Vector3& center, const Vector3& size, const Quaternion& rotate, const Vector4& color, float thickness) {
+std::vector<VertexData> ONEngine::GetCubeVertices(const Vector3& center, const Vector3& size, const Quaternion& rotate, const Vector4& color, float thickness, bool is2D) {
 	Vector3 halfSize = size * 0.5f;
 	std::vector<VertexData> outVertices;
 
 	// 回転行列の作成
 	Matrix4x4 rotateMat = Matrix4x4::MakeRotate(rotate);
 
-	Vector3 baseVertices[8] = {
-		Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
-		Vector3(halfSize.x, -halfSize.y, -halfSize.z),
-		Vector3(halfSize.x, halfSize.y, -halfSize.z),
-		Vector3(-halfSize.x, halfSize.y, -halfSize.z),
-		Vector3(-halfSize.x, -halfSize.y, halfSize.z),
-		Vector3(halfSize.x, -halfSize.y, halfSize.z),
-		Vector3(halfSize.x, halfSize.y, halfSize.z),
-		Vector3(-halfSize.x, halfSize.y, halfSize.z)
-	};
+	if (is2D) {
+		Vector3 baseVertices[4] = {
+			Vector3(-halfSize.x, -halfSize.y, 0.0f),
+			Vector3(halfSize.x, -halfSize.y, 0.0f),
+			Vector3(halfSize.x, halfSize.y, 0.0f),
+			Vector3(-halfSize.x, halfSize.y, 0.0f)
+		};
 
-	Vector3 vertices[8];
-	for (int i = 0; i < 8; i++) {
-		// 回転を適用してから中心座標を足す
-		vertices[i] = center + Matrix4x4::Transform(baseVertices[i], rotateMat);
-	}
+		Vector3 vertices[4];
+		for (int i = 0; i < 4; i++) {
+			vertices[i] = center + Matrix4x4::Transform(baseVertices[i], rotateMat);
+		}
 
-	int32_t indices[] = {
-		0, 1, 1, 2, 2, 3, 3, 0,
-		4, 5, 5, 6, 6, 7, 7, 4,
-		0, 4, 1, 5, 2, 6, 3, 7
-	};
+		int32_t indices[] = {
+			0, 1, 1, 2, 2, 3, 3, 0
+		};
 
-	for (size_t i = 0; i < sizeof(indices) / sizeof(int); i += 2) {
-		AddThickLineSegment(outVertices, vertices[indices[i]], vertices[indices[i + 1]], color, thickness);
+		for (size_t i = 0; i < sizeof(indices) / sizeof(int); i += 2) {
+			AddThickLineSegment(outVertices, vertices[indices[i]], vertices[indices[i + 1]], color, thickness);
+		}
+	} else {
+		Vector3 baseVertices[8] = {
+			Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
+			Vector3(halfSize.x, -halfSize.y, -halfSize.z),
+			Vector3(halfSize.x, halfSize.y, -halfSize.z),
+			Vector3(-halfSize.x, halfSize.y, -halfSize.z),
+			Vector3(-halfSize.x, -halfSize.y, halfSize.z),
+			Vector3(halfSize.x, -halfSize.y, halfSize.z),
+			Vector3(halfSize.x, halfSize.y, halfSize.z),
+			Vector3(-halfSize.x, halfSize.y, halfSize.z)
+		};
+
+		Vector3 vertices[8];
+		for (int i = 0; i < 8; i++) {
+			// 回転を適用してから中心座標を足す
+			vertices[i] = center + Matrix4x4::Transform(baseVertices[i], rotateMat);
+		}
+
+		int32_t indices[] = {
+			0, 1, 1, 2, 2, 3, 3, 0,
+			4, 5, 5, 6, 6, 7, 7, 4,
+			0, 4, 1, 5, 2, 6, 3, 7
+		};
+
+		for (size_t i = 0; i < sizeof(indices) / sizeof(int); i += 2) {
+			AddThickLineSegment(outVertices, vertices[indices[i]], vertices[indices[i + 1]], color, thickness);
+		}
 	}
 
 	return outVertices;

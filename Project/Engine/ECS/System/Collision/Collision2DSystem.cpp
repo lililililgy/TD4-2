@@ -1,4 +1,4 @@
-#include "Collision2DSystem.h"
+﻿#include "Collision2DSystem.h"
 
 using namespace ONEngine;
 
@@ -230,7 +230,7 @@ void Collision2DSystem::CallEnterFunc(const std::string& ecsGroupName) {
 				MonoObject* exc = nullptr;
 
 				if(!script.collisionEventMethods2D[0]) {
-					script.collisionEventMethods2D[0] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionEnter2D", 1);
+					script.collisionEventMethods2D[0] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionEnter", 1);
 				}
 
 				if(!script.collisionEventMethods2D[0]) {
@@ -282,7 +282,7 @@ void Collision2DSystem::CallStayFunc(const std::string& ecsGroupName) {
 				MonoObject* exc = nullptr;
 
 				if(!script.collisionEventMethods2D[1]) {
-					script.collisionEventMethods2D[1] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionStay2D", 1);
+					script.collisionEventMethods2D[1] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionStay", 1);
 				}
 
 				if(!script.collisionEventMethods2D[1]) {
@@ -332,7 +332,7 @@ void Collision2DSystem::CallExitFunc(const std::string& ecsGroupName) {
 				MonoObject* exc = nullptr;
 
 				if(!script.collisionEventMethods2D[2]) {
-					script.collisionEventMethods2D[2] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionExit2D", 1);
+					script.collisionEventMethods2D[2] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionExit", 1);
 				}
 
 				if(!script.collisionEventMethods2D[2]) {

@@ -98,7 +98,7 @@ void ColliderRenderQueueSystem::UpdateCircleCollider(ComponentArray<CircleCollid
 			Transform* t = owner->GetTransform();
 			radius *= (std::max)(t->scale.x, t->scale.y);
 		}
-		Gizmo::DrawWireSphere(position, radius, Vector4(1.0f, 0.5f, 0.0f, 1.0f));
+		Gizmo::DrawWireSphere2D(position, radius, Vector4(1.0f, 0.5f, 0.0f, 1.0f));
 	}
 }
 
@@ -123,9 +123,9 @@ void ColliderRenderQueueSystem::UpdateBoxCollider2D(ComponentArray<BoxCollider2D
 			size2D.x *= t->scale.x;
 			size2D.y *= t->scale.y;
 		}
-		Vector3 size(size2D.x, size2D.y, 0.01f);
+		Vector3 size(size2D.x, size2D.y, 0.0f);
 		const Quaternion& rotate = owner->GetTransform()->GetRotate();
-		Gizmo::DrawWireCube(position, size, rotate, Vector4(0.0f, 1.0f, 0.5f, 1.0f));
+		Gizmo::DrawWireCube2D(position, size, rotate, Vector4(0.0f, 1.0f, 0.5f, 1.0f));
 	}
 }
 
