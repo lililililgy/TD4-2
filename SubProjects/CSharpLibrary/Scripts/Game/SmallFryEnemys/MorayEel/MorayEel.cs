@@ -1,23 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 public class MorayEel : MonoScript {
-	/* ----- 遘ｻ蜍輔↓逕ｨ縺�繧句､画焚鄒､ ----- */
-    
+    /* ----- パラメータ ----- */
+
+
+    private HP hp_;
 
     public override void Initialize() {
-	
-	}
+        // HPスクリプト取得
+        hp_ = entity.GetScript<HP>();
+    }
 
-	public override void Update() {
-		
-	}
+    public override void Update() {
 
-	private void FireMorayEel()
-	{
+        // 死んだら更新スキップ
+        if (hp_ != null && hp_.currentHp <= 0) {
+            return;
+        }
+    }
 
-	}
+    private void FireMorayEel() {
+
+    }
 }

@@ -55,7 +55,7 @@ public class MorayEelPot : MonoScript {
         Vector3 initialVelocity = fireDir * firePower;
 
         // 生成したウツボの移動スクリプトに初速を渡し、発射(減衰)フェーズを開始させる
-        MorayEelMovement movement = eel.GetScript<MorayEelMovement>();
+        MorayEelSpawnMove movement = eel.GetScript<MorayEelSpawnMove>();
         if (movement) {
             movement.Launch(initialVelocity);
         }

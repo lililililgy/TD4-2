@@ -143,7 +143,8 @@
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEel.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEelPot.cs" />
-    <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\SpawnFromPot\MorayEelMovement.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\SmallFryChaseMove.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\SpawnFromPot\MorayEelSpawnMove.cs" />
     <Compile Include="Scripts\Test.cs" />
     <Compile Include="Scripts\Test\Bullet.cs" />
     <Compile Include="Scripts\Test\ColliderTest1.cs" />
