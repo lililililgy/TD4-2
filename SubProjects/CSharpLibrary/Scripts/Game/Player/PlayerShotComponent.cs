@@ -14,6 +14,12 @@ public class PlayerShotComponent : MonoScript {
         shootCooldown_ -= Time.deltaTime;
         shootCooldown_ = Math.Max(shootCooldown_, 0.0f);
 
+        // ダッシュ中などは発射不可
+        PlayerStateComponent stateComponent = entity.GetScript<PlayerStateComponent>();
+        if (!stateComponent.CanShoot()) {
+            return;
+        }
+
         PlayerInputComponent inputComponent = entity.GetScript<PlayerInputComponent>();
 
         if (!inputComponent.isShootButtonPressed_) {

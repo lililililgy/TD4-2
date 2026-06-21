@@ -40,7 +40,18 @@
             "type": "Transform"
         },
         {
+            "PlayerFollowCamera": {},
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PlayerFollowCamera"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "066cf8700e962fdd141e80666ddb8240",

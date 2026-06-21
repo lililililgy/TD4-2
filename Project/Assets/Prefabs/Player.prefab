@@ -24,9 +24,10 @@
         },
         {
             "PlayerInputComponent": {},
-            "PlayerMoveComponent": {
-                "moveSpeed_": 0.0
-            },
+            "PlayerStateComponent": {},
+            "PlayerNormalState": {},
+            "PlayerDashState": {},
+            "PlayerMoveComponent": {},
             "PlayerShotComponent": {
                 "bulletSpawnOffset_": {
                     "x": 0.0,
@@ -74,11 +75,23 @@
                 },
                 {
                     "enable": true,
+                    "name": "PlayerStateComponent"
+                },
+                {
+                    "enable": true,
                     "name": "PlayerMoveComponent"
                 },
                 {
                     "enable": true,
                     "name": "PlayerShotComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerNormalState"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerDashState"
                 }
             ],
             "type": "Script"

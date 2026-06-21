@@ -35,14 +35,37 @@ public class PlayerInputComponent
             }
         }
 
+        // ダッシュ（押した瞬間のみ）
+        isDashButtonPressed_ = false;
+
+        foreach (var key in dashKeys_) {
+            if (Input.PressKey(key)) {
+                isDashButtonPressed_ = true;
+                break;
+            }
+        }
+
+        if (!isDashButtonPressed_) {
+            foreach (var button in dashButtons_) {
+                if (Input.PressGamepad(button)) {
+                    isDashButtonPressed_ = true;
+                    break;
+                }
+            }
+        }
+
     }
 
 
     public Vector2 moveDir_;
 
     public bool isShootButtonPressed_ = false;
+    public bool isDashButtonPressed_ = false;
 
     [SerializeField] private List<KeyCode> shootKeys_ = new List<KeyCode> { KeyCode.Space, KeyCode.Z, KeyCode.X };
     [SerializeField] private List<Gamepad> shotButtons_ = new List<Gamepad> { Gamepad.LeftShoulder, Gamepad.RightShoulder };
+
+    [SerializeField] private List<KeyCode> dashKeys_ = new List<KeyCode> { KeyCode.LeftShift };
+    [SerializeField] private List<Gamepad> dashButtons_ = new List<Gamepad> { Gamepad.A };
 
 }
