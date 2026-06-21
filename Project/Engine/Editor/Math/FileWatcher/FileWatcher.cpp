@@ -18,7 +18,8 @@ bool FileWatcher::Start(const std::vector<std::wstring>& dirs) {
 	isRunning_ = true;
 
 	for (const auto& dir : dirs) {
-		if (!std::filesystem::exists(dir)) continue;
+		std::error_code ec;
+		if (!std::filesystem::exists(dir, ec) || ec) continue;
 
 		auto ctx = std::make_shared<WatchTarget>();
 		ctx->dirPath = dir;
@@ -152,6 +153,11 @@ void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> ctx) {
 
 		DWORD bytesTransferred = 0;
 		if (!GetOverlappedResult(ctx->hDir, &overlapped, &bytesTransferred, FALSE)) {
+			DWORD err = GetLastError();
+			if (err == ERROR_NOTIFY_ENUM_DIR) {
+				isPending = false;
+				continue;
+			}
 			/// ----- error ----- ///
 			break;
 		}
@@ -165,7 +171,13 @@ void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> ctx) {
 
 		FILE_NOTIFY_INFORMATION* fni = reinterpret_cast<FILE_NOTIFY_INFORMATION*>(buffer);
 		while (true) {
-			if (reinterpret_cast<BYTE*>(fni) + sizeof(FILE_NOTIFY_INFORMATION) > buffer + bytesTransferred) {
+			/// fniの固定メンバ部分がバッファの範囲内かチェック
+			if (reinterpret_cast<BYTE*>(fni) + offsetof(FILE_NOTIFY_INFORMATION, FileName) > buffer + bytesTransferred) {
+				break;
+			}
+
+			/// fni->FileName がバッファの範囲内かチェック
+			if (reinterpret_cast<BYTE*>(fni->FileName) + fni->FileNameLength > buffer + bytesTransferred) {
 				break;
 			}
 
@@ -177,6 +189,8 @@ void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> ctx) {
 			case FILE_ACTION_MODIFIED:         ev.action = FileEvent::Action::Modified;   break;
 			case FILE_ACTION_RENAMED_OLD_NAME: ev.action = FileEvent::Action::RenamedOld; break;
 			case FILE_ACTION_RENAMED_NEW_NAME: ev.action = FileEvent::Action::RenamedNew; break;
+			default:
+				break;
 			}
 
 			/// Pathの構築
@@ -184,14 +198,15 @@ void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> ctx) {
 			ev.watchedDir = ctx->dirPath;
 
 			/// タイプ判定（削除でもできるだけ推定）
-			if (std::filesystem::exists(ev.path)) {
-				if (std::filesystem::is_directory(ev.path)) {
+			std::error_code ec;
+			if (std::filesystem::exists(ev.path, ec) && !ec) {
+				if (std::filesystem::is_directory(ev.path, ec) && !ec) {
 					ev.type = FileEvent::Type::Directory;
 				} else {
 					ev.type = FileEvent::Type::File;
 				}
 			} else {
-				/// 削除された場合、拡張子などで推測
+				/// 削除された場合、あるいはアクセスエラーの場合は拡張子などで推測
 				if (ev.path.find(L'.') != std::wstring::npos) {
 					ev.type = FileEvent::Type::File;
 				} else {
@@ -210,8 +225,14 @@ void FileWatcher::WatchDirectory(std::shared_ptr<WatchTarget> ctx) {
 				break;
 			}
 
+			/// 次のエントリのアドレスがバッファ内に収まっているかチェック
+			BYTE* nextFniByte = reinterpret_cast<BYTE*>(fni) + fni->NextEntryOffset;
+			if (nextFniByte < buffer || nextFniByte >= buffer + bytesTransferred) {
+				break;
+			}
+
 			/// 次のエントリへ
-			fni = reinterpret_cast<FILE_NOTIFY_INFORMATION*>(reinterpret_cast<BYTE*>(fni) + fni->NextEntryOffset);
+			fni = reinterpret_cast<FILE_NOTIFY_INFORMATION*>(nextFniByte);
 		}
 	}
 }

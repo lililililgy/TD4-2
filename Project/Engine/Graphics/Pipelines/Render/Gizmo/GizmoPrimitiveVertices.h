@@ -29,16 +29,16 @@ struct VertexData {
 /// @param thickness 線の太さ
 /// @param segment 線の分割数
 /// @return 1セグメントあたり6頂点(TRIANGLELIST)の頂点データ
-std::vector<GizmoPrimitive::VertexData> GetSphereVertices(const Vector3& center, float radius, const Vector4& color, float thickness = 1.0f, size_t segment = 24);
+std::vector<GizmoPrimitive::VertexData> GetSphereVertices(const Vector3& center, float radius, const Vector4& color, float thickness = 1.0f, size_t segment = 24, bool is2D = false);
 
 /// @brief Cubeの頂点データを取得する
 /// @param center Cubeの中心
-/// @param size Cubeのサイズ
+/// @param size Cube of size
 /// @param rotate Cubeの回転
 /// @param color Cubeの色
 /// @param thickness 線の太さ
 /// @return 1セグメントあたり6頂点(TRIANGLELIST)の頂点データ
-std::vector<GizmoPrimitive::VertexData> GetCubeVertices(const Vector3& center, const Vector3& size, const Quaternion& rotate, const Vector4& color, float thickness = 1.0f);
+std::vector<GizmoPrimitive::VertexData> GetCubeVertices(const Vector3& center, const Vector3& size, const Quaternion& rotate, const Vector4& color, float thickness = 1.0f, bool is2D = false);
 
 /// @brief 矩形の頂点データを取得する
 /// @param matWorld ワールド座標

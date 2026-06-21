@@ -167,25 +167,25 @@ static class ComponentBatchManager {
 		});
 
 		// --- Animator の登録 ---
-		RegisterConverter<Animator, Animator.BatchData>((ComponentArray<Animator> array) => {
-			int count = array.Count;
-			Animator.BatchData[] batch = new Animator.BatchData[count];
-			for (int i = 0; i < count; i++) {
-				var comp = array.Get(i);
-				batch[i].compId = comp.compId;
-			}
-			return batch;
-		});
+		//RegisterConverter<Animator, Animator.BatchData>((ComponentArray<Animator> array) => {
+		//	int count = array.Count;
+		//	Animator.BatchData[] batch = new Animator.BatchData[count];
+		//	for (int i = 0; i < count; i++) {
+		//		var comp = array.Get(i);
+		//		batch[i].compId = comp.compId;
+		//	}
+		//	return batch;
+		//});
 
-		RegisterAllocator<Animator, Animator.BatchData>((ComponentArray<Animator> array) => {
-			int count = array.Count;
-			Animator.BatchData[] batch = new Animator.BatchData[count];
-			for (int i = 0; i < count; i++) {
-				var comp = array.Get(i);
-				batch[i].compId = comp.compId;
-			}
-			return batch;
-		});
+		//RegisterAllocator<Animator, Animator.BatchData>((ComponentArray<Animator> array) => {
+		//	int count = array.Count;
+		//	Animator.BatchData[] batch = new Animator.BatchData[count];
+		//	for (int i = 0; i < count; i++) {
+		//		var comp = array.Get(i);
+		//		batch[i].compId = comp.compId;
+		//	}
+		//	return batch;
+		//});
 	}
 
 

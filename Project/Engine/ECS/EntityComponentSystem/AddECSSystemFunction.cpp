@@ -13,6 +13,7 @@
 #include "../System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
 #include "../System/ScriptUpdateSystem/ScriptUpdateSystem.h"
 #include "../System/Collision/CollisionSystem.h"
+#include "../System/Collision/Collision2DSystem.h"
 #include "../System/Collision/ColliderRenderQueueSystem.h"
 #include "../System/SkinMesh/SkinMeshUpdateSystem.h"
 #include "../System/CameraUpdate/CameraUpdateSystem.h"
@@ -52,6 +53,7 @@ void ONEngine::GameECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Asse
 	/// 衝突判定に使うsystem
 	ecs->AddSystem<TerrainCollision>();
 	ecs->AddSystem<CollisionSystem>();
+	ecs->AddSystem<Collision2DSystem>();
 	ecs->AddSystem<TransformUpdateSystem>();
 
 	ecs->AddSystem<CameraUpdateSystem>(dxm->GetDxDevice());
@@ -90,6 +92,7 @@ void ONEngine::DebugECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Ass
 	/// 衝突判定に使うsystem
 	ecs->AddSystem<TerrainCollision>();
 	ecs->AddSystem<CollisionSystem>();
+	ecs->AddSystem<Collision2DSystem>();
 	ecs->AddSystem<TransformUpdateSystem>();
 
 	/// 描画に使うsystem

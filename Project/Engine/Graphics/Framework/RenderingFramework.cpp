@@ -1,4 +1,4 @@
-#include "RenderingFramework.h"
+﻿#include "RenderingFramework.h"
 
 using namespace ONEngine;
 
@@ -32,6 +32,9 @@ void RenderingFramework::Initialize(DxManager* dxm, WindowManager* windowManager
 
 	renderingPipelineCollection_->Initialize();
 	assetCollection_->Initialize(pDxManager_);
+
+	const int maxGizmoRenderingCount = 1024;
+	Gizmo::Initialize(maxGizmoRenderingCount);
 
 
 	/// ----- RenderTextureの初期化 ----- ///
@@ -138,6 +141,9 @@ void RenderingFramework::PreDraw(ECSGroup* ecsGroup) {
 
 void RenderingFramework::DrawScene() {
 	CameraComponent* camera = pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera();
+	if (!camera) {
+		camera = pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera2D();
+	}
 	
 	// 実行チェックログ
 	static int drawSceneLogCount = 0;
@@ -192,13 +198,16 @@ void RenderingFramework::DrawScene() {
 	renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera2D());
 
 	/// Gizmo描画 (最後)
-	renderingPipelineCollection_->DrawGizmos(camera);
+	renderingPipelineCollection_->DrawGizmos(camera, pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera2D());
 
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 }
 
 void RenderingFramework::DrawDebug() {
 	CameraComponent* camera = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera();
+	if (!camera) {
+		camera = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
+	}
 
 	// 実行チェックログ
 	static int drawDebugLogCount = 0;
@@ -252,8 +261,15 @@ void RenderingFramework::DrawDebug() {
 		renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("GameScene")->GetMainCamera2D(), "GameScene");
 	}
 
+	CameraComponent* camera2D = nullptr;
+	if (auto gameGroup = pEntityComponentSystem_->GetECSGroup("GameScene")) {
+		camera2D = gameGroup->GetMainCamera2D();
+	} else {
+		camera2D = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
+	}
+
 	/// Gizmo描画 (最後)
-	renderingPipelineCollection_->DrawGizmos(camera);
+	renderingPipelineCollection_->DrawGizmos(camera, camera2D);
 
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 
@@ -262,6 +278,9 @@ void RenderingFramework::DrawDebug() {
 
 void RenderingFramework::DrawPrefab() {
 	CameraComponent* camera = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera();
+	if (!camera) {
+		camera = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
+	}
 
 	// 実行チェックログ
 	static int drawPrefabLogCount = 0;
@@ -309,8 +328,15 @@ void RenderingFramework::DrawPrefab() {
 
 	renderingPipelineCollection_->DrawSelectedPrefab2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D());
 
+	CameraComponent* camera2D = nullptr;
+	if (auto gameGroup = pEntityComponentSystem_->GetECSGroup("GameScene")) {
+		camera2D = gameGroup->GetMainCamera2D();
+	} else {
+		camera2D = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
+	}
+
 	/// Gizmo描画 (最後)
-	renderingPipelineCollection_->DrawGizmos(camera);
+	renderingPipelineCollection_->DrawGizmos(camera, camera2D);
 
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 

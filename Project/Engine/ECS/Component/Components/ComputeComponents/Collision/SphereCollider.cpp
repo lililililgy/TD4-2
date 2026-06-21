@@ -32,6 +32,7 @@ void ComponentDebug::SphereColliderDebug(SphereCollider* c) {
 		}
 
 		ImGui::Checkbox("Is Trigger", &c->isTrigger_);
+		ImGui::Checkbox("Use Owner Scale", &c->useOwnerScale_);
 		ImGui::Checkbox("Freeze Y", &c->freezeY_);
 		ImGui::DragFloat("Mass", &c->mass_, 0.1f, 0.001f, 10000.0f);
 	}
@@ -104,6 +105,7 @@ void ONEngine::from_json(const nlohmann::json& j, SphereCollider& s) {
 	s.enable = j.value("enable", 1);
 	s.radius_ = j.value("radius", 1.0f);
 	s.isTrigger_ = j.value("isTrigger", false);
+	s.useOwnerScale_ = j.value("useOwnerScale", true);
 	s.freezeY_ = j.value("freezeY", false);
 	s.mass_ = j.value("mass", 1.0f);
 	s.collisionState_ = magic_enum::enum_cast<CollisionState>(j.value("state", "Dynamic")).value_or(CollisionState::Dynamic);
@@ -117,6 +119,7 @@ void ONEngine::to_json(nlohmann::json& j, const SphereCollider& s) {
 		{ "enable", s.enable },
 		{ "radius", s.GetRadius() },
 		{ "isTrigger", s.IsTrigger() },
+		{ "useOwnerScale", s.IsUseOwnerScale() },
 		{ "freezeY", s.freezeY_ },
 		{ "mass", s.mass_ },
 		{ "state", magic_enum::enum_name(s.collisionState_) },
@@ -167,5 +170,15 @@ float ONEngine::InternalGetMass(uint64_t nativeHandle) {
 void ONEngine::InternalSetMass(uint64_t nativeHandle, float mass) {
 	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
 	if(c) c->SetMass(mass);
+}
+
+bool ONEngine::InternalIsUseOwnerScaleSphere(uint64_t nativeHandle) {
+	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+	return c ? c->IsUseOwnerScale() : true;
+}
+
+void ONEngine::InternalSetUseOwnerScaleSphere(uint64_t nativeHandle, bool use) {
+	SphereCollider* c = reinterpret_cast<SphereCollider*>(nativeHandle);
+	if(c) c->SetUseOwnerScale(use);
 }
 
