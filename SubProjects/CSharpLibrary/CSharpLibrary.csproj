@@ -126,6 +126,9 @@
     <Compile Include="Scripts\Engine\ECS\Components\Compute\CircleCollider.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\SphereCollider.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Transform.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\UIElementComponent.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\UIGroupComponent.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\UILinkNavigationComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\DissolveMeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\MeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SkinMeshRenderer.cs" />

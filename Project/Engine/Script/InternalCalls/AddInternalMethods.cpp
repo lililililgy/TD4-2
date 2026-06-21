@@ -205,6 +205,7 @@ void ONEngine::AddEntityInternalCalls() {
 	mono_add_internal_call("Entity::InternalGetScript", (void*)InternalGetScript);
 	mono_add_internal_call("Entity::InternalGetEnable", (void*)InternalGetEnable);
 	mono_add_internal_call("Entity::InternalSetEnable", (void*)InternalSetEnable);
+	mono_add_internal_call("UIElementComponent::InternalGetElementId", (void*)InternalGetElementId);
 
 	mono_add_internal_call("ECSGroup::InternalCreateEntity", (void*)InternalCreateEntity);
 	mono_add_internal_call("ECSGroup::InternalDestroyEntity", (void*)InternalDestroyEntity);

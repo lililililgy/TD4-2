@@ -12,6 +12,9 @@
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/CustomMeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line2DRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line3DRenderer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UILinkNavigationComponent.h"
 
 
 namespace ONEngine {
