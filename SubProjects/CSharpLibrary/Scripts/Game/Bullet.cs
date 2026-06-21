@@ -24,7 +24,7 @@ public class Bullet : MonoScript {
         transform.position += moveDir_ * speed_ * Time.deltaTime;
     }
 
-    void SetMoveDir(Vector3 dir) {
+    public void SetMoveDir(Vector3 dir) {
         moveDir_ = dir.Normalized();
     }
 

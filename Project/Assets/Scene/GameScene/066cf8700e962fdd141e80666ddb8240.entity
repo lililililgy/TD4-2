@@ -24,7 +24,7 @@
             "position": {
                 "x": 0.0,
                 "y": 0.0,
-                "z": -144.30003356933594
+                "z": 0.0
             },
             "rotate": {
                 "w": 1.0,
@@ -40,7 +40,16 @@
             "type": "Transform"
         },
         {
-            "PlayerFollowCamera": {},
+            "PlayerFollowCamera": {
+                "maxSmoothSpeed_": 32.0,
+                "offset_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "smoothTime_": 0.30000001192092896,
+                "targetName_": "Player"
+            },
             "type": "Variables"
         },
         {

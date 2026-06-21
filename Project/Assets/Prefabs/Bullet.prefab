@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 0.10000000149011612,
-                "y": 0.10000000149011612,
-                "z": 0.10000000149011612
+                "x": 64.0,
+                "y": 64.0,
+                "z": 64.0
             },
             "type": "Transform"
         },
@@ -28,35 +28,6 @@
                 "speed_": 32.0
             },
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "material": {
-                "baseColor": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "baseTextureGuid": "00000000000000000000000000000000",
-                "guid": "00000000000000000000000000000000",
-                "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 1,
-                "uvTransform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "rotate": 0.0,
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                }
-            },
-            "meshPath": "./Packages/Models/primitive/cube.obj",
-            "renderQueue": 2,
-            "type": "MeshRenderer"
         },
         {
             "categoryBits": 4,
@@ -71,7 +42,8 @@
                 "z": 1.0
             },
             "state": "Dynamic",
-            "type": "BoxCollider"
+            "type": "BoxCollider",
+            "useOwnerScale": true
         },
         {
             "enable": 1,
@@ -82,9 +54,36 @@
                 }
             ],
             "type": "Script"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "ac842be8df6723ae5fa4c2c06a0e1f11",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
         }
     ],
-    "guid": "3a1a5dc65fa8e81a0f9a91c93957cb63",
+    "guid": "e4ce6021771d62eb49b3baa2c57bee7e",
     "name": "Bullet",
     "parentGuid": null,
     "prefabName": ""

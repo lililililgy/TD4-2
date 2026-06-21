@@ -58,7 +58,13 @@ struct Mathf {
 		return a + (b - a) * t;
 	}
 
-	static public float Clamp(float value, float min, float max) {
+	static public int Clamp(int value, int min, int max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+
+    static public float Clamp(float value, float min, float max) {
 		if (value < min) return min;
 		if (value > max) return max;
 		return value;

@@ -35,7 +35,7 @@ public class PlayerInputComponent
             }
         }
 
-        // ダッシュ（押した瞬間のみ）
+        // ダッシュ
         isDashButtonPressed_ = false;
 
         foreach (var key in dashKeys_) {
@@ -54,18 +54,58 @@ public class PlayerInputComponent
             }
         }
 
+        // リロード（押した瞬間のみ）
+        isReloadButtonPressed_ = false;
+        foreach (var key in reloadKeys_) {
+            if (Input.PressKey(key)) {
+                isReloadButtonPressed_ = true;
+                break;
+            }
+        }
+
+        if (!isReloadButtonPressed_) {
+            foreach (var button in reloadButtons_) {
+                if (Input.PressGamepad(button)) {
+                    isReloadButtonPressed_ = true;
+                    break;
+                }
+            }
+        }
+
     }
 
+    public Vector2 MoveDir {
+        get { return moveDir_; }
+    }
 
-    public Vector2 moveDir_;
+    public bool IsShootButtonPressed {
+        get { return isShootButtonPressed_; }
+    }
+    public bool IsDashButtonPressed {
+        get { return isDashButtonPressed_; }
+    }
+    public bool IsReloadButtonPressed {
+        get { return isReloadButtonPressed_; }
+    }
 
-    public bool isShootButtonPressed_ = false;
-    public bool isDashButtonPressed_ = false;
+    // 移動方向（正規化済み）
+    private Vector2 moveDir_;
 
+    // 発射ボタンが押されているか（押している間 true）
+    private bool isShootButtonPressed_ = false;
+    private bool isDashButtonPressed_ = false;
+    private bool isReloadButtonPressed_ = false;
+
+    // 弾の発射ボタン（キーボードとゲームパッドの両方をサポート）
     [SerializeField] private List<KeyCode> shootKeys_ = new List<KeyCode> { KeyCode.Space, KeyCode.Z, KeyCode.X };
     [SerializeField] private List<Gamepad> shotButtons_ = new List<Gamepad> { Gamepad.LeftShoulder, Gamepad.RightShoulder };
 
+    // ダッシュボタン（キーボードとゲームパッドの両方をサポート）
     [SerializeField] private List<KeyCode> dashKeys_ = new List<KeyCode> { KeyCode.LeftShift };
     [SerializeField] private List<Gamepad> dashButtons_ = new List<Gamepad> { Gamepad.A };
+
+    // リロードボタン（キーボードとゲームパッドの両方をサポート）
+    [SerializeField] private List<KeyCode> reloadKeys_ = new List<KeyCode> { KeyCode.R };
+    [SerializeField] private List<Gamepad> reloadButtons_ = new List<Gamepad> { Gamepad.Y };
 
 }

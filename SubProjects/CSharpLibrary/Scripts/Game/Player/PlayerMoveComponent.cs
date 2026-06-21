@@ -31,15 +31,15 @@ public class PlayerMoveComponent
 
         // 通常時は入力方向を「正面（forward）」として記録する。
         // moveForward_（ダッシュ等）の間は入力を無視して、正面へ走り続ける。
-        if (param.canMove_ && inputComp.moveDir_.LengthSq() > kThresholdSpeed) {
-            forwardDir_ = inputComp.moveDir_.Normalized();
+        if (param.canMove_ && inputComp.MoveDir.LengthSq() > kThresholdSpeed) {
+            forwardDir_ = inputComp.MoveDir.Normalized();
         }
 
         Vector2 input;
         if (param.moveForward_) {
             input = forwardDir_;
         } else if (param.canMove_) {
-            input = inputComp.moveDir_;
+            input = inputComp.MoveDir;
         } else {
             input = new Vector2(0.0f, 0.0f);
         }

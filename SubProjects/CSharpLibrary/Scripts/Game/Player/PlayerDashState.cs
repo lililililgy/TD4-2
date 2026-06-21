@@ -36,13 +36,13 @@ public class PlayerDashState : PlayerState {
     // 通常 → ダッシュ の遷移条件
     public bool WantsToStart() {
         PlayerInputComponent input = entity.GetScript<PlayerInputComponent>();
-        return input != null && input.isDashButtonPressed_;
+        return input != null && input.IsDashButtonPressed;
     }
 
     // ダッシュ → 通常 の遷移条件
     public bool IsFinished() {
         PlayerInputComponent input = entity.GetScript<PlayerInputComponent>();
-        return input != null && !input.isDashButtonPressed_;
+        return input != null && !input.IsDashButtonPressed;
     }
 
     // ダッシュ中は射撃不可
