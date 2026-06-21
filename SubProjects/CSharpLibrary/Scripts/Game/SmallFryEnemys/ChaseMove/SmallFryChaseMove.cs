@@ -1,7 +1,8 @@
 using System;
 
 
-public class SmallFryChaseMove : MonoScript {
+public class SmallFryChaseMove : MonoScript
+{
 
     // チェイス系パラメータ
     [SerializeField] private float chaseSpeed = 5.0f;
@@ -27,112 +28,164 @@ public class SmallFryChaseMove : MonoScript {
     // action
     private Action updateAction_ = null;
 
-    public override void Initialize() {
+    public override void Initialize()
+    {
         initialScale_ = transform.scale;
     }
 
-    public override void Update() {
+    public override void Update()
+    {
         // Action更新
         updateAction_?.Invoke();
     }
 
-    public void StartChase() {
-        // Playerエンティティを探す
-        if (playerEntity_ == null) {
-            playerEntity_ = ecsGroup.FindEntity(playerEntityName);
-        }
+    public void StartChase()
+    {
         // チェイスActionに移行
         chaseTimer_ = 0.0f;
         updateAction_ = Wait;
     }
 
-    private void ChaseMove() {
+
+    private void ChaseMove()
+    {
 
         // プレイヤーEntitynullチェック
-        if (playerEntity_ == null) {
-            return;
-        }
+        if (!TryFindPlayer()) { return; }
 
         // 追いかけタイマー更新
-        chaseTimer_ += Time.deltaTime;
-
-        // 一定時間追いかけたらWaitに遷移する
-        if (chaseTimer_ >= chaseDuration) {
-            velocity_ = Vector3.zero;
-            updateAction_ = Wait;
-            return;
-        }
+        if (TickChaseTimer()) { return; }
 
         // プレイヤーへのベクトルを取得
         Vector3 toPlayer = playerEntity_.transform.position - transform.position;
         float distance = toPlayer.Length();
 
         // 近づきすぎたら方向固定で直進
-        if (distance <= rushDistance) {
+        if (distance <= rushDistance)
+        {
             updateAction_ = RushMove;
             return;
         }
 
         // プレイヤーの方向へ追尾する
-        if (distance > 0.001f) {
-            velocity_ = toPlayer.Normalized() * chaseSpeed;
-        }
+        CalcVelocityToPlayer();
 
         // 位置適応・進行方向へ向く
         transform.position += velocity_ * Time.deltaTime;
         FaceVelocity();
     }
 
-    private void RushMove() {
+    private void RushMove()
+    {
+        // 追いかけタイマー更新・時間切れで Wait へ
+        if (TickChaseTimer())
+        {
+            return;
+        }
+
+        // 位置とvelocityの適用
         transform.position += velocity_ * Time.deltaTime;
         FaceVelocity();
     }
 
-    private void FaceVelocity() {
+    private void FaceVelocity()
+    {
         // 動いていなかったら早期リターン
-        if (velocity_.x == 0.0f && velocity_.y == 0.0f) {
+        if (velocity_.x == 0.0f && velocity_.y == 0.0f)
+        {
             return;
         }
-        // 進行方向へのターゲット回転を求めて、現在角度から Slerp で補間
+        // 進行方向へのターゲット回転を計算し、現在角度から Slerp で補間
         Quaternion targetRotate = Quaternion.LookRotation(-Vector3.forward, velocity_.Normalized());
-        transform.rotate = Quaternion.Slerp(transform.rotate, targetRotate,0.3f);
+        transform.rotate = Quaternion.Slerp(transform.rotate, targetRotate, 0.3f);
     }
 
-    private void Wait() {
+    private void Wait()
+    {
 
         // プレイヤーEntityのnullチェック
-        if (playerEntity_ == null) {
+        if (!TryFindPlayer())
+        {
             return;
         }
 
         // 一定距離までプレイヤーがいたら発見モーションへ移行
         Vector3 toPlayer = playerEntity_.transform.position - transform.position;
-        if (toPlayer.Length() <= chaseDistance) {
+        if (toPlayer.Length() <= chaseDistance)
+        {
             currentDiscoveryTimer_ = 0.0f;
             updateAction_ = DiscoveryMotion;
         }
     }
 
-    private void DiscoveryMotion() {
+    private void DiscoveryMotion()
+    {
+
+        // プレイヤーの方向を計算する
+        CalcVelocityToPlayer();
+        FaceVelocity();
+
         // 発見演出タイマー更新
         currentDiscoveryTimer_ += Time.deltaTime;
         float halfTime = discoveryTimer * 0.5f;
 
-        if (currentDiscoveryTimer_ < halfTime) {
+        if (currentDiscoveryTimer_ < halfTime)
+        {
             // 前半: EaseOutBack でスケールアップ
             float time = currentDiscoveryTimer_ / halfTime;
             float scale = 1.0f + (discoveryScale - 1.0f) * Ease.Out.Back(time);
             transform.scale = initialScale_ * scale;
-        } else if (currentDiscoveryTimer_ < discoveryTimer) {
-            // 後半: EaseOutQuad で元のスケールに戻す
+        }
+        else if (currentDiscoveryTimer_ < discoveryTimer)
+        {
+            // 後半: EaseOutBack で元のスケールに戻す
             float time = (currentDiscoveryTimer_ - halfTime) / halfTime;
             float scale = discoveryScale + (1.0f - discoveryScale) * Ease.Out.Back(time);
             transform.scale = initialScale_ * scale;
-        } else {
+        }
+        else
+        {
             // 演出終了 → ChaseMove へ
             transform.scale = initialScale_;
             chaseTimer_ = 0.0f;
             updateAction_ = ChaseMove;
         }
+    }
+
+    private bool TryFindPlayer()
+    {
+        // プレイヤーEntityを取得
+        if (playerEntity_ == null)
+        {
+            playerEntity_ = ecsGroup.FindEntity(playerEntityName);
+        }
+        //見つからなければ false を返す
+        return playerEntity_ != null;
+    }
+
+    private void CalcVelocityToPlayer()
+    {
+        // プレイヤーへのベクトルを計算
+        Vector3 toPlayer = playerEntity_.transform.position - transform.position;
+        if (toPlayer.Length() > 0.001f)
+        {
+            // velocityを計算
+            velocity_ = toPlayer.Normalized() * chaseSpeed;
+        }
+    }
+
+    private bool TickChaseTimer()
+    {
+        // 追いかけタイマーを更新
+        chaseTimer_ += Time.deltaTime;
+
+        // chaseDurationを超えたらWaitに遷移
+        if (chaseTimer_ >= chaseDuration)
+        {
+            velocity_ = Vector3.zero;
+            updateAction_ = Wait;
+            return true;
+        }
+        return false;
     }
 }
