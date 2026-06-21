@@ -2,36 +2,13 @@
     "active": true,
     "components": [
         {
-            "enable": 1,
-            "material": {
-                "baseColor": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "baseTextureGuid": "81a024e9a87e59e95d5afd6b2ea6a342",
-                "guid": "00000000000000000000000000000000",
-                "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 1,
-                "uvTransform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "rotate": 0.0,
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                }
+            "SmallFryChaseMove": {
+                "chaseSpeed": 9.0
             },
-            "meshPath": "./Assets/Models/pillar.obj",
-            "renderQueue": 2,
-            "type": "MeshRenderer"
+            "type": "Variables"
         }
     ],
-    "guid": "bea1929225ec333549f4eb67e2733910",
+    "guid": "4f20d8e28f3757e9c643a0cc627987db",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

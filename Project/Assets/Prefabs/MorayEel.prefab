@@ -10,7 +10,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -33,11 +33,13 @@
                 "startChaseDistance": 0.0
             },
             "SmallFryChaseMove": {
-                "chaseDistance": 20.0,
+                "chaseDistance": 50.0,
                 "chaseDuration": 2.0,
-                "chaseSpeed": 1.5,
+                "chaseSpeed": 9.0,
+                "discoveryScale": 2.0,
+                "discoveryTimer": 0.6000000238418579,
                 "playerEntityName": "Player",
-                "rushDistance": 5.0
+                "rushDistance": 20.0
             },
             "type": "Variables"
         },
@@ -89,7 +91,7 @@
             "type": "MeshRenderer"
         }
     ],
-    "guid": "bea1929225ec333549f4eb67e2733910",
+    "guid": "4f20d8e28f3757e9c643a0cc627987db",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"
