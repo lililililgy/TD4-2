@@ -1,1 +1,48 @@
-{"prefabName":"MorayEelPot"}
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "MorayEelMovement": {
+                "chargeSpeed": 0.0,
+                "chargeStartTime": 0.0,
+                "deraySpeed": 0.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "MorayEelMovement"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "b7dd53bc6f3ae10b76ff7b0e184e2087",
+    "name": "MorayEelPot",
+    "parentGuid": null,
+    "prefabName": "MorayEelPot"
+}

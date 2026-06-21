@@ -1,1 +1,53 @@
-{"prefabName":"MorayEel"}
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "MorayEel": {},
+            "MorayEelMovement": {
+                "chargeSpeed": 0.0,
+                "chargeStartTime": 0.0,
+                "deraySpeed": 0.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "MorayEel"
+                },
+                {
+                    "enable": true,
+                    "name": "MorayEelMovement"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "03d2268858b71adfe35313452fdff984",
+    "name": "MorayEel",
+    "parentGuid": null,
+    "prefabName": "MorayEel"
+}
