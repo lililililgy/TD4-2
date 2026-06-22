@@ -1,0 +1,19 @@
+{
+    "entities": [
+        {
+            "guid": "ef9cb081b1c1cd85474b7280c162abf3",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/ef9cb081b1c1cd85474b7280c162abf3.entity"
+        },
+        {
+            "guid": "c13ec1b095d9df2802ccfeef119225e0",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/c13ec1b095d9df2802ccfeef119225e0.entity"
+        },
+        {
+            "guid": "97a0853c3a925f639287dd7808dc5820",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/97a0853c3a925f639287dd7808dc5820.entity"
+        }
+    ]
+}

@@ -9,13 +9,13 @@ public class KingGeso : MonoScript
     [SerializeField]
     public string targetEntityName = "Player";
     [SerializeField]
-    public string cameraEntityName = "Camera1";
+    public string cameraEntityName = "Camera_1";
     [SerializeField]
-    public Vector3 gesoSpawnOffset = Vector3.zero;
+    public Vector2 gesoSpawnOffset = Vector2.zero;
     [SerializeField]
-    public float screenHalfWidth = 8.0f;
+    public float screenHalfWidth = 1280.0f;
     [SerializeField]
-    public float screenHalfHeight = 4.5f;
+    public float screenHalfHeight = 720.0f;
     [SerializeField]
     public float screenEdgeMargin = 0.5f;
     [SerializeField]
@@ -32,6 +32,8 @@ public class KingGeso : MonoScript
     public float gesoRotationSpeed = 8.0f;
     [SerializeField]
     public float gesoMoveDuration = 0.25f;
+    [SerializeField]
+    public float gesoPassThroughDistance = 3.0f;
 
     private HP _hp;
     private IKingGesoState _state;
@@ -173,7 +175,8 @@ public class KingGeso : MonoScript
         }
 
         gesoSpawnOffset = CreateRandomScreenEdgeOffset();
-        _activeGeso.transform.position = GetScreenCenter() + gesoSpawnOffset;
+        Vector2 spawnPosition = GetScreenCenter() + gesoSpawnOffset;
+        _activeGeso.transform.position = new Vector3(spawnPosition.x, GetMovementHeight(), spawnPosition.y);
         return true;
     }
 
@@ -195,6 +198,7 @@ public class KingGeso : MonoScript
         hand.attackDuration = AttackDuration;
         hand.rotationSpeed = gesoRotationSpeed;
         hand.moveDuration = gesoMoveDuration;
+        hand.passThroughDistance = gesoPassThroughDistance;
         return hand.CommandAttack(_targetEntity);
     }
 
@@ -210,7 +214,7 @@ public class KingGeso : MonoScript
         }
     }
 
-    private Vector3 CreateRandomScreenEdgeOffset()
+    private Vector2 CreateRandomScreenEdgeOffset()
     {
         float halfWidth = screenHalfWidth > 0.0f ? screenHalfWidth : 0.01f;
         float halfHeight = screenHalfHeight > 0.0f ? screenHalfHeight : 0.01f;
@@ -221,28 +225,32 @@ public class KingGeso : MonoScript
         switch (edge)
         {
             case 0:
-                return new Vector3(-halfWidth - screenEdgeMargin, 0.0f, vertical);
+                return new Vector2(-halfWidth - screenEdgeMargin, vertical);
             case 1:
-                return new Vector3(halfWidth + screenEdgeMargin, 0.0f, vertical);
+                return new Vector2(halfWidth + screenEdgeMargin, vertical);
             case 2:
-                return new Vector3(horizontal, 0.0f, -halfHeight - screenEdgeMargin);
+                return new Vector2(horizontal, -halfHeight - screenEdgeMargin);
             default:
-                return new Vector3(horizontal, 0.0f, halfHeight + screenEdgeMargin);
+                return new Vector2(horizontal, halfHeight + screenEdgeMargin);
         }
     }
 
-    private Vector3 GetScreenCenter()
+    private Vector2 GetScreenCenter()
     {
         Vector3 center = transform.worldPosition;
         if (_cameraEntity != null && _cameraEntity.transform != null)
         {
             center = _cameraEntity.transform.worldPosition;
         }
+        return new Vector2(center.x, center.z);
+    }
 
+    private float GetMovementHeight()
+    {
         if (_targetEntity != null && _targetEntity.transform != null)
         {
-            center.y = _targetEntity.transform.worldPosition.y;
+            return _targetEntity.transform.worldPosition.y;
         }
-        return center;
+        return transform.worldPosition.y;
     }
 }

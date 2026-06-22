@@ -14,7 +14,7 @@
             "fogStart": 0.0,
             "fovY": 0.699999988079071,
             "isDrawFrustum": false,
-            "isMainCamera": false,
+            "isMainCamera": true,
             "nearClip": 0.10000000149011612,
             "type": "CameraComponent"
         },
@@ -40,22 +40,11 @@
             "type": "Transform"
         },
         {
-            "DebugCamera": {},
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "DebugCamera"
-                }
-            ],
-            "type": "Script"
         }
     ],
-    "guid": "5777e8cd7fb89b14e6ba044b8f737e69",
-    "name": "DebugCamera",
+    "guid": "97a0853c3a925f639287dd7808dc5820",
+    "name": "Camera_1",
     "parentGuid": null,
     "prefabName": ""
 }

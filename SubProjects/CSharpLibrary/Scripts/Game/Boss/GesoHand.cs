@@ -22,11 +22,13 @@ public class GesoHand : MonoScript
     [SerializeField]
     public float moveDuration = 0.25f; //ターゲットまで直線移動する時間
     [SerializeField]
+    public float passThroughDistance = 3.0f; //ターゲットを通過して進む距離
+    [SerializeField]
     public float returnDuration = 0.3f; //手が元の位置に戻るまでの時間
     [SerializeField]
-    public float attackOffsetForward = 2.0f; //攻撃の前方オフセット
+    public float attackOffsetForward = 500.0f; //攻撃の前方オフセット
     [SerializeField]
-    public float attackOffsetUp = 0.0f; //攻撃の上方向オフセット
+    public float attackOffsetUp = 500.0f; //攻撃の上方向オフセット
 
     // 現在の手の状態
     public HandState State { get; private set; }
@@ -35,8 +37,9 @@ public class GesoHand : MonoScript
 
     // 手の元の回転
     private Quaternion _homeRotation;
-    private Vector3 _homePosition;
-    private Vector3 _attackTargetPosition;
+    private Vector2 _homePosition;
+    private Vector2 _attackTargetPosition;
+    private float _movementHeight;
     // 攻撃対象のエンティティ
     private Entity _target;
     // 現在の状態の経過時間
@@ -50,7 +53,8 @@ public class GesoHand : MonoScript
     public override void Initialize()
     {
         _homeRotation = transform.rotation;
-        _homePosition = transform.position;
+        _homePosition = ToPlane(transform.position);
+        _movementHeight = transform.position.y;
         State = HandState.Idle;
         _target = null;
         _stateTime = 0.0f;
@@ -104,7 +108,9 @@ public class GesoHand : MonoScript
         }
 
         _target = target;
-        _attackTargetPosition = target.transform.worldPosition;
+        Vector2 targetPosition = ToPlane(target.transform.position);
+        Vector2 attackDirection = (targetPosition - _homePosition).Normalized();
+        _attackTargetPosition = targetPosition + attackDirection * passThroughDistance;
         _stateTime = 0.0f;
         _attackEventSent = false;
         State = HandState.Attacking;
@@ -138,7 +144,7 @@ public class GesoHand : MonoScript
 
         float duration = moveDuration > 0.0f ? moveDuration : 0.001f;
         float moveRatio = Mathf.Clamp01(_stateTime / duration);
-        transform.position = Vector3.Lerp(_homePosition, _attackTargetPosition, moveRatio);
+        SetPlanePosition(Lerp(_homePosition, _attackTargetPosition, moveRatio));
 
         if (!_attackEventSent && moveRatio >= 1.0f)
         {
@@ -160,13 +166,14 @@ public class GesoHand : MonoScript
         _stateTime += Time.deltaTime;
         float duration = returnDuration > 0.0f ? returnDuration : 0.001f;
         float returnRatio = Mathf.Clamp01(Time.deltaTime / duration);
-        transform.position = Vector3.Lerp(transform.position, _homePosition, returnRatio);
+        Vector2 currentPosition = ToPlane(transform.position);
+        SetPlanePosition(Lerp(currentPosition, _homePosition, returnRatio));
         transform.rotation = Quaternion.Slerp(transform.rotation, _homeRotation, returnRatio);
 
         if (_stateTime >= returnDuration)
         {
             transform.rotation = _homeRotation;
-            transform.position = _homePosition;
+            SetPlanePosition(_homePosition);
             _target = null;
             State = HandState.Idle;
         }
@@ -183,22 +190,38 @@ public class GesoHand : MonoScript
             return;
         }
 
-        RotateTowardPosition(_target.transform.worldPosition);
+        RotateTowardPosition(ToPlane(_target.transform.position));
     }
 
-    private void RotateTowardPosition(Vector3 targetPosition)
+    private void RotateTowardPosition(Vector2 targetPosition)
     {
-        Vector3 direction = targetPosition - transform.position;
+        Vector2 direction = targetPosition - ToPlane(transform.position);
         if (direction.Length() <= 0.001f)
         {
             return;
         }
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction.Normalized());
+        Vector2 normalized = direction.Normalized();
+        Quaternion targetRotation = Quaternion.LookRotation(new Vector3(normalized.x, 0.0f, normalized.y));
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             targetRotation,
             Mathf.Clamp01(rotationSpeed * Time.deltaTime));
+    }
+
+    private static Vector2 ToPlane(Vector3 position)
+    {
+        return new Vector2(position.x, position.z);
+    }
+
+    private void SetPlanePosition(Vector2 position)
+    {
+        transform.position = new Vector3(position.x, _movementHeight, position.y);
+    }
+
+    private static Vector2 Lerp(Vector2 start, Vector2 end, float ratio)
+    {
+        return start + (end - start) * ratio;
     }
 
     //=============================
