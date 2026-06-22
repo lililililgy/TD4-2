@@ -10,17 +10,28 @@
                 "w": 0.4359589219093323,
                 "z": -0.8999665379524231
             },
+            "scale": {
+                "x": 64.0,
+                "y": 128.0,
+                "z": 63.999996185302734
+            },
             "type": "Transform"
         },
         {
             "PlayerDashState": {
-                "accel_": 1500.0,
-                "maxSpeed_": 4000.0
+                "accel_": 1000.0,
+                "maxSpeed_": 2000.0
             },
             "PlayerStateComponent": {
                 "currentStateName_": "PlayerNormalState"
             },
             "type": "Variables"
+        },
+        {
+            "material": {
+                "baseTextureGuid": "d51cab75456c2575ddb9851f6174f647"
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
