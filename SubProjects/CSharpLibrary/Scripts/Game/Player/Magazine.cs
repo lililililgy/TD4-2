@@ -33,9 +33,14 @@ public class Magazine : MonoScript {
         }
     }
 
-    // リロード可能 = 犠牲にできる成熟卵(残機)が1つ以上ある
+    // リロード可能 = 犠牲にできる成熟卵(残機)があり、弾(LARVAE)に空きがあり、クールタイムが明けている
     public bool CanReload {
-        get { return roeManager_ != null && roeManager_.MatureCount() > 0 && reloadTimer_ <= 0.0f; }
+        get {
+            return roeManager_ != null
+                && roeManager_.MatureCount() > 0
+                && roeManager_.CanLoadAmmo
+                && reloadTimer_ <= 0.0f;
+        }
     }
 
     // 弾切れ = 幼生卵(弾薬)が無い
@@ -48,8 +53,8 @@ public class Magazine : MonoScript {
         get { return roeManager_ != null ? roeManager_.LarveCount() : 0; }
     }
 
-    // 弾薬の上限 = 抱えられる卵の上限
+    // 弾薬の上限 = 弾(LARVAE)の上限
     public int GetMaxAmmo {
-        get { return roeManager_ != null ? roeManager_.MaxBrood : 0; }
+        get { return roeManager_ != null ? roeManager_.MaxAmmo : 0; }
     }
 }

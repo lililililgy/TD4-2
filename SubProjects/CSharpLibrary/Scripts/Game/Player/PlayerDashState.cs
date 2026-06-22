@@ -5,6 +5,7 @@ using System;
 public class PlayerDashState : PlayerState {
 
     [SerializeField] private bool  canMove_              = true;
+    [SerializeField] private bool  moveForward_          = false; // true: 入力を無視して正面へ走り続ける（ドッジ）。false: 入力方向へ普通に移動
     [SerializeField] private float accel_                = 4096.0f;
     [SerializeField] private float maxSpeed_             = 1024.0f;
     [SerializeField] private float decelSmoothTime_      = 0.2f;
@@ -12,7 +13,6 @@ public class PlayerDashState : PlayerState {
     [SerializeField] private float rotateSmoothTime_     = 3.0f;
     [SerializeField] private float rotateMaxSmoothSpeed_ = 64.0f;
 
-    [SerializeField] private bool  moveForward_ = false; // true: 入力を無視して正面へ走り続ける（ドッジ）。false: 入力方向へ普通に移動
 
     private PlayerMoveParam moveParam_ = new PlayerMoveParam();
 

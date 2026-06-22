@@ -40,6 +40,10 @@
             "type": "Transform"
         },
         {
+            "PlayerFollowCamera": {
+                "maxSmoothSpeed_": 26.0,
+                "smoothTime_": 0.8999999761581421
+            },
             "type": "Variables"
         }
     ],

@@ -6,8 +6,10 @@ using System.Collections.Generic;
 //   残機 = 成熟卵(MATURE)の数 = MatureCount()
 //   弾薬 = 幼生卵(LARVAE)の数 = LarveCount()
 //
-// 卵は有限資源。母体が時間（暫定。本来は経験値）で UNMATURE を産卵し、上限 maxBrood_ まで増える。
-//   リロード   : MATURE を1つ LARVAE 化（残機を犠牲に弾を作る）→ TryReload()
+// 卵は有限資源。上限は「卵」と「弾」で別管理する：
+//   卵(UNMATURE+MATURE) の上限 = maxRoe_  … 母体が時間（暫定。本来は経験値）で産卵する分の上限
+//   弾(LARVAE)          の上限 = maxAmmo_ … リロードで作り置きできる弾の上限
+//   リロード   : MATURE を1つ LARVAE 化（残機を犠牲に弾を作る。弾が上限なら不可）→ TryReload()
 //   発射       : LARVAE を1つ隊列から外して返す（呼び出し側が弾化して破棄）→ TryConsumeLarvae()
 //
 // 隊列順は entityId をキーに記録し、卵が自分の Initialize / Update で pull する
@@ -16,7 +18,8 @@ public class RoeManager : MonoScript {
 
     [SerializeField] private string roePrefabName_ = "Roe";  // 生成する卵プレハブ名
 
-    [SerializeField] private int   maxBrood_     = 5;    // 抱えられる卵の上限（全状態の合計）
+    [SerializeField] private int   maxRoe_       = 5;    // 卵(UNMATURE+MATURE)の上限
+    [SerializeField] private int   maxAmmo_      = 5;    // 弾(LARVAE)の上限
     [SerializeField] private float layInterval_  = 3.0f; // 産卵間隔（暫定：時間。経験値実装時に差し替え）
 
     private float layTimer_ = 0.0f;
@@ -28,10 +31,11 @@ public class RoeManager : MonoScript {
         Prune();
 
         // 産卵（暫定：時間経過。経験値が実装されたらここを「経験値消費で1個産む」に差し替える）
+        // 上限は卵(UNMATURE+MATURE)の数で判定する。弾(LARVAE)は別枠なので数えない。
         layTimer_ += Time.deltaTime;
         if (layTimer_ >= layInterval_) {
             layTimer_ = 0.0f;
-            if (roe_.Count < maxBrood_) {
+            if (EggCount() < maxRoe_) {
                 Spawn();
             }
         }
@@ -49,12 +53,25 @@ public class RoeManager : MonoScript {
         return CountState(RoeState.LARVAE);
     }
 
-    public int MaxBrood { get { return maxBrood_; } }
+    // 卵 = 未成熟＋成熟の数（弾は含まない）。産卵上限の判定に使う。
+    public int EggCount() {
+        return CountState(RoeState.UNMATURE) + CountState(RoeState.MATURE);
+    }
+
+    public int MaxRoe  { get { return maxRoe_; } }
+    public int MaxAmmo { get { return maxAmmo_; } }
+
+    // 弾(LARVAE)に空きがあるか（リロード可否）
+    public bool CanLoadAmmo { get { return LarveCount() < maxAmmo_; } }
 
     // ---- 状態遷移（リロード・発射） ----
 
-    // 成熟卵(残機)を1つ幼生卵(弾薬)に変える。インデックスの小さい（隊列の前の）卵から探す。成功で true。
+    // 成熟卵(残機)を1つ幼生卵(弾薬)に変える。インデックスの小さい（隊列の前の）卵から探す。
+    // 弾が上限に達していれば作れない。成功で true。
     public bool TryReload() {
+        if (!CanLoadAmmo) {
+            return false;
+        }
         for (int i = 0; i < roe_.Count; i++) {
             RoeStateComponent state = GetState(roe_[i]);
             if (state != null && state.CurrentState == RoeState.MATURE) {

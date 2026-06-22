@@ -116,13 +116,15 @@
             },
             "RoeManager": {
                 "broodCount_": 3,
-                "layInterval_": 1.0,
+                "layInterval_": 5.0,
                 "leaderName_": "Player",
+                "maxAmmo_": 6,
                 "maxBrood_": 12,
+                "maxRoe_": 12,
                 "roePrefabName_": "Roe"
             },
             "RoeTrail": {
-                "maxTrailLength_": 400.0,
+                "maxTrailLength_": 1280.0,
                 "recordMinDistance_": 2.0
             },
             "type": "Variables"
@@ -132,11 +134,11 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "PlayerInputComponent"
+                    "name": "PlayerShotComponent"
                 },
                 {
                     "enable": true,
-                    "name": "PlayerShotComponent"
+                    "name": "PlayerInputComponent"
                 },
                 {
                     "enable": true,
