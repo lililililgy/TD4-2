@@ -2,7 +2,7 @@ using System;
 
 public class GesoHand : MonoScript
 {
-    // è‚Ìó‘Ô‚ğ•\‚·—ñ‹“Œ^
+    // æ‰‹ã®çŠ¶æ…‹ã‚’è¡¨ã™åˆ—æŒ™å‹
     public enum HandState
     {
         Idle,
@@ -12,40 +12,45 @@ public class GesoHand : MonoScript
     }
 
     [SerializeField]
-    public float rotationSpeed = 8.0f;@//‰ñ“]‘¬“x
+    public float rotationSpeed = 8.0f;ã€€//å›è»¢é€Ÿåº¦
     [SerializeField]
-    public float attackDamage = 10.0f; //UŒ‚—Í
+    public float attackDamage = 10.0f; //æ”»æ’ƒåŠ›
     [SerializeField]
-    public float attackRadius = 1.5f; //UŒ‚”ÍˆÍ
+    public float attackRadius = 1.5f; //æ”»æ’ƒç¯„å›²
     [SerializeField]
-    public float attackDuration = 0.4f; //UŒ‚‚Ì‘±ŠÔ
+    public float attackDuration = 0.4f; //æ”»æ’ƒã®æŒç¶šæ™‚é–“
     [SerializeField]
-    public float returnDuration = 0.3f; //è‚ªŒ³‚ÌˆÊ’u‚É–ß‚é‚Ü‚Å‚ÌŠÔ
+    public float moveDuration = 0.25f; //ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¾ã§ç›´ç·šç§»å‹•ã™ã‚‹æ™‚é–“
     [SerializeField]
-    public float attackOffsetForward = 2.0f; //UŒ‚‚Ì‘O•ûƒIƒtƒZƒbƒg
+    public float returnDuration = 0.3f; //æ‰‹ãŒå…ƒã®ä½ç½®ã«æˆ»ã‚‹ã¾ã§ã®æ™‚é–“
     [SerializeField]
-    public float attackOffsetUp = 0.0f; //UŒ‚‚Ìã•ûŒüƒIƒtƒZƒbƒg
+    public float attackOffsetForward = 2.0f; //æ”»æ’ƒã®å‰æ–¹ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+    [SerializeField]
+    public float attackOffsetUp = 0.0f; //æ”»æ’ƒã®ä¸Šæ–¹å‘ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 
-    // Œ»İ‚Ìè‚Ìó‘Ô
+    // ç¾åœ¨ã®æ‰‹ã®çŠ¶æ…‹
     public HandState State { get; private set; }
-    // UŒ‚‰Â”\‚©‚Ç‚¤‚©‚ğ”»’è‚·‚éƒvƒƒpƒeƒB
+    // æ”»æ’ƒå¯èƒ½ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
     public bool CanAttack { get { return State == HandState.Idle || State == HandState.Aiming; } }
 
-    // è‚ÌŒ³‚Ì‰ñ“]
+    // æ‰‹ã®å…ƒã®å›è»¢
     private Quaternion _homeRotation;
-    // UŒ‚‘ÎÛ‚ÌƒGƒ“ƒeƒBƒeƒB
+    private Vector3 _homePosition;
+    private Vector3 _attackTargetPosition;
+    // æ”»æ’ƒå¯¾è±¡ã®ã‚¨ãƒ³ãƒ†ã‚£ãƒ†ã‚£
     private Entity _target;
-    // Œ»İ‚Ìó‘Ô‚ÌŒo‰ßŠÔ
+    // ç¾åœ¨ã®çŠ¶æ…‹ã®çµŒéæ™‚é–“
     private float _stateTime;
-    // UŒ‚ƒCƒxƒ“ƒg‚ª‘—M‚³‚ê‚½‚©‚Ç‚¤‚©‚ğ’ÇÕ‚·‚éƒtƒ‰ƒO
+    // æ”»æ’ƒã‚¤ãƒ™ãƒ³ãƒˆãŒé€ä¿¡ã•ã‚ŒãŸã‹ã©ã†ã‹ã‚’è¿½è·¡ã™ã‚‹ãƒ•ãƒ©ã‚°
     private bool _attackEventSent;
 
     //=============================
-    // ‰Šú‰»
+    // åˆæœŸåŒ–
     //=============================
     public override void Initialize()
     {
         _homeRotation = transform.rotation;
+        _homePosition = transform.position;
         State = HandState.Idle;
         _target = null;
         _stateTime = 0.0f;
@@ -53,10 +58,11 @@ public class GesoHand : MonoScript
     }
 
     //=============================
-    // XV
+    // æ›´æ–°
     //=============================
     public override void Update()
     {
+
         switch (State)
         {
             case HandState.Aiming:
@@ -74,11 +80,11 @@ public class GesoHand : MonoScript
     }
 
     //=============================
-    // ƒvƒŒƒCƒ„[‚ğ‘_‚¤ˆ—
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ç‹™ã†å‡¦ç†
     //=============================
     public void CommandAim(Entity target)
     {
-        if (!CanAttack || target == null)
+        if (!CanAttack || target == null || target.transform == null)
         {
             return;
         }
@@ -88,16 +94,17 @@ public class GesoHand : MonoScript
     }
 
     //=============================
-    // UŒ‚ˆ—
+    // æ”»æ’ƒå‡¦ç†
     //=============================
     public bool CommandAttack(Entity target)
     {
-        if (!CanAttack || target == null)
+        if (!CanAttack || target == null || target.transform == null)
         {
             return false;
         }
 
         _target = target;
+        _attackTargetPosition = target.transform.worldPosition;
         _stateTime = 0.0f;
         _attackEventSent = false;
         State = HandState.Attacking;
@@ -105,7 +112,7 @@ public class GesoHand : MonoScript
     }
 
     //=============================
-    // è‚ğŒ³‚ÌˆÊ’u‚É–ß‚·ˆ—
+    // æ‰‹ã‚’å…ƒã®ä½ç½®ã«æˆ»ã™å‡¦ç†
     //=============================
     public void CommandIdle()
     {
@@ -116,7 +123,7 @@ public class GesoHand : MonoScript
     }
 
     //=============================
-    // UŒ‚’†‚ÌXVˆ—
+    // æ”»æ’ƒä¸­ã®æ›´æ–°å‡¦ç†
     //=============================
     private void UpdateAttack()
     {
@@ -126,18 +133,15 @@ public class GesoHand : MonoScript
             return;
         }
 
-        RotateTowardTarget();
+        // æ”»æ’ƒé–‹å§‹æ™‚ã«è¨˜éŒ²ã—ãŸä½ç½®ã¸å‘ãã‚’åˆã‚ã›ã‚‹
+        RotateTowardPosition(_attackTargetPosition);
 
-        if (!_attackEventSent)
+        float duration = moveDuration > 0.0f ? moveDuration : 0.001f;
+        float moveRatio = Mathf.Clamp01(_stateTime / duration);
+        transform.position = Vector3.Lerp(_homePosition, _attackTargetPosition, moveRatio);
+
+        if (!_attackEventSent && moveRatio >= 1.0f)
         {
-            FrameEvent.EnqueueAttackEvent(
-                "GesoHandAttack",
-                entity.Id,
-                attackDamage,
-                attackRadius,
-                attackDuration,
-                attackOffsetForward,
-                attackOffsetUp);
             _attackEventSent = true;
         }
 
@@ -149,24 +153,27 @@ public class GesoHand : MonoScript
     }
 
     //=============================
-    // è‚ğŒ³‚ÌˆÊ’u‚É–ß‚·XVˆ—
+    // æ‰‹ã‚’å…ƒã®ä½ç½®ã«æˆ»ã™æ›´æ–°å‡¦ç†
     //=============================
     private void UpdateReturn()
     {
         _stateTime += Time.deltaTime;
         float duration = returnDuration > 0.0f ? returnDuration : 0.001f;
-        transform.rotation = Quaternion.Slerp(transform.rotation, _homeRotation, Mathf.Clamp01(Time.deltaTime / duration));
+        float returnRatio = Mathf.Clamp01(Time.deltaTime / duration);
+        transform.position = Vector3.Lerp(transform.position, _homePosition, returnRatio);
+        transform.rotation = Quaternion.Slerp(transform.rotation, _homeRotation, returnRatio);
 
         if (_stateTime >= returnDuration)
         {
             transform.rotation = _homeRotation;
+            transform.position = _homePosition;
             _target = null;
             State = HandState.Idle;
         }
     }
 
     //=============================
-    // ƒ^[ƒQƒbƒg‚ÉŒü‚©‚Á‚Ä‰ñ“]‚·‚éˆ—
+    // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«å‘ã‹ã£ã¦å›è»¢ã™ã‚‹å‡¦ç†
     //=============================
     private void RotateTowardTarget()
     {
@@ -176,7 +183,12 @@ public class GesoHand : MonoScript
             return;
         }
 
-        Vector3 direction = _target.transform.worldPosition - transform.worldPosition;
+        RotateTowardPosition(_target.transform.worldPosition);
+    }
+
+    private void RotateTowardPosition(Vector3 targetPosition)
+    {
+        Vector3 direction = targetPosition - transform.position;
         if (direction.Length() <= 0.001f)
         {
             return;
@@ -190,7 +202,7 @@ public class GesoHand : MonoScript
     }
 
     //=============================
-    // è‚ğŒ³‚ÌˆÊ’u‚É–ß‚·ˆ—‚ğŠJn‚·‚é
+    // æ‰‹ã‚’å…ƒã®ä½ç½®ã«æˆ»ã™å‡¦ç†ã‚’é–‹å§‹ã™ã‚‹
     //=============================
     private void BeginReturn()
     {

@@ -137,6 +137,7 @@
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Game\Boss\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGesoState.cs" />
     <Compile Include="Scripts\Game\Common\HP.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />

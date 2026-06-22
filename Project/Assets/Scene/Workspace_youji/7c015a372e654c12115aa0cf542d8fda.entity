@@ -16,23 +16,35 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 0.9999998807907104,
-                "y": 1.0,
-                "z": 0.9999998807907104
+                "x": 300.0,
+                "y": 300.0,
+                "z": 300.0
             },
             "type": "Transform"
         },
         {
             "HP": {
-                "MAX_HP": 10,
-                "currentHp": 10,
+                "MAX_HP": 1,
+                "currentHp": 1,
                 "disableAutoDestruction": false,
                 "isInvincible": false,
                 "regenPerSecond": 0.0
             },
             "KingGeso": {
                 "_wasAttackRequested": false,
+                "attackDuration": 1.0,
+                "cooldownDuration": 1.0,
+                "gesoAttackDamage": 10.0,
+                "gesoAttackRadius": 1.5,
+                "gesoPrefabName": "Geso",
+                "gesoSpawnOffset": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "idleDuration": 2.0,
                 "maxHp": 0,
+                "targetEntityName": "Player",
                 "treePath": ""
             },
             "type": "Variables"
@@ -46,10 +58,10 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "00000000000000000000000000000000",
+                "baseTextureGuid": "8a26fda7e524f009a45b1755c26cb60d",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 1,
+                "postEffectFlags": 0,
                 "uvTransform": {
                     "position": {
                         "x": 0.0,
@@ -62,9 +74,7 @@
                     }
                 }
             },
-            "meshPath": "./Assets/Models/Bomb/bomb.obj",
-            "renderQueue": 2,
-            "type": "MeshRenderer"
+            "type": "SpriteRenderer"
         },
         {
             "enable": 1,

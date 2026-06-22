@@ -1,25 +1,44 @@
 using System;
-using System.Collections.Generic;
 
 public class KingGeso : MonoScript
 {
-    // Blackboardのキーをハッシュ化して定数として保持
-    private static readonly uint CurrentHpKey = BehaviorTreeLoader.HashString("CurrentHP");
-    private static readonly uint HpRatioKey = BehaviorTreeLoader.HashString("HPRatio");
-    private static readonly uint TargetEntityKey = BehaviorTreeLoader.HashString("TargetEntity");
-
-    [SerializeField]
-    public string treePath = "Assets/AITrees/DefaultTree.json";
     [SerializeField]
     public int maxHp = 10;
-
-    private AgentIntentComponent _intent;
-    HP _hp;
-    private readonly List<GesoHand> _hands = new List<GesoHand>();
-    private Entity _targetEntity;
-    private int _nextHandIndex;
     [SerializeField]
-    private bool _wasAttackRequested;
+    public string gesoPrefabName = "Geso";
+    [SerializeField]
+    public string targetEntityName = "Player";
+    [SerializeField]
+    public string cameraEntityName = "Camera1";
+    [SerializeField]
+    public Vector3 gesoSpawnOffset = Vector3.zero;
+    [SerializeField]
+    public float screenHalfWidth = 8.0f;
+    [SerializeField]
+    public float screenHalfHeight = 4.5f;
+    [SerializeField]
+    public float screenEdgeMargin = 0.5f;
+    [SerializeField]
+    public float idleDuration = 2.0f;
+    [SerializeField]
+    public float attackDuration = 1.0f;
+    [SerializeField]
+    public float cooldownDuration = 1.0f;
+    [SerializeField]
+    public float gesoAttackDamage = 10.0f;
+    [SerializeField]
+    public float gesoAttackRadius = 1.5f;
+    [SerializeField]
+    public float gesoRotationSpeed = 8.0f;
+    [SerializeField]
+    public float gesoMoveDuration = 0.25f;
+
+    private HP _hp;
+    private IKingGesoState _state;
+    private Entity _targetEntity;
+    private Entity _cameraEntity;
+    private Entity _activeGeso;
+    private bool _attackRequested;
 
 
     //=============================================================
@@ -27,17 +46,6 @@ public class KingGeso : MonoScript
     //=============================================================
     public override void Initialize()
     {
-
-        _intent = entity.GetComponent<AgentIntentComponent>();
-        if (_intent == null)
-        {
-            _intent = entity.AddComponent<AgentIntentComponent>();
-        }
-
-        // エディタで作成したツリーをロード
-        _intent.LoadBehaviorTree(treePath);
-
-        // HP is owned and managed by KingGeso.
         _hp = entity.GetScript<HP>();
         if (_hp == null)
         {
@@ -47,11 +55,18 @@ public class KingGeso : MonoScript
         _hp.MAX_HP = maxHp > 0 ? maxHp : 1;
         _hp.Initialize();
 
-        _hands.Clear();
-        // 子エンティティを再帰的に探索してGesoHandを収集
-        CollectHands(entity);
-        _nextHandIndex = 0;
-        _wasAttackRequested = false;
+        if (!String.IsNullOrEmpty(targetEntityName))
+        {
+            _targetEntity = ecsGroup.FindEntity(targetEntityName);
+        }
+        if (!String.IsNullOrEmpty(cameraEntityName))
+        {
+            _cameraEntity = ecsGroup.FindEntity(cameraEntityName);
+        }
+
+        _activeGeso = null;
+        _attackRequested = false;
+        ChangeState(new KingGesoIdleState());
     }
 
     //=============================================================
@@ -68,18 +83,15 @@ public class KingGeso : MonoScript
             }
         }
 
-        // --- デバッグ用：Jキーで攻撃を要求する ---
         if (Input.TriggerKey(KeyCode.J))
         {
-            _wasAttackRequested = true;
+            RequestAttack();
         }
 
-        //ボスの状態をBlackboardに同期
-        SyncBossStateToBlackboard();
-        //Blackboardからターゲットを取得
-        UpdateTargetFromBlackboard();
-        //手の状態を更新
-        DispatchHandCommands();
+        if (_state != null)
+        {
+            _state.Update(this);
+        }
 
         // --- デバッグ用：視線の表示 ---
         GizmoBatch.DrawRay(transform.position + Vector3.up * 2.0f, transform.forward * 5.0f, new Vector4(0, 1, 0, 1));
@@ -91,129 +103,146 @@ public class KingGeso : MonoScript
     public void SetTarget(Entity target)
     {
         _targetEntity = target;
-        if (_intent != null && _intent.behaviorTree != null)
+    }
+
+    //=============================================================
+    // 攻撃の要求
+    //=============================================================
+    public void RequestAttack()
+    {
+        _attackRequested = true;
+    }
+
+    internal float IdleDuration
+    {
+        get { return idleDuration > 0.0f ? idleDuration : 0.01f; }
+    }
+
+    internal float AttackDuration
+    {
+        get { return attackDuration > 0.0f ? attackDuration : 0.01f; }
+    }
+
+    internal float CooldownDuration
+    {
+        get { return cooldownDuration > 0.0f ? cooldownDuration : 0.01f; }
+    }
+
+    //=============================================================
+    // 内部処理
+    //=============================================================
+    internal bool ConsumeAttackRequest()
+    {
+        bool requested = _attackRequested;
+        _attackRequested = false;
+        return requested;
+    }
+
+    //=============================================================
+    // 状態の変更
+    //=============================================================
+    internal void ChangeState(IKingGesoState nextState)
+    {
+        if (_state != null)
         {
-            // Blackboardにターゲットを設定
-            _intent.behaviorTree.Blackboard.SetObject(TargetEntityKey, target);
+            _state.Exit(this);
+        }
+
+        _state = nextState;
+        if (_state != null)
+        {
+            _state.Enter(this);
         }
     }
 
     //=============================================================
-    // 手の収集
+    // ゲソのスポーン処理
     //=============================================================
-    private void CollectHands(Entity root)
+    internal bool SpawnGeso()
     {
-        // 再帰的に子エンティティを探索してGesoHandを収集
-        uint childCount = root.GetChildCount();
-        for (uint i = 0; i < childCount; i++)
+        DestroyActiveGeso();
+        if (String.IsNullOrEmpty(gesoPrefabName))
         {
-            // 子エンティティを取得
-            Entity child = root.GetChild(i);
-            if (child == null)
-            {
-                continue;
-            }
-
-            // GesoHandスクリプトを取得
-            GesoHand hand = child.GetScript<GesoHand>();
-            if (hand != null)
-            {
-                // GesoHandをリストに追加
-                _hands.Add(hand);
-            }
-
-            // 再帰的に子エンティティを探索
-            CollectHands(child);
+            return false;
         }
+
+        _activeGeso = ecsGroup.CreateEntity(gesoPrefabName);
+        if (_activeGeso == null)
+        {
+            return false;
+        }
+
+        gesoSpawnOffset = CreateRandomScreenEdgeOffset();
+        _activeGeso.transform.position = GetScreenCenter() + gesoSpawnOffset;
+        return true;
+    }
+
+    internal bool StartActiveGesoAttack()
+    {
+        if (_activeGeso == null)
+        {
+            return false;
+        }
+
+        GesoHand hand = _activeGeso.GetScript<GesoHand>();
+        if (hand == null)
+        {
+            return false;
+        }
+
+        hand.attackDamage = gesoAttackDamage;
+        hand.attackRadius = gesoAttackRadius;
+        hand.attackDuration = AttackDuration;
+        hand.rotationSpeed = gesoRotationSpeed;
+        hand.moveDuration = gesoMoveDuration;
+        return hand.CommandAttack(_targetEntity);
     }
 
     //=============================================================
-    // Blackboardとの同期
+    // ゲソの破壊処理
     //=============================================================
-    private void SyncBossStateToBlackboard()
+    internal void DestroyActiveGeso()
     {
-        if (_hp == null || _intent == null || _intent.behaviorTree == null)
+        if (_activeGeso != null)
         {
-            return;
-        }
-        // Blackboardに現在のHPとHP比率を設定
-        Blackboard blackboard = _intent.behaviorTree.Blackboard;
-        blackboard.SetInt(CurrentHpKey, _hp.currentHp);
-        blackboard.SetFloat(HpRatioKey, _hp.CurrentHpRatio());
-    }
-
-    //=============================================================
-    // Blackboardからターゲットを取得
-    //=============================================================
-    private void UpdateTargetFromBlackboard()
-    {
-        if (_intent == null || _intent.behaviorTree == null)
-        {
-            return;
-        }
-
-        // Blackboardからターゲットエンティティを取得
-        Entity blackboardTarget = _intent.behaviorTree.Blackboard.GetEntity(TargetEntityKey);
-        if (blackboardTarget != null)
-        {
-            _targetEntity = blackboardTarget;
+            _activeGeso.Destroy();
+            _activeGeso = null;
         }
     }
 
-    //=============================================================
-    // 手の状態を更新
-    //=============================================================
-    private void DispatchHandCommands()
+    private Vector3 CreateRandomScreenEdgeOffset()
     {
-        if (_hands.Count == 0)
-        {
-            return;
-        }
+        float halfWidth = screenHalfWidth > 0.0f ? screenHalfWidth : 0.01f;
+        float halfHeight = screenHalfHeight > 0.0f ? screenHalfHeight : 0.01f;
+        float horizontal = RandomUtil.NextFloat11() * halfWidth;
+        float vertical = RandomUtil.NextFloat11() * halfHeight;
+        int edge = (int)(RandomUtil.NextFloat() * 4.0f);
 
-        // ターゲットがいない場合は手を待機状態にする
-        if (_targetEntity == null)
+        switch (edge)
         {
-            foreach (GesoHand hand in _hands)
-            {
-                hand.CommandIdle();
-            }
-            _wasAttackRequested = false;
-            return;
+            case 0:
+                return new Vector3(-halfWidth - screenEdgeMargin, 0.0f, vertical);
+            case 1:
+                return new Vector3(halfWidth + screenEdgeMargin, 0.0f, vertical);
+            case 2:
+                return new Vector3(horizontal, 0.0f, -halfHeight - screenEdgeMargin);
+            default:
+                return new Vector3(horizontal, 0.0f, halfHeight + screenEdgeMargin);
         }
-
-        // ターゲットがいる場合は手をターゲットに向ける
-        foreach (GesoHand hand in _hands)
-        {
-            hand.CommandAim(_targetEntity);
-        }
-
-        // 攻撃が要求されたかどうかを判定
-        bool attackRequested = _intent != null && _intent.isAttacking;
-       
-        if (attackRequested && !_wasAttackRequested)
-        {
-            // 攻撃が要求され、前回は要求されていなかった場合に攻撃を試みる
-            TryAttackWithNextHand();
-        }
-
-        _wasAttackRequested = attackRequested;
     }
 
-    //=============================================================
-    // 次の手で攻撃を試みる
-    //=============================================================
-    private void TryAttackWithNextHand()
+    private Vector3 GetScreenCenter()
     {
-        for (int i = 0; i < _hands.Count; i++)
+        Vector3 center = transform.worldPosition;
+        if (_cameraEntity != null && _cameraEntity.transform != null)
         {
-            // 次の手のインデックスを計算
-            int index = (_nextHandIndex + i) % _hands.Count;
-            if (_hands[index].CommandAttack(_targetEntity))
-            {
-                // 攻撃が成功した場合、次の手のインデックスを更新
-                _nextHandIndex = (index + 1) % _hands.Count;
-                return;
-            }
+            center = _cameraEntity.transform.worldPosition;
         }
+
+        if (_targetEntity != null && _targetEntity.transform != null)
+        {
+            center.y = _targetEntity.transform.worldPosition.y;
+        }
+        return center;
     }
 }
