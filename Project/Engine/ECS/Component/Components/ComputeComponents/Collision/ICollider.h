@@ -111,6 +111,16 @@ public:
 		isTrigger_ = trigger;
 	}
 
+	/// @brief コライダーサイズがEntityのスケールに依存するかどうかを返す
+	bool IsUseOwnerScale() const {
+		return useOwnerScale_;
+	}
+
+	/// @brief コライダーサイズがEntityのスケールに依存するかどうかを設定する
+	void SetUseOwnerScale(bool use) {
+		useOwnerScale_ = use;
+	}
+
 
 protected:
 	/// ===================================================
@@ -120,6 +130,7 @@ protected:
 	Vector3 prevPosition_;
 	bool isTrigger_ = false;
 	bool freezeY_ = false;
+	bool useOwnerScale_ = true;
 	float mass_ = 1.0f;
 	CollisionState collisionState_ = CollisionState::Dynamic;
 

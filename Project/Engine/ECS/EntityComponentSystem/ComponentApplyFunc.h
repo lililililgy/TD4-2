@@ -29,6 +29,8 @@ void ApplySprite(void* element, ECSGroup* ecsGroup);
 void ApplyAgentIntent(void* element, ECSGroup* ecsGroup);
 void ApplyCamera(void* element, ECSGroup* ecsGroup);
 void ApplyAnimator(void* element, ECSGroup* ecsGroup);
+void ApplyUIGroup(void* element, ECSGroup* ecsGroup);
+void ApplyUIElement(void* element, ECSGroup* ecsGroup);
 
 /// Fetch
 
@@ -39,6 +41,8 @@ void FetchSprite(void* element, ECSGroup* ecsGroup);
 void FetchAgentIntent(void* element, ECSGroup* ecsGroup);
 void FetchCamera(void* element, ECSGroup* ecsGroup);
 void FetchAnimator(void* element, ECSGroup* ecsGroup);
+void FetchUIGroup(void* element, ECSGroup* ecsGroup);
+void FetchUIElement(void* element, ECSGroup* ecsGroup);
 
 
 ComponentApplyFunc GetApplyFunc(MonoClass* monoClass);

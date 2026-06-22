@@ -1,0 +1,16 @@
+{
+    "active": true,
+    "components": [
+        {
+            "rotate": {
+                "w": -0.32731181383132935,
+                "z": -0.9449163675308228
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "99b9a76f9748626f2e2ddcaa686294a3",
+    "name": "MorayEelPot",
+    "parentGuid": null,
+    "prefabName": "MorayEelPot"
+}

@@ -1,4 +1,4 @@
-﻿#include "EntityComponentSystem.h"
+#include "EntityComponentSystem.h"
 
 using namespace ONEngine;
 
@@ -10,9 +10,11 @@ using namespace ONEngine;
 
 /// ecs
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Variables/Variables.h"
 #include "AddECSSystemFunction.h"
 #include "AddECSComponentFactoryFunction.h"
 #include "ComponentApplyFunc.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
 #include "Engine/Editor/Views/Windows/Develop/BehaviorTreeEditorWindow.h"
 
 namespace {
@@ -302,6 +304,18 @@ const char* MonoInternalMethods::InternalGetName(int32_t _entityId, MonoString* 
 	return entity->GetName().c_str();
 }
 
+const char* MonoInternalMethods::InternalGetElementId(uint32_t compId, MonoString* _groupName) {
+	std::string groupName = mono_string_to_utf8(_groupName);
+	ECSGroup* group = gECS->GetECSGroup(groupName);
+	if (!group) return "";
+	auto* array = group->GetComponentArray<UIElementComponent>();
+	if (!array) return "";
+	if (auto* comp = array->GetComponent(compId)) {
+		return comp->elementId.c_str();
+	}
+	return "";
+}
+
 void MonoInternalMethods::InternalSetName(int32_t _entityId, MonoString* _name, MonoString* _groupName) {
 	std::string groupName = mono_string_to_utf8(_groupName);
 	std::string name = mono_string_to_utf8(_name);
@@ -403,6 +417,11 @@ void MonoInternalMethods::InternalAddScript(int32_t _entityId, MonoString* _scri
 		if(data) {
 			data->isAdded = true;
 		}
+	}
+
+	/// Variablesがあれば値を適用する
+	if(Variables* vars = entity->GetComponent<Variables>()) {
+		vars->SetScriptVariables(scriptName);
 	}
 }
 

@@ -1,4 +1,4 @@
-﻿#include "ScriptUpdateSystem.h"
+#include "ScriptUpdateSystem.h"
 
 using namespace ONEngine;
 
@@ -13,6 +13,7 @@ using namespace ONEngine;
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Animation/AnimationPlayer.h"
 #include "Engine/Script/MonoScriptEngine.h"
 #include "Engine/Core/Utility/Time/CPUTimeStamp.h"
 
@@ -47,6 +48,15 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 			script->SetIsAdded(false);
 			for (auto& data : script->GetScriptDataList()) {
 				data.isAdded = false;
+				data.collisionEventMethods.fill(nullptr);
+				data.collisionEventMethods2D.fill(nullptr);
+			}
+		}
+
+		ComponentArray<AnimationPlayer>* animPlayerArray = ecs->GetComponentArray<AnimationPlayer>();
+		if (animPlayerArray) {
+			for (auto& animPlayer : animPlayerArray->GetUsedComponents()) {
+				animPlayer->ClearBindings();
 			}
 		}
 

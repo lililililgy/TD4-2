@@ -53,5 +53,7 @@ bool InternalIsTriggerSphere(uint64_t nativeHandle);
 void InternalSetTriggerSphere(uint64_t nativeHandle, bool trigger);
 float InternalGetMass(uint64_t nativeHandle);
 void InternalSetMass(uint64_t nativeHandle, float mass);
+bool InternalIsUseOwnerScaleSphere(uint64_t nativeHandle);
+void InternalSetUseOwnerScaleSphere(uint64_t nativeHandle, bool use);
 
 } /// ONEngine

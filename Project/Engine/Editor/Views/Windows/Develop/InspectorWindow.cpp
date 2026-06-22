@@ -32,6 +32,8 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ShadowCaster/ShadowCaster.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/VoxelTerrain/VoxelTerrain.h"
@@ -99,8 +101,10 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 	RegisterComponent<Skybox>(ComponentType::Renderer, [&](Skybox* comp) { ComponentDebug::SkyboxDebug(comp); });
 
 	/// collider
-	RegisterComponent<SphereCollider>(ComponentType::Collider, [&](SphereCollider* comp) { ComponentDebug::SphereColliderDebug(comp); });
-	RegisterComponent<BoxCollider>(ComponentType::Collider, [&](BoxCollider* comp) { ComponentDebug::BoxColliderDebug(comp); });
+	RegisterComponent<SphereCollider>(ComponentType::Collider, [](SphereCollider* comp) { ComponentDebug::SphereColliderDebug(comp); });
+	RegisterComponent<BoxCollider>(ComponentType::Collider, [](BoxCollider* comp) { ComponentDebug::BoxColliderDebug(comp); });
+	RegisterComponent<CircleCollider>(ComponentType::Collider, [](CircleCollider* comp) { ComponentDebug::CircleColliderDebug(comp); });
+	RegisterComponent<BoxCollider2D>(ComponentType::Collider, [](BoxCollider2D* comp) { ComponentDebug::BoxCollider2DDebug(comp); });
 
 
 

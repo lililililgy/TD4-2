@@ -24,6 +24,9 @@ Project/ONEngine.vcxproj
 Project/ONEngine.vcxproj.filters
 Project/ONEngine.vcxproj.user
 
+# other files
+Project/Packages/Config/
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 
@@ -33,6 +36,8 @@ SubProjects/CSharpLibrary/*.sln
 SubProjects/CSharpLibrary/*.user
 SubProjects/CSharpLibrary/*.suo
 SubProjects/CSharpLibrary/*.userprefs
+SubProjects/CSharpLibrary/bin/
+SubProjects/CSharpLibrary/obj/
 
 # C# Binaries (Automated)
 Project/Packages/Scripts/CSharpLibrary*.dll

@@ -1,6 +1,11 @@
 {
     "entities": [
         {
+            "guid": "8c8048660a2727105f574bae04a8daf2",
+            "parentGuid": null,
+            "path": "./GameScene/8c8048660a2727105f574bae04a8daf2.entity"
+        },
+        {
             "guid": "066cf8700e962fdd141e80666ddb8240",
             "parentGuid": null,
             "path": "./GameScene/066cf8700e962fdd141e80666ddb8240.entity"

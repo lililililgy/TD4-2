@@ -453,17 +453,29 @@ bool CheckMethod::CollisionCheckSphereVsSphere(SphereCollider* s1, SphereCollide
 	GameEntity* e1 = s1->GetOwner();
 	GameEntity* e2 = s2->GetOwner();
 
+	float r1 = s1->GetRadius();
+	if (s1->IsUseOwnerScale()) {
+		Transform* t1 = e1->GetTransform();
+		r1 *= (std::max)({ t1->scale.x, t1->scale.y, t1->scale.z });
+	}
+
+	float r2 = s2->GetRadius();
+	if (s2->IsUseOwnerScale()) {
+		Transform* t2 = e2->GetTransform();
+		r2 *= (std::max)({ t2->scale.x, t2->scale.y, t2->scale.z });
+	}
+
 	float distance = (e1->GetPosition() - e2->GetPosition()).Length();
 
 	/// 衝突情報の設定
 	if(info) {
 		/// 法線はe1からe2への方向
 		info->normal = Vector3::Normalize(e2->GetPosition() - e1->GetPosition());
-		info->penetration = (s1->GetRadius() + s2->GetRadius()) - distance;
+		info->penetration = (r1 + r2) - distance;
 	}
 
 
-	return distance <= (s1->GetRadius() + s2->GetRadius());
+	return distance <= (r1 + r2);
 }
 
 bool CheckMethod::CollisionCheckSphereVsBox(SphereCollider* s, BoxCollider* b, CollisionInfo* info) {
@@ -496,12 +508,12 @@ bool CheckMethod::CollisionCheckBoxVsSphere(BoxCollider* b, SphereCollider* s, C
 	Vector3 localSpherePos = Matrix4x4::Transform(spherePos, matOBBTransformInverse);
 
 	// ★修正2: 箱のサイズとTransformのスケールは、ここで計算する
-	// ※ bTrans->scale が Vector3 であることを想定
-	Vector3 boxWorldSize = Vector3(
-		b->GetSize().x * bTrans->scale.x,
-		b->GetSize().y * bTrans->scale.y,
-		b->GetSize().z * bTrans->scale.z
-	);
+	Vector3 boxWorldSize = b->GetSize();
+	if (b->IsUseOwnerScale()) {
+		boxWorldSize.x *= bTrans->scale.x;
+		boxWorldSize.y *= bTrans->scale.y;
+		boxWorldSize.z *= bTrans->scale.z;
+	}
 	Vector3 halfExtents = boxWorldSize * 0.5f;
 	
 	Vector3 localMin = -halfExtents;
@@ -517,7 +529,12 @@ bool CheckMethod::CollisionCheckBoxVsSphere(BoxCollider* b, SphereCollider* s, C
 	// 4. 最近接点と球の中心の距離をチェック
 	Vector3 localDelta = localSpherePos - localClosestPoint;
 	float distanceSquared = localDelta.LengthSquared();
-	float radius = s->GetRadius(); // ※もしSphereにもTransformのscaleを適用するならここも修正
+
+	float radius = s->GetRadius();
+	if (s->IsUseOwnerScale()) {
+		Transform* sTrans = sphereEntity->GetTransform();
+		radius *= (std::max)({ sTrans->scale.x, sTrans->scale.y, sTrans->scale.z });
+	}
 
 	if(distanceSquared > radius * radius) {
 		return false; // 衝突していない
@@ -581,11 +598,12 @@ bool CheckMethod::CollisionCheckBoxVsBox(BoxCollider* b1, BoxCollider* b2, Colli
 
 	// OBBパラメータの準備
 	Vector3 center1 = e1->GetPosition();
-	Vector3 size1 = Vector3(
-		b1->GetSize().x * t1->scale.x,
-		b1->GetSize().y * t1->scale.y,
-		b1->GetSize().z * t1->scale.z
-	);
+	Vector3 size1 = b1->GetSize();
+	if (b1->IsUseOwnerScale()) {
+		size1.x *= t1->scale.x;
+		size1.y *= t1->scale.y;
+		size1.z *= t1->scale.z;
+	}
 	Vector3 half1 = size1 * 0.5f;
 	Matrix4x4 rot1 = Matrix4x4::MakeRotate(t1->GetRotate());
 	Vector3 axis1[3] = {
@@ -595,11 +613,12 @@ bool CheckMethod::CollisionCheckBoxVsBox(BoxCollider* b1, BoxCollider* b2, Colli
 	};
 
 	Vector3 center2 = e2->GetPosition();
-	Vector3 size2 = Vector3(
-		b2->GetSize().x * t2->scale.x,
-		b2->GetSize().y * t2->scale.y,
-		b2->GetSize().z * t2->scale.z
-	);
+	Vector3 size2 = b2->GetSize();
+	if (b2->IsUseOwnerScale()) {
+		size2.x *= t2->scale.x;
+		size2.y *= t2->scale.y;
+		size2.z *= t2->scale.z;
+	}
 	Vector3 half2 = size2 * 0.5f;
 	Matrix4x4 rot2 = Matrix4x4::MakeRotate(t2->GetRotate());
 	Vector3 axis2[3] = {

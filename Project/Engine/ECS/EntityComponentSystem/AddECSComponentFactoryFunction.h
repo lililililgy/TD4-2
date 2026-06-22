@@ -15,11 +15,18 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ShadowCaster/ShadowCaster.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/VoxelTerrain/VoxelTerrain.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Agent/AgentIntentComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animation/AnimationPlayer.h"
+
+/// UI
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UILinkNavigationComponent.h"
 
 /// renderer
 #include "Engine/ECS/Component/Components/RendererComponents/Skybox/Skybox.h"
@@ -54,6 +61,9 @@ inline void AddComponentFactoryFunction(ComponentCollection* compCollection) {
 	compCollection->RegisterComponentFactory<AgentIntentComponent>();
 	compCollection->RegisterComponentFactory<Animator>();
 	compCollection->RegisterComponentFactory<AnimationPlayer>();
+	compCollection->RegisterComponentFactory<UIGroupComponent>();
+	compCollection->RegisterComponentFactory<UIElementComponent>();
+	compCollection->RegisterComponentFactory<UILinkNavigationComponent>();
 
 
 	/// renderer
@@ -70,6 +80,8 @@ inline void AddComponentFactoryFunction(ComponentCollection* compCollection) {
 	/// collider
 	compCollection->RegisterComponentFactory<SphereCollider>();
 	compCollection->RegisterComponentFactory<BoxCollider>();
+	compCollection->RegisterComponentFactory<CircleCollider>();
+	compCollection->RegisterComponentFactory<BoxCollider2D>();
 }
 
 } /// namespace ONEngine

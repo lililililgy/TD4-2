@@ -13,6 +13,8 @@ namespace ONEngine {
 class DxManager;
 class EntityComponentSystem;
 class CameraComponent;
+class Gizmo3DRenderingPipeline;
+class Gizmo2DRenderingPipeline;
 }
 
 namespace ONEngine::Asset {
@@ -73,7 +75,7 @@ public:
 	void DrawParticles(CameraComponent* _3dCamera);
 
 	/// @brief Gizmoの描画
-	void DrawGizmos(CameraComponent* _3dCamera);
+	void DrawGizmos(CameraComponent* _3dCamera, CameraComponent* _2dCamera);
 
 	/// @brief 2DのEntityを描画する
 	/// @param _2dCamera 2Dカメラ
@@ -117,7 +119,8 @@ private:
 	std::vector<std::unique_ptr<IRenderingPipeline>>   renderer2ds_;
 
 	std::unique_ptr<IRenderingPipeline>   particleRenderer_;
-	std::unique_ptr<IRenderingPipeline>   gizmoRenderer_;
+	std::unique_ptr<Gizmo3DRenderingPipeline> gizmo3D_;
+	std::unique_ptr<Gizmo2DRenderingPipeline> gizmo2D_;
 
 	std::vector<std::unique_ptr<IPostProcessPipeline>> postProcesses_;
 };

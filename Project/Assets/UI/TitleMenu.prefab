@@ -1,0 +1,160 @@
+{
+    "entities": [
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "elementId": "start",
+                    "elementIndex": 0,
+                    "enable": 1,
+                    "groupId": "8fd6d8453d6bac804e85c11e7d5d78cc",
+                    "type": "UIElementComponent"
+                },
+                {
+                    "enable": 1,
+                    "links": {},
+                    "type": "UILinkNavigationComponent"
+                }
+            ],
+            "guid": "6c919d39f4875d47756322d76c2dbb63",
+            "name": "Element_0",
+            "prefabName": ""
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "elementId": "option",
+                    "elementIndex": 1,
+                    "enable": 1,
+                    "groupId": "8fd6d8453d6bac804e85c11e7d5d78cc",
+                    "type": "UIElementComponent"
+                },
+                {
+                    "enable": 1,
+                    "links": {},
+                    "type": "UILinkNavigationComponent"
+                }
+            ],
+            "guid": "e36ba3a76159468e2c5bfed82f8fbfd6",
+            "name": "Element_1",
+            "prefabName": ""
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "elementId": "exit",
+                    "elementIndex": 2,
+                    "enable": 1,
+                    "groupId": "8fd6d8453d6bac804e85c11e7d5d78cc",
+                    "type": "UIElementComponent"
+                },
+                {
+                    "enable": 1,
+                    "links": {},
+                    "type": "UILinkNavigationComponent"
+                }
+            ],
+            "guid": "fe5085bde1aaaa46feefbbbea7fac7e3",
+            "name": "Element_2",
+            "prefabName": ""
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "currentSelected": "",
+                    "enable": 1,
+                    "isFocused": true,
+                    "isVisible": true,
+                    "parentGroup": "",
+                    "type": "UIGroupComponent"
+                }
+            ],
+            "guid": "8fd6d8453d6bac804e85c11e7d5d78cc",
+            "name": "Group_3",
+            "prefabName": ""
+        }
+    ]
+}

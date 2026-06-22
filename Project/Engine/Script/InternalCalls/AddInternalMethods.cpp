@@ -18,6 +18,8 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Skybox/Skybox.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/CustomMeshRenderer.h"
@@ -124,6 +126,8 @@ namespace {
 		mono_add_internal_call("SphereCollider::InternalSetTrigger", (void*)InternalSetTriggerSphere);
 		mono_add_internal_call("SphereCollider::InternalGetMass", (void*)InternalGetMass);
 		mono_add_internal_call("SphereCollider::InternalSetMass", (void*)InternalSetMass);
+		mono_add_internal_call("SphereCollider::InternalIsUseOwnerScale", (void*)InternalIsUseOwnerScaleSphere);
+		mono_add_internal_call("SphereCollider::InternalSetUseOwnerScale", (void*)InternalSetUseOwnerScaleSphere);
 
 		mono_add_internal_call("BoxCollider::InternalGetSize", (void*)InternalGetSize);
 		mono_add_internal_call("BoxCollider::InternalSetSize", (void*)InternalSetSize);
@@ -131,6 +135,28 @@ namespace {
 		mono_add_internal_call("BoxCollider::InternalSetTrigger", (void*)InternalSetTriggerBox);
 		mono_add_internal_call("BoxCollider::InternalGetMassBox", (void*)InternalGetMassBox);
 		mono_add_internal_call("BoxCollider::InternalSetMassBox", (void*)InternalSetMassBox);
+		mono_add_internal_call("BoxCollider::InternalIsUseOwnerScale", (void*)InternalIsUseOwnerScaleBox);
+		mono_add_internal_call("BoxCollider::InternalSetUseOwnerScale", (void*)InternalSetUseOwnerScaleBox);
+
+		/// CircleCollider
+		mono_add_internal_call("CircleCollider::InternalGetRadius", (void*)InternalGetRadiusCircle);
+		mono_add_internal_call("CircleCollider::InternalSetRadius", (void*)InternalSetRadiusCircle);
+		mono_add_internal_call("CircleCollider::InternalIsTriggerCircle", (void*)InternalIsTriggerCircle);
+		mono_add_internal_call("CircleCollider::InternalSetTriggerCircle", (void*)InternalSetTriggerCircle);
+		mono_add_internal_call("CircleCollider::InternalGetMassCircle", (void*)InternalGetMassCircle);
+		mono_add_internal_call("CircleCollider::InternalSetMassCircle", (void*)InternalSetMassCircle);
+		mono_add_internal_call("CircleCollider::InternalIsUseOwnerScaleCircle", (void*)InternalIsUseOwnerScaleCircle);
+		mono_add_internal_call("CircleCollider::InternalSetUseOwnerScaleCircle", (void*)InternalSetUseOwnerScaleCircle);
+
+		/// BoxCollider2D
+		mono_add_internal_call("BoxCollider2D::InternalGetSizeBox2D", (void*)InternalGetSizeBox2D);
+		mono_add_internal_call("BoxCollider2D::InternalSetSizeBox2D", (void*)InternalSetSizeBox2D);
+		mono_add_internal_call("BoxCollider2D::InternalIsTriggerBox2D", (void*)InternalIsTriggerBox2D);
+		mono_add_internal_call("BoxCollider2D::InternalSetTriggerBox2D", (void*)InternalSetTriggerBox2D);
+		mono_add_internal_call("BoxCollider2D::InternalGetMassBox2D", (void*)InternalGetMassBox2D);
+		mono_add_internal_call("BoxCollider2D::InternalSetMassBox2D", (void*)InternalSetMassBox2D);
+		mono_add_internal_call("BoxCollider2D::InternalIsUseOwnerScaleBox2D", (void*)InternalIsUseOwnerScaleBox2D);
+		mono_add_internal_call("BoxCollider2D::InternalSetUseOwnerScaleBox2D", (void*)InternalSetUseOwnerScaleBox2D);
 	}
 
 	void AddAudioInternalCalls() {
@@ -179,6 +205,7 @@ void ONEngine::AddEntityInternalCalls() {
 	mono_add_internal_call("Entity::InternalGetScript", (void*)InternalGetScript);
 	mono_add_internal_call("Entity::InternalGetEnable", (void*)InternalGetEnable);
 	mono_add_internal_call("Entity::InternalSetEnable", (void*)InternalSetEnable);
+	mono_add_internal_call("UIElementComponent::InternalGetElementId", (void*)InternalGetElementId);
 
 	mono_add_internal_call("ECSGroup::InternalCreateEntity", (void*)InternalCreateEntity);
 	mono_add_internal_call("ECSGroup::InternalDestroyEntity", (void*)InternalDestroyEntity);

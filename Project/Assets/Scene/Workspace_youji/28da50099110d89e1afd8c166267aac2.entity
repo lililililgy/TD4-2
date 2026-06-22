@@ -2,7 +2,7 @@
     "active": true,
     "components": [
         {
-            "cameraType": 0,
+            "cameraType": 1,
             "enable": 1,
             "farClip": 1000.0,
             "fogColor": {
@@ -22,8 +22,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -63.09876251220703,
-                "y": 0.0,
+                "x": 0.0,
+                "y": 4.000001907348633,
                 "z": 0.0
             },
             "rotate": {
@@ -44,7 +44,7 @@
         }
     ],
     "guid": "28da50099110d89e1afd8c166267aac2",
-    "name": "Camera_1",
+    "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""
 }

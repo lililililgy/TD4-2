@@ -59,4 +59,9 @@ public class AudioSource : Component {
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static private extern void InternalPlayOneShot(ulong _nativeHandle, float _volume, float _pitch, string _path);
+
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
+		InternalGetParams(nativeHandle, out volume, out pitch);
+	}
 }

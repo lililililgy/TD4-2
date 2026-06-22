@@ -77,6 +77,10 @@ public:
 	static Var MonoObjectToVar(void* obj, void* type);
 	static std::shared_ptr<GenericObject> MonoObjectToGeneric(void* obj);
 	static void VarToMonoObject(void* obj, void* klass, const Var& var);
+	static std::shared_ptr<GenericObject> CloneGenericObject(const std::shared_ptr<GenericObject>& src);
+	static bool IsEqualGenericObject(const std::shared_ptr<GenericObject>& a, const std::shared_ptr<GenericObject>& b);
+	static Var CloneVar(const Var& src);
+	static bool IsEqualVar(const Var& a, const Var& b);
 
 
 	/// @brief 変数のグループ、スクリプトごとに使用する予定

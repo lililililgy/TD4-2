@@ -1,10 +1,13 @@
-﻿#include "MonoScriptEngine.h"
+#include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
 
 using namespace ONEngine;
 
 /// std
 #include <regex>
+#include <thread>
+#include <chrono>
+#include <fstream>
 
 /// externals
 #include <metadata/mono-config.h>
@@ -76,11 +79,18 @@ void MonoScriptEngine::Initialize() {
 	mono_config_parse(nullptr);
 
 	/// JIT初期化 (v4.x CLRターゲット)
-	domain_ = mono_jit_init_version("MyDomain", "v4.0.30319");
-	if(!domain_) {
+	rootDomain_ = mono_jit_init_version("MyRootDomain", "v4.0.30319");
+	if(!rootDomain_) {
 		Console::LogError("Failed to initialize Mono JIT", LogCategory::ScriptEngine);
 		return;
 	}
+
+	domain_ = CreateReloadDomain();
+	if(!domain_) {
+		Console::LogError("Failed to create Mono domain for initialization", LogCategory::ScriptEngine);
+		return;
+	}
+	mono_domain_set(domain_, true);
 
 	auto latestDll = FindLatestDll("./Packages/Scripts", "CSharpLibrary");
 	if(!latestDll.has_value()) {
@@ -105,8 +115,9 @@ void MonoScriptEngine::Initialize() {
 }
 
 void MonoScriptEngine::Finalize() {
-	if(domain_) {
-		mono_jit_cleanup(domain_);
+	if(rootDomain_) {
+		mono_jit_cleanup(rootDomain_);
+		rootDomain_ = nullptr;
 		domain_ = nullptr;
 	}
 }
@@ -195,6 +206,29 @@ void MonoScriptEngine::HotReload() {
 		return;
 	}
 
+	// コピー中の可能性があるため、ファイルが完全に書き込まれロック解除されるまで待つ
+	{
+		int retryCount = 0;
+		const int maxRetries = 20; // 最大2秒
+		bool fileReady = false;
+		while (retryCount < maxRetries) {
+			std::ifstream file(*latestDll, std::ios::binary | std::ios::in);
+			if (file.good()) {
+				fileReady = true;
+				break;
+			}
+			retryCount++;
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		}
+		if (!fileReady) {
+			Console::LogError("Latest DLL is still locked or inaccessible: " + *latestDll, LogCategory::ScriptEngine);
+			mono_domain_set(oldDomain, true);
+			mono_domain_unload(domain_);
+			domain_ = oldDomain;
+			return;
+		}
+	}
+
 	assembly_ = mono_domain_assembly_open(domain_, latestDll->c_str());
 	if(!assembly_) {
 		Console::LogError("Failed to load assembly in new domain", LogCategory::ScriptEngine);
@@ -220,8 +254,8 @@ void MonoScriptEngine::HotReload() {
 		}
 	}
 
-	if(oldDomain != mono_get_root_domain()) {
-		mono_domain_unload(oldDomain);
+	if(oldDomain != rootDomain_) {
+		domainsToUnload_.push_back(oldDomain);
 	}
 
 	currentDllPath_ = *latestDll;
@@ -236,7 +270,7 @@ void MonoScriptEngine::SetEcsPtr(EntityComponentSystem* ecs) {
 }
 
 std::optional<std::string> MonoScriptEngine::FindLatestDll(const std::string& dirPath, const std::string& baseName) {
-	std::regex pattern(baseName + R"(.*\.dll)"); // プレフィックスが一致する全てのDLL
+	std::regex pattern(baseName + R"(_.*\.dll)"); // タイムスタンプ付きの全てのDLL
 	std::optional<std::string> latestFile;
 	std::filesystem::file_time_type latestTime;
 
@@ -259,6 +293,22 @@ std::optional<std::string> MonoScriptEngine::FindLatestDll(const std::string& di
 		if(!latestFile || currentTime > latestTime) {
 			latestFile = entry.path().string();
 			latestTime = currentTime;
+		}
+	}
+
+	// タイムスタンプ付きが見つからなかった場合のフォールバック (CSharpLibrary.dll)
+	if(!latestFile) {
+		std::regex fallbackPattern(baseName + R"(\.dll)");
+		for(const auto& entry : std::filesystem::directory_iterator(dirPath)) {
+			if(!entry.is_regular_file()) {
+				continue;
+			}
+
+			std::string filename = entry.path().filename().string();
+			if(std::regex_match(filename, fallbackPattern)) {
+				latestFile = entry.path().string();
+				break;
+			}
 		}
 	}
 
@@ -448,6 +498,13 @@ MonoDomain* MonoScriptEngine::CreateReloadDomain() {
 	}
 
 	return domain;
+}
+
+void MonoScriptEngine::ClearPendingDomains() {
+	for(auto* domain : domainsToUnload_) {
+		mono_domain_unload(domain);
+	}
+	domainsToUnload_.clear();
 }
 
 MonoDomain* MonoScriptEngine::Domain() const {

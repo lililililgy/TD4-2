@@ -1,4 +1,4 @@
-#include "ProjectWindow.h"
+﻿#include "ProjectWindow.h"
 
 /// std
 #include <filesystem>
@@ -86,7 +86,7 @@ void ProjectWindow::ShowImGui() {
 	for(const auto& ev : fileWatcher_.ConsumeEvents()) {
 		if(ev.type == FileEvent::Type::File) {
 			std::string relPath = GetRelativePath(ev.path);
-			if(ev.action == FileEvent::Action::Modified || ev.action == FileEvent::Action::RenamedNew) {
+			if(ev.action == FileEvent::Action::Added || ev.action == FileEvent::Action::Modified || ev.action == FileEvent::Action::RenamedNew) {
 				// リロードリクエストをキューイング（即時実行するとD3D12のコマンドリスト競合でクラッシュするため）
 				HotReloadManager::GetInstance().RequestAssetReload(relPath);
 
@@ -242,10 +242,10 @@ void ProjectWindow::ShowImGui() {
 					UpdateFileCache(targetPath_);
 
 					// スクリプト作成後にPremakeを実行してプロジェクトを更新 (Projectフォルダからの相対パス)
-					system("powershell.exe -ExecutionPolicy Bypass -File ../SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
+					//system("powershell.exe -ExecutionPolicy Bypass -File ../SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
 
 					// プロジェクトが更新されたのでホットリロードを要求（ビルドは手動または起動時に行われる想定）
-					HotReloadManager::GetInstance().RequestScriptHotReload();
+					//HotReloadManager::GetInstance().RequestScriptHotReload();
 				}
 			} catch(...) {}
 			showCreateScriptPopup_ = false;

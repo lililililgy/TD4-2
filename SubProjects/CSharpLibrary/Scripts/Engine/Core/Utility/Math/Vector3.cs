@@ -29,8 +29,11 @@ public struct Vector3 {
 	public float Length() {
 		return (float)System.Math.Sqrt(x * x + y * y + z * z);
 	}
+    public float LengthSq() {
+        return x * x + y * y + z * z;
+    }
 
-	public Vector3 Normalized() {
+    public Vector3 Normalized() {
 		float length = this.Length();
 		if (length == 0.0f) return zero;
 		return new Vector3(x / length, y / length, z / length);
@@ -43,7 +46,11 @@ public struct Vector3 {
 		return v.Length();
 	}
 
-	static public Vector3 Normalize(Vector3 v) {
+	static public float LengthSq(Vector3 v) {
+		return v.LengthSq();
+    }
+
+    static public Vector3 Normalize(Vector3 v) {
 		return v.Normalized();
 	}
 

@@ -7,34 +7,173 @@
             "position": {
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": 1.4156103134155273e-06
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 256.0,
+                "y": 255.9999542236328,
+                "z": 255.9999542236328
             },
             "type": "Transform"
         },
         {
-            "PlayerInputComponent": {},
+            "Magazine": {
+                "maxAmmo_": 10,
+                "reloadCooldown_": 0.6000000238418579
+            },
+            "PlayerDashState": {
+                "accel_": 1024.0,
+                "canMove_": true,
+                "cooldown_": 12.0,
+                "decelMaxSmoothSpeed_": 1.0,
+                "decelSmoothTime_": 116.0,
+                "duration_": 12.0,
+                "maxSpeed_": 782.0,
+                "moveForward_": true,
+                "rotateMaxSmoothSpeed_": 12.0,
+                "rotateSmoothTime_": 0.8999999761581421
+            },
+            "PlayerInputComponent": {
+                "dashButtons_": [
+                    4096,
+                    8192
+                ],
+                "dashKeys_": [
+                    42
+                ],
+                "isDashButtonPressed_": false,
+                "isShootButtonPressed_": false,
+                "isShot_": false,
+                "moveDir_": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "reloadButtons_": [
+                    16384,
+                    32768
+                ],
+                "reloadKeys_": [
+                    19
+                ],
+                "shootCooldownTime_": 0.0,
+                "shootKeys_": [
+                    57,
+                    44,
+                    45
+                ],
+                "shotButtons_": [
+                    256,
+                    512
+                ]
+            },
+            "PlayerLifeComponent": {
+                "lifeCount_": 0,
+                "maxLife_": 0
+            },
             "PlayerMoveComponent": {
-                "moveSpeed_": 0.0
+                "accel_": 256.0,
+                "currentRotateMaxSmoothSpeed_": 64.0,
+                "currentRotateSmoothTime_": 3.0,
+                "decelMaxSmoothSpeed_": 12.0,
+                "decelSmoothTime_": 0.20000000298023224,
+                "maxSmoothSpeed_": 70.0,
+                "maxSpeed_": 512.0,
+                "moveSpeed_": 20.0,
+                "paramReleaseMaxSmoothSpeed_": 32.0,
+                "paramReleaseSmoothTime_": 0.800000011920929,
+                "smoothTime_": 0.07999999821186066,
+                "velocity_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "PlayerNormalState": {
+                "accel_": 512.0,
+                "canMove_": true,
+                "decelMaxSmoothSpeed_": 32.0,
+                "decelSmoothTime_": 0.10000000149011612,
+                "maxSpeed_": 322.0,
+                "rotateMaxSmoothSpeed_": 32.0,
+                "rotateSmoothTime_": 0.20000000298023224
             },
             "PlayerShotComponent": {
                 "bulletSpawnOffset_": {
                     "x": 0.0,
-                    "y": 0.0
+                    "y": -1.399999976158142
                 },
-                "shootCooldownTime_": 0.0
+                "isShot_": false,
+                "shootCooldownTime_": 0.18000000715255737
+            },
+            "PlayerStateComponent": {
+                "currentStateName_": ""
+            },
+            "RoeManager": {
+                "broodCount_": 3,
+                "layInterval_": 5.0,
+                "leaderName_": "Player",
+                "maxAmmo_": 6,
+                "maxBrood_": 12,
+                "maxRoe_": 12,
+                "roePrefabName_": "Roe"
+            },
+            "RoeTrail": {
+                "maxTrailLength_": 1280.0,
+                "recordMinDistance_": 2.0
             },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PlayerShotComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerInputComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerMoveComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerStateComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerNormalState"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerDashState"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerLifeComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "RoeTrail"
+                },
+                {
+                    "enable": true,
+                    "name": "RoeManager"
+                },
+                {
+                    "enable": true,
+                    "name": "Magazine"
+                }
+            ],
+            "type": "Script"
         },
         {
             "enable": 1,
@@ -45,10 +184,10 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "00000000000000000000000000000000",
+                "baseTextureGuid": "98833aef331aafb2bfce860b634d7f4a",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 1,
+                "postEffectFlags": 0,
                 "uvTransform": {
                     "position": {
                         "x": 0.0,
@@ -61,31 +200,11 @@
                     }
                 }
             },
-            "meshPath": "./Packages/Models/primitive/cube.obj",
-            "renderQueue": 2,
-            "type": "MeshRenderer"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "PlayerInputComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerMoveComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerShotComponent"
-                }
-            ],
-            "type": "Script"
+            "type": "SpriteRenderer"
         }
     ],
-    "guid": "02c6a58007198b6c2043c9fb7e6cd183",
+    "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
     "name": "Player",
     "parentGuid": null,
-    "prefabName": ""
+    "prefabName": "Player"
 }
