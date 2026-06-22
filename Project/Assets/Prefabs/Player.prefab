@@ -24,17 +24,8 @@
         },
         {
             "Magazine": {
-                "maxAmmo_": 10
-            },
-            "PlayerLifeComponent": {},
-            "RoeTrail": {
-                "recordMinDistance_": 2.0,
-                "maxTrailLength_": 400.0
-            },
-            "RoeManager": {
-                "roePrefabName_": "Roe",
-                "leaderName_": "Player",
-                "broodCount_": 3
+                "maxAmmo_": 10,
+                "reloadCooldown_": 0.6000000238418579
             },
             "PlayerDashState": {
                 "accel_": 1024.0,
@@ -81,6 +72,10 @@
                     512
                 ]
             },
+            "PlayerLifeComponent": {
+                "lifeCount_": 0,
+                "maxLife_": 0
+            },
             "PlayerMoveComponent": {
                 "accel_": 256.0,
                 "currentRotateMaxSmoothSpeed_": 64.0,
@@ -119,6 +114,17 @@
             "PlayerStateComponent": {
                 "currentStateName_": ""
             },
+            "RoeManager": {
+                "broodCount_": 3,
+                "layInterval_": 1.0,
+                "leaderName_": "Player",
+                "maxBrood_": 12,
+                "roePrefabName_": "Roe"
+            },
+            "RoeTrail": {
+                "maxTrailLength_": 400.0,
+                "recordMinDistance_": 2.0
+            },
             "type": "Variables"
         },
         {
@@ -150,10 +156,6 @@
                 },
                 {
                     "enable": true,
-                    "name": "Magazine"
-                },
-                {
-                    "enable": true,
                     "name": "PlayerLifeComponent"
                 },
                 {
@@ -163,6 +165,10 @@
                 {
                     "enable": true,
                     "name": "RoeManager"
+                },
+                {
+                    "enable": true,
+                    "name": "Magazine"
                 }
             ],
             "type": "Script"

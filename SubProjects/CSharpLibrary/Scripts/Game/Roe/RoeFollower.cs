@@ -15,6 +15,7 @@ public class RoeFollower : MonoScript {
     [SerializeField] private float  maxSmoothSpeed_ = 100000.0f;
 
     private RoeTrail trail_;
+    private RoeManager manager_;
     private Vector3 smoothVel_ = Vector3.zero;
 
     public override void Initialize() {
@@ -24,20 +25,21 @@ public class RoeFollower : MonoScript {
         }
 
         trail_ = leader.GetScript<RoeTrail>();
-
-        // 隊列順は RoeManager から entityId で引く（取れなければ inspector の order_ を使う）
-        RoeManager manager = leader.GetScript<RoeManager>();
-        if (manager != null) {
-            int assigned = manager.GetOrder(entity.Id);
-            if (assigned > 0) {
-                order_ = assigned;
-            }
-        }
+        manager_ = leader.GetScript<RoeManager>();
     }
 
     public override void Update() {
         if (trail_ == null) {
             return;
+        }
+
+        // 隊列順は毎フレーム RoeManager から entityId で引く（卵が発射で抜けると詰め直される）。
+        // 取れなければ inspector の order_ をそのまま使う。
+        if (manager_ != null) {
+            int assigned = manager_.GetOrder(entity.Id);
+            if (assigned > 0) {
+                order_ = assigned;
+            }
         }
 
         // 先頭卵は playerOffset_、以降は roeOffset_ ずつ後ろ（order_ は1始まり）

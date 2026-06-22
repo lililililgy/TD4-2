@@ -41,6 +41,11 @@
                 "maxScale_": 48.0,
                 "minScale_": 16.0
             },
+            "RoeStateComponent": {
+                "growTime_": 0.5,
+                "maxScale_": 64.0,
+                "minScale_": 16.0
+            },
             "type": "Variables"
         },
         {
@@ -52,7 +57,7 @@
                 },
                 {
                     "enable": true,
-                    "name": "RoeGrowth"
+                    "name": "RoeStateComponent"
                 }
             ],
             "type": "Script"
@@ -85,8 +90,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "7b02574abe14d6b4c6c789c8df8ef4f1",
+    "guid": "f98f033a048fca1c08267e84a4a287aa",
     "name": "Roe",
     "parentGuid": null,
-    "prefabName": ""
+    "prefabName": "Roe"
 }
