@@ -2,7 +2,7 @@
     "active": true,
     "components": [
         {
-            "cameraType": 0,
+            "cameraType": 1,
             "enable": 1,
             "farClip": 1000.0,
             "fogColor": {
@@ -40,7 +40,27 @@
             "type": "Transform"
         },
         {
+            "PlayerFollowCamera": {
+                "maxSmoothSpeed_": 32.0,
+                "offset_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "smoothTime_": 0.30000001192092896,
+                "targetName_": "Player"
+            },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PlayerFollowCamera"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "066cf8700e962fdd141e80666ddb8240",
