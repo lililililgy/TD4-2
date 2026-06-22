@@ -19,7 +19,11 @@ public struct Vector2 {
 		return (float)System.Math.Sqrt(x * x + y * y);
 	}
 
-	public Vector2 Normalized() {
+    public float LengthSq() {
+        return x * x + y * y;
+    }
+
+    public Vector2 Normalized() {
 		float length = this.Length();
 		if (length == 0.0f) return zero;
 		return new Vector2(x / length, y / length);
@@ -35,7 +39,11 @@ public struct Vector2 {
 		return v.Length();
 	}
 
-	static public float Dot(Vector2 a, Vector2 b) {
+	static public float LengthSq(Vector2 v) {
+        return v.LengthSq();
+    }
+
+    static public float Dot(Vector2 a, Vector2 b) {
 		return a.x * b.x + a.y * b.y;
 	}
 

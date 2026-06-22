@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 64.0,
-                "y": 64.0,
-                "z": 64.0
+                "x": 32.0,
+                "y": 32.0,
+                "z": 32.0
             },
             "type": "Transform"
         },
@@ -27,30 +27,37 @@
                 "lifeTime_": 5.0,
                 "speed_": 32.0
             },
-            "type": "Variables"
-        },
-        {
-            "categoryBits": 4,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 4294967240,
-            "mass": 1.0,
-            "size": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+            "RoeFollower": {
+                "leaderName_": "Player",
+                "maxSmoothSpeed_": 42.0,
+                "order_": 1,
+                "playerOffset_": 128.0,
+                "roeOffset_": 48.0,
+                "smoothTime_": 0.800000011920929,
+                "spacing_": 48.0
             },
-            "state": "Dynamic",
-            "type": "BoxCollider",
-            "useOwnerScale": true
+            "RoeGrowth": {
+                "growTime_": 0.5,
+                "maxScale_": 48.0,
+                "minScale_": 16.0
+            },
+            "RoeStateComponent": {
+                "growTime_": 0.5,
+                "maxScale_": 64.0,
+                "minScale_": 16.0
+            },
+            "type": "Variables"
         },
         {
             "enable": 1,
             "scripts": [
                 {
                     "enable": true,
-                    "name": "Bullet"
+                    "name": "RoeFollower"
+                },
+                {
+                    "enable": true,
+                    "name": "RoeStateComponent"
                 }
             ],
             "type": "Script"
@@ -64,7 +71,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "ac842be8df6723ae5fa4c2c06a0e1f11",
+                "baseTextureGuid": "ef82942482f6276604a60b37a36239ef",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -83,8 +90,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "e4ce6021771d62eb49b3baa2c57bee7e",
-    "name": "Bullet",
+    "guid": "f98f033a048fca1c08267e84a4a287aa",
+    "name": "Roe",
     "parentGuid": null,
-    "prefabName": ""
+    "prefabName": "Roe"
 }

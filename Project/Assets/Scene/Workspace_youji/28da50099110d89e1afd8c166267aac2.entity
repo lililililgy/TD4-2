@@ -2,7 +2,7 @@
     "active": true,
     "components": [
         {
-            "cameraType": 0,
+            "cameraType": 1,
             "enable": 1,
             "farClip": 1000.0,
             "fogColor": {
@@ -23,7 +23,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 4.000001907348633,
                 "z": 0.0
             },
             "rotate": {
