@@ -45,6 +45,18 @@ public class Entity {
 		}
 	}
 
+	public ECSGroup ecsGroup {
+		get {
+			return ecsGroup_;
+		}
+	}
+
+	public string ecsGroupName {
+		get {
+			return ecsGroupName_;
+		}
+	}
+
 	public string name {
 		get {
 			IntPtr namePtr = InternalGetName(entityId_, ecsGroupName_);

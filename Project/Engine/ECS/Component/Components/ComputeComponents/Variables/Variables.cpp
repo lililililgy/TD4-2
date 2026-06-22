@@ -52,10 +52,7 @@ namespace {
 		MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
 		if (!attrs) return false;
 
-		static MonoClass* serializeFieldAttr = nullptr;
-		if (!serializeFieldAttr) {
-			serializeFieldAttr = mono_class_from_name(MonoScriptEngine::GetInstance().Image(), "", "SerializeField");
-		}
+		MonoClass* serializeFieldAttr = mono_class_from_name(MonoScriptEngine::GetInstance().Image(), "", "SerializeField");
 
 		bool has = serializeFieldAttr && mono_custom_attrs_has_attr(attrs, serializeFieldAttr);
 		mono_custom_attrs_free(attrs);
@@ -330,6 +327,76 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 			}
 			}, val);
 	}
+}
+
+std::shared_ptr<Variables::GenericObject> Variables::CloneGenericObject(const std::shared_ptr<Variables::GenericObject>& src) {
+	if (!src) return nullptr;
+	auto dst = std::make_shared<Variables::GenericObject>();
+	dst->typeName = src->typeName;
+	for (const auto& [k, v] : src->fields) {
+		dst->fields[k] = CloneVar(v);
+	}
+	return dst;
+}
+
+bool Variables::IsEqualGenericObject(const std::shared_ptr<Variables::GenericObject>& a, const std::shared_ptr<Variables::GenericObject>& b) {
+	if (a == b) return true;
+	if (!a || !b) return false;
+	if (a->typeName != b->typeName) return false;
+	if (a->fields.size() != b->fields.size()) return false;
+	for (auto& [k, v] : a->fields) {
+		if (!b->fields.contains(k)) return false;
+		if (!IsEqualVar(v, b->fields.at(k))) return false;
+	}
+	return true;
+}
+
+Variables::Var Variables::CloneVar(const Variables::Var& src) {
+	return std::visit([](auto&& arg) -> Variables::Var {
+		using T = std::decay_t<decltype(arg)>;
+		if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
+			return CloneGenericObject(arg);
+		} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
+			std::vector<std::shared_ptr<Variables::GenericObject>> listDst;
+			for (const auto& item : arg) {
+				listDst.push_back(CloneGenericObject(item));
+			}
+			return listDst;
+		} else {
+			return arg;
+		}
+	}, src);
+}
+
+bool Variables::IsEqualVar(const Variables::Var& a, const Variables::Var& b) {
+	if (a.index() != b.index()) return false;
+	return std::visit([&](auto&& argA) -> bool {
+		using T = std::decay_t<decltype(argA)>;
+		auto&& argB = std::get<T>(b);
+		if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
+			return IsEqualGenericObject(argA, argB);
+		} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
+			if (argA.size() != argB.size()) return false;
+			for (size_t i = 0; i < argA.size(); ++i) {
+				if (!IsEqualGenericObject(argA[i], argB[i])) return false;
+			}
+			return true;
+		} else if constexpr (std::is_same_v<T, Vector2>) {
+			return argA.x == argB.x && argA.y == argB.y;
+		} else if constexpr (std::is_same_v<T, Vector3>) {
+			return argA.x == argB.x && argA.y == argB.y && argA.z == argB.z;
+		} else if constexpr (std::is_same_v<T, Vector4>) {
+			return argA.x == argB.x && argA.y == argB.y && argA.z == argB.z && argA.w == argB.w;
+		} else if constexpr (std::is_same_v<T, std::vector<Vector3>>) {
+			if (argA.size() != argB.size()) return false;
+			for (size_t i = 0; i < argA.size(); ++i) {
+				if (argA[i].x != argB[i].x || argA[i].y != argB[i].y || argA[i].z != argB[i].z) return false;
+			}
+			return true;
+		} else {
+			return argA == argB;
+		}
+	}, a);
 }
 
 void ONEngine::from_json(const nlohmann::json& j, Variables& v) {

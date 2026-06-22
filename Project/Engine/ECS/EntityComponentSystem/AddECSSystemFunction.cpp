@@ -25,6 +25,8 @@
 #include "../System/AI/AISystem.h"
 #include "../System/Movement/MovementSystem.h"
 #include "../System/Animation/AnimationSystem.h"
+#include "../System/UI/UIHierarchySystem.h"
+#include "../System/UI/UIInputNavigationSystem.h"
 
 using namespace ONEngine;
 
@@ -43,6 +45,8 @@ void ONEngine::GameECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Asse
 	ecs->AddSystem<AnimatorUpdateSystem>();
 	ecs->AddSystem<SkinMeshUpdateSystem>(dxm, assetCollection);
 	ecs->AddSystem<ScriptUpdateSystem>(ecs);
+	ecs->AddSystem<UIHierarchySystem>();
+	ecs->AddSystem<UIInputNavigationSystem>();
 	ecs->AddSystem<AISystem>();
 	ecs->AddSystem<MovementSystem>();
 	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);
@@ -81,6 +85,8 @@ void ONEngine::DebugECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Ass
 	ecs->AddSystem<AnimatorUpdateSystem>();
 	ecs->AddSystem<SkinMeshUpdateSystem>(dxm, assetCollection);
 	ecs->AddSystem<DebugScriptUpdateSystem>(ecs);
+	ecs->AddSystem<UIHierarchySystem>();
+	ecs->AddSystem<UIInputNavigationSystem>();
 	ecs->AddSystem<AISystem>();
 	ecs->AddSystem<MovementSystem>();
 	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);

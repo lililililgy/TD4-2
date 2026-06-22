@@ -84,6 +84,11 @@ namespace {
 			Register<BoxCollider>();
 			Register<CircleCollider>();
 			Register<BoxCollider2D>();
+
+			/// UI
+			Register<UIGroupComponent>();
+			Register<UIElementComponent>();
+			Register<UILinkNavigationComponent>();
 		}
 
 		template <typename T>

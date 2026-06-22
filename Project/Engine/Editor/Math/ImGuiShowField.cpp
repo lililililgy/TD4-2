@@ -64,6 +64,7 @@ bool DrawEnumCombo(MonoClass* enumClass, const char* name, int& value) {
 void DrawGenericObject(std::shared_ptr<ONEngine::Variables::GenericObject> obj) {
 	if (!obj) return;
 	for (auto& [name, val] : obj->fields) {
+		ImGui::PushID(name.c_str());
 		std::visit([&](auto&& arg) {
 			using T = std::decay_t<decltype(arg)>;
 			if constexpr (std::is_same_v<T, int>) ImGui::DragInt(name.c_str(), &arg);
@@ -81,6 +82,62 @@ void DrawGenericObject(std::shared_ptr<ONEngine::Variables::GenericObject> obj) 
 				}
 			}
 			}, val);
+		ImGui::PopID();
+	}
+}
+
+void DrawGenericObjectWithTracking(std::shared_ptr<ONEngine::Variables::GenericObject> obj, bool& anyActive, bool& anyDeactivated) {
+	if (!obj) return;
+	for (auto& [name, val] : obj->fields) {
+		ImGui::PushID(name.c_str());
+		std::visit([&](auto&& arg) {
+			using T = std::decay_t<decltype(arg)>;
+			if constexpr (std::is_same_v<T, int>) {
+				ImGui::DragInt(name.c_str(), &arg);
+				if (ImGui::IsItemActivated()) anyActive = true;
+				if (ImGui::IsItemDeactivatedAfterEdit()) anyDeactivated = true;
+			}
+			else if constexpr (std::is_same_v<T, float>) {
+				ImGui::DragFloat(name.c_str(), &arg);
+				if (ImGui::IsItemActivated()) anyActive = true;
+				if (ImGui::IsItemDeactivatedAfterEdit()) anyDeactivated = true;
+			}
+			else if constexpr (std::is_same_v<T, bool>) {
+				if (ImGui::Checkbox(name.c_str(), &arg)) {
+					anyActive = true;
+					anyDeactivated = true;
+				}
+			}
+			else if constexpr (std::is_same_v<T, std::string>) {
+				if (ImGuiInputText(name.c_str(), &arg)) {
+					anyActive = true;
+					anyDeactivated = true;
+				}
+			}
+			else if constexpr (std::is_same_v<T, ONEngine::Vector2>) {
+				ImGui::DragFloat2(name.c_str(), &arg.x);
+				if (ImGui::IsItemActivated()) anyActive = true;
+				if (ImGui::IsItemDeactivatedAfterEdit()) anyDeactivated = true;
+			}
+			else if constexpr (std::is_same_v<T, ONEngine::Vector3>) {
+				ImGui::DragFloat3(name.c_str(), &arg.x);
+				if (ImGui::IsItemActivated()) anyActive = true;
+				if (ImGui::IsItemDeactivatedAfterEdit()) anyDeactivated = true;
+			}
+			else if constexpr (std::is_same_v<T, ONEngine::Vector4>) {
+				ImGui::DragFloat4(name.c_str(), &arg.x);
+				if (ImGui::IsItemActivated()) anyActive = true;
+				if (ImGui::IsItemDeactivatedAfterEdit()) anyDeactivated = true;
+			}
+			else if constexpr (std::is_same_v<T, std::shared_ptr<ONEngine::Variables::GenericObject>>) {
+				if (ImGui::CollapsingHeader(name.c_str())) {
+					ImGui::Indent();
+					DrawGenericObjectWithTracking(arg, anyActive, anyDeactivated);
+					ImGui::Unindent();
+				}
+			}
+			}, val);
+		ImGui::PopID();
 	}
 }
 
@@ -93,21 +150,14 @@ void CSGui::ShowField(const std::string& scriptName, int type, MonoObject* obj, 
 	if (type == MONO_TYPE_VALUETYPE || type == MONO_TYPE_CLASS) {
 		MonoType* fieldType = mono_field_get_type(field);
 		MonoClass* fieldClass = mono_class_from_mono_type(fieldType);
-		const char* className = mono_class_get_name(fieldClass);
-		if (strcmp(className, "Vector2") != 0 && strcmp(className, "Vector3") != 0 && strcmp(className, "Vector4") != 0 && !mono_class_is_enum(fieldClass)) {
-			if (ImGui::CollapsingHeader(name)) {
-				ImGui::Indent();
-				MonoObject* subObj = mono_field_get_value_object(mono_domain_get(), field, obj);
-				if (subObj) {
-					void* iter = nullptr;
-					MonoClassField* subField = nullptr;
-					while ((subField = mono_class_get_fields(fieldClass, &iter))) {
-						ShowField(scriptName, mono_type_get_type(mono_field_get_type(subField)), subObj, subField, mono_field_get_name(subField));
-					}
+		if (fieldClass) {
+			const char* className = mono_class_get_name(fieldClass);
+			if (strcmp(className, "Vector2") != 0 && strcmp(className, "Vector3") != 0 && strcmp(className, "Vector4") != 0 && !mono_class_is_enum(fieldClass)) {
+				if (gFieldDrawers.find(MONO_TYPE_VALUETYPE) != gFieldDrawers.end()) {
+					gFieldDrawers[MONO_TYPE_VALUETYPE]->Draw(scriptName, obj, field, name);
 				}
-				ImGui::Unindent();
+				return;
 			}
-			return;
 		}
 	}
 
@@ -202,6 +252,24 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 			}
 			ONEngine::Vector4 value = group.Get<ONEngine::Vector4>(name);
 			if(ImGui::DragFloat4(name, &value.x)) group.Add(name, value);
+		} else if(!mono_class_is_enum(fieldClass)) {
+			// カスタム構造体
+			if (!group.Has(name) || !std::holds_alternative<std::shared_ptr<ONEngine::Variables::GenericObject>>(group.Get(name))) {
+				auto elemVar = ONEngine::Variables::MonoObjectToVar(nullptr, mono_field_get_type(field));
+				if (std::holds_alternative<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar)) {
+					group.Add(name, std::get<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar));
+				} else {
+					auto gen = std::make_shared<ONEngine::Variables::GenericObject>();
+					gen->typeName = className;
+					group.Add(name, gen);
+				}
+			}
+			auto& gen = std::get<std::shared_ptr<ONEngine::Variables::GenericObject>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
+			if (ImGui::CollapsingHeader(name)) {
+				ImGui::Indent();
+				DrawGenericObject(gen);
+				ImGui::Unindent();
+			}
 		}
 		break;
 	}
@@ -407,9 +475,78 @@ void CSGui::StructGui::Draw(const std::string& scriptName, MonoObject* obj, Mono
 	MonoClass* fieldClass = mono_class_from_mono_type(mono_field_get_type(field));
 	if(mono_class_is_enum(fieldClass)) { static EnumField enumDrawer; enumDrawer.Draw(scriptName, obj, field, name); return; }
 	if(fieldDrawers.empty()) Register();
+	
 	const char* typeName = mono_class_get_name(fieldClass);
-	if(fieldDrawers.find(typeName) == fieldDrawers.end()) return;
-	fieldDrawers[typeName]->Draw(scriptName, obj, field, name);
+	if(fieldDrawers.find(typeName) != fieldDrawers.end()) {
+		fieldDrawers[typeName]->Draw(scriptName, obj, field, name);
+		return;
+	}
+
+	// --- カスタム構造体の描画とトラッキング ---
+	ImGui::PushID(field);
+
+	MonoObject* structObj = mono_field_get_value_object(mono_domain_get(), field, obj);
+	if (!structObj) {
+		ImGui::Text("%s: (null)", name);
+		ImGui::PopID();
+		return;
+	}
+
+	auto currentGeneric = ONEngine::Variables::MonoObjectToGeneric(structObj);
+	if (!currentGeneric) {
+		ImGui::PopID();
+		return;
+	}
+
+	std::string key = std::format("{}_{}", (void*)obj, (void*)field);
+
+	if (ImGui::CollapsingHeader(name)) {
+		ImGui::Indent();
+
+		auto tempGeneric = ONEngine::Variables::CloneGenericObject(currentGeneric);
+		bool anyItemActive = false;
+		bool anyItemDeactivatedAfterEdit = false;
+
+		DrawGenericObjectWithTracking(tempGeneric, anyItemActive, anyItemDeactivatedAfterEdit);
+
+		if (anyItemActive) {
+			startValues[key] = ONEngine::Variables::CloneGenericObject(currentGeneric);
+		}
+
+		if (tempGeneric && !ONEngine::Variables::IsEqualGenericObject(currentGeneric, tempGeneric)) {
+			// C# 側に即時仮反映
+			ONEngine::Variables::VarToMonoObject(structObj, fieldClass, tempGeneric);
+			if (mono_class_is_valuetype(fieldClass)) {
+				void* unboxed = mono_object_unbox(structObj);
+				mono_field_set_value(obj, field, unboxed);
+			}
+
+			// Variables コンポーネントに即時仮反映
+			ONEngine::GameEntity* entity = ONEngine::MonoScriptEngine::GetInstance().GetOwnerEntity(obj);
+			if (entity) {
+				ONEngine::Variables* vars = entity->GetComponent<ONEngine::Variables>();
+				if (vars) {
+					vars->SetVariable(scriptName, name, tempGeneric);
+				}
+			}
+		}
+
+		if (anyItemDeactivatedAfterEdit) {
+			ONEngine::GameEntity* entity = ONEngine::MonoScriptEngine::GetInstance().GetOwnerEntity(obj);
+			auto startValIt = startValues.find(key);
+			if (entity && startValIt != startValues.end()) {
+				auto startVal = startValIt->second;
+				EditCommand::Execute<ModifyScriptVariableCommand>(
+					entity, scriptName, name, MONO_TYPE_VALUETYPE, startVal, tempGeneric
+				);
+				startValues.erase(startValIt);
+			}
+		}
+
+		ImGui::Unindent();
+	}
+
+	ImGui::PopID();
 }
 
 void CSGui::StructGui::Register() {

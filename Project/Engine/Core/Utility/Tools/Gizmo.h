@@ -10,7 +10,9 @@
 namespace ONEngine {
 
 class Gizmo final {
-	friend class GizmoRenderingPipeline;
+	friend class Gizmo3DRenderingPipeline;
+	friend class Gizmo2DRenderingPipeline;
+	friend class RenderingPipelineCollection;
 	friend class RenderingFramework;
 public:
 	/// ====================================
@@ -56,6 +58,12 @@ private:
 	static const std::vector<CubeData>& GetWireCubeData();
 	static const std::vector<LineData>& GetLineData();
 
+	static const std::vector<SphereData>& GetSphere2DData();
+	static const std::vector<SphereData>& GetWireSphere2DData();
+	static const std::vector<CubeData>& GetCube2DData();
+	static const std::vector<CubeData>& GetWireCube2DData();
+	static const std::vector<LineData>& GetLine2DData();
+
 	/// @brief データのリセット
 	static void Reset();
 
@@ -85,7 +93,7 @@ public:
 
 	/// @brief ワイヤーフレームの箱を描画
 	/// @param position ワールド座標
-	/// @param size 箱의サイズ
+	/// @param size 箱のサイズ
 	/// @param rotate 箱の回転
 	/// @param color 箱の色 
 	static void DrawWireCube(const Vector3& position, const Vector3& size, const Quaternion& rotate = Quaternion::kIdentity, const Vector4& color = Color::kWhite);
@@ -103,6 +111,14 @@ public:
 	/// @param color 線の色
 	/// @param thickness 線の太さ
 	static void DrawRay(const Vector3& position, const Vector3& direction, const Vector4& color = Color::kWhite, float thickness = 1.0f);
+
+	/// ----- 2D用描画メソッド ----- ///
+	static void DrawSphere2D(const Vector3& position, float radius, const Vector4& color = Color::kWhite);
+	static void DrawWireSphere2D(const Vector3& position, float radius, const Vector4& color = Color::kWhite);
+	static void DrawCube2D(const Vector3& position, const Vector3& size, const Quaternion& rotate = Quaternion::kIdentity, const Vector4& color = Color::kWhite);
+	static void DrawWireCube2D(const Vector3& position, const Vector3& size, const Quaternion& rotate = Quaternion::kIdentity, const Vector4& color = Color::kWhite);
+	static void DrawLine2D(const Vector3& startPosition, const Vector3& endPosition, const Vector4& color = Color::kWhite, float thickness = 1.0f);
+	static void DrawRay2D(const Vector3& position, const Vector3& direction, const Vector4& color = Color::kWhite, float thickness = 1.0f);
 
 };
 

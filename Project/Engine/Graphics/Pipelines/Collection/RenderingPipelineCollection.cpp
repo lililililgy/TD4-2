@@ -1,4 +1,4 @@
-#include "RenderingPipelineCollection.h"
+﻿#include "RenderingPipelineCollection.h"
 
 using namespace ONEngine;
 
@@ -20,7 +20,8 @@ using namespace ONEngine;
 #include "../Render/Primitive/Line2DRenderingPipeline.h"
 #include "../Render/Primitive/Line3DRenderingPipeline.h"
 #include "../Render/Sprite/SpriteRenderingPipeline.h"
-#include "../Render/Gizmo/GizmoRenderingPipeline.h"
+#include "../Render/Gizmo/Gizmo3DRenderingPipeline.h"
+#include "../Render/Gizmo/Gizmo2DRenderingPipeline.h"
 #include "../Render/Skybox/SkyboxRenderingPipeline.h"
 #include "../Render/Terrain/TerrainRenderingPipeline.h"
 #include "../Render/Terrain/TerrainProceduralRenderingPipeline.h"
@@ -45,8 +46,7 @@ using namespace ONEngine;
 #include "../PostProcess/PerObject/VoxelTerrainBrush/PostProcessVoxelTerrainBrush.h"
 
 RenderingPipelineCollection::RenderingPipelineCollection(ShaderCompiler* shaderCompiler, DxManager* dxm, EntityComponentSystem* pEntityComponentSystem, Asset::AssetCollection* assetCollection)
-	: pShaderCompiler_(shaderCompiler), pDxManager_(dxm), pEntityComponentSystem_(pEntityComponentSystem), pAssetCollection_(assetCollection) {
-}
+	: pShaderCompiler_(shaderCompiler), pDxManager_(dxm), pEntityComponentSystem_(pEntityComponentSystem), pAssetCollection_(assetCollection) {}
 
 RenderingPipelineCollection::~RenderingPipelineCollection() {}
 
@@ -76,15 +76,18 @@ void RenderingPipelineCollection::Initialize() {
 	Generate3DRenderingPipeline<GridRenderingPipeline>();
 #endif // DEBUG_MODE
 	Generate3DRenderingPipeline<EffectRenderingPipeline>(pAssetCollection_);
-	
+
 	particleRenderer_ = std::make_unique<ParticleSystemRenderingPipeline>(pAssetCollection_);
 	particleRenderer_->Initialize(pShaderCompiler_, pDxManager_);
 
 	Generate3DRenderingPipeline<GrassRenderingPipeline>(pAssetCollection_);
 
 	/// Gizmoは最後に描画する
-	gizmoRenderer_ = std::make_unique<GizmoRenderingPipeline>();
-	gizmoRenderer_->Initialize(pShaderCompiler_, pDxManager_);
+	gizmo3D_ = std::make_unique<Gizmo3DRenderingPipeline>();
+	gizmo3D_->Initialize(pShaderCompiler_, pDxManager_);
+
+	gizmo2D_ = std::make_unique<Gizmo2DRenderingPipeline>();
+	gizmo2D_->Initialize(pShaderCompiler_, pDxManager_);
 
 
 
@@ -108,20 +111,21 @@ void RenderingPipelineCollection::PreDrawEntities(CameraComponent* _3dCamera, Ca
 	ECSGroup* ecsGroup = pEntityComponentSystem_->GetCurrentGroup();
 
 	/// 2d,3d 両方ともカメラが有効かチェックしてから描画する
-	if (IsEnableCamera(_3dCamera)) {
-		for (auto& renderer : renderer3ds_) {
+	if(IsEnableCamera(_3dCamera)) {
+		for(auto& renderer : renderer3ds_) {
 			renderer->PreDraw(ecsGroup, _3dCamera, pDxManager_->GetDxCommand());
 		}
-		if (particleRenderer_) particleRenderer_->PreDraw(ecsGroup, _3dCamera, pDxManager_->GetDxCommand());
-		//if (gizmoRenderer_)     gizmoRenderer_->PreDraw(ecsGroup, _3dCamera, pDxManager_->GetDxCommand());
+		if(particleRenderer_) particleRenderer_->PreDraw(ecsGroup, _3dCamera, pDxManager_->GetDxCommand());
+		if(gizmo3D_)     gizmo3D_->PreDraw(ecsGroup, _3dCamera, pDxManager_->GetDxCommand());
 	} else {
 		// Console::LogError("RenderingPipelineCollection::DrawEntities: 3D Camera is null");
 	}
 
-	if (IsEnableCamera(_2dCamera)) {
-		for (auto& renderer : renderer2ds_) {
+	if(IsEnableCamera(_2dCamera)) {
+		for(auto& renderer : renderer2ds_) {
 			renderer->PreDraw(ecsGroup, _2dCamera, pDxManager_->GetDxCommand());
 		}
+		if(gizmo2D_)     gizmo2D_->PreDraw(ecsGroup, _2dCamera, pDxManager_->GetDxCommand());
 	} else {
 		// Console::LogError("RenderingPipelineCollection::DrawEntities: 2D Camera is null");
 	}
@@ -133,45 +137,51 @@ void RenderingPipelineCollection::DrawEntities(CameraComponent* _3dCamera, Camer
 	ECSGroup* ecsGroup = pEntityComponentSystem_->GetCurrentGroup();
 
 	/// 3dカメラが有効なら3D描画を実行
-	if (IsEnableCamera(_3dCamera)) {
-		for (auto& renderer : renderer3ds_) {
+	if(IsEnableCamera(_3dCamera)) {
+		for(auto& renderer : renderer3ds_) {
 			renderer->Draw(ecsGroup, _3dCamera, pDxManager_->GetDxCommand());
 		}
 	}
 }
 
 void RenderingPipelineCollection::DrawParticles(CameraComponent* _3dCamera) {
-	if (particleRenderer_ && IsEnableCamera(_3dCamera)) {
+	if(particleRenderer_ && IsEnableCamera(_3dCamera)) {
 		particleRenderer_->Draw(pEntityComponentSystem_->GetCurrentGroup(), _3dCamera, pDxManager_->GetDxCommand());
 	}
 }
 
-void RenderingPipelineCollection::DrawGizmos(CameraComponent* _3dCamera) {
-	//if (gizmoRenderer_ && IsEnableCamera(_3dCamera)) {
-	//	gizmoRenderer_->Draw(pEntityComponentSystem_->GetCurrentGroup(), _3dCamera, pDxManager_->GetDxCommand());
-	//}
+void RenderingPipelineCollection::DrawGizmos(CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+#ifdef DEBUG_MODE
+	if(gizmo3D_) {
+		gizmo3D_->Draw(pEntityComponentSystem_->GetCurrentGroup(), _3dCamera, pDxManager_->GetDxCommand());
+	}
+	if(gizmo2D_) {
+		gizmo2D_->Draw(pEntityComponentSystem_->GetCurrentGroup(), _2dCamera, pDxManager_->GetDxCommand());
+	}
+	Gizmo::Reset();
+#endif
 }
 
 void RenderingPipelineCollection::DrawEntities2D(CameraComponent* _2dCamera, const std::string& groupName) {
 	/// 対象のGroupを取得
 	ECSGroup* ecsGroup = groupName.empty() ? pEntityComponentSystem_->GetCurrentGroup() : pEntityComponentSystem_->GetECSGroup(groupName);
-	if (!ecsGroup) return;
+	if(!ecsGroup) return;
 
 	/// 2dカメラが有効なら2D描画を実行
-	if (IsEnableCamera(_2dCamera)) {
+	if(IsEnableCamera(_2dCamera)) {
 		// 検証用ログ
 		static int drawLogCount = 0;
-		if (drawLogCount < 10) {
+		if(drawLogCount < 10) {
 			Console::Log("[RenderingCollection] DrawEntities2D executing. Group: " + ecsGroup->GetGroupName() + " Camera: " + std::to_string((uint64_t)_2dCamera), LogCategory::Engine);
 			drawLogCount++;
 		}
 
-		for (auto& renderer : renderer2ds_) {
+		for(auto& renderer : renderer2ds_) {
 			renderer->Draw(ecsGroup, _2dCamera, pDxManager_->GetDxCommand());
 		}
 	} else {
 		static int failLogCount = 0;
-		if (failLogCount < 10) {
+		if(failLogCount < 10) {
 			std::string camInfo = _2dCamera ? "Present but invalid" : "Null";
 			Console::Log("[RenderingCollection] DrawEntities2D skipped. Group: " + ecsGroup->GetGroupName() + " Camera: " + camInfo, LogCategory::Engine);
 			failLogCount++;
@@ -186,8 +196,8 @@ void RenderingPipelineCollection::DrawSelectedPrefab(CameraComponent* _3dCamera,
 	ECSGroup* ecsGroup = pEntityComponentSystem_->GetECSGroup("Debug");
 
 	/// 3dカメラが有効なら3D描画を実行
-	if (IsEnableCamera(_3dCamera)) {
-		for (auto& renderer : renderer3ds_) {
+	if(IsEnableCamera(_3dCamera)) {
+		for(auto& renderer : renderer3ds_) {
 			renderer->Draw(ecsGroup, _3dCamera, pDxManager_->GetDxCommand());
 		}
 	}
@@ -197,11 +207,11 @@ void RenderingPipelineCollection::DrawSelectedPrefab2D(CameraComponent* _2dCamer
 	/// デバッグ用のGroupを使用する
 	std::string targetGroup = groupName.empty() ? "Debug" : groupName;
 	ECSGroup* ecsGroup = pEntityComponentSystem_->GetECSGroup(targetGroup);
-	if (!ecsGroup) return;
+	if(!ecsGroup) return;
 
 	/// 2dカメラが有効なら2D描画を実行
-	if (IsEnableCamera(_2dCamera)) {
-		for (auto& renderer : renderer2ds_) {
+	if(IsEnableCamera(_2dCamera)) {
+		for(auto& renderer : renderer2ds_) {
 			renderer->Draw(ecsGroup, _2dCamera, pDxManager_->GetDxCommand());
 		}
 	}
@@ -211,12 +221,12 @@ void RenderingPipelineCollection::DrawSelectedPrefab2D(CameraComponent* _2dCamer
 void RenderingPipelineCollection::ExecutePostProcess(const std::string& sceneTextureName) {
 	// 検証用ログ
 	static int postLogCount = 0;
-	if (postLogCount < 10) {
+	if(postLogCount < 10) {
 		Console::Log("[RenderingCollection] ExecutePostProcess for scene: " + sceneTextureName, LogCategory::Engine);
 		postLogCount++;
 	}
 
-	for (auto& postProcess : postProcesses_) {
+	for(auto& postProcess : postProcesses_) {
 		postProcess->Execute(sceneTextureName, pDxManager_->GetDxCommand(), pAssetCollection_, pEntityComponentSystem_);
 	}
 }
@@ -229,21 +239,21 @@ bool RenderingPipelineCollection::IsEnableCamera(const CameraComponent* camera) 
 	* 3, Bufferとして利用できるViewProjectionがあるか
 	*/
 
-	if (!camera) {
+	if(!camera) {
 		// static int nullCamLog = 0;
 		// if (nullCamLog < 1) { Console::Log("[RenderingCollection] IsEnableCamera: Camera is null", LogCategory::Engine); nullCamLog++; }
 		return false;
 	}
 
-	if (!camera->enable) {
+	if(!camera->enable) {
 		static int disableCamLog = 0;
-		if (disableCamLog < 10) { Console::Log("[RenderingCollection] IsEnableCamera: Camera is disabled", LogCategory::Engine); disableCamLog++; }
+		if(disableCamLog < 10) { Console::Log("[RenderingCollection] IsEnableCamera: Camera is disabled", LogCategory::Engine); disableCamLog++; }
 		return false;
 	}
 
-	if (!camera->IsMakeViewProjection()) {
+	if(!camera->IsMakeViewProjection()) {
 		static int noVPLog = 0;
-		if (noVPLog < 10) { Console::Log("[RenderingCollection] IsEnableCamera: Camera ViewProjection is not ready", LogCategory::Engine); noVPLog++; }
+		if(noVPLog < 10) { Console::Log("[RenderingCollection] IsEnableCamera: Camera ViewProjection is not ready", LogCategory::Engine); noVPLog++; }
 		return false;
 	}
 

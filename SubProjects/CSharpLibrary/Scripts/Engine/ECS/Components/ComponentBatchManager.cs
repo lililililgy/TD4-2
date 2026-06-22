@@ -166,26 +166,53 @@ static class ComponentBatchManager {
 			return batch;
 		});
 
-		// --- Animator の登録 ---
-		//RegisterConverter<Animator, Animator.BatchData>((ComponentArray<Animator> array) => {
-		//	int count = array.Count;
-		//	Animator.BatchData[] batch = new Animator.BatchData[count];
-		//	for (int i = 0; i < count; i++) {
-		//		var comp = array.Get(i);
-		//		batch[i].compId = comp.compId;
-		//	}
-		//	return batch;
-		//});
+		// --- UIGroupComponent の登録 ---
+		RegisterConverter<UIGroupComponent, UIGroupComponent.BatchData>((ComponentArray<UIGroupComponent> array) => {
+			int count = array.Count;
+			UIGroupComponent.BatchData[] batch = new UIGroupComponent.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+				batch[i].currentSelectedId = comp.currentSelectedId;
+				batch[i].isFocused = (byte)(comp.isFocused ? 1 : 0);
+				batch[i].isVisible = (byte)(comp.isVisible ? 1 : 0);
+				batch[i].parentGroupId = comp.parentGroupId;
+			}
+			return batch;
+		});
 
-		//RegisterAllocator<Animator, Animator.BatchData>((ComponentArray<Animator> array) => {
-		//	int count = array.Count;
-		//	Animator.BatchData[] batch = new Animator.BatchData[count];
-		//	for (int i = 0; i < count; i++) {
-		//		var comp = array.Get(i);
-		//		batch[i].compId = comp.compId;
-		//	}
-		//	return batch;
-		//});
+		RegisterAllocator<UIGroupComponent, UIGroupComponent.BatchData>((ComponentArray<UIGroupComponent> array) => {
+			int count = array.Count;
+			UIGroupComponent.BatchData[] batch = new UIGroupComponent.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
+
+		// --- UIElementComponent の登録 ---
+		RegisterConverter<UIElementComponent, UIElementComponent.BatchData>((ComponentArray<UIElementComponent> array) => {
+			int count = array.Count;
+			UIElementComponent.BatchData[] batch = new UIElementComponent.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+				batch[i].groupIdId = comp.groupIdId;
+				batch[i].elementIndex = comp.elementIndex;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<UIElementComponent, UIElementComponent.BatchData>((ComponentArray<UIElementComponent> array) => {
+			int count = array.Count;
+			UIElementComponent.BatchData[] batch = new UIElementComponent.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
 	}
 
 
@@ -291,6 +318,26 @@ static class ComponentBatchManager {
 				comp.useDesiredRotation = agentBatch[i].useDesiredRotation != 0;
 				comp.isAttacking = agentBatch[i].isAttacking != 0;
 				comp.targetEntityId = agentBatch[i].targetEntityId;
+			}
+		} else if (componentType == typeof(UIGroupComponent)) {
+			var uiGroupArray = (ComponentArray<UIGroupComponent>)array;
+			var uiGroupBatch = (UIGroupComponent.BatchData[])batch;
+
+			for (int i = 0; i < uiGroupBatch.Length; i++) {
+				var comp = uiGroupArray.Get(i);
+				comp.currentSelectedId = uiGroupBatch[i].currentSelectedId;
+				comp.isFocused = uiGroupBatch[i].isFocused != 0;
+				comp.isVisible = uiGroupBatch[i].isVisible != 0;
+				comp.parentGroupId = uiGroupBatch[i].parentGroupId;
+			}
+		} else if (componentType == typeof(UIElementComponent)) {
+			var uiElementArray = (ComponentArray<UIElementComponent>)array;
+			var uiElementBatch = (UIElementComponent.BatchData[])batch;
+
+			for (int i = 0; i < uiElementBatch.Length; i++) {
+				var comp = uiElementArray.Get(i);
+				comp.groupIdId = uiElementBatch[i].groupIdId;
+				comp.elementIndex = uiElementBatch[i].elementIndex;
 			}
 		}
 	}

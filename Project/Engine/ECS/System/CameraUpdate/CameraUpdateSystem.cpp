@@ -104,6 +104,8 @@ void CameraUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 }
 
 void CameraUpdateSystem::Update(ECSGroup* ecs) {
+	pMainCamera_ = nullptr;
+	pMainCamera2D_ = nullptr;
 
 	/// カメラのComponentを集める
 	ComponentArray<CameraComponent>* cameraArray = ecs->GetComponentArray<CameraComponent>();

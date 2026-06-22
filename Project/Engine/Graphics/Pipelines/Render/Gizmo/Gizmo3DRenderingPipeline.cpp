@@ -1,4 +1,4 @@
-#include "GizmoRenderingPipeline.h"
+#include "Gizmo3DRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -15,11 +15,9 @@ using namespace ONEngine;
 
 using namespace GizmoPrimitive;
 
-GizmoRenderingPipeline::GizmoRenderingPipeline() {}
+Gizmo3DRenderingPipeline::Gizmo3DRenderingPipeline() {}
 
-void GizmoRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
-	Gizmo::Initialize(static_cast<size_t>(std::pow(2, 20))); /// gizmoの初期化
-
+void Gizmo3DRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
 	{	/// wire frame pipeline
 		Shader shader;
 		shader.Initialize(shaderCompiler);
@@ -51,7 +49,6 @@ void GizmoRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManage
 		pipeline->CreatePipeline(dxm->GetDxDevice());
 	}
 
-
 	{
 		/// verticesを最大数分メモリを確保
 		maxVertexNum_ = static_cast<size_t>(std::pow(2, 18));
@@ -64,54 +61,40 @@ void GizmoRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManage
 		vbv_.BufferLocation = vertexBuffer_.Get()->GetGPUVirtualAddress();
 		vbv_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * maxVertexNum_);
 		vbv_.StrideInBytes = static_cast<UINT>(sizeof(VertexData));
-
 	}
 }
 
-void GizmoRenderingPipeline::Draw(class ECSGroup* /*ecsGroup*/, [[maybe_unused]] CameraComponent* camera, [[maybe_unused]] DxCommand* dxCommand) {
+void Gizmo3DRenderingPipeline::Draw(class ECSGroup* /*ecsGroup*/, CameraComponent* camera, DxCommand* dxCommand) {
 #ifdef DEBUG_MODE
-		/* 
-		// 特定のカメラグループのみに限定すると見えない可能性があるため一旦コメントアウト
-		if (camera->GetOwner()->GetECSGroup()->GetGroupName() != "Debug") {
-			return;
-		}
-		*/
-
-	/// ---------------------------------------------------
-	/// wire描画を行う
-	/// ---------------------------------------------------
-
-	const std::vector<Gizmo::SphereData>& wireSphereData = Gizmo::GetWireSphereData();
-	const std::vector<Gizmo::CubeData>& wireCubeData = Gizmo::GetWireCubeData();
-	const std::vector<Gizmo::LineData>& lineData = Gizmo::GetLineData();
-
-	///!< 描画対象がなければ 早期リターン
-	if (wireSphereData.empty() && wireCubeData.empty() && lineData.empty()) {
+	if (!camera || !camera->enable || !camera->IsMakeViewProjection()) {
 		return;
 	}
 
-	// 今回の描画内容をログ出力 (最初の10回)
-	static int drawLogCount = 0;
-	if (drawLogCount < 10) {
-		ONEngine::Console::Log("[Gizmo Pipeline] Drawing " + std::to_string(lineData.size()) + " lines.", ONEngine::LogCategory::Engine);
-		drawLogCount++;
+	const std::vector<Gizmo::SphereData>& wireSphere3D = Gizmo::GetWireSphereData();
+	const std::vector<Gizmo::CubeData>& wireCube3D = Gizmo::GetWireCubeData();
+	const std::vector<Gizmo::LineData>& line3D = Gizmo::GetLineData();
+
+	///!< 描画対象がなければ 早期リターン
+	if (wireSphere3D.empty() && wireCube3D.empty() && line3D.empty()) {
+		return;
 	}
 
-	std::vector<VertexData> vertices;
+	std::vector<VertexData> passVertices;
+
 	/// sphereのデータを頂点データに積む
-	for (auto& data : wireSphereData) {
-		vertices = GetSphereVertices(data.position, data.radius, data.color, 1.0f, 12); // 太さ1.0固定（必要なら拡張）
-		vertices_.insert(vertices_.end(), vertices.begin(), vertices.end());
+	for (auto& data : wireSphere3D) {
+		auto vertices = GetSphereVertices(data.position, data.radius, data.color, 1.0f, 12, false);
+		passVertices.insert(passVertices.end(), vertices.begin(), vertices.end());
 	}
 
 	/// cubeのデータを頂点データに積む
-	for (auto& data : wireCubeData) {
-		vertices = GetCubeVertices(data.position, data.size, data.rotate, data.color, 1.0f); // 太さ1.0固定
-		vertices_.insert(vertices_.end(), vertices.begin(), vertices.end());
+	for (auto& data : wireCube3D) {
+		auto vertices = GetCubeVertices(data.position, data.size, data.rotate, data.color, 1.0f, false);
+		passVertices.insert(passVertices.end(), vertices.begin(), vertices.end());
 	}
 
 	/// lineのデータを頂点データに積む
-	for (auto& data : lineData) {
+	for (auto& data : line3D) {
 		Vector4 p0 = Math::ConvertToVector4(data.startPosition, 1.0f);
 		Vector4 p1 = Math::ConvertToVector4(data.endPosition, 1.0f);
 
@@ -129,34 +112,36 @@ void GizmoRenderingPipeline::Draw(class ECSGroup* /*ecsGroup*/, [[maybe_unused]]
 		v[3].expansionDir = Vector2(1.0f, 1.0f);  // 終点・右
 
 		// Tri 1: (0, 2, 1)
-		vertices_.push_back(v[0]); vertices_.push_back(v[2]); vertices_.push_back(v[1]);
+		passVertices.push_back(v[0]); passVertices.push_back(v[2]); passVertices.push_back(v[1]);
 		// Tri 2: (1, 2, 3)
-		vertices_.push_back(v[1]); vertices_.push_back(v[2]); vertices_.push_back(v[3]);
+		passVertices.push_back(v[1]); passVertices.push_back(v[2]); passVertices.push_back(v[3]);
+	}
+
+	if (passVertices.empty()) {
+		return;
 	}
 
 	/// 超過した分を削除
-	if (vertices_.size() > maxVertexNum_) {
-		vertices_.resize(maxVertexNum_);
+	if (passVertices.size() > maxVertexNum_) {
+		passVertices.resize(maxVertexNum_);
 	}
 
-
-	std::memcpy(mappingData_, vertices_.data(), sizeof(VertexData) * vertices_.size());
+	std::memcpy(mappingData_, passVertices.data(), sizeof(VertexData) * passVertices.size());
 
 	/// 描画命令を行う
 	auto commandList = dxCommand->GetCommandList();
 	auto wirePipeline = pipelines_[Wire].get();
 	wirePipeline->SetPipelineStateForCommandList(dxCommand);
 
-	commandList->IASetVertexBuffers(0, 1, &vbv_);
+	D3D12_VERTEX_BUFFER_VIEW vbv = vbv_;
+	vbv.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * passVertices.size());
+
+	commandList->IASetVertexBuffers(0, 1, &vbv);
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	camera->GetViewProjectionBuffer().BindForGraphicsCommandList(commandList, 0);
 
 	/// draw call
-	commandList->DrawInstanced(static_cast<UINT>(vertices_.size()), 1, 0, 0);
+	commandList->DrawInstanced(static_cast<UINT>(passVertices.size()), 1, 0, 0);
 
-	/// 描画データのクリア
-	Gizmo::Reset();
-	vertices_.clear();
 #endif _DEBUG
 }
-

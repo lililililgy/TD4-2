@@ -23,27 +23,11 @@
             "type": "Transform"
         },
         {
-            "Test": {
-                "testBool": false,
-                "testFloat": 63.0,
-                "testFloats": 22.0,
-                "testInt": 0,
-                "testString": "",
-                "testVector2": {
-                    "x": 0.0,
-                    "y": 0.0
-                },
-                "testVector3": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "testVector4": {
-                    "w": 0.0,
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                }
+            "MorayEelPot": {
+                "fireInterval": 0.0,
+                "firePower": 0.0,
+                "morayEelPrefabName": "",
+                "rotateZSpeed": 0.0
             },
             "type": "Variables"
         },
@@ -52,14 +36,14 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "Test"
+                    "name": "MorayEelPot"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "b10543cdb306d928aea89dbdfd288a13",
-    "name": "NewEntity",
+    "guid": "458601eacf3e3972bc10363de285eb63",
+    "name": "MorayEelPot",
     "parentGuid": null,
-    "prefabName": ""
+    "prefabName": "MorayEelPot"
 }

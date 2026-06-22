@@ -102,6 +102,9 @@ public:
 	/// @return 作成したDomainへのポインタ
 	MonoDomain* CreateReloadDomain();
 	
+	/// @brief 保留中の古いDomainをアンロードする
+	void ClearPendingDomains();
+	
 	void UpdateAiIntents(void* data, int count, float deltaTime, const std::string& groupName);
 
 	/// @brief C#のBlackboardManagerにイベント完了を通知する
@@ -134,9 +137,11 @@ private:
 
 	std::string currentDllPath_;
 
-	MonoDomain* domain_;
+	MonoDomain* rootDomain_ = nullptr;
+	MonoDomain* domain_ = nullptr;
 	MonoImage* image_;
 	MonoAssembly* assembly_ = nullptr;
+	std::vector<MonoDomain*> domainsToUnload_;
 
 	bool isHotReloadRequest_;
 	int32_t domainReloadCounter_; /// domainのリロード回数

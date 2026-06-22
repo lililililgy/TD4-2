@@ -50,6 +50,16 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
                 if constexpr (std::is_same_v<T, std::string>) {
                     MonoString* ms = mono_string_new(mono_domain_get(), arg.c_str());
                     mono_field_set_value(obj, field, ms);
+                } else if constexpr (std::is_same_v<T, std::shared_ptr<ONEngine::Variables::GenericObject>>) {
+                    MonoObject* structObj = mono_field_get_value_object(mono_domain_get(), field, obj);
+                    if (structObj && arg) {
+                        MonoClass* structClass = mono_object_get_class(structObj);
+                        ONEngine::Variables::VarToMonoObject(structObj, structClass, arg);
+                        if (mono_class_is_valuetype(structClass)) {
+                            void* unboxed = mono_object_unbox(structObj);
+                            mono_field_set_value(obj, field, unboxed);
+                        }
+                    }
                 } else {
                     mono_field_set_value(obj, field, (void*)&arg);
                 }

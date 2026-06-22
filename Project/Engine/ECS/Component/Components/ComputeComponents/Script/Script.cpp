@@ -1,4 +1,4 @@
-﻿#include "Script.h"
+#include "Script.h"
 
 
 /// engine
@@ -183,6 +183,7 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 
 	for(size_t i = 0; i < scriptList.size(); i++) {
 		auto& script = scriptList[i];
+		ImGui::PushID(script.scriptName.c_str());
 
 		ptrLable = "##" + std::to_string(reinterpret_cast<uintptr_t>(&script));
 
@@ -294,6 +295,7 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 		if(!enable) {
 			ImGui::PopStyleColor(1);
 		}
+		ImGui::PopID();
 	}
 
 

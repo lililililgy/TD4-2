@@ -17,6 +17,8 @@
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/DissolveMeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Sprite/SpriteRenderer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
 #include "Engine/Script/MonoScriptEngine.h"
 
 
@@ -182,6 +184,33 @@ void ONEngine::ComponentApplyFuncs::ApplyAnimator(void* element, ECSGroup* ecsGr
     }
 }
 
+void ONEngine::ComponentApplyFuncs::ApplyUIGroup(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<UIGroupComponent::BatchData*>(element);
+	auto* array = ecsGroup->GetComponentArray<UIGroupComponent>();
+	if (!CheckComponentArrayEnable(array)) return;
+
+	if (UIGroupComponent* comp = array->GetComponent(data->compId)) {
+		comp->isFocused = (data->isFocused != 0);
+		comp->isVisible = (data->isVisible != 0);
+		comp->currentSelected = ecsGroup->GetEntity(data->currentSelectedId);
+		comp->parentGroup = ecsGroup->GetEntity(data->parentGroupId);
+		if (comp->currentSelected) comp->currentSelectedGuid = comp->currentSelected->GetGuid();
+		if (comp->parentGroup) comp->parentGroupGuid = comp->parentGroup->GetGuid();
+	}
+}
+
+void ONEngine::ComponentApplyFuncs::ApplyUIElement(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<UIElementComponent::BatchData*>(element);
+	auto* array = ecsGroup->GetComponentArray<UIElementComponent>();
+	if (!CheckComponentArrayEnable(array)) return;
+
+	if (UIElementComponent* comp = array->GetComponent(data->compId)) {
+		comp->elementIndex = data->elementIndex;
+		comp->groupEntity = ecsGroup->GetEntity(data->groupIdId);
+		if (comp->groupEntity) comp->groupId = comp->groupEntity->GetGuid();
+	}
+}
+
 void ONEngine::ComponentApplyFuncs::FetchTransform(void* element, ECSGroup* ecsGroup) {
 	auto* data = static_cast<TransformBatch*>(element);
 	auto* array = ecsGroup->GetComponentArray<Transform>();
@@ -300,6 +329,30 @@ void ONEngine::ComponentApplyFuncs::FetchAnimator(void* element, ECSGroup* ecsGr
     }
 }
 
+void ONEngine::ComponentApplyFuncs::FetchUIGroup(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<UIGroupComponent::BatchData*>(element);
+	auto* array = ecsGroup->GetComponentArray<UIGroupComponent>();
+	if (!CheckComponentArrayEnable(array)) return;
+
+	if (UIGroupComponent* comp = array->GetComponent(data->compId)) {
+		data->isFocused = comp->isFocused ? 1 : 0;
+		data->isVisible = comp->isVisible ? 1 : 0;
+		data->currentSelectedId = comp->currentSelected ? comp->currentSelected->GetId() : 0;
+		data->parentGroupId = comp->parentGroup ? comp->parentGroup->GetId() : 0;
+	}
+}
+
+void ONEngine::ComponentApplyFuncs::FetchUIElement(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<UIElementComponent::BatchData*>(element);
+	auto* array = ecsGroup->GetComponentArray<UIElementComponent>();
+	if (!CheckComponentArrayEnable(array)) return;
+
+	if (UIElementComponent* comp = array->GetComponent(data->compId)) {
+		data->elementIndex = comp->elementIndex;
+		data->groupIdId = comp->groupEntity ? comp->groupEntity->GetId() : 0;
+	}
+}
+
 ComponentApplyFunc ComponentApplyFuncs::GetApplyFunc(MonoClass* monoClass) {
 	auto itr = gApplyFuncMap.find(monoClass);
 	if(itr == gApplyFuncMap.end()) {
@@ -381,6 +434,24 @@ void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
 			gApplyFuncMap[monoClass] = ApplyAnimator;
 			gFetchFuncMap[monoClass] = FetchAnimator;
 			gComponentBatchSize[monoClass] = sizeof(AnimatorBatch);
+		}
+	}
+
+	{	/// UIGroupComponent
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "UIGroupComponent");
+		if (monoClass) {
+			gApplyFuncMap[monoClass] = ApplyUIGroup;
+			gFetchFuncMap[monoClass] = FetchUIGroup;
+			gComponentBatchSize[monoClass] = sizeof(UIGroupComponent::BatchData);
+		}
+	}
+
+	{	/// UIElementComponent
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "UIElementComponent");
+		if (monoClass) {
+			gApplyFuncMap[monoClass] = ApplyUIElement;
+			gFetchFuncMap[monoClass] = FetchUIElement;
+			gComponentBatchSize[monoClass] = sizeof(UIElementComponent::BatchData);
 		}
 	}
 }

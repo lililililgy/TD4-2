@@ -1,4 +1,4 @@
-#include "CameraComponent.h"
+﻿#include "CameraComponent.h"
 
 #include <array>
 
@@ -226,6 +226,8 @@ CameraComponent::CameraComponent() {
 	cameraType_ = static_cast<int>(CameraType::Type3D);
 	isDrawFrustum_ = false;
 	orthographicSize_ = EngineConfig::kWindowSize;
+	fogParams_.fogStart = 0.0f;
+	fogParams_.fogEnd = 10000.0f;
 }
 CameraComponent::~CameraComponent() {}
 

@@ -185,6 +185,33 @@ public class BehaviorTree
     }
 
     /// <summary>
+    /// deltaTime を受け取るオーバーロード（AIUpdater からの呼び出し用）。
+    /// </summary>
+    public void Tick(float deltaTime) => Tick();
+
+    /// <summary>
+    /// Blackboard から文字列キーで値を取得するヘルパー。
+    /// </summary>
+    public T GetBlackboardValue<T>(string key, T defaultValue = default)
+    {
+        uint hash = BehaviorTreeLoader.HashString(key);
+        object result;
+        if (typeof(T) == typeof(float))
+            result = Blackboard.GetFloat(hash, defaultValue is float f ? f : 0f);
+        else if (typeof(T) == typeof(int))
+            result = Blackboard.GetInt(hash, defaultValue is int i ? i : 0);
+        else if (typeof(T) == typeof(bool))
+            result = Blackboard.GetBool(hash, defaultValue is bool b ? b : false);
+        else if (typeof(T) == typeof(Vector3))
+            result = Blackboard.GetVector3(hash);
+        else if (typeof(T) == typeof(string))
+            result = Blackboard.GetString(hash, defaultValue is string s ? s : "");
+        else
+            result = Blackboard.GetObject<object>(hash);
+        return result is T typedResult ? typedResult : defaultValue;
+    }
+
+    /// <summary>
     /// 毎フレーム呼び出される、ビヘイビアツリーの実行エントリーポイント。
     /// </summary>
     public void Tick()

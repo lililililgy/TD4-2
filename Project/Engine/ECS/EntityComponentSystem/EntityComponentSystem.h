@@ -144,6 +144,8 @@ uint64_t InternalGetComponent(int32_t entityId, MonoString* monoTypeName, MonoSt
 /// @return 取得した名前の文字列ポインタ
 const char* InternalGetName(int32_t entityId, MonoString* groupName);
 
+const char* InternalGetElementId(uint32_t compId, MonoString* groupName);
+
 /// @brief エンティティの命名
 /// @param entityId 対象のエンティティID
 /// @param name 新規の名前
