@@ -14,7 +14,7 @@
             "fogStart": 0.0,
             "fovY": 0.699999988079071,
             "isDrawFrustum": false,
-            "isMainCamera": false,
+            "isMainCamera": true,
             "nearClip": 0.10000000149011612,
             "type": "CameraComponent"
         },
@@ -40,15 +40,22 @@
             "type": "Transform"
         },
         {
-            "PlayerFollowCamera": {
-                "maxSmoothSpeed_": 26.0,
-                "smoothTime_": 0.8999999761581421
-            },
+            "DebugCamera": {},
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "DebugCamera"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "476d1cadb33306de007290e0c4acae92",
-    "name": "2DCamera",
+    "guid": "5777e8cd7fb89b14e6ba044b8f737e69",
+    "name": "DebugCamera",
     "parentGuid": null,
     "prefabName": ""
 }

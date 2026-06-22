@@ -13,7 +13,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": -150.0,
                 "z": 0.0
             },
             "rotate": {
@@ -23,13 +23,14 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 200.0,
+                "y": 100.0,
+                "z": 200.0
             },
             "type": "Transform"
         },
         {
+            "UITest2": {},
             "type": "Variables"
         },
         {
@@ -38,6 +39,43 @@
                 "DownArrow": "ce3fae6a70176ecc63dbd692f6c70a5f"
             },
             "type": "UILinkNavigationComponent"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "UITest2"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "00000000000000000000000000000000",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "27c4c5cbeffed0c940b7cb0d03571fba",

@@ -23,13 +23,14 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 200.0,
+                "y": 100.0,
+                "z": 200.0
             },
             "type": "Transform"
         },
         {
+            "UITest1": {},
             "type": "Variables"
         },
         {
@@ -38,6 +39,43 @@
                 "DownArrow": "ee5c70b4044749804f7df940d6af0990"
             },
             "type": "UILinkNavigationComponent"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "UITest1"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "00000000000000000000000000000000",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "163cdc0eb6406f3922270ee1bd6b2d91",

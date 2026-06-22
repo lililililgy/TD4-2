@@ -1,4 +1,4 @@
-#include "ProjectWindow.h"
+﻿#include "ProjectWindow.h"
 
 /// std
 #include <filesystem>
@@ -242,10 +242,10 @@ void ProjectWindow::ShowImGui() {
 					UpdateFileCache(targetPath_);
 
 					// スクリプト作成後にPremakeを実行してプロジェクトを更新 (Projectフォルダからの相対パス)
-					system("powershell.exe -ExecutionPolicy Bypass -File ../SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
+					//system("powershell.exe -ExecutionPolicy Bypass -File ../SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
 
 					// プロジェクトが更新されたのでホットリロードを要求（ビルドは手動または起動時に行われる想定）
-					HotReloadManager::GetInstance().RequestScriptHotReload();
+					//HotReloadManager::GetInstance().RequestScriptHotReload();
 				}
 			} catch(...) {}
 			showCreateScriptPopup_ = false;

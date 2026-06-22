@@ -1,34 +1,14 @@
 {
     "entities": [
         {
+            "guid": "5777e8cd7fb89b14e6ba044b8f737e69",
+            "parentGuid": null,
+            "path": "./Debug/5777e8cd7fb89b14e6ba044b8f737e69.entity"
+        },
+        {
             "guid": "476d1cadb33306de007290e0c4acae92",
             "parentGuid": null,
             "path": "./Debug/476d1cadb33306de007290e0c4acae92.entity"
-        },
-        {
-            "guid": "bea1929225ec333549f4eb67e2733910",
-            "parentGuid": null,
-            "path": "./Debug/bea1929225ec333549f4eb67e2733910.entity"
-        },
-        {
-            "guid": "177d135d1deab34b0aa6f1dec9339850",
-            "parentGuid": null,
-            "path": "./Debug/177d135d1deab34b0aa6f1dec9339850.entity"
-        },
-        {
-            "guid": "156f4521b16ab33255b9ad440b5bba8d",
-            "parentGuid": null,
-            "path": "./Debug/156f4521b16ab33255b9ad440b5bba8d.entity"
-        },
-        {
-            "guid": "7148f647b13936f5ab0c4016a48c12fd",
-            "parentGuid": null,
-            "path": "./Debug/7148f647b13936f5ab0c4016a48c12fd.entity"
-        },
-        {
-            "guid": "4f20d8e28f3757e9c643a0cc627987db",
-            "parentGuid": null,
-            "path": "./Debug/4f20d8e28f3757e9c643a0cc627987db.entity"
         }
     ]
 }
