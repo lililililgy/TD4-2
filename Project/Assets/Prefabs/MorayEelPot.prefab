@@ -10,15 +10,15 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 0.6085065603256226,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": 0.7935488224029541
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 256.0,
+                "y": 256.0,
+                "z": 256.0
             },
             "type": "Transform"
         },
@@ -31,6 +31,8 @@
             "MorayEelPot": {
                 "fireInterval": 3.0,
                 "firePower": 812.0,
+                "fireScale": 1.5,
+                "fireScaleTimer": 0.6000000238418579,
                 "morayEelPrefabName": "MorayEel",
                 "rotateZSpeed": 0.4000000059604645
             },
@@ -74,7 +76,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "8901d10fa325c28df1cdf0448ad464b3",
+    "guid": "7c9d0639be578de0009431e0629afde0",
     "name": "MorayEelPot",
     "parentGuid": null,
     "prefabName": "MorayEelPot"

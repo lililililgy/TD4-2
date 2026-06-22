@@ -3,12 +3,13 @@
     "components": [
         {
             "MorayEelPot": {
-                "firePower": 812.0
+                "fireScale": 1.5,
+                "fireScaleTimer": 0.6000000238418579
             },
             "type": "Variables"
         }
     ],
-    "guid": "8901d10fa325c28df1cdf0448ad464b3",
+    "guid": "7c9d0639be578de0009431e0629afde0",
     "name": "MorayEelPot",
     "parentGuid": null,
     "prefabName": "MorayEelPot"
