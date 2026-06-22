@@ -2,21 +2,21 @@
     "active": true,
     "components": [
         {
-            "rotate": {
-                "w": 0.4359589219093323,
-                "z": -0.8999665379524231
-            },
             "scale": {
-                "x": 64.0,
-                "y": 128.0,
-                "z": 63.999996185302734
+                "x": 8.0,
+                "y": 16.0,
+                "z": 7.999999523162842
             },
             "type": "Transform"
         },
         {
             "PlayerDashState": {
-                "accel_": 1000.0,
-                "maxSpeed_": 2000.0
+                "accel_": 256.0,
+                "maxSpeed_": 500.0
+            },
+            "PlayerNormalState": {
+                "accel_": 282.0,
+                "maxSpeed_": 209.0
             },
             "PlayerStateComponent": {
                 "currentStateName_": "PlayerNormalState"

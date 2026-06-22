@@ -9,6 +9,66 @@
                     "matrixCalcFlags": 7,
                     "position": {
                         "x": 0.0,
+                        "y": 0.1970001608133316,
+                        "z": -34.65500259399414
+                    },
+                    "rotate": {
+                        "w": 0.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 0.02199997939169407,
+                        "z": 0.9999997615814209
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "48e6a5389d60e53479bdb951ce8872d1",
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": 32.0,
+                                "y": 1.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                }
+            ],
+            "guid": "efda3cd83c84909f0afd9cebfa57fa63",
+            "name": "water surface",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "prefabName": ""
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
                         "y": 0.3460000157356262,
                         "z": 0.0
                     },
@@ -69,8 +129,8 @@
                     "matrixCalcFlags": 7,
                     "position": {
                         "x": 0.0,
-                        "y": -0.15499983727931976,
-                        "z": 0.0
+                        "y": -0.164000004529953,
+                        "z": -18.69500732421875
                     },
                     "rotate": {
                         "w": 0.0,
@@ -92,12 +152,12 @@
                     "enable": 1,
                     "material": {
                         "baseColor": {
-                            "w": 0.4000000059604645,
-                            "x": 0.23000000417232513,
+                            "w": 0.4440000057220459,
+                            "x": 1.0,
                             "y": 1.0,
-                            "z": 0.0
+                            "z": 1.0
                         },
-                        "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
+                        "baseTextureGuid": "ec07eb05f4f3ec5545f67da0e397067e",
                         "guid": "00000000000000000000000000000000",
                         "normalTextureGuid": "00000000000000000000000000000000",
                         "postEffectFlags": 0,
@@ -120,6 +180,126 @@
             "name": "underwater",
             "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
             "prefabName": ""
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": -0.49600014090538025,
+                        "z": -18.69500732421875
+                    },
+                    "rotate": {
+                        "w": 0.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 0.019999999552965164,
+                        "z": 0.9999997615814209
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "7307678cadf152ea606981d76f7043e6",
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": 8.0,
+                                "y": 1.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                }
+            ],
+            "guid": "52857c49748063e8359a78a714ddf31c",
+            "name": "sand",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "prefabName": ""
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 32.0
+                    },
+                    "rotate": {
+                        "w": 0.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "960ec2345ab1ab75a1c74ef79b962c75",
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": 8.0,
+                                "y": 8.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                }
+            ],
+            "guid": "d3fce46966a69c4d0dd9ac79637ca86a",
+            "name": "uvChecker",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "prefabName": ""
         }
     ],
     "components": [
@@ -129,7 +309,7 @@
             "position": {
                 "x": 0.0,
                 "y": 0.0,
-                "z": 32.0
+                "z": 0.0
             },
             "rotate": {
                 "w": 0.0,
@@ -146,33 +326,6 @@
         },
         {
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "material": {
-                "baseColor": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "baseTextureGuid": "960ec2345ab1ab75a1c74ef79b962c75",
-                "guid": "00000000000000000000000000000000",
-                "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 0,
-                "uvTransform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "rotate": 0.0,
-                    "scale": {
-                        "x": 10.0,
-                        "y": 10.0
-                    }
-                }
-            },
-            "type": "SpriteRenderer"
         }
     ],
     "guid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
