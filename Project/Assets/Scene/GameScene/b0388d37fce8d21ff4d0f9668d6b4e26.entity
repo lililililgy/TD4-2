@@ -1,5 +1,28 @@
 {
     "active": true,
+    "components": [
+        {
+            "position": {
+                "x": 6033.60400390625,
+                "y": -6834.7119140625
+            },
+            "rotate": {
+                "w": 0.4359589219093323,
+                "z": -0.8999665379524231
+            },
+            "type": "Transform"
+        },
+        {
+            "PlayerDashState": {
+                "accel_": 1500.0,
+                "maxSpeed_": 4000.0
+            },
+            "PlayerStateComponent": {
+                "currentStateName_": "PlayerNormalState"
+            },
+            "type": "Variables"
+        }
+    ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
     "name": "Player",
     "parentGuid": null,

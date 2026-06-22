@@ -22,9 +22,9 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 6014.9931640625,
+                "y": -6820.01025390625,
+                "z": 1.4156103134155273e-06
             },
             "rotate": {
                 "w": 1.0,
@@ -41,7 +41,7 @@
         },
         {
             "PlayerFollowCamera": {
-                "maxSmoothSpeed_": 26.0,
+                "maxSmoothSpeed_": 72.0,
                 "offset_": {
                     "x": 0.0,
                     "y": 0.0,

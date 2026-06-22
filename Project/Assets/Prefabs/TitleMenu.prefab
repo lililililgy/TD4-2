@@ -8,15 +8,7 @@
                     "active": true,
                     "components": [
                         {
-                            "elementId": "start",
-                            "elementIndex": 0,
                             "enable": 1,
-                            "groupId": "6edc7f58db76d6a42f6cdc90c4a5ef78",
-                            "type": "UIElementComponent"
-                        },
-                        {
-                            "enable": 1,
-                            "matrixCalcFlags": 7,
                             "position": {
                                 "x": 0.0,
                                 "y": 0.0,
@@ -29,239 +21,117 @@
                                 "z": 0.0
                             },
                             "scale": {
-                                "x": 200.0,
-                                "y": 100.0,
-                                "z": 200.0
-                            },
-                            "type": "Transform"
-                        },
-                        {
-                            "UITest1": {},
-                            "type": "Variables"
-                        },
-                        {
-                            "enable": 1,
-                            "links": {
-                                "DownArrow": "ee5c70b4044749804f7df940d6af0990"
-                            },
-                            "type": "UILinkNavigationComponent"
-                        },
-                        {
-                            "enable": 1,
-                            "scripts": [
-                                {
-                                    "enable": true,
-                                    "name": "UITest1"
-                                }
-                            ],
-                            "type": "Script"
-                        },
-                        {
-                            "enable": 1,
-                            "material": {
-                                "baseColor": {
-                                    "w": 1.0,
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                },
-                                "baseTextureGuid": "00000000000000000000000000000000",
-                                "guid": "00000000000000000000000000000000",
-                                "normalTextureGuid": "00000000000000000000000000000000",
-                                "postEffectFlags": 0,
-                                "uvTransform": {
-                                    "position": {
-                                        "x": 0.0,
-                                        "y": 0.0
-                                    },
-                                    "rotate": 0.0,
-                                    "scale": {
-                                        "x": 1.0,
-                                        "y": 1.0
-                                    }
-                                }
-                            },
-                            "type": "SpriteRenderer"
-                        }
-                    ],
-                    "guid": "163cdc0eb6406f3922270ee1bd6b2d91",
-                    "name": "Element_0",
-                    "parentGuid": "03be9daad74827ccb0679716d94d989f",
-                    "prefabName": ""
-                },
-                {
-                    "active": true,
-                    "components": [
-                        {
-                            "elementId": "option",
-                            "elementIndex": 1,
-                            "enable": 1,
-                            "groupId": "6edc7f58db76d6a42f6cdc90c4a5ef78",
-                            "type": "UIElementComponent"
-                        },
-                        {
-                            "enable": 1,
-                            "matrixCalcFlags": 7,
-                            "position": {
-                                "x": 0.0,
-                                "y": -150.0,
-                                "z": 0.0
-                            },
-                            "rotate": {
-                                "w": 1.0,
-                                "x": 0.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            },
-                            "scale": {
-                                "x": 200.0,
-                                "y": 100.0,
-                                "z": 200.0
-                            },
-                            "type": "Transform"
-                        },
-                        {
-                            "UITest2": {},
-                            "type": "Variables"
-                        },
-                        {
-                            "enable": 1,
-                            "links": {
-                                "DownArrow": "ce3fae6a70176ecc63dbd692f6c70a5f"
-                            },
-                            "type": "UILinkNavigationComponent"
-                        },
-                        {
-                            "enable": 1,
-                            "scripts": [
-                                {
-                                    "enable": true,
-                                    "name": "UITest2"
-                                }
-                            ],
-                            "type": "Script"
-                        },
-                        {
-                            "enable": 1,
-                            "material": {
-                                "baseColor": {
-                                    "w": 1.0,
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                },
-                                "baseTextureGuid": "00000000000000000000000000000000",
-                                "guid": "00000000000000000000000000000000",
-                                "normalTextureGuid": "00000000000000000000000000000000",
-                                "postEffectFlags": 0,
-                                "uvTransform": {
-                                    "position": {
-                                        "x": 0.0,
-                                        "y": 0.0
-                                    },
-                                    "rotate": 0.0,
-                                    "scale": {
-                                        "x": 1.0,
-                                        "y": 1.0
-                                    }
-                                }
-                            },
-                            "type": "SpriteRenderer"
-                        }
-                    ],
-                    "guid": "27c4c5cbeffed0c940b7cb0d03571fba",
-                    "name": "Element_1",
-                    "parentGuid": "03be9daad74827ccb0679716d94d989f",
-                    "prefabName": ""
-                },
-                {
-                    "active": true,
-                    "components": [
-                        {
-                            "elementId": "exit",
-                            "elementIndex": 2,
-                            "enable": 1,
-                            "groupId": "6edc7f58db76d6a42f6cdc90c4a5ef78",
-                            "type": "UIElementComponent"
-                        },
-                        {
-                            "enable": 1,
-                            "matrixCalcFlags": 7,
-                            "position": {
-                                "x": 0.0,
-                                "y": -300.0,
-                                "z": 0.0
-                            },
-                            "rotate": {
-                                "w": 1.0,
-                                "x": 0.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            },
-                            "scale": {
-                                "x": 200.0,
-                                "y": 100.0,
+                                "x": 1.0,
+                                "y": 1.0,
                                 "z": 1.0
                             },
                             "type": "Transform"
                         },
                         {
-                            "UITest3": {},
-                            "type": "Variables"
+                            "elementId": "start",
+                            "elementIndex": 0,
+                            "enable": 1,
+                            "groupId": "03be9daad74827ccb0679716d94d989f",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {
+                                "DownArrow": "27c4c5cbeffed0c940b7cb0d03571fba"
+                            },
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "guid": "163cdc0eb6406f3922270ee1bd6b2d91",
+                    "name": "Element_0",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "option",
+                            "elementIndex": 1,
+                            "enable": 1,
+                            "groupId": "03be9daad74827ccb0679716d94d989f",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {
+                                "DownArrow": "5fe3bcba81b78feca92d90bfa157f348"
+                            },
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "guid": "27c4c5cbeffed0c940b7cb0d03571fba",
+                    "name": "Element_1",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "exit",
+                            "elementIndex": 2,
+                            "enable": 1,
+                            "groupId": "03be9daad74827ccb0679716d94d989f",
+                            "type": "UIElementComponent"
                         },
                         {
                             "enable": 1,
                             "links": {},
                             "type": "UILinkNavigationComponent"
-                        },
-                        {
-                            "enable": 1,
-                            "scripts": [
-                                {
-                                    "enable": true,
-                                    "name": "UITest3"
-                                }
-                            ],
-                            "type": "Script"
-                        },
-                        {
-                            "enable": 1,
-                            "material": {
-                                "baseColor": {
-                                    "w": 1.0,
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                },
-                                "baseTextureGuid": "00000000000000000000000000000000",
-                                "guid": "00000000000000000000000000000000",
-                                "normalTextureGuid": "00000000000000000000000000000000",
-                                "postEffectFlags": 0,
-                                "uvTransform": {
-                                    "position": {
-                                        "x": 0.0,
-                                        "y": 0.0
-                                    },
-                                    "rotate": 0.0,
-                                    "scale": {
-                                        "x": 1.0,
-                                        "y": 1.0
-                                    }
-                                }
-                            },
-                            "type": "SpriteRenderer"
                         }
                     ],
                     "guid": "5fe3bcba81b78feca92d90bfa157f348",
                     "name": "Element_2",
-                    "parentGuid": "03be9daad74827ccb0679716d94d989f",
                     "prefabName": ""
                 }
             ],
             "components": [
                 {
                     "enable": 1,
-                    "matrixCalcFlags": 7,
                     "position": {
                         "x": 0.0,
                         "y": 0.0,
@@ -281,9 +151,6 @@
                     "type": "Transform"
                 },
                 {
-                    "type": "Variables"
-                },
-                {
                     "currentSelected": "",
                     "enable": 1,
                     "isFocused": true,
@@ -294,14 +161,12 @@
             ],
             "guid": "03be9daad74827ccb0679716d94d989f",
             "name": "Group_3",
-            "parentGuid": "80288fb15cf1d0e57e6db44825a89259",
             "prefabName": ""
         }
     ],
     "components": [
         {
             "enable": 1,
-            "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
                 "y": 0.0,
@@ -319,13 +184,9 @@
                 "z": 1.0
             },
             "type": "Transform"
-        },
-        {
-            "type": "Variables"
         }
     ],
-    "guid": "80288fb15cf1d0e57e6db44825a89259",
+    "guid": "d82b7b854087908ad8536f00849664aa",
     "name": "TitleMenu",
-    "parentGuid": null,
-    "prefabName": "TitleMenu"
+    "prefabName": ""
 }

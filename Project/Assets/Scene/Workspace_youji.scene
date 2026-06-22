@@ -34,6 +34,11 @@
             "guid": "5fe3bcba81b78feca92d90bfa157f348",
             "parentGuid": "03be9daad74827ccb0679716d94d989f",
             "path": "./Workspace_youji/5fe3bcba81b78feca92d90bfa157f348.entity"
+        },
+        {
+            "guid": "4be07d5e125dc5c1d46eb613c73b31e3",
+            "parentGuid": null,
+            "path": "./Workspace_youji/4be07d5e125dc5c1d46eb613c73b31e3.entity"
         }
     ]
 }

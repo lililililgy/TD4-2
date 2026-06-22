@@ -41,6 +41,9 @@
         },
         {
             "DebugCamera": {},
+            "PlayerFollowCamera": {
+                "maxSmoothSpeed_": 72.0
+            },
             "type": "Variables"
         },
         {
