@@ -1,0 +1,44 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "CloudManager": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "CloudManager"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "90b92e98ad155b7e29a02d012e606be1",
+    "name": "cloudManager",
+    "parentGuid": "849e0e74c812e269283f6ea848be094c",
+    "prefabName": ""
+}
