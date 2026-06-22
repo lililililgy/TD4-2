@@ -2,7 +2,7 @@
     "active": true,
     "components": [
         {
-            "cameraType": 1,
+            "cameraType": 0,
             "enable": 1,
             "farClip": 1000.0,
             "fogColor": {
@@ -13,7 +13,7 @@
             "fogEnd": 10000.0,
             "fogStart": 0.0,
             "fovY": 0.699999988079071,
-            "isDrawFrustum": false,
+            "isDrawFrustum": true,
             "isMainCamera": true,
             "nearClip": 0.10000000149011612,
             "type": "CameraComponent"
@@ -22,15 +22,15 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": -34.11201477050781,
+                "y": -1.8702447414398193,
+                "z": -114.36476135253906
             },
             "rotate": {
-                "w": 0.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "w": 0.9825399518013,
+                "x": 0.13345469534397125,
+                "y": -0.1284547746181488,
+                "z": 0.01744752749800682
             },
             "scale": {
                 "x": 1.0,
@@ -40,7 +40,25 @@
             "type": "Transform"
         },
         {
-            "DebugCamera": {},
+            "DebugCamera": {
+                "eulerAngles_": {
+                    "x": -0.6600000858306885,
+                    "y": 0.14000000059604645,
+                    "z": 0.0
+                },
+                "isActive_": true,
+                "moveSpeed_": 0.05000000074505806,
+                "position_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "velocity_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
             "PlayerFollowCamera": {
                 "maxSmoothSpeed_": 72.0
             },

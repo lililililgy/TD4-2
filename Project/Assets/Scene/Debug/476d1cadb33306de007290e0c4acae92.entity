@@ -4,7 +4,7 @@
         {
             "cameraType": 1,
             "enable": 1,
-            "farClip": 1000.0,
+            "farClip": 100.0,
             "fogColor": {
                 "x": 0.0,
                 "y": 0.0,
@@ -14,7 +14,7 @@
             "fogStart": 0.0,
             "fovY": 0.699999988079071,
             "isDrawFrustum": false,
-            "isMainCamera": false,
+            "isMainCamera": true,
             "nearClip": 0.10000000149011612,
             "type": "CameraComponent"
         },
