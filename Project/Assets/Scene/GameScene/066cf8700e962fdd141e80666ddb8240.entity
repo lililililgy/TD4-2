@@ -22,9 +22,9 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 6014.9931640625,
-                "y": -6820.01025390625,
-                "z": 1.4156103134155273e-06
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
             },
             "rotate": {
                 "w": 1.0,
@@ -33,9 +33,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 0.08699457347393036,
+                "y": 0.08699432760477066,
+                "z": 0.08699432760477066
             },
             "type": "Transform"
         },
@@ -47,7 +47,7 @@
                     "y": 0.0,
                     "z": 0.0
                 },
-                "smoothTime_": 0.8999999761581421,
+                "smoothTime_": 20.899999618530273,
                 "targetName_": "Player"
             },
             "type": "Variables"
@@ -64,7 +64,7 @@
         }
     ],
     "guid": "066cf8700e962fdd141e80666ddb8240",
-    "name": "Camera",
+    "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""
 }

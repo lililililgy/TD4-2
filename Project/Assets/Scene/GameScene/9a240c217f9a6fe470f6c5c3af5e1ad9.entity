@@ -1,5 +1,13 @@
 {
     "active": true,
+    "components": [
+        {
+            "scale": {
+                "x": 5000.0
+            },
+            "type": "Transform"
+        }
+    ],
     "guid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
     "name": "Background",
     "parentGuid": null,
