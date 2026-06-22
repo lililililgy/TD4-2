@@ -40,7 +40,25 @@
             "type": "Transform"
         },
         {
-            "DebugCamera": {},
+            "DebugCamera": {
+                "eulerAngles_": {
+                    "x": -0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "isActive_": true,
+                "moveSpeed_": 0.05000000074505806,
+                "position_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "velocity_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
             "PlayerFollowCamera": {
                 "maxSmoothSpeed_": 72.0
             },
