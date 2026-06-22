@@ -96,6 +96,14 @@ private:
 	std::string m_CurrentPrefabPath = "";
 	std::string windowName_;
 	std::unordered_map<unsigned long long, std::vector<bool>> m_SelectedKeysMap;
+
+	enum class KeyFilter {
+		All,
+		Keyboard,
+		Controller,
+		Mouse
+	};
+	KeyFilter m_CurrentKeyFilter = KeyFilter::All;
 };
 
 } /// namespace Editor

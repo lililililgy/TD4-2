@@ -23,6 +23,11 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animation/AnimationPlayer.h"
 
+/// UI
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UILinkNavigationComponent.h"
+
 /// renderer
 #include "Engine/ECS/Component/Components/RendererComponents/Skybox/Skybox.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
@@ -56,6 +61,9 @@ inline void AddComponentFactoryFunction(ComponentCollection* compCollection) {
 	compCollection->RegisterComponentFactory<AgentIntentComponent>();
 	compCollection->RegisterComponentFactory<Animator>();
 	compCollection->RegisterComponentFactory<AnimationPlayer>();
+	compCollection->RegisterComponentFactory<UIGroupComponent>();
+	compCollection->RegisterComponentFactory<UIElementComponent>();
+	compCollection->RegisterComponentFactory<UILinkNavigationComponent>();
 
 
 	/// renderer

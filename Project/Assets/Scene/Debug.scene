@@ -1,11 +1,6 @@
 {
     "entities": [
         {
-            "guid": "00000000000000000000000000000001",
-            "parentGuid": null,
-            "path": "./Debug/00000000000000000000000000000001.entity"
-        },
-        {
             "guid": "476d1cadb33306de007290e0c4acae92",
             "parentGuid": null,
             "path": "./Debug/476d1cadb33306de007290e0c4acae92.entity"

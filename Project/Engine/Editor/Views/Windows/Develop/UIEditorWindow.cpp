@@ -342,19 +342,53 @@ void UIEditorWindow::DrawNodeEditor() {
 
 				ImGui::Text("Select Keys for Pin:");
 				ImGui::Separator();
+
+				if (ImGui::BeginTabBar("KeyFilterTabBar")) {
+					if (ImGui::BeginTabItem("All")) {
+						m_CurrentKeyFilter = KeyFilter::All;
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Keyboard")) {
+						m_CurrentKeyFilter = KeyFilter::Keyboard;
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Controller")) {
+						m_CurrentKeyFilter = KeyFilter::Controller;
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Mouse")) {
+						m_CurrentKeyFilter = KeyFilter::Mouse;
+						ImGui::EndTabItem();
+					}
+					ImGui::EndTabBar();
+				}
+				ImGui::Spacing();
 				
-				ImGui::BeginChild("KeyListChild", ImVec2(200.0f, 250.0f), true);
-				for (size_t i = 0; i < keyNames.size(); ++i) {
-					bool isSelected = selectedFlags[i];
-					std::string label = (isSelected ? "[x] " : "[ ] ") + keyNames[i];
-					if (ImGui::Selectable(label.c_str(), isSelected, ImGuiSelectableFlags_DontClosePopups)) {
-						selectedFlags[i] = !isSelected;
+				ImGui::BeginChild("KeyListChild", ImVec2(250.0f, 250.0f), true);
+				if (m_CurrentKeyFilter == KeyFilter::Mouse) {
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.7f, 0.7f, 0.7f, 1.0f));
+					ImGui::TextWrapped("Mouse buttons are not used for link navigation.");
+					ImGui::TextWrapped("Direct click-to-focus is handled automatically by the system.");
+					ImGui::PopStyleColor();
+				} else {
+					for (size_t i = 0; i < keyNames.size(); ++i) {
+						const std::string& keyName = keyNames[i];
+						bool isGamepad = (keyName.rfind("Gamepad", 0) == 0);
+
+						if (m_CurrentKeyFilter == KeyFilter::Keyboard && isGamepad) continue;
+						if (m_CurrentKeyFilter == KeyFilter::Controller && !isGamepad) continue;
+
+						bool isSelected = selectedFlags[i];
+						std::string label = (isSelected ? "[x] " : "[ ] ") + keyName;
+						if (ImGui::Selectable(label.c_str(), isSelected, ImGuiSelectableFlags_DontClosePopups)) {
+							selectedFlags[i] = !isSelected;
+						}
 					}
 				}
 				ImGui::EndChild();
 
 				ImGui::Separator();
-				if (ImGui::Button("Close", ImVec2(200.0f, 0.0f))) {
+				if (ImGui::Button("Close", ImVec2(250.0f, 0.0f))) {
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::EndPopup();
@@ -370,11 +404,8 @@ void UIEditorWindow::DrawNodeEditor() {
 void UIEditorWindow::SavePrefab(const std::string& filepath) {
 	std::filesystem::create_directories(std::filesystem::path(filepath).parent_path());
 
-	json rootJson = json::object();
-	json entitiesArray = json::array();
-
-	// 1. 各ノードをGameEntityのJSON形式でシリアライズ
-	for (const auto& node : m_Nodes) {
+	// 1. ヘルパー関数: ノードとその子孫を再帰的にシリアライズする
+	auto serializeNode = [&](auto& self, Node* node) -> json {
 		json entityJson = json::object();
 		entityJson["guid"] = node->guid.ToString();
 		entityJson["name"] = node->name;
@@ -408,10 +439,8 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 			// 親グループのGUID特定（ピン結線から逆引きする）
 			std::string parentGroupGuid = "";
 			for (const auto& link : m_Links) {
-				// 出力ピンがGroupノードのChildrenLinkで、入力ピンがこのElementのInピンの時
 				Pin* startPin = nullptr;
 				Pin* endPin = nullptr;
-
 				for (const auto& n : m_Nodes) {
 					for (const auto& p : n->outputs) {
 						if (p.id == link.startPinId) startPin = const_cast<Pin*>(&p);
@@ -420,8 +449,7 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 						if (p.id == link.endPinId) endPin = const_cast<Pin*>(&p);
 					}
 				}
-
-				if (startPin && endPin && startPin->node->type == NodeType::Group && endPin->node == node.get()) {
+				if (startPin && endPin && startPin->node->type == NodeType::Group && endPin->node == node) {
 					parentGroupGuid = startPin->node->guid.ToString();
 					break;
 				}
@@ -467,16 +495,94 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 		}
 
 		entityJson["components"] = components;
-		entitiesArray.push_back(entityJson);
+
+		// このノードを親とする子ノードを収集
+		json childrenArray = json::array();
+		for (const auto& n : m_Nodes) {
+			Node* parentNode = nullptr;
+			if (!n->inputs.empty()) {
+				ed::PinId inputPinId = n->inputs[0].id;
+				for (const auto& link : m_Links) {
+					if (link.endPinId == inputPinId) {
+						for (const auto& candidate : m_Nodes) {
+							for (const auto& p : candidate->outputs) {
+								if (p.id == link.startPinId) {
+									parentNode = candidate.get();
+									break;
+								}
+							}
+							if (parentNode) break;
+						}
+					}
+					if (parentNode) break;
+				}
+			}
+			if (parentNode == node) {
+				childrenArray.push_back(self(self, n.get()));
+			}
+		}
+
+		if (!childrenArray.empty()) {
+			entityJson["children"] = childrenArray;
+		}
+
+		return entityJson;
+	};
+
+	// 2. ルートエンティティの作成
+	json rootJson = json::object();
+	rootJson["active"] = true;
+	rootJson["guid"] = ONEngine::GenerateGuid().ToString();
+	std::string rootName = std::filesystem::path(filepath).stem().string();
+	rootJson["name"] = rootName;
+	rootJson["prefabName"] = "";
+
+	json rootComponents = json::array();
+	json transformComp = {
+		{ "type", "Transform" },
+		{ "enable", 1 },
+		{ "position", { { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
+		{ "rotate", { { "w", 1.0 }, { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
+		{ "scale", { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } }
+	};
+	rootComponents.push_back(transformComp);
+	rootJson["components"] = rootComponents;
+
+	// 3. 親ノードを持たないトップレベルのノードをルートの子要素として登録
+	json rootChildren = json::array();
+	for (const auto& n : m_Nodes) {
+		Node* parentNode = nullptr;
+		if (!n->inputs.empty()) {
+			ed::PinId inputPinId = n->inputs[0].id;
+			for (const auto& link : m_Links) {
+				if (link.endPinId == inputPinId) {
+					for (const auto& candidate : m_Nodes) {
+						for (const auto& p : candidate->outputs) {
+							if (p.id == link.startPinId) {
+								parentNode = candidate.get();
+								break;
+							}
+						}
+						if (parentNode) break;
+					}
+				}
+				if (parentNode) break;
+			}
+		}
+		if (!parentNode) {
+			rootChildren.push_back(serializeNode(serializeNode, n.get()));
+		}
 	}
 
-	rootJson["entities"] = entitiesArray;
+	if (!rootChildren.empty()) {
+		rootJson["children"] = rootChildren;
+	}
 
 	std::ofstream ofs(filepath);
 	if (ofs) {
 		ofs << rootJson.dump(4);
 		ofs.close();
-		ONEngine::Console::Log("[UI Editor] Prefab saved successfully: " + filepath);
+		ONEngine::Console::Log("[UI Editor] Prefab saved successfully (correct single-root structure): " + filepath);
 	} else {
 		ONEngine::Console::LogError("[UI Editor] Failed to save prefab: " + filepath);
 	}
@@ -534,159 +640,282 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 	m_Links.clear();
 	m_NextId = 1;
 
-	if (!rootJson.contains("entities")) return;
-
-	// 1. ノードの再構築
 	std::unordered_map<std::string, Node*> guidToNodeMap;
-	for (const auto& entityJson : rootJson["entities"]) {
-		std::string guidStr = entityJson.value("guid", "");
-		std::string name = entityJson.value("name", "UIElement");
-		ONEngine::Guid guid = ONEngine::Guid::FromString(guidStr);
+	std::unordered_map<std::string, json> navLinksMap;
 
-		NodeType t = NodeType::Element;
-		bool isFocused = false;
-		bool isVisible = true;
-		std::string elementId = "";
-		int elementIndex = 0;
+	if (rootJson.contains("entities")) {
+		// Old format (flat entities list)
+		for (const auto& entityJson : rootJson["entities"]) {
+			std::string guidStr = entityJson.value("guid", "");
+			std::string name = entityJson.value("name", "UIElement");
+			ONEngine::Guid guid = ONEngine::Guid::FromString(guidStr);
 
-		for (const auto& compJson : entityJson["components"]) {
-			std::string compType = compJson.value("type", "");
-			if (compType == "UIGroupComponent") {
-				t = NodeType::Group;
-				isFocused = compJson.value("isFocused", false);
-				isVisible = compJson.value("isVisible", true);
-			} else if (compType == "UIElementComponent") {
-				elementId = compJson.value("elementId", "");
-				elementIndex = compJson.value("elementIndex", 0);
-			}
-		}
+			NodeType t = NodeType::Element;
+			bool isFocused = false;
+			bool isVisible = true;
+			std::string elementId = "";
+			int elementIndex = 0;
 
-		auto node = std::make_unique<Node>(m_NextId++, t, name, guid);
-		node->isFocused = isFocused;
-		node->isVisible = isVisible;
-		node->elementId = elementId;
-		node->elementIndex = elementIndex;
-
-		if (t == NodeType::Group) {
-			node->inputs.push_back(Pin(m_NextId++, "ParentLink", PinKind::Input));
-			node->outputs.push_back(Pin(m_NextId++, "ChildrenLink", PinKind::Output));
-			node->inputs[0].node = node.get();
-			node->outputs[0].node = node.get();
-		} else {
-			node->inputs.push_back(Pin(m_NextId++, "In", PinKind::Input));
-			node->inputs[0].node = node.get();
-
-			// 1. UILinkNavigationComponent からリンクを取得してターゲット毎にグループ化
-			std::unordered_map<std::string, std::vector<std::string>> targetToKeys;
-			std::vector<std::string> allLinkedKeys;
-			
 			for (const auto& compJson : entityJson["components"]) {
 				std::string compType = compJson.value("type", "");
-				if (compType == "UILinkNavigationComponent") {
-					if (compJson.contains("links") && compJson["links"].is_object()) {
-						for (auto it = compJson["links"].begin(); it != compJson["links"].end(); ++it) {
-							std::string keyStr = it.key();
-							std::string targetGuidStr = it.value().get<std::string>();
-							if (!targetGuidStr.empty()) {
-								targetToKeys[targetGuidStr].push_back(keyStr);
-								allLinkedKeys.push_back(keyStr);
+				if (compType == "UIGroupComponent") {
+					t = NodeType::Group;
+					isFocused = compJson.value("isFocused", false);
+					isVisible = compJson.value("isVisible", true);
+				} else if (compType == "UIElementComponent") {
+					elementId = compJson.value("elementId", "");
+					elementIndex = compJson.value("elementIndex", 0);
+				}
+			}
+
+			auto node = std::make_unique<Node>(m_NextId++, t, name, guid);
+			node->isFocused = isFocused;
+			node->isVisible = isVisible;
+			node->elementId = elementId;
+			node->elementIndex = elementIndex;
+
+			if (t == NodeType::Group) {
+				node->inputs.push_back(Pin(m_NextId++, "ParentLink", PinKind::Input));
+				node->outputs.push_back(Pin(m_NextId++, "ChildrenLink", PinKind::Output));
+				node->inputs[0].node = node.get();
+				node->outputs[0].node = node.get();
+			} else {
+				node->inputs.push_back(Pin(m_NextId++, "In", PinKind::Input));
+				node->inputs[0].node = node.get();
+
+				// 1. UILinkNavigationComponent からリンクを取得してターゲット毎にグループ化
+				std::unordered_map<std::string, std::vector<std::string>> targetToKeys;
+				
+				for (const auto& compJson : entityJson["components"]) {
+					std::string compType = compJson.value("type", "");
+					if (compType == "UILinkNavigationComponent") {
+						if (compJson.contains("links") && compJson["links"].is_object()) {
+							navLinksMap[guidStr] = compJson["links"];
+							for (auto it = compJson["links"].begin(); it != compJson["links"].end(); ++it) {
+								std::string keyStr = it.key();
+								std::string targetGuidStr = it.value().get<std::string>();
+								if (!targetGuidStr.empty()) {
+									targetToKeys[targetGuidStr].push_back(keyStr);
+								}
 							}
+						}
+					}
+				}
+
+				// 2. グループごとにピンを生成
+				for (auto& pair : targetToKeys) {
+					auto& keysList = pair.second;
+					std::vector<int32_t> keyCodes;
+					for (const auto& k : keysList) {
+						int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(k);
+						if (code != 0) {
+							keyCodes.push_back(code);
+						}
+					}
+					std::sort(keyCodes.begin(), keyCodes.end());
+					keyCodes.erase(std::unique(keyCodes.begin(), keyCodes.end()), keyCodes.end());
+					
+					if (!keyCodes.empty()) {
+						std::string pinName = ONEngine::UILinkNavigationComponent::KeyCodesToString(keyCodes);
+						Pin pin(m_NextId++, pinName, PinKind::Output, keyCodes);
+						pin.node = node.get();
+						node->outputs.push_back(pin);
+					}
+				}
+
+				// 3. デフォルトキーの中で、まだリンクに属していないものを単体の未接続ピンとして配置
+				std::vector<std::string> defaultKeys = { "UpArrow", "DownArrow", "LeftArrow", "RightArrow", "Return", "Space" };
+				for (const auto& dk : defaultKeys) {
+					int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(dk);
+					bool alreadyLinked = false;
+					for (const auto& pin : node->outputs) {
+						if (std::find(pin.keyCodes.begin(), pin.keyCodes.end(), code) != pin.keyCodes.end()) {
+							alreadyLinked = true;
+							break;
+						}
+					}
+					if (!alreadyLinked) {
+						Pin pin(m_NextId++, dk, PinKind::Output, std::vector<int32_t>{ code });
+						pin.node = node.get();
+						node->outputs.push_back(pin);
+					}
+				}
+			}
+
+			guidToNodeMap[guidStr] = node.get();
+			m_Nodes.push_back(std::move(node));
+		}
+
+		// 2. リンク (結線) の再構築
+		for (const auto& entityJson : rootJson["entities"]) {
+			std::string srcGuidStr = entityJson.value("guid", "");
+			Node* srcNode = guidToNodeMap[srcGuidStr];
+			if (!srcNode) continue;
+
+			for (const auto& compJson : entityJson["components"]) {
+				std::string compType = compJson.value("type", "");
+				if (compType == "UIElementComponent") {
+					std::string parentGroupGuid = compJson.value("groupId", "");
+					if (!parentGroupGuid.empty() && guidToNodeMap.find(parentGroupGuid) != guidToNodeMap.end()) {
+						Node* parentNode = guidToNodeMap[parentGroupGuid];
+						if (!parentNode->outputs.empty() && !srcNode->inputs.empty()) {
+							m_Links.push_back(Link(m_NextId++, parentNode->outputs[0].id, srcNode->inputs[0].id));
+						}
+					}
+				}
+			}
+		}
+	} else {
+		// New format (single-root tree)
+		auto loadNodeRecursive = [&](auto& self, const json& entityJson, Node* parentNode) -> void {
+			std::string guidStr = entityJson.value("guid", "");
+			std::string name = entityJson.value("name", "UIElement");
+			ONEngine::Guid guid = ONEngine::Guid::FromString(guidStr);
+
+			NodeType t = NodeType::Element;
+			bool isFocused = false;
+			bool isVisible = true;
+			std::string elementId = "";
+			int elementIndex = 0;
+
+			if (entityJson.contains("components")) {
+				for (const auto& compJson : entityJson["components"]) {
+					std::string compType = compJson.value("type", "");
+					if (compType == "UIGroupComponent") {
+						t = NodeType::Group;
+						isFocused = compJson.value("isFocused", false);
+						isVisible = compJson.value("isVisible", true);
+					} else if (compType == "UIElementComponent") {
+						elementId = compJson.value("elementId", "");
+						elementIndex = compJson.value("elementIndex", 0);
+					} else if (compType == "UILinkNavigationComponent") {
+						if (compJson.contains("links") && compJson["links"].is_object()) {
+							navLinksMap[guidStr] = compJson["links"];
 						}
 					}
 				}
 			}
 
-			// 2. グループごとにピンを生成
-			for (auto& pair : targetToKeys) {
-				auto& keysList = pair.second;
-				std::vector<int32_t> keyCodes;
-				for (const auto& k : keysList) {
-					int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(k);
-					if (code != 0) {
-						keyCodes.push_back(code);
+			auto node = std::make_unique<Node>(m_NextId++, t, name, guid);
+			node->isFocused = isFocused;
+			node->isVisible = isVisible;
+			node->elementId = elementId;
+			node->elementIndex = elementIndex;
+
+			Node* nodeRaw = node.get();
+			guidToNodeMap[guidStr] = nodeRaw;
+			m_Nodes.push_back(std::move(node));
+
+			if (t == NodeType::Group) {
+				nodeRaw->inputs.push_back(Pin(m_NextId++, "ParentLink", PinKind::Input));
+				nodeRaw->outputs.push_back(Pin(m_NextId++, "ChildrenLink", PinKind::Output));
+				nodeRaw->inputs[0].node = nodeRaw;
+				nodeRaw->outputs[0].node = nodeRaw;
+			} else {
+				nodeRaw->inputs.push_back(Pin(m_NextId++, "In", PinKind::Input));
+				nodeRaw->inputs[0].node = nodeRaw;
+
+				std::unordered_map<std::string, std::vector<std::string>> targetToKeys;
+				if (navLinksMap.find(guidStr) != navLinksMap.end()) {
+					const auto& linksObj = navLinksMap[guidStr];
+					for (auto it = linksObj.begin(); it != linksObj.end(); ++it) {
+						std::string keyStr = it.key();
+						std::string targetGuidStr = it.value().get<std::string>();
+						if (!targetGuidStr.empty()) {
+							targetToKeys[targetGuidStr].push_back(keyStr);
+						}
 					}
 				}
-				std::sort(keyCodes.begin(), keyCodes.end());
-				keyCodes.erase(std::unique(keyCodes.begin(), keyCodes.end()), keyCodes.end());
-				
-				if (!keyCodes.empty()) {
-					std::string pinName = ONEngine::UILinkNavigationComponent::KeyCodesToString(keyCodes);
-					Pin pin(m_NextId++, pinName, PinKind::Output, keyCodes);
-					pin.node = node.get();
-					node->outputs.push_back(pin);
+
+				for (auto& pair : targetToKeys) {
+					auto& keysList = pair.second;
+					std::vector<int32_t> keyCodes;
+					for (const auto& k : keysList) {
+						int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(k);
+						if (code != 0) {
+							keyCodes.push_back(code);
+						}
+					}
+					std::sort(keyCodes.begin(), keyCodes.end());
+					keyCodes.erase(std::unique(keyCodes.begin(), keyCodes.end()), keyCodes.end());
+
+					if (!keyCodes.empty()) {
+						std::string pinName = ONEngine::UILinkNavigationComponent::KeyCodesToString(keyCodes);
+						Pin pin(m_NextId++, pinName, PinKind::Output, keyCodes);
+						pin.node = nodeRaw;
+						nodeRaw->outputs.push_back(pin);
+					}
+				}
+
+				std::vector<std::string> defaultKeys = { "UpArrow", "DownArrow", "LeftArrow", "RightArrow", "Return", "Space" };
+				for (const auto& dk : defaultKeys) {
+					int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(dk);
+					bool alreadyLinked = false;
+					for (const auto& pin : nodeRaw->outputs) {
+						if (std::find(pin.keyCodes.begin(), pin.keyCodes.end(), code) != pin.keyCodes.end()) {
+							alreadyLinked = true;
+							break;
+						}
+					}
+					if (!alreadyLinked) {
+						Pin pin(m_NextId++, dk, PinKind::Output, std::vector<int32_t>{ code });
+						pin.node = nodeRaw;
+						nodeRaw->outputs.push_back(pin);
+					}
 				}
 			}
 
-			// 3. デフォルトキーの中で、まだリンクに属していないものを単体の未接続ピンとして配置
-			std::vector<std::string> defaultKeys = { "UpArrow", "DownArrow", "LeftArrow", "RightArrow", "Return", "Space" };
-			for (const auto& dk : defaultKeys) {
-				int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(dk);
-				bool alreadyLinked = false;
-				for (const auto& pin : node->outputs) {
-					if (std::find(pin.keyCodes.begin(), pin.keyCodes.end(), code) != pin.keyCodes.end()) {
-						alreadyLinked = true;
-						break;
-					}
+			if (parentNode && parentNode->type == NodeType::Group) {
+				if (!parentNode->outputs.empty() && !nodeRaw->inputs.empty()) {
+					m_Links.push_back(Link(m_NextId++, parentNode->outputs[0].id, nodeRaw->inputs[0].id));
 				}
-				if (!alreadyLinked) {
-					Pin pin(m_NextId++, dk, PinKind::Output, std::vector<int32_t>{ code });
-					pin.node = node.get();
-					node->outputs.push_back(pin);
+			}
+
+			if (entityJson.contains("children")) {
+				for (const auto& childJson : entityJson["children"]) {
+					self(self, childJson, nodeRaw);
 				}
+			}
+		};
+
+		if (rootJson.contains("children")) {
+			for (const auto& childJson : rootJson["children"]) {
+				loadNodeRecursive(loadNodeRecursive, childJson, nullptr);
 			}
 		}
-
-		guidToNodeMap[guidStr] = node.get();
-		m_Nodes.push_back(std::move(node));
 	}
 
-	// 2. リンク (結線) の再構築
-	for (const auto& entityJson : rootJson["entities"]) {
-		std::string srcGuidStr = entityJson.value("guid", "");
+	// 共通ナビゲーション接続線（リンク）の再構築 (新旧両フォーマットで共通処理として適用)
+	for (const auto& pair : navLinksMap) {
+		std::string srcGuidStr = pair.first;
 		Node* srcNode = guidToNodeMap[srcGuidStr];
 		if (!srcNode) continue;
 
-		for (const auto& compJson : entityJson["components"]) {
-			std::string compType = compJson.value("type", "");
-			if (compType == "UIElementComponent") {
-				std::string parentGroupGuid = compJson.value("groupId", "");
-				if (!parentGroupGuid.empty() && guidToNodeMap.find(parentGroupGuid) != guidToNodeMap.end()) {
-					Node* parentNode = guidToNodeMap[parentGroupGuid];
-					// Group の ChildrenLink -> Element の In ピンへの接続を作成
-					m_Links.push_back(Link(m_NextId++, parentNode->outputs[0].id, srcNode->inputs[0].id));
-				}
-			} else if (compType == "UILinkNavigationComponent") {
-				if (compJson.contains("links") && compJson.at("links").is_object()) {
-					auto linksObj = compJson.at("links");
-					for (auto it = linksObj.begin(); it != linksObj.end(); ++it) {
-						std::string key = it.key();
-						int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(key);
-						std::string targetGuidStr = it.value().get<std::string>();
+		const auto& linksObj = pair.second;
+		for (auto it = linksObj.begin(); it != linksObj.end(); ++it) {
+			std::string key = it.key();
+			int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(key);
+			std::string targetGuidStr = it.value().get<std::string>();
 
-						if (guidToNodeMap.find(targetGuidStr) != guidToNodeMap.end()) {
-							Node* targetNode = guidToNodeMap[targetGuidStr];
-							// Element の出力ピン群から、この key (code) を含むピンを探す
-							Pin* srcPin = nullptr;
-							for (auto& p : srcNode->outputs) {
-								if (std::find(p.keyCodes.begin(), p.keyCodes.end(), code) != p.keyCodes.end()) {
-									srcPin = &p;
-									break;
-								}
-							}
-							if (srcPin) {
-								// 重複接続の防止
-								bool linkExists = false;
-								for (const auto& l : m_Links) {
-									if (l.startPinId == srcPin->id && l.endPinId == targetNode->inputs[0].id) {
-										linkExists = true;
-										break;
-									}
-								}
-								if (!linkExists) {
-									m_Links.push_back(Link(m_NextId++, srcPin->id, targetNode->inputs[0].id));
-								}
-							}
+			if (guidToNodeMap.find(targetGuidStr) != guidToNodeMap.end()) {
+				Node* targetNode = guidToNodeMap[targetGuidStr];
+				Pin* srcPin = nullptr;
+				for (auto& p : srcNode->outputs) {
+					if (std::find(p.keyCodes.begin(), p.keyCodes.end(), code) != p.keyCodes.end()) {
+						srcPin = &p;
+						break;
+					}
+				}
+				if (srcPin && !targetNode->inputs.empty()) {
+					bool linkExists = false;
+					for (const auto& l : m_Links) {
+						if (l.startPinId == srcPin->id && l.endPinId == targetNode->inputs[0].id) {
+							linkExists = true;
+							break;
 						}
+					}
+					if (!linkExists) {
+						m_Links.push_back(Link(m_NextId++, srcPin->id, targetNode->inputs[0].id));
 					}
 				}
 			}
@@ -694,14 +923,18 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 	}
 
 	// 各ノードの配置を初期位置で整列
-	ImVec2 initialPos(100.0f, 100.0f);
-	for (const auto& node : m_Nodes) {
-		ed::SetNodePosition(node->id, initialPos);
-		initialPos.x += 250.0f;
-		if (initialPos.x > 800.0f) {
-			initialPos.x = 100.0f;
-			initialPos.y += 300.0f;
+	if (m_Editor) {
+		ed::SetCurrentEditor(m_Editor);
+		ImVec2 initialPos(100.0f, 100.0f);
+		for (const auto& node : m_Nodes) {
+			ed::SetNodePosition(node->id, initialPos);
+			initialPos.x += 250.0f;
+			if (initialPos.x > 800.0f) {
+				initialPos.x = 100.0f;
+				initialPos.y += 300.0f;
+			}
 		}
+		ed::SetCurrentEditor(nullptr);
 	}
 
 	ONEngine::Console::Log("[UI Editor] Prefab loaded successfully: " + filepath);
@@ -736,7 +969,6 @@ void UIEditorWindow::SyncWithEngineScene() {
 	}
 
 	// プレハブに含まれるエンティティ群のロード
-	// SceneIO に類似したロード処理
 	if (rootJson.contains("entities")) {
 		std::vector<std::pair<GameEntity*, json>> entityLoads;
 		for (const auto& entityJson : rootJson["entities"]) {
@@ -756,5 +988,34 @@ void UIEditorWindow::SyncWithEngineScene() {
 			}
 		}
 		ONEngine::Console::Log("[UI Editor] Sync Preview completed on Game ECSGroup!");
+	} else {
+		// New format (hierarchical tree)
+		auto loadTreeEntity = [&](auto& self, const json& entityJson, GameEntity* parent) -> void {
+			ONEngine::Guid guid = ONEngine::Guid::FromString(entityJson["guid"]);
+			GameEntity* entity = gameGroup->GenerateEntity(guid, true);
+			if (entity) {
+				entity->SetName(entityJson.value("name", "UI_Node"));
+				if (parent) {
+					entity->SetParent(parent);
+				}
+				if (entityJson.contains("components")) {
+					for (const auto& compJson : entityJson["components"]) {
+						std::string compType = compJson.value("type", "");
+						IComponent* comp = entity->AddComponent(compType);
+						if (comp) {
+							ONEngine::ComponentJsonConverter::FromJson(compJson, comp);
+						}
+					}
+				}
+				if (entityJson.contains("children")) {
+					for (const auto& childJson : entityJson["children"]) {
+						self(self, childJson, entity);
+					}
+				}
+			}
+		};
+		
+		loadTreeEntity(loadTreeEntity, rootJson, nullptr);
+		ONEngine::Console::Log("[UI Editor] Sync Preview completed on Game ECSGroup (New single-root tree structure)!");
 	}
 }
