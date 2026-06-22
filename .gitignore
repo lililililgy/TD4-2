@@ -36,6 +36,8 @@ SubProjects/CSharpLibrary/*.sln
 SubProjects/CSharpLibrary/*.user
 SubProjects/CSharpLibrary/*.suo
 SubProjects/CSharpLibrary/*.userprefs
+SubProjects/CSharpLibrary/bin/
+SubProjects/CSharpLibrary/obj/
 
 # C# Binaries (Automated)
 Project/Packages/Scripts/CSharpLibrary*.dll
