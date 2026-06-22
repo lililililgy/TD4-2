@@ -5,44 +5,54 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public class MorayEelPot : MonoScript {
+public class MorayEelPot : MonoScript
+{
     /* ----- パラメータ ----- */
-    [SerializeField] private float firePower = 0.0f;     
-    [SerializeField] private float rotateZSpeed = 0.0f;  
-    [SerializeField] private float fireInterval = 0.0f;  
-    [SerializeField] private string morayEelPrefabName = "MorayEel"; 
+    [SerializeField] private float firePower = 0.0f;
+    [SerializeField] private float rotateZSpeed = 0.0f;
+    [SerializeField] private float fireInterval = 0.0f;
+    [SerializeField] private string morayEelPrefabName = "MorayEel";
 
     /* ----- 実行時状態 ----- */
     private float fireTimer_ = 0.0f; // 発射間隔の計測
     private float angleZ_ = 0.0f;    // 現在のZ回転角
+    private Vector3 baseScale_;
 
-    public override void Initialize() {
+    public override void Initialize()
+    {
         fireTimer_ = 0.0f;
         angleZ_ = 0.0f;
+        baseScale_ = transform.scale;
     }
 
-    public override void Update() {
+    public override void Update()
+    {
         // ツボを Z 軸回転させる
         angleZ_ += rotateZSpeed * Time.deltaTime;
-        if (transform) {
+        if (transform)
+        {
             transform.rotate = Quaternion.FromEuler(new Vector3(0.0f, 0.0f, angleZ_));
         }
 
         // 一定間隔ごとに発射
-        if (fireInterval <= 0.0f) {
+        if (fireInterval <= 0.0f)
+        {
             return;
         }
 
         fireTimer_ += Time.deltaTime;
-        if (fireTimer_ >= fireInterval) {
+        if (fireTimer_ >= fireInterval)
+        {
             fireTimer_ -= fireInterval;
             FireMorayEel();
         }
     }
 
-    private void FireMorayEel() {
+    private void FireMorayEel()
+    {
         Entity eel = ecsGroup.CreateEntity(morayEelPrefabName);
-        if (!eel) {
+        if (!eel)
+        {
             return;
         }
 
@@ -56,7 +66,8 @@ public class MorayEelPot : MonoScript {
 
         // 生成したウツボに初速を与え、発射
         MorayEelSpawnMove movement = eel.GetScript<MorayEelSpawnMove>();
-        if (movement) {
+        if (movement)
+        {
             movement.Launch(initialVelocity);
         }
     }

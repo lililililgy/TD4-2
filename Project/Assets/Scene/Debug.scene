@@ -9,6 +9,16 @@
             "guid": "476d1cadb33306de007290e0c4acae92",
             "parentGuid": null,
             "path": "./Debug/476d1cadb33306de007290e0c4acae92.entity"
+        },
+        {
+            "guid": "9cea0bb48e33cd35a2c74cd17e11a678",
+            "parentGuid": null,
+            "path": "./Debug/9cea0bb48e33cd35a2c74cd17e11a678.entity"
+        },
+        {
+            "guid": "da0bbdfd978d841dc10fe848f8868a24",
+            "parentGuid": null,
+            "path": "./Debug/da0bbdfd978d841dc10fe848f8868a24.entity"
         }
     ]
 }

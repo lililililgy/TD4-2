@@ -2,13 +2,13 @@
     "active": true,
     "components": [
         {
-            "SmallFryChaseMove": {
-                "chaseSpeed": 9.0
+            "MorayEelSpawnMove": {
+                "deraySpeed": 749.5999755859375
             },
             "type": "Variables"
         }
     ],
-    "guid": "4f20d8e28f3757e9c643a0cc627987db",
+    "guid": "da0bbdfd978d841dc10fe848f8868a24",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"
