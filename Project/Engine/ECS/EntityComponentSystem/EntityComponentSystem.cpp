@@ -10,6 +10,7 @@ using namespace ONEngine;
 
 /// ecs
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Variables/Variables.h"
 #include "AddECSSystemFunction.h"
 #include "AddECSComponentFactoryFunction.h"
 #include "ComponentApplyFunc.h"
@@ -416,6 +417,11 @@ void MonoInternalMethods::InternalAddScript(int32_t _entityId, MonoString* _scri
 		if(data) {
 			data->isAdded = true;
 		}
+	}
+
+	/// Variablesがあれば値を適用する
+	if(Variables* vars = entity->GetComponent<Variables>()) {
+		vars->SetScriptVariables(scriptName);
 	}
 }
 

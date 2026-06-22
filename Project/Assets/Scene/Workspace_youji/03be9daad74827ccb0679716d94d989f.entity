@@ -24,10 +24,18 @@
         },
         {
             "type": "Variables"
+        },
+        {
+            "currentSelected": "",
+            "enable": 1,
+            "isFocused": true,
+            "isVisible": true,
+            "parentGroup": "",
+            "type": "UIGroupComponent"
         }
     ],
-    "guid": "4fdaec90e2c53507a246bc309dbbb5fd",
-    "name": "TitleMenu",
-    "parentGuid": null,
+    "guid": "03be9daad74827ccb0679716d94d989f",
+    "name": "Group_3",
+    "parentGuid": "80288fb15cf1d0e57e6db44825a89259",
     "prefabName": ""
 }

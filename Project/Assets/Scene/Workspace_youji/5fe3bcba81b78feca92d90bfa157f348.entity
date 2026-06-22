@@ -2,6 +2,13 @@
     "active": true,
     "components": [
         {
+            "elementId": "exit",
+            "elementIndex": 2,
+            "enable": 1,
+            "groupId": "6edc7f58db76d6a42f6cdc90c4a5ef78",
+            "type": "UIElementComponent"
+        },
+        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
@@ -24,10 +31,15 @@
         },
         {
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "links": {},
+            "type": "UILinkNavigationComponent"
         }
     ],
-    "guid": "9efbca21b78125154479d5b5566853ae",
+    "guid": "5fe3bcba81b78feca92d90bfa157f348",
     "name": "Element_2",
-    "parentGuid": "e25f6b5a22a0e1d400baa6fcf65fe189",
+    "parentGuid": "03be9daad74827ccb0679716d94d989f",
     "prefabName": ""
 }
