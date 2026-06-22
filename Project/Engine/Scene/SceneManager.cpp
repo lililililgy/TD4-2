@@ -1,10 +1,11 @@
-﻿#include "SceneManager.h"
+#include "SceneManager.h"
 
 using namespace ONEngine;
 
 /// std
 #include <numbers>
 #include <fstream>
+#include <filesystem>
 
 /// external
 #include <nlohmann/json.hpp>
@@ -33,6 +34,13 @@ SceneManager::~SceneManager() {
 		nlohmann::json json;
 		json["Scene"] = currentScene_;
 		const std::string& filepath = "./Packages/Config/LastOpenScene.json";
+
+		std::filesystem::path path(filepath);
+		std::filesystem::path parentDir = path.parent_path();
+		if (!parentDir.empty() && !std::filesystem::exists(parentDir)) {
+			std::filesystem::create_directories(parentDir);
+		}
+
 		std::ofstream ofs(filepath);
 		if (ofs.is_open()) {
 			ofs << json.dump(4);
