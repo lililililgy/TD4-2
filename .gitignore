@@ -24,6 +24,9 @@ Project/ONEngine.vcxproj
 Project/ONEngine.vcxproj.filters
 Project/ONEngine.vcxproj.user
 
+# other files
+Project/Packages/Config/
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 

@@ -77,6 +77,7 @@ private:
 private:
 	void DrawNodeEditor();
 	void DrawToolbar();
+	void DrawFileDialogs();
 	void LoadPrefab(const std::string& filepath);
 	void SavePrefab(const std::string& filepath);
 	void SyncWithEngineScene();

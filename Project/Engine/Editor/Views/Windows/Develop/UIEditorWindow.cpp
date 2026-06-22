@@ -5,6 +5,8 @@
 #include <fstream>
 #include <filesystem>
 #include <nlohmann/json.hpp>
+#include <dialog/ImGuiFileDialog.h>
+#include <algorithm>
 
 /// engine
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
@@ -33,7 +35,7 @@ UIEditorWindow::UIEditorWindow(
 	config.SettingsFile = nullptr; // 自動セーブ無効
 	m_Editor = ed::CreateEditor(&config);
 
-	m_CurrentPrefabPath = "./Assets/UI/TitleMenu.prefab";
+	m_CurrentPrefabPath = "./Assets/Prefabs/TitleMenu.prefab";
 }
 
 UIEditorWindow::~UIEditorWindow() {
@@ -54,25 +56,45 @@ void UIEditorWindow::ShowImGui() {
 	DrawNodeEditor();
 
 	ImGui::End();
+
+	DrawFileDialogs();
 }
 
 void UIEditorWindow::DrawToolbar() {
-	ImGui::Text("Prefab File Path: ");
+	ImGui::Text("Prefab File Path: %s", m_CurrentPrefabPath.empty() ? "(None)" : m_CurrentPrefabPath.c_str());
 	ImGui::SameLine();
-	char pathBuf[256];
-	strncpy_s(pathBuf, m_CurrentPrefabPath.c_str(), sizeof(pathBuf));
-	if (ImGui::InputText("##prefabPath", pathBuf, sizeof(pathBuf))) {
-		m_CurrentPrefabPath = pathBuf;
-	}
 
-	ImGui::SameLine();
 	if (ImGui::Button("Load")) {
-		LoadPrefab(m_CurrentPrefabPath);
+		std::filesystem::path uiPath = std::filesystem::absolute("./Assets/UI");
+		std::filesystem::create_directories(uiPath);
+
+		IGFD::FileDialogConfig config;
+		config.path = uiPath.string();
+		ImGuiFileDialog::Instance()->OpenDialog("LoadPrefabDialog", "Choose Prefab", ".prefab", config);
 	}
 
 	ImGui::SameLine();
 	if (ImGui::Button("Save")) {
-		SavePrefab(m_CurrentPrefabPath);
+		if (m_CurrentPrefabPath.empty()) {
+			std::filesystem::path uiPath = std::filesystem::absolute("./Assets/UI");
+			std::filesystem::create_directories(uiPath);
+
+			IGFD::FileDialogConfig config;
+			config.path = uiPath.string();
+			ImGuiFileDialog::Instance()->OpenDialog("SavePrefabDialog", "Save Prefab", ".prefab", config);
+		} else {
+			SavePrefab(m_CurrentPrefabPath);
+		}
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Save As...")) {
+		std::filesystem::path uiPath = std::filesystem::absolute("./Assets/UI");
+		std::filesystem::create_directories(uiPath);
+
+		IGFD::FileDialogConfig config;
+		config.path = uiPath.string();
+		ImGuiFileDialog::Instance()->OpenDialog("SavePrefabDialog", "Save Prefab As", ".prefab", config);
 	}
 
 	ImGui::SameLine();
@@ -117,17 +139,18 @@ void UIEditorWindow::DrawNodeEditor() {
 		}
 
 		// コンテンツ部
+		std::string nodeIdStr = std::to_string(node->id.Get());
 		if (node->type == NodeType::Group) {
-			ImGui::Checkbox("Is Focused", &node->isFocused);
-			ImGui::Checkbox("Is Visible", &node->isVisible);
+			ImGui::Checkbox(("Is Focused##" + nodeIdStr).c_str(), &node->isFocused);
+			ImGui::Checkbox(("Is Visible##" + nodeIdStr).c_str(), &node->isVisible);
 		} else {
 			char idBuf[64];
 			strncpy_s(idBuf, node->elementId.c_str(), sizeof(idBuf));
 			ImGui::PushItemWidth(120.0f);
-			if (ImGui::InputText("ID", idBuf, sizeof(idBuf))) {
+			if (ImGui::InputText(("ID##" + nodeIdStr).c_str(), idBuf, sizeof(idBuf))) {
 				node->elementId = idBuf;
 			}
-			ImGui::InputInt("Idx", &node->elementIndex);
+			ImGui::InputInt(("Idx##" + nodeIdStr).c_str(), &node->elementIndex);
 			ImGui::PopItemWidth();
 
 			// カスタムキーピンの追加UI
@@ -459,6 +482,35 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 	}
 }
 
+void UIEditorWindow::DrawFileDialogs() {
+	// 1. LoadPrefabDialog
+	if (ImGuiFileDialog::Instance()->Display("LoadPrefabDialog", ImGuiWindowFlags_NoDocking)) {
+		if (ImGuiFileDialog::Instance()->IsOk()) {
+			std::string fullPath = ImGuiFileDialog::Instance()->GetFilePathName();
+			std::string relative = std::filesystem::relative(fullPath, std::filesystem::current_path()).string();
+			std::replace(relative.begin(), relative.end(), '\\', '/');
+			m_CurrentPrefabPath = "./" + relative;
+			LoadPrefab(m_CurrentPrefabPath);
+		}
+		ImGuiFileDialog::Instance()->Close();
+	}
+
+	// 2. SavePrefabDialog
+	if (ImGuiFileDialog::Instance()->Display("SavePrefabDialog", ImGuiWindowFlags_NoDocking)) {
+		if (ImGuiFileDialog::Instance()->IsOk()) {
+			std::string fullPath = ImGuiFileDialog::Instance()->GetFilePathName();
+			if (!fullPath.ends_with(".prefab")) {
+				fullPath += ".prefab";
+			}
+			std::string relative = std::filesystem::relative(fullPath, std::filesystem::current_path()).string();
+			std::replace(relative.begin(), relative.end(), '\\', '/');
+			m_CurrentPrefabPath = "./" + relative;
+			SavePrefab(m_CurrentPrefabPath);
+		}
+		ImGuiFileDialog::Instance()->Close();
+	}
+}
+
 void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 	if (!std::filesystem::exists(filepath)) {
 		ONEngine::Console::LogError("[UI Editor] Prefab file not found: " + filepath);
@@ -469,7 +521,13 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 	if (!ifs.is_open()) return;
 
 	json rootJson;
-	ifs >> rootJson;
+	try {
+		ifs >> rootJson;
+	} catch (const std::exception& e) {
+		ONEngine::Console::LogError("[UI Editor] Failed to parse prefab JSON: " + std::string(e.what()));
+		ifs.close();
+		return;
+	}
 	ifs.close();
 
 	m_Nodes.clear();
