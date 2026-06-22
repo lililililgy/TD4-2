@@ -13,16 +13,22 @@ public class MorayEelPot : MonoScript
     [SerializeField] private float fireInterval = 0.0f;
     [SerializeField] private string morayEelPrefabName = "MorayEel";
 
+    // スケーリング演出
+    [SerializeField] private float fireScale = 2.0f;
+    [SerializeField] private float fireScaleTimer = 0.5f;
+
     /* ----- 実行時状態 ----- */
     private float fireTimer_ = 0.0f; // 発射間隔の計測
     private float angleZ_ = 0.0f;    // 現在のZ回転角
     private Vector3 baseScale_;
+    private float currentFireScaleTimer_ = -1.0f;
 
     public override void Initialize()
     {
         fireTimer_ = 0.0f;
         angleZ_ = 0.0f;
         baseScale_ = transform.scale;
+        currentFireScaleTimer_ = -1.0f;
     }
 
     public override void Update()
@@ -33,6 +39,9 @@ public class MorayEelPot : MonoScript
         {
             transform.rotate = Quaternion.FromEuler(new Vector3(0.0f, 0.0f, angleZ_));
         }
+
+        // 発射時スケーリング演出
+        UpdateFireScaleAnimation();
 
         // 一定間隔ごとに発射
         if (fireInterval <= 0.0f)
@@ -45,6 +54,35 @@ public class MorayEelPot : MonoScript
         {
             fireTimer_ -= fireInterval;
             FireMorayEel();
+        }
+    }
+
+    private void UpdateFireScaleAnimation()
+    {
+        if (currentFireScaleTimer_ < 0.0f) { return; }
+
+        currentFireScaleTimer_ += Time.deltaTime;
+        float halfTime = fireScaleTimer * 0.5f;
+
+        if (currentFireScaleTimer_ < halfTime)
+        {
+            // 前半: EaseOutBack でスケールアップ
+            float t = currentFireScaleTimer_ / halfTime;
+            float scale = 1.0f + (fireScale - 1.0f) * Ease.Out.Back(t);
+            transform.scale = baseScale_ * scale;
+        }
+        else if (currentFireScaleTimer_ < fireScaleTimer)
+        {
+            // 後半: EaseOutBack で元のスケールに戻す
+            float t = (currentFireScaleTimer_ - halfTime) / halfTime;
+            float scale = fireScale + (1.0f - fireScale) * Ease.Out.Back(t);
+            transform.scale = baseScale_ * scale;
+        }
+        else
+        {
+            // 演出終了
+            transform.scale = baseScale_;
+            currentFireScaleTimer_ = -1.0f;
         }
     }
 
@@ -70,5 +108,8 @@ public class MorayEelPot : MonoScript
         {
             movement.Launch(initialVelocity);
         }
+
+        // 発射時スケーリング演出を開始
+        currentFireScaleTimer_ = 0.0f;
     }
 }

@@ -3,12 +3,12 @@
     "components": [
         {
             "MorayEelSpawnMove": {
-                "deraySpeed": 749.5999755859375
+                "spawnSpinCount": 5.0
             },
             "type": "Variables"
         }
     ],
-    "guid": "da0bbdfd978d841dc10fe848f8868a24",
+    "guid": "57d687c6fd7d63d391271bd73f5fb938",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

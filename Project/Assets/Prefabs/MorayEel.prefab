@@ -10,10 +10,10 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.7071067690849304,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": -0.7071067690849304
             },
             "scale": {
                 "x": 255.0,
@@ -30,6 +30,7 @@
                 "deraySpeed": 749.5999755859375,
                 "launchTime": 0.8999999761581421,
                 "playerEntityName": "Player",
+                "spawnSpinCount": 5.0,
                 "startChaseDistance": 0.0
             },
             "SmallFryChaseMove": {
@@ -89,7 +90,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "da0bbdfd978d841dc10fe848f8868a24",
+    "guid": "57d687c6fd7d63d391271bd73f5fb938",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"
