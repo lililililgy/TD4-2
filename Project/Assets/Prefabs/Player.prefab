@@ -26,6 +26,16 @@
             "Magazine": {
                 "maxAmmo_": 10
             },
+            "PlayerLifeComponent": {},
+            "RoeTrail": {
+                "recordMinDistance_": 2.0,
+                "maxTrailLength_": 400.0
+            },
+            "RoeManager": {
+                "roePrefabName_": "Roe",
+                "leaderName_": "Player",
+                "broodCount_": 3
+            },
             "PlayerDashState": {
                 "accel_": 1024.0,
                 "canMove_": true,
@@ -141,6 +151,18 @@
                 {
                     "enable": true,
                     "name": "Magazine"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerLifeComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "RoeTrail"
+                },
+                {
+                    "enable": true,
+                    "name": "RoeManager"
                 }
             ],
             "type": "Script"
