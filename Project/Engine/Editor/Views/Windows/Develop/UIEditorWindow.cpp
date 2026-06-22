@@ -1,4 +1,4 @@
-#include "UIEditorWindow.h"
+﻿#include "UIEditorWindow.h"
 
 /// external
 #include <imgui.h>
@@ -20,37 +20,7 @@ using namespace Editor;
 using namespace ONEngine;
 using json = nlohmann::json;
 
-namespace {
-
-int32_t ParseKeyCodeString(const std::string& keyStr) {
-	if (keyStr == "UpArrow") return 0xC8;
-	if (keyStr == "DownArrow") return 0xD0;
-	if (keyStr == "LeftArrow") return 0xCB;
-	if (keyStr == "RightArrow") return 0xCD;
-	if (keyStr == "Return") return 0x1C;
-	if (keyStr == "Space") return 0x39;
-	if (keyStr == "W") return 0x11;
-	if (keyStr == "S") return 0x1F;
-	if (keyStr == "A") return 0x1E;
-	if (keyStr == "D") return 0x20;
-	return 0;
-}
-
-std::string KeyCodeToString(int32_t keyCode) {
-	if (keyCode == 0xC8) return "UpArrow";
-	if (keyCode == 0xD0) return "DownArrow";
-	if (keyCode == 0xCB) return "LeftArrow";
-	if (keyCode == 0xCD) return "RightArrow";
-	if (keyCode == 0x1C) return "Return";
-	if (keyCode == 0x39) return "Space";
-	if (keyCode == 0x11) return "W";
-	if (keyCode == 0x1F) return "S";
-	if (keyCode == 0x1E) return "A";
-	if (keyCode == 0x20) return "D";
-	return std::to_string(keyCode);
-}
-
-} // namespace
+// Anonymous namespace removed because we use UILinkNavigationComponent helper methods.
 
 UIEditorWindow::UIEditorWindow(
 	const std::string& title,
@@ -129,7 +99,13 @@ void UIEditorWindow::DrawNodeEditor() {
 
 		// タイトル部
 		ImGui::TextColored(headerColor, "%s Node [%s]", (node->type == NodeType::Group ? "Group" : "Element"), node->name.c_str());
-		ImGui::Separator();
+		ImGui::Dummy(ImVec2(220.0f, 0.0f)); // Enforce a stable node width of 220px
+		
+		// Draw a node-constrained separator line
+		ImVec2 p0 = ImGui::GetCursorScreenPos();
+		ImVec2 p1 = ImVec2(p0.x + 220.0f, p0.y);
+		ImGui::GetWindowDrawList()->AddLine(p0, p1, ImColor(ImGui::GetStyle().Colors[ImGuiCol_Separator]));
+		ImGui::Dummy(ImVec2(0.0f, 4.0f));
 
 		// 入力ピン
 		for (const auto& pin : node->inputs) {
@@ -147,26 +123,100 @@ void UIEditorWindow::DrawNodeEditor() {
 		} else {
 			char idBuf[64];
 			strncpy_s(idBuf, node->elementId.c_str(), sizeof(idBuf));
+			ImGui::PushItemWidth(120.0f);
 			if (ImGui::InputText("ID", idBuf, sizeof(idBuf))) {
 				node->elementId = idBuf;
 			}
 			ImGui::InputInt("Idx", &node->elementIndex);
+			ImGui::PopItemWidth();
+
+			// カスタムキーピンの追加UI
+			ImGui::Spacing();
+			ImGui::Text("Add Key Pin:");
+			
+			auto& selectedFlags = m_SelectedKeysMap[node->id.Get()];
+			const auto& keyNames = ONEngine::UILinkNavigationComponent::GetSupportedKeyNames();
+			if (selectedFlags.size() != keyNames.size()) {
+				selectedFlags.assign(keyNames.size(), false);
+			}
+			
+			// 選択状態を表すプレビュー文字列を作成
+			std::string preview = "";
+			for (size_t i = 0; i < keyNames.size(); ++i) {
+				if (selectedFlags[i]) {
+					if (!preview.empty()) preview += ", ";
+					preview += keyNames[i];
+				}
+			}
+			if (preview.empty()) {
+				preview = "(Select keys...)";
+			}
+			
+			ImGui::PushItemWidth(140.0f);
+			std::string buttonId = preview + "##BtnCombo_" + std::to_string(node->id.Get());
+			if (ImGui::Button(buttonId.c_str(), ImVec2(140.0f, 0.0f))) {
+				ImGui::OpenPopup(("KeySelectorPopup_" + std::to_string(node->id.Get())).c_str());
+			}
+			ImGui::PopItemWidth();
+			ImGui::SameLine();
+			
+			std::string addBtnId = "+##AddKeyPin_" + std::to_string(node->id.Get());
+			if (ImGui::Button(addBtnId.c_str())) {
+				std::vector<int32_t> keyCodes;
+				for (size_t i = 0; i < keyNames.size(); ++i) {
+					if (selectedFlags[i]) {
+						int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(keyNames[i]);
+						if (code != 0) {
+							keyCodes.push_back(code);
+						}
+					}
+				}
+				if (!keyCodes.empty()) {
+					std::sort(keyCodes.begin(), keyCodes.end());
+					keyCodes.erase(std::unique(keyCodes.begin(), keyCodes.end()), keyCodes.end());
+					
+					std::string normalizedName = ONEngine::UILinkNavigationComponent::KeyCodesToString(keyCodes);
+					bool exists = false;
+					for (const auto& pin : node->outputs) {
+						if (pin.name == normalizedName) exists = true;
+					}
+					if (!exists) {
+						Pin newPin(m_NextId++, normalizedName, PinKind::Output, keyCodes);
+						newPin.node = node.get();
+						node->outputs.push_back(newPin);
+					}
+					// 選択状態をクリア
+					selectedFlags.assign(keyNames.size(), false);
+				}
+			}
 		}
 
 		// 出力ピン
-		for (const auto& pin : node->outputs) {
-			ImGui::TextUnformatted(pin.name.c_str());
+		int deletePinIndex = -1;
+		for (size_t i = 0; i < node->outputs.size(); ++i) {
+			auto& pin = node->outputs[i];
 			
-			float posX = ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(">").x - 4.0f;
-			if (posX > ImGui::GetCursorPosX()) {
-				ImGui::SameLine(posX);
-			} else {
+			if (pin.name != "ChildrenLink") {
+				std::string deleteBtnId = "x##DeletePin_" + std::to_string(pin.id.Get());
+				if (ImGui::Button(deleteBtnId.c_str())) {
+					deletePinIndex = static_cast<int>(i);
+				}
 				ImGui::SameLine();
 			}
-
+			
+			ImGui::TextUnformatted(pin.name.c_str());
+			ImGui::SameLine(200.0f);
 			ed::BeginPin(pin.id, ed::PinKind::Output);
 			ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), ">");
 			ed::EndPin();
+		}
+
+		if (deletePinIndex != -1) {
+			ed::PinId idToDelete = node->outputs[deletePinIndex].id;
+			m_Links.erase(std::remove_if(m_Links.begin(), m_Links.end(), [&](const Link& l) {
+				return l.startPinId == idToDelete || l.endPinId == idToDelete;
+			}), m_Links.end());
+			node->outputs.erase(node->outputs.begin() + deletePinIndex);
 		}
 
 		ed::EndNode();
@@ -235,14 +285,14 @@ void UIEditorWindow::DrawNodeEditor() {
 			std::string name = "Element_" + std::to_string(m_Nodes.size());
 			auto node = std::make_unique<Node>(m_NextId++, NodeType::Element, name, newGuid);
 
-			// 入力ピンと4方向出力ピンの作成
+			// 入力ピンと4方向出力ピン of 作成
 			node->inputs.push_back(Pin(m_NextId++, "In", PinKind::Input));
 			node->inputs[0].node = node.get();
 
 			std::vector<std::string> keys = { "UpArrow", "DownArrow", "LeftArrow", "RightArrow", "Return", "Space" };
 			for (const auto& key : keys) {
-				int32_t keyCode = ParseKeyCodeString(key);
-				Pin pin(m_NextId++, key, PinKind::Output, keyCode);
+				int32_t keyCode = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(key);
+				Pin pin(m_NextId++, key, PinKind::Output, std::vector<int32_t>{ keyCode });
 				pin.node = node.get();
 				node->outputs.push_back(pin);
 			}
@@ -252,6 +302,41 @@ void UIEditorWindow::DrawNodeEditor() {
 		}
 
 		ImGui::EndPopup();
+	}
+	ed::Resume();
+
+	// Key selector popups for elements
+	ed::Suspend();
+	for (const auto& node : m_Nodes) {
+		if (node->type == NodeType::Element) {
+			std::string popupId = "KeySelectorPopup_" + std::to_string(node->id.Get());
+			if (ImGui::BeginPopup(popupId.c_str())) {
+				const auto& keyNames = ONEngine::UILinkNavigationComponent::GetSupportedKeyNames();
+				auto& selectedFlags = m_SelectedKeysMap[node->id.Get()];
+				if (selectedFlags.size() != keyNames.size()) {
+					selectedFlags.assign(keyNames.size(), false);
+				}
+
+				ImGui::Text("Select Keys for Pin:");
+				ImGui::Separator();
+				
+				ImGui::BeginChild("KeyListChild", ImVec2(200.0f, 250.0f), true);
+				for (size_t i = 0; i < keyNames.size(); ++i) {
+					bool isSelected = selectedFlags[i];
+					std::string label = (isSelected ? "[x] " : "[ ] ") + keyNames[i];
+					if (ImGui::Selectable(label.c_str(), isSelected, ImGuiSelectableFlags_DontClosePopups)) {
+						selectedFlags[i] = !isSelected;
+					}
+				}
+				ImGui::EndChild();
+
+				ImGui::Separator();
+				if (ImGui::Button("Close", ImVec2(200.0f, 0.0f))) {
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+		}
 	}
 	ed::Resume();
 
@@ -341,8 +426,10 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 							}
 						}
 						if (destPin && destPin->node) {
-							std::string keyStr = KeyCodeToString(outPin.keyCode);
-							linksObj[keyStr] = destPin->node->guid.ToString();
+							for (int32_t keyCode : outPin.keyCodes) {
+								std::string keyStr = ONEngine::UILinkNavigationComponent::KeyCodeToString(keyCode);
+								linksObj[keyStr] = destPin->node->guid.ToString();
+							}
 						}
 					}
 				}
@@ -431,12 +518,63 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 			node->inputs.push_back(Pin(m_NextId++, "In", PinKind::Input));
 			node->inputs[0].node = node.get();
 
-			std::vector<std::string> keys = { "UpArrow", "DownArrow", "LeftArrow", "RightArrow", "Return", "Space" };
-			for (const auto& key : keys) {
-				int32_t keyCode = ParseKeyCodeString(key);
-				Pin pin(m_NextId++, key, PinKind::Output, keyCode);
-				pin.node = node.get();
-				node->outputs.push_back(pin);
+			// 1. UILinkNavigationComponent からリンクを取得してターゲット毎にグループ化
+			std::unordered_map<std::string, std::vector<std::string>> targetToKeys;
+			std::vector<std::string> allLinkedKeys;
+			
+			for (const auto& compJson : entityJson["components"]) {
+				std::string compType = compJson.value("type", "");
+				if (compType == "UILinkNavigationComponent") {
+					if (compJson.contains("links") && compJson["links"].is_object()) {
+						for (auto it = compJson["links"].begin(); it != compJson["links"].end(); ++it) {
+							std::string keyStr = it.key();
+							std::string targetGuidStr = it.value().get<std::string>();
+							if (!targetGuidStr.empty()) {
+								targetToKeys[targetGuidStr].push_back(keyStr);
+								allLinkedKeys.push_back(keyStr);
+							}
+						}
+					}
+				}
+			}
+
+			// 2. グループごとにピンを生成
+			for (auto& pair : targetToKeys) {
+				auto& keysList = pair.second;
+				std::vector<int32_t> keyCodes;
+				for (const auto& k : keysList) {
+					int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(k);
+					if (code != 0) {
+						keyCodes.push_back(code);
+					}
+				}
+				std::sort(keyCodes.begin(), keyCodes.end());
+				keyCodes.erase(std::unique(keyCodes.begin(), keyCodes.end()), keyCodes.end());
+				
+				if (!keyCodes.empty()) {
+					std::string pinName = ONEngine::UILinkNavigationComponent::KeyCodesToString(keyCodes);
+					Pin pin(m_NextId++, pinName, PinKind::Output, keyCodes);
+					pin.node = node.get();
+					node->outputs.push_back(pin);
+				}
+			}
+
+			// 3. デフォルトキーの中で、まだリンクに属していないものを単体の未接続ピンとして配置
+			std::vector<std::string> defaultKeys = { "UpArrow", "DownArrow", "LeftArrow", "RightArrow", "Return", "Space" };
+			for (const auto& dk : defaultKeys) {
+				int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(dk);
+				bool alreadyLinked = false;
+				for (const auto& pin : node->outputs) {
+					if (std::find(pin.keyCodes.begin(), pin.keyCodes.end(), code) != pin.keyCodes.end()) {
+						alreadyLinked = true;
+						break;
+					}
+				}
+				if (!alreadyLinked) {
+					Pin pin(m_NextId++, dk, PinKind::Output, std::vector<int32_t>{ code });
+					pin.node = node.get();
+					node->outputs.push_back(pin);
+				}
 			}
 		}
 
@@ -464,20 +602,31 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 					auto linksObj = compJson.at("links");
 					for (auto it = linksObj.begin(); it != linksObj.end(); ++it) {
 						std::string key = it.key();
+						int32_t code = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(key);
 						std::string targetGuidStr = it.value().get<std::string>();
 
 						if (guidToNodeMap.find(targetGuidStr) != guidToNodeMap.end()) {
 							Node* targetNode = guidToNodeMap[targetGuidStr];
-							// Element の各方向キー出力ピン -> 遷移先ノードの In ピンへの接続を作成
+							// Element の出力ピン群から、この key (code) を含むピンを探す
 							Pin* srcPin = nullptr;
 							for (auto& p : srcNode->outputs) {
-								if (p.name == key) {
+								if (std::find(p.keyCodes.begin(), p.keyCodes.end(), code) != p.keyCodes.end()) {
 									srcPin = &p;
 									break;
 								}
 							}
 							if (srcPin) {
-								m_Links.push_back(Link(m_NextId++, srcPin->id, targetNode->inputs[0].id));
+								// 重複接続の防止
+								bool linkExists = false;
+								for (const auto& l : m_Links) {
+									if (l.startPinId == srcPin->id && l.endPinId == targetNode->inputs[0].id) {
+										linkExists = true;
+										break;
+									}
+								}
+								if (!linkExists) {
+									m_Links.push_back(Link(m_NextId++, srcPin->id, targetNode->inputs[0].id));
+								}
 							}
 						}
 					}

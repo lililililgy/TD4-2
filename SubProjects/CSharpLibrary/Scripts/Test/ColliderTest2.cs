@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 
 public class ColliderTest2 : MonoScript {
+
+	[SerializeField] float test = 0.0f;
+
+
 	public override void Initialize() {
 		
 	}

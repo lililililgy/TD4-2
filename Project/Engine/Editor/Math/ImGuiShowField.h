@@ -5,6 +5,9 @@
 #include <unordered_map>
 #include <memory>
 
+/// engine
+#include "Engine/ECS/Component/Components/ComputeComponents/Variables/Variables.h"
+
 /// external
 #include <mono/jit/jit.h>
 #include <imgui.h>
@@ -87,6 +90,7 @@ struct StructGui : public ImGuiShowField {
 	void Draw(const std::string& scriptName, MonoObject* obj, MonoClassField* field, const char* name) override;
 	void Register();
 	std::unordered_map<std::string, std::unique_ptr<ImGuiShowField>> fieldDrawers; ///< フィールドの型ごとに表示用の構造体を保持
+	std::unordered_map<std::string, std::shared_ptr<ONEngine::Variables::GenericObject>> startValues; ///< フィールド編集開始時の値を保持
 };
 
 /// @brief Vector2をImGuiで表示するための構造体

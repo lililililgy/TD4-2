@@ -3,6 +3,7 @@
 /// std
 #include <unordered_map>
 #include <string>
+#include <vector>
 #include <nlohmann/json_fwd.hpp>
 
 /// engine
@@ -37,6 +38,13 @@ public:
 	void Reset() override {
 		links.clear();
 	}
+
+public:
+	static int32_t ParseKeyCodeString(const std::string& keyStr);
+	static std::string KeyCodeToString(int32_t keyCode);
+	static std::vector<int32_t> ParseKeyCodesString(const std::string& keysStr);
+	static std::string KeyCodesToString(const std::vector<int32_t>& keyCodes);
+	static const std::vector<std::string>& GetSupportedKeyNames();
 
 public:
 	/// ----- リンク遷移マップ (キー: KeyCode, 値: 遷移先Entity Guid) ----- ///

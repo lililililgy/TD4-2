@@ -42,10 +42,10 @@ private:
 		std::string name;
 		PinKind kind;
 		Node* node;
-		int32_t keyCode = 0; // 出力ピンが表すキーコード
+		std::vector<int32_t> keyCodes; // 出力ピンが表すキーコード群
 
-		Pin(int id, const std::string& name, PinKind kind, int32_t key = 0)
-			: id(id), name(name), kind(kind), node(nullptr), keyCode(key) {}
+		Pin(int id, const std::string& name, PinKind kind, const std::vector<int32_t>& keys = {})
+			: id(id), name(name), kind(kind), node(nullptr), keyCodes(keys) {}
 	};
 
 	struct Node {
@@ -94,6 +94,7 @@ private:
 
 	std::string m_CurrentPrefabPath = "";
 	std::string windowName_;
+	std::unordered_map<unsigned long long, std::vector<bool>> m_SelectedKeysMap;
 };
 
 } /// namespace Editor

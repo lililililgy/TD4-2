@@ -13,6 +13,7 @@
 #include "Engine/Core/Utility/Math/Vector2.h"
 #include "Engine/Core/Utility/Math/Vector3.h"
 #include "Engine/Core/Utility/Math/Vector4.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Variables/Variables.h"
 #include "../IEditCommand.h"
 
 namespace ONEngine { class GameEntity; }
@@ -24,7 +25,7 @@ namespace Editor {
 /// ///////////////////////////////////////////////
 class ModifyScriptVariableCommand : public IEditCommand {
 public:
-    using VariantValue = std::variant<int, float, double, bool, std::string, ONEngine::Vector2, ONEngine::Vector3, ONEngine::Vector4>;
+    using VariantValue = std::variant<int, float, double, bool, std::string, ONEngine::Vector2, ONEngine::Vector3, ONEngine::Vector4, std::shared_ptr<ONEngine::Variables::GenericObject>>;
 
     ModifyScriptVariableCommand(ONEngine::GameEntity* entity, const std::string& scriptName, const std::string& fieldName, int monoType, const VariantValue& oldValue, const VariantValue& newValue);
     ~ModifyScriptVariableCommand() override = default;
