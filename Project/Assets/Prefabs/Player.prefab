@@ -23,9 +23,43 @@
             "type": "Transform"
         },
         {
+            "AttackCollision": {
+                "damage_": 10.0,
+                "destroyOnHit_": false
+            },
+            "HP": {
+                "currentHp_": 0.0,
+                "disableAutoDestruction_": true,
+                "isInvincible_": false,
+                "maxHp_": 12.0
+            },
             "Magazine": {
                 "maxAmmo_": 10,
                 "reloadCooldown_": 0.6000000238418579
+            },
+            "PlayerAttackComponent": {
+                "damageCurve_": [
+                    {
+                        "__type": "DamagePoint",
+                        "speed": 0.0,
+                        "damage": 0.0
+                    },
+                    {
+                        "__type": "DamagePoint",
+                        "speed": 300.0,
+                        "damage": 10.0
+                    },
+                    {
+                        "__type": "DamagePoint",
+                        "speed": 600.0,
+                        "damage": 30.0
+                    },
+                    {
+                        "__type": "DamagePoint",
+                        "speed": 1000.0,
+                        "damage": 50.0
+                    }
+                ]
             },
             "PlayerDashState": {
                 "accel_": 1024.0,
@@ -171,6 +205,18 @@
                 {
                     "enable": true,
                     "name": "Magazine"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerAttackComponent"
                 }
             ],
             "type": "Script"

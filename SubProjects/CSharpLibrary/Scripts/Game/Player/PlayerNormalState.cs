@@ -12,10 +12,10 @@ public class PlayerNormalState : PlayerState {
     [SerializeField] private float rotateSmoothTime_     = 3.0f;
     [SerializeField] private float rotateMaxSmoothSpeed_ = 64.0f;
 
-    private PlayerMoveParam moveParam_ = new PlayerMoveParam();
+    private MoveParam moveParam_ = new MoveParam();
 
     public override void Initialize() {
-        moveParam_ = new PlayerMoveParam {
+        moveParam_ = new MoveParam {
             canMove_              = canMove_,
             accel_                = accel_,
             maxSpeed_             = maxSpeed_,
@@ -26,7 +26,7 @@ public class PlayerNormalState : PlayerState {
         };
     }
 
-    public override PlayerMoveParam MoveParam {
+    public override MoveParam MoveParam {
         get { return moveParam_; }
     }
 }

@@ -82,6 +82,21 @@ public class RoeManager : MonoScript {
         return false;
     }
 
+    // ダメージで残機を1つ失う：成熟卵(MATURE)を1つ隊列から外して破棄する。末尾側から。成功で true。
+    public bool TryKillLife() {
+        for (int i = roe_.Count - 1; i >= 0; i--) {
+            RoeStateComponent state = GetState(roe_[i]);
+            if (state != null && state.CurrentState == RoeState.MATURE) {
+                Entity e = roe_[i];
+                roe_.RemoveAt(i);
+                ReassignOrders();
+                e.Destroy();
+                return true;
+            }
+        }
+        return false;
+    }
+
     // 幼生卵(弾薬)を1つ隊列から外して返す（発射用）。無ければ null。破棄は呼び出し側に任せる。
     public Entity TryConsumeLarvae() {
         for (int i = roe_.Count - 1; i >= 0; i--) {
