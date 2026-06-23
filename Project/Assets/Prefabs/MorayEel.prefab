@@ -10,15 +10,15 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.7071067690849304,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": -0.7071067690849304
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 255.0,
+                "y": 255.0,
+                "z": 255.0
             },
             "type": "Transform"
         },
@@ -33,15 +33,16 @@
             "MorayEelSpawnMove": {
                 "chargeSpeed": 0.0,
                 "chargeStartTime": 0.0,
-                "deraySpeed": 0.6000000238418579,
+                "deraySpeed": 749.5999755859375,
                 "launchTime": 0.8999999761581421,
                 "playerEntityName": "Player",
+                "spawnSpinCount": 5.0,
                 "startChaseDistance": 0.0
             },
             "SmallFryChaseMove": {
                 "chaseDistance": 50.0,
                 "chaseDuration": 2.0,
-                "chaseSpeed": 9.0,
+                "chaseSpeed": 299.0,
                 "discoveryScale": 2.0,
                 "discoveryTimer": 0.6000000238418579,
                 "playerEntityName": "Player",
@@ -83,7 +84,7 @@
                 "baseTextureGuid": "81a024e9a87e59e95d5afd6b2ea6a342",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 1,
+                "postEffectFlags": 0,
                 "uvTransform": {
                     "position": {
                         "x": 0.0,
@@ -96,12 +97,10 @@
                     }
                 }
             },
-            "meshPath": "./Assets/Models/pillar.obj",
-            "renderQueue": 2,
-            "type": "MeshRenderer"
+            "type": "SpriteRenderer"
         }
     ],
-    "guid": "4f20d8e28f3757e9c643a0cc627987db",
+    "guid": "57d687c6fd7d63d391271bd73f5fb938",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

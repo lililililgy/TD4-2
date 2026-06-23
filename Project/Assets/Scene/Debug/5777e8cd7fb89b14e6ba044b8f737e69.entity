@@ -1,0 +1,82 @@
+{
+    "active": true,
+    "components": [
+        {
+            "cameraType": 0,
+            "enable": 1,
+            "farClip": 1000.0,
+            "fogColor": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fogEnd": 10000.0,
+            "fogStart": 0.0,
+            "fovY": 0.699999988079071,
+            "isDrawFrustum": false,
+            "isMainCamera": true,
+            "nearClip": 0.10000000149011612,
+            "type": "CameraComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -34.11201477050781,
+                "y": -1.8702447414398193,
+                "z": -114.36476135253906
+            },
+            "rotate": {
+                "w": 0.9516298174858093,
+                "x": 0.2531541585922241,
+                "y": 0.16825628280639648,
+                "z": -0.04475981742143631
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "DebugCamera": {
+                "eulerAngles_": {
+                    "x": 0.5200002193450928,
+                    "y": 0.34999990463256836,
+                    "z": 0.0
+                },
+                "isActive_": true,
+                "moveSpeed_": 0.05000000074505806,
+                "position_": {
+                    "x": -34.11201477050781,
+                    "y": -1.8702447414398193,
+                    "z": -114.36476135253906
+                },
+                "velocity_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "PlayerFollowCamera": {
+                "maxSmoothSpeed_": 72.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "DebugCamera"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "5777e8cd7fb89b14e6ba044b8f737e69",
+    "name": "DebugCamera",
+    "parentGuid": null,
+    "prefabName": ""
+}

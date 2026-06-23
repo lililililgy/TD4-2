@@ -28,4 +28,20 @@ public class CameraComponent : Component {
 	public float nearClip = 0.1f;
 	public float farClip = 1000.0f;
 	public CameraType cameraType = CameraType.Type3D;
+
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
+
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(CameraComponent), batch, 1, ecsGroupName);
+
+		this.matVP = batch[0].matVP;
+		this.matView = batch[0].matView;
+		this.matProjection = batch[0].matProjection;
+		this.fovY = batch[0].fovY;
+		this.nearClip = batch[0].nearClip;
+		this.farClip = batch[0].farClip;
+		this.cameraType = (CameraType)batch[0].cameraType;
+	}
 }

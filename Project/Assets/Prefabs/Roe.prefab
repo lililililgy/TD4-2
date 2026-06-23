@@ -29,11 +29,11 @@
             },
             "RoeFollower": {
                 "leaderName_": "Player",
-                "maxSmoothSpeed_": 42.0,
+                "maxSmoothSpeed_": 423.0,
                 "order_": 1,
                 "playerOffset_": 128.0,
                 "roeOffset_": 48.0,
-                "smoothTime_": 0.800000011920929,
+                "smoothTime_": 0.25999999046325684,
                 "spacing_": 48.0
             },
             "RoeGrowth": {
@@ -90,7 +90,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "f98f033a048fca1c08267e84a4a287aa",
+    "guid": "480bbeb91daed9b69464fda7c7c7ffe5",
     "name": "Roe",
     "parentGuid": null,
     "prefabName": "Roe"

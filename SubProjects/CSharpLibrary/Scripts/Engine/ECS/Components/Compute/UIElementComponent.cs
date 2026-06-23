@@ -23,4 +23,15 @@ public class UIElementComponent : Component {
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	private static extern IntPtr InternalGetElementId(uint compId, string groupName);
+
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
+
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(UIElementComponent), batch, 1, ecsGroupName);
+
+		this.groupIdId = batch[0].groupIdId;
+		this.elementIndex = batch[0].elementIndex;
+	}
 }

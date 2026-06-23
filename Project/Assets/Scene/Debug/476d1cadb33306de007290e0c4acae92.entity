@@ -4,7 +4,7 @@
         {
             "cameraType": 1,
             "enable": 1,
-            "farClip": 1000.0,
+            "farClip": 100.0,
             "fogColor": {
                 "x": 0.0,
                 "y": 0.0,

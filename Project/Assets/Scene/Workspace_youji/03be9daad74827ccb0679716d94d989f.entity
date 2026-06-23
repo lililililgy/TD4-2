@@ -24,10 +24,18 @@
         },
         {
             "type": "Variables"
+        },
+        {
+            "currentSelected": "",
+            "enable": 1,
+            "isFocused": true,
+            "isVisible": true,
+            "parentGroup": "",
+            "type": "UIGroupComponent"
         }
     ],
-    "guid": "05c098271873c02888ea8a29ef5102f2",
-    "name": "Element_0",
-    "parentGuid": "e25f6b5a22a0e1d400baa6fcf65fe189",
+    "guid": "03be9daad74827ccb0679716d94d989f",
+    "name": "Group_3",
+    "parentGuid": "80288fb15cf1d0e57e6db44825a89259",
     "prefabName": ""
 }

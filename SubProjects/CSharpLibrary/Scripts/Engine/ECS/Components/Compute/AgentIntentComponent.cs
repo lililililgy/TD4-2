@@ -52,5 +52,21 @@ public class AgentIntentComponent : Component {
         if (behaviorTree != null) {
         }
     }
+
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
+
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(AgentIntentComponent), batch, 1, ecsGroupName);
+
+		this.desiredMoveDirection = batch[0].desiredMoveDirection;
+		this.desiredRotation = batch[0].desiredRotation;
+		this.rotationSpeed = batch[0].rotationSpeed;
+		this.maxSpeed = batch[0].maxSpeed;
+		this.useDesiredRotation = batch[0].useDesiredRotation != 0;
+		this.isAttacking = batch[0].isAttacking != 0;
+		this.targetEntityId = batch[0].targetEntityId;
+	}
 }
 

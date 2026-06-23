@@ -15,4 +15,17 @@ public class UIGroupComponent : Component {
 	public bool isFocused = false;
 	public bool isVisible = true;
 	public int parentGroupId = 0;
+
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
+
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(UIGroupComponent), batch, 1, ecsGroupName);
+
+		this.currentSelectedId = batch[0].currentSelectedId;
+		this.isFocused = batch[0].isFocused != 0;
+		this.isVisible = batch[0].isVisible != 0;
+		this.parentGroupId = batch[0].parentGroupId;
+	}
 }

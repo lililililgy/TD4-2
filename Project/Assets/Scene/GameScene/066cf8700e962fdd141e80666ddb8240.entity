@@ -33,21 +33,21 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1.7869930267333984,
+                "y": 1.7869873046875,
+                "z": 1.7869873046875
             },
             "type": "Transform"
         },
         {
             "PlayerFollowCamera": {
-                "maxSmoothSpeed_": 26.0,
+                "maxSmoothSpeed_": 72.0,
                 "offset_": {
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
                 },
-                "smoothTime_": 0.8999999761581421,
+                "smoothTime_": 20.899999618530273,
                 "targetName_": "Player"
             },
             "type": "Variables"
@@ -64,7 +64,7 @@
         }
     ],
     "guid": "066cf8700e962fdd141e80666ddb8240",
-    "name": "Camera",
+    "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""
 }

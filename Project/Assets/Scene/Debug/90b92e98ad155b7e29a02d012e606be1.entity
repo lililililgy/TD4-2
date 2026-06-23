@@ -10,7 +10,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -23,11 +23,22 @@
             "type": "Transform"
         },
         {
+            "CloudManager": {},
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "CloudManager"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "e25f6b5a22a0e1d400baa6fcf65fe189",
-    "name": "Group_3",
-    "parentGuid": "4fdaec90e2c53507a246bc309dbbb5fd",
+    "guid": "90b92e98ad155b7e29a02d012e606be1",
+    "name": "cloudManager",
+    "parentGuid": "849e0e74c812e269283f6ea848be094c",
     "prefabName": ""
 }
