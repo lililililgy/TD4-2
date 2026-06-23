@@ -1,4 +1,4 @@
-﻿#include "HierarchyWindow.h"
+#include "HierarchyWindow.h"
 
 /// std
 #include <filesystem>
@@ -141,6 +141,9 @@ void HierarchyWindow::DrawMenuEntity() {
 		}
 		if (ImGui::MenuItem("Mesh")) {
 			pEditorManager_->ExecuteCommand<CreatePrimitiveCommand>(pEcsGroup_, CreatePrimitiveCommand::Type::Mesh, nullptr);
+		}
+		if (ImGui::MenuItem("Sprite")) {
+			pEditorManager_->ExecuteCommand<CreatePrimitiveCommand>(pEcsGroup_, CreatePrimitiveCommand::Type::Sprite, nullptr);
 		}
 		ImGui::EndMenu();
 	}
@@ -514,6 +517,7 @@ bool HierarchyWindow::DrawEntityContextMenu(ONEngine::GameEntity* entity, bool s
 			if(ImGui::MenuItem("Camera")) pEditorManager_->ExecuteCommand<CreatePrimitiveCommand>(pEcsGroup_, CreatePrimitiveCommand::Type::Camera, entity);
 			if(ImGui::MenuItem("Directional Light")) pEditorManager_->ExecuteCommand<CreatePrimitiveCommand>(pEcsGroup_, CreatePrimitiveCommand::Type::DirectionalLight, entity);
 			if(ImGui::MenuItem("Mesh")) pEditorManager_->ExecuteCommand<CreatePrimitiveCommand>(pEcsGroup_, CreatePrimitiveCommand::Type::Mesh, entity);
+			if(ImGui::MenuItem("Sprite")) pEditorManager_->ExecuteCommand<CreatePrimitiveCommand>(pEcsGroup_, CreatePrimitiveCommand::Type::Sprite, entity);
 			ImGui::EndMenu();
 		}
 		if(ImGui::MenuItem("rename")) { renameEntityGuid_ = entity->GetGuid(); newName_ = entity->GetName(); }

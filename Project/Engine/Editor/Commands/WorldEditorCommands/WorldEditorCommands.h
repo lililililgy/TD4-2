@@ -49,6 +49,7 @@ public:
 		Camera,
 		DirectionalLight,
 		Mesh,
+		Sprite,
 	};
 
 	CreatePrimitiveCommand(ONEngine::ECSGroup* ecs, Type type, ONEngine::GameEntity* parentEntity = nullptr);

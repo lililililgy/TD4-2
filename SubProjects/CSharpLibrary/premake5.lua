@@ -49,7 +49,8 @@ project "CSharpLibrary"
     filter {}
 
     -- ビルド後イベント
-    postbuildcommands {
-        "call \"$(ProjectDir)RenameDll.bat\"",
-        "call \"$(ProjectDir)KeepLatest.bat\""
-    }
+    filter "system:windows"
+        postbuildcommands {
+            [[powershell -NoProfile -ExecutionPolicy Bypass -File "$(ProjectDir)RenameDll.ps1"]],
+            [[call "$(ProjectDir)KeepLatest.bat"]]
+        }

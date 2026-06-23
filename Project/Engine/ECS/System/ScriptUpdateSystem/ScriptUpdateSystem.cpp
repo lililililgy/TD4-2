@@ -1,4 +1,4 @@
-#include "ScriptUpdateSystem.h"
+﻿#include "ScriptUpdateSystem.h"
 
 using namespace ONEngine;
 
@@ -31,7 +31,7 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 
-	if (monoEngine.GetIsHotReloadRequest()) {
+	if(monoEngine.GetIsHotReloadRequest()) {
 		// 古いドメインのハンドルを解放
 		ReleaseGCHandle();
 
@@ -40,13 +40,13 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 
 		/// C#側のECSGroupを取得、更新関数を呼ぶ
 		ComponentArray<Script>* scriptArray = ecs->GetComponentArray<Script>();
-		if (!scriptArray || scriptArray->GetUsedComponents().empty()) {
+		if(!scriptArray || scriptArray->GetUsedComponents().empty()) {
 			return;
 		}
 
-		for (auto& script : scriptArray->GetUsedComponents()) {
+		for(auto& script : scriptArray->GetUsedComponents()) {
 			script->SetIsAdded(false);
-			for (auto& data : script->GetScriptDataList()) {
+			for(auto& data : script->GetScriptDataList()) {
 				data.isAdded = false;
 				data.collisionEventMethods.fill(nullptr);
 				data.collisionEventMethods2D.fill(nullptr);
@@ -54,8 +54,8 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 		}
 
 		ComponentArray<AnimationPlayer>* animPlayerArray = ecs->GetComponentArray<AnimationPlayer>();
-		if (animPlayerArray) {
-			for (auto& animPlayer : animPlayerArray->GetUsedComponents()) {
+		if(animPlayerArray) {
+			for(auto& animPlayer : animPlayerArray->GetUsedComponents()) {
 				animPlayer->ClearBindings();
 			}
 		}
@@ -84,7 +84,7 @@ void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 void ScriptUpdateSystem::AddAllEntitiesAndComponents(ECSGroup* ecsGroup) {
 	/// スクリプトを持たないエンティティも追加することでC#で扱いやすくする
-	for (auto& entity : ecsGroup->GetEntities()) {
+	for(auto& entity : ecsGroup->GetEntities()) {
 		AddEntityToScript(entity.get());
 	}
 }
@@ -97,7 +97,7 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 
 	/// スクリプトが有効でない場合はスキップ
 	MonoObject* ecsGroupObj = mono_gchandle_get_target(gcHandle_);
-	if (!ecsGroupObj) {
+	if(!ecsGroupObj) {
 		Console::LogError("Failed to get target from gcHandle_");
 		return false;
 	}
@@ -112,21 +112,21 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 	MonoObject* exc = nullptr;
 	MonoScriptEngineUtils::SafeInvoke(addEntityMethod_, ecsGroupObj, addEntityArgs, &exc);
 
-	if (exc) {
+	if(exc) {
 		MonoScriptEngineUtils::HandleException(exc);
 	}
 
 	Variables* vars = entity->GetComponent<Variables>();
 	Script* script = entity->GetComponent<Script>();
 
-	if (script) {
+	if(script) {
 		/// --------------------------------------------------------------------------------
 		/// スクリプトの追加
 		/// --------------------------------------------------------------------------------
-		for (auto& data : script->GetScriptDataList()) {
+		for(auto& data : script->GetScriptDataList()) {
 
 			/// すでに追加済みなら処理しない
-			if (data.isAdded) {
+			if(data.isAdded) {
 				continue;
 			}
 			data.isAdded = true;
@@ -134,7 +134,7 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			/// スクリプト名からMonoObjectを生成する
 			MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 			MonoClass* behaviorClass = mono_class_from_name(monoEngine.Image(), "", data.scriptName.c_str());
-			if (!behaviorClass) {
+			if(!behaviorClass) {
 				Console::LogError("Failed to find MonoBehavior class");
 				continue;
 			}
@@ -142,7 +142,7 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			/// インスタンスを生成
 			MonoObject* scriptInstance = mono_object_new(mono_domain_get(), behaviorClass);
 			mono_runtime_object_init(scriptInstance); /// クラスの初期化、コンストラクタをイメージ
-			if (!script) {
+			if(!script) {
 				continue;
 			}
 
@@ -154,12 +154,12 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			exc = nullptr;
 			MonoScriptEngineUtils::SafeInvoke(addScriptMethod_, ecsGroupObj, addScriptArgs, &exc);
 
-			if (exc) {
+			if(exc) {
 				MonoScriptEngineUtils::HandleException(exc);
 			}
 
 			/// variablesの設定
-			if (vars) {
+			if(vars) {
 				vars->SetScriptVariables(data.scriptName);
 			}
 
@@ -175,12 +175,12 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 void ScriptUpdateSystem::CallUpdateEcsGroup() {
 
 	/// 関数呼び出しの条件
-	if (gcHandle_ != 0) {
-		if (updateEntitiesMethod_) {
+	if(gcHandle_ != 0) {
+		if(updateEntitiesMethod_) {
 
 			/// 更新関数を呼び出す
 			MonoObject* ecsGroupObj = mono_gchandle_get_target(gcHandle_);
-			if (!ecsGroupObj) {
+			if(!ecsGroupObj) {
 				Console::LogError("Failed to get target from gcHandle_");
 				return;
 			}
@@ -188,7 +188,7 @@ void ScriptUpdateSystem::CallUpdateEcsGroup() {
 			MonoObject* exc = nullptr;
 			MonoScriptEngineUtils::SafeInvoke(updateEntitiesMethod_, ecsGroupObj, nullptr, &exc);
 
-			if (exc) {
+			if(exc) {
 				MonoScriptEngineUtils::HandleException(exc);
 			}
 		}
@@ -203,7 +203,7 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 	/// --------------------------------------------------------------------------------
 
 	MonoClass* ecsClass = mono_class_from_name(image, "", "EntityComponentSystem");
-	if (!ecsClass) {
+	if(!ecsClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem");
 		return;
 	}
@@ -219,7 +219,7 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 	MonoObject* exc = nullptr;
 	MonoObject* ecsGroup = MonoScriptEngineUtils::SafeInvoke(addGroupMethod, nullptr, args, &exc);
 
-	if (exc) {
+	if(exc) {
 		MonoScriptEngineUtils::HandleException(exc);
 	}
 
@@ -230,7 +230,7 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 
 	/// C#側のクラスを取得
 	monoClass_ = mono_object_get_class(ecsGroup);
-	if (!monoClass_) {
+	if(!monoClass_) {
 		Console::LogError("Failed to find class: ECSGroup");
 		return;
 	}
@@ -245,7 +245,7 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 }
 
 void ScriptUpdateSystem::ReleaseGCHandle() {
-	if (gcHandle_ != 0) {
+	if(gcHandle_ != 0) {
 		mono_gchandle_free(gcHandle_);
 		gcHandle_ = 0;
 	}
@@ -257,22 +257,26 @@ void ScriptUpdateSystem::ReleaseGCHandle() {
 /// ///////////////////////////////////////////////
 
 DebugScriptUpdateSystem::DebugScriptUpdateSystem(ECSGroup* ecs)
-	: ScriptUpdateSystem(ecs) {
-}
+	: ScriptUpdateSystem(ecs) {}
 DebugScriptUpdateSystem::~DebugScriptUpdateSystem() {}
 
 void DebugScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	/// 作成中のPrefabを更新してしまう問題を防ぐため、デバッグカメラのみ追加する
 
 	ScriptUpdateSystem::OutsideOfRuntimeUpdate(ecs);
-	CameraComponent* camera = ecs->GetMainCamera();
-	if (!camera) {
-		Console::LogError("Main camera is not set in ECSGroup: " + ecs->GetGroupName());
-		return;
+	CameraComponent* camera3d = ecs->GetMainCamera();
+	if(camera3d) {
+		if(GameEntity* debugCamera = camera3d->GetOwner()) {
+			AddEntityToScript(debugCamera);
+		}
 	}
 
-	if (GameEntity* debugCamera = camera->GetOwner()) {
-		AddEntityToScript(debugCamera);
+
+	CameraComponent* camera2d = ecs->GetMainCamera2D();
+	if(camera2d) {
+		if(GameEntity* debugCamera = camera2d->GetOwner()) {
+			AddEntityToScript(debugCamera);
+		}
 	}
 
 	/// 関数呼び出しの条件

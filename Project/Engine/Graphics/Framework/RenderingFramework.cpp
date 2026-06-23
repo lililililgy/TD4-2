@@ -254,19 +254,13 @@ void RenderingFramework::DrawDebug() {
 	renderingPipelineCollection_->DrawParticles(camera);
 
 	// デバッグ用の2D描画
-	renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D());
+	renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D(), "Debug");
 
-	// ★重要: Debug表示中でも GameScene の UI (HPバー等) を表示したい場合があるため、GameScene の 2D も重ねる
 	if (pEntityComponentSystem_->GetECSGroup("GameScene")) {
-		renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("GameScene")->GetMainCamera2D(), "GameScene");
+		renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D(), "GameScene");
 	}
 
-	CameraComponent* camera2D = nullptr;
-	if (auto gameGroup = pEntityComponentSystem_->GetECSGroup("GameScene")) {
-		camera2D = gameGroup->GetMainCamera2D();
-	} else {
-		camera2D = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
-	}
+	CameraComponent* camera2D = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
 
 	/// Gizmo描画 (最後)
 	renderingPipelineCollection_->DrawGizmos(camera, camera2D);

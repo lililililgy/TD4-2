@@ -117,6 +117,10 @@ EDITOR_STATE CreatePrimitiveCommand::Execute() {
 		baseName = "Mesh";
 		generatedEntity_->AddComponent("MeshRenderer");
 		break;
+	case Type::Sprite:
+		baseName = "Sprite";
+		generatedEntity_->AddComponent("SpriteRenderer");
+		break;
 	}
 
 	uint32_t count = pEcsGroup_->CountEntity(baseName);
