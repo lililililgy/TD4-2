@@ -15,7 +15,7 @@ public class PlayerStateComponent : MonoScript {
     [SerializeField] private string currentStateName_ = "";
 
     // State が取得できないときの保険（移動が壊れないように既定値を返す）
-    private readonly PlayerMoveParam fallbackMoveParam_ = new PlayerMoveParam();
+    private readonly MoveParam fallbackMoveParam_ = new MoveParam();
 
 
     public override void Initialize() {
@@ -82,7 +82,7 @@ public class PlayerStateComponent : MonoScript {
     ///////////////////////////////////////////////////////////////////////////////////////////
     /// 現在状態の能力を外へ公開（判断の中身は各 State が持つ。ここは委譲のみ）
     ///////////////////////////////////////////////////////////////////////////////////////////
-    public PlayerMoveParam CurrentMoveParam() {
+    public MoveParam CurrentMoveParam() {
         if (currentState_ == null || currentState_.MoveParam == null) {
             return fallbackMoveParam_;
         }

@@ -12,7 +12,7 @@ public class MorayEel : MonoScript {
     public override void Update() {
 
         // 死んだら更新スキップ
-        if (hp_ != null && hp_.currentHp <= 0) {
+        if (hp_ != null && hp_.CurrentHp <= 0) {
             return;
         }
     }
