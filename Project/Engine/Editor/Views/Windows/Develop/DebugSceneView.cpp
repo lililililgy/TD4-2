@@ -340,6 +340,9 @@ void DebugSceneView::HandleCameraFocus() {
 				if(targetEntity) {
 					ONEngine::Vector3 targetPos = targetEntity->GetPosition();
 					ONEngine::CameraComponent* editorCamera = pEcs_->GetECSGroup("Debug")->GetMainCamera();
+					if(!editorCamera) {
+						editorCamera = pEcs_->GetECSGroup("Debug")->GetMainCamera2D();
+					}
 
 					if(editorCamera) {
 						float distance = 10.0f;
@@ -419,16 +422,43 @@ void DebugSceneView::DrawToolbar() {
 	bool is2D = Editor::Is2DMode();
 	if (ImGui::RadioButton("2D", is2D)) {
 		Editor::Set2DMode(true);
-		if (auto* cam = pEcs_->GetECSGroup("Debug")->GetMainCamera()) {
-			cam->SetCameraType(static_cast<int>(ONEngine::CameraType::Type2D));
-			cam->GetOwner()->GetTransform()->SetRotate(ONEngine::Quaternion::kIdentity);
+		ONEngine::CameraComponent* debugCamComp = nullptr;
+		ONEngine::CameraComponent* cam2DComp = nullptr;
+		if (auto* debugGroup = pEcs_->GetECSGroup("Debug")) {
+			for (auto& entity : debugGroup->GetEntities()) {
+				if (entity->GetName() == "DebugCamera") {
+					debugCamComp = entity->GetComponent<ONEngine::CameraComponent>();
+				} else if (entity->GetName() == "2DCamera") {
+					cam2DComp = entity->GetComponent<ONEngine::CameraComponent>();
+				}
+			}
+		}
+		if (debugCamComp) {
+			debugCamComp->SetIsMainCameraRequest(false);
+		}
+		if (cam2DComp) {
+			cam2DComp->SetIsMainCameraRequest(true);
 		}
 	}
 	ImGui::SameLine();
 	if (ImGui::RadioButton("3D", !is2D)) {
 		Editor::Set2DMode(false);
-		if (auto* cam = pEcs_->GetECSGroup("Debug")->GetMainCamera()) {
-			cam->SetCameraType(static_cast<int>(ONEngine::CameraType::Type3D));
+		ONEngine::CameraComponent* debugCamComp = nullptr;
+		ONEngine::CameraComponent* cam2DComp = nullptr;
+		if (auto* debugGroup = pEcs_->GetECSGroup("Debug")) {
+			for (auto& entity : debugGroup->GetEntities()) {
+				if (entity->GetName() == "DebugCamera") {
+					debugCamComp = entity->GetComponent<ONEngine::CameraComponent>();
+				} else if (entity->GetName() == "2DCamera") {
+					cam2DComp = entity->GetComponent<ONEngine::CameraComponent>();
+				}
+			}
+		}
+		if (debugCamComp) {
+			debugCamComp->SetIsMainCameraRequest(true);
+		}
+		if (cam2DComp) {
+			cam2DComp->SetIsMainCameraRequest(false);
 		}
 	}
 

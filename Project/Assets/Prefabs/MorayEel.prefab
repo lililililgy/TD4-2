@@ -23,6 +23,12 @@
             "type": "Transform"
         },
         {
+            "HP": {
+                "currentHp_": 0.0,
+                "disableAutoDestruction_": false,
+                "isInvincible_": false,
+                "maxHp_": 30.0
+            },
             "MorayEel": {},
             "MorayEelSpawnMove": {
                 "chargeSpeed": 0.0,
@@ -58,6 +64,10 @@
                 {
                     "enable": true,
                     "name": "SmallFryChaseMove"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
                 }
             ],
             "type": "Script"

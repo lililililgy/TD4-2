@@ -1,89 +1,67 @@
-class HP : MonoScript
-{
-    [SerializeField]
-    public int MAX_HP = 100;
-    [SerializeField]
-    public int currentHp = 0;
-    [SerializeField]
-    public bool disableAutoDestruction = false;
-    [SerializeField]
-    public bool isInvincible = false;
-    [SerializeField]
-    public float regenPerSecond = 0.0f;
+using System;
 
-    private bool _isDead = false;
-    private float accumulatedRegen = 0.0f;
-    private int lastCurrentHp = 0;
+// HP(体力)の管理だけに専念する汎用コンポーネント。
+// ダメージ・回復・死亡判定・(死亡時の)自動破棄のみを扱う。持続回復などの味付けは持たない。
+public class HP : MonoScript {
+    [SerializeField] private float maxHp_ = 100;
+    [SerializeField] private float currentHp_ = 0;
+    [SerializeField] private bool disableAutoDestruction_ = false; // true: 死亡しても自分で Destroy しない
+    [SerializeField] private bool isInvincible_ = false; // true: 無敵状態（ダメージを受けない）
 
-    public override void Initialize()
-    {
-        currentHp = MAX_HP;
-        lastCurrentHp = currentHp;
-        _isDead = false;
-        isInvincible = false;
-        accumulatedRegen = 0.0f;
+    private bool isDead_ = false;
+    private float lastCurrentHp_ = 0;
+
+    public override void Initialize() {
+        currentHp_ = maxHp_;
+        lastCurrentHp_ = currentHp_;
+        isDead_ = false;
     }
 
-    public override void Update()
-    {
-        if (_isDead)
-        {
-            if (!disableAutoDestruction)
-            {
-                entity.Destroy();
-            }
-            return;
-        }
+    public override void Update() {
+        lastCurrentHp_ = currentHp_;
 
-        // 自然回復
-        if (regenPerSecond > 0 && currentHp < MAX_HP)
-        {
-            accumulatedRegen += regenPerSecond * Time.deltaTime;
-            if (accumulatedRegen >= 1.0f)
-            {
-                int regenAmount = (int)accumulatedRegen;
-                Heal(regenAmount);
-                accumulatedRegen -= regenAmount;
-            }
+        // 死亡時の自動破棄（衝突中のクラッシュ防止のため Update で破棄する）
+        if (isDead_ && !disableAutoDestruction_) {
+            entity.Destroy();
         }
     }
 
-    public void TakeDamage(int damage)
-    {
-        if (_isDead || isInvincible) return;
+    public void TakeDamage(float damage) {
+        if (isDead_ || isInvincible_) return;
 
-        currentHp -= damage;
-        if (currentHp <= 0)
-        {
-            currentHp = 0;
-            OnDead();
+        currentHp_ -= damage;
+        if (currentHp_ <= 0) {
+            currentHp_ = 0;
+            isDead_ = true;
         }
     }
 
-    private void OnDead()
-    {
-        // 死亡フラグを立ててUpdateで破棄するようにする（衝突中のクラッシュ防止）
-        _isDead = true;
-    }
-
-    public void Heal(int healAmount)
-    {
-        currentHp += healAmount;
-        if (currentHp > MAX_HP)
-        {
-            currentHp = MAX_HP;
+    public void Heal(int healAmount) {
+        currentHp_ = Mathf.Clamp(currentHp_ + healAmount, 0, maxHp_);
+        if (currentHp_ > 0) {
+            isDead_ = false;
         }
     }
 
-    public bool HasHPChanged()
-    {
-        bool changed = currentHp != lastCurrentHp;
-        lastCurrentHp = currentHp;
+    // 現在HPを直接設定する（外部の真実と同期させたい時用。例: 残機=roe数 をHPへ反映）。
+    public void SetHp(float hp) {
+        currentHp_ = Mathf.Clamp(hp, 0, maxHp_);
+        isDead_ = currentHp_ <= 0;
+    }
+
+    public bool HasHpChanged() {
+        bool changed = currentHp_ != lastCurrentHp_;
+        lastCurrentHp_ = currentHp_;
         return changed;
     }
 
-    public float CurrentHpRatio()
-    {
-        return Mathf.Clamp01((float)currentHp / MAX_HP);
+    public float CurrentHpRatio() {
+        return Mathf.Clamp01((float)currentHp_ / maxHp_);
     }
+
+    public float MaxHp { get { return maxHp_; } set { maxHp_ = value; } }
+    public float CurrentHp { get { return currentHp_; } }
+    public bool IsDead { get { return isDead_; } }
+    public bool IsInvincible { get { return isInvincible_; } set { isInvincible_ = value; } }
+    public bool DisableAutoDestruction { get { return disableAutoDestruction_; } set { disableAutoDestruction_ = value; } }
 }
