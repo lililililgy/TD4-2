@@ -43,10 +43,13 @@ class SpriteRenderer : Component {
 
 	public Vector4 color {
 		get {
-			return InternalGetColor(nativeHandle);
+			return batchData.color;
 		}
 		set {
-			InternalSetColor(nativeHandle, value);
+			batchData.color = value;
+			if (nativeHandle != 0) {
+				InternalSetColor(nativeHandle, value);
+			}
 		}
 	}
 

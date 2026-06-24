@@ -2,18 +2,18 @@
     "active": true,
     "components": [
         {
-            "elementId": "exit",
-            "elementIndex": 2,
+            "elementId": "gama-start",
+            "elementIndex": 3,
             "enable": 1,
-            "groupId": "6edc7f58db76d6a42f6cdc90c4a5ef78",
+            "groupId": "cc4c774c6085d30dcb0a5edbe13b75d3",
             "type": "UIElementComponent"
         },
         {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": -300.0,
+                "x": 2.200000047683716,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
@@ -23,30 +23,23 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 200.0,
-                "y": 100.0,
+                "x": 1.0,
+                "y": 1.0,
                 "z": 1.0
             },
             "type": "Transform"
         },
         {
-            "UITest3": {},
+            "UITest1": {},
+            "UITest4": {
+                "nextSceneName": "GameScene"
+            },
             "type": "Variables"
         },
         {
             "enable": 1,
             "links": {},
             "type": "UILinkNavigationComponent"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "UITest3"
-                }
-            ],
-            "type": "Script"
         },
         {
             "enable": 1,
@@ -74,10 +67,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "UITest4"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "5fe3bcba81b78feca92d90bfa157f348",
-    "name": "Element_2",
-    "parentGuid": "03be9daad74827ccb0679716d94d989f",
+    "guid": "d073f1564f31a7230bad21fe4d4b83eb",
+    "name": "Element_4",
+    "parentGuid": "cc4c774c6085d30dcb0a5edbe13b75d3",
     "prefabName": ""
 }

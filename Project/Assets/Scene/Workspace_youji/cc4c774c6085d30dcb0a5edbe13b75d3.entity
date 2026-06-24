@@ -16,8 +16,8 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
+                "x": 200.0,
+                "y": 100.0,
                 "z": 1.0
             },
             "type": "Transform"
@@ -26,16 +26,21 @@
             "type": "Variables"
         },
         {
-            "currentSelected": "",
+            "currentSelected": "a84c3d3f6eeaaaa670bfe60a33203ef1",
             "enable": 1,
             "isFocused": true,
             "isVisible": true,
             "parentGroup": "",
+            "submitKeys": [
+                "Return",
+                "Space",
+                "GamepadA"
+            ],
             "type": "UIGroupComponent"
         }
     ],
-    "guid": "03be9daad74827ccb0679716d94d989f",
-    "name": "Group_3",
-    "parentGuid": "80288fb15cf1d0e57e6db44825a89259",
+    "guid": "cc4c774c6085d30dcb0a5edbe13b75d3",
+    "name": "Group_0",
+    "parentGuid": "263588fd93a9a031d4c2ed59293ef3ae",
     "prefabName": ""
 }

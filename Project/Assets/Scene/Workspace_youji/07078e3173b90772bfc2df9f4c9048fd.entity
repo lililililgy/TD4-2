@@ -2,53 +2,29 @@
     "active": true,
     "components": [
         {
-            "elementId": "start",
-            "elementIndex": 0,
-            "enable": 1,
-            "groupId": "6edc7f58db76d6a42f6cdc90c4a5ef78",
-            "type": "UIElementComponent"
-        },
-        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 301.7000427246094,
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 200.0,
-                "y": 100.0,
-                "z": 200.0
+                "x": 167.10000610351563,
+                "y": 167.09999084472656,
+                "z": 167.09999084472656
             },
             "type": "Transform"
         },
         {
-            "UITest1": {},
+            "Test": {},
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "links": {
-                "DownArrow": "ee5c70b4044749804f7df940d6af0990"
-            },
-            "type": "UILinkNavigationComponent"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "UITest1"
-                }
-            ],
-            "type": "Script"
         },
         {
             "enable": 1,
@@ -76,10 +52,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "Test"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "163cdc0eb6406f3922270ee1bd6b2d91",
-    "name": "Element_0",
-    "parentGuid": "03be9daad74827ccb0679716d94d989f",
+    "guid": "07078e3173b90772bfc2df9f4c9048fd",
+    "name": "Sprite_5",
+    "parentGuid": null,
     "prefabName": ""
 }

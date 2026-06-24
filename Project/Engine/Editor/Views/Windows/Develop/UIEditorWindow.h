@@ -57,6 +57,10 @@ private:
 		bool isFocused = false;
 		bool isVisible = true;
 		ONEngine::Guid guid; // GameEntity の GUID と一致させる
+		float editorPosX = 0.0f;
+		float editorPosY = 0.0f;
+		bool hasEditorPos = false;
+		std::vector<std::string> submitKeys;
 
 		std::vector<Pin> inputs;
 		std::vector<Pin> outputs;
@@ -104,6 +108,8 @@ private:
 		Mouse
 	};
 	KeyFilter m_CurrentKeyFilter = KeyFilter::All;
+	bool m_IsListeningForKey = false;
+	unsigned long long m_ListeningNodeId = 0;
 };
 
 } /// namespace Editor
