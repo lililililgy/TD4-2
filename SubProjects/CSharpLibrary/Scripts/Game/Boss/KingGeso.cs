@@ -9,7 +9,7 @@ public class KingGeso : MonoScript
     [SerializeField]
     public string targetEntityName = "Player";
     [SerializeField]
-    public string cameraEntityName = "Camera_1";
+    public string cameraEntityName = "Camera";
     [SerializeField]
     public Vector2 gesoSpawnOffset = Vector2.zero;
     [SerializeField]
@@ -25,7 +25,7 @@ public class KingGeso : MonoScript
     [SerializeField]
     public float cooldownDuration = 1.0f;
     [SerializeField]
-    public float gesoAttackDamage = 10.0f;
+    public float gesoAttackDamage = 1.0f;
     [SerializeField]
     public float gesoAttackRadius = 1.5f;
     [SerializeField]
@@ -33,7 +33,7 @@ public class KingGeso : MonoScript
     [SerializeField]
     public float gesoMoveDuration = 0.25f;
     [SerializeField]
-    public float gesoPassThroughDistance = 3.0f;
+    public float gesoPassThroughDistance = 300.0f;
 
     private HP _hp;
     private IKingGesoState _state;
@@ -175,11 +175,15 @@ public class KingGeso : MonoScript
         }
 
         gesoSpawnOffset = CreateRandomScreenEdgeOffset();
-        Vector2 spawnPosition = GetScreenCenter() + gesoSpawnOffset;
-        _activeGeso.transform.position = new Vector3(spawnPosition.x, GetMovementHeight(), spawnPosition.y);
+       Vector2 spawnPosition = GetScreenCenter() + gesoSpawnOffset;
+       // Vector2 spawnPosition = new Vector2(10.0f, 10.0f);
+        _activeGeso.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, GetMovementDepth());
         return true;
     }
 
+    //=============================================================
+    // ゲソの攻撃開始処理
+    //=============================================================
     internal bool StartActiveGesoAttack()
     {
         if (_activeGeso == null)
@@ -193,6 +197,7 @@ public class KingGeso : MonoScript
             return false;
         }
 
+        // ゲソの攻撃パラメーターを設定して攻撃を開始
         hand.attackDamage = gesoAttackDamage;
         hand.attackRadius = gesoAttackRadius;
         hand.attackDuration = AttackDuration;
@@ -242,15 +247,15 @@ public class KingGeso : MonoScript
         {
             center = _cameraEntity.transform.worldPosition;
         }
-        return new Vector2(center.x, center.z);
+        return new Vector2(center.x, center.y);
     }
 
-    private float GetMovementHeight()
+    private float GetMovementDepth()
     {
         if (_targetEntity != null && _targetEntity.transform != null)
         {
-            return _targetEntity.transform.worldPosition.y;
+            return _targetEntity.transform.worldPosition.z;
         }
-        return transform.worldPosition.y;
+        return transform.worldPosition.z;
     }
 }

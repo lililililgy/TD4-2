@@ -5,7 +5,7 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
+                "x": 110.0,
                 "y": 0.0,
                 "z": 0.0
             },
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 200.0,
-                "y": 200.0,
-                "z": 200.0
+                "x": 100.0,
+                "y": 100.0,
+                "z": 100.0
             },
             "type": "Transform"
         },
@@ -27,24 +27,14 @@
                 "attackDamage": 0.0,
                 "attackDuration": 0.0,
                 "attackOffsetForward": 0.0,
-                "attackOffsetUp": 500.0,
+                "attackOffsetUp": 0.0,
                 "attackRadius": 0.0,
-                "moveDuration": 129.0,
-                "passThroughDistance": 300.0,
+                "moveDuration": 0.0,
+                "passThroughDistance": 0.0,
                 "returnDuration": 0.0,
                 "rotationSpeed": 0.0
             },
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "GesoHand"
-                }
-            ],
-            "type": "Script"
         },
         {
             "enable": 1,
@@ -72,10 +62,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "GesoHand"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "f46447c8a703aeb72c9e7dcefe68fca0",
-    "name": "Geso",
+    "guid": "2df14a1cd1ce8a1feb7f69a6dc45e7f0",
+    "name": "NewEntity",
     "parentGuid": null,
-    "prefabName": "Geso"
+    "prefabName": ""
 }

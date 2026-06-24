@@ -37,12 +37,12 @@
                 "gesoAttackDamage": 10.0,
                 "gesoAttackRadius": 1.5,
                 "gesoMoveDuration": 0.25,
-                "gesoPassThroughDistance": 3.0,
+                "gesoPassThroughDistance": 1000.0,
                 "gesoPrefabName": "Geso",
                 "gesoRotationSpeed": 8.0,
                 "gesoSpawnOffset": {
-                    "x": 1243.9658203125,
-                    "y": 720.5
+                    "x": 1280.5,
+                    "y": 71.77147674560547
                 },
                 "idleDuration": 2.0,
                 "maxHp": 10,

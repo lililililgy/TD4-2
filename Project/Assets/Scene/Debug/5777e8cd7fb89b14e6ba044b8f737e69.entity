@@ -2,7 +2,7 @@
     "active": true,
     "components": [
         {
-            "cameraType": 1,
+            "cameraType": 0,
             "enable": 1,
             "farClip": 1000.0,
             "fogColor": {
@@ -27,10 +27,10 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "w": 0.24002543091773987,
+                "x": -0.03996758162975311,
+                "y": -0.956770122051239,
+                "z": -0.1593155711889267
             },
             "scale": {
                 "x": 1.0,
@@ -41,6 +41,9 @@
         },
         {
             "DebugCamera": {},
+            "KingGeso": {
+                "gesoPassThroughDistance": 1000.0
+            },
             "type": "Variables"
         },
         {
