@@ -5,9 +5,9 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 0.1970001608133316,
-                "z": -34.65500259399414
+                "x": -574.3999633789063,
+                "y": 0.0,
+                "z": 0.0
             },
             "rotate": {
                 "w": 0.0,
@@ -16,13 +16,28 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 0.02199997939169407,
-                "z": 0.9999997615814209
+                "x": 128.0,
+                "y": 128.0,
+                "z": 128.0
             },
             "type": "Transform"
         },
         {
+            "categoryBits": 64,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 130,
+            "mass": 1.0,
+            "radius": 0.4000000059604645,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "ExperiencePoint": {
+                "experiencePoints": 10.0
+            },
             "type": "Variables"
         },
         {
@@ -31,10 +46,10 @@
                 "baseColor": {
                     "w": 1.0,
                     "x": 1.0,
-                    "y": 1.0,
+                    "y": 0.9900000095367432,
                     "z": 1.0
                 },
-                "baseTextureGuid": "48e6a5389d60e53479bdb951ce8872d1",
+                "baseTextureGuid": "ac842be8df6723ae5fa4c2c06a0e1f11",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -45,16 +60,26 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 64.0,
+                        "x": 1.0,
                         "y": 1.0
                     }
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ExperiencePoint"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "97e3910c7b13de5b8c909742eb5f39e6",
-    "name": "water surface",
-    "parentGuid": "849e0e74c812e269283f6ea848be094c",
-    "prefabName": ""
+    "guid": "c0c63520e221efa43da3dc72e28171cf",
+    "name": "ExpOrbLarge",
+    "parentGuid": null,
+    "prefabName": "ExpOrbLarge"
 }

@@ -288,6 +288,7 @@ static class ComponentBatchManager {
 				comp.position = transformBatch[i].position;
 				comp.rotate = transformBatch[i].rotate;
 				comp.scale = transformBatch[i].scale;
+				comp.matrix = transformBatch[i].matrix; // ワールド行列も毎フレーム反映（m30/31/32 がワールド座標）
 			}
 		} else if (componentType == typeof(MeshRenderer)) {
 			var meshArray = (ComponentArray<MeshRenderer>)array;

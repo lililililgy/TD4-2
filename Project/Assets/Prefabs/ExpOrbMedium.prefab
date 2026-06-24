@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.3460000157356262,
+                "y": -236.59999084472656,
                 "z": 0.0
             },
             "rotate": {
@@ -16,25 +16,40 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 0.3009999990463257,
-                "z": 0.9999997615814209
+                "x": 86.0,
+                "y": 86.0,
+                "z": 86.0
             },
             "type": "Transform"
         },
         {
+            "categoryBits": 64,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 130,
+            "mass": 1.0,
+            "radius": 0.4000000059604645,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "ExperiencePoint": {
+                "experiencePoints": 10.0
+            },
             "type": "Variables"
         },
         {
             "enable": 1,
             "material": {
                 "baseColor": {
-                    "w": 0.4000000059604645,
-                    "x": 0.0,
-                    "y": 1.0,
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.9900000095367432,
                     "z": 1.0
                 },
-                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
+                "baseTextureGuid": "ac842be8df6723ae5fa4c2c06a0e1f11",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -51,10 +66,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ExperiencePoint"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "d6f156c4d55cea78ade5d9d97cad4b25",
-    "name": "sky",
-    "parentGuid": "849e0e74c812e269283f6ea848be094c",
-    "prefabName": ""
+    "guid": "71bdfc033fdb2feb14e6db223ea54ace",
+    "name": "ExpOrbMedium",
+    "parentGuid": null,
+    "prefabName": "ExpOrbMedium"
 }

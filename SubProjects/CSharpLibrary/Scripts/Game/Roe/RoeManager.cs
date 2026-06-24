@@ -18,11 +18,9 @@ public class RoeManager : MonoScript {
 
     [SerializeField] private string roePrefabName_ = "Roe";  // 生成する卵プレハブ名
 
-    [SerializeField] private int   maxRoe_       = 5;    // 卵(UNMATURE+MATURE)の上限
-    [SerializeField] private int   maxAmmo_      = 5;    // 弾(LARVAE)の上限
-    [SerializeField] private float layInterval_  = 3.0f; // 産卵間隔（暫定：時間。経験値実装時に差し替え）
+    [SerializeField] private int maxRoe_ = 5;    // 卵(UNMATURE+MATURE)の上限
+    [SerializeField] private int maxAmmo_ = 5;    // 弾(LARVAE)の上限
 
-    private float layTimer_ = 0.0f;
     private readonly List<Entity> roe_ = new List<Entity>();
     private readonly Dictionary<int, int> orderById_ = new Dictionary<int, int>(); // entityId -> 隊列順(1始まり)
 
@@ -30,13 +28,28 @@ public class RoeManager : MonoScript {
         // 破棄済み（発射・撃破）の卵を隊列から掃除
         Prune();
 
-        // 産卵（暫定：時間経過。経験値が実装されたらここを「経験値消費で1個産む」に差し替える）
-        // 上限は卵(UNMATURE+MATURE)の数で判定する。弾(LARVAE)は別枠なので数えない。
-        layTimer_ += Time.deltaTime;
-        if (layTimer_ >= layInterval_) {
-            layTimer_ = 0.0f;
+        LevelingComponent levelingComponent = entity.GetScript<LevelingComponent>();
+        // Levelが上がったタイミングで産卵
+        if (levelingComponent.IsLevelUp) {
             if (EggCount() < maxRoe_) {
                 Spawn();
+            }
+        }
+
+        // プレイヤーが受け取った経験値を卵に分配する
+        float addedExp = levelingComponent.AddedExp;
+        if (addedExp > 0) {
+            foreach (Entity e in roe_) {
+                if (e == null) {
+                    continue;
+                }
+                RoeStateComponent state = e.GetScript<RoeStateComponent>();
+                if (state == null || state.CurrentState != RoeState.UNMATURE) {
+                    continue;
+                }
+
+                LevelingComponent roeLevel = e.GetScript<LevelingComponent>();
+                roeLevel?.AddExperience(addedExp);
             }
         }
     }
@@ -58,7 +71,7 @@ public class RoeManager : MonoScript {
         return CountState(RoeState.UNMATURE) + CountState(RoeState.MATURE);
     }
 
-    public int MaxRoe  { get { return maxRoe_; } }
+    public int MaxRoe { get { return maxRoe_; } }
     public int MaxAmmo { get { return maxAmmo_; } }
 
     // 弾(LARVAE)に空きがあるか（リロード可否）

@@ -6,8 +6,8 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": -0.164000004529953,
-                "z": -18.69500732421875
+                "y": -511.699951171875,
+                "z": 0.0
             },
             "rotate": {
                 "w": 0.0,
@@ -16,25 +16,40 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 0.699999988079071,
-                "z": 0.9999997615814209
+                "x": 48.0,
+                "y": 48.0,
+                "z": 48.0
             },
             "type": "Transform"
         },
         {
+            "categoryBits": 64,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 130,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "ExperiencePoint": {
+                "experiencePoints": 1.0
+            },
             "type": "Variables"
         },
         {
             "enable": 1,
             "material": {
                 "baseColor": {
-                    "w": 0.34299999475479126,
+                    "w": 1.0,
                     "x": 1.0,
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "ec07eb05f4f3ec5545f67da0e397067e",
+                "baseTextureGuid": "ac842be8df6723ae5fa4c2c06a0e1f11",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -51,10 +66,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ExperiencePoint"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "b62e6ddf286fb83e9207b9a4fda82313",
-    "name": "underwater",
-    "parentGuid": "849e0e74c812e269283f6ea848be094c",
-    "prefabName": ""
+    "guid": "33e9d0022557dfb99cb04f55226de2bb",
+    "name": "ExpOrbSmall",
+    "parentGuid": null,
+    "prefabName": "ExpOrbSmall"
 }
