@@ -110,7 +110,12 @@ void SceneManager::LoadScene(const std::string& sceneName) {
 		return;
 	}
 
-	MoveNextToCurrentScene(false);
+	// MoveNextToCurrentScene(false);
+	// NOTE: シーン遷移処理（旧シーンの破棄と新シーンの読み込み）を即時実行するのではなく、
+	// 次のフレームの開始時（SceneManager::Update）まで遅延させます。
+	// これにより、OnSelectやOnSubmitなどのスクリプト・システム更新処理のコールバック実行中に
+	// エンティティやECSGroupが即座に破棄されてメモリが解放され、呼び出し元のC++コードで
+	// use-after-free（ダングリングポインタアクセス）が発生しクラッシュする不具合を完全に防止します。
 }
 
 void SceneManager::ReloadScene(bool isTemporary) {
