@@ -27,6 +27,10 @@
                 "lifeTime_": 5.0,
                 "speed_": 32.0
             },
+            "LevelingComponent": {
+                "baseRequiredExp_": 100.0,
+                "maxLevel_": 1
+            },
             "RoeFollower": {
                 "leaderName_": "Player",
                 "maxSmoothSpeed_": 423.0,
@@ -54,6 +58,10 @@
                 {
                     "enable": true,
                     "name": "RoeFollower"
+                },
+                {
+                    "enable": true,
+                    "name": "LevelingComponent"
                 },
                 {
                     "enable": true,
@@ -90,7 +98,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "480bbeb91daed9b69464fda7c7c7ffe5",
+    "guid": "51c53b2a14880fd8f79aef7e66685435",
     "name": "Roe",
     "parentGuid": null,
     "prefabName": "Roe"

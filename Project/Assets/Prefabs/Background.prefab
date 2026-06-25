@@ -48,7 +48,7 @@
                             },
                             "rotate": 0.0,
                             "scale": {
-                                "x": 32.0,
+                                "x": 64.0,
                                 "y": 1.0
                             }
                         }
@@ -152,7 +152,7 @@
                     "enable": 1,
                     "material": {
                         "baseColor": {
-                            "w": 0.4440000057220459,
+                            "w": 0.34299999475479126,
                             "x": 1.0,
                             "y": 1.0,
                             "z": 1.0
@@ -190,7 +190,7 @@
                     "position": {
                         "x": 0.0,
                         "y": -0.49600014090538025,
-                        "z": -18.69500732421875
+                        "z": -13.932994842529297
                     },
                     "rotate": {
                         "w": 0.0,
@@ -228,7 +228,7 @@
                             },
                             "rotate": 0.0,
                             "scale": {
-                                "x": 8.0,
+                                "x": 20.0,
                                 "y": 1.0
                             }
                         }
@@ -288,8 +288,8 @@
                             },
                             "rotate": 0.0,
                             "scale": {
-                                "x": 8.0,
-                                "y": 8.0
+                                "x": 32.0,
+                                "y": 16.0
                             }
                         }
                     },
@@ -298,6 +298,50 @@
             ],
             "guid": "d3fce46966a69c4d0dd9ac79637ca86a",
             "name": "uvChecker",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "prefabName": ""
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 0.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "CloudManager": {},
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "scripts": [
+                        {
+                            "enable": true,
+                            "name": "CloudManager"
+                        }
+                    ],
+                    "type": "Script"
+                }
+            ],
+            "guid": "0904d7e09a94f47ab071fbc09f48fb02",
+            "name": "cloudManager",
             "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
             "prefabName": ""
         }
@@ -318,7 +362,7 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 2000.0,
+                "x": 5000.0,
                 "y": 2000.000244140625,
                 "z": 2000.000244140625
             },

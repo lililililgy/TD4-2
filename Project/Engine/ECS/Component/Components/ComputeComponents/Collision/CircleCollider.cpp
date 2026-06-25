@@ -1,4 +1,4 @@
-#include "CircleCollider.h"
+﻿#include "CircleCollider.h"
 
 /// std
 #include <bit>
@@ -94,7 +94,7 @@ void ComponentDebug::CircleColliderDebug(CircleCollider* c) {
 
 	/// circle parameter
 	ImGui::SeparatorText("circle parameter");
-	Editor::ImMathf::DragFloat("radius", &c->radius_, 0.1f, 0.0f, 100.0f);
+	Editor::ImMathf::DragFloat("radius", &c->radius_, 0.1f);
 }
 
 void ONEngine::from_json(const nlohmann::json& j, CircleCollider& s) {

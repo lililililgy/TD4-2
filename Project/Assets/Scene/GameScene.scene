@@ -39,6 +39,31 @@
             "guid": "d3fce46966a69c4d0dd9ac79637ca86a",
             "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
             "path": "./GameScene/d3fce46966a69c4d0dd9ac79637ca86a.entity"
+        },
+        {
+            "guid": "0904d7e09a94f47ab071fbc09f48fb02",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "path": "./GameScene/0904d7e09a94f47ab071fbc09f48fb02.entity"
+        },
+        {
+            "guid": "c390a64a0dc1ce6cc005e4385c312bf4",
+            "parentGuid": "b0388d37fce8d21ff4d0f9668d6b4e26",
+            "path": "./GameScene/c390a64a0dc1ce6cc005e4385c312bf4.entity"
+        },
+        {
+            "guid": "c0c63520e221efa43da3dc72e28171cf",
+            "parentGuid": null,
+            "path": "./GameScene/c0c63520e221efa43da3dc72e28171cf.entity"
+        },
+        {
+            "guid": "71bdfc033fdb2feb14e6db223ea54ace",
+            "parentGuid": null,
+            "path": "./GameScene/71bdfc033fdb2feb14e6db223ea54ace.entity"
+        },
+        {
+            "guid": "33e9d0022557dfb99cb04f55226de2bb",
+            "parentGuid": null,
+            "path": "./GameScene/33e9d0022557dfb99cb04f55226de2bb.entity"
         }
     ]
 }

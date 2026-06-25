@@ -12,16 +12,12 @@ public enum RoeState {
 // UNMATURE → MATURE は自分で成長する（本来は経験値、暫定で時間経過）。
 // MATURE → LARVAE はリロード時に RoeManager から SetState で遷移させられる。
 public class RoeStateComponent : MonoScript {
-    [SerializeField] private float growTime_ = 5.0f;   // この秒数で成熟（暫定：時間成長）
-
     [SerializeField] private float minScale_ = 32.0f;  // 幼生／成長前のスケール
     [SerializeField] private float maxScale_ = 64.0f;  // 成熟後のスケール
 
-    private float currentTimer_ = 0.0f;
     private RoeState currentState_ = RoeState.UNMATURE;
 
     public override void Initialize() {
-        currentTimer_ = 0.0f;
         currentState_ = RoeState.UNMATURE;
         ApplyScale(minScale_);
     }
@@ -32,11 +28,11 @@ public class RoeStateComponent : MonoScript {
             return;
         }
 
-        currentTimer_ += Time.deltaTime;
-        ApplyScale(Mathf.Lerp(minScale_, maxScale_, Mathf.Clamp01(currentTimer_ / growTime_)));
+        LevelingComponent levelingComponent = entity.GetScript<LevelingComponent>();
+        ApplyScale(Mathf.Lerp(minScale_, maxScale_, levelingComponent.GetExpProgress()));
 
-        // TODO: 経験値が実装されたら、この条件を「経験値 >= 必要量」に差し替える。
-        if (currentTimer_ >= growTime_) {
+        // Level UP したら RoeState を MATURE に遷移させる。見た目もここで合わせる。
+        if (levelingComponent.IsLevelUp) {
             SetState(RoeState.MATURE);
         }
     }
