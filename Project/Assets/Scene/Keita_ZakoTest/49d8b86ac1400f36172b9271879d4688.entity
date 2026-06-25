@@ -1,5 +1,13 @@
 {
     "active": true,
+    "components": [
+        {
+            "material": {
+                "baseTextureGuid": "1e73117556377963597bd35043846a53"
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
     "guid": "49d8b86ac1400f36172b9271879d4688",
     "name": "Player",
     "parentGuid": null,

@@ -10,10 +10,10 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.6085065603256226,
+                "w": -0.26280903816223145,
                 "x": 0.0,
-                "y": 0.0,
-                "z": 0.7935488224029541
+                "y": -0.0,
+                "z": 0.9648478627204895
             },
             "scale": {
                 "x": 200.0,
@@ -89,7 +89,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "137293673fcfbf8a78503feb4bd3a281",
+    "guid": "99b9a76f9748626f2e2ddcaa686294a3",
     "name": "MorayEelPot",
     "parentGuid": null,
     "prefabName": "MorayEelPot"

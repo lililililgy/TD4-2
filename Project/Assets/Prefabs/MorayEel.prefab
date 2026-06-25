@@ -5,26 +5,26 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": -188.46104431152344,
+                "y": 257.52862548828125,
+                "z": 2.481629280737252e-06
             },
             "rotate": {
-                "w": 0.7071067690849304,
-                "x": 0.0,
-                "y": 0.0,
-                "z": -0.7071067690849304
+                "w": -1.401298464324817e-45,
+                "x": -0.31065064668655396,
+                "y": 0.9505242109298706,
+                "z": 1.401298464324817e-45
             },
             "scale": {
-                "x": 200.0,
-                "y": 200.0,
-                "z": 200.0
+                "x": 243.5471954345703,
+                "y": 243.5471954345703,
+                "z": 243.5471954345703
             },
             "type": "Transform"
         },
         {
             "HP": {
-                "currentHp_": 0.0,
+                "currentHp_": 30.0,
                 "disableAutoDestruction_": false,
                 "isInvincible_": false,
                 "maxHp_": 30.0
@@ -105,7 +105,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "9b42d49b1704e99ede0240878059edc0",
+    "guid": "c7bd3bb05c418427e323ef135b6aee95",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"
