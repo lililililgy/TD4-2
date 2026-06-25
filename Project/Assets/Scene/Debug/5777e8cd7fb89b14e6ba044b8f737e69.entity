@@ -2,7 +2,7 @@
     "active": true,
     "components": [
         {
-            "cameraType": 0,
+            "cameraType": 1,
             "enable": 1,
             "farClip": 1000.0,
             "fogColor": {
@@ -14,7 +14,7 @@
             "fogStart": 0.0,
             "fovY": 0.699999988079071,
             "isDrawFrustum": false,
-            "isMainCamera": true,
+            "isMainCamera": false,
             "nearClip": 0.10000000149011612,
             "type": "CameraComponent"
         },
@@ -24,13 +24,13 @@
             "position": {
                 "x": -34.11201477050781,
                 "y": -1.8702447414398193,
-                "z": -114.36476135253906
+                "z": -162.9647674560547
             },
             "rotate": {
-                "w": 0.9438902735710144,
-                "x": 0.25615552067756653,
-                "y": 0.201183021068573,
-                "z": -0.05459759756922722
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
             },
             "scale": {
                 "x": 1.0,

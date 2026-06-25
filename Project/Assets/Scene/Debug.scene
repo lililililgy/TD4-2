@@ -29,6 +29,21 @@
             "guid": "7c9d0639be578de0009431e0629afde0",
             "parentGuid": null,
             "path": "./Debug/7c9d0639be578de0009431e0629afde0.entity"
+        },
+        {
+            "guid": "964efaa064eee4042f2712e84375186e",
+            "parentGuid": null,
+            "path": "./Debug/964efaa064eee4042f2712e84375186e.entity"
+        },
+        {
+            "guid": "1434512c4fde0ff25cb88f72b355416c",
+            "parentGuid": null,
+            "path": "./Debug/1434512c4fde0ff25cb88f72b355416c.entity"
+        },
+        {
+            "guid": "9b42d49b1704e99ede0240878059edc0",
+            "parentGuid": null,
+            "path": "./Debug/9b42d49b1704e99ede0240878059edc0.entity"
         }
     ]
 }

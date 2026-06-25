@@ -2,13 +2,14 @@
     "active": true,
     "components": [
         {
-            "MorayEelSpawnMove": {
-                "spawnSpinCount": 5.0
+            "SmallFryChaseMove": {
+                "chaseDuration": 2.5,
+                "waitTime": 1.7999999523162842
             },
             "type": "Variables"
         }
     ],
-    "guid": "57d687c6fd7d63d391271bd73f5fb938",
+    "guid": "9b42d49b1704e99ede0240878059edc0",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

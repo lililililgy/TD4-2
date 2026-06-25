@@ -16,9 +16,9 @@
                 "z": -0.7071067690849304
             },
             "scale": {
-                "x": 255.0,
-                "y": 255.0,
-                "z": 255.0
+                "x": 200.0,
+                "y": 200.0,
+                "z": 200.0
             },
             "type": "Transform"
         },
@@ -30,17 +30,22 @@
                 "deraySpeed": 749.5999755859375,
                 "launchTime": 0.8999999761581421,
                 "playerEntityName": "Player",
-                "spawnSpinCount": 5.0,
+                "spawnSpinCount": 3.0,
                 "startChaseDistance": 0.0
             },
             "SmallFryChaseMove": {
-                "chaseDistance": 50.0,
-                "chaseDuration": 2.0,
+                "chaseDistance": 600.0,
+                "chaseDuration": 2.5,
+                "chasePulseDuration": 0.10000000149011612,
+                "chasePulseScale": 1.100000023841858,
                 "chaseSpeed": 299.0,
                 "discoveryScale": 2.0,
                 "discoveryTimer": 0.6000000238418579,
                 "playerEntityName": "Player",
-                "rushDistance": 20.0
+                "rushDistance": 200.0,
+                "waitPulseDuration": 1.2999999523162842,
+                "waitPulseScale": 1.2000000476837158,
+                "waitTime": 1.7999999523162842
             },
             "type": "Variables"
         },
@@ -71,7 +76,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "81a024e9a87e59e95d5afd6b2ea6a342",
+                "baseTextureGuid": "ed881088c6b4a6998fd4e34005204169",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -90,7 +95,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "57d687c6fd7d63d391271bd73f5fb938",
+    "guid": "9b42d49b1704e99ede0240878059edc0",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

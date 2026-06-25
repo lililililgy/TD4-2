@@ -2,14 +2,13 @@
     "active": true,
     "components": [
         {
-            "MorayEelPot": {
-                "fireScale": 1.5,
-                "fireScaleTimer": 0.6000000238418579
+            "material": {
+                "baseTextureGuid": "13ff242ada4146403f10477a01d44d79"
             },
-            "type": "Variables"
+            "type": "SpriteRenderer"
         }
     ],
-    "guid": "7c9d0639be578de0009431e0629afde0",
+    "guid": "137293673fcfbf8a78503feb4bd3a281",
     "name": "MorayEelPot",
     "parentGuid": null,
     "prefabName": "MorayEelPot"
