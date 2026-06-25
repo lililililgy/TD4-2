@@ -28,17 +28,10 @@
                 "speed_": 32.0
             },
             "LevelingComponent": {
-                "baseRequiredExp_": 100.0,
+                "baseRequiredExp_": 50.0,
+                "currentExp_": 0.0,
+                "currentLevel_": 0,
                 "maxLevel_": 1
-            },
-            "RoeFollower": {
-                "leaderName_": "Player",
-                "maxSmoothSpeed_": 423.0,
-                "order_": 1,
-                "playerOffset_": 128.0,
-                "roeOffset_": 48.0,
-                "smoothTime_": 0.25999999046325684,
-                "spacing_": 48.0
             },
             "RoeGrowth": {
                 "growTime_": 0.5,
@@ -48,7 +41,15 @@
             "RoeStateComponent": {
                 "growTime_": 0.5,
                 "maxScale_": 64.0,
-                "minScale_": 16.0
+                "minScale_": 32.0
+            },
+            "TrailFollower": {
+                "leadOffset_": 512.0,
+                "leaderName_": "Player",
+                "maxSmoothSpeed_": 423.0,
+                "order_": 1,
+                "smoothTime_": 0.25999999046325684,
+                "unitOffset_": 86.0
             },
             "type": "Variables"
         },
@@ -57,7 +58,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "RoeFollower"
+                    "name": "TrailFollower"
                 },
                 {
                     "enable": true,
@@ -79,7 +80,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "ef82942482f6276604a60b37a36239ef",
+                "baseTextureGuid": "da3917104a877fa8943d617ddba222c0",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -98,7 +99,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "51c53b2a14880fd8f79aef7e66685435",
+    "guid": "df894814d6d863344dde87d1393aede2",
     "name": "Roe",
     "parentGuid": null,
     "prefabName": "Roe"

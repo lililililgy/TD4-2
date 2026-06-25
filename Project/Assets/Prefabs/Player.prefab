@@ -77,9 +77,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 256.0,
-                "y": 255.9999542236328,
-                "z": 255.9999542236328
+                "x": 128.0,
+                "y": 127.99998474121094,
+                "z": 127.99998474121094
             },
             "type": "Transform"
         },
@@ -97,15 +97,16 @@
         },
         {
             "AttackCollision": {
-                "damage_": 100,
+                "damage_": 0.0,
                 "destroyOnHit_": false
             },
             "HP": {
                 "MAX_HP": 12,
                 "currentHp": 1,
-                "currentHp_": 1.0,
+                "currentHp_": 0.0,
+                "directlyDamageable_": false,
                 "disableAutoDestruction": false,
-                "disableAutoDestruction_": false,
+                "disableAutoDestruction_": true,
                 "isInvincible": false,
                 "isInvincible_": false,
                 "maxHp_": 12.0,
@@ -113,6 +114,8 @@
             },
             "LevelingComponent": {
                 "baseRequiredExp_": 100.0,
+                "currentExp_": 0.0,
+                "currentLevel_": 0,
                 "maxLevel_": 999
             },
             "Magazine": {
@@ -222,13 +225,13 @@
             "PlayerShotComponent": {
                 "bulletSpawnOffset_": {
                     "x": 0.0,
-                    "y": -1.399999976158142
+                    "y": 1.0
                 },
                 "isShot_": false,
                 "shootCooldownTime_": 0.18000000715255737
             },
             "PlayerStateComponent": {
-                "currentStateName_": ""
+                "currentStateName_": "PlayerNormalState"
             },
             "RoeManager": {
                 "broodCount_": 3,
@@ -316,7 +319,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "98833aef331aafb2bfce860b634d7f4a",
+                "baseTextureGuid": "82bfb5cf159727c85b283e4ffcf1337a",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,

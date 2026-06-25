@@ -10,7 +10,8 @@ public class LevelingComponent : MonoScript {
 
     [SerializeField] private int currentLevel_;
     [SerializeField] private float currentExp_;
-    private float addedExp_; // 追加された経験値
+    private float addedExp_; // このフレームに追加された経験値（毎フレーム先頭でリセット）
+    private float totalGainedExp_; // 累計で取得した経験値（リセットしない。実行順に依存しない増分取得用）
     private float requiredExp_; // 次のLevelに必要な経験値
 
     private bool isLevelUp_ = false; // Levelが上がったかどうかのフラグ
@@ -23,6 +24,7 @@ public class LevelingComponent : MonoScript {
         currentLevel_ = 0;
         currentExp_ = 0f;
         addedExp_ = 0f;
+        totalGainedExp_ = 0f;
         requiredExp_ = CalculateRequiredExp(currentLevel_);
     }
     public override void Update() {
@@ -73,6 +75,7 @@ public class LevelingComponent : MonoScript {
         }
         currentExp_ += exp.ExperiencePoints;
         addedExp_ += exp.ExperiencePoints;
+        totalGainedExp_ += exp.ExperiencePoints;
 
         pendingDestroyIds_.Add(collision.Id);// 経験値オブジェクトを破棄予定リストに追加
     }
@@ -80,6 +83,7 @@ public class LevelingComponent : MonoScript {
     public void AddExperience(float exp) {
         currentExp_ += exp;
         addedExp_ += exp;
+        totalGainedExp_ += exp;
     }
 
     public int MaxLevel {
@@ -94,6 +98,12 @@ public class LevelingComponent : MonoScript {
 
     public float AddedExp {
         get { return addedExp_; }
+    }
+
+    // 累計取得経験値。毎フレームのリセットが無いので、消費側が前回値との差分を取れば
+    // スクリプトの実行順に依存せず「このフレームの増分」を得られる。
+    public float TotalGainedExp {
+        get { return totalGainedExp_; }
     }
 
     public bool IsLevelUp {
