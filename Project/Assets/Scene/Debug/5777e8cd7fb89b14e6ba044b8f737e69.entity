@@ -59,6 +59,11 @@
                     "z": 0.0
                 }
             },
+            "KingGeso": {
+                "attackDuration": 100.0,
+                "gesoMoveDuration": 10.25,
+                "screenEdgeMargin": 128.5
+            },
             "PlayerFollowCamera": {
                 "maxSmoothSpeed_": 72.0
             },

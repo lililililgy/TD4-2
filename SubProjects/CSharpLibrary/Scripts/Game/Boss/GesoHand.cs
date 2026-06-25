@@ -43,6 +43,9 @@ public class GesoHand : MonoScript
     // 攻撃イベントが送信されたかどうかを追跡するフラグ
     private bool _attackEventSent;
 
+    //弱点インスタンス
+    private GesoWeakPoint _weakPoint;
+
     //=============================
     // 初期化
     //=============================
