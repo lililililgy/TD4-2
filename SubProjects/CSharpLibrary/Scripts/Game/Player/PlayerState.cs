@@ -6,7 +6,7 @@ using System;
 public abstract class PlayerState : MonoScript {
 
     // この状態の移動パラメーター（自分の SerializeField から構築する）
-    public abstract PlayerMoveParam MoveParam { get; }
+    public abstract MoveParam MoveParam { get; }
 
     // この状態で射撃が可能か
     public virtual bool CanShoot() {

@@ -4,27 +4,27 @@
         {
             "cameraType": 1,
             "enable": 1,
-            "farClip": 1000.0,
+            "farClip": 100.0,
             "fogColor": {
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
-            "fogEnd": -431602080.0,
-            "fogStart": -431602080.0,
-            "fovY": 0.699999988079071,
+            "fogEnd": 10000.0,
+            "fogStart": 0.0,
+            "fovY": 0.6100000143051147,
             "isDrawFrustum": false,
             "isMainCamera": true,
-            "nearClip": 0.10000000149011612,
+            "nearClip": 0.4099999964237213,
             "type": "CameraComponent"
         },
         {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -21.446176528930664,
-                "y": 17.780208587646484,
-                "z": 21.365306854248047
+                "x": -57.27166748046875,
+                "y": 22.028217315673828,
+                "z": 0.0
             },
             "rotate": {
                 "w": 0.0,
@@ -33,31 +33,36 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0000056028366089,
-                "y": 1.0000057220458984,
-                "z": 1.0000126361846924
+                "x": 1.4483363628387451,
+                "y": 1.4483363628387451,
+                "z": 1.4483363628387451
             },
             "type": "Transform"
         },
         {
-            "DebugCamera": {
-                "eulerAngles_": {
-                    "x": -0.0,
-                    "y": 0.0,
+            "DebugCamera2D": {
+                "dragSensitivity_": 1.0,
+                "isActive_": true,
+                "moveSpeed_": 1.0,
+                "position_": {
+                    "x": -57.27166748046875,
+                    "y": 22.028217315673828,
                     "z": 0.0
                 },
-                "isActive_": true,
-                "moveSpeed_": 0.05000000074505806,
-                "position_": {
-                    "x": -21.446176528930664,
-                    "y": 17.780208587646484,
-                    "z": 21.365306854248047
+                "scale_": {
+                    "x": 1.4483363628387451,
+                    "y": 1.4483363628387451,
+                    "z": 1.4483363628387451
                 },
                 "velocity_": {
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
                 }
+            },
+            "PlayerFollowCamera": {
+                "maxSmoothSpeed_": 26.0,
+                "smoothTime_": 0.8999999761581421
             },
             "type": "Variables"
         },
@@ -66,7 +71,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "DebugCamera"
+                    "name": "DebugCamera2D"
                 }
             ],
             "type": "Script"

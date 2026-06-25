@@ -22,15 +22,15 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": -36.02433395385742,
+                "y": 2.0796570777893066,
+                "z": -117.26132202148438
             },
             "rotate": {
-                "w": 0.24002543091773987,
-                "x": -0.03996758162975311,
-                "y": -0.956770122051239,
-                "z": -0.1593155711889267
+                "w": 0.4564409852027893,
+                "x": 0.3850955367088318,
+                "y": -0.6130551695823669,
+                "z": 0.5172296166419983
             },
             "scale": {
                 "x": 1.0,
@@ -40,9 +40,27 @@
             "type": "Transform"
         },
         {
-            "DebugCamera": {},
-            "KingGeso": {
-                "gesoPassThroughDistance": 1000.0
+            "DebugCamera": {
+                "eulerAngles_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "isActive_": true,
+                "moveSpeed_": 0.05000000074505806,
+                "position_": {
+                    "x": -34.11201477050781,
+                    "y": -1.8702447414398193,
+                    "z": -114.36476135253906
+                },
+                "velocity_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "PlayerFollowCamera": {
+                "maxSmoothSpeed_": 72.0
             },
             "type": "Variables"
         },
@@ -50,7 +68,7 @@
             "enable": 1,
             "scripts": [
                 {
-                    "enable": true,
+                    "enable": false,
                     "name": "DebugCamera"
                 }
             ],

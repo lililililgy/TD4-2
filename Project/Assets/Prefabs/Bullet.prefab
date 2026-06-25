@@ -30,22 +30,6 @@
             "type": "Variables"
         },
         {
-            "categoryBits": 4,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 4294967240,
-            "mass": 1.0,
-            "size": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "state": "Dynamic",
-            "type": "BoxCollider",
-            "useOwnerScale": true
-        },
-        {
             "enable": 1,
             "scripts": [
                 {
@@ -83,7 +67,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "e4ce6021771d62eb49b3baa2c57bee7e",
+    "guid": "e4305bca59592be37931d61ed75bd112",
     "name": "Bullet",
     "parentGuid": null,
     "prefabName": ""

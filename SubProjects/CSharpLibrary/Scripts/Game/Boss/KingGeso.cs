@@ -54,7 +54,7 @@ public class KingGeso : MonoScript
             _hp = entity.AddScript<HP>();
         }
 
-        _hp.MAX_HP = maxHp > 0 ? maxHp : 1;
+        _hp.MaxHp = maxHp > 0 ? maxHp : 1;
         _hp.Initialize();
 
         if (!String.IsNullOrEmpty(targetEntityName))

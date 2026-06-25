@@ -2,22 +2,6 @@
     "active": true,
     "components": [
         {
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "direction": {
-                "x": 0.0,
-                "y": -1.0,
-                "z": 0.0
-            },
-            "enable": 1,
-            "intensity": 1.0,
-            "type": "DirectionalLight"
-        },
-        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
@@ -26,7 +10,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -39,11 +23,22 @@
             "type": "Transform"
         },
         {
+            "CloudManager": {},
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "CloudManager"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "c4259d42735d744b39e01525b7247d66",
-    "name": "DirectionalLight",
-    "parentGuid": null,
+    "guid": "0904d7e09a94f47ab071fbc09f48fb02",
+    "name": "cloudManager",
+    "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
     "prefabName": ""
 }

@@ -7,18 +7,29 @@ public class MorayEelSpawnMove : MonoScript
     [SerializeField] private float deraySpeed = 1.0f;
     [SerializeField] private float launchTime = 1.0f;
     [SerializeField] private string playerEntityName = "Player";
+    [SerializeField] private float spawnSpinCount = 3.0f;
 
+    // velocity
     private Vector3 velocity_ = Vector3.zero;
+    // 出現からの経過時間
     private float timer_ = 0.0f;
+    // 発射フラグ
     private bool launched_ = false;
+    //Action,PlayerEntity
     private Action updateAction_;
     private Entity playerEntity_ = null;
+    // 雑魚敵の追いかけスクリプト
     private SmallFryChaseMove chaseMove_;
+    // 目標角度
+    private Quaternion targetRotation_;
 
     public override void Initialize()
     {
         // 追いかけMoveスクリプトを取得
         chaseMove_ = entity.GetScript<SmallFryChaseMove>();
+
+        // 発射時の向き（= ポットの向き）を終着点として保存
+        targetRotation_ = transform.rotate;
 
         // ツボから出てきた場合は、SpawnMoveに遷移
         if (!launched_)
@@ -49,9 +60,19 @@ public class MorayEelSpawnMove : MonoScript
         // 位置の適応
         transform.position += velocity_ * Time.deltaTime;
 
+        // -------------登場時の回転演出
+        // tの計算
+        float t = Math.Min(timer_ / launchTime, 1.0f);
+        // 序盤は速く回り、終盤に向けて減速
+        float remaining = Ease.In.Quad(1.0f - t);
+        // 回転させて、適用する
+        float extraAngle = spawnSpinCount * 2.0f * (float)Math.PI * remaining;
+        transform.rotate = Quaternion.MakeFromAxis(Vector3.forward, extraAngle) * targetRotation_;
+
         // 時間経過でChargeMoveに移行
         if (timer_ >= launchTime)
         {
+            transform.rotate = targetRotation_;
             updateAction_ = ChargeMove;
         }
     }

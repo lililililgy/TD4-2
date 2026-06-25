@@ -1,9 +1,9 @@
 using System;
 
-// 1状態ぶんの移動パラメーター（実行時 DTO）。
-// シリアライズはされず、PlayerStateComponent がフラットな SerializeField から
-// 構築して各 State に注入する（ネストした SerializeField はエディタに出ないため）。
-public class PlayerMoveParam {
+// 1状態ぶんの移動パラメーター（実行時 DTO）。プレイヤー・敵など移動するもの全般で共通。
+// シリアライズはされず、各ドライバ（PlayerState / EnemyMoveComponent 等）が
+// フラットな SerializeField から構築して Mover に渡す（ネストした SerializeField はエディタに出ないため）。
+public class MoveParam {
     public bool  canMove_              = true;     // この状態で移動入力を受け付けるか
     public float accel_                = 256.0f;   // 加速度
     public float maxSpeed_             = 512.0f;   // 最大速度

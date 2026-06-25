@@ -140,21 +140,30 @@
     <Compile Include="Scripts\Engine\Graphics\UVTransform.cs" />
     <Compile Include="Scripts\Engine\MonoScript.cs" />
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
+    <Compile Include="Scripts\Game\Background\Cloud.cs" />
+    <Compile Include="Scripts\Game\Background\CloudManager.cs" />
     <Compile Include="Scripts\Game\Boss\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso.cs" />
     <Compile Include="Scripts\Game\Boss\KingGesoState.cs" />
     <Compile Include="Scripts\Game\Bullet.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
+    <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
+    <Compile Include="Scripts\Game\Common\DamagePoint.cs" />
     <Compile Include="Scripts\Game\Common\HP.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
+    <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
+    <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
+    <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
+    <Compile Include="Scripts\Game\Movement\MoveParam.cs" />
+    <Compile Include="Scripts\Game\Movement\Mover.cs" />
     <Compile Include="Scripts\Game\Player\Magazine.cs" />
+    <Compile Include="Scripts\Game\Player\PlayerAttackComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerDashState.cs" />
     <Compile Include="Scripts\Game\Player\PlayerInputComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerLifeComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerMoveComponent.cs" />
-    <Compile Include="Scripts\Game\Player\PlayerMoveParam.cs" />
     <Compile Include="Scripts\Game\Player\PlayerNormalState.cs" />
     <Compile Include="Scripts\Game\Player\PlayerShotComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerState.cs" />
@@ -188,11 +197,11 @@
   </Target>
   -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <PostBuildEvent>call "$(ProjectDir)RenameDll.bat"
+    <PostBuildEvent>powershell -NoProfile -ExecutionPolicy Bypass -File "$(ProjectDir)RenameDll.ps1"
 call "$(ProjectDir)KeepLatest.bat"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <PostBuildEvent>call "$(ProjectDir)RenameDll.bat"
+    <PostBuildEvent>powershell -NoProfile -ExecutionPolicy Bypass -File "$(ProjectDir)RenameDll.ps1"
 call "$(ProjectDir)KeepLatest.bat"</PostBuildEvent>
   </PropertyGroup>
 </Project>
