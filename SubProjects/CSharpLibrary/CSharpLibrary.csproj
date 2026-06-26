@@ -149,7 +149,9 @@
     <Compile Include="Scripts\Game\Bullet.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
     <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
+    <Compile Include="Scripts\Game\Common\Attractor.cs" />
     <Compile Include="Scripts\Game\Common\DamagePoint.cs" />
+    <Compile Include="Scripts\Game\Common\DamageRelay.cs" />
     <Compile Include="Scripts\Game\Common\HP.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
@@ -157,8 +159,11 @@
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
+    <Compile Include="Scripts\Game\Experience\ExperiencePoint.cs" />
+    <Compile Include="Scripts\Game\Experience\LevelingComponent.cs" />
     <Compile Include="Scripts\Game\Movement\MoveParam.cs" />
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
+    <Compile Include="Scripts\Game\Movement\TrailFollower.cs" />
     <Compile Include="Scripts\Game\Player\Magazine.cs" />
     <Compile Include="Scripts\Game\Player\PlayerAttackComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerDashState.cs" />
@@ -170,7 +175,6 @@
     <Compile Include="Scripts\Game\Player\PlayerState.cs" />
     <Compile Include="Scripts\Game\Player\PlayerStateComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerStateTransition.cs" />
-    <Compile Include="Scripts\Game\Roe\RoeFollower.cs" />
     <Compile Include="Scripts\Game\Roe\RoeManager.cs" />
     <Compile Include="Scripts\Game\Roe\RoeStateComponent.cs" />
     <Compile Include="Scripts\Game\Roe\RoeTrail.cs" />
@@ -181,6 +185,7 @@
     <Compile Include="Scripts\Game\UI\Test\UITest1.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest2.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest3.cs" />
+    <Compile Include="Scripts\Game\UI\Test\UITest4.cs" />
     <Compile Include="Scripts\Math\SmoothDamp.cs" />
     <Compile Include="Scripts\Test.cs" />
     <Compile Include="Scripts\Test\ColliderTest1.cs" />
