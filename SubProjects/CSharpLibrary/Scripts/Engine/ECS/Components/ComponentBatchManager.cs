@@ -252,6 +252,8 @@ static class ComponentBatchManager {
 
 	// 一括受信
 	public static void ReceiveAllBatches(ComponentCollection collection, string ecsGroupName) {
+		throw new Exception("Debugger Test Exception");
+
 		foreach (var kv in allocators) {
 			if (!collection.TryGetArray(kv.Key, out IComponentArray array)) {
 				// Debug.LogWarning($"ComponentBatchManager.ReceiveAllBatches: ComponentArray for {kv.Key} not found.");

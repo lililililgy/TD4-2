@@ -16,6 +16,7 @@ using namespace ONEngine;
 #include <mono/metadata/tokentype.h>
 #include <mono/metadata/blob.h>
 #include <mono/metadata/debug-helpers.h>
+#include <mono/metadata/threads.h>
 
 
 /// engine
@@ -61,11 +62,18 @@ void MonoScriptEngine::Initialize() {
 	SetEnvironmentVariableA("PATH", "Packages/mono/bin;C:/Windows/System32");
 	SetEnvironmentVariableA("MONO_PATH", "Packages/mono/lib/4.5");
 
-	/// 高速化用オプション
+#if defined(DEBUG_MODE)
+	/// デバッグモード用のオプション設定 (環境変数を使用してSoft Debuggerを確実に起動)
+	SetEnvironmentVariableA("MONO_ENV_OPTIONS", "--soft-breakpoints --debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y");
+	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+#else
+	/// 高速化用オプション (argv[0]としてダミーを配置)
 	const char* options[] = {
+		"ONEngine",
 		"--optimize=all",   // JIT最適化フル
 	};
 	mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**)options);
+#endif
 
 	/// ログ出力(任意、デバッグ時だけでもOK)
 	mono_trace_set_level_string("info");
@@ -85,11 +93,17 @@ void MonoScriptEngine::Initialize() {
 		return;
 	}
 
+#if defined(DEBUG_MODE)
+	// デバッグモード時はドメインリロードによるデバッガの麻痺を防ぐため、
+	// ルートドメインに直接ロードし、AppDomainを追加作成しない
+	domain_ = rootDomain_;
+#else
 	domain_ = CreateReloadDomain();
 	if(!domain_) {
 		Console::LogError("Failed to create Mono domain for initialization", LogCategory::ScriptEngine);
 		return;
 	}
+#endif
 	mono_domain_set(domain_, true);
 
 	auto latestDll = FindLatestDll("./Packages/Scripts", "CSharpLibrary");
@@ -184,6 +198,10 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
+#if defined(DEBUG_MODE)
+	Console::LogWarning("Hot Reload is disabled in Debug Mode to ensure stable debugging.", LogCategory::ScriptEngine);
+	return;
+#endif
 
 	MonoDomain* oldDomain = domain_;
 	std::string oldDllPath = currentDllPath_;
@@ -270,6 +288,16 @@ void MonoScriptEngine::SetEcsPtr(EntityComponentSystem* ecs) {
 }
 
 std::optional<std::string> MonoScriptEngine::FindLatestDll(const std::string& dirPath, const std::string& baseName) {
+#if defined(DEBUG_MODE)
+	// デバッグモード時は、デバッガがアセンブリ名とシンボルを正しく認識できるように、
+	// 常にタイムスタンプなしの固定DLLをロードする
+	std::string path = dirPath + "/" + baseName + ".dll";
+	if (std::filesystem::exists(path)) {
+		Console::Log("Debug Mode: Loading fixed DLL for debugging: " + path, LogCategory::ScriptEngine);
+		return path;
+	}
+#endif
+
 	std::regex pattern(baseName + R"(_.*\.dll)"); // タイムスタンプ付きの全てのDLL
 	std::optional<std::string> latestFile;
 	std::filesystem::file_time_type latestTime;
@@ -831,6 +859,9 @@ MonoObject* ONEngine::MonoScriptEngineUtils::SafeInvoke(MonoMethod* method, void
 	if(!method) {
 		return nullptr;
 	}
+
+	// 現在のスレッドを確実に Mono にアタッチする (デバッガとGCの正常動作のため)
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
 
 	try {
 		return mono_runtime_invoke(method, obj, params, outExc);
