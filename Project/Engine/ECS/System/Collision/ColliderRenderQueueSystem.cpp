@@ -1,4 +1,4 @@
-#include "ColliderRenderQueueSystem.h"
+﻿#include "ColliderRenderQueueSystem.h"
 
 using namespace ONEngine;
 
@@ -124,7 +124,7 @@ void ColliderRenderQueueSystem::UpdateBoxCollider2D(ComponentArray<BoxCollider2D
 			size2D.y *= worldScale.y;
 		}
 		Vector3 size(size2D.x, size2D.y, 0.0f);
-		const Quaternion rotate = owner->GetTransform()->GetRotate();
+		const Quaternion rotate = Quaternion::Normalize(owner->GetRotateQuaternion());
 		Gizmo::DrawWireCube2D(position, size, rotate, Vector4(0.0f, 1.0f, 0.5f, 1.0f));
 	}
 }

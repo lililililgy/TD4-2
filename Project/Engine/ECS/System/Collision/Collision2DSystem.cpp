@@ -1,4 +1,4 @@
-#include "Collision2DSystem.h"
+﻿#include "Collision2DSystem.h"
 
 using namespace ONEngine;
 
@@ -475,7 +475,7 @@ bool CheckMethod2D::CollisionCheckBox2DVsCircle(BoxCollider2D* b, CircleCollider
 		radius *= (std::max)(circleScale.x, circleScale.y);
 	}
 
-	Matrix4x4 rot = Matrix4x4::MakeRotate(boxEntity->GetTransform()->GetRotate());
+	Matrix4x4 rot = Matrix4x4::MakeRotate(boxEntity->GetRotateQuaternion());
 	Vector3 axisX3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Right, rot));
 	Vector3 axisY3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Up, rot));
 	Vector2 axisX(axisX3D.x, axisX3D.y);
@@ -561,12 +561,12 @@ bool CheckMethod2D::CollisionCheckBox2DVsBox2D(BoxCollider2D* b1, BoxCollider2D*
 	}
 	Vector2 half2 = size2 * 0.5f;
 
-	Matrix4x4 rot1 = Matrix4x4::MakeRotate(e1->GetTransform()->GetRotate());
+	Matrix4x4 rot1 = Matrix4x4::MakeRotate(Quaternion::Normalize(e1->GetRotateQuaternion()));
 	Vector3 axis1X_3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Right, rot1));
 	Vector3 axis1Y_3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Up, rot1));
 	Vector2 axis1[2] = { Vector2(axis1X_3D.x, axis1X_3D.y), Vector2(axis1Y_3D.x, axis1Y_3D.y) };
 
-	Matrix4x4 rot2 = Matrix4x4::MakeRotate(e2->GetTransform()->GetRotate());
+	Matrix4x4 rot2 = Matrix4x4::MakeRotate(Quaternion::Normalize(e2->GetRotateQuaternion()));
 	Vector3 axis2X_3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Right, rot2));
 	Vector3 axis2Y_3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Up, rot2));
 	Vector2 axis2[2] = { Vector2(axis2X_3D.x, axis2X_3D.y), Vector2(axis2Y_3D.x, axis2Y_3D.y) };
