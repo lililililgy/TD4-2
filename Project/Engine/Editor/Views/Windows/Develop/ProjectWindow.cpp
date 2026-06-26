@@ -1,4 +1,4 @@
-﻿#include "ProjectWindow.h"
+#include "ProjectWindow.h"
 
 /// std
 #include <filesystem>
@@ -11,13 +11,17 @@
 #include <imgui.h>
 #include <shellapi.h>
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
+#include "Engine/ECS/Entity/GameEntity/GameEntity.h"
 
 /// editor
 #include "Engine/Editor/Manager/EditorManager.h"
 #include "Engine/Editor/Manager/HotReloadManager.h"
+#include "Engine/Editor/Manager/ImGuiManager.h"
 #include "Engine/Editor/Math/AssetPayload.h"
 #include "Engine/Editor/Math/ImGuiMath.h"
 #include "Engine/Editor/Math/ImGuiSelection.h"
@@ -191,6 +195,49 @@ void ProjectWindow::ShowImGui() {
 					if(std::filesystem::exists(oldMeta)) {
 						std::filesystem::rename(oldMeta, newMeta);
 					}
+
+					// Prefabのリネーム時に配置済みEntityの名前とPrefab名を同期
+					if(targetPath_.extension() == ".prefab") {
+						std::string oldPrefabName = targetPath_.stem().string();
+						std::string newPrefabName = newPath.stem().string();
+
+						// 1. プレハブファイル自体の内部データ（JSON）の "name" と "prefabName" を書き換える
+						try {
+							std::ifstream inFile(newPath);
+							if (inFile.is_open()) {
+								nlohmann::json prefabJson;
+								inFile >> prefabJson;
+								inFile.close();
+
+								prefabJson["name"] = newPrefabName;
+								prefabJson["prefabName"] = newPrefabName;
+
+								std::ofstream outFile(newPath);
+								if (outFile.is_open()) {
+									outFile << prefabJson.dump(4);
+									outFile.close();
+								}
+							}
+						} catch (...) {
+							ONEngine::Console::LogError("Failed to update internal name of prefab file.");
+						}
+
+						// 2. シーン内の配置済みEntityの同期およびプレハブキャッシュの再構築
+						if(auto* ecs = pImGuiManager_->GetEntityComponentSystem()) {
+							if(auto* currentGroup = ecs->GetCurrentGroup()) {
+								for(auto& entity : currentGroup->GetEntities()) {
+									if(entity && entity->GetPrefabName() == oldPrefabName) {
+										entity->SetPrefabName(newPrefabName);
+										entity->SetName(newPrefabName);
+									}
+								}
+								if(auto* entityCollection = currentGroup->GetEntityCollection()) {
+									entityCollection->LoadPrefabAll();
+								}
+							}
+						}
+					}
+
 					UpdateFileCache(currentPath_);
 					UpdateDirectoryCache(currentPath_.parent_path());
 				}

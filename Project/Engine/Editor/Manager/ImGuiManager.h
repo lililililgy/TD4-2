@@ -121,6 +121,9 @@ public:
 
 	/// @brief SceneManagerの取得
 	ONEngine::SceneManager* GetSceneManager() const { return pSceneManager_; }
+
+	/// @brief EntityComponentSystemの取得
+	ONEngine::EntityComponentSystem* GetEntityComponentSystem() const { return pEntityComponentSystem_; }
 };
 
 
