@@ -1,0 +1,86 @@
+{
+    "active": true,
+    "components": [
+        {
+            "elementId": "gama-start",
+            "elementIndex": 3,
+            "enable": 1,
+            "groupId": "cc4c774c6085d30dcb0a5edbe13b75d3",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 2.200000047683716,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "UITest1": {},
+            "UITest4": {
+                "nextSceneName": "GameScene"
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "links": {},
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "00000000000000000000000000000000",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "UITest4"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "d073f1564f31a7230bad21fe4d4b83eb",
+    "name": "Element_4",
+    "parentGuid": "cc4c774c6085d30dcb0a5edbe13b75d3",
+    "prefabName": ""
+}

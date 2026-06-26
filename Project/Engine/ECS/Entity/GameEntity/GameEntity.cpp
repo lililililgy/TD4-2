@@ -210,21 +210,23 @@ Vector3 GameEntity::GetRotate() {
 	if (!parent_) {
 		return Quaternion::ToEuler(transform_->rotate);
 	}
-
-	// 自身のローカル回転を加算  
-	return Quaternion::ToEuler(parent_->GetRotateQuaternion() * transform_->rotate);
+	return parent_->GetRotate() + Quaternion::ToEuler(transform_->rotate);
 }
 
 Quaternion GameEntity::GetRotateQuaternion() {
-	if (!parent_) {
-		return transform_->rotate;
-	}
-
-	return parent_->GetRotateQuaternion() * transform_->rotate;
+	return Quaternion::FromEuler(GetRotate());
 }
 
 Vector3 GameEntity::GetScale() {
-	return transform_->scale;
+	if (!parent_) {
+		return transform_->scale;
+	}
+	Vector3 parentScale = parent_->GetScale();
+	return Vector3(
+		parentScale.x * transform_->scale.x,
+		parentScale.y * transform_->scale.y,
+		parentScale.z * transform_->scale.z
+	);
 }
 
 Transform* GameEntity::GetTransform() const {

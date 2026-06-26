@@ -1,4 +1,4 @@
-﻿#include "Quaternion.h"
+#include "Quaternion.h"
 
 using namespace ONEngine;
 
@@ -37,10 +37,10 @@ float Quaternion::Length(const Quaternion& q) {
 
 Quaternion Quaternion::Normalize(const Quaternion& q) {
 	float len = Length(q);
-	if (len != 0.0f) {
+	if (len > 0.0001f) {
 		return q / len;
 	}
-	return q;
+	return Quaternion::kIdentity;
 }
 
 Vector3 Quaternion::Transform(const Vector3& v, const Quaternion& q) {

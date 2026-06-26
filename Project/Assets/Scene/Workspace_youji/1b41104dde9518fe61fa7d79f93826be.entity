@@ -1,0 +1,88 @@
+{
+    "active": true,
+    "components": [
+        {
+            "elementId": "option",
+            "elementIndex": 1,
+            "enable": 1,
+            "groupId": "cc4c774c6085d30dcb0a5edbe13b75d3",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": -1.5,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "UITest2": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "87f771141d9931d1873f84b0254c7a17",
+                "S": "87f771141d9931d1873f84b0254c7a17",
+                "UpArrow": "a84c3d3f6eeaaaa670bfe60a33203ef1",
+                "W": "a84c3d3f6eeaaaa670bfe60a33203ef1"
+            },
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "00000000000000000000000000000000",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "UITest2"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "1b41104dde9518fe61fa7d79f93826be",
+    "name": "Element_2",
+    "parentGuid": "cc4c774c6085d30dcb0a5edbe13b75d3",
+    "prefabName": ""
+}

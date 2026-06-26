@@ -712,6 +712,8 @@ void ImGuiManager::Finalize() {
 }
 
 void ImGuiManager::Update() {
+	sceneImageInfos_.clear();
+
 	UpdateMousePosition(
 		pWindowManager_->GetMainWindow()->GetHwnd(),
 		ONEngine::EngineConfig::kWindowSize

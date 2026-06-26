@@ -318,7 +318,9 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 					MonoClass* ek = mono_class_from_mono_type(et);
 					for (auto& itemGen : arg) {
 						MonoObject* item = mono_object_new(mono_domain_get(), ek);
-						mono_runtime_object_init(item);
+						if (!mono_class_is_valuetype(ek)) {
+							mono_runtime_object_init(item);
+						}
 						VarToMonoObject(item, ek, itemGen);
 						void* args[1] = { item };
 						mono_runtime_invoke(add, list, args, nullptr);
@@ -627,7 +629,9 @@ void Variables::SetScriptVariables(const std::string& scriptName) {
 					MonoClass* ek = mono_class_from_mono_type(et);
 					for (auto& itemGen : arg) {
 						MonoObject* item = mono_object_new(mono_domain_get(), ek);
-						mono_runtime_object_init(item);
+						if (!mono_class_is_valuetype(ek)) {
+							mono_runtime_object_init(item);
+						}
 						VarToMonoObject(item, ek, itemGen);
 						void* args[1] = { item };
 						mono_runtime_invoke(add, list, args, nullptr);

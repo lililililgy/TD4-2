@@ -1,4 +1,4 @@
-#include "ColliderRenderQueueSystem.h"
+﻿#include "ColliderRenderQueueSystem.h"
 
 using namespace ONEngine;
 
@@ -119,12 +119,12 @@ void ColliderRenderQueueSystem::UpdateBoxCollider2D(ComponentArray<BoxCollider2D
 		const Vector3 position = owner->GetPosition();
 		Vector2 size2D = boxCollider2D->GetSize();
 		if (boxCollider2D->IsUseOwnerScale()) {
-			Transform* t = owner->GetTransform();
-			size2D.x *= t->scale.x;
-			size2D.y *= t->scale.y;
+			Vector3 worldScale = owner->GetScale();
+			size2D.x *= worldScale.x;
+			size2D.y *= worldScale.y;
 		}
 		Vector3 size(size2D.x, size2D.y, 0.0f);
-		const Quaternion& rotate = owner->GetTransform()->GetRotate();
+		const Quaternion rotate = Quaternion::Normalize(owner->GetRotateQuaternion());
 		Gizmo::DrawWireCube2D(position, size, rotate, Vector4(0.0f, 1.0f, 0.5f, 1.0f));
 	}
 }
