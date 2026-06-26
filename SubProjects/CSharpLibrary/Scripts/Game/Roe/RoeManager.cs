@@ -18,25 +18,47 @@ public class RoeManager : MonoScript {
 
     [SerializeField] private string roePrefabName_ = "Roe";  // 生成する卵プレハブ名
 
-    [SerializeField] private int   maxRoe_       = 5;    // 卵(UNMATURE+MATURE)の上限
-    [SerializeField] private int   maxAmmo_      = 5;    // 弾(LARVAE)の上限
-    [SerializeField] private float layInterval_  = 3.0f; // 産卵間隔（暫定：時間。経験値実装時に差し替え）
+    [SerializeField] private int maxRoe_ = 5;    // 卵(UNMATURE+MATURE)の上限
+    [SerializeField] private int maxAmmo_ = 5;    // 弾(LARVAE)の上限
 
-    private float layTimer_ = 0.0f;
     private readonly List<Entity> roe_ = new List<Entity>();
-    private readonly Dictionary<int, int> orderById_ = new Dictionary<int, int>(); // entityId -> 隊列順(1始まり)
+    private float lastDistributedPlayerExp_ = 0f; // 前フレームまでに卵へ分配済みのプレイヤー累計経験値
 
     public override void Update() {
         // 破棄済み（発射・撃破）の卵を隊列から掃除
         Prune();
 
-        // 産卵（暫定：時間経過。経験値が実装されたらここを「経験値消費で1個産む」に差し替える）
-        // 上限は卵(UNMATURE+MATURE)の数で判定する。弾(LARVAE)は別枠なので数えない。
-        layTimer_ += Time.deltaTime;
-        if (layTimer_ >= layInterval_) {
-            layTimer_ = 0.0f;
+        // 隊列順(リスト順)を各卵の TrailFollower に push する。
+        // 生成直後でスクリプト未生成の卵も、次フレーム以降にここで順番が入る。
+        PushOrders();
+
+        LevelingComponent levelingComponent = entity.GetScript<LevelingComponent>();
+        // Levelが上がったタイミングで産卵
+        if (levelingComponent.IsLevelUp) {
             if (EggCount() < maxRoe_) {
                 Spawn();
+            }
+        }
+
+        // プレイヤーが新たに取得した経験値(前フレームからの増分)を卵に分配する。
+        // AddedExp は LevelingComponent.Update が毎フレーム先頭でリセットするため、
+        // スクリプト実行順(Leveling→RoeManager)では常に 0 になってしまう。
+        // 累計値(TotalGainedExp)の差分を自分で取ることで実行順に依存せず増分を得る。
+        float playerTotalExp = levelingComponent.TotalGainedExp;
+        float gainedExp = playerTotalExp - lastDistributedPlayerExp_;
+        lastDistributedPlayerExp_ = playerTotalExp;
+        if (gainedExp > 0) {
+            foreach (Entity e in roe_) {
+                if (e == null) {
+                    continue;
+                }
+                RoeStateComponent state = e.GetScript<RoeStateComponent>();
+                if (state == null || state.CurrentState != RoeState.UNMATURE) {
+                    continue;
+                }
+
+                LevelingComponent roeLevel = e.GetScript<LevelingComponent>();
+                roeLevel?.AddExperience(gainedExp);
             }
         }
     }
@@ -58,7 +80,7 @@ public class RoeManager : MonoScript {
         return CountState(RoeState.UNMATURE) + CountState(RoeState.MATURE);
     }
 
-    public int MaxRoe  { get { return maxRoe_; } }
+    public int MaxRoe { get { return maxRoe_; } }
     public int MaxAmmo { get { return maxAmmo_; } }
 
     // 弾(LARVAE)に空きがあるか（リロード可否）
@@ -89,7 +111,6 @@ public class RoeManager : MonoScript {
             if (state != null && state.CurrentState == RoeState.MATURE) {
                 Entity e = roe_[i];
                 roe_.RemoveAt(i);
-                ReassignOrders();
                 e.Destroy();
                 return true;
             }
@@ -104,16 +125,10 @@ public class RoeManager : MonoScript {
             if (state != null && state.CurrentState == RoeState.LARVAE) {
                 Entity e = roe_[i];
                 roe_.RemoveAt(i);
-                ReassignOrders();
                 return e;
             }
         }
         return null;
-    }
-
-    // 卵が自分の順番を引くための問い合わせ（未登録は -1）
-    public int GetOrder(int entityId) {
-        return orderById_.TryGetValue(entityId, out int order) ? order : -1;
     }
 
     // ---- 内部 ----
@@ -133,26 +148,21 @@ public class RoeManager : MonoScript {
         return e != null ? e.GetScript<RoeStateComponent>() : null;
     }
 
-    // 破棄済みの卵をリストから除去し、隊列順を詰め直す
+    // 破棄済みの卵をリストから除去する（隊列順は Update の PushOrders で詰め直す）
     private void Prune() {
-        bool changed = false;
         for (int i = roe_.Count - 1; i >= 0; i--) {
             if (roe_[i] == null) {
                 roe_.RemoveAt(i);
-                changed = true;
             }
-        }
-        if (changed) {
-            ReassignOrders();
         }
     }
 
-    // リスト順 = 隊列順(1始まり) で order を振り直す。卵側が GetOrder で pull する。
-    private void ReassignOrders() {
-        orderById_.Clear();
+    // リスト順 = 隊列順(1始まり) を各卵の TrailFollower に push する。
+    private void PushOrders() {
         for (int i = 0; i < roe_.Count; i++) {
             if (roe_[i] != null) {
-                orderById_[roe_[i].Id] = i + 1;
+                TrailFollower follower = roe_[i].GetScript<TrailFollower>();
+                follower?.SetOrder(i + 1);
             }
         }
     }
@@ -164,14 +174,13 @@ public class RoeManager : MonoScript {
             return false;
         }
 
-        // 初期位置はプレイヤー位置に寄せる（以後 RoeFollower が追従）
+        // 初期位置はプレイヤー位置に寄せる（以後 TrailFollower が追従）
         Transform t = e.GetComponent<Transform>();
         if (t != null) {
             t.position = transform.position;
         }
 
         roe_.Add(e);
-        ReassignOrders();
         return true;
     }
 }

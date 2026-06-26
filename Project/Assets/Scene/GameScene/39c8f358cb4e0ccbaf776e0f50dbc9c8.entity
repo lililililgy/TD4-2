@@ -1,0 +1,16 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": -510.60003662109375,
+                "y": 300.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "39c8f358cb4e0ccbaf776e0f50dbc9c8",
+    "name": "ExpOrbLarge",
+    "parentGuid": null,
+    "prefabName": "ExpOrbLarge"
+}

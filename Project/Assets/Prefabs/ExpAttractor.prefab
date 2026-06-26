@@ -1,0 +1,59 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 3.5999999046325684,
+                "y": 3.59999942779541,
+                "z": 3.59999942779541
+            },
+            "type": "Transform"
+        },
+        {
+            "categoryBits": 128,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 64,
+            "mass": 1.0,
+            "radius": 100.0,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "Attractor": {
+                "pullSpeed_": 256.0,
+                "stopDistance_": 0.10000000149011612
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "Attractor"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "c390a64a0dc1ce6cc005e4385c312bf4",
+    "name": "ExpAttractor",
+    "parentGuid": "b0388d37fce8d21ff4d0f9668d6b4e26",
+    "prefabName": "ExpAttractor"
+}

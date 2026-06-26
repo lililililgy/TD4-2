@@ -23,7 +23,9 @@
             "type": "Transform"
         },
         {
-            "CloudManager": {},
+            "CloudManager": {
+                "spawnTime": 3.0
+            },
             "type": "Variables"
         },
         {

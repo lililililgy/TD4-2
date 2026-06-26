@@ -4,6 +4,8 @@ using namespace ONEngine;
 
 /// std
 #include <unordered_map>
+#include <unordered_set>
+#include <algorithm>
 #include <utility>
 
 /// engine
@@ -73,6 +75,25 @@ void CollisionSystem::RuntimeUpdate(ECSGroup* ecs) {
 	enterPairs_.clear();
 	stayPairs_.clear();
 	exitPairs_.clear();
+
+	/// 破棄済みエンティティを参照するペアを collidedPairs_ から除去する。
+	/// collidedPairs_ は GameEntity* の生ポインタを保持しており、Entity.Destroy() で
+	/// GameEntity が即時解放されるとダングリングになる。残したまま次の衝突パスへ進むと
+	/// exitPairs_ 経由で CallExitFunc が解放済みメモリを参照し use-after-free で落ちる。
+	/// 「生存中のエンティティ集合」に居ないペアだけを落とす（分離しただけの生存ペアは Exit を正しく発火させる）。
+	{
+		std::unordered_set<GameEntity*> liveEntities;
+		for (const auto& e : ecs->GetEntities()) {
+			liveEntities.insert(e.get());
+		}
+		collidedPairs_.erase(
+			std::remove_if(collidedPairs_.begin(), collidedPairs_.end(),
+				[&liveEntities](const CollisionPair& p) {
+					return liveEntities.find(p.first) == liveEntities.end()
+						|| liveEntities.find(p.second) == liveEntities.end();
+				}),
+			collidedPairs_.end());
+	}
 
 	/// 全てのコライダーを取得
 	ComponentArray<SphereCollider>* sphereColliderArray = ecs->GetComponentArray<SphereCollider>();

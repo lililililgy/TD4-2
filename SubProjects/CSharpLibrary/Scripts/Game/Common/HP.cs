@@ -7,6 +7,7 @@ public class HP : MonoScript {
     [SerializeField] private float currentHp_ = 0;
     [SerializeField] private bool disableAutoDestruction_ = false; // true: 死亡しても自分で Destroy しない
     [SerializeField] private bool isInvincible_ = false; // true: 無敵状態（ダメージを受けない）
+    [SerializeField] private bool directlyDamageable_ = true; // false: 直接被弾では削れない（中継=DamageRelay 経由のみ。共有ライフの本体/頭向け）
 
     private bool isDead_ = false;
     private float lastCurrentHp_ = 0;
@@ -64,4 +65,5 @@ public class HP : MonoScript {
     public bool IsDead { get { return isDead_; } }
     public bool IsInvincible { get { return isInvincible_; } set { isInvincible_ = value; } }
     public bool DisableAutoDestruction { get { return disableAutoDestruction_; } set { disableAutoDestruction_ = value; } }
+    public bool IsDirectlyDamageable { get { return directlyDamageable_; } set { directlyDamageable_ = value; } }
 }

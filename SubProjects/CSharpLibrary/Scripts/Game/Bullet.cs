@@ -22,6 +22,12 @@ public class Bullet : MonoScript {
         // 移動
         Transform transform = entity.GetComponent<Transform>();
         transform.position += moveDir_ * speed_ * Time.deltaTime;
+
+        // 進行方向を向く（2D・Z軸回り）。ほぼ静止しているフレームは今の向きを保持する。
+        float roll = Mathf.Atan2(moveDir_.x, moveDir_.y);
+        transform.rotate = Quaternion.MakeFromAxis(Vector3.back, roll);
+
+
     }
 
     public void SetMoveDir(Vector3 dir) {
