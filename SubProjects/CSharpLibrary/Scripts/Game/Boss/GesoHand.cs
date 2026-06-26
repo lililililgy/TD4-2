@@ -5,10 +5,11 @@ public class GesoHand : MonoScript
     // 手の状態を表す列挙型
     public enum HandState
     {
-        Idle,
-        Aiming,
-        Attacking,
-        Returning,
+        Idle, // 待機状態
+        Aiming, // 狙っている状態
+        Attacking, // 攻撃中の状態
+        Returning, // 手が元の位置に戻る状態
+        Damageing, // ダメージを受けている状態
     }
 
     [SerializeField]
