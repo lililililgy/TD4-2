@@ -499,7 +499,7 @@ void DebugSceneView::DrawSceneTexture(ImVec2& outImagePos, ImVec2& outImageSize)
 	ImGui::Image(ImTextureID(texture->GetSRVGPUHandle().ptr), outImageSize);
 
 	// 情報保存（ギズモのピッキング等に使用）
-	pImGuiManager_->AddSceneImageInfo("Scene", ImGuiSceneImageInfo{ outImagePos, outImageSize });
+	pImGuiManager_->AddSceneImageInfo("Scene", ImGuiSceneImageInfo{ outImagePos, outImageSize, ImGui::IsItemHovered() });
 }
 
 ///

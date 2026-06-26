@@ -224,7 +224,15 @@ Quaternion GameEntity::GetRotateQuaternion() {
 }
 
 Vector3 GameEntity::GetScale() {
-	return transform_->scale;
+	if (!parent_) {
+		return transform_->scale;
+	}
+	Vector3 parentScale = parent_->GetScale();
+	return Vector3(
+		parentScale.x * transform_->scale.x,
+		parentScale.y * transform_->scale.y,
+		parentScale.z * transform_->scale.z
+	);
 }
 
 Transform* GameEntity::GetTransform() const {

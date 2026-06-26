@@ -1,4 +1,4 @@
-﻿#include "Collision2DSystem.h"
+#include "Collision2DSystem.h"
 
 using namespace ONEngine;
 
@@ -410,23 +410,19 @@ bool CheckMethod2D::CollisionCheckCircleVsCircle(CircleCollider* c1, CircleColli
 	GameEntity* e1 = c1->GetOwner();
 	GameEntity* e2 = c2->GetOwner();
 
-	Transform* t1 = e1->GetTransform();
-	Transform* t2 = e2->GetTransform();
-
-	Vector3 pos1 = e1->GetPosition();
-	Vector3 pos2 = e2->GetPosition();
-
-	Vector2 p1(pos1.x, pos1.y);
-	Vector2 p2(pos2.x, pos2.y);
+	Vector2 p1(e1->GetPosition().x, e1->GetPosition().y);
+	Vector2 p2(e2->GetPosition().x, e2->GetPosition().y);
 
 	float r1 = c1->GetRadius();
 	if(c1->IsUseOwnerScale()) {
-		r1 *= (std::max)(t1->scale.x, t1->scale.y);
+		Vector3 scale1 = e1->GetScale();
+		r1 *= (std::max)(scale1.x, scale1.y);
 	}
 
 	float r2 = c2->GetRadius();
 	if(c2->IsUseOwnerScale()) {
-		r2 *= (std::max)(t2->scale.x, t2->scale.y);
+		Vector3 scale2 = e2->GetScale();
+		r2 *= (std::max)(scale2.x, scale2.y);
 	}
 
 	float distance = (p1 - p2).Length();
@@ -470,20 +466,16 @@ bool CheckMethod2D::CollisionCheckBox2DVsCircle(BoxCollider2D* b, CircleCollider
 	GameEntity* boxEntity = b->GetOwner();
 	GameEntity* circleEntity = s->GetOwner();
 
-	Transform* bTrans = boxEntity->GetTransform();
-	Transform* cTrans = circleEntity->GetTransform();
-
-	Vector3 boxPos3D = boxEntity->GetPosition();
-	Vector3 circlePos3D = circleEntity->GetPosition();
-	Vector2 boxPos(boxPos3D.x, boxPos3D.y);
-	Vector2 circlePos(circlePos3D.x, circlePos3D.y);
+	Vector2 boxPos(boxEntity->GetPosition().x, boxEntity->GetPosition().y);
+	Vector2 circlePos(circleEntity->GetPosition().x, circleEntity->GetPosition().y);
 
 	float radius = s->GetRadius();
 	if(s->IsUseOwnerScale()) {
-		radius *= (std::max)(cTrans->scale.x, cTrans->scale.y);
+		Vector3 circleScale = circleEntity->GetScale();
+		radius *= (std::max)(circleScale.x, circleScale.y);
 	}
 
-	Matrix4x4 rot = Matrix4x4::MakeRotate(bTrans->GetRotate());
+	Matrix4x4 rot = Matrix4x4::MakeRotate(boxEntity->GetTransform()->GetRotate());
 	Vector3 axisX3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Right, rot));
 	Vector3 axisY3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Up, rot));
 	Vector2 axisX(axisX3D.x, axisX3D.y);
@@ -494,8 +486,9 @@ bool CheckMethod2D::CollisionCheckBox2DVsCircle(BoxCollider2D* b, CircleCollider
 
 	Vector2 size = b->GetSize();
 	if(b->IsUseOwnerScale()) {
-		size.x *= bTrans->scale.x;
-		size.y *= bTrans->scale.y;
+		Vector3 boxScale = boxEntity->GetScale();
+		size.x *= boxScale.x;
+		size.y *= boxScale.y;
 	}
 	Vector2 half = size * 0.5f;
 
@@ -549,34 +542,31 @@ bool CheckMethod2D::CollisionCheckBox2DVsBox2D(BoxCollider2D* b1, BoxCollider2D*
 	GameEntity* e1 = b1->GetOwner();
 	GameEntity* e2 = b2->GetOwner();
 
-	Transform* t1 = e1->GetTransform();
-	Transform* t2 = e2->GetTransform();
-
-	Vector3 center1_3D = e1->GetPosition();
-	Vector3 center2_3D = e2->GetPosition();
-	Vector2 center1(center1_3D.x, center1_3D.y);
-	Vector2 center2(center2_3D.x, center2_3D.y);
+	Vector2 center1(e1->GetPosition().x, e1->GetPosition().y);
+	Vector2 center2(e2->GetPosition().x, e2->GetPosition().y);
 
 	Vector2 size1 = b1->GetSize();
 	if(b1->IsUseOwnerScale()) {
-		size1.x *= t1->scale.x;
-		size1.y *= t1->scale.y;
+		Vector3 scale1 = e1->GetScale();
+		size1.x *= scale1.x;
+		size1.y *= scale1.y;
 	}
 	Vector2 half1 = size1 * 0.5f;
 
 	Vector2 size2 = b2->GetSize();
 	if(b2->IsUseOwnerScale()) {
-		size2.x *= t2->scale.x;
-		size2.y *= t2->scale.y;
+		Vector3 scale2 = e2->GetScale();
+		size2.x *= scale2.x;
+		size2.y *= scale2.y;
 	}
 	Vector2 half2 = size2 * 0.5f;
 
-	Matrix4x4 rot1 = Matrix4x4::MakeRotate(t1->GetRotate());
+	Matrix4x4 rot1 = Matrix4x4::MakeRotate(e1->GetTransform()->GetRotate());
 	Vector3 axis1X_3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Right, rot1));
 	Vector3 axis1Y_3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Up, rot1));
 	Vector2 axis1[2] = { Vector2(axis1X_3D.x, axis1X_3D.y), Vector2(axis1Y_3D.x, axis1Y_3D.y) };
 
-	Matrix4x4 rot2 = Matrix4x4::MakeRotate(t2->GetRotate());
+	Matrix4x4 rot2 = Matrix4x4::MakeRotate(e2->GetTransform()->GetRotate());
 	Vector3 axis2X_3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Right, rot2));
 	Vector3 axis2Y_3D = Vector3::Normalize(Matrix4x4::Transform(Vector3::Up, rot2));
 	Vector2 axis2[2] = { Vector2(axis2X_3D.x, axis2X_3D.y), Vector2(axis2Y_3D.x, axis2Y_3D.y) };

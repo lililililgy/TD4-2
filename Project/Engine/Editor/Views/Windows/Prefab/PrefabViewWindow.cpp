@@ -83,6 +83,6 @@ void PrefabViewWindow::RenderView() {
 	ImGui::Image(ImTextureID(texture->GetSRVGPUHandle().ptr), imageSize);
 
 	// 情報保存
-	pImGuiManager_->AddSceneImageInfo("Prefab", ImGuiSceneImageInfo{ imagePos, imageSize });
+	pImGuiManager_->AddSceneImageInfo("Prefab", ImGuiSceneImageInfo{ imagePos, imageSize, ImGui::IsItemHovered() });
 
 }
