@@ -25,7 +25,7 @@
         {
             "Bullet": {
                 "lifeTime_": 5.0,
-                "speed_": 32.0
+                "speed_": 364.0
             },
             "type": "Variables"
         },
@@ -48,7 +48,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "ac842be8df6723ae5fa4c2c06a0e1f11",
+                "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -67,7 +67,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "e4305bca59592be37931d61ed75bd112",
+    "guid": "741efcde7a59318b001308b96161f1e8",
     "name": "Bullet",
     "parentGuid": null,
     "prefabName": ""

@@ -1,6 +1,8 @@
 #pragma once
 
 /// std
+#include <vector>
+#include <string>
 #include <nlohmann/json_fwd.hpp>
 
 /// engine
@@ -48,6 +50,7 @@ public:
 		parentGroup = nullptr;
 		currentSelectedGuid = Guid::kInvalid;
 		parentGroupGuid = Guid::kInvalid;
+		submitKeys = { "Return", "Space", "GamepadA" }; // デフォルト決定キー
 	}
 
 public:
@@ -65,6 +68,9 @@ public:
 
 	bool wasFocused = false;
 	bool wasVisible = true;
+
+	/// ----- 決定キー設定 ----- ///
+	std::vector<std::string> submitKeys;
 };
 
 } /// namespace ONEngine

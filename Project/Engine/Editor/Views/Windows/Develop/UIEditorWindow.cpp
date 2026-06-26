@@ -1,4 +1,4 @@
-﻿#include "UIEditorWindow.h"
+#include "UIEditorWindow.h"
 
 /// external
 #include <imgui.h>
@@ -16,6 +16,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UILinkNavigationComponent.h"
 #include "Engine/Editor/Commands/ComponentEditCommands/ComponentJsonConverter.h"
 #include "Engine/ECS/Component/Components/Interface/IComponent.h"
+#include "Engine/Core/Utility/Input/Input.h"
 #include "InspectorWindow.h"
 
 using namespace Editor;
@@ -143,6 +144,25 @@ void UIEditorWindow::DrawNodeEditor() {
 		if (node->type == NodeType::Group) {
 			ImGui::Checkbox(("Is Focused##" + nodeIdStr).c_str(), &node->isFocused);
 			ImGui::Checkbox(("Is Visible##" + nodeIdStr).c_str(), &node->isVisible);
+
+			ImGui::Spacing();
+			ImGui::Text("Submit Keys:");
+
+			std::string preview = "";
+			for (size_t i = 0; i < node->submitKeys.size(); ++i) {
+				if (!preview.empty()) preview += ", ";
+				preview += node->submitKeys[i];
+			}
+			if (preview.empty()) {
+				preview = "(Select keys...)";
+			}
+
+			ImGui::PushItemWidth(140.0f);
+			std::string buttonId = preview + "##BtnGroupCombo_" + nodeIdStr;
+			if (ImGui::Button(buttonId.c_str(), ImVec2(140.0f, 0.0f))) {
+				ImGui::OpenPopup(("SubmitKeySelectorPopup_" + nodeIdStr).c_str());
+			}
+			ImGui::PopItemWidth();
 		} else {
 			char idBuf[64];
 			strncpy_s(idBuf, node->elementId.c_str(), sizeof(idBuf));
@@ -328,7 +348,7 @@ void UIEditorWindow::DrawNodeEditor() {
 	}
 	ed::Resume();
 
-	// Key selector popups for elements
+	// Key selector popups
 	ed::Suspend();
 	for (const auto& node : m_Nodes) {
 		if (node->type == NodeType::Element) {
@@ -341,6 +361,49 @@ void UIEditorWindow::DrawNodeEditor() {
 				}
 
 				ImGui::Text("Select Keys for Pin:");
+				ImGui::Separator();
+
+				// 入力待機用のインタラクティブボタン
+				bool isThisNodeListening = m_IsListeningForKey && (m_ListeningNodeId == node->id.Get());
+				if (isThisNodeListening) {
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f));
+					if (ImGui::Button("[Listening... Press a key / Click to Cancel]", ImVec2(250.0f, 0.0f))) {
+						m_IsListeningForKey = false;
+						m_ListeningNodeId = 0;
+					}
+					ImGui::PopStyleColor(3);
+
+					// 待機状態時のみキー入力をリアルタイム監視して自動選択し、待機状態を解除する
+					for (size_t i = 0; i < keyNames.size(); ++i) {
+						const std::string& keyName = keyNames[i];
+						int32_t keyCode = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(keyName);
+						if (keyCode != 0) {
+							bool pressed = false;
+							if (keyCode < 256) {
+								pressed = ONEngine::Input::TriggerKey(keyCode);
+							} else {
+								pressed = ONEngine::Input::TriggerGamepad(keyCode - 256);
+							}
+
+							if (pressed) {
+								// Escapeキーは除外
+								if (keyName != "Escape") {
+									selectedFlags[i] = !selectedFlags[i]; // トグル選択
+									m_IsListeningForKey = false; // 入力されたので待機解除
+									m_ListeningNodeId = 0;
+									break;
+								}
+							}
+						}
+					}
+				} else {
+					if (ImGui::Button("Press Key to Select", ImVec2(250.0f, 0.0f))) {
+						m_IsListeningForKey = true;
+						m_ListeningNodeId = node->id.Get();
+					}
+				}
 				ImGui::Separator();
 
 				if (ImGui::BeginTabBar("KeyFilterTabBar")) {
@@ -393,6 +456,131 @@ void UIEditorWindow::DrawNodeEditor() {
 				}
 				ImGui::EndPopup();
 			}
+		} else if (node->type == NodeType::Group) {
+			std::string popupId = "SubmitKeySelectorPopup_" + std::to_string(node->id.Get());
+			if (ImGui::BeginPopup(popupId.c_str())) {
+				const auto& keyNames = ONEngine::UILinkNavigationComponent::GetSupportedKeyNames();
+				auto& selectedFlags = m_SelectedKeysMap[node->id.Get()];
+				if (selectedFlags.size() != keyNames.size()) {
+					selectedFlags.assign(keyNames.size(), false);
+					for (size_t i = 0; i < keyNames.size(); ++i) {
+						if (std::find(node->submitKeys.begin(), node->submitKeys.end(), keyNames[i]) != node->submitKeys.end()) {
+							selectedFlags[i] = true;
+						}
+					}
+				}
+
+				ImGui::Text("Select Submit Keys:");
+				ImGui::Separator();
+
+				// 入力待機用のインタラクティブボタン
+				bool isThisNodeListening = m_IsListeningForKey && (m_ListeningNodeId == node->id.Get());
+				if (isThisNodeListening) {
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f));
+					if (ImGui::Button("[Listening... Press a key / Click to Cancel]", ImVec2(250.0f, 0.0f))) {
+						m_IsListeningForKey = false;
+						m_ListeningNodeId = 0;
+					}
+					ImGui::PopStyleColor(3);
+
+					// 待機状態時のみキー入力をリアルタイム監視して自動選択し、待機状態を解除する
+					for (size_t i = 0; i < keyNames.size(); ++i) {
+						const std::string& keyName = keyNames[i];
+						int32_t keyCode = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(keyName);
+						if (keyCode != 0) {
+							bool pressed = false;
+							if (keyCode < 256) {
+								pressed = ONEngine::Input::TriggerKey(keyCode);
+							} else {
+								pressed = ONEngine::Input::TriggerGamepad(keyCode - 256);
+							}
+
+							if (pressed) {
+								// Escapeキーは除外
+								if (keyName != "Escape") {
+									selectedFlags[i] = !selectedFlags[i]; // トグル選択
+									m_IsListeningForKey = false; // 入力されたので待機解除
+									m_ListeningNodeId = 0;
+
+									// Update node->submitKeys immediately
+									node->submitKeys.clear();
+									for (size_t k = 0; k < keyNames.size(); ++k) {
+										if (selectedFlags[k]) {
+											node->submitKeys.push_back(keyNames[k]);
+										}
+									}
+									break;
+								}
+							}
+						}
+					}
+				} else {
+					if (ImGui::Button("Press Key to Select", ImVec2(250.0f, 0.0f))) {
+						m_IsListeningForKey = true;
+						m_ListeningNodeId = node->id.Get();
+					}
+				}
+				ImGui::Separator();
+
+				if (ImGui::BeginTabBar("SubmitKeyFilterTabBar")) {
+					if (ImGui::BeginTabItem("All")) {
+						m_CurrentKeyFilter = KeyFilter::All;
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Keyboard")) {
+						m_CurrentKeyFilter = KeyFilter::Keyboard;
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Controller")) {
+						m_CurrentKeyFilter = KeyFilter::Controller;
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Mouse")) {
+						m_CurrentKeyFilter = KeyFilter::Mouse;
+						ImGui::EndTabItem();
+					}
+					ImGui::EndTabBar();
+				}
+				ImGui::Spacing();
+				
+				ImGui::BeginChild("SubmitKeyListChild", ImVec2(250.0f, 250.0f), true);
+				if (m_CurrentKeyFilter == KeyFilter::Mouse) {
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.7f, 0.7f, 0.7f, 1.0f));
+					ImGui::TextWrapped("Mouse buttons are not used for submit keys.");
+					ImGui::PopStyleColor();
+				} else {
+					for (size_t i = 0; i < keyNames.size(); ++i) {
+						const std::string& keyName = keyNames[i];
+						bool isGamepad = (keyName.rfind("Gamepad", 0) == 0);
+
+						if (m_CurrentKeyFilter == KeyFilter::Keyboard && isGamepad) continue;
+						if (m_CurrentKeyFilter == KeyFilter::Controller && !isGamepad) continue;
+
+						bool isSelected = selectedFlags[i];
+						std::string label = (isSelected ? "[x] " : "[ ] ") + keyName;
+						if (ImGui::Selectable(label.c_str(), isSelected, ImGuiSelectableFlags_DontClosePopups)) {
+							selectedFlags[i] = !isSelected;
+							
+							// Update node->submitKeys
+							node->submitKeys.clear();
+							for (size_t k = 0; k < keyNames.size(); ++k) {
+								if (selectedFlags[k]) {
+									node->submitKeys.push_back(keyNames[k]);
+								}
+							}
+						}
+					}
+				}
+				ImGui::EndChild();
+
+				ImGui::Separator();
+				if (ImGui::Button("Close", ImVec2(250.0f, 0.0f))) {
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
 		}
 	}
 	ed::Resume();
@@ -404,6 +592,89 @@ void UIEditorWindow::DrawNodeEditor() {
 void UIEditorWindow::SavePrefab(const std::string& filepath) {
 	std::filesystem::create_directories(std::filesystem::path(filepath).parent_path());
 
+	// ノード座標を取得するため、一時的にエディタコンテキストを設定
+	if (m_Editor) {
+		ed::SetCurrentEditor(m_Editor);
+	}
+
+	// 既存ファイルのコンポーネントを保存するマップ
+	// GUID -> コンポーネントリスト の形で保持
+	std::unordered_map<std::string, std::vector<json>> existingComponents;
+	std::string existingRootGuid = "";
+	std::vector<json> existingRootComponents;
+
+	if (std::filesystem::exists(filepath)) {
+		try {
+			std::ifstream ifs(filepath);
+			if (ifs.is_open()) {
+				json j;
+				ifs >> j;
+
+				// ルートエンティティの情報を取得
+				if (j.is_object()) {
+					if (j.contains("guid")) {
+						existingRootGuid = j["guid"].get<std::string>();
+					}
+					if (j.contains("components") && j["components"].is_array()) {
+						existingRootComponents = j["components"].get<std::vector<json>>();
+					}
+
+					// 再帰的にエンティティを走査してコンポーネントを収集するヘルパー
+					auto collectComponents = [&](auto& self, const json& entity) -> void {
+						if (entity.is_object() && entity.contains("guid")) {
+							std::string guidStr = entity["guid"].get<std::string>();
+							if (entity.contains("components") && entity["components"].is_array()) {
+								existingComponents[guidStr] = entity["components"].get<std::vector<json>>();
+							}
+						}
+						// 子ノードも走査
+						if (entity.is_object() && entity.contains("children") && entity["children"].is_array()) {
+							for (const auto& child : entity["children"]) {
+								self(self, child);
+							}
+						}
+					};
+
+					// 既存の entities 配列（旧フォーマット互換）または children 配列から収集
+					if (j.contains("entities") && j["entities"].is_array()) {
+						for (const auto& entity : j["entities"]) {
+							collectComponents(collectComponents, entity);
+						}
+					}
+					if (j.contains("children") && j["children"].is_array()) {
+						for (const auto& child : j["children"]) {
+							collectComponents(collectComponents, child);
+						}
+					}
+				}
+			}
+		} catch (...) {
+			// パース失敗時は無視
+		}
+	}
+
+	// B. 次に、現在アクティブなシーン（ゲームメモリ）上の最新コンポーネント情報で上書きする
+	ONEngine::ECSGroup* gameGroup = pEcs_->GetCurrentGroup();
+	if (gameGroup) {
+		for (auto& entity : gameGroup->GetEntities()) {
+			std::string guidStr = entity->GetGuid().ToString();
+			
+			// このエンティティがUI関連コンポーネントを持っている場合、現在のシーン上の全コンポーネントを最新の状態でJSONシリアライズして退避
+			if (entity->GetComponent<UIGroupComponent>() || entity->GetComponent<UIElementComponent>()) {
+				std::vector<json> compsJson;
+				for (const auto& pair : entity->GetComponents()) {
+					IComponent* comp = pair.second;
+					if (comp) {
+						json compJson = ONEngine::ComponentJsonConverter::ToJson(comp);
+						compsJson.push_back(compJson);
+					}
+				}
+				// ディスクから読み込んだ古い情報を、メモリ上の最新情報で完全に上書きする
+				existingComponents[guidStr] = compsJson;
+			}
+		}
+	}
+
 	// 1. ヘルパー関数: ノードとその子孫を再帰的にシリアライズする
 	auto serializeNode = [&](auto& self, Node* node) -> json {
 		json entityJson = json::object();
@@ -412,18 +683,57 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 		entityJson["active"] = true;
 		entityJson["prefabName"] = "";
 
-		json components = json::array();
+		// エディタ上での位置情報を保存
+		if (m_Editor) {
+			ImVec2 pos = ed::GetNodePosition(node->id);
+			entityJson["editorPosition"] = {
+				{ "x", pos.x },
+				{ "y", pos.y }
+			};
+		}
 
-		// デフォルトの Transform コンポーネント
-		json transformComp = {
-			{ "type", "Transform" },
-			{ "enable", 1 },
-			{ "position", { { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
-			{ "rotate", { { "w", 1.0 }, { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
-			{ "scale", { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } }
-		};
+		json components = json::array();
+		std::string nodeGuidStr = node->guid.ToString();
+
+		json transformComp;
+		bool hasExistingTransform = false;
+
+		// 既存のコンポーネントを分類して退避
+		std::vector<json> otherComponents;
+		if (existingComponents.count(nodeGuidStr)) {
+			for (const auto& comp : existingComponents[nodeGuidStr]) {
+				if (comp.is_object() && comp.contains("type")) {
+					std::string typeStr = comp["type"].get<std::string>();
+					if (typeStr == "Transform") {
+						transformComp = comp;
+						hasExistingTransform = true;
+					} else if (typeStr != "UIGroupComponent" && 
+							   typeStr != "UIElementComponent" && 
+							   typeStr != "UILinkNavigationComponent") {
+						otherComponents.push_back(comp);
+					}
+				}
+			}
+		}
+
+		// 1. Transformコンポーネントを先頭に追加
+		if (!hasExistingTransform) {
+			transformComp = {
+				{ "type", "Transform" },
+				{ "enable", 1 },
+				{ "position", { { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
+				{ "rotate", { { "w", 1.0 }, { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
+				{ "scale", { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } }
+			};
+		}
 		components.push_back(transformComp);
 
+		// 2. 他の非UIコンポーネント（SpriteRenderer, Script等）を追加
+		for (const auto& comp : otherComponents) {
+			components.push_back(comp);
+		}
+
+		// 3. UI関連コンポーネントを追加
 		if (node->type == NodeType::Group) {
 			json groupComp = {
 				{ "type", "UIGroupComponent" },
@@ -431,7 +741,8 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 				{ "isFocused", node->isFocused },
 				{ "isVisible", node->isVisible },
 				{ "currentSelected", "" },
-				{ "parentGroup", "" }
+				{ "parentGroup", "" },
+				{ "submitKeys", node->submitKeys.empty() ? std::vector<std::string>{"Return", "Space", "GamepadA"} : node->submitKeys }
 			};
 			components.push_back(groupComp);
 		} else {
@@ -532,20 +843,40 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 	// 2. ルートエンティティの作成
 	json rootJson = json::object();
 	rootJson["active"] = true;
-	rootJson["guid"] = ONEngine::GenerateGuid().ToString();
+	rootJson["guid"] = existingRootGuid.empty() ? ONEngine::GenerateGuid().ToString() : existingRootGuid;
 	std::string rootName = std::filesystem::path(filepath).stem().string();
 	rootJson["name"] = rootName;
 	rootJson["prefabName"] = "";
 
 	json rootComponents = json::array();
-	json transformComp = {
-		{ "type", "Transform" },
-		{ "enable", 1 },
-		{ "position", { { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
-		{ "rotate", { { "w", 1.0 }, { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
-		{ "scale", { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } }
-	};
-	rootComponents.push_back(transformComp);
+	bool hasExistingRootTransform = false;
+	std::vector<json> otherRootComponents;
+	for (const auto& comp : existingRootComponents) {
+		if (comp.is_object() && comp.contains("type")) {
+			std::string typeStr = comp["type"].get<std::string>();
+			if (typeStr == "Transform") {
+				rootComponents.push_back(comp);
+				hasExistingRootTransform = true;
+			} else {
+				otherRootComponents.push_back(comp);
+			}
+		}
+	}
+
+	if (!hasExistingRootTransform) {
+		json transformComp = {
+			{ "type", "Transform" },
+			{ "enable", 1 },
+			{ "position", { { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
+			{ "rotate", { { "w", 1.0 }, { "x", 0.0 }, { "y", 0.0 }, { "z", 0.0 } } },
+			{ "scale", { { "x", 1.0 }, { "y", 1.0 }, { "z", 1.0 } } }
+		};
+		rootComponents.insert(rootComponents.begin(), transformComp);
+	}
+
+	for (const auto& comp : otherRootComponents) {
+		rootComponents.push_back(comp);
+	}
 	rootJson["components"] = rootComponents;
 
 	// 3. 親ノードを持たないトップレベルのノードをルートの子要素として登録
@@ -582,9 +913,13 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 	if (ofs) {
 		ofs << rootJson.dump(4);
 		ofs.close();
-		ONEngine::Console::Log("[UI Editor] Prefab saved successfully (correct single-root structure): " + filepath);
+		ONEngine::Console::Log("[UI Editor] Prefab saved successfully (preserved non-UI components): " + filepath);
 	} else {
 		ONEngine::Console::LogError("[UI Editor] Failed to save prefab: " + filepath);
+	}
+
+	if (m_Editor) {
+		ed::SetCurrentEditor(nullptr);
 	}
 }
 
@@ -639,6 +974,7 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 	m_Nodes.clear();
 	m_Links.clear();
 	m_NextId = 1;
+	m_SelectedKeysMap.clear();
 
 	std::unordered_map<std::string, Node*> guidToNodeMap;
 	std::unordered_map<std::string, json> navLinksMap;
@@ -655,6 +991,8 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 			bool isVisible = true;
 			std::string elementId = "";
 			int elementIndex = 0;
+			std::vector<std::string> submitKeys;
+			bool hasSubmitKeys = false;
 
 			for (const auto& compJson : entityJson["components"]) {
 				std::string compType = compJson.value("type", "");
@@ -662,6 +1000,10 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 					t = NodeType::Group;
 					isFocused = compJson.value("isFocused", false);
 					isVisible = compJson.value("isVisible", true);
+					if (compJson.contains("submitKeys") && compJson["submitKeys"].is_array()) {
+						submitKeys = compJson["submitKeys"].get<std::vector<std::string>>();
+						hasSubmitKeys = true;
+					}
 				} else if (compType == "UIElementComponent") {
 					elementId = compJson.value("elementId", "");
 					elementIndex = compJson.value("elementIndex", 0);
@@ -673,6 +1015,9 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 			node->isVisible = isVisible;
 			node->elementId = elementId;
 			node->elementIndex = elementIndex;
+			if (t == NodeType::Group) {
+				node->submitKeys = hasSubmitKeys ? submitKeys : std::vector<std::string>{"Return", "Space", "GamepadA"};
+			}
 
 			if (t == NodeType::Group) {
 				node->inputs.push_back(Pin(m_NextId++, "ParentLink", PinKind::Input));
@@ -777,6 +1122,8 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 			bool isVisible = true;
 			std::string elementId = "";
 			int elementIndex = 0;
+			std::vector<std::string> submitKeys;
+			bool hasSubmitKeys = false;
 
 			if (entityJson.contains("components")) {
 				for (const auto& compJson : entityJson["components"]) {
@@ -785,6 +1132,10 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 						t = NodeType::Group;
 						isFocused = compJson.value("isFocused", false);
 						isVisible = compJson.value("isVisible", true);
+						if (compJson.contains("submitKeys") && compJson["submitKeys"].is_array()) {
+							submitKeys = compJson["submitKeys"].get<std::vector<std::string>>();
+							hasSubmitKeys = true;
+						}
 					} else if (compType == "UIElementComponent") {
 						elementId = compJson.value("elementId", "");
 						elementIndex = compJson.value("elementIndex", 0);
@@ -801,6 +1152,9 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 			node->isVisible = isVisible;
 			node->elementId = elementId;
 			node->elementIndex = elementIndex;
+			if (t == NodeType::Group) {
+				node->submitKeys = hasSubmitKeys ? submitKeys : std::vector<std::string>{"Return", "Space", "GamepadA"};
+			}
 
 			Node* nodeRaw = node.get();
 			guidToNodeMap[guidStr] = nodeRaw;

@@ -15,9 +15,17 @@ public class AttackCollision : MonoScript {
             return; // 自分自身は無視
         }
 
-        HP hp = collision.GetScript<HP>();
+        // 相手が DamageRelay(中継)を持っていれば、その所有者(頭)の共有 HP へダメージを送る。
+        // 持っていなければ従来通り相手の HP を直接削る（敵など）。
+        DamageRelay relay = collision.GetScript<DamageRelay>();
+        HP hp = relay != null ? relay.OwnerHp : collision.GetScript<HP>();
         if (hp == null) {
-            return; // HP を持たない相手には何もしない
+            return; // ダメージを送れる相手が居ない
+        }
+
+        // 中継経由でない直接被弾で、directlyDamageable_=false の HP(=共有ライフの本体/頭)は無視。
+        if (relay == null && !hp.IsDirectlyDamageable) {
+            return;
         }
 
         hp.TakeDamage(damage_);
