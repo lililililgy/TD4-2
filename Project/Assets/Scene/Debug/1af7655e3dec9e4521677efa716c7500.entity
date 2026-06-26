@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": -4.0,
+                "y": -5.0,
                 "z": 0.0
             },
             "rotate": {
@@ -29,20 +29,20 @@
             "categoryBits": 1,
             "enable": 1,
             "freezeY": false,
-            "isTrigger": false,
+            "isTrigger": true,
             "maskBits": 4294967295,
             "mass": 1.0,
             "size": {
-                "x": 10.0,
-                "y": 100.0
+                "x": 1.0,
+                "y": 10.0
             },
             "state": "Dynamic",
             "type": "BoxCollider2D",
             "useOwnerScale": true
         }
     ],
-    "guid": "64cb6334a309b3fd43027c15b16ff3d0",
+    "guid": "1af7655e3dec9e4521677efa716c7500",
     "name": "Collider",
-    "parentGuid": "f46447c8a703aeb72c9e7dcefe68fca0",
+    "parentGuid": "398009cc5837a61d8661b20a93f25ff5",
     "prefabName": ""
 }

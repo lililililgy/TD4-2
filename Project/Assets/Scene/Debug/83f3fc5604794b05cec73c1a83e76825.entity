@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": -12.0,
+                "y": -155.0,
                 "z": 0.0
             },
             "rotate": {
@@ -37,21 +37,6 @@
             "type": "Script"
         },
         {
-            "categoryBits": 1,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 4294967295,
-            "mass": 1.0,
-            "size": {
-                "x": 20.0,
-                "y": 20.0
-            },
-            "state": "Dynamic",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
-        },
-        {
             "enable": 1,
             "material": {
                 "baseColor": {
@@ -77,10 +62,25 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 4294967295,
+            "mass": 1.0,
+            "size": {
+                "x": 20.0,
+                "y": 20.0
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
         }
     ],
-    "guid": "1c66efe267891cd67df194e5d4def7b5",
+    "guid": "83f3fc5604794b05cec73c1a83e76825",
     "name": "weakPoint",
-    "parentGuid": "f46447c8a703aeb72c9e7dcefe68fca0",
+    "parentGuid": "398009cc5837a61d8661b20a93f25ff5",
     "prefabName": ""
 }
