@@ -1,10 +1,10 @@
 {
-    "active": false,
+    "active": true,
     "components": [
         {
             "cameraType": 1,
             "enable": 1,
-            "farClip": 100.0,
+            "farClip": 1000.0,
             "fogColor": {
                 "x": 0.0,
                 "y": 0.0,
@@ -27,7 +27,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -41,14 +41,30 @@
         },
         {
             "PlayerFollowCamera": {
-                "maxSmoothSpeed_": 26.0,
-                "smoothTime_": 0.8999999761581421
+                "maxSmoothSpeed_": 100000.0,
+                "offset_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": -144.3
+                },
+                "smoothTime_": 0.15,
+                "targetName_": "Player"
             },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PlayerFollowCamera"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "476d1cadb33306de007290e0c4acae92",
-    "name": "2DCamera",
+    "guid": "2bb21ccbfbde4082830210d36ae5a2a5",
+    "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""
 }
