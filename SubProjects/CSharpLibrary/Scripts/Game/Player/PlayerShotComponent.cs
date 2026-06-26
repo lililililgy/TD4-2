@@ -42,12 +42,10 @@ public class PlayerShotComponent : MonoScript {
 
             Transform bullTrans = bulletEnt.GetComponent<Transform>();
             Transform playerTrans = entity.GetComponent<Transform>();
-            Transform larvaTrans = larva.GetComponent<Transform>();
 
-            // 弾の位置は消費した幼生卵の位置（隊列の卵が飛んでいく絵）。取れなければプレイヤー位置から。
-            bullTrans.position = larvaTrans != null
-                ? larvaTrans.position
-                : playerTrans.position + Quaternion.RotateVector(playerTrans.rotate, new Vector3(bulletSpawnOffset_.x, bulletSpawnOffset_.y, 0.0f));
+            // 弾はプレイヤーの向いている方向へ bulletSpawnOffset_ ぶんずらした位置から出す。
+            bullTrans.position = playerTrans.position
+                + Quaternion.RotateVector(playerTrans.rotate, new Vector3(bulletSpawnOffset_.x, bulletSpawnOffset_.y, 0.0f));
             //方向を設定
             Bullet bulletSC = bulletEnt.GetScript<Bullet>();
             bulletSC.SetMoveDir(Quaternion.RotateVector(playerTrans.rotate, Vector3.up));

@@ -1,0 +1,21 @@
+{
+    "active": true,
+    "components": [
+        {
+            "categoryBits": 2,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 4294967097,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "c7e49d4ba2a496a12f3b5b31c8b3903a",
+    "name": "Player_Body",
+    "parentGuid": null,
+    "prefabName": "Player_Body"
+}

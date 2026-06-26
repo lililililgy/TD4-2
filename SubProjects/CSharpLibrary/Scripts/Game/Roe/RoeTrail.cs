@@ -37,7 +37,26 @@ public class RoeTrail : MonoScript {
             remaining -= seg;
             prev = next;
         }
-        return prev; // 経路がまだ短ければ末尾（最古点）
+
+        // 経路を全部たどっても distance に届かない（チェーンが記録経路より長い）場合は、
+        // 末尾の進行方向へ remaining ぶん外挿する。これをしないと、届かない要素が
+        // すべて最古点に重なってしまう（Player 停止中や移動直後に顕著）。
+        // 方向は過去の記録点から取るので、Player が止まっていても安定して定まる。
+        Vector3 tail;
+        int n = points_.Count;
+        if (n >= 2) {
+            tail = points_[n - 1] - points_[n - 2]; // 2番目に古い点 → 最古点（外向き）
+        } else if (n == 1) {
+            tail = points_[0] - transform.position;
+        } else {
+            return prev;
+        }
+
+        float tailLen = tail.Length();
+        if (tailLen <= 0.0f) {
+            return prev; // 方向が定まらない（ほぼ未移動）ときだけ最古点
+        }
+        return prev + tail * (remaining / tailLen);
     }
 
     private void TrimToLength() {

@@ -7,10 +7,10 @@
             "position": {
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": 1.4156103134155273e-06
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -23,20 +23,16 @@
             "type": "Transform"
         },
         {
-            "categoryBits": 64,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 130,
-            "mass": 1.0,
-            "radius": 0.4000000059604645,
-            "state": "Dynamic",
-            "type": "CircleCollider",
-            "useOwnerScale": true
-        },
-        {
-            "ExperiencePoint": {
-                "experiencePoints": 100.0
+            "DamageRelay": {
+                "ownerName_": "Player"
+            },
+            "TrailFollower": {
+                "leadOffset_": 128.0,
+                "leaderName_": "Player",
+                "maxSmoothSpeed_": 128.0,
+                "order_": 2,
+                "smoothTime_": 0.6000000238418579,
+                "unitOffset_": 128.0
             },
             "type": "Variables"
         },
@@ -46,10 +42,10 @@
                 "baseColor": {
                     "w": 1.0,
                     "x": 1.0,
-                    "y": 0.9900000095367432,
+                    "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "ac842be8df6723ae5fa4c2c06a0e1f11",
+                "baseTextureGuid": "82cb330b11aa48a1ed2e22a64137fde3",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -72,14 +68,18 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "ExperiencePoint"
+                    "name": "TrailFollower"
+                },
+                {
+                    "enable": true,
+                    "name": "DamageRelay"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "39c8f358cb4e0ccbaf776e0f50dbc9c8",
-    "name": "ExpOrbLarge",
+    "guid": "f047a48bcea3657f6316497a5bf61442",
+    "name": "Player_Tentacle",
     "parentGuid": null,
-    "prefabName": "ExpOrbLarge"
+    "prefabName": "Player_Tentacle"
 }

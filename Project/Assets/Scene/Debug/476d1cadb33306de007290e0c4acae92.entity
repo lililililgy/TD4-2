@@ -12,18 +12,18 @@
             },
             "fogEnd": 10000.0,
             "fogStart": 0.0,
-            "fovY": 0.699999988079071,
+            "fovY": 0.6100000143051147,
             "isDrawFrustum": false,
             "isMainCamera": true,
-            "nearClip": 0.10000000149011612,
+            "nearClip": 0.4099999964237213,
             "type": "CameraComponent"
         },
         {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 0.0,
+                "x": -2502.744873046875,
+                "y": 443.0816650390625,
                 "z": 0.0
             },
             "rotate": {
@@ -33,18 +33,29 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 0.19185921549797058,
+                "y": 0.19185921549797058,
+                "z": 0.19185921549797058
             },
             "type": "Transform"
         },
         {
+            "DebugCamera2D": {},
             "PlayerFollowCamera": {
                 "maxSmoothSpeed_": 26.0,
                 "smoothTime_": 0.8999999761581421
             },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "DebugCamera2D"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "476d1cadb33306de007290e0c4acae92",

@@ -25,6 +25,7 @@ public class RoeStateComponent : MonoScript {
     public override void Update() {
         // 成長するのは UNMATURE のときだけ。MATURE/LARVAE は遷移待ち。
         if (currentState_ != RoeState.UNMATURE) {
+            ApplyScale(maxScale_);
             return;
         }
 

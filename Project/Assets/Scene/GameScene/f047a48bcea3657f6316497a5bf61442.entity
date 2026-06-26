@@ -1,0 +1,21 @@
+{
+    "active": true,
+    "components": [
+        {
+            "categoryBits": 2,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 4294967097,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "f047a48bcea3657f6316497a5bf61442",
+    "name": "Player_Tentacle",
+    "parentGuid": null,
+    "prefabName": "Player_Tentacle"
+}
