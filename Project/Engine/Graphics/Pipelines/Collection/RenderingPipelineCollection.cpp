@@ -1,4 +1,4 @@
-﻿#include "RenderingPipelineCollection.h"
+#include "RenderingPipelineCollection.h"
 
 using namespace ONEngine;
 
@@ -42,6 +42,7 @@ using namespace ONEngine;
 #include "../PostProcess/Screen/RadialBlur/PostProcessRadialBlur.h"
 #include "../PostProcess/Screen/Shadow/PostProcessShadowApply.h"
 #include "../PostProcess/Screen/Fog/PostProcessFog.h"
+#include "../PostProcess/Screen/Fisheye/PostProcessFisheye.h"
 #include "../PostProcess/PerObject/TerrainBrush/PostProcessTerrainBrush.h"
 #include "../PostProcess/PerObject/VoxelTerrainBrush/PostProcessVoxelTerrainBrush.h"
 
@@ -92,17 +93,20 @@ void RenderingPipelineCollection::Initialize() {
 
 
 	/// ----- オブジェクトごとのポストエフェクトのパイプラインを生成 ----- ///
-	GeneratePostProcessPipeline<PostProcessLighting>();
-	GeneratePostProcessPipeline<PostProcessGrayscalePerObject>();
-	GeneratePostProcessPipeline<PostProcessTerrainBrush>();
-	GeneratePostProcessPipeline<PostProcessVoxelTerrainBrush>();
-	GeneratePostProcessPipeline<PostProcessGaussianBlurPerObject>();
+	GeneratePostProcess3DPipeline<PostProcessLighting>();
+	GeneratePostProcess3DPipeline<PostProcessGrayscalePerObject>();
+	GeneratePostProcess3DPipeline<PostProcessTerrainBrush>();
+	GeneratePostProcess3DPipeline<PostProcessVoxelTerrainBrush>();
+	GeneratePostProcess3DPipeline<PostProcessGaussianBlurPerObject>();
 
 	/// ----- スクリーンにかける用のポストエフェクトのパイプラインを生成 ----- ///
-	GeneratePostProcessPipeline<PostProcessGrayscale>();
-	GeneratePostProcessPipeline<PostProcessRadialBlur>();
-	GeneratePostProcessPipeline<PostProcessShadowApply>();
-	GeneratePostProcessPipeline<PostProcessFog>();
+	GeneratePostProcess3DPipeline<PostProcessShadowApply>();
+	GeneratePostProcess3DPipeline<PostProcessFog>();
+
+	/// ----- 2D/UIを含む画面全体にかけるポストエフェクトのパイプラインを生成 ----- ///
+	GeneratePostProcessScreenPipeline<PostProcessGrayscale>();
+	GeneratePostProcessScreenPipeline<PostProcessRadialBlur>();
+	GeneratePostProcessScreenPipeline<PostProcessFisheye>();
 }
 
 void RenderingPipelineCollection::PreDrawEntities(CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
@@ -218,15 +222,28 @@ void RenderingPipelineCollection::DrawSelectedPrefab2D(CameraComponent* _2dCamer
 }
 
 
-void RenderingPipelineCollection::ExecutePostProcess(const std::string& sceneTextureName) {
+void RenderingPipelineCollection::ExecutePostProcess3D(const std::string& sceneTextureName) {
 	// 検証用ログ
-	static int postLogCount = 0;
-	if(postLogCount < 10) {
-		Console::Log("[RenderingCollection] ExecutePostProcess for scene: " + sceneTextureName, LogCategory::Engine);
-		postLogCount++;
+	static int post3DLogCount = 0;
+	if(post3DLogCount < 10) {
+		Console::Log("[RenderingCollection] ExecutePostProcess3D for scene: " + sceneTextureName, LogCategory::Engine);
+		post3DLogCount++;
 	}
 
-	for(auto& postProcess : postProcesses_) {
+	for(auto& postProcess : postProcesses3D_) {
+		postProcess->Execute(sceneTextureName, pDxManager_->GetDxCommand(), pAssetCollection_, pEntityComponentSystem_);
+	}
+}
+
+void RenderingPipelineCollection::ExecutePostProcessScreen(const std::string& sceneTextureName) {
+	// 検証用ログ
+	static int postScreenLogCount = 0;
+	if(postScreenLogCount < 10) {
+		Console::Log("[RenderingCollection] ExecutePostProcessScreen for scene: " + sceneTextureName, LogCategory::Engine);
+		postScreenLogCount++;
+	}
+
+	for(auto& postProcess : postProcessesScreen_) {
 		postProcess->Execute(sceneTextureName, pDxManager_->GetDxCommand(), pAssetCollection_, pEntityComponentSystem_);
 	}
 }

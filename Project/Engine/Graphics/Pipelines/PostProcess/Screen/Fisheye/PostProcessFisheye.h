@@ -1,0 +1,50 @@
+#pragma once
+
+/// std
+#include <array>
+
+/// engine
+#include "Engine/Graphics/Pipelines/Interface/IPostProcessPipeline.h"
+#include "Engine/Graphics/Buffer/ConstantBuffer.h"
+
+/// ///////////////////////////////////////////////////
+/// 魚眼レンズ処理
+/// ///////////////////////////////////////////////////
+namespace ONEngine {
+
+class PostProcessFisheye : public ScreenPostProcess {
+public:
+	/// ===================================================
+	/// public : methods
+	/// ===================================================
+
+	PostProcessFisheye();
+	~PostProcessFisheye() override;
+
+	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
+
+	void Execute(
+		const std::string& textureName,
+		DxCommand* dxCommand,
+		Asset::AssetCollection* assetCollection,
+		EntityComponentSystem* entityComponentSystem
+	) override;
+
+
+private:
+	/// ===================================================
+	/// private : objects
+	/// ===================================================
+
+	struct FisheyeParams {
+		float strength;
+		float scale;
+		float padding[2]; // 16byte alignment
+	};
+
+	ConstantBuffer<FisheyeParams> constantBuffer_;
+	std::array<size_t, 3> textureIndices_; ///< テクスチャのインデックス
+};
+
+
+} /// ONEngine

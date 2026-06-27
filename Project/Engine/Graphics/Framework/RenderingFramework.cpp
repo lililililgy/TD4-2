@@ -1,4 +1,4 @@
-﻿#include "RenderingFramework.h"
+#include "RenderingFramework.h"
 
 using namespace ONEngine;
 
@@ -177,9 +177,9 @@ void RenderingFramework::DrawScene() {
 
 	GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::MainScene);
 
-	/// ポストエフェクト
+	/// 3D用ポストエフェクト
 	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::PostProcess);
-	renderingPipelineCollection_->ExecutePostProcess(renderTex->GetName());
+	renderingPipelineCollection_->ExecutePostProcess3D(renderTex->GetName());
 	GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::PostProcess);
 
 	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
@@ -191,13 +191,25 @@ void RenderingFramework::DrawScene() {
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
 
-	/// パーティクル描画 (ポストエフェクト後)
+	/// パーティクル描画 (3Dポスト後、2D前)
 	renderingPipelineCollection_->DrawParticles(camera);
 
 	/// 2Dオーバーレイ描画
 	renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera2D());
 
-	/// Gizmo描画 (最後)
+	// 2D描画後に画面全体ポストプロセスを適用するためにSRVに遷移
+	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
+
+	/// 画面全体用ポストエフェクト (2DUI、パーティクルを含めて適用)
+	renderingPipelineCollection_->ExecutePostProcessScreen(renderTex->GetName());
+
+	// ギズモ描画のためにRenderTargetに再遷移
+	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
+	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false); // Clear=false
+	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
+	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
+
+	/// Gizmo描画 (最後、デバッグ表示のためポストプロセス後)
 	renderingPipelineCollection_->DrawGizmos(camera, pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera2D());
 
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
@@ -239,7 +251,7 @@ void RenderingFramework::DrawDebug() {
 	renderingPipelineCollection_->DrawEntities(camera, nullptr);
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 
-	renderingPipelineCollection_->ExecutePostProcess(renderTex->GetName());
+	renderingPipelineCollection_->ExecutePostProcess3D(renderTex->GetName());
 
 	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
 	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false); // Clear=false
@@ -250,7 +262,7 @@ void RenderingFramework::DrawDebug() {
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
 
-	/// パーティクル描画 (ポストエフェクト後)
+	/// パーティクル描画
 	renderingPipelineCollection_->DrawParticles(camera);
 
 	// デバッグ用の2D描画
@@ -259,6 +271,18 @@ void RenderingFramework::DrawDebug() {
 	if (pEntityComponentSystem_->GetECSGroup("GameScene")) {
 		renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D(), "GameScene");
 	}
+
+	// 2D描画後に画面全体ポストプロセスを適用するためにSRVに遷移
+	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
+
+	/// 画面全体用ポストエフェクト (2DUI、パーティクルを含めて適用)
+	renderingPipelineCollection_->ExecutePostProcessScreen(renderTex->GetName());
+
+	// ギズモ描画のためにRenderTargetに再遷移
+	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
+	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false); // Clear=false
+	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
+	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
 
 	CameraComponent* camera2D = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
 
@@ -306,7 +330,7 @@ void RenderingFramework::DrawPrefab() {
 	renderingPipelineCollection_->DrawSelectedPrefab(camera, nullptr);
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 
-	renderingPipelineCollection_->ExecutePostProcess(renderTex->GetName());
+	renderingPipelineCollection_->ExecutePostProcess3D(renderTex->GetName());
 
 	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
 	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false); // Clear=false
@@ -317,10 +341,22 @@ void RenderingFramework::DrawPrefab() {
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
 
-	/// パーティクル描画 (ポストエフェクト後)
+	/// パーティクル描画
 	renderingPipelineCollection_->DrawParticles(camera);
 
 	renderingPipelineCollection_->DrawSelectedPrefab2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D());
+
+	// 2D描画後に画面全体ポストプロセスを適用するためにSRVに遷移
+	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
+
+	/// 画面全体用ポストエフェクト (2DUI、パーティクルを含めて適用)
+	renderingPipelineCollection_->ExecutePostProcessScreen(renderTex->GetName());
+
+	// ギズモ描画のためにRenderTargetに再遷移
+	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
+	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false); // Clear=false
+	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
+	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
 
 	CameraComponent* camera2D = nullptr;
 	if (auto gameGroup = pEntityComponentSystem_->GetECSGroup("GameScene")) {
