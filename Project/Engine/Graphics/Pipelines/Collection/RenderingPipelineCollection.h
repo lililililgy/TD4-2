@@ -57,7 +57,10 @@ public:
 	void Generate2DRenderingPipeline(Args&&... args);
 
 	template <IsPostProcessPipeline T, typename... Args>
-	void GeneratePostProcessPipeline(Args&&... args);
+	void GeneratePostProcess3DPipeline(Args&&... args);
+
+	template <IsPostProcessPipeline T, typename... Args>
+	void GeneratePostProcessScreenPipeline(Args&&... args);
 
 
 
@@ -93,9 +96,13 @@ public:
 	void DrawSelectedPrefab2D(CameraComponent* _2dCamera, const std::string& groupName = "");
 
 
-	/// @brief ポストエフェクトの実行
+	/// @brief 3Dポストエフェクトの実行
 	/// @param sceneTextureName シーンの名前 (Debug, Game, Prefab etc...)
-	void ExecutePostProcess(const std::string& sceneTextureName);
+	void ExecutePostProcess3D(const std::string& sceneTextureName);
+
+	/// @brief 画面全体ポストエフェクトの実行 (2D/UIを含む)
+	/// @param sceneTextureName シーンの名前 (Debug, Game, Prefab etc...)
+	void ExecutePostProcessScreen(const std::string& sceneTextureName);
 
 
 	/// @brief 引数のカメラが有効なのか確認する
@@ -122,7 +129,8 @@ private:
 	std::unique_ptr<Gizmo3DRenderingPipeline> gizmo3D_;
 	std::unique_ptr<Gizmo2DRenderingPipeline> gizmo2D_;
 
-	std::vector<std::unique_ptr<IPostProcessPipeline>> postProcesses_;
+	std::vector<std::unique_ptr<IPostProcessPipeline>> postProcesses3D_;
+	std::vector<std::unique_ptr<IPostProcessPipeline>> postProcessesScreen_;
 };
 
 
@@ -146,10 +154,17 @@ inline void RenderingPipelineCollection::Generate2DRenderingPipeline(Args&&... a
 }
 
 template<IsPostProcessPipeline T, typename... Args>
-inline void RenderingPipelineCollection::GeneratePostProcessPipeline(Args&&... args) {
+	inline void RenderingPipelineCollection::GeneratePostProcess3DPipeline(Args&&... args) {
 	std::unique_ptr<T> postProcess = std::make_unique<T>();
 	postProcess->Initialize(pShaderCompiler_, pDxManager_);
-	postProcesses_.push_back(std::move(postProcess));
+	postProcesses3D_.push_back(std::move(postProcess));
+}
+
+template<IsPostProcessPipeline T, typename... Args>
+inline void RenderingPipelineCollection::GeneratePostProcessScreenPipeline(Args&&... args) {
+	std::unique_ptr<T> postProcess = std::make_unique<T>();
+	postProcess->Initialize(pShaderCompiler_, pDxManager_);
+	postProcessesScreen_.push_back(std::move(postProcess));
 }
 
 } /// ONEngine
