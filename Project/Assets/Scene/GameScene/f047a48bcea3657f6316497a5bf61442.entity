@@ -12,6 +12,13 @@
             "state": "Dynamic",
             "type": "CircleCollider",
             "useOwnerScale": true
+        },
+        {
+            "TrailFollower": {
+                "leadOffset_": 64.0,
+                "maxLagDistance_": 64.0
+            },
+            "type": "Variables"
         }
     ],
     "guid": "f047a48bcea3657f6316497a5bf61442",

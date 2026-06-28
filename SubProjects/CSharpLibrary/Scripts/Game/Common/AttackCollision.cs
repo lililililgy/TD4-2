@@ -28,7 +28,11 @@ public class AttackCollision : MonoScript {
             return;
         }
 
-        hp.TakeDamage(damage_);
+        // 会心(クリティカル)補正。Critical を持っていれば、攻撃者の向きと相手への角度差に
+        // 応じた倍率を取得してダメージに掛ける。持っていなければ等倍。
+        Critical critical = entity.GetScript<Critical>();
+        float multiplier = critical != null ? critical.DamageMultiplierAgainst(collision) : 1.0f;
+        hp.TakeDamage(damage_ * multiplier);
 
         if (destroyOnHit_) {
             entity.Destroy();
