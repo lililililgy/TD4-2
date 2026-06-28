@@ -11,6 +11,7 @@
 #include "../System/MeshBufferRecreate/MeshBufferRecreate.h"
 #include "../System/EffectUpdateSystem/EffectUpdateSystem.h"
 #include "../System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
+#include "../System/ParticleSystem2DUpdateSystem/ParticleSystem2DUpdateSystem.h"
 #include "../System/ScriptUpdateSystem/ScriptUpdateSystem.h"
 #include "../System/Collision/CollisionSystem.h"
 #include "../System/Collision/Collision2DSystem.h"
@@ -52,6 +53,7 @@ void ONEngine::GameECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Asse
 	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);
 	ecs->AddSystem<EffectUpdateSystem>();
 	ecs->AddSystem<ParticleSystemUpdateSystem>();
+	ecs->AddSystem<ParticleSystem2DUpdateSystem>();
 	ecs->AddSystem<TransformUpdateSystem>();
 
 	/// 衝突判定に使うsystem
@@ -92,6 +94,7 @@ void ONEngine::DebugECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Ass
 	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);
 	ecs->AddSystem<EffectUpdateSystem>();
 	ecs->AddSystem<ParticleSystemUpdateSystem>();
+	ecs->AddSystem<ParticleSystem2DUpdateSystem>();
 	ecs->AddSystem<TransformUpdateSystem>();
 	ecs->AddSystem<ShadowCasterUpdateSystem>();
 
