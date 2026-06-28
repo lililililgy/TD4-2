@@ -26,6 +26,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Effect/Effect.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/Terrain.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/TerrainCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/Grass/GrassField.h"
@@ -73,6 +74,7 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 	RegisterComponent<AnimationPlayer>(ComponentType::Compute, [&](AnimationPlayer* comp) { ComponentDebug::AnimationPlayerDebug(comp); });
 	RegisterComponent<Effect>(ComponentType::Compute, [&](Effect* comp) { ComponentDebug::EffectDebug(comp); });
 	RegisterComponent<ParticleSystem>(ComponentType::Compute, [&](ParticleSystem* comp) { ONEngine::ParticleSystemDebug(comp); });
+	RegisterComponent<ParticleSystem2D>(ComponentType::Compute, [&](ParticleSystem2D* comp) { ONEngine::ParticleSystem2DDebug(comp); });
 	RegisterComponent<Terrain>(ComponentType::Compute, [&](Terrain* comp) { ComponentDebug::TerrainDebug(comp, pEcs_, pAssetCollection_); });
 	RegisterComponent<TerrainCollider>(ComponentType::Compute, [&](TerrainCollider* comp) { ComponentDebug::TerrainColliderDebug(comp); });
 	RegisterComponent<GrassField>(ComponentType::Compute, [&](GrassField* comp) { ComponentDebug::GrassFieldDebug(comp, pAssetCollection_); });

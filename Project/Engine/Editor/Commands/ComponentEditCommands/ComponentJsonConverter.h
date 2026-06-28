@@ -9,6 +9,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Light/Light.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Effect/Effect.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/CustomMeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line2DRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line3DRenderer.h"
@@ -119,6 +120,10 @@ void from_json(const nlohmann::json& j, ParticleSystemSizeOverLifetime& s);
 void to_json(nlohmann::json& j, const ParticleSystemSizeOverLifetime& s);
 void from_json(const nlohmann::json& j, ParticleSystemVelocityOverLifetime& v);
 void to_json(nlohmann::json& j, const ParticleSystemVelocityOverLifetime& v);
+
+
+void from_json(const nlohmann::json& j, ParticleSystem2D& p);
+void to_json(nlohmann::json& j, const ParticleSystem2D& p);
 
 
 } /// ONEngine

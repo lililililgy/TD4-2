@@ -17,6 +17,7 @@ using namespace ONEngine;
 #include "../Render/Mesh/SkinMeshSkeletonRenderingPipeline.h"
 #include "../Render/Effect/EffectRenderingPipeline.h"
 #include "../Render/ParticleSystem/ParticleSystemRenderingPipeline.h"
+#include "../Render/ParticleSystem2D/ParticleSystem2DRenderingPipeline.h"
 #include "../Render/Primitive/Line2DRenderingPipeline.h"
 #include "../Render/Primitive/Line3DRenderingPipeline.h"
 #include "../Render/Sprite/SpriteRenderingPipeline.h"
@@ -56,6 +57,7 @@ void RenderingPipelineCollection::Initialize() {
 	/// ----- 2D用のパイプラインを生成 ----- ///
 	Generate2DRenderingPipeline<Line2DRenderingPipeline>();
 	Generate2DRenderingPipeline<SpriteRenderingPipeline>(pAssetCollection_);
+	Generate2DRenderingPipeline<ParticleSystem2DRenderingPipeline>(pAssetCollection_);
 
 	/// ----- 3D用のパイプラインを生成 ----- ///
 	Generate3DRenderingPipeline<Line3DRenderingPipeline>();
