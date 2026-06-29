@@ -40,7 +40,26 @@
             "type": "Transform"
         },
         {
-            "DebugCamera2D": {},
+            "DebugCamera2D": {
+                "dragSensitivity_": 1.0,
+                "isActive_": true,
+                "moveSpeed_": 1.0,
+                "position_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale_": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "velocity_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
             "PlayerFollowCamera": {
                 "maxSmoothSpeed_": 26.0,
                 "smoothTime_": 0.8999999761581421
