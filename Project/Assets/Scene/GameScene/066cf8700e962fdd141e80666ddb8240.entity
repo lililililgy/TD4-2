@@ -1,0 +1,70 @@
+{
+    "active": true,
+    "components": [
+        {
+            "cameraType": 1,
+            "enable": 1,
+            "farClip": 1000.0,
+            "fogColor": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fogEnd": 10000.0,
+            "fogStart": 8.407790785948902e-45,
+            "fovY": 0.699999988079071,
+            "isDrawFrustum": false,
+            "isMainCamera": true,
+            "nearClip": 0.10000000149011612,
+            "type": "CameraComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 280.169921875,
+                "y": 936.710693359375,
+                "z": 1.4156103134155273e-06
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.7869930267333984,
+                "y": 1.7869873046875,
+                "z": 1.7869873046875
+            },
+            "type": "Transform"
+        },
+        {
+            "PlayerFollowCamera": {
+                "maxSmoothSpeed_": 72.0,
+                "offset_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "smoothTime_": 20.899999618530273,
+                "targetName_": "Player"
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PlayerFollowCamera"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "066cf8700e962fdd141e80666ddb8240",
+    "name": "MainCamera",
+    "parentGuid": null,
+    "prefabName": ""
+}
