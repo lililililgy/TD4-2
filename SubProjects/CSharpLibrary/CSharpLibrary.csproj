@@ -187,6 +187,9 @@
     <Compile Include="Scripts\Game\UI\Test\UITest2.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest3.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest4.cs" />
+    <Compile Include="Scripts\Game\UI\Title\ExitGame.cs" />
+    <Compile Include="Scripts\Game\UI\Title\GameStart.cs" />
+    <Compile Include="Scripts\Game\UI\Title\OpenOption.cs" />
     <Compile Include="Scripts\Math\SmoothDamp.cs" />
     <Compile Include="Scripts\Test.cs" />
     <Compile Include="Scripts\Test\ColliderTest1.cs" />

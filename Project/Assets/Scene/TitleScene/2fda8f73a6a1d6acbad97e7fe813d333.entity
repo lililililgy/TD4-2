@@ -2,39 +2,48 @@
     "active": true,
     "components": [
         {
+            "elementId": "start",
+            "elementIndex": 0,
+            "enable": 1,
+            "groupId": "d7ea2c0f9f4ecbe9053c755f9af5b335",
+            "type": "UIElementComponent"
+        },
+        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.3460000157356262,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "scale": {
                 "x": 1.0,
-                "y": 0.3009999990463257,
-                "z": 0.9999997615814209
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
+            "GameStart": {},
+            "UITest1": {},
             "type": "Variables"
         },
         {
             "enable": 1,
             "material": {
                 "baseColor": {
-                    "w": 0.4000000059604645,
-                    "x": 0.0,
+                    "w": 1.0,
+                    "x": 1.0,
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
+                "baseTextureGuid": "00000000000000000000000000000000",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -51,10 +60,28 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "GameStart"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "f888bb77a406a2873331d4da01e251dd",
+                "S": "f888bb77a406a2873331d4da01e251dd"
+            },
+            "type": "UILinkNavigationComponent"
         }
     ],
-    "guid": "9e8c6017860216c6330e8a0562708f7f",
-    "name": "sky",
-    "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+    "guid": "2fda8f73a6a1d6acbad97e7fe813d333",
+    "name": "Element_1",
+    "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
     "prefabName": ""
 }

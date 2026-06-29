@@ -110,6 +110,7 @@ private:
 	KeyFilter m_CurrentKeyFilter = KeyFilter::All;
 	bool m_IsListeningForKey = false;
 	unsigned long long m_ListeningNodeId = 0;
+	ed::NodeId m_ContextMenuNodeId;
 };
 
 } /// namespace Editor

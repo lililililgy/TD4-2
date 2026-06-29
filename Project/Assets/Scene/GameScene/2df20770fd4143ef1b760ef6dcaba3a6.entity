@@ -10,7 +10,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -23,24 +23,11 @@
             "type": "Transform"
         },
         {
-            "CloudManager": {
-                "spawnTime": 3.0
-            },
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "CloudManager"
-                }
-            ],
-            "type": "Script"
         }
     ],
-    "guid": "0904d7e09a94f47ab071fbc09f48fb02",
-    "name": "cloudManager",
-    "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+    "guid": "2df20770fd4143ef1b760ef6dcaba3a6",
+    "name": "TitleMenu",
+    "parentGuid": null,
     "prefabName": ""
 }

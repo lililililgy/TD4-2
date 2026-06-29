@@ -283,7 +283,7 @@ void UIEditorWindow::DrawNodeEditor() {
 	}
 	ed::EndCreate();
 
-	// 4. リンクの削除
+	// 4. リンクとノードの削除
 	if (ed::BeginDelete()) {
 		ed::LinkId linkId;
 		while (ed::QueryDeletedLink(&linkId)) {
@@ -293,13 +293,45 @@ void UIEditorWindow::DrawNodeEditor() {
 				m_Links.erase(it, m_Links.end());
 			}
 		}
+
+		ed::NodeId nodeId;
+		while (ed::QueryDeletedNode(&nodeId)) {
+			auto it = std::find_if(m_Nodes.begin(), m_Nodes.end(),
+				[nodeId](const std::unique_ptr<Node>& n) { return n->id == nodeId; });
+			if (it != m_Nodes.end()) {
+				if (ed::AcceptDeletedItem()) {
+					Node* node = it->get();
+					// このノードに接続されているすべてのリンクを削除
+					std::vector<ed::PinId> pinIds;
+					for (const auto& pin : node->inputs) pinIds.push_back(pin.id);
+					for (const auto& pin : node->outputs) pinIds.push_back(pin.id);
+
+					m_Links.erase(std::remove_if(m_Links.begin(), m_Links.end(),
+						[&pinIds](const Link& l) {
+							return std::find(pinIds.begin(), pinIds.end(), l.startPinId) != pinIds.end() ||
+								   std::find(pinIds.begin(), pinIds.end(), l.endPinId) != pinIds.end();
+						}), m_Links.end());
+
+					// ノードを削除
+					m_Nodes.erase(it);
+				}
+			} else {
+				ed::RejectDeletedItem();
+			}
+		}
 	}
 	ed::EndDelete();
 
-	// 5. キャンバス上での右クリックによるノード作成
+	// 5. キャンバス上での右クリックによるノード作成 / ノード右クリックメニュー
 	ed::Suspend();
 	if (ed::ShowBackgroundContextMenu()) {
 		ImGui::OpenPopup("Create Node Menu");
+	}
+
+	ed::NodeId contextNodeId;
+	if (ed::ShowNodeContextMenu(&contextNodeId)) {
+		m_ContextMenuNodeId = contextNodeId;
+		ImGui::OpenPopup("Node Context Menu");
 	}
 	ed::Resume();
 
@@ -344,6 +376,13 @@ void UIEditorWindow::DrawNodeEditor() {
 			m_Nodes.push_back(std::move(node));
 		}
 
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginPopup("Node Context Menu")) {
+		if (ImGui::MenuItem("Delete Node")) {
+			ed::DeleteNode(m_ContextMenuNodeId);
+		}
 		ImGui::EndPopup();
 	}
 	ed::Resume();

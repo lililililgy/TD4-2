@@ -3,32 +3,32 @@
         {
             "guid": "ce6bd684ea7760fe9da2648769f73f28",
             "parentGuid": null,
-            "path": "./GameScene/ce6bd684ea7760fe9da2648769f73f28.entity"
+            "path": "./TitleScene/ce6bd684ea7760fe9da2648769f73f28.entity"
         },
         {
             "guid": "2df20770fd4143ef1b760ef6dcaba3a6",
             "parentGuid": null,
-            "path": "./GameScene/2df20770fd4143ef1b760ef6dcaba3a6.entity"
+            "path": "./TitleScene/2df20770fd4143ef1b760ef6dcaba3a6.entity"
         },
         {
             "guid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
             "parentGuid": "2df20770fd4143ef1b760ef6dcaba3a6",
-            "path": "./GameScene/d7ea2c0f9f4ecbe9053c755f9af5b335.entity"
+            "path": "./TitleScene/d7ea2c0f9f4ecbe9053c755f9af5b335.entity"
         },
         {
             "guid": "2fda8f73a6a1d6acbad97e7fe813d333",
             "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
-            "path": "./GameScene/2fda8f73a6a1d6acbad97e7fe813d333.entity"
+            "path": "./TitleScene/2fda8f73a6a1d6acbad97e7fe813d333.entity"
         },
         {
             "guid": "f888bb77a406a2873331d4da01e251dd",
             "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
-            "path": "./GameScene/f888bb77a406a2873331d4da01e251dd.entity"
+            "path": "./TitleScene/f888bb77a406a2873331d4da01e251dd.entity"
         },
         {
             "guid": "1f912cca31c2b47ac9910262e8660b26",
             "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
-            "path": "./GameScene/1f912cca31c2b47ac9910262e8660b26.entity"
+            "path": "./TitleScene/1f912cca31c2b47ac9910262e8660b26.entity"
         }
     ]
 }

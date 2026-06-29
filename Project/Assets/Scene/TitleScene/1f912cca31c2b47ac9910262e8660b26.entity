@@ -2,27 +2,36 @@
     "active": true,
     "components": [
         {
+            "elementId": "exit",
+            "elementIndex": 2,
+            "enable": 1,
+            "groupId": "d7ea2c0f9f4ecbe9053c755f9af5b335",
+            "type": "UIElementComponent"
+        },
+        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.1970001608133316,
-                "z": -34.65500259399414
+                "y": -3.0,
+                "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "scale": {
                 "x": 1.0,
-                "y": 0.02199997939169407,
-                "z": 0.9999997615814209
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
+            "ExitGame": {},
+            "UITest3": {},
             "type": "Variables"
         },
         {
@@ -34,7 +43,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "48e6a5389d60e53479bdb951ce8872d1",
+                "baseTextureGuid": "00000000000000000000000000000000",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -45,16 +54,34 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 64.0,
+                        "x": 1.0,
                         "y": 1.0
                     }
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ExitGame"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "UpArrow": "f888bb77a406a2873331d4da01e251dd",
+                "W": "f888bb77a406a2873331d4da01e251dd"
+            },
+            "type": "UILinkNavigationComponent"
         }
     ],
-    "guid": "efda3cd83c84909f0afd9cebfa57fa63",
-    "name": "water surface",
-    "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+    "guid": "1f912cca31c2b47ac9910262e8660b26",
+    "name": "Element_3",
+    "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
     "prefabName": ""
 }
