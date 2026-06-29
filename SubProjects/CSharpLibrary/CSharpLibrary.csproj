@@ -178,7 +178,6 @@
     <Compile Include="Scripts\Game\Player\PlayerStateTransition.cs" />
     <Compile Include="Scripts\Game\Roe\RoeManager.cs" />
     <Compile Include="Scripts\Game\Roe\RoeStateComponent.cs" />
-    <Compile Include="Scripts\Game\Roe\RoeTrail.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\SmallFryChaseMove.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEel.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEelPot.cs" />

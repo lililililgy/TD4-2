@@ -15,8 +15,11 @@
         },
         {
             "TrailFollower": {
-                "leadOffset_": 64.0,
-                "maxLagDistance_": 64.0
+                "leadOffset_": 256.0,
+                "maxSmoothSpeed_": 999.0,
+                "order_": 0,
+                "smoothTime_": 0.30000001192092896,
+                "unitOffset_": 256.0
             },
             "type": "Variables"
         }
