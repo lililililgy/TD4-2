@@ -40,12 +40,9 @@ public class SpriteAnimation : MonoScript {
 	public override void Update() {
 		if (spriteRenderer == null) {
 			spriteRenderer = entity.GetComponent<SpriteRenderer>();
-			Debug.Log($"[SpriteAnimation] Trying to get SpriteRenderer: {spriteRenderer != null}");
 		}
 
-		if (!isPlay) return;
-		if (isFinished) return;
-		if (spriteRenderer == null) return;
+		if (!isPlay || isFinished || spriteRenderer == null) return;
 
 		float frameDuration = 1f / Math.Max(0.001f, fps);
 		timer += Time.deltaTime;
@@ -54,8 +51,6 @@ public class SpriteAnimation : MonoScript {
 			timer -= frameDuration;
 			int maxFrames = totalFrames > 0 ? totalFrames : rows * cols;
 			int nextFrame = currentFrame + 1;
-
-			Debug.Log($"[SpriteAnimation] Frame Advance: {currentFrame} -> {nextFrame} (Max: {maxFrames}), rows={rows}, cols={cols}");
 
 			if (nextFrame >= maxFrames) {
 				if (isLoop) {
@@ -78,18 +73,15 @@ public class SpriteAnimation : MonoScript {
 	public void Play() {
 		isPlay = true;
 		isFinished = false;
-		Debug.Log("[SpriteAnimation] Play called");
 	}
 
 	public void Pause() {
 		isPlay = false;
-		Debug.Log("[SpriteAnimation] Pause called");
 	}
 
 	public void Stop() {
 		isPlay = false;
 		ResetAnimation();
-		Debug.Log("[SpriteAnimation] Stop called");
 	}
 
 	public void ResetAnimation() {
@@ -97,7 +89,6 @@ public class SpriteAnimation : MonoScript {
 		currentFrame = 0;
 		isFinished = false;
 		UpdateUV();
-		Debug.Log("[SpriteAnimation] ResetAnimation called");
 	}
 
 	public void SetFrame(int frameIndex) {
@@ -107,18 +98,10 @@ public class SpriteAnimation : MonoScript {
 		timer = 0f;
 		UpdateUV();
 		OnFrameChanged?.Invoke(currentFrame);
-		Debug.Log($"[SpriteAnimation] SetFrame called: {frameIndex}");
 	}
 
 	private void UpdateUV() {
-		if (spriteRenderer == null) {
-			Debug.Log("[SpriteAnimation] UpdateUV failed: SpriteRenderer is null");
-			return;
-		}
-		if (rows <= 0 || cols <= 0) {
-			Debug.Log($"[SpriteAnimation] UpdateUV failed: invalid rows/cols ({rows}/{cols})");
-			return;
-		}
+		if (spriteRenderer == null || rows <= 0 || cols <= 0) return;
 
 		int colIndex = currentFrame % cols;
 		int rowIndex = currentFrame / cols;
@@ -141,8 +124,6 @@ public class SpriteAnimation : MonoScript {
 		uv.scale = new Vector2(uSize, vSize);
 		uv.position = new Vector2(uOffset, vOffset);
 		uv.rotate = 0.0f;
-
-		Debug.Log($"[SpriteAnimation] UpdateUV: Frame={currentFrame}, UVPos=({uv.position.x}, {uv.position.y}), UVScale=({uv.scale.x}, {uv.scale.y})");
 
 		spriteRenderer.uvTransform = uv;
 	}
