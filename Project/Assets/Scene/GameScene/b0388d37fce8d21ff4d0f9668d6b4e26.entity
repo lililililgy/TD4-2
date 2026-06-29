@@ -15,8 +15,9 @@
                 "paramReleaseSmoothTime_": 0.6000000238418579
             },
             "PlayerNormalState": {
-                "rotateMaxSmoothSpeed_": 97.30000305175781,
-                "rotateSmoothTime_": 0.800000011920929
+                "minSpeed_": 32.0,
+                "rotateMaxSmoothSpeed_": 21.299999237060547,
+                "rotateSmoothTime_": 2.799999952316284
             },
             "TrailLeader": {},
             "type": "Variables"
