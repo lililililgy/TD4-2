@@ -46,6 +46,10 @@ void ConsoleLog(MonoString* msg, LogCategory category) {
 	mono_free(cstr);
 }
 
+void ApplicationQuit() {
+	PostQuitMessage(0);
+}
+
 }
 
 
@@ -140,6 +144,9 @@ void MonoScriptEngine::RegisterFunctions() {
 
 	/// log
 	mono_add_internal_call("Debug::InternalConsoleLog", (void*)ConsoleLog);
+
+	/// application
+	mono_add_internal_call("Application::InternalQuit", (void*)ApplicationQuit);
 
 	/// time
 	mono_add_internal_call("Time::InternalGetDeltaTime", (void*)Time::DeltaTime);

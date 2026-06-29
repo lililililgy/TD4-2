@@ -45,10 +45,10 @@ void ComponentDebug::UIGroupComponentDebug(UIGroupComponent* comp) {
 	}
 	
 	char buf[256];
-	strncpy(buf, keysStr.c_str(), sizeof(buf));
+	strncpy_s(buf, keysStr.c_str(), sizeof(buf));
 	buf[sizeof(buf) - 1] = '\0';
 	
-	if (ImGui::InputText("Keys (comma separated)", buf, sizeof(buf))) {
+	if (ImGui::InputText("Keys (comma separated)##SubmitKeys", buf, sizeof(buf))) {
 		std::vector<std::string> newKeys;
 		std::string raw(buf);
 		size_t pos = 0;
@@ -70,6 +70,42 @@ void ComponentDebug::UIGroupComponentDebug(UIGroupComponent* comp) {
 		}
 		comp->submitKeys = newKeys;
 	}
+
+	// キャンセルキー（cancelKeys）の編集UI
+	ImGui::Text("Cancel Keys (Back Keys):");
+	
+	std::string cancelKeysStr = "";
+	for (size_t i = 0; i < comp->cancelKeys.size(); ++i) {
+		cancelKeysStr += comp->cancelKeys[i];
+		if (i + 1 < comp->cancelKeys.size()) {
+			cancelKeysStr += ", ";
+		}
+	}
+	
+	char cancelBuf[256];
+	strncpy_s(cancelBuf, cancelKeysStr.c_str(), sizeof(cancelBuf));
+	cancelBuf[sizeof(cancelBuf) - 1] = '\0';
+	
+	if (ImGui::InputText("Keys (comma separated)##CancelKeys", cancelBuf, sizeof(cancelBuf))) {
+		std::vector<std::string> newKeys;
+		std::string raw(cancelBuf);
+		size_t pos = 0;
+		while ((pos = raw.find(",")) != std::string::npos) {
+			std::string token = raw.substr(0, pos);
+			token.erase(0, token.find_first_not_of(" \t"));
+			token.erase(token.find_last_not_of(" \t") + 1);
+			if (!token.empty()) {
+				newKeys.push_back(token);
+			}
+			raw.erase(0, pos + 1);
+		}
+		raw.erase(0, raw.find_first_not_of(" \t"));
+		raw.erase(raw.find_last_not_of(" \t") + 1);
+		if (!raw.empty()) {
+			newKeys.push_back(raw);
+		}
+		comp->cancelKeys = newKeys;
+	}
 }
 
 void ONEngine::from_json(const nlohmann::json& j, UIGroupComponent& c) {
@@ -89,6 +125,13 @@ void ONEngine::from_json(const nlohmann::json& j, UIGroupComponent& c) {
 	} else {
 		c.submitKeys = { "Return", "Space", "GamepadA" }; // デフォルト値
 	}
+
+	// cancelKeys の読み込み
+	if (j.contains("cancelKeys") && j["cancelKeys"].is_array()) {
+		c.cancelKeys = j["cancelKeys"].get<std::vector<std::string>>();
+	} else {
+		c.cancelKeys = { "Escape", "GamepadB" }; // デフォルト値
+	}
 }
 
 void ONEngine::to_json(nlohmann::json& j, const UIGroupComponent& c) {
@@ -99,6 +142,7 @@ void ONEngine::to_json(nlohmann::json& j, const UIGroupComponent& c) {
 		{ "isVisible", c.isVisible },
 		{ "currentSelected", c.currentSelectedGuid.CheckValid() ? c.currentSelectedGuid.ToString() : "" },
 		{ "parentGroup", c.parentGroupGuid.CheckValid() ? c.parentGroupGuid.ToString() : "" },
-		{ "submitKeys", c.submitKeys }
+		{ "submitKeys", c.submitKeys },
+		{ "cancelKeys", c.cancelKeys }
 	};
 }

@@ -1,10 +1,10 @@
 {
-    "active": false,
+    "active": true,
     "components": [
         {
             "cameraType": 1,
             "enable": 1,
-            "farClip": 1000.239990234375,
+            "farClip": 1000.0,
             "fogColor": {
                 "x": 0.0,
                 "y": 0.0,
@@ -23,7 +23,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 24.000009536743164,
                 "z": 0.0
             },
             "rotate": {
@@ -40,15 +40,31 @@
             "type": "Transform"
         },
         {
-            "DebugCamera2D": {},
-            "PlayerFollowCamera": {
-                "maxSmoothSpeed_": 26.0,
-                "smoothTime_": 0.8999999761581421
-            },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "fisheyeScale": 0.7139999866485596,
+            "fisheyeStrength": 0.382999986410141,
+            "id": 0,
+            "postEffects": [
+                {
+                    "enabled": false,
+                    "type": 0
+                },
+                {
+                    "enabled": false,
+                    "type": 1
+                },
+                {
+                    "enabled": true,
+                    "type": 2
+                }
+            ],
+            "type": "ScreenPostEffectTag"
         }
     ],
-    "guid": "4f6e72f15f5c2f71a13cb6e0b55a9248",
+    "guid": "ce6bd684ea7760fe9da2648769f73f28",
     "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""

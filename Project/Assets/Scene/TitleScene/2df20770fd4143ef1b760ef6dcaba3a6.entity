@@ -5,14 +5,14 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -27.47757911682129,
-                "y": 37.369529724121094,
+                "x": 0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
                 "w": 1.0,
                 "x": 0.0,
-                "y": -0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "scale": {
@@ -26,8 +26,8 @@
             "type": "Variables"
         }
     ],
-    "guid": "f5bc1d50b0430642acd76fdce9773a9e",
-    "name": "Player",
+    "guid": "2df20770fd4143ef1b760ef6dcaba3a6",
+    "name": "TitleMenu",
     "parentGuid": null,
     "prefabName": ""
 }

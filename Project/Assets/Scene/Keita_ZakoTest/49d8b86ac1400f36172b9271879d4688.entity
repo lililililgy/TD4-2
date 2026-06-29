@@ -3,13 +3,13 @@
     "components": [
         {
             "material": {
-                "baseTextureGuid": "b5d57f5c6d0dba2ba728ef16ef0db666"
+                "baseTextureGuid": "1e73117556377963597bd35043846a53"
             },
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "64f0238e6ee5433f9d62c9b6e20ddd85",
-    "name": "MorayEel",
+    "guid": "49d8b86ac1400f36172b9271879d4688",
+    "name": "Player",
     "parentGuid": null,
-    "prefabName": "MorayEel"
+    "prefabName": "Player"
 }

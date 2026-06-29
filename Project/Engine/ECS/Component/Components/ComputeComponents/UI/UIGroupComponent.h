@@ -51,6 +51,7 @@ public:
 		currentSelectedGuid = Guid::kInvalid;
 		parentGroupGuid = Guid::kInvalid;
 		submitKeys = { "Return", "Space", "GamepadA" }; // デフォルト決定キー
+		cancelKeys = { "Escape", "GamepadB" }; // デフォルトキャンセルキー
 	}
 
 public:
@@ -71,6 +72,9 @@ public:
 
 	/// ----- 決定キー設定 ----- ///
 	std::vector<std::string> submitKeys;
+
+	/// ----- キャンセルキー設定 ----- ///
+	std::vector<std::string> cancelKeys;
 };
 
 } /// namespace ONEngine

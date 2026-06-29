@@ -140,6 +140,25 @@ void NotifySubmit(ECSGroup* ecs, GameEntity* groupOwner, GameEntity* selected) {
 	}
 }
 
+void NotifyCancel(ECSGroup* ecs, GameEntity* groupOwner) {
+	if (!groupOwner) return;
+	std::string groupName = ecs->GetGroupName();
+	ONEngine::Console::Log(std::format("[UI Navigation] Cancel Event: Group='{}'", groupOwner->GetName()));
+
+	// グループ統括スクリプトの OnCancel 呼び出し
+	if (Script* groupScriptComp = groupOwner->GetComponent<Script>()) {
+		for (const auto& name : groupScriptComp->GetScriptNames()) {
+			MonoObject* obj = MonoScriptEngine::GetInstance().GetMonoBehaviorFromCS(groupName, groupOwner->GetId(), name);
+			if (obj) {
+				ONEngine::Console::Log(std::format("[UI Navigation]   -> Calling OnCancel() on Group '{}' (Script: '{}')", groupOwner->GetName(), name));
+				InvokeScriptMethod(obj, "OnCancel");
+			} else {
+				ONEngine::Console::LogWarning(std::format("[UI Navigation]   -> OnCancel: Failed to get MonoObject for Group '{}' (Script: '{}')", groupOwner->GetName(), name));
+			}
+		}
+	}
+}
+
 } // namespace
 
 UIInputNavigationSystem::UIInputNavigationSystem() = default;
@@ -206,6 +225,45 @@ void UIInputNavigationSystem::ProcessInputNavigation(ECSGroup* ecs) {
 				it->second = selected->GetGuid();
 				NotifyFocusChange(ecs, groupOwner, oldSelected, selected);
 			}
+		}
+
+		// 0. キャンセル・戻るキーのチェック
+		bool cancelTriggered = false;
+		for (const auto& keyName : groupComp->cancelKeys) {
+			int32_t keyCode = UILinkNavigationComponent::ParseKeyCodeString(keyName);
+			if (keyCode != 0) {
+				bool pressed = false;
+				if (keyCode < 256) {
+					pressed = Input::TriggerKey(keyCode);
+				} else {
+					pressed = Input::TriggerGamepad(keyCode - 256);
+				}
+
+				if (pressed) {
+					cancelTriggered = true;
+					break;
+				}
+			}
+		}
+
+		if (cancelTriggered) {
+			ONEngine::Console::Log(std::format("[UI Navigation] Group Cancel Key Triggered on Group '{}'", groupOwner->GetName()));
+			
+			// スクリプトに通知
+			NotifyCancel(ecs, groupOwner);
+
+			// 親グループがあれば自動でフォーカスを親に戻す
+			if (groupComp->parentGroup) {
+				UIGroupComponent* parentComp = groupComp->parentGroup->GetComponent<UIGroupComponent>();
+				if (parentComp) {
+					groupComp->isFocused = false;
+					groupComp->isVisible = false;
+					parentComp->isFocused = true;
+					parentComp->isVisible = true;
+					ONEngine::Console::Log(std::format("[UI Navigation] Auto-returning focus to parent group '{}'", groupComp->parentGroup->GetName()));
+				}
+			}
+			continue;
 		}
 
 		// 1. 決定・送信キーのチェック

@@ -61,6 +61,7 @@ private:
 		float editorPosY = 0.0f;
 		bool hasEditorPos = false;
 		std::vector<std::string> submitKeys;
+		std::vector<std::string> cancelKeys;
 
 		std::vector<Pin> inputs;
 		std::vector<Pin> outputs;
@@ -110,6 +111,7 @@ private:
 	KeyFilter m_CurrentKeyFilter = KeyFilter::All;
 	bool m_IsListeningForKey = false;
 	unsigned long long m_ListeningNodeId = 0;
+	ed::NodeId m_ContextMenuNodeId;
 };
 
 } /// namespace Editor
