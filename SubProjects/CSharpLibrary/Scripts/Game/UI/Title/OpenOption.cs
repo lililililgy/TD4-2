@@ -29,6 +29,7 @@ public class OpenOption : MonoScript {
 			if (uiGroupComp != null) {
 				uiGroupComp.isVisible = false;
 				uiGroupComp.isFocused = false;
+				Debug.Log("[OpenOption] title menu close");
 			}
 		}
 
@@ -39,6 +40,7 @@ public class OpenOption : MonoScript {
 			if (uiGroupComp != null) {
 				uiGroupComp.isVisible = true;
 				uiGroupComp.isFocused = true;
+				Debug.Log("[OpenOption] option menu open");
 			}
 		}
 	}
