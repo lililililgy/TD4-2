@@ -16,7 +16,7 @@ public class GesoWeakPoint : MonoScript {
         var hp = entity.GetScript<HP>();
         if (hp != null)
         {
-            hp.Damage(damage);
+            hp.TakeDamage(damage);
         }
     }
 }

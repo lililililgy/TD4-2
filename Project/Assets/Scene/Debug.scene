@@ -9,21 +9,6 @@
             "guid": "476d1cadb33306de007290e0c4acae92",
             "parentGuid": null,
             "path": "./Debug/476d1cadb33306de007290e0c4acae92.entity"
-        },
-        {
-            "guid": "f46447c8a703aeb72c9e7dcefe68fca0",
-            "parentGuid": null,
-            "path": "./Debug/f46447c8a703aeb72c9e7dcefe68fca0.entity"
-        },
-        {
-            "guid": "64cb6334a309b3fd43027c15b16ff3d0",
-            "parentGuid": "f46447c8a703aeb72c9e7dcefe68fca0",
-            "path": "./Debug/64cb6334a309b3fd43027c15b16ff3d0.entity"
-        },
-        {
-            "guid": "1c66efe267891cd67df194e5d4def7b5",
-            "parentGuid": "f46447c8a703aeb72c9e7dcefe68fca0",
-            "path": "./Debug/1c66efe267891cd67df194e5d4def7b5.entity"
         }
     ]
 }

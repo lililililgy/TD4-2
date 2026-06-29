@@ -13,12 +13,15 @@ using namespace ONEngine;
 namespace {
 
 	struct Flags {
-		Flags() : flags(PostEffectType_Count, false) {}
+		Flags() : flags(PostEffectType_Count, false), fisheyeStrength(0.15f), fisheyeScale(0.9f) {}
 		std::vector<bool> flags;
 		std::vector<std::string> flagNames = {
 			"Grayscale",
-			"Radial Blur" 
+			"Radial Blur",
+			"Fisheye"
 		};
+		float fisheyeStrength;
+		float fisheyeScale;
 	};
 
 	Flags gFlags;
@@ -31,6 +34,22 @@ void ScreenPostEffectTag::SetPostEffectEnable(PostEffectType type, bool enable) 
 
 bool ScreenPostEffectTag::GetPostEffectEnable(PostEffectType type) const {
 	return gFlags.flags[static_cast<size_t>(type)];
+}
+
+void ScreenPostEffectTag::SetFisheyeStrength(float strength) {
+	gFlags.fisheyeStrength = strength;
+}
+
+float ScreenPostEffectTag::GetFisheyeStrength() const {
+	return gFlags.fisheyeStrength;
+}
+
+void ScreenPostEffectTag::SetFisheyeScale(float scale) {
+	gFlags.fisheyeScale = scale;
+}
+
+float ScreenPostEffectTag::GetFisheyeScale() const {
+	return gFlags.fisheyeScale;
 }
 
 
@@ -46,6 +65,21 @@ void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* component) {
 		ImGui::Checkbox(gFlags.flagNames[i].c_str(), &flag);
 
 		gFlags.flags[i] = flag;
+	}
+
+	if (gFlags.flags[PostEffectType_Fisheye]) {
+		ImGui::Separator();
+		ImGui::Text("Fisheye Settings");
+
+		float strength = gFlags.fisheyeStrength;
+		if (ImGui::SliderFloat("Distortion Strength", &strength, -1.0f, 1.0f)) {
+			gFlags.fisheyeStrength = strength;
+		}
+
+		float scale = gFlags.fisheyeScale;
+		if (ImGui::SliderFloat("View Scale", &scale, 0.1f, 2.0f)) {
+			gFlags.fisheyeScale = scale;
+		}
 	}
 
 }
@@ -65,6 +99,12 @@ void ONEngine::from_json(const nlohmann::json& j, ScreenPostEffectTag& c) {
 			c.SetPostEffectEnable(PostEffectType(type), enabled);
 		}
 	}
+	if (j.contains("fisheyeStrength")) {
+		c.SetFisheyeStrength(j["fisheyeStrength"].get<float>());
+	}
+	if (j.contains("fisheyeScale")) {
+		c.SetFisheyeScale(j["fisheyeScale"].get<float>());
+	}
 }
 
 void ONEngine::to_json(nlohmann::json& j, const ScreenPostEffectTag& c) {
@@ -78,4 +118,6 @@ void ONEngine::to_json(nlohmann::json& j, const ScreenPostEffectTag& c) {
 			{ "enabled", gFlags.flags[i] }
 			});
 	}
+	j["fisheyeStrength"] = c.GetFisheyeStrength();
+	j["fisheyeScale"] = c.GetFisheyeScale();
 }

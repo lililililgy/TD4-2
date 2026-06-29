@@ -10,6 +10,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Effect/Effect.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/TerrainCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/Grass/GrassField.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
@@ -52,6 +53,7 @@ inline void AddComponentFactoryFunction(ComponentCollection* compCollection) {
 	compCollection->RegisterComponentFactory<Variables>();
 	compCollection->RegisterComponentFactory<Effect>();
 	compCollection->RegisterComponentFactory<ParticleSystem>();
+	compCollection->RegisterComponentFactory<ParticleSystem2D>();
 	compCollection->RegisterComponentFactory<Terrain>();
 	compCollection->RegisterComponentFactory<GrassField>();
 	compCollection->RegisterComponentFactory<TerrainCollider>();

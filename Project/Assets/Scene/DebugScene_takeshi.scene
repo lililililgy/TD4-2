@@ -1,6 +1,11 @@
 {
     "entities": [
         {
+            "guid": "4f6e72f15f5c2f71a13cb6e0b55a9248",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/4f6e72f15f5c2f71a13cb6e0b55a9248.entity"
+        },
+        {
             "guid": "ef9cb081b1c1cd85474b7280c162abf3",
             "parentGuid": null,
             "path": "./DebugScene_takeshi/ef9cb081b1c1cd85474b7280c162abf3.entity"

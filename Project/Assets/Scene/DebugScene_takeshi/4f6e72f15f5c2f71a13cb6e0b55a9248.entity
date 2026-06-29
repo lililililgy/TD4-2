@@ -4,14 +4,14 @@
         {
             "cameraType": 1,
             "enable": 1,
-            "farClip": 1000.0,
+            "farClip": 1000.239990234375,
             "fogColor": {
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
-            "fogEnd": -431602080.0,
-            "fogStart": -431602080.0,
+            "fogEnd": 10000.0,
+            "fogStart": 0.0,
             "fovY": 0.699999988079071,
             "isDrawFrustum": false,
             "isMainCamera": true,
@@ -43,8 +43,8 @@
             "type": "Variables"
         }
     ],
-    "guid": "35a911224f7d976bffe5d8beca536d26",
-    "name": "Camera_3",
+    "guid": "4f6e72f15f5c2f71a13cb6e0b55a9248",
+    "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""
 }

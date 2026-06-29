@@ -1,4 +1,5 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "ImGuiMath.h"
 
 #define NOMINMAX
@@ -599,6 +600,143 @@ void ONEngine::ParticleSystemDebug(ParticleSystem* ps) {
 		DrawMinMaxCurve("Linear X", ps->velocityOverLifetime.x);
 		DrawMinMaxCurve("Linear Y", ps->velocityOverLifetime.y);
 		DrawMinMaxCurve("Linear Z", ps->velocityOverLifetime.z);
+		DrawMinMaxCurve("Speed Modifier", ps->velocityOverLifetime.speedModifier);
+		Editor::ImMathf::InputEnum<SimulationSpace>("Space", &ps->velocityOverLifetime.space);
+		if (!ps->velocityOverLifetime.enabled) ImGui::EndDisabled();
+	}
+	EndModuleHeader();
+
+	bool rendererEnabled = true;
+	if (BeginModuleHeader("Renderer", &rendererEnabled)) {
+		Editor::ImMathf::InputEnum<ParticleSystemRenderer::RenderMode>("Render Mode", &ps->renderer.renderMode);
+		Editor::ImMathf::InputEnum<ParticleSystemRenderer::RenderAlignment>("Render Alignment", &ps->renderer.alignment);
+		
+		if (ps->renderer.renderMode == ParticleSystemRenderer::RenderMode::StretchedBillboard) {
+			Editor::ImMathf::DragFloat("Speed Scale", &ps->renderer.speedScale);
+			Editor::ImMathf::DragFloat("Length Scale", &ps->renderer.lengthScale);
+		}
+
+		Editor::ImMathf::InputEnum<ParticleSystemRenderer::BlendMode>("Blend Mode", &ps->renderer.blendMode);
+		DrawAssetGuidField("Material", ps->renderer.materialGuid, Asset::AssetType::Material);
+		DrawAssetGuidField("Mesh", ps->renderer.meshGuid, Asset::AssetType::Mesh);
+	}
+	EndModuleHeader();
+}
+
+void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
+	if (!ps) return;
+	if (ImGui::CollapsingHeader("Particle System 2D", ImGuiTreeNodeFlags_DefaultOpen)) {
+		
+		// --- Editor Preview Controls ---
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "--- Editor Preview ---");
+		ImGui::Text("Status: %s", ps->isEditorPreview_ ? (ps->isEditorPaused_ ? "Paused" : "Playing") : "Stopped");
+		ImGui::Text("Time: %.2f / %.2f", ps->GetTime(), ps->main.duration);
+		ImGui::Text("Alive: %llu / %d", ps->aliveCount, ps->main.maxParticles);
+
+		if (ImGui::Button("Preview Play")) {
+			ps->isEditorPreview_ = true;
+			ps->isEditorPaused_ = false;
+			if (!ps->IsPlaying()) ps->Play();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Preview Pause")) {
+			ps->isEditorPaused_ = !ps->isEditorPaused_;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Preview Stop")) {
+			ps->isEditorPreview_ = false;
+			ps->isEditorPaused_ = false;
+			ps->Stop();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Preview Restart")) {
+			ps->Stop();
+			ps->Play();
+			ps->ResetTime(0.0f);
+			ps->isEditorPreview_ = true;
+			ps->isEditorPaused_ = false;
+		}
+
+		ImGui::Separator();
+
+		// --- Playback Controls (Runtime) ---
+		ImGui::Text("Runtime Status: %s", ps->IsPlaying() ? (ps->IsPaused() ? "Paused" : "Playing") : "Stopped");
+		if (ImGui::Button("Play")) ps->Play(); ImGui::SameLine();
+		if (ImGui::Button("Pause")) ps->Pause(); ImGui::SameLine();
+		if (ImGui::Button("Stop")) ps->Stop(); ImGui::SameLine();
+		if (ImGui::Button("Restart")) { ps->Stop(); ps->Play(); }
+		
+		ImGui::Separator();
+
+		Editor::ImMathf::DragFloat("Duration", &ps->main.duration);
+		ImGui::Checkbox("Looping", &ps->main.looping);
+		ImGui::Checkbox("Prewarm", &ps->main.prewarm);
+		DrawMinMaxFloat("Start Delay", ps->main.startDelay);
+		DrawMinMaxFloat("Start Lifetime", ps->main.startLifetime);
+		DrawMinMaxFloat("Start Speed", ps->main.startSpeed);
+		DrawMinMaxFloat("Start Size", ps->main.startSize);
+		DrawMinMaxFloat("Start Rotation", ps->main.startRotation);
+		DrawMinMaxColor("Start Color", ps->main.startColor);
+		Editor::ImMathf::DragFloat("Gravity Modifier", &ps->main.gravityModifier);
+		Editor::ImMathf::InputEnum<SimulationSpace>("Simulation Space", &ps->main.simulationSpace);
+		ImGui::DragInt("Max Particles", &ps->main.maxParticles, 1, 1, 1000000);
+	}
+	if (BeginModuleHeader("Emission", &ps->emission.enabled)) {
+		Editor::ImMathf::DragFloat("Rate over Time", &ps->emission.rateOverTime);
+		if (ImGui::TreeNode("Bursts")) {
+			if (ImGui::Button("+")) ps->emission.bursts.push_back({});
+			for (size_t i = 0; i < ps->emission.bursts.size(); ++i) {
+				ImGui::PushID((int)i);
+				ImGui::DragFloat("Time", &ps->emission.bursts[i].time, 0.01f); ImGui::SameLine();
+				ImGui::DragInt("Count", &ps->emission.bursts[i].count); ImGui::SameLine();
+				if (ImGui::Button("x")) { ps->emission.bursts.erase(ps->emission.bursts.begin() + i); ImGui::PopID(); break; }
+				ImGui::PopID();
+			}
+			ImGui::TreePop();
+		}
+		if (!ps->emission.enabled) ImGui::EndDisabled();
+	}
+	EndModuleHeader();
+	if (BeginModuleHeader("Shape", &ps->shape.enabled)) {
+		Editor::ImMathf::InputEnum<ParticleSystemShapeType>("Shape Type", &ps->shape.type);
+
+		if (ps->shape.type == ParticleSystemShapeType::Box) {
+			Editor::ImMathf::DragFloat3("Box Scale", &ps->shape.boxScale);
+		} else {
+			Editor::ImMathf::DragFloat("Radius", &ps->shape.radius);
+
+			if (ps->shape.type != ParticleSystemShapeType::Edge) {
+				Editor::ImMathf::DragFloat("Radius Thickness", &ps->shape.radiusThickness);
+			}
+
+			if (ps->shape.type == ParticleSystemShapeType::Cone || ps->shape.type == ParticleSystemShapeType::Circle) {
+				Editor::ImMathf::DragFloat("Arc", &ps->shape.arc);
+			}
+
+			if (ps->shape.type == ParticleSystemShapeType::Cone) {
+				Editor::ImMathf::DragFloat("Angle", &ps->shape.angle);
+			}
+		}
+
+		if (!ps->shape.enabled) ImGui::EndDisabled();
+	}
+	EndModuleHeader();
+
+	if (BeginModuleHeader("Color over Lifetime", &ps->colorOverLifetime.enabled)) {
+		DrawMinMaxGradient("Color", ps->colorOverLifetime.color);
+		if (!ps->colorOverLifetime.enabled) ImGui::EndDisabled();
+	}
+	EndModuleHeader();
+
+	if (BeginModuleHeader("Size over Lifetime", &ps->sizeOverLifetime.enabled)) {
+		DrawMinMaxCurve("Size", ps->sizeOverLifetime.size);
+		if (!ps->sizeOverLifetime.enabled) ImGui::EndDisabled();
+	}
+	EndModuleHeader();
+
+	if (BeginModuleHeader("Velocity over Lifetime", &ps->velocityOverLifetime.enabled)) {
+		DrawMinMaxCurve("Linear X", ps->velocityOverLifetime.x);
+		DrawMinMaxCurve("Linear Y", ps->velocityOverLifetime.y);
 		DrawMinMaxCurve("Speed Modifier", ps->velocityOverLifetime.speedModifier);
 		Editor::ImMathf::InputEnum<SimulationSpace>("Space", &ps->velocityOverLifetime.space);
 		if (!ps->velocityOverLifetime.enabled) ImGui::EndDisabled();
