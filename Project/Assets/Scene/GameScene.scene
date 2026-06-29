@@ -59,16 +59,6 @@
             "guid": "c390a64a0dc1ce6cc005e4385c312bf4",
             "parentGuid": "b0388d37fce8d21ff4d0f9668d6b4e26",
             "path": "./GameScene/c390a64a0dc1ce6cc005e4385c312bf4.entity"
-        },
-        {
-            "guid": "39c8f358cb4e0ccbaf776e0f50dbc9c8",
-            "parentGuid": null,
-            "path": "./GameScene/39c8f358cb4e0ccbaf776e0f50dbc9c8.entity"
-        },
-        {
-            "guid": "e0c12c6558963b9815e9d2be24e07097",
-            "parentGuid": null,
-            "path": "./GameScene/e0c12c6558963b9815e9d2be24e07097.entity"
         }
     ]
 }

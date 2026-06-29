@@ -98,6 +98,7 @@
     <Compile Include="Scripts\Engine\Animation\SpriteAnimation.cs" />
     <Compile Include="Scripts\Engine\Attribute\SerializeField.cs" />
     <Compile Include="Scripts\Engine\Core\ObjectPool\ObjectPool.cs" />
+    <Compile Include="Scripts\Engine\Core\Utility\Application\Application.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\File\FileSystem.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Input\Gamepad.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Input\Input.cs" />
@@ -194,6 +195,9 @@
     <Compile Include="Scripts\Game\UI\Test\UITest2.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest3.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest4.cs" />
+    <Compile Include="Scripts\Game\UI\Title\ExitGame.cs" />
+    <Compile Include="Scripts\Game\UI\Title\GameStart.cs" />
+    <Compile Include="Scripts\Game\UI\Title\OpenOption.cs" />
     <Compile Include="Scripts\Math\SmoothDamp.cs" />
     <Compile Include="Scripts\Test.cs" />
     <Compile Include="Scripts\Test\ColliderTest1.cs" />

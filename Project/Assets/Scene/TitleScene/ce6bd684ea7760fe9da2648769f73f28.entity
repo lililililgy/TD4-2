@@ -11,7 +11,7 @@
                 "z": 0.0
             },
             "fogEnd": 10000.0,
-            "fogStart": 8.407790785948902e-45,
+            "fogStart": 0.0,
             "fovY": 0.699999988079071,
             "isDrawFrustum": false,
             "isMainCamera": true,
@@ -22,48 +22,49 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 280.169921875,
-                "y": 936.710693359375,
-                "z": 1.4156103134155273e-06
+                "x": 0.0,
+                "y": 24.000009536743164,
+                "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 1.7869930267333984,
-                "y": 1.7869873046875,
-                "z": 1.7869873046875
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
-            "PlayerFollowCamera": {
-                "maxSmoothSpeed_": 72.0,
-                "offset_": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "smoothTime_": 20.899999618530273,
-                "targetName_": "Player"
-            },
             "type": "Variables"
         },
         {
             "enable": 1,
-            "scripts": [
+            "fisheyeScale": 0.7139999866485596,
+            "fisheyeStrength": 0.382999986410141,
+            "id": 0,
+            "postEffects": [
                 {
-                    "enable": true,
-                    "name": "PlayerFollowCamera"
+                    "enabled": false,
+                    "type": 0
+                },
+                {
+                    "enabled": false,
+                    "type": 1
+                },
+                {
+                    "enabled": true,
+                    "type": 2
                 }
             ],
-            "type": "Script"
+            "type": "ScreenPostEffectTag"
         }
     ],
-    "guid": "066cf8700e962fdd141e80666ddb8240",
+    "guid": "ce6bd684ea7760fe9da2648769f73f28",
     "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""

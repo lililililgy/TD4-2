@@ -1,4 +1,4 @@
-﻿#include "ScriptUpdateSystem.h"
+#include "ScriptUpdateSystem.h"
 
 using namespace ONEngine;
 
@@ -264,6 +264,14 @@ void DebugScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	/// 作成中のPrefabを更新してしまう問題を防ぐため、デバッグカメラのみ追加する
 
 	ScriptUpdateSystem::OutsideOfRuntimeUpdate(ecs);
+
+	// シーン再生中（デバッグ実行中）は、通常のScriptUpdateSystemが全Entityを処理するため、
+	// ここでのデバッグカメラの追加やC#側のUpdateEntities()の呼び出しはスキップします。
+	// これを行わないと、再生開始時にC#側のAwake/Initリストがフライングでクリアされてしまいます。
+	if (ONEngine::DebugConfig::isDebugging) {
+		return;
+	}
+
 	CameraComponent* camera3d = ecs->GetMainCamera();
 	if(camera3d) {
 		if(GameEntity* debugCamera = camera3d->GetOwner()) {
