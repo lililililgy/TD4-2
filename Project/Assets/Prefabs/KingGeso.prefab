@@ -1,0 +1,106 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -9.900003433227539,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 111.30000305175781,
+                "y": 111.30001068115234,
+                "z": 111.30001068115234
+            },
+            "type": "Transform"
+        },
+        {
+            "HP": {
+                "MAX_HP": 10,
+                "currentHp": 10,
+                "currentHp_": 0.0,
+                "disableAutoDestruction": false,
+                "disableAutoDestruction_": false,
+                "isInvincible": false,
+                "isInvincible_": false,
+                "maxHp_": 0.0,
+                "regenPerSecond": 0.0
+            },
+            "KingGeso": {
+                "attackDuration": 10.0,
+                "cameraEntityName": "Camera",
+                "cooldownDuration": 1.0,
+                "gesoAttackDamage": 20.0,
+                "gesoAttackRadius": 1.5,
+                "gesoMoveDuration": 10.0,
+                "gesoPassThroughDistance": 1000.0,
+                "gesoPrefabName": "Geso",
+                "gesoRotationSpeed": 8.0,
+                "gesoSpawnOffset": {
+                    "x": 1280.5,
+                    "y": 71.77147674560547
+                },
+                "idleDuration": 2.0,
+                "maxHp": 10,
+                "screenEdgeMargin": 0.5,
+                "screenHalfHeight": 720.0,
+                "screenHalfWidth": 1280.0,
+                "targetEntityName": "Player"
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "05a5378f0ccc9ddfe67c691e1e72c324",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KingGeso"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "ef9cb081b1c1cd85474b7280c162abf3",
+    "name": "KingGeso",
+    "parentGuid": null,
+    "prefabName": "KingGeso"
+}

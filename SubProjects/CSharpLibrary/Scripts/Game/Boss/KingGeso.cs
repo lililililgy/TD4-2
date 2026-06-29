@@ -2,38 +2,28 @@ using System;
 
 public class KingGeso : MonoScript
 {
-    [SerializeField]
-    public int maxHp = 10;
-    [SerializeField]
-    public string gesoPrefabName = "Geso";
-    [SerializeField]
-    public string targetEntityName = "Player";
-    [SerializeField]
-    public string cameraEntityName = "Camera";
-    [SerializeField]
-    public Vector2 gesoSpawnOffset = Vector2.zero;
-    [SerializeField]
-    public float screenHalfWidth = 1280.0f;
-    [SerializeField]
-    public float screenHalfHeight = 720.0f;
-    [SerializeField]
-    public float screenEdgeMargin = 0.5f;
-    [SerializeField]
-    public float idleDuration = 2.0f;
-    [SerializeField]
-    public float attackDuration = 1.0f;
-    [SerializeField]
-    public float cooldownDuration = 1.0f;
-    [SerializeField]
-    public float gesoAttackDamage = 1.0f;
-    [SerializeField]
-    public float gesoAttackRadius = 1.5f;
-    [SerializeField]
-    public float gesoRotationSpeed = 8.0f;
-    [SerializeField]
-    public float gesoMoveDuration = 0.25f;
-    [SerializeField]
-    public float gesoPassThroughDistance = 300.0f;
+    [SerializeField] public int maxHp = 10;
+    [SerializeField] public string gesoPrefabName = "GesoHand";
+    [SerializeField] public string targetEntityName = "Player";
+    [SerializeField] public string cameraEntityName = "Camera";
+    [SerializeField] public Vector2 gesoSpawnOffset = Vector2.zero;
+    [SerializeField] public float screenHalfWidth = 1280.0f;
+    [SerializeField] public float screenHalfHeight = 720.0f;
+    [SerializeField] public float screenEdgeMargin = 0.5f;
+    /// 待機状態の持続時間（秒）
+    [SerializeField] public float idleDuration = 2.0f;
+    /// 攻撃状態の持続時間（秒）
+    [SerializeField] public float attackDuration = 3.0f;
+    /// クールダウン時間（秒）
+    [SerializeField] public float cooldownDuration = 3.0f;
+    /// ゲソの攻撃力
+    [SerializeField] public float gesoAttackDamage = 1.0f;
+    /// ゲソの回転速度
+    [SerializeField] public float gesoRotationSpeed = 8.0f;
+    /// ゲソの移動時間
+    [SerializeField] public float gesoMoveDuration = 0.5f;
+    /// ゲソの通過距離
+    [SerializeField] public float gesoPassThroughDistance = 300.0f;
 
     private HP _hp;
     private IKingGesoState _state;
@@ -212,7 +202,6 @@ public class KingGeso : MonoScript
 
         // ゲソの攻撃パラメーターを設定して攻撃を開始
         hand.attackDamage = gesoAttackDamage;
-        hand.attackRadius = gesoAttackRadius;
         hand.attackDuration = AttackDuration;
         hand.rotationSpeed = gesoRotationSpeed;
         hand.moveDuration = gesoMoveDuration;

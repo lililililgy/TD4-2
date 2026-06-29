@@ -9,7 +9,7 @@
                     "matrixCalcFlags": 7,
                     "position": {
                         "x": 0.0,
-                        "y": -5.0,
+                        "y": 0.0,
                         "z": 0.0
                     },
                     "rotate": {
@@ -19,9 +19,9 @@
                         "z": 0.0
                     },
                     "scale": {
-                        "x": 10.0,
-                        "y": 10.0,
-                        "z": 10.0
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
                     },
                     "type": "Transform"
                 },
@@ -37,16 +37,16 @@
                     "mass": 1.0,
                     "size": {
                         "x": 1.0,
-                        "y": 10.0
+                        "y": 1.0
                     },
                     "state": "Dynamic",
                     "type": "BoxCollider2D",
                     "useOwnerScale": true
                 }
             ],
-            "guid": "2397938bd1d294c7b0eaa1abde4792d5",
+            "guid": "a1eab261d5e83c80a43a26f48723add2",
             "name": "Collider",
-            "parentGuid": "386215d1fd0b817acd9d150089332030",
+            "parentGuid": "0226e8f42587aa6fa61a6a7e47d5a50c",
             "prefabName": ""
         },
         {
@@ -54,10 +54,10 @@
             "components": [
                 {
                     "enable": 1,
-                    "matrixCalcFlags": 7,
+                    "matrixCalcFlags": 3,
                     "position": {
                         "x": 0.0,
-                        "y": -5.0,
+                        "y": 1.4901161193847656e-08,
                         "z": 0.0
                     },
                     "rotate": {
@@ -67,9 +67,9 @@
                         "z": 0.0
                     },
                     "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 67.80001831054688,
+                        "y": 67.8000717163086,
+                        "z": 67.8000717163086
                     },
                     "type": "Transform"
                 },
@@ -88,6 +88,21 @@
                     "type": "Script"
                 },
                 {
+                    "categoryBits": 8,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 4294967295,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 90.09999084472656,
+                        "y": 90.10000610351563
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": false
+                },
+                {
                     "enable": 1,
                     "material": {
                         "baseColor": {
@@ -96,7 +111,7 @@
                             "y": 1.0,
                             "z": 1.0
                         },
-                        "baseTextureGuid": "b097081ca8fb83a55b05f8dbaf4e6930",
+                        "baseTextureGuid": "2b1b8b572356f6c42b296f1a5cd80124",
                         "guid": "00000000000000000000000000000000",
                         "normalTextureGuid": "00000000000000000000000000000000",
                         "postEffectFlags": 0,
@@ -113,26 +128,11 @@
                         }
                     },
                     "type": "SpriteRenderer"
-                },
-                {
-                    "categoryBits": 8,
-                    "enable": 1,
-                    "freezeY": false,
-                    "isTrigger": true,
-                    "maskBits": 4294967295,
-                    "mass": 1.0,
-                    "size": {
-                        "x": 20.0,
-                        "y": 20.0
-                    },
-                    "state": "Dynamic",
-                    "type": "BoxCollider2D",
-                    "useOwnerScale": true
                 }
             ],
-            "guid": "d14cba0bab2c76d32317d287d61f89e5",
+            "guid": "0e50874e02128391a1a27810dfea80df",
             "name": "weakPoint",
-            "parentGuid": "386215d1fd0b817acd9d150089332030",
+            "parentGuid": "0226e8f42587aa6fa61a6a7e47d5a50c",
             "prefabName": ""
         }
     ],
@@ -152,9 +152,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 50.0,
+                "y": 1000.0,
+                "z": 10.0
             },
             "type": "Transform"
         },
@@ -191,18 +191,18 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "da3917104a877fa8943d617ddba222c0",
+                "baseTextureGuid": "6992cc0e23463923b5e73e418fa99406",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
                 "uvTransform": {
                     "position": {
-                        "x": 0.0,
+                        "x": 0.1899999976158142,
                         "y": 0.0
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 1.0,
+                        "x": 0.6299999952316284,
                         "y": 1.0
                     }
                 }
@@ -210,8 +210,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "386215d1fd0b817acd9d150089332030",
-    "name": "Geso",
+    "guid": "0226e8f42587aa6fa61a6a7e47d5a50c",
+    "name": "GesoHand",
     "parentGuid": null,
     "prefabName": "Geso"
 }

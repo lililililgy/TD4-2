@@ -7,7 +7,7 @@ public class GesoWeakPoint : MonoScript {
 
     // ボスのエンティティ名
     [SerializeField]
-    private string kingGesoEntityName = "Boss";
+    private string kingGesoEntityName = "KingGeso";
 
     // ボスの参照
     private KingGeso _kingGeso;

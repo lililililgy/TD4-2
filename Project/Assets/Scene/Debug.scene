@@ -1,29 +1,24 @@
 {
     "entities": [
         {
-            "guid": "5777e8cd7fb89b14e6ba044b8f737e69",
-            "parentGuid": null,
-            "path": "./Debug/5777e8cd7fb89b14e6ba044b8f737e69.entity"
-        },
-        {
             "guid": "476d1cadb33306de007290e0c4acae92",
             "parentGuid": null,
             "path": "./Debug/476d1cadb33306de007290e0c4acae92.entity"
         },
         {
-            "guid": "386215d1fd0b817acd9d150089332030",
+            "guid": "d494b79e4e2565acee4afeb894c8102d",
             "parentGuid": null,
-            "path": "./Debug/386215d1fd0b817acd9d150089332030.entity"
+            "path": "./Debug/d494b79e4e2565acee4afeb894c8102d.entity"
         },
         {
-            "guid": "2397938bd1d294c7b0eaa1abde4792d5",
-            "parentGuid": "386215d1fd0b817acd9d150089332030",
-            "path": "./Debug/2397938bd1d294c7b0eaa1abde4792d5.entity"
+            "guid": "6324a9b9287c11835cbcc3d94fb678e5",
+            "parentGuid": "d494b79e4e2565acee4afeb894c8102d",
+            "path": "./Debug/6324a9b9287c11835cbcc3d94fb678e5.entity"
         },
         {
-            "guid": "d14cba0bab2c76d32317d287d61f89e5",
-            "parentGuid": "386215d1fd0b817acd9d150089332030",
-            "path": "./Debug/d14cba0bab2c76d32317d287d61f89e5.entity"
+            "guid": "c28a24de98be8dd7315867697a54ec9c",
+            "parentGuid": "d494b79e4e2565acee4afeb894c8102d",
+            "path": "./Debug/c28a24de98be8dd7315867697a54ec9c.entity"
         }
     ]
 }
