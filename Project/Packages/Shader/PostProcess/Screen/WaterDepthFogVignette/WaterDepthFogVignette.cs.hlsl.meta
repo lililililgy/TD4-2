@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "af9a5988cfacbf06e6f6dbf7c0743108",
+    "name": "WaterDepthFogVignette.cs",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}

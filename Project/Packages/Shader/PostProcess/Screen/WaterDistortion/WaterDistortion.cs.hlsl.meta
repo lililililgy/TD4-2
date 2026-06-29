@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "1db36fb81e61f447789f7815f0d9cd00",
+    "name": "WaterDistortion.cs",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}

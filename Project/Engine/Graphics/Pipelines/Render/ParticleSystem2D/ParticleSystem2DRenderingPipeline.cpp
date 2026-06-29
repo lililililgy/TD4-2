@@ -65,7 +65,7 @@ void ParticleSystem2DRenderingPipeline::Initialize(ShaderCompiler* shaderCompile
             pipeline->AddStaticSampler(D3D12_SHADER_VISIBILITY_PIXEL, 0);
 
             pipeline->SetBlendDesc(blendModeFuncs[i]());
-            pipeline->SetDepthStencilDesc(DepthNone()); // Disable depth read/write for 2D UI/render consistency
+            pipeline->SetDepthStencilDesc(DepthRead());
             pipeline->CreatePipeline(dxm->GetDxDevice());
         }
     }
