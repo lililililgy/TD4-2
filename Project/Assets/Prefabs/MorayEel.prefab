@@ -86,7 +86,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "ed881088c6b4a6998fd4e34005204169",
+                "baseTextureGuid": "b5d57f5c6d0dba2ba728ef16ef0db666",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -105,7 +105,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "c7bd3bb05c418427e323ef135b6aee95",
+    "guid": "64f0238e6ee5433f9d62c9b6e20ddd85",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

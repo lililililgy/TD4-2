@@ -2,14 +2,13 @@
     "active": true,
     "components": [
         {
-            "SmallFryChaseMove": {
-                "chaseDuration": 2.5,
-                "waitTime": 1.7999999523162842
+            "material": {
+                "baseTextureGuid": "b5d57f5c6d0dba2ba728ef16ef0db666"
             },
-            "type": "Variables"
+            "type": "SpriteRenderer"
         }
     ],
-    "guid": "9b42d49b1704e99ede0240878059edc0",
+    "guid": "64f0238e6ee5433f9d62c9b6e20ddd85",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

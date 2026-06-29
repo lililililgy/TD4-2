@@ -45,9 +45,9 @@
                 "offset_": {
                     "x": 0.0,
                     "y": 0.0,
-                    "z": -144.3
+                    "z": -144.3000030517578
                 },
-                "smoothTime_": 0.15,
+                "smoothTime_": 0.15000000596046448,
                 "targetName_": "Player"
             },
             "type": "Variables"
