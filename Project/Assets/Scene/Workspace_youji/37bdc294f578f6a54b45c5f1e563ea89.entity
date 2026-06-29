@@ -29,7 +29,7 @@
                 "invertY": false,
                 "isLoop": true,
                 "isPlay": true,
-                "rows": 3,
+                "rows": 1,
                 "totalFrames": 0
             },
             "type": "Variables"

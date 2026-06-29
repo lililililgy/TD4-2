@@ -93,17 +93,13 @@ void MonoScriptEngine::Initialize() {
 		return;
 	}
 
-#if defined(DEBUG_MODE)
-	// デバッグモード時はドメインリロードによるデバッガの麻痺を防ぐため、
-	// ルートドメインに直接ロードし、AppDomainを追加作成しない
-	domain_ = rootDomain_;
-#else
+	// デバッグモード時でも、再生ごとのC#状態リセットを確実にするため、
+	// AppDomainを常に再作成するように変更
 	domain_ = CreateReloadDomain();
 	if(!domain_) {
 		Console::LogError("Failed to create Mono domain for initialization", LogCategory::ScriptEngine);
 		return;
 	}
-#endif
 	mono_domain_set(domain_, true);
 
 	auto latestDll = FindLatestDll("./Packages/Scripts", "CSharpLibrary");
@@ -198,10 +194,7 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
-#if defined(DEBUG_MODE)
-	Console::LogWarning("Hot Reload is disabled in Debug Mode to ensure stable debugging.", LogCategory::ScriptEngine);
-	return;
-#endif
+	// デバッグモード時でも再生ごとのリセットを優先するため、Hot Reloadを有効化
 
 	MonoDomain* oldDomain = domain_;
 	std::string oldDllPath = currentDllPath_;
@@ -288,15 +281,7 @@ void MonoScriptEngine::SetEcsPtr(EntityComponentSystem* ecs) {
 }
 
 std::optional<std::string> MonoScriptEngine::FindLatestDll(const std::string& dirPath, const std::string& baseName) {
-#if defined(DEBUG_MODE)
-	// デバッグモード時は、デバッガがアセンブリ名とシンボルを正しく認識できるように、
-	// 常にタイムスタンプなしの固定DLLをロードする
-	std::string path = dirPath + "/" + baseName + ".dll";
-	if (std::filesystem::exists(path)) {
-		Console::Log("Debug Mode: Loading fixed DLL for debugging: " + path, LogCategory::ScriptEngine);
-		return path;
-	}
-#endif
+	// デバッグモード時でもホットリロード可能にするため、タイムスタンプ付きの最新DLLをロードする
 
 	std::regex pattern(baseName + R"(_.*\.dll)"); // タイムスタンプ付きの全てのDLL
 	std::optional<std::string> latestFile;
