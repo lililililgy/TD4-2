@@ -7,10 +7,11 @@ public class PlayerNormalState : PlayerState {
     [SerializeField] private bool  canMove_              = true;
     [SerializeField] private float accel_                = 256.0f;
     [SerializeField] private float maxSpeed_             = 512.0f;
+    [SerializeField] private float minSpeed_             = 0.0f;
     [SerializeField] private float decelSmoothTime_      = 0.2f;
     [SerializeField] private float decelMaxSmoothSpeed_  = 12.0f;
-    [SerializeField] private float rotateSmoothTime_     = 3.0f;
-    [SerializeField] private float rotateMaxSmoothSpeed_ = 64.0f;
+    [SerializeField] private float rotateSmoothTime_     = 0.12f; // 旋回の効き（小さいほど機敏）
+    [SerializeField] private float rotateMaxSmoothSpeed_ = 8.0f;  // 最大旋回レート(rad/s)。小さいほど曲がりにくい
 
     private MoveParam moveParam_ = new MoveParam();
 
@@ -19,6 +20,7 @@ public class PlayerNormalState : PlayerState {
             canMove_              = canMove_,
             accel_                = accel_,
             maxSpeed_             = maxSpeed_,
+            minSpeed_             = minSpeed_,
             decelSmoothTime_      = decelSmoothTime_,
             decelMaxSmoothSpeed_  = decelMaxSmoothSpeed_,
             rotateSmoothTime_     = rotateSmoothTime_,

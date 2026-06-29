@@ -60,20 +60,39 @@ public class TrailLeader : MonoScript {
             list.Add(f);
         }
 
+        // 曲げ角拘束の基準向き：先頭ノードはリーダーの「後方」を基準にする。
+        // （リーダーの向きが未確定で長さが出ない時は真下にフォールバック）
+        Vector3 anchor   = transform.position;
+        Vector3 back     = -Quaternion.RotateVector(transform.rotate, Vector3.up);
+        float   bl       = back.Length();
+        Vector3 leaderBackward = (bl > kEps) ? back * (1.0f / bl) : new Vector3(0.0f, -1.0f, 0.0f);
+
         // 各 chain を order 順に、前ノードの更新後位置から1パスで解く(FTL/PBD)。
-        Vector3 anchor = transform.position;
-        float   dt     = Time.deltaTime;
+        float dt = Time.deltaTime;
         foreach (KeyValuePair<string, List<TrailFollower>> kv in groups_) {
             List<TrailFollower> list = kv.Value;
             list.Sort(CompareOrder);
 
-            Vector3 prev = anchor;
+            Vector3 prev   = anchor;
+            Vector3 refDir = leaderBackward; // 先頭の基準＝リーダー後方。以降は前セグメントの向き。
             for (int i = 0; i < list.Count; i++) {
                 // 先頭(生存ノードの最前)はリーダーに leadOffset で繋ぐ。以降は前ノードに unitOffset。
-                prev = list[i].Solve(prev, i == 0, dt);
+                Vector3 newPos = list[i].Solve(prev, refDir, i == 0, dt);
+
+                // 次ノードの基準向き＝今解いたセグメント(prev→newPos)の向き。
+                // 潰れて長さが出ない時は基準を更新せず前の向きを引き継ぐ。
+                Vector3 seg = newPos - prev;
+                float   sl  = seg.Length();
+                if (sl > kEps) {
+                    refDir = seg * (1.0f / sl);
+                }
+                prev = newPos;
             }
         }
     }
+
+    // ベクトル長のゼロ割り回避しきい値
+    private const float kEps = 1e-4f;
 
     private static int CompareOrder(TrailFollower a, TrailFollower b) {
         return a.Order.CompareTo(b.Order);

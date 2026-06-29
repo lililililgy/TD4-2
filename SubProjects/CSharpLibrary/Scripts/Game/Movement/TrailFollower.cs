@@ -9,6 +9,9 @@ using System;
 //   ・min より近づいたら min まで押し戻す（潰れて重ならない）
 //   ・max より離れたら max まで引き戻す（離れすぎない＝前進中はここで曳かれる）
 //   ・min〜max の範囲内は拘束しない（自由に動ける）
+// さらに「曲げ角」も拘束できる(maxBendRad_)：このセグメント(前ノード→自分)の向きを、
+// 基準向き refDir(前セグメントの向き／先頭はリーダー後方)から ±maxBendRad_ 以内に収める。
+// = 隊列が急角度に折れ曲がらない＝ロープの曲げ剛性。π(≈3.14159) で無制限(従来どおり)。
 public class TrailFollower : MonoScript {
 
     [SerializeField] private string leaderName_     = "Player";    // 追従するリーダー名
@@ -18,6 +21,7 @@ public class TrailFollower : MonoScript {
     [SerializeField] private float  leadMaxOffset_  = 8.0f;        // リーダー → 先頭ノード の最大距離
     [SerializeField] private float  unitMinOffset_  = 4.0f;        // ノード間（前ノード → 自分）の最小距離
     [SerializeField] private float  unitMaxOffset_  = 8.0f;        // ノード間（前ノード → 自分）の最大距離
+    [SerializeField] private float  maxBendRad_     = Mathf.PI;    // 基準向きから許す曲げ角(rad)。π(≈3.14159)で無制限
     [SerializeField] private float  smoothTime_     = 0.08f;       // 追従の滑らかさ（0で即時）
     [SerializeField] private float  maxSmoothSpeed_ = 100000.0f;   // 追従速度の上限
 
@@ -42,9 +46,10 @@ public class TrailFollower : MonoScript {
         }
     }
 
-    // TrailLeader から order 順に呼ばれる。前ノードの「更新後の現在位置」prev を基準に、
-    // 距離を [min, max] に拘束した点へスムーズに寄せ、更新後の自分の位置を返す(次ノードの prev になる)。
-    public Vector3 Solve(Vector3 prev, bool isFront, float dt) {
+    // TrailLeader から order 順に呼ばれる。前ノードの「更新後の現在位置」prev と
+    // 基準向き refDir(前セグメントの向き／先頭はリーダー後方、いずれも単位ベクトル)を受け取り、
+    // 距離と曲げ角を拘束した点へスムーズに寄せ、更新後の自分の位置を返す(次ノードの prev になる)。
+    public Vector3 Solve(Vector3 prev, Vector3 refDir, bool isFront, float dt) {
         // 先頭(生存ノードの最前)はリーダーに、それ以外は前ノードに対するレンジを使う。
         float minD = isFront ? leadMinOffset_ : unitMinOffset_;
         float maxD = isFront ? leadMaxOffset_ : unitMaxOffset_;
@@ -53,11 +58,35 @@ public class TrailFollower : MonoScript {
         }
         Vector3 cur = transform.position;
 
-        // 前ノード → 自分 の方向。重なって長さが出ないフレームは真下にフォールバック
+        // 前ノード → 自分 の方向。重なって長さが出ないフレームは基準向き→真下にフォールバック
         // （ゼロ方向だと target が prev に潰れて重なるのを防ぐ）。
         Vector3 dir = cur - prev;
         float   dl  = dir.Length();
-        Vector3 unit = (dl > kEps) ? dir * (1.0f / dl) : new Vector3(0.0f, -1.0f, 0.0f);
+        Vector3 unit;
+        if (dl > kEps) {
+            unit = dir * (1.0f / dl);
+        } else if (refDir.x * refDir.x + refDir.y * refDir.y > kEps * kEps) {
+            unit = refDir;
+        } else {
+            unit = new Vector3(0.0f, -1.0f, 0.0f);
+        }
+
+        // 曲げ角拘束：unit を基準向き refDir から ±maxBendRad_ 以内へクランプ（2D・Z軸回り）。
+        // refDir が無効(長さ0)なら拘束しない。maxBendRad_=π は実質無制限。
+        if (maxBendRad_ < Mathf.PI - kEps &&
+            refDir.x * refDir.x + refDir.y * refDir.y > kEps * kEps) {
+            float dot   = refDir.x * unit.x + refDir.y * unit.y;
+            float cross = refDir.x * unit.y - refDir.y * unit.x;
+            float ang   = Mathf.Atan2(cross, dot); // refDir→unit の符号付き角 [-π,π]
+            if (ang > maxBendRad_ || ang < -maxBendRad_) {
+                float clamped = (ang > 0.0f) ? maxBendRad_ : -maxBendRad_;
+                float c = Mathf.Cos(clamped);
+                float s = Mathf.Sin(clamped);
+                // refDir を clamped だけ回した向きを採用
+                unit = new Vector3(refDir.x * c - refDir.y * s,
+                                   refDir.x * s + refDir.y * c, 0.0f);
+            }
+        }
 
         // レッシュ拘束：範囲内(min〜max)は現在距離を保つ＝拘束しない。範囲外だけ境界へ引き戻す。
         float   targetDist = (dl < minD) ? minD : ((dl > maxD) ? maxD : dl);

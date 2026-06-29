@@ -2,6 +2,23 @@
     "active": true,
     "components": [
         {
+            "AttackCollision": {
+                "damage_": 10.201784133911133
+            },
+            "HP": {
+                "currentHp_": 1.0
+            },
+            "LevelingComponent": {
+                "currentLevel_": 2
+            },
+            "PlayerMoveComponent": {
+                "paramReleaseSmoothTime_": 0.6000000238418579
+            },
+            "PlayerNormalState": {
+                "minSpeed_": 32.0,
+                "rotateMaxSmoothSpeed_": 97.30000305175781,
+                "rotateSmoothTime_": 0.800000011920929
+            },
             "TrailLeader": {},
             "type": "Variables"
         }

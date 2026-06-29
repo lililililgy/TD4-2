@@ -163,6 +163,7 @@
     <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
     <Compile Include="Scripts\Game\Experience\ExperiencePoint.cs" />
     <Compile Include="Scripts\Game\Experience\LevelingComponent.cs" />
+    <Compile Include="Scripts\Game\Movement\MoveDirector.cs" />
     <Compile Include="Scripts\Game\Movement\MoveParam.cs" />
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
     <Compile Include="Scripts\Game\Movement\TrailFollower.cs" />
