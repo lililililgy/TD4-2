@@ -29,6 +29,21 @@
             "guid": "1f912cca31c2b47ac9910262e8660b26",
             "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
             "path": "./TitleScene/1f912cca31c2b47ac9910262e8660b26.entity"
+        },
+        {
+            "guid": "2a6196215b5ed240af352e1b4a505194",
+            "parentGuid": null,
+            "path": "./TitleScene/2a6196215b5ed240af352e1b4a505194.entity"
+        },
+        {
+            "guid": "1296745c833814ed0971914bb15803d8",
+            "parentGuid": "2a6196215b5ed240af352e1b4a505194",
+            "path": "./TitleScene/1296745c833814ed0971914bb15803d8.entity"
+        },
+        {
+            "guid": "05a4d04b4fcbe6a58ec47d2a82ede2dd",
+            "parentGuid": "1296745c833814ed0971914bb15803d8",
+            "path": "./TitleScene/05a4d04b4fcbe6a58ec47d2a82ede2dd.entity"
         }
     ]
 }

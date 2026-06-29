@@ -163,6 +163,25 @@ void UIEditorWindow::DrawNodeEditor() {
 				ImGui::OpenPopup(("SubmitKeySelectorPopup_" + nodeIdStr).c_str());
 			}
 			ImGui::PopItemWidth();
+
+			ImGui::Spacing();
+			ImGui::Text("Cancel Keys:");
+
+			std::string cancelPreview = "";
+			for (size_t i = 0; i < node->cancelKeys.size(); ++i) {
+				if (!cancelPreview.empty()) cancelPreview += ", ";
+				cancelPreview += node->cancelKeys[i];
+			}
+			if (cancelPreview.empty()) {
+				cancelPreview = "(Select keys...)";
+			}
+
+			ImGui::PushItemWidth(140.0f);
+			std::string cancelBtnId = cancelPreview + "##BtnCancelGroupCombo_" + nodeIdStr;
+			if (ImGui::Button(cancelBtnId.c_str(), ImVec2(140.0f, 0.0f))) {
+				ImGui::OpenPopup(("CancelKeySelectorPopup_" + nodeIdStr).c_str());
+			}
+			ImGui::PopItemWidth();
 		} else {
 			char idBuf[64];
 			strncpy_s(idBuf, node->elementId.c_str(), sizeof(idBuf));
@@ -343,6 +362,8 @@ void UIEditorWindow::DrawNodeEditor() {
 			ONEngine::Guid newGuid = ONEngine::GenerateGuid();
 			std::string name = "Group_" + std::to_string(m_Nodes.size());
 			auto node = std::make_unique<Node>(m_NextId++, NodeType::Group, name, newGuid);
+			node->submitKeys = { "Return", "Space", "GamepadA" };
+			node->cancelKeys = { "Escape", "GamepadB" };
 
 			// 入力ピンと出力ピンの作成
 			node->inputs.push_back(Pin(m_NextId++, "ParentLink", PinKind::Input));
@@ -620,6 +641,131 @@ void UIEditorWindow::DrawNodeEditor() {
 				}
 				ImGui::EndPopup();
 			}
+
+			std::string cancelPopupId = "CancelKeySelectorPopup_" + std::to_string(node->id.Get());
+			if (ImGui::BeginPopup(cancelPopupId.c_str())) {
+				const auto& keyNames = ONEngine::UILinkNavigationComponent::GetSupportedKeyNames();
+				auto& selectedFlags = m_SelectedKeysMap[node->id.Get() + 100000]; // submitKeys と衝突回避のオフセット
+				if (selectedFlags.size() != keyNames.size()) {
+					selectedFlags.assign(keyNames.size(), false);
+					for (size_t i = 0; i < keyNames.size(); ++i) {
+						if (std::find(node->cancelKeys.begin(), node->cancelKeys.end(), keyNames[i]) != node->cancelKeys.end()) {
+							selectedFlags[i] = true;
+						}
+					}
+				}
+
+				ImGui::Text("Select Cancel Keys:");
+				ImGui::Separator();
+
+				// 入力待機用のインタラクティブボタン
+				bool isThisNodeListening = m_IsListeningForKey && (m_ListeningNodeId == node->id.Get() + 100000);
+				if (isThisNodeListening) {
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.1f, 0.1f, 1.0f));
+					if (ImGui::Button("[Listening... Press a key / Click to Cancel]", ImVec2(250.0f, 0.0f))) {
+						m_IsListeningForKey = false;
+						m_ListeningNodeId = 0;
+					}
+					ImGui::PopStyleColor(3);
+
+					// 待機状態時のみキー入力をリアルタイム監視して自動選択し、待機状態を解除する
+					for (size_t i = 0; i < keyNames.size(); ++i) {
+						const std::string& keyName = keyNames[i];
+						int32_t keyCode = ONEngine::UILinkNavigationComponent::ParseKeyCodeString(keyName);
+						if (keyCode != 0) {
+							bool pressed = false;
+							if (keyCode < 256) {
+								pressed = ONEngine::Input::TriggerKey(keyCode);
+							} else {
+								pressed = ONEngine::Input::TriggerGamepad(keyCode - 256);
+							}
+
+							if (pressed) {
+								// Escapeキーは除外
+								if (keyName != "Escape") {
+									selectedFlags[i] = !selectedFlags[i]; // トグル選択
+									m_IsListeningForKey = false; // 入力されたので待機解除
+									m_ListeningNodeId = 0;
+
+									// Update node->cancelKeys immediately
+									node->cancelKeys.clear();
+									for (size_t k = 0; k < keyNames.size(); ++k) {
+										if (selectedFlags[k]) {
+											node->cancelKeys.push_back(keyNames[k]);
+										}
+									}
+									break;
+								}
+							}
+						}
+					}
+				} else {
+					if (ImGui::Button("Press Key to Select", ImVec2(250.0f, 0.0f))) {
+						m_IsListeningForKey = true;
+						m_ListeningNodeId = node->id.Get() + 100000;
+					}
+				}
+				ImGui::Separator();
+
+				if (ImGui::BeginTabBar("CancelKeyFilterTabBar")) {
+					if (ImGui::BeginTabItem("All")) {
+						m_CurrentKeyFilter = KeyFilter::All;
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Keyboard")) {
+						m_CurrentKeyFilter = KeyFilter::Keyboard;
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Controller")) {
+						m_CurrentKeyFilter = KeyFilter::Controller;
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Mouse")) {
+						m_CurrentKeyFilter = KeyFilter::Mouse;
+						ImGui::EndTabItem();
+					}
+					ImGui::EndTabBar();
+				}
+				ImGui::Spacing();
+				
+				ImGui::BeginChild("CancelKeyListChild", ImVec2(250.0f, 250.0f), true);
+				if (m_CurrentKeyFilter == KeyFilter::Mouse) {
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.7f, 0.7f, 0.7f, 1.0f));
+					ImGui::TextWrapped("Mouse buttons are not used for cancel keys.");
+					ImGui::PopStyleColor();
+				} else {
+					for (size_t i = 0; i < keyNames.size(); ++i) {
+						const std::string& keyName = keyNames[i];
+						bool isGamepad = (keyName.rfind("Gamepad", 0) == 0);
+
+						if (m_CurrentKeyFilter == KeyFilter::Keyboard && isGamepad) continue;
+						if (m_CurrentKeyFilter == KeyFilter::Controller && !isGamepad) continue;
+
+						bool isSelected = selectedFlags[i];
+						std::string label = (isSelected ? "[x] " : "[ ] ") + keyName;
+						if (ImGui::Selectable(label.c_str(), isSelected, ImGuiSelectableFlags_DontClosePopups)) {
+							selectedFlags[i] = !isSelected;
+							
+							// Update node->cancelKeys
+							node->cancelKeys.clear();
+							for (size_t k = 0; k < keyNames.size(); ++k) {
+								if (selectedFlags[k]) {
+									node->cancelKeys.push_back(keyNames[k]);
+								}
+							}
+						}
+					}
+				}
+				ImGui::EndChild();
+
+				ImGui::Separator();
+				if (ImGui::Button("Close", ImVec2(250.0f, 0.0f))) {
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
 		}
 	}
 	ed::Resume();
@@ -781,7 +927,8 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 				{ "isVisible", node->isVisible },
 				{ "currentSelected", "" },
 				{ "parentGroup", "" },
-				{ "submitKeys", node->submitKeys.empty() ? std::vector<std::string>{"Return", "Space", "GamepadA"} : node->submitKeys }
+				{ "submitKeys", node->submitKeys.empty() ? std::vector<std::string>{"Return", "Space", "GamepadA"} : node->submitKeys },
+				{ "cancelKeys", node->cancelKeys.empty() ? std::vector<std::string>{"Escape", "GamepadB"} : node->cancelKeys }
 			};
 			components.push_back(groupComp);
 		} else {
@@ -1032,6 +1179,8 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 			int elementIndex = 0;
 			std::vector<std::string> submitKeys;
 			bool hasSubmitKeys = false;
+			std::vector<std::string> cancelKeys;
+			bool hasCancelKeys = false;
 
 			for (const auto& compJson : entityJson["components"]) {
 				std::string compType = compJson.value("type", "");
@@ -1042,6 +1191,10 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 					if (compJson.contains("submitKeys") && compJson["submitKeys"].is_array()) {
 						submitKeys = compJson["submitKeys"].get<std::vector<std::string>>();
 						hasSubmitKeys = true;
+					}
+					if (compJson.contains("cancelKeys") && compJson["cancelKeys"].is_array()) {
+						cancelKeys = compJson["cancelKeys"].get<std::vector<std::string>>();
+						hasCancelKeys = true;
 					}
 				} else if (compType == "UIElementComponent") {
 					elementId = compJson.value("elementId", "");
@@ -1056,6 +1209,7 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 			node->elementIndex = elementIndex;
 			if (t == NodeType::Group) {
 				node->submitKeys = hasSubmitKeys ? submitKeys : std::vector<std::string>{"Return", "Space", "GamepadA"};
+				node->cancelKeys = hasCancelKeys ? cancelKeys : std::vector<std::string>{"Escape", "GamepadB"};
 			}
 
 			if (t == NodeType::Group) {
@@ -1163,6 +1317,8 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 			int elementIndex = 0;
 			std::vector<std::string> submitKeys;
 			bool hasSubmitKeys = false;
+			std::vector<std::string> cancelKeys;
+			bool hasCancelKeys = false;
 
 			if (entityJson.contains("components")) {
 				for (const auto& compJson : entityJson["components"]) {
@@ -1174,6 +1330,10 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 						if (compJson.contains("submitKeys") && compJson["submitKeys"].is_array()) {
 							submitKeys = compJson["submitKeys"].get<std::vector<std::string>>();
 							hasSubmitKeys = true;
+						}
+						if (compJson.contains("cancelKeys") && compJson["cancelKeys"].is_array()) {
+							cancelKeys = compJson["cancelKeys"].get<std::vector<std::string>>();
+							hasCancelKeys = true;
 						}
 					} else if (compType == "UIElementComponent") {
 						elementId = compJson.value("elementId", "");
@@ -1193,6 +1353,7 @@ void UIEditorWindow::LoadPrefab(const std::string& filepath) {
 			node->elementIndex = elementIndex;
 			if (t == NodeType::Group) {
 				node->submitKeys = hasSubmitKeys ? submitKeys : std::vector<std::string>{"Return", "Space", "GamepadA"};
+				node->cancelKeys = hasCancelKeys ? cancelKeys : std::vector<std::string>{"Escape", "GamepadB"};
 			}
 
 			Node* nodeRaw = node.get();

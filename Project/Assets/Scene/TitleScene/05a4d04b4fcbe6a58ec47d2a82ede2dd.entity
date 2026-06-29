@@ -1,22 +1,12 @@
 {
-    "active": true,
+    "active": false,
     "components": [
         {
-            "cameraType": 1,
+            "elementId": "",
+            "elementIndex": 0,
             "enable": 1,
-            "farClip": 1000.0,
-            "fogColor": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "fogEnd": 10000.0,
-            "fogStart": 0.0,
-            "fovY": 0.699999988079071,
-            "isDrawFrustum": false,
-            "isMainCamera": true,
-            "nearClip": 0.10000000149011612,
-            "type": "CameraComponent"
+            "groupId": "1296745c833814ed0971914bb15803d8",
+            "type": "UIElementComponent"
         },
         {
             "enable": 1,
@@ -27,7 +17,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -41,10 +31,15 @@
         },
         {
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "links": {},
+            "type": "UILinkNavigationComponent"
         }
     ],
-    "guid": "ce6bd684ea7760fe9da2648769f73f28",
-    "name": "MainCamera",
-    "parentGuid": null,
+    "guid": "05a4d04b4fcbe6a58ec47d2a82ede2dd",
+    "name": "Element_1",
+    "parentGuid": "1296745c833814ed0971914bb15803d8",
     "prefabName": ""
 }

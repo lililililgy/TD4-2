@@ -1,5 +1,5 @@
 {
-    "active": true,
+    "active": false,
     "components": [
         {
             "enable": 1,
@@ -16,8 +16,8 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 200.0,
-                "y": 100.0,
+                "x": 1.0,
+                "y": 1.0,
                 "z": 1.0
             },
             "type": "Transform"
@@ -30,21 +30,20 @@
                 "Escape",
                 "GamepadB"
             ],
-            "currentSelected": "2fda8f73a6a1d6acbad97e7fe813d333",
+            "currentSelected": "05a4d04b4fcbe6a58ec47d2a82ede2dd",
             "enable": 1,
-            "isFocused": true,
-            "isVisible": true,
+            "isFocused": false,
+            "isVisible": false,
             "parentGroup": "",
             "submitKeys": [
                 "Return",
-                "Space",
-                "GamepadA"
+                "Space"
             ],
             "type": "UIGroupComponent"
         }
     ],
-    "guid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
+    "guid": "1296745c833814ed0971914bb15803d8",
     "name": "Group_0",
-    "parentGuid": "2df20770fd4143ef1b760ef6dcaba3a6",
+    "parentGuid": "2a6196215b5ed240af352e1b4a505194",
     "prefabName": ""
 }

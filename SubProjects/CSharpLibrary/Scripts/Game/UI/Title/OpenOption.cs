@@ -23,7 +23,24 @@ public class OpenOption : MonoScript {
 	}
 
 	public void OnSubmit() {
+		Entity parentGroup = entity.parent;
+		if (parentGroup != null) {
+			UIGroupComponent uiGroupComp = parentGroup.GetComponent<UIGroupComponent>();
+			if (uiGroupComp != null) {
+				uiGroupComp.isVisible = false;
+				uiGroupComp.isFocused = false;
+			}
+		}
 
+
+		Entity optionGroup = ecsGroup.FindEntity("OptionMenu");
+		if (optionGroup != null) {
+			UIGroupComponent uiGroupComp = optionGroup.GetComponent<UIGroupComponent>();
+			if (uiGroupComp != null) {
+				uiGroupComp.isVisible = true;
+				uiGroupComp.isFocused = true;
+			}
+		}
 	}
 
 

@@ -86,8 +86,8 @@
                         }
                     ],
                     "editorPosition": {
-                        "x": 376.0,
-                        "y": 389.0
+                        "x": 350.0,
+                        "y": 100.0
                     },
                     "guid": "a84c3d3f6eeaaaa670bfe60a33203ef1",
                     "name": "Element_1",
@@ -177,8 +177,8 @@
                         }
                     ],
                     "editorPosition": {
-                        "x": 626.0,
-                        "y": 389.0
+                        "x": 600.0,
+                        "y": 100.0
                     },
                     "guid": "1b41104dde9518fe61fa7d79f93826be",
                     "name": "Element_2",
@@ -266,8 +266,8 @@
                         }
                     ],
                     "editorPosition": {
-                        "x": 874.0,
-                        "y": 378.0
+                        "x": 100.0,
+                        "y": 400.0
                     },
                     "guid": "87f771141d9931d1873f84b0254c7a17",
                     "name": "Element_3",
@@ -300,6 +300,10 @@
                     "type": "Variables"
                 },
                 {
+                    "cancelKeys": [
+                        "Escape",
+                        "GamepadB"
+                    ],
                     "currentSelected": "",
                     "enable": 1,
                     "isFocused": true,

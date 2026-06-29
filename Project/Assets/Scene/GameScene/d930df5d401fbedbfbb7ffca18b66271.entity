@@ -2,6 +2,23 @@
     "active": true,
     "components": [
         {
+            "cameraType": 1,
+            "enable": 1,
+            "farClip": 1000.0,
+            "fogColor": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fogEnd": 10000.0,
+            "fogStart": 0.0,
+            "fovY": 0.699999988079071,
+            "isDrawFrustum": true,
+            "isMainCamera": true,
+            "nearClip": 0.10000000149011612,
+            "type": "CameraComponent"
+        },
+        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
@@ -10,7 +27,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -26,8 +43,8 @@
             "type": "Variables"
         }
     ],
-    "guid": "2df20770fd4143ef1b760ef6dcaba3a6",
-    "name": "TitleMenu",
+    "guid": "d930df5d401fbedbfbb7ffca18b66271",
+    "name": "Camera_8",
     "parentGuid": null,
     "prefabName": ""
 }
