@@ -181,9 +181,16 @@
     <Compile Include="Scripts\Game\Roe\RoeManager.cs" />
     <Compile Include="Scripts\Game\Roe\RoeStateComponent.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\SmallFryChaseMove.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\ChaseController.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\ChaseAnimation.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\TargetRangeDetector.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEel.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEelPot.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\SpawnFromPot\MorayEelSpawnMove.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\Action\SpikeFishAttack.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFish.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishAroundNeedle.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishNeedle.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest1.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest2.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest3.cs" />
@@ -197,8 +204,7 @@
     <Compile Include="Scripts\Test\ColliderTest2.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
   </ItemGroup>
-  <ItemGroup>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

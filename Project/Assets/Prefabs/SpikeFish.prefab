@@ -10,44 +10,34 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": -0.2202180027961731,
+                "w": 0.0,
                 "x": 0.0,
-                "y": -0.0,
-                "z": 0.9754506945610046
+                "y": 0.0,
+                "z": 0.0
             },
             "scale": {
-                "x": 200.0,
-                "y": 200.0,
-                "z": 200.0
+                "x": 217.69996643066406,
+                "y": 217.69992065429688,
+                "z": 217.69992065429688
             },
             "type": "Transform"
         },
         {
-            "MorayEelMovement": {
-                "chargeSpeed": 0.0,
-                "chargeStartTime": 0.0,
-                "deraySpeed": 0.0
+            "ChaseController": {
+                "autoStart": false,
+                "chaseDistance": 500.0,
+                "chaseDuration": 1.0,
+                "chaseSpeed": 0.0,
+                "enableFacing": false,
+                "rushDistance": 0.0,
+                "stopAtRushDistance": true,
+                "targetEntityName": "Player",
+                "waitTime": 5.0
             },
-            "MorayEelPot": {
-                "fireExpandDuration": 0.20000000298023224,
-                "fireExpandScale": {
-                    "x": 1.0,
-                    "y": 1.399999976158142,
-                    "z": 1.0
-                },
-                "fireInterval": 3.0,
-                "firePower": 812.0,
-                "fireReturnDuration": 0.20000000298023224,
-                "fireScale": 1.5,
-                "fireScaleTimer": 0.6000000238418579,
-                "fireShrinkDuration": 0.4000000059604645,
-                "fireShrinkScale": {
-                    "x": 1.2999999523162842,
-                    "y": 0.4000000059604645,
-                    "z": 1.2999999523162842
-                },
-                "morayEelPrefabName": "MorayEel",
-                "rotateZSpeed": 0.4000000059604645
+            "SmallFryChaseMove": {},
+            "TargetRangeDetector": {
+                "range": 400.0,
+                "targetEntityName": "Player"
             },
             "type": "Variables"
         },
@@ -56,7 +46,15 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "MorayEelPot"
+                    "name": "SmallFryChaseMove"
+                },
+                {
+                    "enable": true,
+                    "name": "ChaseController"
+                },
+                {
+                    "enable": true,
+                    "name": "TargetRangeDetector"
                 }
             ],
             "type": "Script"
@@ -70,7 +68,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "2e86d5b84216ccf743fa60c74d705af5",
+                "baseTextureGuid": "42abbd61b0729f258766ad5a5a961ef2",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -89,8 +87,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "3556dc232010489a1d55f08b63b9655b",
-    "name": "MorayEelPot",
+    "guid": "0ddfefefe7891522f08877c724fc53a4",
+    "name": "SpikeFish",
     "parentGuid": null,
-    "prefabName": "MorayEelPot"
+    "prefabName": "SpikeFish"
 }

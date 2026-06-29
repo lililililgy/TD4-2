@@ -28,7 +28,7 @@ public class MorayEelSpawnMove : MonoScript
         // 追いかけMoveスクリプトを取得
         chaseMove_ = entity.GetScript<SmallFryChaseMove>();
 
-        // 発射時の向き（= ポットの向き）を終着点として保存
+        // 発射時の向きを終着点として保存
         targetRotation_ = transform.rotate;
 
         // ツボから出てきた場合は、SpawnMoveに遷移

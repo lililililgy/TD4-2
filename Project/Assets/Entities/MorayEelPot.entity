@@ -1,6 +1,14 @@
 {
     "active": true,
-    "guid": "99b9a76f9748626f2e2ddcaa686294a3",
+    "components": [
+        {
+            "material": {
+                "baseTextureGuid": "2e86d5b84216ccf743fa60c74d705af5"
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "3556dc232010489a1d55f08b63b9655b",
     "name": "MorayEelPot",
     "parentGuid": null,
     "prefabName": "MorayEelPot"
