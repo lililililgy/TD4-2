@@ -77,15 +77,23 @@ public static class SpringDamper {
         const float kExpCoeff2 = 0.48f;
         const float kExpCoeff3 = 0.235f;
 
+        // smoothTime が実質ゼロなら「即時」。このまま進めると omega が発散し、
+        // maxChange(= maxSpeed * smoothTime) もほぼ0になって目標へ動けず固まる（凍結）。
+        // それを避けるため目標へスナップする（速度は連続性のため (to-from)/dt で埋める）。
+        if (smoothTime <= kEpsilon) {
+            currentVelocity = deltaTime > 0f
+                ? traits.Scale(traits.Sub(to, from), 1f / deltaTime)
+                : default;
+            return to;
+        }
+
         smoothTime = Math.Max(kEpsilon, smoothTime);
 
         float omega = 2f / smoothTime;
         float x = omega * deltaTime;
         float exp = 1f / (1f + x + kExpCoeff2 * x * x + kExpCoeff3 * x * x * x);
 
-        T change = traits.Sub(from, to);              // from - to （後で符号を戻す）
-                                                      // 元実装は change = to - from だが、Unity 同様 from-to で扱い最後に from 基準へ戻す
-        change = traits.Sub(to, from);                // change = to - from
+        T change = traits.Sub(to, from);
 
         float maxChange = maxSpeed * smoothTime;
         change = traits.ClampMagnitude(change, maxChange);
