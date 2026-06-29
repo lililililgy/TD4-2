@@ -49,6 +49,11 @@
             "guid": "05a4d04b4fcbe6a58ec47d2a82ede2dd",
             "parentGuid": "1296745c833814ed0971914bb15803d8",
             "path": "./TitleScene/05a4d04b4fcbe6a58ec47d2a82ede2dd.entity"
+        },
+        {
+            "guid": "2f183c2cac4e5fb5db1ccfdd4d006899",
+            "parentGuid": null,
+            "path": "./TitleScene/2f183c2cac4e5fb5db1ccfdd4d006899.entity"
         }
     ]
 }

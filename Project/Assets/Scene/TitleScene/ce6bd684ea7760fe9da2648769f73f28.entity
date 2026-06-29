@@ -23,7 +23,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 54.89999771118164,
+                "y": 24.000009536743164,
                 "z": 0.0
             },
             "rotate": {
@@ -41,6 +41,27 @@
         },
         {
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "fisheyeScale": 0.7139999866485596,
+            "fisheyeStrength": 0.382999986410141,
+            "id": 0,
+            "postEffects": [
+                {
+                    "enabled": false,
+                    "type": 0
+                },
+                {
+                    "enabled": false,
+                    "type": 1
+                },
+                {
+                    "enabled": true,
+                    "type": 2
+                }
+            ],
+            "type": "ScreenPostEffectTag"
         }
     ],
     "guid": "ce6bd684ea7760fe9da2648769f73f28",
