@@ -1,0 +1,59 @@
+{
+    "entities": [
+        {
+            "guid": "ce6bd684ea7760fe9da2648769f73f28",
+            "parentGuid": null,
+            "path": "./TitleScene/ce6bd684ea7760fe9da2648769f73f28.entity"
+        },
+        {
+            "guid": "2c891b2f0db32ba4c941d9b4fd46afb2",
+            "parentGuid": null,
+            "path": "./TitleScene/2c891b2f0db32ba4c941d9b4fd46afb2.entity"
+        },
+        {
+            "guid": "2df20770fd4143ef1b760ef6dcaba3a6",
+            "parentGuid": null,
+            "path": "./TitleScene/2df20770fd4143ef1b760ef6dcaba3a6.entity"
+        },
+        {
+            "guid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
+            "parentGuid": "2df20770fd4143ef1b760ef6dcaba3a6",
+            "path": "./TitleScene/d7ea2c0f9f4ecbe9053c755f9af5b335.entity"
+        },
+        {
+            "guid": "2fda8f73a6a1d6acbad97e7fe813d333",
+            "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
+            "path": "./TitleScene/2fda8f73a6a1d6acbad97e7fe813d333.entity"
+        },
+        {
+            "guid": "f888bb77a406a2873331d4da01e251dd",
+            "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
+            "path": "./TitleScene/f888bb77a406a2873331d4da01e251dd.entity"
+        },
+        {
+            "guid": "1f912cca31c2b47ac9910262e8660b26",
+            "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
+            "path": "./TitleScene/1f912cca31c2b47ac9910262e8660b26.entity"
+        },
+        {
+            "guid": "2a6196215b5ed240af352e1b4a505194",
+            "parentGuid": null,
+            "path": "./TitleScene/2a6196215b5ed240af352e1b4a505194.entity"
+        },
+        {
+            "guid": "1296745c833814ed0971914bb15803d8",
+            "parentGuid": "2a6196215b5ed240af352e1b4a505194",
+            "path": "./TitleScene/1296745c833814ed0971914bb15803d8.entity"
+        },
+        {
+            "guid": "05a4d04b4fcbe6a58ec47d2a82ede2dd",
+            "parentGuid": "1296745c833814ed0971914bb15803d8",
+            "path": "./TitleScene/05a4d04b4fcbe6a58ec47d2a82ede2dd.entity"
+        },
+        {
+            "guid": "2f183c2cac4e5fb5db1ccfdd4d006899",
+            "parentGuid": null,
+            "path": "./TitleScene/2f183c2cac4e5fb5db1ccfdd4d006899.entity"
+        }
+    ]
+}
