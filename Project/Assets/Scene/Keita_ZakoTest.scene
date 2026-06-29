@@ -14,6 +14,11 @@
             "guid": "49d8b86ac1400f36172b9271879d4688",
             "parentGuid": null,
             "path": "./Keita_ZakoTest/49d8b86ac1400f36172b9271879d4688.entity"
+        },
+        {
+            "guid": "0ddfefefe7891522f08877c724fc53a4",
+            "parentGuid": null,
+            "path": "./Keita_ZakoTest/0ddfefefe7891522f08877c724fc53a4.entity"
         }
     ]
 }
