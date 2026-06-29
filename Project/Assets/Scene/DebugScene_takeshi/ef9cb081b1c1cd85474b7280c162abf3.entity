@@ -1,5 +1,15 @@
 {
     "active": true,
+    "components": [
+        {
+            "KingGeso": {
+                "gesoPrefabName": "GesoHand",
+                "waveGesoCount": 0,
+                "waveGesoInterval": 0.0
+            },
+            "type": "Variables"
+        }
+    ],
     "guid": "ef9cb081b1c1cd85474b7280c162abf3",
     "name": "KingGeso",
     "parentGuid": null,

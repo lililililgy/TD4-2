@@ -106,6 +106,9 @@ public class GesoHand : MonoScript
         }
 
         _target = target;
+        _homeRotation = transform.rotation;
+        _homePosition = ToPlane(transform.position);
+        _movementDepth = transform.position.z;
         Vector2 targetPosition = ToPlane(target.transform.position);
         Vector2 attackDirection = (targetPosition - _homePosition).Normalized();
         _attackTargetPosition = targetPosition + attackDirection * passThroughDistance;
@@ -203,8 +206,8 @@ public class GesoHand : MonoScript
         }
 
         Vector2 normalized = direction.Normalized();
-        float angle = Mathf.Atan2(normalized.y, normalized.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.MakeFromAxis(Vector3.forward, angle);
+        float angle = Mathf.Atan2(normalized.x, normalized.y);
+        transform.rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
     }
 
     private static Vector2 ToPlane(Vector3 position)

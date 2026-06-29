@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public class KingGeso : MonoScript
 {
@@ -21,15 +22,19 @@ public class KingGeso : MonoScript
     /// ゲソの回転速度
     [SerializeField] public float gesoRotationSpeed = 8.0f;
     /// ゲソの移動時間
-    [SerializeField] public float gesoMoveDuration = 0.5f;
+    [SerializeField] public float gesoMoveDuration = 0.1f;
     /// ゲソの通過距離
     [SerializeField] public float gesoPassThroughDistance = 300.0f;
+    /// 波状攻撃で出すゲソの本数
+    [SerializeField] public int waveGesoCount = 60;
+    /// 波状攻撃で次のゲソを出す間隔（秒）
+    [SerializeField] public float waveGesoInterval = 0.001f;
 
     private HP _hp;
     private IKingGesoState _state;
     private Entity _targetEntity;
     private Entity _cameraEntity;
-    private Entity _activeGeso;
+    private List<Entity> _activeGesos = new List<Entity>();
     private bool _attackRequested;
 
 
@@ -56,7 +61,7 @@ public class KingGeso : MonoScript
             _cameraEntity = ecsGroup.FindEntity(cameraEntityName);
         }
 
-        _activeGeso = null;
+        _activeGesos.Clear();
         _attackRequested = false;
         ChangeState(new KingGesoIdleState());
     }
@@ -133,6 +138,16 @@ public class KingGeso : MonoScript
         get { return cooldownDuration > 0.0f ? cooldownDuration : 0.01f; }
     }
 
+    internal int WaveGesoCount
+    {
+        get { return waveGesoCount > 0 ? waveGesoCount : 1; }
+    }
+
+    internal float WaveGesoInterval
+    {
+        get { return waveGesoInterval > 0.0f ? waveGesoInterval : 0.01f; }
+    }
+
     //=============================================================
     // 内部処理
     //=============================================================
@@ -163,38 +178,38 @@ public class KingGeso : MonoScript
     //=============================================================
     // ゲソのスポーン処理
     //=============================================================
-    internal bool SpawnGeso()
+    internal Entity SpawnGeso()
     {
-        DestroyActiveGeso();
         if (String.IsNullOrEmpty(gesoPrefabName))
         {
-            return false;
+            return null;
         }
 
-        _activeGeso = ecsGroup.CreateEntity(gesoPrefabName);
-        if (_activeGeso == null)
+        Entity geso = ecsGroup.CreateEntity(gesoPrefabName);
+        if (geso == null)
         {
-            return false;
+            return null;
         }
 
         gesoSpawnOffset = CreateRandomScreenEdgeOffset();
-       Vector2 spawnPosition = GetScreenCenter() + gesoSpawnOffset;
-       // Vector2 spawnPosition = new Vector2(10.0f, 10.0f);
-        _activeGeso.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, GetMovementDepth());
-        return true;
+        Vector2 spawnPosition = GetScreenCenter() + gesoSpawnOffset;
+        // Vector2 spawnPosition = new Vector2(10.0f, 10.0f);
+        geso.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, GetMovementDepth());
+        _activeGesos.Add(geso);
+        return geso;
     }
 
     //=============================================================
     // ゲソの攻撃開始処理
     //=============================================================
-    internal bool StartActiveGesoAttack()
+    internal bool StartGesoAttack(Entity geso)
     {
-        if (_activeGeso == null)
+        if (geso == null)
         {
             return false;
         }
 
-        GesoHand hand = _activeGeso.GetScript<GesoHand>();
+        GesoHand hand = geso.GetScript<GesoHand>();
         if (hand == null)
         {
             return false;
@@ -214,11 +229,14 @@ public class KingGeso : MonoScript
     //=============================================================
     internal void DestroyActiveGeso()
     {
-        if (_activeGeso != null)
+        for (int i = 0; i < _activeGesos.Count; i++)
         {
-            _activeGeso.Destroy();
-            _activeGeso = null;
+            if (_activeGesos[i] != null)
+            {
+                _activeGesos[i].Destroy();
+            }
         }
+        _activeGesos.Clear();
     }
 
     private Vector2 CreateRandomScreenEdgeOffset()

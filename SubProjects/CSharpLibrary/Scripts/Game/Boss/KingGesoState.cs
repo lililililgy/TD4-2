@@ -55,28 +55,40 @@ internal sealed class KingGesoIdleState : IKingGesoState
 internal sealed class KingGesoAttackState : IKingGesoState
 {
     private float _elapsed;
-    private bool _attackStarted;
+    private float _spawnElapsed;
+    private int _spawnedCount;
+    private Entity _pendingGeso;
 
     public void Enter(KingGeso owner)
     {
         _elapsed = 0.0f;
-        _attackStarted = false;
+        _spawnElapsed = 0.0f;
+        _spawnedCount = 0;
+        _pendingGeso = null;
 
-        if (!owner.SpawnGeso())
-        {
-            owner.ChangeState(new KingGesoCooldownState());
-        }
+        SpawnNextGeso(owner);
     }
 
     public void Update(KingGeso owner)
     {
-        if (!_attackStarted)
+        if (_pendingGeso != null)
         {
             // 攻撃開始
-            _attackStarted = owner.StartActiveGesoAttack();
+            if (owner.StartGesoAttack(_pendingGeso))
+            {
+                _pendingGeso = null;
+            }
         }
 
         _elapsed += Time.deltaTime;
+        _spawnElapsed += Time.deltaTime;
+
+        if (_pendingGeso == null && _spawnedCount < owner.WaveGesoCount && _spawnElapsed >= owner.WaveGesoInterval)
+        {
+            _spawnElapsed = 0.0f;
+            SpawnNextGeso(owner);
+        }
+
         if (_elapsed >= owner.AttackDuration)
         {
             //attack終了後、クールダウン状態に遷移
@@ -88,6 +100,18 @@ internal sealed class KingGesoAttackState : IKingGesoState
     {
         // 攻撃終了時にアクティブなゲソを破棄
         owner.DestroyActiveGeso();
+    }
+
+    private void SpawnNextGeso(KingGeso owner)
+    {
+        _pendingGeso = owner.SpawnGeso();
+        if (_pendingGeso == null)
+        {
+            owner.ChangeState(new KingGesoCooldownState());
+            return;
+        }
+
+        _spawnedCount++;
     }
 }
 
