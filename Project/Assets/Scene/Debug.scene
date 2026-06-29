@@ -1,0 +1,24 @@
+{
+    "entities": [
+        {
+            "guid": "476d1cadb33306de007290e0c4acae92",
+            "parentGuid": null,
+            "path": "./Debug/476d1cadb33306de007290e0c4acae92.entity"
+        },
+        {
+            "guid": "d494b79e4e2565acee4afeb894c8102d",
+            "parentGuid": null,
+            "path": "./Debug/d494b79e4e2565acee4afeb894c8102d.entity"
+        },
+        {
+            "guid": "6324a9b9287c11835cbcc3d94fb678e5",
+            "parentGuid": "d494b79e4e2565acee4afeb894c8102d",
+            "path": "./Debug/6324a9b9287c11835cbcc3d94fb678e5.entity"
+        },
+        {
+            "guid": "c28a24de98be8dd7315867697a54ec9c",
+            "parentGuid": "d494b79e4e2565acee4afeb894c8102d",
+            "path": "./Debug/c28a24de98be8dd7315867697a54ec9c.entity"
+        }
+    ]
+}
