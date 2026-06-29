@@ -7,7 +7,7 @@ namespace ONEngine::DebugConfig {
 	bool isDebugging = false;
 	bool isPause = false;
 	bool isShowDebugScene = true;
-	bool isShowGameScene = false;
+	bool isShowGameScene = true;
 
 	int selectedMode_ = 0; ///< 選択中のデバッグウィンドウ
 }

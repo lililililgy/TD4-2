@@ -95,6 +95,7 @@
     <Compile Include="Scripts\Engine\AI\BehaviorTree\WaitRandomNode.cs" />
     <Compile Include="Scripts\Engine\AI\FrameEvent.cs" />
     <Compile Include="Scripts\Engine\Animation\AnimationPlayer.cs" />
+    <Compile Include="Scripts\Engine\Animation\SpriteAnimation.cs" />
     <Compile Include="Scripts\Engine\Attribute\SerializeField.cs" />
     <Compile Include="Scripts\Engine\Core\ObjectPool\ObjectPool.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\File\FileSystem.cs" />
