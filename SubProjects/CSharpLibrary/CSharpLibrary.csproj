@@ -183,6 +183,9 @@
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEel.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEelPot.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\SpawnFromPot\MorayEelSpawnMove.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFish.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishAroundNeedle.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishNeedle.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest1.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest2.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest3.cs" />
