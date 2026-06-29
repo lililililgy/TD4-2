@@ -43,10 +43,40 @@
             "type": "Variables"
         },
         {
+            "absorptionCoefficients": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "causticsIntensity": 0.5329999923706055,
+            "causticsScale": 0.2759999930858612,
+            "causticsSpeed": 0.2669999897480011,
+            "colorFilter": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "contrast": 1.0700000524520874,
+            "distortionFrequency": 4.591000080108643,
+            "distortionSpeed": 0.800000011920929,
+            "distortionStrength": 0.002300000051036477,
             "enable": 1,
             "fisheyeScale": 0.7139999866485596,
             "fisheyeStrength": 0.382999986410141,
+            "fogColor": [
+                0.21247155964374542,
+                0.5236766934394836,
+                0.5340501666069031
+            ],
+            "fogDensity": 0.000699999975040555,
+            "fogWaterSurfaceY": -100.0,
             "id": 0,
+            "lightDirection": [
+                -0.5289999842643738,
+                -0.0820000022649765,
+                -1.0
+            ],
+            "lightShaftsIntensity": 0.6930000185966492,
             "postEffects": [
                 {
                     "enabled": false,
@@ -59,9 +89,27 @@
                 {
                     "enabled": true,
                     "type": 2
+                },
+                {
+                    "enabled": true,
+                    "type": 3
+                },
+                {
+                    "enabled": true,
+                    "type": 4
+                },
+                {
+                    "enabled": true,
+                    "type": 5
+                },
+                {
+                    "enabled": true,
+                    "type": 6
                 }
             ],
-            "type": "ScreenPostEffectTag"
+            "saturation": 2.0,
+            "type": "ScreenPostEffectTag",
+            "vignetteStrength": 1.3930000066757202
         }
     ],
     "guid": "ce6bd684ea7760fe9da2648769f73f28",

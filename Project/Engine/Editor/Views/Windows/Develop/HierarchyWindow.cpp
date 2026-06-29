@@ -549,6 +549,7 @@ bool HierarchyWindow::DrawEntityContextMenu(ONEngine::GameEntity* entity, bool s
 
 void HierarchyWindow::HandleEntityShortcuts(ONEngine::GameEntity* entity, bool selected) {
 	if (!selected || !ImGui::IsWindowFocused()) return;
+	if (ImGui::GetIO().WantTextInput) return;
 
 	if (ImGui::IsKeyPressed(ImGuiKey_Delete)) {
 		deleteQueue_.push_back(entity->GetGuid());
@@ -565,6 +566,7 @@ void HierarchyWindow::HandleEntityShortcuts(ONEngine::GameEntity* entity, bool s
 
 void HierarchyWindow::HandleGlobalShortcuts() {
 	if (!ImGui::IsWindowFocused()) return;
+	if (ImGui::GetIO().WantTextInput) return;
 
 	// 何も選択されていない、またはCtrl+Vのみを処理
 	if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_V)) {

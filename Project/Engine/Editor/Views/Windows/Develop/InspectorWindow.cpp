@@ -469,11 +469,11 @@ void InspectorWindow::DrawComponentNode(ONEngine::GameEntity* entity, auto& itr)
 
 	bool isDeleted = false;
 
+	// 2. ポップアップメニューの処理 (削除されたかどうかのフラグを受け取る)
+	isDeleted = HandleComponentPopupMenu(entity, comp, compName, itr);
+
 	// ヘッダーが開かれている場合の中身の処理
 	if(isHeaderOpen) {
-		// 2. ポップアップメニューの処理 (削除されたかどうかのフラグを受け取る)
-		isDeleted = HandleComponentPopupMenu(entity, comp, compName, itr);
-
 		// 3. 削除されていなければ中身のプロパティを描画
 		if(!isDeleted) {
 			DrawComponentInnerContent(comp, itr->first, comp->enable);
@@ -503,9 +503,9 @@ void InspectorWindow::DrawMultiComponentNode(const std::vector<ONEngine::GameEnt
 	bool isHeaderOpen = DrawMultiComponentHeaderUI(comps, compName, baseColor);
 
 	bool isDeleted = false;
+	isDeleted = HandleMultiComponentPopupMenu(entities, hash, compName);
+
 	if (isHeaderOpen) {
-		isDeleted = HandleMultiComponentPopupMenu(entities, hash, compName);
-		
 		if (!isDeleted) {
 			// 全員有効かチェック
 			bool allEnabled = true;
@@ -527,6 +527,9 @@ bool InspectorWindow::DrawComponentHeaderUI(ONEngine::IComponent* comp, const st
 	// TreeNode
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen;
 	bool isHeaderOpen = ImGui::TreeNodeEx("##header", flags, "");
+	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+		ImGui::OpenPopup("CompPopup");
+	}
 
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 2.0f);
@@ -571,6 +574,9 @@ bool InspectorWindow::DrawMultiComponentHeaderUI(const std::vector<ONEngine::ICo
 
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen;
 	bool isHeaderOpen = ImGui::TreeNodeEx("##header", flags, "");
+	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+		ImGui::OpenPopup("MultiCompPopup");
+	}
 
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 2.0f);
