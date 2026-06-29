@@ -24,6 +24,7 @@ public class ExitGame : MonoScript {
 
 	public void OnSubmit() {
 		/// ゲームを終了する
+		Application.Quit();
 	}
 
 	public override void Update() {

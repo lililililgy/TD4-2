@@ -98,6 +98,7 @@
     <Compile Include="Scripts\Engine\Animation\SpriteAnimation.cs" />
     <Compile Include="Scripts\Engine\Attribute\SerializeField.cs" />
     <Compile Include="Scripts\Engine\Core\ObjectPool\ObjectPool.cs" />
+    <Compile Include="Scripts\Engine\Core\Utility\Application\Application.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\File\FileSystem.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Input\Gamepad.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Input\Input.cs" />
