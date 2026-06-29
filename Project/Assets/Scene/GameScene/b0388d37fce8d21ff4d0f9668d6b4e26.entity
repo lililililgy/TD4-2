@@ -1,5 +1,11 @@
 {
     "active": true,
+    "components": [
+        {
+            "TrailLeader": {},
+            "type": "Variables"
+        }
+    ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
     "name": "Player",
     "parentGuid": null,

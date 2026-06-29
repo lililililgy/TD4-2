@@ -166,6 +166,7 @@
     <Compile Include="Scripts\Game\Movement\MoveParam.cs" />
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
     <Compile Include="Scripts\Game\Movement\TrailFollower.cs" />
+    <Compile Include="Scripts\Game\Movement\TrailLeader.cs" />
     <Compile Include="Scripts\Game\Player\Magazine.cs" />
     <Compile Include="Scripts\Game\Player\PlayerAttackComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerDashState.cs" />

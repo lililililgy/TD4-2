@@ -44,12 +44,15 @@
                 "minScale_": 32.0
             },
             "TrailFollower": {
-                "leadOffset_": 512.0,
+                "chainName_": "Roe",
+                "leadMaxOffset_": 512.0,
+                "leadMinOffset_": 256.0,
                 "leaderName_": "Player",
                 "maxSmoothSpeed_": 423.0,
                 "order_": 1,
                 "smoothTime_": 0.25999999046325684,
-                "unitOffset_": 86.0
+                "unitMaxOffset_": 86.0,
+                "unitMinOffset_": 43.0
             },
             "type": "Variables"
         },

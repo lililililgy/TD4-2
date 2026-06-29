@@ -27,12 +27,15 @@
                 "ownerName_": "Player"
             },
             "TrailFollower": {
-                "leadOffset_": 128.0,
+                "chainName_": "PlayerTail",
+                "leadMaxOffset_": 128.0,
+                "leadMinOffset_": 64.0,
                 "leaderName_": "Player",
                 "maxSmoothSpeed_": 128.0,
                 "order_": 2,
                 "smoothTime_": 0.6000000238418579,
-                "unitOffset_": 128.0
+                "unitMaxOffset_": 128.0,
+                "unitMinOffset_": 64.0
             },
             "type": "Variables"
         },
