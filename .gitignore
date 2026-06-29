@@ -341,7 +341,7 @@ DirectXGame/imgui.ini
 # **/DirectXTex/Shaders/Compiled/
 **/DirectXTex/Bin/
 # Debug Scene
-# Project/Assets/Scene/Debug.scene
-# Project/Assets/Scene/Debug/
+Project/Assets/Scene/Debug.scene
+Project/Assets/Scene/Debug/
 
 *.slnx

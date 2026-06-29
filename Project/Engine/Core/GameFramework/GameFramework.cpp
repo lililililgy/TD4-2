@@ -1,9 +1,11 @@
 #include "GameFramework.h"
+#include "DebugSceneGenerator.h"
 
 using namespace ONEngine;
 
 /// std
 #include <chrono>
+
 
 /// engine
 #include "Engine/Core/Utility/Input/Input.h"
@@ -191,5 +193,8 @@ void GameFramework::Draw() {
 }
 
 void GameFramework::LoadDebugScene() {
+	DebugSceneGenerator::GenerateDefaultDebugSceneIfNeeded();
 	sceneManager_->GetSceneIO()->Input("Debug", entityComponentSystem_->GetECSGroup("Debug"));
 }
+
+

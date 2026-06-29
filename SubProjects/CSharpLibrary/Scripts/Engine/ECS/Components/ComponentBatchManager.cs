@@ -305,6 +305,7 @@ static class ComponentBatchManager {
 			for (int i = 0; i < spriteBatch.Length; i++) {
 				var comp = spriteArray.Get(i);
 				comp.color = spriteBatch[i].color;
+				comp.uvTransform = spriteBatch[i].uvTransform;
 			}
 		} else if (componentType == typeof(AgentIntentComponent)) {
 			var agentArray = (ComponentArray<AgentIntentComponent>)array;
