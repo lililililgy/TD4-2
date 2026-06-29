@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 10.0,
-                "y": 0.0,
+                "x": 0.0,
+                "y": -5.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,25 +16,40 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 100.0,
-                "y": 100.0,
-                "z": 100.0
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
-            "GesoHand": {
-                "attackDamage": 0.0,
-                "attackDuration": 0.0,
-                "attackOffsetForward": 0.0,
-                "attackOffsetUp": 0.0,
-                "attackRadius": 0.0,
-                "moveDuration": 0.0,
-                "passThroughDistance": 0.0,
-                "returnDuration": 0.0,
-                "rotationSpeed": 0.0
-            },
+            "GesoWeakPoint": {},
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "GesoWeakPoint"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 4294967295,
+            "mass": 1.0,
+            "size": {
+                "x": 20.0,
+                "y": 20.0
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
         },
         {
             "enable": 1,
@@ -45,7 +60,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "da3917104a877fa8943d617ddba222c0",
+                "baseTextureGuid": "b097081ca8fb83a55b05f8dbaf4e6930",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -62,20 +77,10 @@
                 }
             },
             "type": "SpriteRenderer"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "GesoHand"
-                }
-            ],
-            "type": "Script"
         }
     ],
-    "guid": "2df14a1cd1ce8a1feb7f69a6dc45e7f0",
-    "name": "NewEntity",
-    "parentGuid": null,
+    "guid": "d14cba0bab2c76d32317d287d61f89e5",
+    "name": "weakPoint",
+    "parentGuid": "386215d1fd0b817acd9d150089332030",
     "prefabName": ""
 }

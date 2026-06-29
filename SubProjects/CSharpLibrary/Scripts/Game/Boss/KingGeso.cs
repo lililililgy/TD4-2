@@ -115,6 +115,19 @@ public class KingGeso : MonoScript
         _attackRequested = true;
     }
 
+    //=============================================================
+    // ダメージ処理
+    //=============================================================
+    public void TakeDamage(float damage)
+    {
+        if (_hp == null)
+        {
+            return;
+        }
+
+        _hp.TakeDamage(damage);
+    }
+
     internal float IdleDuration
     {
         get { return idleDuration > 0.0f ? idleDuration : 0.01f; }

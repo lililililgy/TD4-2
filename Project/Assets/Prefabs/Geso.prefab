@@ -19,9 +19,9 @@
                         "z": 0.0
                     },
                     "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 10.0,
+                        "y": 10.0,
+                        "z": 10.0
                     },
                     "type": "Transform"
                 },
@@ -29,7 +29,7 @@
                     "type": "Variables"
                 },
                 {
-                    "categoryBits": 1,
+                    "categoryBits": 8,
                     "enable": 1,
                     "freezeY": false,
                     "isTrigger": true,
@@ -44,9 +44,9 @@
                     "useOwnerScale": true
                 }
             ],
-            "guid": "1af7655e3dec9e4521677efa716c7500",
+            "guid": "2397938bd1d294c7b0eaa1abde4792d5",
             "name": "Collider",
-            "parentGuid": "398009cc5837a61d8661b20a93f25ff5",
+            "parentGuid": "386215d1fd0b817acd9d150089332030",
             "prefabName": ""
         },
         {
@@ -57,7 +57,7 @@
                     "matrixCalcFlags": 7,
                     "position": {
                         "x": 0.0,
-                        "y": -155.0,
+                        "y": -5.0,
                         "z": 0.0
                     },
                     "rotate": {
@@ -115,10 +115,10 @@
                     "type": "SpriteRenderer"
                 },
                 {
-                    "categoryBits": 1,
+                    "categoryBits": 8,
                     "enable": 1,
                     "freezeY": false,
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "maskBits": 4294967295,
                     "mass": 1.0,
                     "size": {
@@ -130,9 +130,9 @@
                     "useOwnerScale": true
                 }
             ],
-            "guid": "83f3fc5604794b05cec73c1a83e76825",
+            "guid": "d14cba0bab2c76d32317d287d61f89e5",
             "name": "weakPoint",
-            "parentGuid": "398009cc5837a61d8661b20a93f25ff5",
+            "parentGuid": "386215d1fd0b817acd9d150089332030",
             "prefabName": ""
         }
     ],
@@ -152,9 +152,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 10.0,
-                "y": 10.0,
-                "z": 10.0
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
@@ -210,7 +210,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "398009cc5837a61d8661b20a93f25ff5",
+    "guid": "386215d1fd0b817acd9d150089332030",
     "name": "Geso",
     "parentGuid": null,
     "prefabName": "Geso"
