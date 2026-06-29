@@ -28,8 +28,7 @@ public class Mover {
         // 現在の状態の移動パラメーター = 目標値（next）。current を next へアニメーション：
         //   上がる時は即時、下がる時は SmoothDamp（徐々に減速）。
         currentMaxSpeed_ = AnimateParam(currentMaxSpeed_, param.maxSpeed_, ref maxSpeedSmoothVel_);
-        currentAccel_    = AnimateParam(currentAccel_,    param.accel_,    ref accelSmoothVel_);
-        currentMinSpeed_ = AnimateParam(currentMinSpeed_, param.minSpeed_, ref minSpeedSmoothVel_);
+        currentAccel_ = AnimateParam(currentAccel_, param.accel_, ref accelSmoothVel_);
 
         // 減衰
         if (desiredDir.LengthSq() <= kThresholdSpeed) {
@@ -40,29 +39,16 @@ public class Mover {
             velocity_ = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
                 velocity_, Vector3.zero, ref currentDecelSmoothSpeed_, param.decelSmoothTime_, Time.deltaTime, param.decelMaxSmoothSpeed_);
         } else {
-            Vector2 dir = desiredDir.Normalized();
+            // 加速（アニメーション中の current を使う）
+            Vector3 moveDir = new Vector3(desiredDir.x, desiredDir.y, 0.0f).Normalized();
+            Vector3 newVelo = velocity_ + moveDir * (currentAccel_ * Time.deltaTime);
 
-            // 速度の大きさ：加速して [minSpeed, maxSpeed] にクランプ。
-            // 入力中は minSpeed を下回らないので、真後ろ入力でも速度ベクトルが 0 にならず、
-            // 「向きを変える＝旋回」として表現できる（瞬間反転しない）。
-            float minSpeed = Mathf.Clamp(currentMinSpeed_, 0.0f, currentMaxSpeed_);
-            float speed = velocity_.Length() + currentAccel_ * Time.deltaTime;
-            speed = Mathf.Clamp(speed, minSpeed, currentMaxSpeed_);
+            velocity_ = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
+                velocity_.Normalized(), newVelo.Normalized(), ref rotateSmoothVel_, param.rotateSmoothTime_, Time.deltaTime, param.rotateMaxSmoothSpeed_) * newVelo.Length();
 
-            // 現在の進行方向（ほぼ停止しているときは直近の進行方向を採用）。
-            Vector2 heading = (velocity_.LengthSq() > kThresholdSpeed)
-                ? new Vector2(velocity_.x, velocity_.y).Normalized()
-                : headingDir_;
-
-            // 進行方向を入力方向へ旋回させる。角度空間で SmoothDamp するので、
-            // 真後ろ(180°)入力でも速度ベクトルが 0 を通らず、最短回りで滑らかに回り込む。
-            float curAngle    = Mathf.Atan2(heading.y, heading.x);
-            float targetAngle = curAngle + WrapPi(Mathf.Atan2(dir.y, dir.x) - curAngle);
-            float newAngle    = SpringDamper.SmoothDamp<float, FloatDampTraits>(
-                curAngle, targetAngle, ref rotateSmoothVel_, param.rotateSmoothTime_, Time.deltaTime, param.rotateMaxSmoothSpeed_);
-
-            headingDir_ = new Vector2(Mathf.Cos(newAngle), Mathf.Sin(newAngle));
-            velocity_ = new Vector3(headingDir_.x, headingDir_.y, 0.0f) * speed;
+            if (velocity_.LengthSq() > currentMaxSpeed_ * currentMaxSpeed_) {
+                velocity_ = velocity_.Normalized() * currentMaxSpeed_;
+            }
         }
 
         float cullRoll = Mathf.Atan2(velocity_.x, velocity_.y);
@@ -87,7 +73,7 @@ public class Mover {
     // 角度差を (-PI, PI] に正規化（最短回転方向を選ぶ）。
     private static float WrapPi(float angle) {
         float twoPi = 2.0f * Mathf.PI;
-        while (angle >  Mathf.PI) angle -= twoPi;
+        while (angle > Mathf.PI) angle -= twoPi;
         while (angle < -Mathf.PI) angle += twoPi;
         return angle;
     }
@@ -95,19 +81,14 @@ public class Mover {
     // 実行時の状態
     private Vector3 velocity_ = Vector3.zero;
     private Vector3 currentDecelSmoothSpeed_ = Vector3.zero;
-    private float   rotateSmoothVel_ = 0.0f;   // 旋回角の SmoothDamp 速度(rad/s)
-
-    // 直近の進行方向。ほぼ停止状態から動き出すときの旋回の起点に使う（物理の内部状態）。
-    private Vector2 headingDir_ = new Vector2(0.0f, 1.0f);
+    private Vector3 rotateSmoothVel_ = Vector3.zero;
 
     // 移動パラメーターのアニメーション（current を 目標 next へ追従させる）
     private float currentAccel_ = 0.0f;
     private float currentMaxSpeed_ = 0.0f;
-    private float currentMinSpeed_ = 0.0f;
 
     private float accelSmoothVel_ = 0.0f;
     private float maxSpeedSmoothVel_ = 0.0f;
-    private float minSpeedSmoothVel_ = 0.0f;
 
     private readonly float paramReleaseSmoothTime_;
     private readonly float paramReleaseMaxSmoothSpeed_;

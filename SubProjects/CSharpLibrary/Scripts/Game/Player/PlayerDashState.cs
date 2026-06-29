@@ -8,7 +8,6 @@ public class PlayerDashState : PlayerState {
     [SerializeField] private bool  moveForward_          = false; // true: 入力を無視して正面へ走り続ける（ドッジ）。false: 入力方向へ普通に移動
     [SerializeField] private float accel_                = 4096.0f;
     [SerializeField] private float maxSpeed_             = 1024.0f;
-    [SerializeField] private float minSpeed_             = 0.0f;
     [SerializeField] private float decelSmoothTime_      = 0.2f;
     [SerializeField] private float decelMaxSmoothSpeed_  = 12.0f;
     [SerializeField] private float rotateSmoothTime_     = 0.12f; // 旋回の効き（※moveForward_中は旋回しないので無効）
@@ -22,7 +21,6 @@ public class PlayerDashState : PlayerState {
             canMove_              = canMove_,
             accel_                = accel_,
             maxSpeed_             = maxSpeed_,
-            minSpeed_             = minSpeed_,
             decelSmoothTime_      = decelSmoothTime_,
             decelMaxSmoothSpeed_  = decelMaxSmoothSpeed_,
             rotateSmoothTime_     = rotateSmoothTime_,

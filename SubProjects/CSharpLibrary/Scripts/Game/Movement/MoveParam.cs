@@ -7,7 +7,6 @@ public class MoveParam {
     // --- 物理パラメータ（Mover が解釈する） ---
     public float accel_                = 256.0f;   // 加速度
     public float maxSpeed_             = 512.0f;   // 最大速度
-    public float minSpeed_             = 0.0f;     // 入力中の最低速度。0 にならないので真後ろ入力でも速度が消えず旋回できる
     public float decelSmoothTime_      = 0.2f;     // 減速の平滑化時間
     public float decelMaxSmoothSpeed_  = 12.0f;    // 減速の最大平滑化速度
     public float rotateSmoothTime_     = 3.0f;     // 旋回の平滑化時間（小さいほど機敏に向きを変える）
