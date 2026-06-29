@@ -1,0 +1,217 @@
+{
+    "active": true,
+    "children": [
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": -5.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 0.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "type": "Variables"
+                },
+                {
+                    "categoryBits": 1,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 4294967295,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 1.0,
+                        "y": 10.0
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": true
+                }
+            ],
+            "guid": "1af7655e3dec9e4521677efa716c7500",
+            "name": "Collider",
+            "parentGuid": "398009cc5837a61d8661b20a93f25ff5",
+            "prefabName": ""
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": -155.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 0.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "GesoWeakPoint": {},
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "scripts": [
+                        {
+                            "enable": true,
+                            "name": "GesoWeakPoint"
+                        }
+                    ],
+                    "type": "Script"
+                },
+                {
+                    "enable": 1,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "b097081ca8fb83a55b05f8dbaf4e6930",
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                },
+                {
+                    "categoryBits": 1,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": false,
+                    "maskBits": 4294967295,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 20.0,
+                        "y": 20.0
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": true
+                }
+            ],
+            "guid": "83f3fc5604794b05cec73c1a83e76825",
+            "name": "weakPoint",
+            "parentGuid": "398009cc5837a61d8661b20a93f25ff5",
+            "prefabName": ""
+        }
+    ],
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 10.0,
+                "y": 10.0,
+                "z": 10.0
+            },
+            "type": "Transform"
+        },
+        {
+            "GesoHand": {
+                "attackDamage": 0.0,
+                "attackDuration": 0.0,
+                "attackOffsetForward": 0.0,
+                "attackOffsetUp": 500.0,
+                "attackRadius": 133.0,
+                "moveDuration": 128.0,
+                "passThroughDistance": 300.0,
+                "returnDuration": 0.0,
+                "rotationSpeed": 0.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "GesoHand"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "da3917104a877fa8943d617ddba222c0",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "398009cc5837a61d8661b20a93f25ff5",
+    "name": "Geso",
+    "parentGuid": null,
+    "prefabName": "Geso"
+}

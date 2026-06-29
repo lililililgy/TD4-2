@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 setlocal
 
 REM --- バッチファイルと同じフォルダにある PowerShell スクリプトを実行 ---

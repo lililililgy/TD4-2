@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <imgui.h>
 
@@ -10,6 +10,7 @@ namespace Editor {
 struct ImGuiSceneImageInfo {
 	ImVec2 position;
 	ImVec2 size;
+	bool isHovered = false;
 };
 
 } /// Editor

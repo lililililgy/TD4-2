@@ -428,7 +428,14 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 						MonoClass* ek = mono_class_from_mono_type(elemType);
 						if(strcmp(mono_class_get_name(ek), "Vector3") == 0) { ONEngine::Vector3 v = ONEngine::Vector3::Zero; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
 						else if(mono_class_is_enum(ek)) { int v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-						else { MonoObject* item = mono_object_new(domain, ek); mono_runtime_object_init(item); void* args[1] = { item }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+						else {
+							MonoObject* item = mono_object_new(domain, ek);
+							if (!mono_class_is_valuetype(ek)) {
+								mono_runtime_object_init(item);
+							}
+							void* args[1] = { item };
+							mono_runtime_invoke(addMethod, listObj, args, nullptr);
+						}
 					}
 				}
 			} else if(size < count) {

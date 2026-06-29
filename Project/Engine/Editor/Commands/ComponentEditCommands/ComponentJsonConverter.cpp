@@ -20,6 +20,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Variables/Variables.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ShadowCaster/ShadowCaster.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Agent/AgentIntentComponent.h"
@@ -57,6 +58,7 @@ namespace {
 			Register<AudioSource>();
 			Register<Effect>();
 			Register<ParticleSystem>();
+			Register<ParticleSystem2D>();
 			Register<Script>();
 			Register<Terrain>();
 			Register<GrassField>();
@@ -445,6 +447,31 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystem& p) {
 void ONEngine::to_json(nlohmann::json& j, const ParticleSystem& p) {
 	j = nlohmann::json{
 		{ "type", "ParticleSystem" },
+		{ "enable", p.enable },
+		{ "main", p.main },
+		{ "emission", p.emission },
+		{ "shape", p.shape },
+		{ "colorOverLifetime", p.colorOverLifetime },
+		{ "sizeOverLifetime", p.sizeOverLifetime },
+		{ "velocityOverLifetime", p.velocityOverLifetime },
+		{ "renderer", p.renderer },
+	};
+}
+
+void ONEngine::from_json(const nlohmann::json& j, ParticleSystem2D& p) {
+	p.enable = j.value("enable", 1);
+	if (j.contains("main")) p.main = j.at("main").get<ParticleSystemMain>();
+	if (j.contains("emission")) p.emission = j.at("emission").get<ParticleSystemEmission>();
+	if (j.contains("shape")) p.shape = j.at("shape").get<ParticleSystemShape>();
+	if (j.contains("colorOverLifetime")) p.colorOverLifetime = j.at("colorOverLifetime").get<ParticleSystemColorOverLifetime>();
+	if (j.contains("sizeOverLifetime")) p.sizeOverLifetime = j.at("sizeOverLifetime").get<ParticleSystemSizeOverLifetime>();
+	if (j.contains("velocityOverLifetime")) p.velocityOverLifetime = j.at("velocityOverLifetime").get<ParticleSystemVelocityOverLifetime>();
+	if (j.contains("renderer")) p.renderer = j.at("renderer").get<ParticleSystemRenderer>();
+}
+
+void ONEngine::to_json(nlohmann::json& j, const ParticleSystem2D& p) {
+	j = nlohmann::json{
+		{ "type", "ParticleSystem2D" },
 		{ "enable", p.enable },
 		{ "main", p.main },
 		{ "emission", p.emission },

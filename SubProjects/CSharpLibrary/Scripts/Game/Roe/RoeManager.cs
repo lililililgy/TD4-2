@@ -158,6 +158,7 @@ public class RoeManager : MonoScript {
     }
 
     // リスト順 = 隊列順(1始まり) を各卵の TrailFollower に push する。
+    // 各卵は order を自分で持ち、母体(Player)を order に応じた距離で追従する。
     private void PushOrders() {
         for (int i = 0; i < roe_.Count; i++) {
             if (roe_[i] != null) {

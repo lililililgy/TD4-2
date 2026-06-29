@@ -10,6 +10,7 @@
 enum PostEffectType {
 	PostEffectType_Grayscale,  ///< グレースケール
 	PostEffectType_RadialBlur, ///< ラジアルブラー
+	PostEffectType_Fisheye,    ///< 魚眼レンズ
 	PostEffectType_Count	   ///< 要素数
 };
 
@@ -36,6 +37,18 @@ public:
 	/// @param type 確認するポストエフェクトの種類
 	/// @return true: 有効 false: 無効
 	bool GetPostEffectEnable(PostEffectType type) const;
+
+	/// @brief 魚眼レンズの歪み強度を設定する
+	void SetFisheyeStrength(float strength);
+
+	/// @brief 魚眼レンズの歪み強度を取得する
+	float GetFisheyeStrength() const;
+
+	/// @brief 魚眼レンズの表示スケールを設定する
+	void SetFisheyeScale(float scale);
+
+	/// @brief 魚眼レンズの表示スケールを取得する
+	float GetFisheyeScale() const;
 
 private:
 	/// ===================================================

@@ -105,6 +105,7 @@ void CustomMeshRendererDebug(class CustomMeshRenderer* customMeshRenderer);
 
 void EffectDebug(class Effect* effect);
 void ParticleSystemDebug(class ParticleSystem* ps);
+void ParticleSystem2DDebug(class ParticleSystem2D* ps);
 
 /// Unity-like modular header with checkbox
 bool BeginModuleHeader(const char* label, bool* enabled);

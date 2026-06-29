@@ -1,4 +1,4 @@
-﻿#include "GameSceneView.h"
+#include "GameSceneView.h"
 
 /// external
 #include <imgui.h>
@@ -45,7 +45,7 @@ void GameSceneView::ShowImGui() {
 	ImGui::SetCursorScreenPos(imagePos);
 	ImGui::Image(ImTextureID(texture.GetSRVGPUHandle().ptr), windowSize);
 
-	pImGuiManager_->AddSceneImageInfo("GameScene", ImGuiSceneImageInfo{ imagePos, windowSize });
+	pImGuiManager_->AddSceneImageInfo("GameScene", ImGuiSceneImageInfo{ imagePos, windowSize, ImGui::IsItemHovered() });
 
 	ImGui::End();
 }

@@ -1,4 +1,4 @@
-﻿#include "Mouse.h"
+#include "Mouse.h"
 
 using namespace ONEngine;
 
@@ -79,9 +79,9 @@ void Mouse::Update(Window* window) {
 
 const Vector2& Mouse::GetImGuiImageMousePosNormalized(const std::string& name) {
 	const Editor::ImGuiSceneImageInfo* imageInfo = pImGuiManager_->GetSceneImageInfo(name);
-	/// imageInfoが見つからない場合は、デフォルトの位置を返す
-	if (!imageInfo) {
-		static Vector2 defaultPosition(0.0f, 0.0f);
+	/// imageInfoが見つからない、またはホバーされていない場合は、デフォルトの位置を返す
+	if (!imageInfo || !imageInfo->isHovered) {
+		static Vector2 defaultPosition(-1.0f, -1.0f);
 		return defaultPosition;
 	}
 

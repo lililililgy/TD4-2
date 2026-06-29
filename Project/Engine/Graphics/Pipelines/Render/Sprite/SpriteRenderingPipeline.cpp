@@ -151,7 +151,7 @@ void SpriteRenderingPipeline::Draw(class ECSGroup* ecsGroup, CameraComponent* ca
 			
 			renderingDataList.push_back({
 				sr,
-				owner->GetTransform()->position.z, // Z値を保存
+				owner->GetPosition().z, // Z値を保存
 				owner->GetTransform()->GetMatWorld()
 			});
 		}

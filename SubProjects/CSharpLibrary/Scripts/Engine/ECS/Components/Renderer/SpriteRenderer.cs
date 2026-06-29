@@ -53,6 +53,21 @@ class SpriteRenderer : Component {
 		}
 	}
 
+	public UVTransform uvTransform {
+		get {
+			return batchData.uvTransform;
+		}
+		set {
+			batchData.uvTransform = value;
+		}
+	}
+
+	public Vector2 textureSize {
+		get {
+			return batchData.textureSize;
+		}
+	}
+
 
 	/// -------------------------------------------
 	/// internal methods

@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "db07b9b1d94da9475ae29487063f481a",
+    "name": "Fisheye.cs",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}

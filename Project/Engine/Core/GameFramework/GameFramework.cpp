@@ -1,9 +1,11 @@
 #include "GameFramework.h"
+#include "DebugSceneGenerator.h"
 
 using namespace ONEngine;
 
 /// std
 #include <chrono>
+
 
 /// engine
 #include "Engine/Core/Utility/Input/Input.h"
@@ -156,9 +158,10 @@ void GameFramework::Update() {
 	entityComponentSystem_->DebuggingUpdate();
 	entityComponentSystem_->OutsideOfUpdate();
 
+	sceneManager_->Update();
+
 	///!< ゲームデバッグモードの場合は更新処理を行う
 	if(DebugConfig::isDebugging) {
-		sceneManager_->Update();
 		entityComponentSystem_->Update();
 	}
 	CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::ECSUpdate);
@@ -190,5 +193,8 @@ void GameFramework::Draw() {
 }
 
 void GameFramework::LoadDebugScene() {
+	DebugSceneGenerator::GenerateDefaultDebugSceneIfNeeded();
 	sceneManager_->GetSceneIO()->Input("Debug", entityComponentSystem_->GetECSGroup("Debug"));
 }
+
+

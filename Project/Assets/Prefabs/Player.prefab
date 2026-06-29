@@ -242,10 +242,6 @@
                 "maxRoe_": 12,
                 "roePrefabName_": "Roe"
             },
-            "RoeTrail": {
-                "maxTrailLength_": 1280.0,
-                "recordMinDistance_": 2.0
-            },
             "type": "Variables"
         },
         {
@@ -282,10 +278,6 @@
                 {
                     "enable": true,
                     "name": "RoeManager"
-                },
-                {
-                    "enable": true,
-                    "name": "RoeTrail"
                 },
                 {
                     "enable": true,
