@@ -71,6 +71,9 @@ public:
 	/// @brief C++で初期化したコンポーネントデータをCS側に同期する
 	void SyncInitialComponentsToCS(ECSGroup* ecsGroup);
 
+	/// C#側のECSGroupインスタンスを取得
+	MonoObject* GetEcsGroupObject(const std::string& groupName);
+
 	/// C#側のEntityを取得
 	MonoObject* GetEntityFromCS(const std::string& ecsGroupName, int32_t entityId);
 	MonoObject* GetMonoBehaviorFromCS(const std::string& ecsGroupName, int32_t entityId, const std::string& behaviorName);

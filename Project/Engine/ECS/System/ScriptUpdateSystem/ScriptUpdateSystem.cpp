@@ -18,6 +18,7 @@ using namespace ONEngine;
 #include "Engine/Core/Utility/Time/CPUTimeStamp.h"
 
 ScriptUpdateSystem::ScriptUpdateSystem(ECSGroup* ecs) {
+	ecsGroupName_ = ecs->GetGroupName();
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 	MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
 }
@@ -96,9 +97,9 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 	//}
 
 	/// スクリプトが有効でない場合はスキップ
-	MonoObject* ecsGroupObj = mono_gchandle_get_target(gcHandle_);
+	MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
 	if(!ecsGroupObj) {
-		Console::LogError("Failed to get target from gcHandle_");
+		Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
 		return false;
 	}
 
@@ -179,9 +180,9 @@ void ScriptUpdateSystem::CallUpdateEcsGroup() {
 		if(updateEntitiesMethod_) {
 
 			/// 更新関数を呼び出す
-			MonoObject* ecsGroupObj = mono_gchandle_get_target(gcHandle_);
+			MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
 			if(!ecsGroupObj) {
-				Console::LogError("Failed to get target from gcHandle_");
+				Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
 				return;
 			}
 
