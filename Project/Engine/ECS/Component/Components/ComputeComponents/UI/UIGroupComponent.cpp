@@ -1,4 +1,4 @@
-#include "UIGroupComponent.h"
+﻿#include "UIGroupComponent.h"
 
 /// external
 #include <imgui.h>
@@ -107,6 +107,21 @@ void ComponentDebug::UIGroupComponentDebug(UIGroupComponent* comp) {
 		comp->cancelKeys = newKeys;
 	}
 }
+
+
+void ComponentDebug::UIGroupComponentInspectorDebug(UIGroupComponent* comp) {
+	if(!comp) {
+		return;
+	}
+
+	ImGui::PushID(comp->id);
+
+	ImGui::Checkbox("isFocused", &comp->isFocused);
+	ImGui::Checkbox("isVisible", &comp->isVisible);
+
+	ImGui::PopID();
+}
+
 
 void ONEngine::from_json(const nlohmann::json& j, UIGroupComponent& c) {
 	c.enable = j.value("enable", static_cast<int>(true));

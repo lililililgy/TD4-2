@@ -41,8 +41,8 @@
                         }
                     ],
                     "editorPosition": {
-                        "x": 890.0,
-                        "y": 394.0
+                        "x": 350.0,
+                        "y": 100.0
                     },
                     "guid": "b0b199714afc5383159778fb70dc057e",
                     "name": "Element_1",
@@ -71,6 +71,10 @@
                     "type": "Transform"
                 },
                 {
+                    "cancelKeys": [
+                        "Escape",
+                        "GamepadB"
+                    ],
                     "currentSelected": "",
                     "enable": 1,
                     "isFocused": false,
@@ -84,8 +88,8 @@
                 }
             ],
             "editorPosition": {
-                "x": 602.0,
-                "y": 186.0
+                "x": 100.0,
+                "y": 100.0
             },
             "guid": "2a15e7315f298ba39d92c4b290861b52",
             "name": "Group_0",

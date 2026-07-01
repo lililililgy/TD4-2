@@ -1,4 +1,4 @@
-#include "InspectorWindow.h"
+﻿#include "InspectorWindow.h"
 
 /// std
 #include <format>
@@ -42,6 +42,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animation/AnimationPlayer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
 
 /// renderer
 #include "Engine/ECS/Component/Components/RendererComponents/Skybox/Skybox.h"
@@ -82,6 +83,7 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 	RegisterComponent<ShadowCaster>(ComponentType::Compute, [&](ShadowCaster* comp) { ComponentDebug::ShadowCasterDebug(comp); });
 	RegisterComponent<AgentIntentComponent>(ComponentType::Compute, [&](AgentIntentComponent* comp) { ComponentDebug::AgentIntentComponentDebug(comp); });
 	RegisterComponentMulti<Animator>(ComponentType::Compute, [&](const std::vector<Animator*>& comps) { ComponentDebug::AnimatorDebug(comps); });
+	RegisterComponent<UIGroupComponent>(ComponentType::Compute, [&](UIGroupComponent* comp) { ComponentDebug::UIGroupComponentInspectorDebug(comp); });
 
 	/// light
 	RegisterComponent<DirectionalLight>(ComponentType::Light, [&](DirectionalLight* comp) { DirectionalLightDebug(comp); });

@@ -19,6 +19,7 @@ void to_json(nlohmann::json& j, const UIGroupComponent& c);
 
 namespace ComponentDebug {
 void UIGroupComponentDebug(UIGroupComponent* comp);
+void UIGroupComponentInspectorDebug(UIGroupComponent* comp);
 }
 
 /// ///////////////////////////////////////////////////
@@ -26,17 +27,21 @@ void UIGroupComponentDebug(UIGroupComponent* comp);
 /// ///////////////////////////////////////////////////
 class UIGroupComponent : public IComponent {
 	friend void ComponentDebug::UIGroupComponentDebug(UIGroupComponent* comp);
+	friend void ComponentDebug::UIGroupComponentInspectorDebug(UIGroupComponent* comp);
 	friend void from_json(const nlohmann::json& j, UIGroupComponent& c);
 	friend void to_json(nlohmann::json& j, const UIGroupComponent& c);
 
 public:
+#pragma pack(push, 4)
 	struct BatchData {
 		uint32_t compId;
 		int32_t currentSelectedId;
 		uint8_t isFocused;
 		uint8_t isVisible;
+		uint8_t padding[2];
 		int32_t parentGroupId;
 	};
+#pragma pack(pop)
 
 public:
 	UIGroupComponent() {
