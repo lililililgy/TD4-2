@@ -1,0 +1,76 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 64.0,
+                "y": 64.0,
+                "z": 64.0
+            },
+            "type": "Transform"
+        },
+        {
+            "SpikeFishNeedle": {
+                "acceleration": 816.0,
+                "aliveTime": 3.0,
+                "initialSpeed": 60.0,
+                "maxSpeed": 1244.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpikeFishNeedle"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "00000000000000000000000000000000",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "8afbd356263c22a230471d5173a8e9f5",
+    "name": "Needle",
+    "parentGuid": null,
+    "prefabName": "Needle"
+}

@@ -1,38 +1,143 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public class SpikeFishAroundNeedle : MonoScript
 {
     /* ----- パラメータ ----- */
-    [SerializeField] private float firePower = 0.0f;
-    [SerializeField] private float rotateZSpeed = 0.0f;
-    [SerializeField] private float fireInterval = 0.0f;
+    [SerializeField] private float coolTime        = 3.0f;   // 発射後に0→1へイージングする時間
+    [SerializeField] private float popInDuration   = 0.3f;   // coolTime終了直前、ポップインにかける秒数
+    [SerializeField] private float maxAngularSpeed = 720.0f; // 発射直前の最大回転速度 (deg/s)
 
-    // スケーリング演出
-    [SerializeField] private Vector3 fireShrinkScale = new Vector3(0.7f, 0.7f, 0.7f);
-    [SerializeField] private Vector3 fireExpandScale = new Vector3(2.0f, 2.0f, 2.0f);
-    [SerializeField] private float fireShrinkDuration = 0.1f;
-    [SerializeField] private float fireExpandDuration = 0.2f;
-    [SerializeField] private float fireReturnDuration = 0.2f;
+    // transform.scale には触れず、この倍率を baseScale に掛けて適用する
+    public float ScaleMult { get; private set; } = 0.0f;
+
+    // 回復完了 = 攻撃可能
+    public bool IsAppear => !isRecovering_ && ScaleMult >= 1.0f;
 
     /* ----- 実行時状態 ----- */
-
+    private const string needleName_ = "Needle";
+    private Vector3 baseScale_;
+    private float   currentAngle_ = 0.0f;  // rad, チャージ中に加算される
+    private float   angularVel_   = 0.0f;  // rad/s
+    private float   chargeAccel_  = 0.0f;  // rad/s²
+    private bool    isCharging_   = false;
+    private bool    isRecovering_ = false;
+    private float   recoverTimer_ = 0.0f;
+    private SpriteAnimation spriteAnim_;
 
     public override void Initialize()
     {
+        baseScale_ = transform.scale;
+        spriteAnim_ = entity.GetScript<SpriteAnimation>();
+        // スポーン時もスケール0→1でイージング
+        BeginRecovery();
+    }
 
+    // SpikeFishAttack から発射直前(チャージ完了時)に呼ぶ
+    public void PlayFireAnimation()
+    {
+        spriteAnim_?.ResetAnimation();
+        spriteAnim_?.Play();
+    }
 
-
+    // SpikeFishAttack からアニメーション終了時(発射直後)に呼ぶ。最終フレームのまま止まるため元のUV位置へ戻す
+    public void ResetFireAnimation()
+    {
+        spriteAnim_?.ResetAnimation();
     }
 
     public override void Update()
     {
-
+        if (isCharging_)   UpdateCharging();
+        if (isRecovering_) UpdateRecovery();
     }
 
+    // SpikeFishAttack からチャージ開始時に呼ぶ
+    public void StartCharging(float chargeDuration)
+    {
+        isCharging_ = true;
+        angularVel_ = 0.0f;
+        float maxAngRad = maxAngularSpeed * Mathf.Deg2Rad;
+        chargeAccel_ = maxAngRad / Math.Max(0.001f, chargeDuration);
+    }
 
+    // SpikeFishAttack からチャージ完了時に呼ぶ
+    public void FireNeedle(int fireNeedleNum)
+    {
+        isCharging_ = false;
+        angularVel_ = 0.0f;
 
+        int count = Math.Max(1, fireNeedleNum);
+        float intervalRad = (Mathf.PI * 2.0f) / count;
+        for (int i = 0; i < count; i++)
+        {
+            Entity needle = ecsGroup.CreateEntity(needleName_);
+            if (needle == null) continue;
+
+            float angle = currentAngle_ + i * intervalRad;
+            Vector3 dir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);
+
+            needle.transform.position = WorldPosition(transform);
+            needle.GetScript<SpikeFishNeedle>()?.SetDirection(dir);
+        }
+
+        ScaleMult = 0.0f;
+        ApplyScale();
+        BeginRecovery();
+    }
+
+    /* ----- private ----- */
+
+    // Transform.worldPosition はネイティブ側から同期されない未使用フィールドのため、
+    // ワールド座標は matrix の平行移動成分(m30/m31/m32)から取る(Attractor.cs と同じ手法)。
+    private static Vector3 WorldPosition(Transform t)
+    {
+        return new Vector3(t.matrix.m30, t.matrix.m31, t.matrix.m32);
+    }
+
+    private void BeginRecovery()
+    {
+        isRecovering_ = true;
+        recoverTimer_ = 0.0f;
+    }
+
+    private void UpdateCharging()
+    {
+        angularVel_   += chargeAccel_ * Time.deltaTime;
+        currentAngle_ += angularVel_  * Time.deltaTime;
+        transform.rotate = Quaternion.MakeFromAxis(Vector3.back, currentAngle_);
+    }
+
+    private void UpdateRecovery()
+    {
+        recoverTimer_ += Time.deltaTime;
+
+        if (recoverTimer_ >= coolTime)
+        {
+            ScaleMult     = 1.0f;
+            isRecovering_ = false;
+        }
+        else
+        {
+            // Ease.Out.Back は t≈0.37 で早々に1.0へ到達しオーバーシュートしてしまうため、
+            // coolTime の大半は隠したまま(ScaleMult=0)にし、終了直前の popInDuration 秒だけで
+            // Back を使ってポップインさせる。
+            float popInStart = Math.Max(0.0f, coolTime - popInDuration);
+            if (recoverTimer_ <= popInStart)
+            {
+                ScaleMult = 0.0f;
+            }
+            else
+            {
+                float t = (recoverTimer_ - popInStart) / Math.Max(0.001f, coolTime - popInStart);
+                ScaleMult = Ease.Out.Back(t);
+            }
+        }
+
+        ApplyScale();
+    }
+
+    private void ApplyScale()
+    {
+        transform.scale = baseScale_ * ScaleMult;
+    }
 }

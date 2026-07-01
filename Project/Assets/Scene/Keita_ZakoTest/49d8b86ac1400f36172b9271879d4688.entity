@@ -2,6 +2,17 @@
     "active": true,
     "components": [
         {
+            "position": {
+                "x": 195.3761444091797,
+                "y": -1791.1217041015625
+            },
+            "rotate": {
+                "w": 0.94363933801651,
+                "z": 0.3309754729270935
+            },
+            "type": "Transform"
+        },
+        {
             "material": {
                 "baseTextureGuid": "1e73117556377963597bd35043846a53"
             },

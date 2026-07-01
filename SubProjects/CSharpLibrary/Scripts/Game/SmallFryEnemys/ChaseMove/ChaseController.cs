@@ -6,6 +6,7 @@ public class ChaseController : MonoScript
     [SerializeField] private float  chaseSpeed       = 5.0f;
     [SerializeField] private float  chaseDuration    = 3.0f;
     [SerializeField] private float  chaseDistance    = 5.0f;
+    [SerializeField] private float  leachDistance   = 10.0f; 
     [SerializeField] private float  rushDistance     = 2.0f;
     [SerializeField] private string targetEntityName = "Player";
     [SerializeField] private float  waitTime         = 2.0f;
@@ -38,6 +39,7 @@ public class ChaseController : MonoScript
     private bool    isFirstWait_    = true;
     private Entity  targetEntity_   = null;
     private Action  updateAction_   = null;
+    private bool    isPaused_       = false;
 
     public override void Initialize()
     {
@@ -50,8 +52,25 @@ public class ChaseController : MonoScript
 
     public override void Update()
     {
+        // 攻撃中などは移動・状態タイマーごと停止する
+        if (isPaused_)
+        {
+            velocity_ = Vector3.zero;
+            return;
+        }
+
         // 現在の状態 Action を実行
         updateAction_?.Invoke();
+    }
+
+    // 攻撃中など、外部から追跡を一時停止/再開させる
+    public void SetPaused(bool paused)
+    {
+        isPaused_ = paused;
+        if (paused)
+        {
+            velocity_ = Vector3.zero;
+        }
     }
 
     public void StartChase()
@@ -140,6 +159,9 @@ public class ChaseController : MonoScript
         Vector3 toTarget = targetEntity_.transform.position - transform.position;
         float   distance = toTarget.Length();
 
+        // 離れすぎたら追跡を諦めて Wait へ
+        if (ChangeWaitByDistance(distance)) { return; }
+
         if (distance <= rushDistance)
         {
             if (stopAtRushDistance)
@@ -223,5 +245,17 @@ public class ChaseController : MonoScript
             return true;
         }
         return false;
+    }
+
+ 
+    private bool ChangeWaitByDistance(float distance)
+    {
+        if (distance >= leachDistance) { return false; }
+
+        velocity_    = Vector3.zero;
+        waitTimer_   = 0.0f;
+        isFirstWait_ = false;
+        TransitionTo(State.Wait);
+        return true;
     }
 }
