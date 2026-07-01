@@ -5,7 +5,7 @@
             "elementId": "",
             "elementIndex": 0,
             "enable": 1,
-            "groupId": "1296745c833814ed0971914bb15803d8",
+            "groupId": "a3fd89de2fd48bd644a51d8751d5b999",
             "type": "UIElementComponent"
         },
         {
@@ -38,8 +38,8 @@
             "type": "UILinkNavigationComponent"
         }
     ],
-    "guid": "05a4d04b4fcbe6a58ec47d2a82ede2dd",
+    "guid": "387f51ec4bc5393e1f00ebf4ee96d57d",
     "name": "Element_1",
-    "parentGuid": "1296745c833814ed0971914bb15803d8",
+    "parentGuid": "a3fd89de2fd48bd644a51d8751d5b999",
     "prefabName": ""
 }

@@ -225,6 +225,9 @@ void Internal_UpdateNodeStatus(uint32_t nodeIdHash, int status, MonoString* tree
 void Internal_UpdateBlackboardValue(uint32_t keyHash, MonoString* value, MonoString* typeName);
 void Internal_OnBreakpointHit(uint32_t nodeIdHash);
 
+void UIGroupComponent_SetVisible(uint32_t compId, bool isVisible, MonoString* groupName);
+void UIGroupComponent_SetFocused(uint32_t compId, bool isFocused, MonoString* groupName);
+
 } // namespace MonoInternalMethods
 
 } /// ONEngine

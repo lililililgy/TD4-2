@@ -30,9 +30,13 @@ SceneManager::SceneManager(EntityComponentSystem* entityComponentSystem_)
 }
 SceneManager::~SceneManager() {
 	/// 最後に開いていたシーンを保存
-	if (!currentScene_.empty()) {
+	std::string sceneToSave = currentScene_;
+	if (!temporarySavedSceneName_.empty()) {
+		sceneToSave = temporarySavedSceneName_;
+	}
+	if (!sceneToSave.empty()) {
 		nlohmann::json json;
-		json["Scene"] = currentScene_;
+		json["Scene"] = sceneToSave;
 		const std::string& filepath = "./Packages/Config/LastOpenScene.json";
 
 		std::filesystem::path path(filepath);
@@ -100,7 +104,12 @@ void SceneManager::SaveCurrentScene() {
 }
 
 void SceneManager::SaveCurrentSceneTemporary() {
+	temporarySavedSceneName_ = currentScene_;
 	sceneIO_->OutputTemporary(pEcs_->GetCurrentGroup());
+}
+
+void SceneManager::ClearTemporarySavedSceneName() {
+	temporarySavedSceneName_.clear();
 }
 
 void SceneManager::LoadScene(const std::string& sceneName) {
@@ -119,14 +128,19 @@ void SceneManager::LoadScene(const std::string& sceneName) {
 }
 
 void SceneManager::ReloadScene(bool isTemporary) {
-	if (currentScene_.empty()) {
+	std::string sceneToLoad = currentScene_;
+	if (isTemporary && !temporarySavedSceneName_.empty()) {
+		sceneToLoad = temporarySavedSceneName_;
+	}
+
+	if (sceneToLoad.empty()) {
 		Console::LogError("No current scene to reload.");
 		return;
 	}
 	/// 現在のシーンを再読み込み
-	SetNextScene(currentScene_);
+	SetNextScene(sceneToLoad);
 	if (nextScene_.empty()) {
-		Console::LogError("Failed to reload scene: " + currentScene_);
+		Console::LogError("Failed to reload scene: " + sceneToLoad);
 		return;
 	}
 	MoveNextToCurrentScene(isTemporary);

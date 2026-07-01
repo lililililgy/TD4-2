@@ -625,3 +625,31 @@ void ONEngine::MonoInternalMethods::Internal_OnBreakpointHit(uint32_t nodeIdHash
     // 無ければ Time::SetTimeScale(0) 等で代用。
 }
 
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
+
+void ONEngine::MonoInternalMethods::UIGroupComponent_SetVisible(uint32_t compId, bool isVisible, MonoString* groupNameStr) {
+	std::string groupName = mono_string_to_utf8(groupNameStr);
+	ECSGroup* ecsGroup = gECS->GetECSGroup(groupName);
+	if (ecsGroup) {
+		auto* array = ecsGroup->GetComponentArray<UIGroupComponent>();
+		if (array) {
+			if (UIGroupComponent* comp = array->GetComponent(compId)) {
+				comp->isVisible = isVisible;
+			}
+		}
+	}
+}
+
+void ONEngine::MonoInternalMethods::UIGroupComponent_SetFocused(uint32_t compId, bool isFocused, MonoString* groupNameStr) {
+	std::string groupName = mono_string_to_utf8(groupNameStr);
+	ECSGroup* ecsGroup = gECS->GetECSGroup(groupName);
+	if (ecsGroup) {
+		auto* array = ecsGroup->GetComponentArray<UIGroupComponent>();
+		if (array) {
+			if (UIGroupComponent* comp = array->GetComponent(compId)) {
+				comp->isFocused = isFocused;
+			}
+		}
+	}
+}
+

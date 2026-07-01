@@ -10,7 +10,7 @@ public class AgentIntentComponent : Component {
     /// <summary>
     /// C++とC#でデータを一括同期するための構造体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BatchData {
         public uint compId;
         public Vector3 desiredMoveDirection;
@@ -19,6 +19,8 @@ public class AgentIntentComponent : Component {
         public float maxSpeed;
         public byte useDesiredRotation; // bool interop
         public byte isAttacking; // Use byte for bool interop
+        public byte padding1;
+        public byte padding2;
         public int targetEntityId;
     }
 

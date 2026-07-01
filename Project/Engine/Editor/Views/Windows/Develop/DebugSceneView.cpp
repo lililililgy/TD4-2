@@ -82,6 +82,7 @@ void DebugSceneView::SetGamePlay(bool isGamePlay) {
 
 		/// 共通の処理（ゲーム開始、停止時に行う処理）
 		pSceneManager_->ReloadScene(true);
+		pSceneManager_->ClearTemporarySavedSceneName();
 		ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
 	}
 
