@@ -7,7 +7,7 @@
             "position": {
                 "x": 0.0,
                 "y": 0.0,
-                "z": 68.0999984741211
+                "z": 0.0
             },
             "rotate": {
                 "w": 0.0,
@@ -16,25 +16,36 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 2000.0,
-                "y": 2000.0,
-                "z": 2000.0
+                "x": 300.0,
+                "y": 300.0,
+                "z": 300.0
             },
             "type": "Transform"
         },
         {
+            "SpriteAnimation": {
+                "cols": 2,
+                "endFrame": 2,
+                "fps": 3.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 2,
+                "startFrame": 0,
+                "totalFrames": 4
+            },
             "type": "Variables"
         },
         {
             "enable": 1,
             "material": {
                 "baseColor": {
-                    "w": 0.019999999552965164,
+                    "w": 1.0,
                     "x": 1.0,
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "960ec2345ab1ab75a1c74ef79b962c75",
+                "baseTextureGuid": "6e5cc0790988bb1060f3c69972791b9d",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -51,10 +62,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "2733733195a9c87b332e3dae871c2367",
-    "name": "Sprite_6",
+    "guid": "ddf21099df5e2046845854c126d0162a",
+    "name": "Test",
     "parentGuid": null,
     "prefabName": ""
 }
