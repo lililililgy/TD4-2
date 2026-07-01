@@ -1,0 +1,19 @@
+{
+    "active": true,
+    "components": [
+        {
+            "scale": {
+                "y": 3000.0
+            },
+            "type": "Transform"
+        },
+        {
+            "enable": 0,
+            "type": "ScreenPostEffectTag"
+        }
+    ],
+    "guid": "8731e7fca368f06f73ed583c3dd4900c",
+    "name": "Background",
+    "parentGuid": null,
+    "prefabName": "Background"
+}

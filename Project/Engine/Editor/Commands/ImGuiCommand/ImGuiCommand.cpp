@@ -177,3 +177,71 @@ bool ImMathf::Checkbox(const std::string& label, bool* pv) {
 	return edit;
 }
 
+bool ImMathf::SliderFloat(const std::string& label, float* pv, float min, float max, const char* format) {
+	static float startValue{};
+
+	bool edit = ImGui::SliderFloat(label.c_str(), pv, min, max, format);
+	/// 操作を始めた
+	if (ImGui::IsItemActivated()) {
+		startValue = *pv;
+	}
+
+	/// 操作を終えた
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		float endValue = *pv;
+		EditCommand::Execute<ModifyValueCommand<float>>(pv, startValue, endValue);
+	}
+
+	return edit;
+}
+
+bool ImMathf::SliderFloat3(const std::string& label, ONEngine::Vector3* pv, float min, float max, const char* format) {
+	static ONEngine::Vector3 startValue{};
+
+	float values[3] = { pv->x, pv->y, pv->z };
+	bool edit = ImGui::SliderFloat3(label.c_str(), values, min, max, format);
+	if (edit) {
+		pv->x = values[0];
+		pv->y = values[1];
+		pv->z = values[2];
+	}
+
+	/// 操作を始めた
+	if (ImGui::IsItemActivated()) {
+		startValue = *pv;
+	}
+
+	/// 操作を終えた
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		ONEngine::Vector3 endValue = *pv;
+		EditCommand::Execute<ModifyValueCommand<ONEngine::Vector3>>(pv, startValue, endValue);
+	}
+
+	return edit;
+}
+
+bool ImMathf::ColorEdit3(const std::string& label, ONEngine::Vector3* pv) {
+	static ONEngine::Vector3 startValue{};
+
+	float color[3] = { pv->x, pv->y, pv->z };
+	bool edit = ImGui::ColorEdit3(label.c_str(), color);
+	if (edit) {
+		pv->x = color[0];
+		pv->y = color[1];
+		pv->z = color[2];
+	}
+
+	/// 操作を始めた
+	if (ImGui::IsItemActivated()) {
+		startValue = *pv;
+	}
+
+	/// 操作を終えた
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		ONEngine::Vector3 endValue = *pv;
+		EditCommand::Execute<ModifyValueCommand<ONEngine::Vector3>>(pv, startValue, endValue);
+	}
+
+	return edit;
+}
+
