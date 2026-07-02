@@ -1,4 +1,4 @@
-#include "RenderingPipelineCollection.h"
+﻿#include "RenderingPipelineCollection.h"
 
 using namespace ONEngine;
 
@@ -46,6 +46,10 @@ using namespace ONEngine;
 #include "../PostProcess/Screen/Fisheye/PostProcessFisheye.h"
 #include "../PostProcess/PerObject/TerrainBrush/PostProcessTerrainBrush.h"
 #include "../PostProcess/PerObject/VoxelTerrainBrush/PostProcessVoxelTerrainBrush.h"
+#include "../PostProcess/Screen/WaterDistortion/PostProcessWaterDistortion.h"
+#include "../PostProcess/Screen/WaterDepthFogVignette/PostProcessWaterDepthFogVignette.h"
+#include "../PostProcess/Screen/WaterColorGrading/PostProcessWaterColorGrading.h"
+#include "../PostProcess/Screen/WaterCausticsLightShafts/PostProcessWaterCausticsLightShafts.h"
 
 RenderingPipelineCollection::RenderingPipelineCollection(ShaderCompiler* shaderCompiler, DxManager* dxm, EntityComponentSystem* pEntityComponentSystem, Asset::AssetCollection* assetCollection)
 	: pShaderCompiler_(shaderCompiler), pDxManager_(dxm), pEntityComponentSystem_(pEntityComponentSystem), pAssetCollection_(assetCollection) {}
@@ -108,6 +112,10 @@ void RenderingPipelineCollection::Initialize() {
 	/// ----- 2D/UIを含む画面全体にかけるポストエフェクトのパイプラインを生成 ----- ///
 	GeneratePostProcessScreenPipeline<PostProcessGrayscale>();
 	GeneratePostProcessScreenPipeline<PostProcessRadialBlur>();
+	GeneratePostProcessScreenPipeline<PostProcessWaterCausticsLightShafts>();
+	GeneratePostProcessScreenPipeline<PostProcessWaterDepthFogVignette>();
+	GeneratePostProcessScreenPipeline<PostProcessWaterColorGrading>();
+	GeneratePostProcessScreenPipeline<PostProcessWaterDistortion>();
 	GeneratePostProcessScreenPipeline<PostProcessFisheye>();
 }
 

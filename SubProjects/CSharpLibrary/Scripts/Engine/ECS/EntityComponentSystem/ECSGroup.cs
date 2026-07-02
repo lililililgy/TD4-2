@@ -133,13 +133,14 @@ public class ECSGroup {
 
 		ComponentBatchManager.SendAllBatches(componentCollection, groupName);
 
-		Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////");
-		Debug.Log("ECSGroup.UpdateEntities - Updating entities in group: " + groupName + ", EntityCount: " + entities_.Count);
-		Debug.Log($"gen0:{GC.CollectionCount(0)} gen1:{GC.CollectionCount(1)} gen2:{GC.CollectionCount(2)}");
-		sw.Stop();
-		double ms = sw.ElapsedTicks * 1000.0 / Stopwatch.Frequency;
-		Debug.Log("Update Time (ms): " + ms);
-		Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////");
+		//Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////");
+		//Debug.Log("ECSGroup.UpdateEntities - Updating entities in group: " + groupName + ", EntityCount: " + entities_.Count);
+		//Debug.Log($"gen0:{GC.CollectionCount(0)} gen1:{GC.CollectionCount(1)} gen2:{GC.CollectionCount(2)}");
+		//sw.Stop();
+		//double ms = sw.ElapsedTicks * 1000.0 / Stopwatch.Frequency;
+		//Debug.Log("Update Time (ms): " + ms);
+		//Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////");
+
 	}
 
 
@@ -152,9 +153,9 @@ public class ECSGroup {
 		}
 
 #if DEBUG
-		Debug.Log("");
-		Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////");
-		Debug.Log("ECSGroup.CallAwake - Awakening entities in group: " + groupName + ", Count: " + awakeList_.Count);
+		//Debug.Log("");
+		//Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////");
+		//Debug.Log("ECSGroup.CallAwake - Awakening entities in group: " + groupName + ", Count: " + awakeList_.Count);
 #endif
 
 		List<Entity> entitiesToAwake = new List<Entity>(awakeList_);
@@ -166,8 +167,8 @@ public class ECSGroup {
 		}
 
 #if DEBUG
-		Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////");
-		Debug.Log("");
+		//Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////");
+		//Debug.Log("");
 #endif
 	}
 

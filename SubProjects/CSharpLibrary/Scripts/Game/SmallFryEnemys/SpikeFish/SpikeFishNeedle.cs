@@ -1,38 +1,36 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public class SpikeFishNeedle : MonoScript
 {
     /* ----- パラメータ ----- */
-    [SerializeField] private float firePower = 0.0f;
-    [SerializeField] private float rotateZSpeed = 0.0f;
-    [SerializeField] private float fireInterval = 0.0f;
-
-    // スケーリング演出
-    [SerializeField] private Vector3 fireShrinkScale = new Vector3(0.7f, 0.7f, 0.7f);
-    [SerializeField] private Vector3 fireExpandScale = new Vector3(2.0f, 2.0f, 2.0f);
-    [SerializeField] private float fireShrinkDuration = 0.1f;
-    [SerializeField] private float fireExpandDuration = 0.2f;
-    [SerializeField] private float fireReturnDuration = 0.2f;
+    [SerializeField] private float initialSpeed = 60.0f;  // 発射直後の初速
+    [SerializeField] private float maxSpeed     = 300.0f; // 最終的に到達する最大速度
+    [SerializeField] private float acceleration = 900.0f; // 初速からmaxSpeedへ到達する加速度
+    [SerializeField] private float aliveTime    = 2.0f;
 
     /* ----- 実行時状態 ----- */
+    private Vector3 direction_    = Vector3.zero;
+    private float   currentSpeed_ = 0.0f;
+    private float   lifeTimer_    = 0.0f;
 
-
-    public override void Initialize()
+    // FireNeedle から発射方向を設定する
+    public void SetDirection(Vector3 dir)
     {
-
-
-
+        direction_    = dir.Normalized();
+        currentSpeed_ = initialSpeed;
+        float roll = Mathf.Atan2(direction_.x, direction_.y);
+        transform.rotate = Quaternion.MakeFromAxis(Vector3.back, roll);
     }
 
     public override void Update()
     {
+        currentSpeed_ = Math.Min(maxSpeed, currentSpeed_ + acceleration * Time.deltaTime);
+        transform.position += direction_ * currentSpeed_ * Time.deltaTime;
 
+        lifeTimer_ += Time.deltaTime;
+        if (lifeTimer_ >= aliveTime)
+        {
+            entity.Destroy();
+        }
     }
-
-
-
 }

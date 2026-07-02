@@ -16,6 +16,11 @@
             "path": "./TitleScene/2df20770fd4143ef1b760ef6dcaba3a6.entity"
         },
         {
+            "guid": "0a8746990723639928d2994e6405bfef",
+            "parentGuid": null,
+            "path": "./TitleScene/0a8746990723639928d2994e6405bfef.entity"
+        },
+        {
             "guid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
             "parentGuid": "2df20770fd4143ef1b760ef6dcaba3a6",
             "path": "./TitleScene/d7ea2c0f9f4ecbe9053c755f9af5b335.entity"
@@ -36,24 +41,19 @@
             "path": "./TitleScene/1f912cca31c2b47ac9910262e8660b26.entity"
         },
         {
-            "guid": "2a6196215b5ed240af352e1b4a505194",
-            "parentGuid": null,
-            "path": "./TitleScene/2a6196215b5ed240af352e1b4a505194.entity"
-        },
-        {
-            "guid": "1296745c833814ed0971914bb15803d8",
-            "parentGuid": "2a6196215b5ed240af352e1b4a505194",
-            "path": "./TitleScene/1296745c833814ed0971914bb15803d8.entity"
-        },
-        {
-            "guid": "05a4d04b4fcbe6a58ec47d2a82ede2dd",
-            "parentGuid": "1296745c833814ed0971914bb15803d8",
-            "path": "./TitleScene/05a4d04b4fcbe6a58ec47d2a82ede2dd.entity"
-        },
-        {
             "guid": "2f183c2cac4e5fb5db1ccfdd4d006899",
             "parentGuid": null,
             "path": "./TitleScene/2f183c2cac4e5fb5db1ccfdd4d006899.entity"
+        },
+        {
+            "guid": "a3fd89de2fd48bd644a51d8751d5b999",
+            "parentGuid": "0a8746990723639928d2994e6405bfef",
+            "path": "./TitleScene/a3fd89de2fd48bd644a51d8751d5b999.entity"
+        },
+        {
+            "guid": "387f51ec4bc5393e1f00ebf4ee96d57d",
+            "parentGuid": "a3fd89de2fd48bd644a51d8751d5b999",
+            "path": "./TitleScene/387f51ec4bc5393e1f00ebf4ee96d57d.entity"
         }
     ]
 }

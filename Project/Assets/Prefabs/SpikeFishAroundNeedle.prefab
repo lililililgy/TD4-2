@@ -10,29 +10,48 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": -0.4573034644126892,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": -0.8893107175827026
             },
             "scale": {
-                "x": 330.49993896484375,
-                "y": 330.49993896484375,
-                "z": 330.49993896484375
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
+            "SpikeFishAroundNeedle": {
+                "coolTime": 5.0,
+                "maxAngularSpeed": 1241.0,
+                "popInDuration": 0.30000001192092896
+            },
             "SpriteAnimation": {
                 "cols": 3,
                 "fps": 10.0,
                 "invertY": false,
-                "isLoop": true,
-                "isPlay": true,
+                "isLoop": false,
+                "isPlay": false,
                 "rows": 1,
                 "totalFrames": 0
             },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpikeFishAroundNeedle"
+                },
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
         },
         {
             "enable": 1,
@@ -43,7 +62,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "34045413e923085ff86d18fef399b86d",
+                "baseTextureGuid": "5697b7219ab5220641dc1f97f180b3f3",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,26 +73,16 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 1.0,
+                        "x": 0.3333333432674408,
                         "y": 1.0
                     }
                 }
             },
             "type": "SpriteRenderer"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "SpriteAnimation"
-                }
-            ],
-            "type": "Script"
         }
     ],
-    "guid": "37bdc294f578f6a54b45c5f1e563ea89",
-    "name": "Hugu",
-    "parentGuid": null,
-    "prefabName": ""
+    "guid": "ed0ce65e3b321cfd0f3b5f891116c113",
+    "name": "SpikeFishAroundNeedle",
+    "parentGuid": "0ddfefefe7891522f08877c724fc53a4",
+    "prefabName": "SpikeFishAroundNeedle"
 }

@@ -60,7 +60,7 @@ void SpriteRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManag
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_PIXEL, 0);         ///< texture sampler
 		pipeline_->SetBlendDesc(BlendMode::Normal());
 
-		pipeline_->SetDepthStencilDesc(DepthNone()); // 2D UIなので深度テストを無効化
+		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
 
 		pipeline_->CreatePipeline(dxm->GetDxDevice());
 

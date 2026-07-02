@@ -1,5 +1,32 @@
 {
     "active": true,
+    "components": [
+        {
+            "ChaseController": {
+                "OnChaseStart": {
+                    "__type": ""
+                },
+                "OnDiscoveryStart": {
+                    "__type": ""
+                },
+                "OnRushStart": {
+                    "__type": ""
+                },
+                "OnWaitStart": {
+                    "__type": ""
+                }
+            },
+            "TargetRangeDetector": {
+                "OnEnter": {
+                    "__type": ""
+                },
+                "OnExit": {
+                    "__type": ""
+                }
+            },
+            "type": "Variables"
+        }
+    ],
     "guid": "0ddfefefe7891522f08877c724fc53a4",
     "name": "SpikeFish",
     "parentGuid": null,

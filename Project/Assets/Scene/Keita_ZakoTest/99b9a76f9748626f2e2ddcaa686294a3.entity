@@ -1,5 +1,14 @@
 {
     "active": true,
+    "components": [
+        {
+            "rotate": {
+                "w": -0.5268125534057617,
+                "z": 0.8499814867973328
+            },
+            "type": "Transform"
+        }
+    ],
     "guid": "99b9a76f9748626f2e2ddcaa686294a3",
     "name": "MorayEelPot",
     "parentGuid": null,

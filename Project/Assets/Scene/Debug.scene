@@ -3,22 +3,7 @@
         {
             "guid": "07677c908df7d5df1e1b03c4c09657b8",
             "parentGuid": null,
-            "path": "./Debug/07677c908df7d5df1e1b03c4c09657b8.entity"
-        },
-        {
-            "guid": "fded9b2bcdd60a37b9b6a9cef9716833",
-            "parentGuid": null,
-            "path": "./Debug/fded9b2bcdd60a37b9b6a9cef9716833.entity"
-        },
-        {
-            "guid": "d9bcd3f5dc8e2398af0d373ed2c0d56a",
-            "parentGuid": "fded9b2bcdd60a37b9b6a9cef9716833",
-            "path": "./Debug/d9bcd3f5dc8e2398af0d373ed2c0d56a.entity"
-        },
-        {
-            "guid": "fcc957842c963c89acdd0f744612aab6",
-            "parentGuid": "fded9b2bcdd60a37b9b6a9cef9716833",
-            "path": "./Debug/fcc957842c963c89acdd0f744612aab6.entity"
+            "path": "./Debug/476d1cadb33306de007290e0c4acae92.entity"
         }
     ]
 }

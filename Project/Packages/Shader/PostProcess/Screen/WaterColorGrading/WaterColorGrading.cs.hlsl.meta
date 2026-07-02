@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "381b984eaf695e3d4291eeeed1311111",
+    "name": "WaterColorGrading.cs",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}

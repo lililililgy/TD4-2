@@ -30,17 +30,24 @@ public class OpenOption : MonoScript {
 				uiGroupComp.isVisible = false;
 				uiGroupComp.isFocused = false;
 				Debug.Log("[OpenOption] title menu close");
+			} else {
+				Debug.LogError("[OpenOption] not found this parent");
 			}
+		} else {
+			Debug.LogError("[OpenOption] not found this parent");
 		}
 
 
-		Entity optionGroup = ecsGroup.FindEntity("OptionMenu");
-		if (optionGroup != null) {
-			UIGroupComponent uiGroupComp = optionGroup.GetComponent<UIGroupComponent>();
-			if (uiGroupComp != null) {
-				uiGroupComp.isVisible = true;
-				uiGroupComp.isFocused = true;
-				Debug.Log("[OpenOption] option menu open");
+		Entity optionMenu = ecsGroup.FindEntity("OptionMenu");
+		if (optionMenu != null) {
+			Entity group = optionMenu.GetChild(0);
+			if (group) {
+				UIGroupComponent uiGroupComp = group.GetComponent<UIGroupComponent>();
+				if (uiGroupComp != null) {
+					uiGroupComp.isVisible = true;
+					uiGroupComp.isFocused = true;
+					Debug.Log("[OpenOption] option menu open");
+				}
 			}
 		}
 	}
