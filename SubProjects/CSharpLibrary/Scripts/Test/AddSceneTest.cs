@@ -10,5 +10,9 @@ public class AddSceneTest : MonoScript {
 		if(Input.TriggerKey(KeyCode.Space)) {
 			SceneManager.Add("TestScene");
 		}
+
+		if(Input.TriggerKey(KeyCode.Escape)) {
+			SceneManager.Unload("TestScene");
+		}
 	}
 }

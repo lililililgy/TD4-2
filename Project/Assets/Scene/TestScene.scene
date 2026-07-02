@@ -14,6 +14,11 @@
             "guid": "fdc0a69b9f03f088a93928956e048156",
             "parentGuid": null,
             "path": "./TestScene/fdc0a69b9f03f088a93928956e048156.entity"
+        },
+        {
+            "guid": "3b652048d773b38c33ed531ab1d043d2",
+            "parentGuid": null,
+            "path": "./TestScene/3b652048d773b38c33ed531ab1d043d2.entity"
         }
     ]
 }

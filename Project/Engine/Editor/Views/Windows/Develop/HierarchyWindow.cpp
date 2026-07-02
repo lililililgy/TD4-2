@@ -176,56 +176,89 @@ void HierarchyWindow::DrawMenuScene() {
 
 void HierarchyWindow::DrawHierarchy() {
 	flatHierarchyGuids_.clear();
-	const auto& entities = pEcsGroup_->GetEntities();
 
-	// ---------------------------------------------------
-	// 0. シーンヘッダーの描画
-	// ---------------------------------------------------
-	std::string sceneName = pSceneManager_->GetCurrentSceneName();
-	if (sceneName.empty()) sceneName = "Untitled Scene";
-
-	// dirtyならアスタリスクをつける
-	if (pSceneManager_->IsDirty()) {
-		sceneName += " *";
-	}
-
-	ImGuiTreeNodeFlags sceneFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
-	bool sceneNodeOpen = ImGui::CollapsingHeader(sceneName.c_str(), sceneFlags);
-
-	// シーンヘッダーへのドラッグ＆ドロップ（ルートへの移動）
-	if (ImGui::BeginDragDropTarget()) {
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("EntityData")) {
-			ONEngine::GameEntity** srcEntityPtr = static_cast<ONEngine::GameEntity**>(payload->Data);
-			ONEngine::GameEntity* srcEntity = *srcEntityPtr;
-			// ルートの先頭に配置
-			pEditorManager_->ExecuteCommand<ReorderEntityCommand>(pEcsGroup_, srcEntity, nullptr, 0);
+	std::vector<std::string> groupsToDraw;
+	const auto& activeGroupNames = pEcs_->GetActiveGroupNames();
+	if (activeGroupNames.empty()) {
+		if (auto* currentGroup = pEcs_->GetCurrentGroup()) {
+			groupsToDraw.push_back(currentGroup->GetGroupName());
 		}
-		ImGui::EndDragDropTarget();
+	} else {
+		groupsToDraw = activeGroupNames;
 	}
 
-	// 右クリックでコンテキストメニュー
-	if (ImGui::BeginPopupContextItem("SceneHeaderContext")) {
-		DrawMenuEntity();
-		ImGui::Separator();
-		DrawMenuScene();
-		ImGui::EndPopup();
-	}
+	for (const auto& groupName : groupsToDraw) {
+		ONEngine::ECSGroup* group = pEcs_->GetECSGroup(groupName);
+		if (!group) continue;
 
-	if (sceneNodeOpen) {
+		// Temporarily set pEcsGroup_ to the group we are drawing
+		pEcsGroup_ = group;
+
+		ImGui::PushID(groupName.c_str());
+
+		const auto& entities = pEcsGroup_->GetEntities();
+
 		// ---------------------------------------------------
-		// 1. 各エンティティの描画
+		// 0. シーンヘッダーの描画
 		// ---------------------------------------------------
-		uint32_t rootIndex = 0;
-		for (const auto& entity : entities) {
-			// ルートエンティティのみ開始
-			if (!entity->GetParent()) {
-				DrawReorderSeparator(nullptr, rootIndex);
-				DrawEntity(entity.get());
-				rootIndex++;
+		std::string sceneName = groupName;
+		if (groupName == pSceneManager_->GetCurrentSceneName()) {
+			if (pSceneManager_->IsDirty()) {
+				sceneName += " *";
 			}
 		}
-		// 最後の隙間
-		DrawReorderSeparator(nullptr, rootIndex);
+
+		ImGuiTreeNodeFlags sceneFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+		bool sceneNodeOpen = ImGui::CollapsingHeader(sceneName.c_str(), sceneFlags);
+
+		// シーンヘッダーへのドラッグ＆ドロップ（ルートへの移動）
+		if (ImGui::BeginDragDropTarget()) {
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("EntityData")) {
+				ONEngine::GameEntity** srcEntityPtr = static_cast<ONEngine::GameEntity**>(payload->Data);
+				ONEngine::GameEntity* srcEntity = *srcEntityPtr;
+				// ルートの先頭に配置
+				pEditorManager_->ExecuteCommand<ReorderEntityCommand>(pEcsGroup_, srcEntity, nullptr, 0);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+		// 右クリックでコンテキストメニュー
+		if (ImGui::BeginPopupContextItem("SceneHeaderContext")) {
+			DrawMenuEntity();
+			ImGui::Separator();
+			DrawMenuScene();
+			ImGui::EndPopup();
+		}
+
+		if (sceneNodeOpen) {
+			// ---------------------------------------------------
+			// 1. 各エンティティの描画
+			// ---------------------------------------------------
+			uint32_t rootIndex = 0;
+			for (const auto& entity : entities) {
+				// ルートエンティティのみ開始
+				if (!entity->GetParent()) {
+					DrawReorderSeparator(nullptr, rootIndex);
+					DrawEntity(entity.get());
+					rootIndex++;
+				}
+			}
+			// 最後の隙間
+			DrawReorderSeparator(nullptr, rootIndex);
+		}
+
+		/// 遅延削除の実行
+		if(!deleteQueue_.empty()) {
+			for(const auto& guid : deleteQueue_) {
+				ONEngine::GameEntity* entity = pEcsGroup_->GetEntityFromGuid(guid);
+				if(entity) {
+					pEditorManager_->ExecuteCommand<DeleteEntityCommand>(pEcsGroup_, entity);
+				}
+			}
+			deleteQueue_.clear();
+		}
+
+		ImGui::PopID();
 	}
 
 	// ---------------------------------------------------
@@ -258,17 +291,6 @@ void HierarchyWindow::DrawHierarchy() {
 			ImGui::GetForegroundDrawList()->AddRectFilled(marqueeMin_, marqueeMax_, ImColor(100, 150, 255, 50));
 			ImGui::GetForegroundDrawList()->AddRect(marqueeMin_, marqueeMax_, ImColor(100, 150, 255, 200));
 		}
-	}
-
-	/// 遅延削除の実行
-	if(!deleteQueue_.empty()) {
-		for(const auto& guid : deleteQueue_) {
-			ONEngine::GameEntity* entity = pEcsGroup_->GetEntityFromGuid(guid);
-			if(entity) {
-				pEditorManager_->ExecuteCommand<DeleteEntityCommand>(pEcsGroup_, entity);
-			}
-		}
-		deleteQueue_.clear();
 	}
 }
 
