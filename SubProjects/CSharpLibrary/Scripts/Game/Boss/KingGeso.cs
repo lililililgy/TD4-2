@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public class KingGeso : MonoScript
 {
+    private const int DefaultWaveGesoCount = 6;
+    private const float DefaultWaveGesoInterval = 2.0f;
+
     [SerializeField] public int maxHp = 10;
     [SerializeField] public string gesoPrefabName = "GesoHand";
     [SerializeField] public string targetEntityName = "Player";
@@ -26,9 +29,9 @@ public class KingGeso : MonoScript
     /// ゲソの通過距離
     [SerializeField] public float gesoPassThroughDistance = 300.0f;
     /// 波状攻撃で出すゲソの本数
-    [SerializeField] public int waveGesoCount = 60;
+    [SerializeField] public int waveGesoCount = DefaultWaveGesoCount;
     /// 波状攻撃で次のゲソを出す間隔（秒）
-    [SerializeField] public float waveGesoInterval = 0.001f;
+    [SerializeField] public float waveGesoInterval = DefaultWaveGesoInterval;
 
     private HP _hp;
     private IKingGesoState _state;
@@ -140,12 +143,12 @@ public class KingGeso : MonoScript
 
     internal int WaveGesoCount
     {
-        get { return waveGesoCount > 0 ? waveGesoCount : 1; }
+        get { return waveGesoCount > 0 ? waveGesoCount : DefaultWaveGesoCount; }
     }
 
     internal float WaveGesoInterval
     {
-        get { return waveGesoInterval > 0.0f ? waveGesoInterval : 0.01f; }
+        get { return waveGesoInterval > 0.0f ? waveGesoInterval : DefaultWaveGesoInterval; }
     }
 
     //=============================================================

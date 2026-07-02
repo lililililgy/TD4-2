@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+
 /// <summary>
 /// キングゲソの状態(基底クラス)
 /// </summary>
@@ -57,36 +59,28 @@ internal sealed class KingGesoAttackState : IKingGesoState
     private float _elapsed;
     private float _spawnElapsed;
     private int _spawnedCount;
-    private Entity _pendingGeso;
+    private readonly List<Entity> _pendingGesos = new List<Entity>();
 
     public void Enter(KingGeso owner)
     {
         _elapsed = 0.0f;
         _spawnElapsed = 0.0f;
         _spawnedCount = 0;
-        _pendingGeso = null;
+        _pendingGesos.Clear();
 
         SpawnNextGeso(owner);
     }
 
     public void Update(KingGeso owner)
     {
-        if (_pendingGeso != null)
-        {
-            // 攻撃開始
-            if (owner.StartGesoAttack(_pendingGeso))
-            {
-                _pendingGeso = null;
-            }
-        }
+        StartPendingGesoAttacks(owner);
 
         _elapsed += Time.deltaTime;
         _spawnElapsed += Time.deltaTime;
 
-        if (_pendingGeso == null && _spawnedCount < owner.WaveGesoCount && _spawnElapsed >= owner.WaveGesoInterval)
+        if (!SpawnDueGesos(owner))
         {
-            _spawnElapsed = 0.0f;
-            SpawnNextGeso(owner);
+            return;
         }
 
         if (_elapsed >= owner.AttackDuration)
@@ -102,16 +96,45 @@ internal sealed class KingGesoAttackState : IKingGesoState
         owner.DestroyActiveGeso();
     }
 
-    private void SpawnNextGeso(KingGeso owner)
+    private void StartPendingGesoAttacks(KingGeso owner)
     {
-        _pendingGeso = owner.SpawnGeso();
-        if (_pendingGeso == null)
+        for (int i = _pendingGesos.Count - 1; i >= 0; i--)
         {
-            owner.ChangeState(new KingGesoCooldownState());
-            return;
+            Entity pendingGeso = _pendingGesos[i];
+            if (pendingGeso == null || owner.StartGesoAttack(pendingGeso))
+            {
+                _pendingGesos.RemoveAt(i);
+            }
+        }
+    }
+
+    private bool SpawnDueGesos(KingGeso owner)
+    {
+        float interval = owner.WaveGesoInterval;
+        while (_spawnedCount < owner.WaveGesoCount && _spawnElapsed >= interval)
+        {
+            _spawnElapsed -= interval;
+            if (!SpawnNextGeso(owner))
+            {
+                return false;
+            }
         }
 
+        return true;
+    }
+
+    private bool SpawnNextGeso(KingGeso owner)
+    {
+        Entity geso = owner.SpawnGeso();
+        if (geso == null)
+        {
+            owner.ChangeState(new KingGesoCooldownState());
+            return false;
+        }
+
+        _pendingGesos.Add(geso);
         _spawnedCount++;
+        return true;
     }
 }
 
