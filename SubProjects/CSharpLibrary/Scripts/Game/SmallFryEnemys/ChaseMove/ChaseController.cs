@@ -84,6 +84,8 @@ public class ChaseController : MonoScript
 
     private void TransitionTo(State next)
     {
+
+        // Stateの遷移処理
         CurrentState = next;
         switch (next)
         {

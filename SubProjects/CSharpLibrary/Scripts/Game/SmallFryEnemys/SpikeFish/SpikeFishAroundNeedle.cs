@@ -39,7 +39,7 @@ public class SpikeFishAroundNeedle : MonoScript
         spriteAnim_?.Play();
     }
 
-    // SpikeFishAttack からアニメーション終了時(発射直後)に呼ぶ。最終フレームのまま止まるため元のUV位置へ戻す
+    // SpikeFishAttack からアニメーション終了時に呼ぶ。最終フレームのまま止まるため元のUV位置へ戻す
     public void ResetFireAnimation()
     {
         spriteAnim_?.ResetAnimation();
@@ -47,8 +47,8 @@ public class SpikeFishAroundNeedle : MonoScript
 
     public override void Update()
     {
-        if (isCharging_)   UpdateCharging();
-        if (isRecovering_) UpdateRecovery();
+        if (isCharging_) { UpdateCharging(); }
+        if (isRecovering_) { UpdateRecovery(); }
     }
 
     // SpikeFishAttack からチャージ開始時に呼ぶ
@@ -71,7 +71,7 @@ public class SpikeFishAroundNeedle : MonoScript
         for (int i = 0; i < count; i++)
         {
             Entity needle = ecsGroup.CreateEntity(needleName_);
-            if (needle == null) continue;
+            if (needle == null) { continue; }
 
             float angle = currentAngle_ + i * intervalRad;
             Vector3 dir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);
@@ -87,8 +87,6 @@ public class SpikeFishAroundNeedle : MonoScript
 
     /* ----- private ----- */
 
-    // Transform.worldPosition はネイティブ側から同期されない未使用フィールドのため、
-    // ワールド座標は matrix の平行移動成分(m30/m31/m32)から取る(Attractor.cs と同じ手法)。
     private static Vector3 WorldPosition(Transform t)
     {
         return new Vector3(t.matrix.m30, t.matrix.m31, t.matrix.m32);
@@ -118,9 +116,7 @@ public class SpikeFishAroundNeedle : MonoScript
         }
         else
         {
-            // Ease.Out.Back は t≈0.37 で早々に1.0へ到達しオーバーシュートしてしまうため、
-            // coolTime の大半は隠したまま(ScaleMult=0)にし、終了直前の popInDuration 秒だけで
-            // Back を使ってポップインさせる。
+
             float popInStart = Math.Max(0.0f, coolTime - popInDuration);
             if (recoverTimer_ <= popInStart)
             {
