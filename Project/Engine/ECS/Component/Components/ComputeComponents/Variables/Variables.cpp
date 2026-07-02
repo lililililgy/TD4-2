@@ -177,7 +177,21 @@ Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 			}
 			return gen;
 		}
-		case MONO_TYPE_CLASS: return std::shared_ptr<GenericObject>(nullptr);
+		case MONO_TYPE_CLASS:
+		{
+			MonoClass* klass = mono_class_from_mono_type((MonoType*)type);
+			if (!klass) return std::shared_ptr<GenericObject>(nullptr);
+			const char* name = mono_class_get_name(klass);
+			if (strcmp(name, "String") == 0) return std::string("");
+
+			auto gen = std::make_shared<Variables::GenericObject>();
+			gen->typeName = name;
+			void* iter = nullptr; MonoClassField* f;
+			while ((f = mono_class_get_fields(klass, &iter))) {
+				if (ShouldSerialize(f)) gen->fields[mono_field_get_name(f)] = MonoObjectToVar(nullptr, mono_field_get_type(f));
+			}
+			return gen;
+		}
 		case MONO_TYPE_GENERICINST: return std::vector<int>();
 		default: return 0;
 		}

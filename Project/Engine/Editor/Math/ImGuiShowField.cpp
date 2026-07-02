@@ -28,6 +28,27 @@
 using namespace Editor;
 
 namespace {
+bool HasSerializeField(MonoClassField* field) {
+	MonoClass* klass = mono_field_get_parent(field);
+	MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
+	if (!attrs) return false;
+
+	MonoClass* serializeFieldAttr = mono_class_from_name(ONEngine::MonoScriptEngine::GetInstance().Image(), "", "SerializeField");
+
+	bool has = serializeFieldAttr && mono_custom_attrs_has_attr(attrs, serializeFieldAttr);
+	mono_custom_attrs_free(attrs);
+	return has;
+}
+
+bool IsPublicField(MonoClassField* field) {
+	uint32_t flags = mono_field_get_flags(field);
+	return (flags & 0x0006) == 0x0006;
+}
+
+bool ShouldSerialize(MonoClassField* field) {
+	return IsPublicField(field) || HasSerializeField(field);
+}
+
 std::unordered_map<int, std::unique_ptr<CSGui::ImGuiShowField>> gFieldDrawers;
 
 void RegisterFieldDrawers() {
@@ -324,7 +345,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 						size_t oldSize = list.size(); list.resize(size);
 						for (size_t i = oldSize; i < list.size(); ++i) {
 							auto elemVar = ONEngine::Variables::MonoObjectToVar(nullptr, elemType);
-							if (std::holds_alternative<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar)) {
+							if (std::holds_alternative<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar) && std::get<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar) != nullptr) {
 								list[i] = std::get<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar);
 							} else {
 								list[i] = std::make_shared<ONEngine::Variables::GenericObject>();
@@ -333,6 +354,22 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 						}
 					}
 					for (int i = 0; i < (int)list.size(); ++i) {
+						if (list[i]) {
+							if (list[i]->typeName.empty()) {
+								list[i]->typeName = mono_class_get_name(elemClass);
+							}
+							void* iter = nullptr;
+							MonoClassField* f = nullptr;
+							while ((f = mono_class_get_fields(elemClass, &iter))) {
+								if (ShouldSerialize(f)) {
+									std::string fieldName = mono_field_get_name(f);
+									if (!list[i]->fields.contains(fieldName)) {
+										list[i]->fields[fieldName] = ONEngine::Variables::MonoObjectToVar(nullptr, mono_field_get_type(f));
+									}
+								}
+							}
+						}
+
 						if (ImGui::CollapsingHeader(std::format("[{}]", i).c_str())) {
 							ImGui::Indent(); DrawGenericObject(list[i]); ImGui::Unindent();
 						}
