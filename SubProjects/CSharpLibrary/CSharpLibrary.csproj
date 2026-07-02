@@ -163,6 +163,7 @@
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
     <Compile Include="Scripts\Game\EnemySpawnSystem.cs" />
+    <Compile Include="Scripts\Game\Enemy\SpawnEntry.cs" />
     <Compile Include="Scripts\Game\Experience\ExperiencePoint.cs" />
     <Compile Include="Scripts\Game\Experience\LevelingComponent.cs" />
     <Compile Include="Scripts\Game\Map\EnemyHeatMap.cs" />
