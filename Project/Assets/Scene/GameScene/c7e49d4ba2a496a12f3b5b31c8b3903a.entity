@@ -17,6 +17,7 @@
             "TrailFollower": {
                 "leadMinOffset_": 98.0,
                 "maxBendRad_": 0.699999988079071,
+                "rotateToFace_": true,
                 "unitMinOffset_": 229.0
             },
             "type": "Variables"

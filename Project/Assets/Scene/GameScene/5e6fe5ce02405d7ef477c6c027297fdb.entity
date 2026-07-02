@@ -1,0 +1,113 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 3.369999885559082,
+                "y": 1.890000581741333,
+                "z": 1.890000581741333
+            },
+            "type": "Transform"
+        },
+        {
+            "EnemyHeatMap": {
+                "cellSize_": {
+                    "x": 256.0,
+                    "y": 256.0
+                }
+            },
+            "EnemySpawnSystem": {
+                "convolutionRadius_": 2,
+                "defaultSpawnTable_": [
+                    {
+                        "__type": ""
+                    }
+                ],
+                "exclusionAreaMax_": {
+                    "x": 1725.43994140625,
+                    "y": 967.6799926757813
+                },
+                "exclusionAreaMin_": {
+                    "x": -1725.43994140625,
+                    "y": -967.6799926757813
+                },
+                "heatWeightThreshold_": 8,
+                "maxSpawnCount_": 12,
+                "originName_": "Player",
+                "spawnAreaMax_": {
+                    "x": 1984.0,
+                    "y": 1116.0
+                },
+                "spawnAreaMin_": {
+                    "x": -1984.0,
+                    "y": -1116.0
+                },
+                "spawnInterval_": 0.10000000149011612
+            },
+            "TrailFollower": {
+                "chainName_": "System",
+                "leadMaxOffset_": 0.0,
+                "leadMinOffset_": 0.0,
+                "leaderName_": "Player",
+                "maxBendRad_": 0.0,
+                "maxSmoothSpeed_": 0.0,
+                "order_": 0,
+                "rotateToFace_": false,
+                "smoothTime_": 0.0,
+                "unitMaxOffset_": 0.0,
+                "unitMinOffset_": 0.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "EnemySpawnSystem"
+                },
+                {
+                    "enable": true,
+                    "name": "EnemyHeatMap"
+                },
+                {
+                    "enable": true,
+                    "name": "TrailFollower"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 0,
+            "mass": 1.0,
+            "size": {
+                "x": 1024.0,
+                "y": 1024.0
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "5e6fe5ce02405d7ef477c6c027297fdb",
+    "name": "EnemySpawnSystem",
+    "parentGuid": null,
+    "prefabName": ""
+}
