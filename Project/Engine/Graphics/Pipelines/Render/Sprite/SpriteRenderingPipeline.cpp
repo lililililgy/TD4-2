@@ -112,11 +112,7 @@ void SpriteRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManag
 	}
 
 
-	{	/// structured buffer
-		transformsBuffer_.Create(static_cast<uint32_t>(kMaxRenderingSpriteCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
-		materialsBuffer.Create(static_cast<uint32_t>(kMaxRenderingSpriteCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
-	}
-
+	pDxManager_ = dxm;
 
 }
 
@@ -162,12 +158,16 @@ void SpriteRenderingPipeline::Draw(class ECSGroup* ecsGroup, CameraComponent* ca
 		return a.z > b.z;
 	});
 
+	const std::string& groupName = ecsGroup->GetGroupName();
+	auto* materialsBuffer = GetOrCreateMaterialsBuffer(groupName);
+	auto* transformsBuffer = GetOrCreateTransformsBuffer(groupName);
+
 	/// bufferにデータをセット
 	size_t transformIndex = 0;
 	for (const auto& data : renderingDataList) {
 		/// Material, Transformのセット
-		materialsBuffer.SetMappedData(transformIndex, data.renderer->GetGpuMaterial());
-		transformsBuffer_.SetMappedData(transformIndex, data.matWorld);
+		materialsBuffer->SetMappedData(transformIndex, data.renderer->GetGpuMaterial());
+		transformsBuffer->SetMappedData(transformIndex, data.matWorld);
 		++transformIndex;
 	}
 
@@ -202,8 +202,8 @@ void SpriteRenderingPipeline::Draw(class ECSGroup* ecsGroup, CameraComponent* ca
 	/// (Shader側で textures[material.baseTextureId] としてアクセスするため)
 	cmdList->SetGraphicsRootDescriptorTable(ROOT_PARAM_TEXTURES, pDxManager_->GetDxSRVHeap()->GetSRVStartGPUHandle());
 
-	materialsBuffer.SRVBindForGraphicsCommandList(cmdList, ROOT_PARAM_MATERIAL);
-	transformsBuffer_.SRVBindForGraphicsCommandList(cmdList, ROOT_PARAM_TRANSFORM);
+	materialsBuffer->SRVBindForGraphicsCommandList(cmdList, ROOT_PARAM_MATERIAL);
+	transformsBuffer->SRVBindForGraphicsCommandList(cmdList, ROOT_PARAM_TRANSFORM);
 
 	/// 描画
 	cmdList->DrawIndexedInstanced(
@@ -213,5 +213,27 @@ void SpriteRenderingPipeline::Draw(class ECSGroup* ecsGroup, CameraComponent* ca
 	);
 
 	GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::SpriteRendering);
+}
+
+StructuredBuffer<GPUMaterial>* SpriteRenderingPipeline::GetOrCreateMaterialsBuffer(const std::string& groupName) {
+	auto it = materialsBuffers_.find(groupName);
+	if (it != materialsBuffers_.end()) {
+		return it->second.get();
+	}
+	auto buffer = std::make_unique<StructuredBuffer<GPUMaterial>>();
+	buffer->Create(static_cast<uint32_t>(kMaxRenderingSpriteCount_), pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap());
+	materialsBuffers_[groupName] = std::move(buffer);
+	return materialsBuffers_[groupName].get();
+}
+
+StructuredBuffer<Matrix4x4>* SpriteRenderingPipeline::GetOrCreateTransformsBuffer(const std::string& groupName) {
+	auto it = transformsBuffers_.find(groupName);
+	if (it != transformsBuffers_.end()) {
+		return it->second.get();
+	}
+	auto buffer = std::make_unique<StructuredBuffer<Matrix4x4>>();
+	buffer->Create(static_cast<uint32_t>(kMaxRenderingSpriteCount_), pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap());
+	transformsBuffers_[groupName] = std::move(buffer);
+	return transformsBuffers_[groupName].get();
 }
 

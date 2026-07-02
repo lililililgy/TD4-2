@@ -3,6 +3,7 @@
 /// std
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 /// engine
 #include "../Pipelines/Collection/RenderingPipelineCollection.h"
@@ -68,6 +69,9 @@ public:
 	/// @brief DxCommandを実行してリセットする
 	void DxCommandExeAndReset();
 
+	/// @brief シーンごとのレンダーターゲットを取得または作成する
+	SceneRenderTexture* GetOrCreateSceneRenderTexture(const std::string& groupName, const Vector4& clearColor);
+
 private:
 	/// ===================================================
 	/// private : objects
@@ -77,6 +81,7 @@ private:
 	std::unique_ptr<RenderingPipelineCollection> renderingPipelineCollection_;
 	std::unique_ptr<Asset::AssetCollection>             assetCollection_;
 	std::vector<std::unique_ptr<SceneRenderTexture>> renderTextures_;
+	std::unordered_map<std::string, std::unique_ptr<SceneRenderTexture>> sceneRenderTextures_;
 	DxManager* pDxManager_;
 	WindowManager* pWindowManager_;
 	class EntityComponentSystem* pEntityComponentSystem_;
@@ -85,9 +90,9 @@ private:
 #ifdef DEBUG_MODE
 	Editor::ImGuiManager* pImGuiManager_ = nullptr;
 #else
-	std::unique_ptr<CopyImageRenderingPipeline> copyImagePipeline_;
 	Window* releaseBuildSubWindow_;
 #endif // DEBUG_MODE
+	std::unique_ptr<CopyImageRenderingPipeline> copyImagePipeline_;
 
 
 public:

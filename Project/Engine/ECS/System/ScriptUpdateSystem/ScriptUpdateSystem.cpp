@@ -97,15 +97,23 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 	//}
 
 	/// スクリプトが有効でない場合はスキップ
-	MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
+	if (gcHandle_ == 0) {
+		return false;
+	}
+	MonoObject* ecsGroupObj = mono_gchandle_get_target(gcHandle_);
 	if(!ecsGroupObj) {
-		Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
+		Console::LogError("Failed to get ecsGroupObj from gcHandle for group: " + ecsGroupName_);
 		return false;
 	}
 
 	/// --------------------------------------------------------------------------------
 	/// Entityの追加関数を呼び出す
 	/// --------------------------------------------------------------------------------
+	if (!addEntityMethod_) {
+		Console::LogError("addEntityMethod_ is null for group: " + ecsGroupName_);
+		return false;
+	}
+
 	void* addEntityArgs[1];
 	int32_t entityId = entity->GetId();
 	addEntityArgs[0] = &entityId;
@@ -180,9 +188,9 @@ void ScriptUpdateSystem::CallUpdateEcsGroup() {
 		if(updateEntitiesMethod_) {
 
 			/// 更新関数を呼び出す
-			MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
+			MonoObject* ecsGroupObj = mono_gchandle_get_target(gcHandle_);
 			if(!ecsGroupObj) {
-				Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
+				Console::LogError("Failed to get ecsGroupObj from gcHandle for group: " + ecsGroupName_);
 				return;
 			}
 
@@ -213,8 +221,9 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 	MonoMethod* addGroupMethod = MonoScriptEngineUtils::FindMethodInClassOrParents(ecsClass, "AddECSGroup", 1);
 
 	/// 関数の引数
+	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 	void* args[1];
-	args[0] = mono_string_new(mono_domain_get(), ecsGroupName.c_str());; /// ECSのGroup名
+	args[0] = mono_string_new(monoEngine.Domain(), ecsGroupName.c_str());; /// ECSのGroup名
 
 	/// 関数を呼び出す
 	MonoObject* exc = nullptr;
@@ -224,6 +233,14 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 		MonoScriptEngineUtils::HandleException(exc);
 	}
 
+	if (!ecsGroup) {
+		Console::LogError("Failed to add or retrieve C# ECSGroup: " + ecsGroupName);
+		monoClass_ = nullptr;
+		updateEntitiesMethod_ = nullptr;
+		addEntityMethod_ = nullptr;
+		addScriptMethod_ = nullptr;
+		return;
+	}
 
 	/// --------------------------------------------------------------------------------
 	/// C#側のECSGroupクラスを取得

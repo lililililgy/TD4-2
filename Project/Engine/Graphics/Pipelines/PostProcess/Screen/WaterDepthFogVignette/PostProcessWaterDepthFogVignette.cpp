@@ -35,7 +35,7 @@ void PostProcessWaterDepthFogVignette::Initialize(ShaderCompiler* shaderCompiler
 	paramsBuffer_.Create(dxm->GetDxDevice());
 }
 
-void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem) {
+void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem, ECSGroup* ecsGroup) {
 	CameraComponent* camera = nullptr;
 	if (textureName.find("debug") != std::string::npos) {
 		ECSGroup* debugGroup = entityComponentSystem->GetECSGroup("Debug");
@@ -44,7 +44,7 @@ void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, D
 		}
 	}
 	if (!camera) {
-		ECSGroup* currentGroup = entityComponentSystem->GetCurrentGroup();
+		ECSGroup* currentGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
 		if (currentGroup) {
 			camera = currentGroup->GetMainCamera2D();
 		}

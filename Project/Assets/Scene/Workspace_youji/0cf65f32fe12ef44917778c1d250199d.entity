@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 0.3460000157356262,
+                "x": 358.3999938964844,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 0.3009999990463257,
-                "z": 0.9999997615814209
+                "x": 213.39999389648438,
+                "y": 213.4000701904297,
+                "z": 213.4000701904297
             },
             "type": "Transform"
         },
@@ -29,12 +29,12 @@
             "enable": 1,
             "material": {
                 "baseColor": {
-                    "w": 0.4000000059604645,
-                    "x": 0.0,
+                    "w": 1.0,
+                    "x": 1.0,
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
+                "baseTextureGuid": "00000000000000000000000000000000",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -53,8 +53,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "f82556a643ca075a8a6ad4cc372769a9",
-    "name": "sky",
-    "parentGuid": "8731e7fca368f06f73ed583c3dd4900c",
+    "guid": "0cf65f32fe12ef44917778c1d250199d",
+    "name": "Sprite_2",
+    "parentGuid": null,
     "prefabName": ""
 }

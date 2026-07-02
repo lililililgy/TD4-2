@@ -6,8 +6,8 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": -0.49600014090538025,
-                "z": -13.932994842529297
+                "y": 0.0,
+                "z": 0.0
             },
             "rotate": {
                 "w": 0.0,
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 0.019999999552965164,
-                "z": 0.9999997615814209
+                "x": 1000.0,
+                "y": 1000.0,
+                "z": 1000.0
             },
             "type": "Transform"
         },
@@ -29,12 +29,12 @@
             "enable": 1,
             "material": {
                 "baseColor": {
-                    "w": 1.0,
-                    "x": 1.0,
+                    "w": 0.47999998927116394,
+                    "x": 0.0,
                     "y": 1.0,
-                    "z": 1.0
+                    "z": 0.0
                 },
-                "baseTextureGuid": "7307678cadf152ea606981d76f7043e6",
+                "baseTextureGuid": "00000000000000000000000000000000",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -45,7 +45,7 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 20.0,
+                        "x": 1.0,
                         "y": 1.0
                     }
                 }
@@ -53,8 +53,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "e03b4beee497b84a4fdc0f410e9361f7",
-    "name": "sand",
-    "parentGuid": "8731e7fca368f06f73ed583c3dd4900c",
+    "guid": "fdc0a69b9f03f088a93928956e048156",
+    "name": "Sprite_2_1",
+    "parentGuid": null,
     "prefabName": ""
 }

@@ -62,6 +62,14 @@ public:
 	/// @param sceneName シーンの名前
 	void LoadScene(const std::string& sceneName);
 
+	/// @brief シーンを追加で読み込む
+	/// @param sceneName シーンの名前
+	void AddScene(const std::string& sceneName);
+
+	/// @brief シーンをアンロードする
+	/// @param sceneName シーンの名前
+	void UnloadScene(const std::string& sceneName);
+
 	/// @brief 現在のシーンをリロードする
 	/// @param isTemporary 一時的なシーンかどうか
 	void ReloadScene(bool isTemporary);
@@ -104,6 +112,7 @@ private:
 
 	std::string currentScene_;
 	std::string nextScene_;
+	bool isNextSceneAdditive_ = false;
 
 	bool isDirty_ = false;
 
@@ -125,6 +134,8 @@ public:
 namespace MonoInternalMethods {
 
 void InternalLoadScene(MonoString* sceneName);
+void InternalAddScene(MonoString* sceneName);
+void InternalUnloadScene(MonoString* sceneName);
 }
 
 } /// ONEngine

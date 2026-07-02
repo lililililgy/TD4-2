@@ -23,7 +23,7 @@
             "type": "Transform"
         },
         {
-            "CloudManager": {},
+            "AddSceneTest": {},
             "type": "Variables"
         },
         {
@@ -31,14 +31,14 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "CloudManager"
+                    "name": "AddSceneTest"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "0f1e306fbbfd8085ee51a177c95923c8",
-    "name": "cloudManager",
-    "parentGuid": "8731e7fca368f06f73ed583c3dd4900c",
+    "guid": "bf0c252395b6840cfed59ce900c910a7",
+    "name": "NewEntity",
+    "parentGuid": null,
     "prefabName": ""
 }

@@ -5,9 +5,9 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": -0.164000004529953,
-                "z": -18.69500732421875
+                "x": -56.70000457763672,
+                "y": 0.0,
+                "z": 0.0
             },
             "rotate": {
                 "w": 0.0,
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 0.699999988079071,
-                "z": 0.9999997615814209
+                "x": 100.0,
+                "y": 100.0,
+                "z": 100.0
             },
             "type": "Transform"
         },
@@ -29,12 +29,12 @@
             "enable": 1,
             "material": {
                 "baseColor": {
-                    "w": 0.34299999475479126,
-                    "x": 1.0,
+                    "w": 1.0,
+                    "x": 0.0,
                     "y": 1.0,
-                    "z": 1.0
+                    "z": 0.0
                 },
-                "baseTextureGuid": "ec07eb05f4f3ec5545f67da0e397067e",
+                "baseTextureGuid": "00000000000000000000000000000000",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -53,8 +53,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "801400a32d5b71374d69b1846c08eb6e",
-    "name": "underwater",
-    "parentGuid": "8731e7fca368f06f73ed583c3dd4900c",
+    "guid": "e9b7f0fb453e89b3a651c054d2f1cfce",
+    "name": "Sprite_2",
+    "parentGuid": null,
     "prefabName": ""
 }

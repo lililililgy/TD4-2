@@ -202,6 +202,7 @@
     <Compile Include="Scripts\Game\UI\Title\OpenOption.cs" />
     <Compile Include="Scripts\Math\SmoothDamp.cs" />
     <Compile Include="Scripts\Test.cs" />
+    <Compile Include="Scripts\Test\AddSceneTest.cs" />
     <Compile Include="Scripts\Test\ColliderTest1.cs" />
     <Compile Include="Scripts\Test\ColliderTest2.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />

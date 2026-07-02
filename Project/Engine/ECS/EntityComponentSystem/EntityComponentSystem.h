@@ -68,6 +68,12 @@ public:
 	void SetCurrentGroupName(const std::string& name);
 	const std::string& GetCurrentGroupName() const;
 
+	/// アクティブなグループ名管理
+	void AddActiveGroupName(const std::string& name);
+	void RemoveActiveGroupName(const std::string& name);
+	void ClearActiveGroupNames();
+	const std::vector<std::string>& GetActiveGroupNames() const;
+
 	DxManager* GetDxManager() const { return pDxManager_; }
 
 	/// すべてのECSグループの取得
@@ -91,6 +97,7 @@ private:
 	std::unordered_map<std::string, std::unique_ptr<ECSGroup>> ecsGroups_;
 	ECSGroup* debugGroup_ = nullptr;
 	std::string currentGroupName_;
+	std::vector<std::string> activeGroupNames_;
 
 };
 

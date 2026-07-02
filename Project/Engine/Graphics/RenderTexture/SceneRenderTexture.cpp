@@ -48,6 +48,13 @@ void SceneRenderTexture::SetRenderTarget(DxCommand* dxCommand, DxDSVHeap* dxDSVH
 	);
 }
 
+void SceneRenderTexture::SetRenderTargetColorOnly(DxCommand* dxCommand, DxDSVHeap* dxDSVHeap, bool clear) {
+	renderTextures_[0]->SetRenderTarget(
+		dxCommand, dxDSVHeap,
+		clear
+	);
+}
+
 void SceneRenderTexture::CreateBarrierRenderTarget(DxCommand* dxCommand) {
 	for (auto& renderTexture : renderTextures_) {
 		renderTexture->CreateBarrierRenderTarget(dxCommand);

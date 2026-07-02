@@ -65,44 +65,53 @@ public:
 
 
 	/// @brief すべてのPipelineのPreDrawを実行する
+	/// @param ecsGroup 対象のECSGroup
 	/// @param _3dCamera 3Dカメラ
 	/// @param _2dCamera 2Dカメラ
-	void PreDrawEntities(CameraComponent* _3dCamera, CameraComponent* _2dCamera);
+	void PreDrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera);
 
 	/// @brief 現在のECSGroupのすべてのEntityを描画する
+	/// @param ecsGroup 対象のECSGroup
 	/// @param _3dCamera 3Dカメラ
 	/// @param _2dCamera 2DCamera
-	void DrawEntities(CameraComponent* _3dCamera, CameraComponent* _2dCamera);
+	void DrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera);
 
 	/// @brief パーティクルの描画 (ポストエフェクト後に実行)
-	void DrawParticles(CameraComponent* _3dCamera);
+	/// @param ecsGroup 対象のECSGroup
+	void DrawParticles(ECSGroup* ecsGroup, CameraComponent* _3dCamera);
 
 	/// @brief Gizmoの描画
-	void DrawGizmos(CameraComponent* _3dCamera, CameraComponent* _2dCamera);
-
-	/// @brief 2DのEntityを描画する
-	/// @param _2dCamera 2Dカメラ
-	/// @param groupName 対象のECSGroupの名前 (空なら現在のGroup)
-	void DrawEntities2D(CameraComponent* _2dCamera, const std::string& groupName = "");
-
-	/// @brief 選択されたPrefabの描画
+	/// @param ecsGroup 対象のECSGroup
 	/// @param _3dCamera 3Dカメラ
 	/// @param _2dCamera 2Dカメラ
-	void DrawSelectedPrefab(CameraComponent* _3dCamera, CameraComponent* _2dCamera);
+	void DrawGizmos(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera);
+
+	/// @brief 2DのEntityを描画する
+	/// @param ecsGroup 対象のECSGroup
+	/// @param _2dCamera 2Dカメラ
+	void DrawEntities2D(ECSGroup* ecsGroup, CameraComponent* _2dCamera);
+
+	/// @brief 選択されたPrefabの描画
+	/// @param ecsGroup 対象のECSGroup
+	/// @param _3dCamera 3Dカメラ
+	/// @param _2dCamera 2Dカメラ
+	void DrawSelectedPrefab(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera);
 
 	/// @brief 選択されたPrefabの2D描画
+	/// @param ecsGroup 対象のECSGroup
 	/// @param _2dCamera 2Dカメラ
-	/// @param groupName 対象のECSGroupの名前 (空ならDebug)
-	void DrawSelectedPrefab2D(CameraComponent* _2dCamera, const std::string& groupName = "");
+	void DrawSelectedPrefab2D(ECSGroup* ecsGroup, CameraComponent* _2dCamera);
 
 
 	/// @brief 3Dポストエフェクトの実行
 	/// @param sceneTextureName シーンの名前 (Debug, Game, Prefab etc...)
-	void ExecutePostProcess3D(const std::string& sceneTextureName);
+	/// @param ecsGroup 対象のECSGroup (nullptrの場合はカレントグループ)
+	void ExecutePostProcess3D(const std::string& sceneTextureName, ECSGroup* ecsGroup = nullptr);
 
 	/// @brief 画面全体ポストエフェクトの実行 (2D/UIを含む)
 	/// @param sceneTextureName シーンの名前 (Debug, Game, Prefab etc...)
-	void ExecutePostProcessScreen(const std::string& sceneTextureName);
+	/// @param ecsGroup 対象のECSGroup (nullptrの場合はカレントグループ)
+	void ExecutePostProcessScreen(const std::string& sceneTextureName, ECSGroup* ecsGroup = nullptr);
 
 
 	/// @brief 引数のカメラが有効なのか確認する
