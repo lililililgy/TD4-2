@@ -50,7 +50,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "00000000000000000000000000000000",
+                "baseTextureGuid": "b8c21351bb3241d42752a073a2b20b7d",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -69,7 +69,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "8afbd356263c22a230471d5173a8e9f5",
+    "guid": "92f752c5e273865f24cd5199ed5b2b53",
     "name": "Needle",
     "parentGuid": null,
     "prefabName": "Needle"

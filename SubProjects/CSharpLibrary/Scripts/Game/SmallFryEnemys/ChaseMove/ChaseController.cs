@@ -18,7 +18,7 @@ public class ChaseController : MonoScript
     // rushDistance 以内で停止するか
     [SerializeField] private bool stopAtRushDistance = false;
 
-    // ChaseAnimation がアタッチされていれば Initialize() で上書きされる
+    // ChaseAnimationのリアクション中に待機する時間
     public float DiscoveryDuration { get; set; } = 0.0f;
 
     public enum State { Idle, Wait, Discovery, Chase, Rush }

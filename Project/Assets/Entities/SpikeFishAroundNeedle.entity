@@ -2,10 +2,21 @@
     "active": true,
     "components": [
         {
-            "SpikeFishAroundNeedle": {
-                "maxAngularSpeed": 1241.0
+            "rotate": {
+                "w": -0.4573034644126892,
+                "z": -0.8893107175827026
             },
-            "type": "Variables"
+            "type": "Transform"
+        },
+        {
+            "material": {
+                "uvTransform": {
+                    "scale": {
+                        "x": 0.3333333432674408
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "ed0ce65e3b321cfd0f3b5f891116c113",
