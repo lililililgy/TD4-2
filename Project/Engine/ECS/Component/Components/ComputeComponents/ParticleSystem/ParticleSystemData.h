@@ -158,6 +158,13 @@ namespace ONEngine {
         }
     };
 
+    enum class FlipMode : uint8_t {
+        None,
+        X,
+        Y,
+        Both
+    };
+
     struct ParticleSystemRenderer {
         enum class RenderMode : uint8_t {
             Billboard,
@@ -186,9 +193,16 @@ namespace ONEngine {
 
         float speedScale = 0.0f;
         float lengthScale = 2.0f;
+        FlipMode flipMode = FlipMode::None;
 
         std::string materialGuid; // Reference to material asset
         std::string meshGuid;     // For Mesh mode
+    };
+
+    struct ParticleSystemTextureSheetAnimation {
+        bool enabled = false;
+        int tilesX = 1;
+        int tilesY = 1;
     };
 
 }
