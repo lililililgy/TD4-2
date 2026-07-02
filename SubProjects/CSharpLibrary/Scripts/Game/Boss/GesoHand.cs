@@ -17,8 +17,6 @@ public class GesoHand : MonoScript
     [SerializeField]
     public float attackDamage = 1.0f; //攻撃力
     [SerializeField]
-    public float attackRadius = 1.5f; //攻撃範囲
-    [SerializeField]
     public float attackDuration = 0.4f; //攻撃の持続時間
     [SerializeField]
     public float moveDuration = 0.25f; //ターゲットまで直線移動する時間
@@ -141,7 +139,7 @@ public class GesoHand : MonoScript
 
         // 攻撃開始時に記録した位置へ向きを合わせる
         RotateTowardPosition(_attackTargetPosition);
-
+        // 攻撃対象の位置に向かって移動する
         float duration = moveDuration > 0.0f ? moveDuration : 0.001f;
         float moveRatio = Mathf.Clamp01(_stateTime / duration);
         SetPlanePosition(Lerp(_homePosition, _attackTargetPosition, moveRatio));
@@ -205,7 +203,7 @@ public class GesoHand : MonoScript
         }
 
         Vector2 normalized = direction.Normalized();
-       float angle = Mathf.Atan2(normalized.y, normalized.x) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(normalized.y, normalized.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.MakeFromAxis(Vector3.forward, angle);
     }
 

@@ -32,6 +32,7 @@ public:
 	/// <summary>
 	/// C++とC#でデータを一括同期するための構造体
 	/// </summary>
+#pragma pack(push, 4)
 	struct BatchData {
 	    uint32_t compId;
 	    Vector3 desiredMoveDirection;
@@ -40,8 +41,10 @@ public:
 	    float maxSpeed;
 	    uint8_t useDesiredRotation; // bool interop
 	    uint8_t isAttacking; // boolの代わりにuint8_tを使用して互換性を確保
+	    uint8_t padding[2];
 	    int32_t targetEntityId;
 	};
+#pragma pack(pop)
 	/// ----- friend class ----- ///
 	friend class MovementSystem;
 

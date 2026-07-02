@@ -15,6 +15,18 @@ public class AttackCollision : MonoScript {
             return; // 自分自身は無視
         }
 
+        Critical critical = entity.GetScript<Critical>();
+        float multiplier = critical != null ? critical.DamageMultiplierAgainst(collision) : 1.0f;
+
+        GesoWeakPoint weakPoint = collision.GetScript<GesoWeakPoint>();
+        if (weakPoint != null) {
+            weakPoint.Damage(damage_ * multiplier);
+            if (destroyOnHit_) {
+                entity.Destroy();
+            }
+            return;
+        }
+
         // 相手が DamageRelay(中継)を持っていれば、その所有者(頭)の共有 HP へダメージを送る。
         // 持っていなければ従来通り相手の HP を直接削る（敵など）。
         DamageRelay relay = collision.GetScript<DamageRelay>();
@@ -30,8 +42,6 @@ public class AttackCollision : MonoScript {
 
         // 会心(クリティカル)補正。Critical を持っていれば、攻撃者の向きと相手への角度差に
         // 応じた倍率を取得してダメージに掛ける。持っていなければ等倍。
-        Critical critical = entity.GetScript<Critical>();
-        float multiplier = critical != null ? critical.DamageMultiplierAgainst(collision) : 1.0f;
         hp.TakeDamage(damage_ * multiplier);
 
         if (destroyOnHit_) {

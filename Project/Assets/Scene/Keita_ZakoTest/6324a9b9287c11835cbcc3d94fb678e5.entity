@@ -10,7 +10,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -24,10 +24,25 @@
         },
         {
             "type": "Variables"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 4294967295,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
         }
     ],
-    "guid": "2a6196215b5ed240af352e1b4a505194",
-    "name": "OptionMenu",
-    "parentGuid": null,
+    "guid": "6324a9b9287c11835cbcc3d94fb678e5",
+    "name": "Collider",
+    "parentGuid": "d494b79e4e2565acee4afeb894c8102d",
     "prefabName": ""
 }

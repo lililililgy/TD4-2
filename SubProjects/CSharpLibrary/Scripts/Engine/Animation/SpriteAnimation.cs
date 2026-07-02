@@ -10,7 +10,10 @@ public class SpriteAnimation : MonoScript {
 	[SerializeField] public bool isLoop = true;
 	[SerializeField] public bool isPlay = true;
 	[SerializeField] public int totalFrames = 0; // 0 の場合は rows * cols とみなす
+	[SerializeField] public int startFrame = 0;
+	[SerializeField] public int endFrame = -1; // -1 の場合は自動的に最後のフレームになります
 	[SerializeField] public bool invertY = false; // DirectX等の左上(0,0)基準の場合は false。左下(0,0)基準の場合は true
+
 
 	// --- 再生状態 ---
 	private float timer = 0f;
@@ -50,11 +53,22 @@ public class SpriteAnimation : MonoScript {
 		if (timer >= frameDuration) {
 			timer -= frameDuration;
 			int maxFrames = totalFrames > 0 ? totalFrames : rows * cols;
+			int firstFrame = Math.Max(0, Math.Min(startFrame, maxFrames - 1));
+			int lastFrame = (endFrame >= firstFrame && endFrame < maxFrames) ? endFrame : maxFrames - 1;
+
+			// 現在のフレームが範囲外にある場合は、範囲内に補正する
+			if (currentFrame < firstFrame || currentFrame > lastFrame) {
+				currentFrame = firstFrame;
+				UpdateUV();
+				OnFrameChanged?.Invoke(currentFrame);
+				return;
+			}
+
 			int nextFrame = currentFrame + 1;
 
-			if (nextFrame >= maxFrames) {
+			if (nextFrame > lastFrame) {
 				if (isLoop) {
-					currentFrame = 0;
+					currentFrame = firstFrame;
 					UpdateUV();
 					OnFrameChanged?.Invoke(currentFrame);
 				} else {
@@ -86,14 +100,19 @@ public class SpriteAnimation : MonoScript {
 
 	public void ResetAnimation() {
 		timer = 0f;
-		currentFrame = 0;
+		int maxFrames = totalFrames > 0 ? totalFrames : rows * cols;
+		int firstFrame = Math.Max(0, Math.Min(startFrame, maxFrames - 1));
+		currentFrame = firstFrame;
 		isFinished = false;
 		UpdateUV();
 	}
 
 	public void SetFrame(int frameIndex) {
 		int maxFrames = totalFrames > 0 ? totalFrames : rows * cols;
-		if (frameIndex < 0 || frameIndex >= maxFrames) return;
+		int firstFrame = Math.Max(0, Math.Min(startFrame, maxFrames - 1));
+		int lastFrame = (endFrame >= firstFrame && endFrame < maxFrames) ? endFrame : maxFrames - 1;
+
+		if (frameIndex < firstFrame || frameIndex > lastFrame) return;
 		currentFrame = frameIndex;
 		timer = 0f;
 		UpdateUV();

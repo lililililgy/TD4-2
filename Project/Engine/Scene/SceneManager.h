@@ -54,6 +54,8 @@ public:
 	void SaveCurrentScene();
 	/// @brief 現在のシーンを一時的に保存する
 	void SaveCurrentSceneTemporary();
+	/// @brief 一時保存されたシーン名をクリアする
+	void ClearTemporarySavedSceneName();
 
 
 	/// @brief シーンを読み込む
@@ -106,6 +108,7 @@ private:
 	bool isDirty_ = false;
 
 	std::unique_ptr<SceneIO> sceneIO_;
+	std::string temporarySavedSceneName_;
 
 
 public:

@@ -14,11 +14,6 @@
             "guid": "c13ec1b095d9df2802ccfeef119225e0",
             "parentGuid": null,
             "path": "./DebugScene_takeshi/c13ec1b095d9df2802ccfeef119225e0.entity"
-        },
-        {
-            "guid": "2df14a1cd1ce8a1feb7f69a6dc45e7f0",
-            "parentGuid": null,
-            "path": "./DebugScene_takeshi/2df14a1cd1ce8a1feb7f69a6dc45e7f0.entity"
         }
     ]
 }

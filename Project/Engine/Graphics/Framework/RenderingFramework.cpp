@@ -1,4 +1,4 @@
-#include "RenderingFramework.h"
+﻿#include "RenderingFramework.h"
 
 using namespace ONEngine;
 
@@ -268,8 +268,8 @@ void RenderingFramework::DrawDebug() {
 	// デバッグ用の2D描画
 	renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D(), "Debug");
 
-	if (pEntityComponentSystem_->GetECSGroup("GameScene")) {
-		renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D(), "GameScene");
+	if (pEntityComponentSystem_->GetCurrentGroup()) {
+		renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D(), pEntityComponentSystem_->GetCurrentGroup()->GetGroupName());
 	}
 
 	// 2D描画後に画面全体ポストプロセスを適用するためにSRVに遷移

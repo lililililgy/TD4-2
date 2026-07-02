@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "3d74355b418641c9a64245aa85a8d9d2",
+    "name": "WaterCausticsLightShafts.cs",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}

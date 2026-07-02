@@ -2,13 +2,6 @@
     "active": false,
     "components": [
         {
-            "elementId": "",
-            "elementIndex": 0,
-            "enable": 1,
-            "groupId": "1296745c833814ed0971914bb15803d8",
-            "type": "UIElementComponent"
-        },
-        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
@@ -33,13 +26,24 @@
             "type": "Variables"
         },
         {
+            "cancelKeys": [
+                "Escape",
+                "GamepadB"
+            ],
+            "currentSelected": "387f51ec4bc5393e1f00ebf4ee96d57d",
             "enable": 1,
-            "links": {},
-            "type": "UILinkNavigationComponent"
+            "isFocused": false,
+            "isVisible": false,
+            "parentGroup": "d7ea2c0f9f4ecbe9053c755f9af5b335",
+            "submitKeys": [
+                "Return",
+                "Space"
+            ],
+            "type": "UIGroupComponent"
         }
     ],
-    "guid": "05a4d04b4fcbe6a58ec47d2a82ede2dd",
-    "name": "Element_1",
-    "parentGuid": "1296745c833814ed0971914bb15803d8",
+    "guid": "a3fd89de2fd48bd644a51d8751d5b999",
+    "name": "Group_0",
+    "parentGuid": "0a8746990723639928d2994e6405bfef",
     "prefabName": ""
 }

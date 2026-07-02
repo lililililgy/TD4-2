@@ -13,8 +13,8 @@ public class EnemyMoveComponent : MonoScript {
     [SerializeField] private float maxSpeed_             = 256.0f;
     [SerializeField] private float decelSmoothTime_      = 0.2f;
     [SerializeField] private float decelMaxSmoothSpeed_  = 12.0f;
-    [SerializeField] private float rotateSmoothTime_     = 3.0f;
-    [SerializeField] private float rotateMaxSmoothSpeed_ = 64.0f;
+    [SerializeField] private float rotateSmoothTime_     = 0.2f; // 旋回の効き（小さいほど機敏）
+    [SerializeField] private float rotateMaxSmoothSpeed_ = 3.0f; // 最大旋回レート(rad/s)。敵は重め
 
     [SerializeField] private float paramReleaseSmoothTime_     = 0.25f;
     [SerializeField] private float paramReleaseMaxSmoothSpeed_ = 100000.0f;
@@ -24,15 +24,15 @@ public class EnemyMoveComponent : MonoScript {
 
     public override void Initialize() {
         mover_ = new Mover(paramReleaseSmoothTime_, paramReleaseMaxSmoothSpeed_);
+        // 敵は常にターゲット方向（最終的な進行方向）を直接 Mover へ渡すので、
+        // canMove/moveForward の解釈は不要（Mover も解釈しない）。
         moveParam_ = new MoveParam {
-            canMove_              = true,
             accel_                = accel_,
             maxSpeed_             = maxSpeed_,
             decelSmoothTime_      = decelSmoothTime_,
             decelMaxSmoothSpeed_  = decelMaxSmoothSpeed_,
             rotateSmoothTime_     = rotateSmoothTime_,
             rotateMaxSmoothSpeed_ = rotateMaxSmoothSpeed_,
-            moveForward_          = false,
         };
     }
 

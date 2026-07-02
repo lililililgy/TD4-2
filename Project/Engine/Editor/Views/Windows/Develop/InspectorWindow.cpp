@@ -1,4 +1,4 @@
-#include "InspectorWindow.h"
+﻿#include "InspectorWindow.h"
 
 /// std
 #include <format>
@@ -42,6 +42,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animation/AnimationPlayer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
 
 /// renderer
 #include "Engine/ECS/Component/Components/RendererComponents/Skybox/Skybox.h"
@@ -82,6 +83,7 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 	RegisterComponent<ShadowCaster>(ComponentType::Compute, [&](ShadowCaster* comp) { ComponentDebug::ShadowCasterDebug(comp); });
 	RegisterComponent<AgentIntentComponent>(ComponentType::Compute, [&](AgentIntentComponent* comp) { ComponentDebug::AgentIntentComponentDebug(comp); });
 	RegisterComponentMulti<Animator>(ComponentType::Compute, [&](const std::vector<Animator*>& comps) { ComponentDebug::AnimatorDebug(comps); });
+	RegisterComponent<UIGroupComponent>(ComponentType::Compute, [&](UIGroupComponent* comp) { ComponentDebug::UIGroupComponentInspectorDebug(comp); });
 
 	/// light
 	RegisterComponent<DirectionalLight>(ComponentType::Light, [&](DirectionalLight* comp) { DirectionalLightDebug(comp); });
@@ -469,11 +471,11 @@ void InspectorWindow::DrawComponentNode(ONEngine::GameEntity* entity, auto& itr)
 
 	bool isDeleted = false;
 
+	// 2. ポップアップメニューの処理 (削除されたかどうかのフラグを受け取る)
+	isDeleted = HandleComponentPopupMenu(entity, comp, compName, itr);
+
 	// ヘッダーが開かれている場合の中身の処理
 	if(isHeaderOpen) {
-		// 2. ポップアップメニューの処理 (削除されたかどうかのフラグを受け取る)
-		isDeleted = HandleComponentPopupMenu(entity, comp, compName, itr);
-
 		// 3. 削除されていなければ中身のプロパティを描画
 		if(!isDeleted) {
 			DrawComponentInnerContent(comp, itr->first, comp->enable);
@@ -503,9 +505,9 @@ void InspectorWindow::DrawMultiComponentNode(const std::vector<ONEngine::GameEnt
 	bool isHeaderOpen = DrawMultiComponentHeaderUI(comps, compName, baseColor);
 
 	bool isDeleted = false;
+	isDeleted = HandleMultiComponentPopupMenu(entities, hash, compName);
+
 	if (isHeaderOpen) {
-		isDeleted = HandleMultiComponentPopupMenu(entities, hash, compName);
-		
 		if (!isDeleted) {
 			// 全員有効かチェック
 			bool allEnabled = true;
@@ -527,6 +529,9 @@ bool InspectorWindow::DrawComponentHeaderUI(ONEngine::IComponent* comp, const st
 	// TreeNode
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen;
 	bool isHeaderOpen = ImGui::TreeNodeEx("##header", flags, "");
+	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+		ImGui::OpenPopup("CompPopup");
+	}
 
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 2.0f);
@@ -571,6 +576,9 @@ bool InspectorWindow::DrawMultiComponentHeaderUI(const std::vector<ONEngine::ICo
 
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen;
 	bool isHeaderOpen = ImGui::TreeNodeEx("##header", flags, "");
+	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+		ImGui::OpenPopup("MultiCompPopup");
+	}
 
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 2.0f);
