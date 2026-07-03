@@ -36,7 +36,7 @@
                     "MesopelagicZone",
                     "BathypelagicZone"
                 ],
-                "convolutionRadius_": 2,
+                "convolutionRadius_": 4,
                 "defaultSpawnTable_": [
                     {
                         "__type": "SpawnEntry",
@@ -57,8 +57,9 @@
                     "x": -1725.43994140625,
                     "y": -967.6799926757813
                 },
-                "heatWeightThreshold_": 8,
-                "maxSpawnCount_": 12,
+                "heatWeightThreshold_": 3,
+                "maxEnemyCount_": 12,
+                "maxSpawnCount_": 1,
                 "originName_": "Player",
                 "spawnAreaMax_": {
                     "x": 1984.0,
@@ -68,7 +69,7 @@
                     "x": -1984.0,
                     "y": -1116.0
                 },
-                "spawnInterval_": 0.029999999329447746
+                "spawnInterval_": 1.0
             },
             "TrailFollower": {
                 "chainName_": "System",

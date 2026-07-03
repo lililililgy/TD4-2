@@ -28,7 +28,13 @@
                     "x": 0.0,
                     "y": 0.0
                 },
-                "spawnTable_": []
+                "spawnTable_": [
+                    {
+                        "__type": "SpawnEntry",
+                        "enemyType": "MorayEelPot",
+                        "weight": 6.0
+                    }
+                ]
             },
             "type": "Variables"
         },

@@ -45,11 +45,15 @@ public class EnemySpawnSystem : MonoScript {
     // スポーン間隔
     [SerializeField] private float spawnInterval_ = 5.0f;
     private float spawnTimer_ = 0.0f;
+
+    // 1フレームでスポーンする最大数
     [SerializeField] private int maxSpawnCount_ = 10;
     // セル内の敵の数がこの値以上の場合、そのセルの重みを0にする
     [SerializeField] private int heatWeightThreshold_ = 5;
     // 重みの畳み込み範囲(セル数)。周囲のセルの重みを合成し、密集地帯の影響が近隣セルにも及ぶようにする
     [SerializeField] private int convolutionRadius_ = 1;
+    // スポーン可能な敵の総数の上限。上限に達している場合はスポーンしない
+    [SerializeField] private int maxEnemyCount_ = 100;
 
     // 現在のバイオームの出現テーブル。エディタで設定する。
     [SerializeField]
@@ -95,6 +99,11 @@ public class EnemySpawnSystem : MonoScript {
         // スポーンセルの重みをクリアする
         spawnCellWeights_.Clear();
         CalculateSpawnCellWeights();
+
+        // スポーン可能な敵の総数が上限に達している場合はスポーンしない
+        EnemyHeatMap heatMap = entity.GetScript<EnemyHeatMap>();
+        if (heatMap == null) return;
+        if (heatMap.GetEnemyCount() >= maxEnemyCount_) return;
 
         int spawnCount = 0;
         // スポーン間隔を超えた場合、スポーン処理を行う

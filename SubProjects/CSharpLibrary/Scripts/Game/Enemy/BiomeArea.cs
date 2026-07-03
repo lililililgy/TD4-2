@@ -3,7 +3,9 @@ using System.Collections.Generic;
 // 矩形リージョンに紐づく Biome。エンティティの Transform.position を中心とした
 // half-extents の矩形内かどうかを判定できる。
 public class BiomeArea : MonoScript {
-    [SerializeField] private List<SpawnEntry> spawnTable_ = new List<SpawnEntry>();
+    [SerializeField] private List<SpawnEntry> spawnTable_ = new List<SpawnEntry> {
+        new SpawnEntry { enemyType = "Test", weight = 1.0f },
+    };
     // エリアの半サイズ。中心はエンティティの Transform.position
     [SerializeField] private Vector2 halfExtents_;
 
