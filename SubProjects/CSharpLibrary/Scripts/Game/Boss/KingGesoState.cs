@@ -68,16 +68,19 @@ internal sealed class KingGesoAttackState : IKingGesoState
         _spawnedCount = 0;
         _pendingGesos.Clear();
 
+        // 初回のゲソをスポーン
         SpawnNextGeso(owner);
     }
 
     public void Update(KingGeso owner)
     {
+        // まだスポーンしていないゲソの攻撃を開始
         StartPendingGesoAttacks(owner);
 
         _elapsed += Time.deltaTime;
         _spawnElapsed += Time.deltaTime;
 
+        // ゲソのスポーン間隔に達した場合、次のゲソをスポーン
         if (!SpawnDueGesos(owner))
         {
             return;
@@ -96,10 +99,18 @@ internal sealed class KingGesoAttackState : IKingGesoState
         owner.DestroyActiveGeso();
     }
 
+    /// <summary>
+    /// 待機中のゲソの攻撃を開始する
+    /// </summary>
+    /// <param name="owner"></param>
     private void StartPendingGesoAttacks(KingGeso owner)
     {
+
+        // 待機中のゲソの攻撃を開始
         for (int i = _pendingGesos.Count - 1; i >= 0; i--)
         {
+
+            // ゲソがnullでない場合、攻撃を開始し、成功した場合はリストから削除
             Entity pendingGeso = _pendingGesos[i];
             if (pendingGeso == null || owner.StartGesoAttack(pendingGeso))
             {
@@ -108,12 +119,21 @@ internal sealed class KingGesoAttackState : IKingGesoState
         }
     }
 
+    /// <summary>
+    /// スポーン間隔に達した場合、次のゲソをスポーンする
+    /// </summary>
+    /// <param name="owner"></param>
+    /// <returns></returns>
     private bool SpawnDueGesos(KingGeso owner)
     {
+
+        // スポーン間隔を取得
         float interval = owner.WaveGesoInterval;
         while (_spawnedCount < owner.WaveGesoCount && _spawnElapsed >= interval)
         {
             _spawnElapsed -= interval;
+
+            // 次のゲソをスポーン。スポーンに失敗した場合はクールダウン状態に遷移
             if (!SpawnNextGeso(owner))
             {
                 return false;
@@ -125,14 +145,19 @@ internal sealed class KingGesoAttackState : IKingGesoState
 
     private bool SpawnNextGeso(KingGeso owner)
     {
+
+        // ゲソをスポーン
         Entity geso = owner.SpawnGeso();
         if (geso == null)
         {
+
+            // ゲソのスポーンに失敗した場合、クールダウン状態に遷移
             owner.ChangeState(new KingGesoCooldownState());
             return false;
         }
 
-        _pendingGesos.Add(geso);
+        // スポーンしたゲソを待機リストに追加
+        //_pendingGesos.Add(geso);
         _spawnedCount++;
         return true;
     }

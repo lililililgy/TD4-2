@@ -44,9 +44,9 @@
                     "useOwnerScale": true
                 }
             ],
-            "guid": "a1eab261d5e83c80a43a26f48723add2",
+            "guid": "d8273a22e1ba2e077c3f312e0e1e0139",
             "name": "Collider",
-            "parentGuid": "0226e8f42587aa6fa61a6a7e47d5a50c",
+            "parentGuid": "a7e33f11bf23a2f451fde93f462e6d19",
             "prefabName": ""
         },
         {
@@ -88,21 +88,6 @@
                     "type": "Script"
                 },
                 {
-                    "categoryBits": 8,
-                    "enable": 1,
-                    "freezeY": false,
-                    "isTrigger": true,
-                    "maskBits": 4294967295,
-                    "mass": 1.0,
-                    "size": {
-                        "x": 90.09999084472656,
-                        "y": 90.10000610351563
-                    },
-                    "state": "Dynamic",
-                    "type": "BoxCollider2D",
-                    "useOwnerScale": false
-                },
-                {
                     "enable": 1,
                     "material": {
                         "baseColor": {
@@ -128,11 +113,26 @@
                         }
                     },
                     "type": "SpriteRenderer"
+                },
+                {
+                    "categoryBits": 8,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 2,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 90.09999084472656,
+                        "y": 90.10000610351563
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": false
                 }
             ],
-            "guid": "0e50874e02128391a1a27810dfea80df",
+            "guid": "e9ec23aeae218a23e6ea51735f4e0369",
             "name": "weakPoint",
-            "parentGuid": "0226e8f42587aa6fa61a6a7e47d5a50c",
+            "parentGuid": "a7e33f11bf23a2f451fde93f462e6d19",
             "prefabName": ""
         }
     ],
@@ -210,7 +210,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "0226e8f42587aa6fa61a6a7e47d5a50c",
+    "guid": "a7e33f11bf23a2f451fde93f462e6d19",
     "name": "GesoHand",
     "parentGuid": null,
     "prefabName": "GesoHand"

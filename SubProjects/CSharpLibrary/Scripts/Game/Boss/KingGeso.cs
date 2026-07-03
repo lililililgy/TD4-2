@@ -198,6 +198,7 @@ public class KingGeso : MonoScript
         Vector2 spawnPosition = GetScreenCenter() + gesoSpawnOffset;
         // Vector2 spawnPosition = new Vector2(10.0f, 10.0f);
         geso.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, GetMovementDepth());
+
         _activeGesos.Add(geso);
         return geso;
     }
@@ -232,14 +233,17 @@ public class KingGeso : MonoScript
     //=============================================================
     internal void DestroyActiveGeso()
     {
-        for (int i = 0; i < _activeGesos.Count; i++)
+
+        List<Entity> activeGesos = new List<Entity>(_activeGesos);
+        _activeGesos.Clear();
+
+        for (int i = 0; i < activeGesos.Count; i++)
         {
-            if (_activeGesos[i] != null)
+            if (activeGesos[i] != null)
             {
-                _activeGesos[i].Destroy();
+                activeGesos[i].Destroy();
             }
         }
-        _activeGesos.Clear();
     }
 
     private Vector2 CreateRandomScreenEdgeOffset()
