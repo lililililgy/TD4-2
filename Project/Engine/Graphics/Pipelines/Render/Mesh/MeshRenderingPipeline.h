@@ -72,25 +72,33 @@ private:
 	/// private : methods
 	/// ===================================================
 
-	void Drawing(ID3D12GraphicsCommandList* cmdList, std::unordered_map<std::string, std::list<MeshRenderer*>>& pathMeshMap, const std::vector<Asset::Texture>& textures);
+	void Drawing(
+		ID3D12GraphicsCommandList* cmdList,
+		std::unordered_map<std::string, std::list<MeshRenderer*>>& pathMeshMap,
+		const std::vector<Asset::Texture>& textures,
+		StructuredBuffer<GPUMaterial>* materialBuffer,
+		StructuredBuffer<uint32_t>* textureIdBuffer,
+		StructuredBuffer<Matrix4x4>* transformBuffer
+	);
 
 private:
 
-	/// ===================================================
-	/// private : objects
-	/// ===================================================
-
 	/// ----- other class ----- ///
 	Asset::AssetCollection* pAssetCollection_;
+	DxManager* pDxManager_ = nullptr;
 
 	const size_t kMaxRenderingMeshCount_ = 1024; ///< 最大描画メッシュ数
 
 	std::unique_ptr<GraphicsPipeline> pipeline_;
 	std::unique_ptr<GraphicsPipeline> telegraphPipeline_;
 
-	StructuredBuffer<Matrix4x4> transformBuffer_;
-	StructuredBuffer<GPUMaterial> materialBuffer_;
-	StructuredBuffer<uint32_t> textureIdBuffer_;
+	std::unordered_map<std::string, std::unique_ptr<StructuredBuffer<Matrix4x4>>> transformBuffers_;
+	std::unordered_map<std::string, std::unique_ptr<StructuredBuffer<GPUMaterial>>> materialBuffers_;
+	std::unordered_map<std::string, std::unique_ptr<StructuredBuffer<uint32_t>>> textureIdBuffers_;
+
+	StructuredBuffer<Matrix4x4>* GetOrCreateTransformBuffer(const std::string& groupName);
+	StructuredBuffer<GPUMaterial>* GetOrCreateMaterialBuffer(const std::string& groupName);
+	StructuredBuffer<uint32_t>* GetOrCreateTextureIdBuffer(const std::string& groupName);
 
 	size_t transformIndex_;
 	uint32_t instanceIndex_;

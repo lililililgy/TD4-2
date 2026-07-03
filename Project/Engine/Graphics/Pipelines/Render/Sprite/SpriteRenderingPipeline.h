@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <list>
+#include <unordered_map>
 
 /// engine
 #include "../../Interface/IRenderingPipeline.h"
@@ -71,10 +72,12 @@ private:
 	DxManager* pDxManager_ = nullptr;
 
 
-	const size_t                      kMaxRenderingSpriteCount_ = 1024; ///< 最大描画スプライト数
+	const size_t kMaxRenderingSpriteCount_ = 1024;
+	std::unordered_map<std::string, std::unique_ptr<StructuredBuffer<GPUMaterial>>> materialsBuffers_;
+	std::unordered_map<std::string, std::unique_ptr<StructuredBuffer<Matrix4x4>>>   transformsBuffers_;
 
-	StructuredBuffer<GPUMaterial>     materialsBuffer;
-	StructuredBuffer<Matrix4x4>       transformsBuffer_;
+	StructuredBuffer<GPUMaterial>* GetOrCreateMaterialsBuffer(const std::string& groupName);
+	StructuredBuffer<Matrix4x4>* GetOrCreateTransformsBuffer(const std::string& groupName);
 
 	std::vector<VertexData>           vertices_;
 	DxResource                        vertexBuffer_;

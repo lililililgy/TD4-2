@@ -32,7 +32,7 @@ void CopyImageRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxMa
 		pipeline_->SetTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 		pipeline_->SetBlendDesc(BlendMode::Normal());
 
-		pipeline_->SetDepthStencilDesc(DefaultDepthStencilDesc());
+		pipeline_->SetDepthStencilDesc(DepthNone());
 
 		pipeline_->SetRTVNum(1);
 		pipeline_->SetRTVFormat(DXGI_FORMAT_R8G8B8A8_UNORM, 0);
@@ -54,6 +54,23 @@ void CopyImageRenderingPipeline::Draw(ECSGroup* /*ecs*/, CameraComponent*, DxCom
 
 	auto& textures = pAssetCollection_->GetTextures();
 	size_t index = pAssetCollection_->GetTextureIndex("./Assets/Scene/RenderTexture/sceneScene");
+
+	cmdList->SetGraphicsRootDescriptorTable(0, textures[index].GetSRVGPUHandle());
+
+	cmdList->DrawInstanced(3, 1, 0, 0);
+
+}
+
+void CopyImageRenderingPipeline::DrawTexture(const std::string& textureName, DxCommand* dxCommand) {
+
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
+	ID3D12GraphicsCommandList* cmdList = dxCommand->GetCommandList();
+
+	/// settings
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	auto& textures = pAssetCollection_->GetTextures();
+	size_t index = pAssetCollection_->GetTextureIndex(textureName);
 
 	cmdList->SetGraphicsRootDescriptorTable(0, textures[index].GetSRVGPUHandle());
 

@@ -10,7 +10,7 @@
                 "y": 0.0,
                 "z": 0.0
             },
-            "fogEnd": 100000.0,
+            "fogEnd": 10000.0,
             "fogStart": 0.0,
             "fovY": 0.699999988079071,
             "isDrawFrustum": false,
@@ -27,9 +27,9 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
-                "y": -0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "scale": {
@@ -43,7 +43,7 @@
             "type": "Variables"
         }
     ],
-    "guid": "28da50099110d89e1afd8c166267aac2",
+    "guid": "92ac14d379e4962995c416ebf7c079c5",
     "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""

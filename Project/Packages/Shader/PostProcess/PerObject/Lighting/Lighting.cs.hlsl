@@ -137,7 +137,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
             outputColor += EnvironmentReflection(worldPos, N);
         }
 
-        outputTex[DTid.xy] = float4(outputColor, 1.0f);
+        outputTex[DTid.xy] = float4(outputColor, color.a);
         return;
     }
 
@@ -195,5 +195,5 @@ void main(uint3 DTid : SV_DispatchThreadID)
         lighting += EnvironmentReflection(worldPos, N);
     }
 
-    outputTex[DTid.xy] = float4(lighting, 1.0f);
+    outputTex[DTid.xy] = float4(lighting, color.a);
 }

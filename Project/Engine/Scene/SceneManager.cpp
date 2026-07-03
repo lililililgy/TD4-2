@@ -114,6 +114,7 @@ void SceneManager::ClearTemporarySavedSceneName() {
 
 void SceneManager::LoadScene(const std::string& sceneName) {
 	SetNextScene(sceneName);
+	isNextSceneAdditive_ = false;
 	if (nextScene_.empty()) {
 		Console::LogError("Failed to load scene: " + sceneName);
 		return;
@@ -125,6 +126,15 @@ void SceneManager::LoadScene(const std::string& sceneName) {
 	// これにより、OnSelectやOnSubmitなどのスクリプト・システム更新処理のコールバック実行中に
 	// エンティティやECSGroupが即座に破棄されてメモリが解放され、呼び出し元のC++コードで
 	// use-after-free（ダングリングポインタアクセス）が発生しクラッシュする不具合を完全に防止します。
+}
+
+void SceneManager::AddScene(const std::string& sceneName) {
+	SetNextScene(sceneName);
+	isNextSceneAdditive_ = true;
+	if (nextScene_.empty()) {
+		Console::LogError("Failed to add scene: " + sceneName);
+		return;
+	}
 }
 
 void SceneManager::ReloadScene(bool isTemporary) {
@@ -181,14 +191,58 @@ void SceneManager::SetDirty(bool isDirty) {
 	isDirty_ = isDirty;
 }
 
+void SceneManager::UnloadScene(const std::string& sceneName) {
+	pEcs_->GetDxManager()->GetDxCommand()->WaitForGpuComplete();
+
+	ECSGroup* group = pEcs_->GetECSGroup(sceneName);
+	if (group) {
+		group->RemoveEntityAll();
+	}
+
+	pEcs_->RemoveActiveGroupName(sceneName);
+
+	// If the current active scene is the one unloaded, switch to the remaining active scene
+	if (currentScene_ == sceneName) {
+		const auto& activeGroups = pEcs_->GetActiveGroupNames();
+		if (!activeGroups.empty()) {
+			currentScene_ = activeGroups.back();
+			pEcs_->SetCurrentGroupName(currentScene_);
+		} else {
+			currentScene_.clear();
+		}
+	}
+}
+
 void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 	/// GPUの処理が終わるまで待つ（リソース破棄中のアクセスを防ぐ）
 	pEcs_->GetDxManager()->GetDxCommand()->WaitForGpuComplete();
 
 	ECSGroup* prevSceneGroup = pEcs_->GetCurrentGroup();
-	if (prevSceneGroup) {
-		prevSceneGroup->RemoveEntityAll();
+	if (!isNextSceneAdditive_) {
+		// Clear all active scenes
+		if (pEcs_->GetActiveGroupNames().empty()) {
+			if (prevSceneGroup) {
+				prevSceneGroup->RemoveEntityAll();
+			}
+		} else {
+			for (const auto& activeName : pEcs_->GetActiveGroupNames()) {
+				if (auto* group = pEcs_->GetECSGroup(activeName)) {
+					group->RemoveEntityAll();
+				}
+			}
+			pEcs_->ClearActiveGroupNames();
+		}
+	} else {
+		// Make sure existing scene names are in activeGroupNames_
+		if (pEcs_->GetActiveGroupNames().empty()) {
+			if (prevSceneGroup) {
+				pEcs_->AddActiveGroupName(prevSceneGroup->GetGroupName());
+			}
+		}
 	}
+
+	bool wasAdditive = isNextSceneAdditive_;
+	isNextSceneAdditive_ = false; // Reset the flag
 
 	currentScene_ = std::move(nextScene_);
 	nextScene_.clear();
@@ -197,6 +251,7 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 	const std::string& sceneName = nextSceneGroup->GetGroupName();
 
 	pEcs_->SetCurrentGroupName(sceneName);
+	pEcs_->AddActiveGroupName(sceneName);
 
 	/// sceneに必要な情報を渡して初期化
 	if (isTemporary) {
@@ -222,6 +277,24 @@ void MonoInternalMethods::InternalLoadScene(MonoString* sceneName) {
 	char* cstr = mono_string_to_utf8(sceneName);
 	if (gSceneManager) {
 		gSceneManager->LoadScene(cstr);
+	}
+
+	mono_free(cstr);
+}
+
+void MonoInternalMethods::InternalAddScene(MonoString* sceneName) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	if (gSceneManager) {
+		gSceneManager->AddScene(cstr);
+	}
+
+	mono_free(cstr);
+}
+
+void MonoInternalMethods::InternalUnloadScene(MonoString* sceneName) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	if (gSceneManager) {
+		gSceneManager->UnloadScene(cstr);
 	}
 
 	mono_free(cstr);
