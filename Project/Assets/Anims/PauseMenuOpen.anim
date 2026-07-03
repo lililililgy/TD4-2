@@ -1,0 +1,13 @@
+{
+    "endFrame": 60,
+    "loop": true,
+    "name": "PauseMenuOpen",
+    "startFrame": 0,
+    "tracks": [
+        {
+            "component": "Transform",
+            "keyframes": [],
+            "property": "position"
+        }
+    ]
+}
