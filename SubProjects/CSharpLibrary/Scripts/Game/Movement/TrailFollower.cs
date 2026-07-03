@@ -14,22 +14,23 @@ using System;
 // = 隊列が急角度に折れ曲がらない＝ロープの曲げ剛性。π(≈3.14159) で無制限(従来どおり)。
 public class TrailFollower : MonoScript {
 
-    [SerializeField] private string leaderName_     = "Player";    // 追従するリーダー名
-    [SerializeField] private string chainName_      = "Default";   // 同じ TrailLeader 上で独立した隊列を分ける名前
-    [SerializeField] private int    order_          = 1;           // 隊列の順番（1が先頭）
-    [SerializeField] private float  leadMinOffset_  = 4.0f;        // リーダー → 先頭ノード の最小距離
-    [SerializeField] private float  leadMaxOffset_  = 8.0f;        // リーダー → 先頭ノード の最大距離
-    [SerializeField] private float  unitMinOffset_  = 4.0f;        // ノード間（前ノード → 自分）の最小距離
-    [SerializeField] private float  unitMaxOffset_  = 8.0f;        // ノード間（前ノード → 自分）の最大距離
-    [SerializeField] private float  maxBendRad_     = Mathf.PI;    // 基準向きから許す曲げ角(rad)。π(≈3.14159)で無制限
-    [SerializeField] private float  smoothTime_     = 0.08f;       // 追従の滑らかさ（0で即時）
-    [SerializeField] private float  maxSmoothSpeed_ = 100000.0f;   // 追従速度の上限
+    [SerializeField] private string leaderName_ = "Player";    // 追従するリーダー名
+    [SerializeField] private string chainName_ = "Default";   // 同じ TrailLeader 上で独立した隊列を分ける名前
+    [SerializeField] private bool rotateToFace_ = true;        // 進行方向を向くかどうか
+    [SerializeField] private int order_ = 1;           // 隊列の順番（1が先頭）
+    [SerializeField] private float leadMinOffset_ = 4.0f;        // リーダー → 先頭ノード の最小距離
+    [SerializeField] private float leadMaxOffset_ = 8.0f;        // リーダー → 先頭ノード の最大距離
+    [SerializeField] private float unitMinOffset_ = 4.0f;        // ノード間（前ノード → 自分）の最小距離
+    [SerializeField] private float unitMaxOffset_ = 8.0f;        // ノード間（前ノード → 自分）の最大距離
+    [SerializeField] private float maxBendRad_ = Mathf.PI;    // 基準向きから許す曲げ角(rad)。π(≈3.14159)で無制限
+    [SerializeField] private float smoothTime_ = 0.08f;       // 追従の滑らかさ（0で即時）
+    [SerializeField] private float maxSmoothSpeed_ = 100000.0f;   // 追従速度の上限
 
-    private Vector3 smoothVel_  = Vector3.zero;
-    private bool    registered_ = false;
+    private Vector3 smoothVel_ = Vector3.zero;
+    private bool registered_ = false;
 
     public string ChainName { get { return chainName_; } }
-    public int    Order      { get { return order_; } }
+    public int Order { get { return order_; } }
 
     // 動的な隊列（卵など）は外部マネージャが SetOrder() で順番を差し込む。
     public void SetOrder(int order) { order_ = order; }
@@ -61,7 +62,7 @@ public class TrailFollower : MonoScript {
         // 前ノード → 自分 の方向。重なって長さが出ないフレームは基準向き→真下にフォールバック
         // （ゼロ方向だと target が prev に潰れて重なるのを防ぐ）。
         Vector3 dir = cur - prev;
-        float   dl  = dir.Length();
+        float dl = dir.Length();
         Vector3 unit;
         if (dl > kEps) {
             unit = dir * (1.0f / dl);
@@ -75,9 +76,9 @@ public class TrailFollower : MonoScript {
         // refDir が無効(長さ0)なら拘束しない。maxBendRad_=π は実質無制限。
         if (maxBendRad_ < Mathf.PI - kEps &&
             refDir.x * refDir.x + refDir.y * refDir.y > kEps * kEps) {
-            float dot   = refDir.x * unit.x + refDir.y * unit.y;
+            float dot = refDir.x * unit.x + refDir.y * unit.y;
             float cross = refDir.x * unit.y - refDir.y * unit.x;
-            float ang   = Mathf.Atan2(cross, dot); // refDir→unit の符号付き角 [-π,π]
+            float ang = Mathf.Atan2(cross, dot); // refDir→unit の符号付き角 [-π,π]
             if (ang > maxBendRad_ || ang < -maxBendRad_) {
                 float clamped = (ang > 0.0f) ? maxBendRad_ : -maxBendRad_;
                 float c = Mathf.Cos(clamped);
@@ -89,18 +90,20 @@ public class TrailFollower : MonoScript {
         }
 
         // レッシュ拘束：範囲内(min〜max)は現在距離を保つ＝拘束しない。範囲外だけ境界へ引き戻す。
-        float   targetDist = (dl < minD) ? minD : ((dl > maxD) ? maxD : dl);
-        Vector3 target     = prev + unit * targetDist;
+        float targetDist = (dl < minD) ? minD : ((dl > maxD) ? maxD : dl);
+        Vector3 target = prev + unit * targetDist;
 
         Vector3 pos = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
             cur, target, ref smoothVel_, smoothTime_, dt, maxSmoothSpeed_);
         transform.position = pos;
 
         // 進行方向を向く（2D・Z軸回り）。ほぼ静止しているフレームは今の向きを保持する。
-        Vector3 move = pos - cur;
-        if (move.x * move.x + move.y * move.y > FaceEpsilonSq) {
-            float roll = Mathf.Atan2(move.x, move.y);
-            transform.rotate = Quaternion.MakeFromAxis(Vector3.back, roll);
+        if (rotateToFace_) {
+            Vector3 move = pos - cur;
+            if (move.x * move.x + move.y * move.y > FaceEpsilonSq) {
+                float roll = Mathf.Atan2(move.x, move.y);
+                transform.rotate = Quaternion.MakeFromAxis(Vector3.back, roll);
+            }
         }
 
         return pos;
