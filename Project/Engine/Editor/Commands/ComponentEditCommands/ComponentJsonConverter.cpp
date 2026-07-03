@@ -365,9 +365,16 @@ void ONEngine::to_json(nlohmann::json& j, const Line3DRenderer& l) {
 void ONEngine::from_json(const nlohmann::json& j, AnimationCurveKey& k) {
 	k.time = j.value("time", 0.0f);
 	k.value = j.value("value", 1.0f);
+	k.inTangent = j.value("inTangent", 0.0f);
+	k.outTangent = j.value("outTangent", 0.0f);
 }
 void ONEngine::to_json(nlohmann::json& j, const AnimationCurveKey& k) {
-	j = nlohmann::json{ {"time", k.time}, {"value", k.value} };
+	j = nlohmann::json{
+		{"time", k.time},
+		{"value", k.value},
+		{"inTangent", k.inTangent},
+		{"outTangent", k.outTangent}
+	};
 }
 
 void ONEngine::from_json(const nlohmann::json& j, AnimationCurve& c) {
@@ -397,17 +404,31 @@ void ONEngine::to_json(nlohmann::json& j, const MinMaxCurve& m) {
 void ONEngine::from_json(const nlohmann::json& j, GradientColorKey& k) {
 	k.color = j.value("color", Color::kWhite);
 	k.time = j.value("time", 0.0f);
+	k.inTangent = j.value("inTangent", 0.0f);
+	k.outTangent = j.value("outTangent", 0.0f);
 }
 void ONEngine::to_json(nlohmann::json& j, const GradientColorKey& k) {
-	j = nlohmann::json{ {"color", k.color}, {"time", k.time} };
+	j = nlohmann::json{
+		{"color", k.color},
+		{"time", k.time},
+		{"inTangent", k.inTangent},
+		{"outTangent", k.outTangent}
+	};
 }
 
 void ONEngine::from_json(const nlohmann::json& j, GradientAlphaKey& k) {
 	k.alpha = j.value("alpha", 1.0f);
 	k.time = j.value("time", 0.0f);
+	k.inTangent = j.value("inTangent", 0.0f);
+	k.outTangent = j.value("outTangent", 0.0f);
 }
 void ONEngine::to_json(nlohmann::json& j, const GradientAlphaKey& k) {
-	j = nlohmann::json{ {"alpha", k.alpha}, {"time", k.time} };
+	j = nlohmann::json{
+		{"alpha", k.alpha},
+		{"time", k.time},
+		{"inTangent", k.inTangent},
+		{"outTangent", k.outTangent}
+	};
 }
 
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystemGradient& g) {
@@ -467,6 +488,12 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystem2D& p) {
 	if (j.contains("sizeOverLifetime")) p.sizeOverLifetime = j.at("sizeOverLifetime").get<ParticleSystemSizeOverLifetime>();
 	if (j.contains("velocityOverLifetime")) p.velocityOverLifetime = j.at("velocityOverLifetime").get<ParticleSystemVelocityOverLifetime>();
 	if (j.contains("renderer")) p.renderer = j.at("renderer").get<ParticleSystemRenderer>();
+	if (j.contains("textureSheetAnimation")) {
+		auto& ta = j.at("textureSheetAnimation");
+		p.textureSheetAnimation.enabled = ta.value("enabled", false);
+		p.textureSheetAnimation.tilesX = ta.value("tilesX", 1);
+		p.textureSheetAnimation.tilesY = ta.value("tilesY", 1);
+	}
 }
 
 void ONEngine::to_json(nlohmann::json& j, const ParticleSystem2D& p) {
@@ -480,6 +507,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystem2D& p) {
 		{ "sizeOverLifetime", p.sizeOverLifetime },
 		{ "velocityOverLifetime", p.velocityOverLifetime },
 		{ "renderer", p.renderer },
+		{ "textureSheetAnimation", nlohmann::json{{ "enabled", p.textureSheetAnimation.enabled }, { "tilesX", p.textureSheetAnimation.tilesX }, { "tilesY", p.textureSheetAnimation.tilesY }} },
 	};
 }
 
@@ -608,6 +636,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystemShape& s) {
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystemRenderer& r) {
 	r.renderMode = static_cast<ParticleSystemRenderer::RenderMode>(j.value("renderMode", static_cast<uint8_t>(ParticleSystemRenderer::RenderMode::Billboard)));
 	r.blendMode = static_cast<ParticleSystemRenderer::BlendMode>(j.value("blendMode", static_cast<uint8_t>(ParticleSystemRenderer::BlendMode::Normal)));
+	r.flipMode = static_cast<FlipMode>(j.value("flipMode", static_cast<uint8_t>(FlipMode::None)));
 	r.materialGuid = j.value("materialGuid", "");
 	r.meshGuid = j.value("meshGuid", "");
 }
@@ -616,6 +645,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystemRenderer& r) {
 	j = nlohmann::json{
 		{ "renderMode", static_cast<uint8_t>(r.renderMode) },
 		{ "blendMode", static_cast<uint8_t>(r.blendMode) },
+		{ "flipMode", static_cast<uint8_t>(r.flipMode) },
 		{ "materialGuid", r.materialGuid },
 		{ "meshGuid", r.meshGuid }
 	};

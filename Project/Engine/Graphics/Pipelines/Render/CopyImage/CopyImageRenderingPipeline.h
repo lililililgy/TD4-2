@@ -32,6 +32,7 @@ public:
 
 	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
 	void Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
+	void DrawTexture(const std::string& textureName, DxCommand* dxCommand);
 
 private:
 	/// ===================================================

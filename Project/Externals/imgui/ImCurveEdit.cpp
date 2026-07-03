@@ -237,9 +237,9 @@ namespace ImCurveEdit
             const ImVec2 p1 = pointToRange(pts[p]);
             const ImVec2 p2 = pointToRange(pts[p + 1]);
 
-            if (curveType == CurveSmooth || curveType == CurveLinear)
+            if (curveType == CurveSmooth || curveType == CurveLinear || curveType == CurveBezier)
             {
-               size_t subStepCount = (curveType == CurveSmooth) ? 20 : 2;
+               size_t subStepCount = (curveType == CurveLinear) ? 2 : 30;
                float step = 1.f / float(subStepCount - 1);
                for (size_t substep = 0; substep < subStepCount - 1; substep++)
                {
@@ -248,11 +248,25 @@ namespace ImCurveEdit
                   const ImVec2 sp1 = ImLerp(p1, p2, t);
                   const ImVec2 sp2 = ImLerp(p1, p2, t + step);
 
-                  const float rt1 = smoothstep(p1.x, p2.x, sp1.x);
-                  const float rt2 = smoothstep(p1.x, p2.x, sp2.x);
+                  ImVec2 pos1, pos2;
+                  if (curveType == CurveBezier)
+                  {
+                     // Get actual values using the cubic Hermite spline interpolation from delegate
+                     float realX1 = ImLerp(pts[p].x, pts[p + 1].x, t);
+                     float realX2 = ImLerp(pts[p].x, pts[p + 1].x, t + step);
+                     float realY1 = delegate.GetCurveValue(c, realX1);
+                     float realY2 = delegate.GetCurveValue(c, realX2);
 
-                  const ImVec2 pos1 = ImVec2(sp1.x, ImLerp(p1.y, p2.y, rt1)) * viewSize + offset;
-                  const ImVec2 pos2 = ImVec2(sp2.x, ImLerp(p1.y, p2.y, rt2)) * viewSize + offset;
+                     pos1 = pointToRange(ImVec2(realX1, realY1)) * viewSize + offset;
+                     pos2 = pointToRange(ImVec2(realX2, realY2)) * viewSize + offset;
+                  }
+                  else
+                  {
+                     const float rt1 = smoothstep(p1.x, p2.x, sp1.x);
+                     const float rt2 = smoothstep(p1.x, p2.x, sp2.x);
+                     pos1 = ImVec2(sp1.x, ImLerp(p1.y, p2.y, rt1)) * viewSize + offset;
+                     pos2 = ImVec2(sp2.x, ImLerp(p1.y, p2.y, rt2)) * viewSize + offset;
+                  }
 
                   if (distance(io.MousePos.x, io.MousePos.y, pos1.x, pos1.y, pos2.x, pos2.y) < 8.f && !scrollingV)
                   {

@@ -50,6 +50,9 @@ bool DragFloat(const char* label, float* v, float speed = 0.1f, float min = 0.0f
 /// Vector3のドラッグ入力
 bool DragFloat3(const char* label, ONEngine::Vector3* v, float speed = 0.1f, float min = 0.0f, float max = 0.0f, const char* format = "%.3f", ImGuiInputTextFlags flags = 0);
 
+/// ドラッグ中に画面端でカーソルをループさせる処理
+void LoopCursorIfDragging();
+
 /// Enumの入力
 template <typename T>
 bool InputEnum(const char* label, T* value) {

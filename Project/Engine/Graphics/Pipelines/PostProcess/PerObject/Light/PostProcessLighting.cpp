@@ -83,7 +83,7 @@ void PostProcessLighting::Initialize(ShaderCompiler* shaderCompiler, DxManager* 
 
 }
 
-void PostProcessLighting::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* pEntityComponentSystem) {
+void PostProcessLighting::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* pEntityComponentSystem, ECSGroup* pEcsGroup) {
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
@@ -92,7 +92,7 @@ void PostProcessLighting::Execute(const std::string& textureName, DxCommand* dxC
 
 	{	/// set constant buffers and structured buffers
 
-		ECSGroup* ecsGroup = pEntityComponentSystem->GetCurrentGroup();
+		ECSGroup* ecsGroup = pEcsGroup ? pEcsGroup : pEntityComponentSystem->GetCurrentGroup();
 
 		std::vector<DirectionalLight*> directionalLights;
 		std::vector<PointLight*> pointLights;

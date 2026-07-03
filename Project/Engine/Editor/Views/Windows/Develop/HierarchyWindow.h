@@ -140,6 +140,9 @@ protected:
 	bool showNewScenePopup_ = false;
 	std::string newSceneName_ = "NewScene";
 
+	/// ----- mode ----- ///
+	bool isMultiGroup_ = false;
+
 };
 
 /// ///////////////////////////////////////////////////
