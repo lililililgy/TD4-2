@@ -1,0 +1,90 @@
+{
+    "active": true,
+    "components": [
+        {
+            "elementId": "checkpoint",
+            "elementIndex": 1,
+            "enable": 1,
+            "groupId": "26262eae83e1a46421b288c8f7d1da70",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -5.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "UITest1": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "00000000000000000000000000000000",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "GamepadDPadDown": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "GamepadDPadUp": "7a55b245537f869f03e93d3b4296d439",
+                "S": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "UpArrow": "7a55b245537f869f03e93d3b4296d439",
+                "W": "7a55b245537f869f03e93d3b4296d439"
+            },
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "UITest1"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "8820e517ebe0c5a3b20230d236c64665",
+    "name": "checkpoint",
+    "parentGuid": "26262eae83e1a46421b288c8f7d1da70",
+    "prefabName": ""
+}

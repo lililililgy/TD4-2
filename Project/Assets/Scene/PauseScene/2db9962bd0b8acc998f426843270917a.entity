@@ -10,7 +10,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -23,23 +23,11 @@
             "type": "Transform"
         },
         {
-            "AddSceneTest": {},
-            "TestPauseStart": {},
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "TestPauseStart"
-                }
-            ],
-            "type": "Script"
         }
     ],
-    "guid": "bf0c252395b6840cfed59ce900c910a7",
-    "name": "NewEntity",
+    "guid": "2db9962bd0b8acc998f426843270917a",
+    "name": "PauseMenu",
     "parentGuid": null,
     "prefabName": ""
 }

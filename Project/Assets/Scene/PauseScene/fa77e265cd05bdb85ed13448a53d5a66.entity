@@ -1,0 +1,60 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -579.0999755859375,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.9274941086769104,
+                "x": 0.0,
+                "y": 0.0,
+                "z": -0.37383773922920227
+            },
+            "scale": {
+                "x": 2500.0,
+                "y": 750.0,
+                "z": 765.8002319335938
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 0.6000000238418579,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "fa77e265cd05bdb85ed13448a53d5a66",
+    "name": "Frame",
+    "parentGuid": null,
+    "prefabName": ""
+}

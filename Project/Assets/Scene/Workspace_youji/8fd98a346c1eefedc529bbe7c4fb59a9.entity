@@ -32,6 +32,8 @@
                         "alphaKeys": [
                             {
                                 "alpha": 0.5799999833106995,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 0.7900000214576721
                             }
                         ],
@@ -43,6 +45,8 @@
                                     "g": 1.0,
                                     "r": 1.0
                                 },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 1.0
                             }
                         ]
