@@ -58,6 +58,12 @@ public class EnemySpawnSystem : MonoScript {
         new SpawnEntry { enemyType = "SpikeFish", weight = 1.0f },
     };
 
+    // 矩形リージョン方式のバイオームエリア。名前はシーンのエンティティ名と一致させる。
+    // リスト順＝優先度（重なりは先勝ち）
+    [SerializeField] private List<string> biomeNames_ = new List<string>();
+    // biomeNames_ から解決済みの BiomeArea のキャッシュ
+    private List<BiomeArea> biomeAreas_ = new List<BiomeArea>();
+
     // 抽選候補のセルとその重み。畳み込み後の重みは実数になるため、セルIDと組にしてリストで保持する。
     private struct WeightedCell {
         public Vector2Int cellId;
@@ -66,10 +72,21 @@ public class EnemySpawnSystem : MonoScript {
     private List<WeightedCell> spawnCellWeights_ = new List<WeightedCell>();
 
     // Biome（実行時にテーブルから構築する）
-    private Biome currentBiome_;
+    private Biome defaultBiome_;
 
     public override void Initialize() {
-        currentBiome_ = new Biome(defaultSpawnTable_);
+        defaultBiome_ = new Biome(defaultSpawnTable_);
+
+        biomeAreas_.Clear();
+        foreach (var name in biomeNames_) {
+            Entity biomeEntity = ecsGroup.FindEntity(name);
+            if (biomeEntity == null) continue;
+
+            BiomeArea biomeArea = biomeEntity.GetScript<BiomeArea>();
+            if (biomeArea == null) continue;
+
+            biomeAreas_.Add(biomeArea);
+        }
     }
 
     public override void Update() {
@@ -78,7 +95,6 @@ public class EnemySpawnSystem : MonoScript {
         // スポーンセルの重みをクリアする
         spawnCellWeights_.Clear();
         CalculateSpawnCellWeights();
-
 
         int spawnCount = 0;
         // スポーン間隔を超えた場合、スポーン処理を行う
@@ -99,8 +115,15 @@ public class EnemySpawnSystem : MonoScript {
     }
 
     // スポーン地点に適用するバイオームを解決する。
+    // biomeAreas_ をリスト順（＝優先度）に走査し、最初にヒットしたエリアの Biome を返す。
+    // 該当エリアが無ければ defaultBiome_（defaultSpawnTable_）にフォールバックする。
     private Biome ResolveBiome(Vector2 spawnPos) {
-        return currentBiome_;
+        foreach (var biomeArea in biomeAreas_) {
+            if (biomeArea.Contains(spawnPos)) {
+                return biomeArea.GetBiome();
+            }
+        }
+        return defaultBiome_;
     }
 
     // 敵のスポーン位置を計算する。セルを重みに応じて抽選し、そのセル範囲内のランダムな座標を返す。

@@ -161,6 +161,7 @@
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
+    <Compile Include="Scripts\Game\Enemy\BiomeArea.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
     <Compile Include="Scripts\Game\Enemy\SpawnEntry.cs" />
     <Compile Include="Scripts\Game\EnemySpawnSystem.cs" />

@@ -16,8 +16,8 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 3.369999885559082,
-                "y": 1.890000581741333,
+                "x": 12.0,
+                "y": 5.0,
                 "z": 1.890000581741333
             },
             "type": "Transform"
@@ -30,10 +30,23 @@
                 }
             },
             "EnemySpawnSystem": {
+                "biomeNames_": [
+                    "SkyZone",
+                    "EpipelagicZone",
+                    "MesopelagicZone",
+                    "BathypelagicZone"
+                ],
                 "convolutionRadius_": 2,
                 "defaultSpawnTable_": [
                     {
-                        "__type": ""
+                        "__type": "SpawnEntry",
+                        "enemyType": "MorayEelPot",
+                        "weight": 6.0
+                    },
+                    {
+                        "__type": "SpawnEntry",
+                        "enemyType": "MorayEel",
+                        "weight": 4.0
                     }
                 ],
                 "exclusionAreaMax_": {
@@ -55,7 +68,7 @@
                     "x": -1984.0,
                     "y": -1116.0
                 },
-                "spawnInterval_": 0.10000000149011612
+                "spawnInterval_": 0.029999999329447746
             },
             "TrailFollower": {
                 "chainName_": "System",
@@ -82,10 +95,6 @@
                 {
                     "enable": true,
                     "name": "EnemyHeatMap"
-                },
-                {
-                    "enable": true,
-                    "name": "TrailFollower"
                 }
             ],
             "type": "Script"
@@ -95,13 +104,13 @@
             "enable": 1,
             "freezeY": false,
             "isTrigger": false,
-            "maskBits": 0,
+            "maskBits": 8,
             "mass": 1.0,
             "size": {
                 "x": 1024.0,
                 "y": 1024.0
             },
-            "state": "Dynamic",
+            "state": "Static",
             "type": "BoxCollider2D",
             "useOwnerScale": true
         }
