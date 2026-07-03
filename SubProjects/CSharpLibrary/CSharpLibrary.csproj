@@ -186,6 +186,7 @@
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\ChaseController.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\SmallFryChaseMove.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\TargetRangeDetector.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\FlapjackOctopus\FlapjackOctopus.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEel.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEelPot.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\SpawnFromPot\MorayEelSpawnMove.cs" />

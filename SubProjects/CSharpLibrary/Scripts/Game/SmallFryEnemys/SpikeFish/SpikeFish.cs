@@ -113,7 +113,7 @@ public class SpikeFish : MonoScript
         float time = Mathf.Clamp01(animationTimer_ / expandanimationDuration);
 
         // 拡大アニメーションの進行度に応じてスケールを計算
-        float scale = 1.0f + (expandScaleRate - 1.0f) * Ease.Out.Back(time);
+        float scale = Mathf.Lerp(1.0f, expandScaleRate, Ease.Out.Back(time));
         transform.scale = initialScale_ * scale;
 
         if (animationTimer_ >= expandanimationDuration)
@@ -129,12 +129,16 @@ public class SpikeFish : MonoScript
     // 拡大しきったスケールから元のスケールへ戻す
     private void PlayingReturnAnimation()
     {
+
+        // 縮小アニメーションの進行度を計算
         animationTimer_ += Time.deltaTime;
         float time = Mathf.Clamp01(animationTimer_ / returnanimationDuration);
 
+        // 縮小アニメーションの進行度に応じてスケールを計算
         float scale = Mathf.Lerp(expandScaleRate, 1.0f, time);
         transform.scale = initialScale_ * scale;
 
+        // 縮小アニメーションが終了したら元のスケールに戻す
         if (animationTimer_ >= returnanimationDuration)
         {
             transform.scale  = initialScale_;
@@ -143,6 +147,7 @@ public class SpikeFish : MonoScript
     }
 
     public void StartPlayAnimation() {
+        // アニメーションを開始する
         animationTimer_ = 0.0f;
         animationAction_ = PlayingExpandAnimation;
     }
