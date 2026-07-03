@@ -1,4 +1,4 @@
-﻿#include "CircleCollider.h"
+#include "CircleCollider.h"
 
 /// std
 #include <bit>
@@ -104,12 +104,26 @@ void ONEngine::from_json(const nlohmann::json& j, CircleCollider& s) {
 	s.useOwnerScale_ = j.value("useOwnerScale", true);
 	s.freezeY_ = j.value("freezeY", false);
 	s.mass_ = j.value("mass", 1.0f);
-	s.collisionState_ = magic_enum::enum_cast<CollisionState>(j.value("state", "Dynamic")).value_or(CollisionState::Dynamic);
+
+	if (j.contains("state")) {
+		if (j["state"].is_string()) {
+			s.collisionState_ = magic_enum::enum_cast<CollisionState>(j["state"].get<std::string>()).value_or(CollisionState::Dynamic);
+		} else if (j["state"].is_number()) {
+			s.collisionState_ = static_cast<CollisionState>(j["state"].get<int>());
+		} else {
+			s.collisionState_ = CollisionState::Dynamic;
+		}
+	} else {
+		s.collisionState_ = CollisionState::Dynamic;
+	}
+
 	s.categoryBits_ = j.value("categoryBits", static_cast<uint32_t>(CollisionFilter::Default));
 	s.maskBits_ = j.value("maskBits", static_cast<uint32_t>(CollisionFilter::ALL));
 }
 
 void ONEngine::to_json(nlohmann::json& j, const CircleCollider& s) {
+	auto stateName = magic_enum::enum_name(s.collisionState_);
+	std::string stateStr = stateName.empty() ? "Dynamic" : std::string(stateName);
 	j = nlohmann::json{
 		{ "type", "CircleCollider" },
 		{ "enable", s.enable },
@@ -118,7 +132,7 @@ void ONEngine::to_json(nlohmann::json& j, const CircleCollider& s) {
 		{ "useOwnerScale", s.IsUseOwnerScale() },
 		{ "freezeY", s.freezeY_ },
 		{ "mass", s.mass_ },
-		{ "state", magic_enum::enum_name(s.collisionState_) },
+		{ "state", stateStr },
 		{ "categoryBits", s.categoryBits_ },
 		{ "maskBits", s.maskBits_ }
 	};

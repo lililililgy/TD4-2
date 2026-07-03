@@ -3,6 +3,7 @@
 /// std
 #include <vector>
 #include <unordered_map>
+#include <new>
 
 /// engine
 #include "../Components/Interface/IComponent.h"
@@ -110,7 +111,8 @@ inline IComponent* ComponentArray<Comp>::AddComponentUntyped() {
 		removedIndices_.pop_back();
 		usedIndices_.push_back(index);
 
-		components_[index] = Comp(); ///< 今までのデータを上書き
+		components_[index].Comp::~Comp();
+		new (&components_[index]) Comp();
 		components_[index].id = static_cast<uint32_t>(index); ///< IDを設定
 
 		///< IDとインデックスのマップを更新

@@ -102,12 +102,26 @@ void ONEngine::from_json(const nlohmann::json& j, BoxCollider2D& b) {
 	b.useOwnerScale_ = j.value("useOwnerScale", true);
 	b.freezeY_ = j.value("freezeY", false);
 	b.mass_ = j.value("mass", 1.0f);
-	b.collisionState_ = magic_enum::enum_cast<CollisionState>(j.value("state", "Dynamic")).value_or(CollisionState::Dynamic);
+
+	if (j.contains("state")) {
+		if (j["state"].is_string()) {
+			b.collisionState_ = magic_enum::enum_cast<CollisionState>(j["state"].get<std::string>()).value_or(CollisionState::Dynamic);
+		} else if (j["state"].is_number()) {
+			b.collisionState_ = static_cast<CollisionState>(j["state"].get<int>());
+		} else {
+			b.collisionState_ = CollisionState::Dynamic;
+		}
+	} else {
+		b.collisionState_ = CollisionState::Dynamic;
+	}
+
 	b.categoryBits_ = j.value("categoryBits", static_cast<uint32_t>(CollisionFilter::Default));
 	b.maskBits_ = j.value("maskBits", static_cast<uint32_t>(CollisionFilter::ALL));
 }
 
 void ONEngine::to_json(nlohmann::json& j, const BoxCollider2D& b) {
+	auto stateName = magic_enum::enum_name(b.collisionState_);
+	std::string stateStr = stateName.empty() ? "Dynamic" : std::string(stateName);
 	j = nlohmann::json{
 		{ "type", "BoxCollider2D" },
 		{ "enable", b.enable },
@@ -116,7 +130,7 @@ void ONEngine::to_json(nlohmann::json& j, const BoxCollider2D& b) {
 		{ "useOwnerScale", b.IsUseOwnerScale() },
 		{ "freezeY", b.freezeY_ },
 		{ "mass", b.mass_ },
-		{ "state", magic_enum::enum_name(b.collisionState_) },
+		{ "state", stateStr },
 		{ "categoryBits", b.categoryBits_ },
 		{ "maskBits", b.maskBits_ }
 	};
