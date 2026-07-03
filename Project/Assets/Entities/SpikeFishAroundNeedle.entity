@@ -2,21 +2,13 @@
     "active": true,
     "components": [
         {
-            "rotate": {
-                "w": -0.4573034644126892,
-                "z": -0.8893107175827026
-            },
-            "type": "Transform"
-        },
-        {
-            "material": {
-                "uvTransform": {
-                    "scale": {
-                        "x": 0.3333333432674408
-                    }
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpikeFishAroundNeedle"
                 }
-            },
-            "type": "SpriteRenderer"
+            ],
+            "type": "Script"
         }
     ],
     "guid": "ed0ce65e3b321cfd0f3b5f891116c113",

@@ -2,14 +2,8 @@
     "active": true,
     "components": [
         {
-            "position": {
-                "x": -1072.5771484375
-            },
-            "type": "Transform"
-        },
-        {
-            "ChaseController": {
-                "leachDistance": 523.0
+            "SpikeFishAttack": {
+                "needleNum": 16
             },
             "type": "Variables"
         }

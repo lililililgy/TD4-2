@@ -2,13 +2,14 @@
     "active": true,
     "components": [
         {
-            "material": {
-                "baseTextureGuid": "b8c21351bb3241d42752a073a2b20b7d"
+            "SpikeFishNeedle": {
+                "acceleration": 1646.0,
+                "maxSpeed": 4889.0
             },
-            "type": "SpriteRenderer"
+            "type": "Variables"
         }
     ],
-    "guid": "92f752c5e273865f24cd5199ed5b2b53",
+    "guid": "bbe0fc158d50a4a113c86e420d6e4b6c",
     "name": "Needle",
     "parentGuid": null,
     "prefabName": "Needle"
