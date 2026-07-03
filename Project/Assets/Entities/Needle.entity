@@ -1,0 +1,15 @@
+{
+    "active": true,
+    "components": [
+        {
+            "material": {
+                "baseTextureGuid": "b8c21351bb3241d42752a073a2b20b7d"
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "92f752c5e273865f24cd5199ed5b2b53",
+    "name": "Needle",
+    "parentGuid": null,
+    "prefabName": "Needle"
+}
