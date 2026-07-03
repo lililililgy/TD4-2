@@ -10,7 +10,7 @@ public class GesoWeakPoint : MonoScript {
     private string kingGesoEntityName = "KingGeso";
 
     // ボスの参照
-    private KingGeso _kingGeso;
+    private KingGeso kingGeso;
 
     //=============================
     // 初期化
@@ -37,16 +37,16 @@ public class GesoWeakPoint : MonoScript {
 
     public void Damage(float damage)
     {
-        if (_kingGeso == null)
+        if (kingGeso == null)
         {
             // ボスの参照がない場合は再取得
             ResolveKingGeso();
         }
 
-        if (_kingGeso != null)
+        if (kingGeso != null)
         {
             // ボスにダメージを与える
-            _kingGeso.TakeDamage(damage);
+            kingGeso.TakeDamage(damage);
         }
     }
 
@@ -55,20 +55,20 @@ public class GesoWeakPoint : MonoScript {
     //=============================
     private void ResolveKingGeso()
     {
-        _kingGeso = null;
+        kingGeso = null;
 
         // ECSグループを取得
         if (!String.IsNullOrEmpty(kingGesoEntityName))
         {
             Entity kingGesoEntity = ecsGroup.FindEntity(kingGesoEntityName);
             //取得できなかった場合はnullを返す
-            _kingGeso = kingGesoEntity != null ? kingGesoEntity.GetScript<KingGeso>() : null;
+            kingGeso = kingGesoEntity != null ? kingGesoEntity.GetScript<KingGeso>() : null;
         }
 
-        if (_kingGeso == null)
+        if (kingGeso == null)
         {
             // 取得できなかった場合は、親のエンティティから取得を試みる
-            _kingGeso = entity.GetScript<KingGeso>();
+            kingGeso = entity.GetScript<KingGeso>();
         }
     }
 }

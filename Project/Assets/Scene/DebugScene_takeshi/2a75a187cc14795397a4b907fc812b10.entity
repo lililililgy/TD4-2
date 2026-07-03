@@ -1,0 +1,109 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -676.1506958007813,
+                "y": -144.66058349609375,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.5393092632293701,
+                "x": -0.0,
+                "y": -0.0,
+                "z": 0.8421077728271484
+            },
+            "scale": {
+                "x": 149.09999084472656,
+                "y": 149.0999755859375,
+                "z": 149.0999755859375
+            },
+            "type": "Transform"
+        },
+        {
+            "HP": {
+                "currentHp_": 10.0,
+                "directlyDamageable_": true,
+                "disableAutoDestruction_": false,
+                "isInvincible_": false,
+                "maxHp_": 10.0
+            },
+            "KingJellyfish": {
+                "attackDuration": 1.0,
+                "cameraEntityName": "Camera",
+                "chargeDamage": 20.0,
+                "chargeMoveDuration": 0.6000000238418579,
+                "chargePassThroughDistance": 300.0,
+                "chargeRecoveryDuration": 0.800000011920929,
+                "chargeTellDuration": 0.800000011920929,
+                "fixedAttackType": 0,
+                "idleDuration": 2.0,
+                "maxHp": 10,
+                "targetEntityName": "Player"
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KingJellyfish"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "b097081ca8fb83a55b05f8dbaf4e6930",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 0,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "2a75a187cc14795397a4b907fc812b10",
+    "name": "KingJellyfish",
+    "parentGuid": null,
+    "prefabName": ""
+}

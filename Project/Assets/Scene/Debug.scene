@@ -4,6 +4,21 @@
             "guid": "c637a1f9ab906c96d025f8f91578b0d1",
             "parentGuid": null,
             "path": "./Debug/c637a1f9ab906c96d025f8f91578b0d1.entity"
+        },
+        {
+            "guid": "619b46bd9b63819f892a38013d5d5740",
+            "parentGuid": null,
+            "path": "./Debug/619b46bd9b63819f892a38013d5d5740.entity"
+        },
+        {
+            "guid": "47f7611b5b4ac502838916dffcf70e2d",
+            "parentGuid": "619b46bd9b63819f892a38013d5d5740",
+            "path": "./Debug/47f7611b5b4ac502838916dffcf70e2d.entity"
+        },
+        {
+            "guid": "d22390f74a81c5e05310ad072ffabbca",
+            "parentGuid": "619b46bd9b63819f892a38013d5d5740",
+            "path": "./Debug/d22390f74a81c5e05310ad072ffabbca.entity"
         }
     ]
 }

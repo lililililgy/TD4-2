@@ -1,20 +1,12 @@
 {
-    "active": true,
+    "active": false,
     "components": [
         {
-            "HP": {
-                "currentHp_": 10.0,
-                "directlyDamageable_": true,
-                "maxHp_": 10.0
-            },
             "KingGeso": {
-                "gesoPrefabName": "GesoHand",
-                "gesoSpawnOffset": {
-                    "x": -509.971923828125,
-                    "y": -720.5
-                },
-                "waveGesoCount": 0,
-                "waveGesoInterval": 0.0
+                "fixedAttackType": 0,
+                "pincerThrustWeight": 1.0,
+                "randomizeAttackType": true,
+                "waveThrustWeight": 1.0
             },
             "type": "Variables"
         }

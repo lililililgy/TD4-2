@@ -1,0 +1,24 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": -429.09564208984375,
+                "y": -51.2968635559082
+            },
+            "rotate": {
+                "w": 0.9458089470863342,
+                "z": 0.3247236907482147
+            },
+            "type": "Transform"
+        },
+        {
+            "TrailLeader": {},
+            "type": "Variables"
+        }
+    ],
+    "guid": "fdd14a8c056d126471f6ed804cdec2c2",
+    "name": "Player",
+    "parentGuid": null,
+    "prefabName": "Player"
+}

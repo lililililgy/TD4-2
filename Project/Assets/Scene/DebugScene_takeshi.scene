@@ -11,9 +11,29 @@
             "path": "./DebugScene_takeshi/ef9cb081b1c1cd85474b7280c162abf3.entity"
         },
         {
-            "guid": "c13ec1b095d9df2802ccfeef119225e0",
+            "guid": "2a75a187cc14795397a4b907fc812b10",
             "parentGuid": null,
-            "path": "./DebugScene_takeshi/c13ec1b095d9df2802ccfeef119225e0.entity"
+            "path": "./DebugScene_takeshi/2a75a187cc14795397a4b907fc812b10.entity"
+        },
+        {
+            "guid": "fdd14a8c056d126471f6ed804cdec2c2",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/fdd14a8c056d126471f6ed804cdec2c2.entity"
+        },
+        {
+            "guid": "850fcbab879074c83a8e3260f9e89ddd",
+            "parentGuid": "fdd14a8c056d126471f6ed804cdec2c2",
+            "path": "./DebugScene_takeshi/850fcbab879074c83a8e3260f9e89ddd.entity"
+        },
+        {
+            "guid": "82818925073f084ce1b68a1262fa2891",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/82818925073f084ce1b68a1262fa2891.entity"
+        },
+        {
+            "guid": "8ef96d013013f25139e7cdb116d191da",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/8ef96d013013f25139e7cdb116d191da.entity"
         }
     ]
 }

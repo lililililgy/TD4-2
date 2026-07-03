@@ -1,0 +1,26 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": -228.98828125,
+                "y": 105.78840637207031
+            },
+            "rotate": {
+                "w": 0.4882097542285919,
+                "z": 0.872726321220398
+            },
+            "type": "Transform"
+        },
+        {
+            "TrailFollower": {
+                "maxBendRad_": 3.1415927410125732
+            },
+            "type": "Variables"
+        }
+    ],
+    "guid": "8ef96d013013f25139e7cdb116d191da",
+    "name": "Player_Tentacle",
+    "parentGuid": null,
+    "prefabName": "Player_Tentacle"
+}

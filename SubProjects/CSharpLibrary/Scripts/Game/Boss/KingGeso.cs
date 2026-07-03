@@ -1,6 +1,18 @@
 using System;
 using System.Collections.Generic;
 
+//============================================================
+// 攻撃タイプの列挙型
+//============================================================
+public enum KingGesoAttackType
+{
+    WaveThrust, //波状突き攻撃
+    PincerThrust, //挟み撃ち攻撃
+}
+
+//============================================================
+// キングゲソのクラス
+//============================================================
 public class KingGeso : MonoScript
 {
     private const int DefaultWaveGesoCount = 6;
@@ -32,13 +44,21 @@ public class KingGeso : MonoScript
     [SerializeField] public int waveGesoCount = DefaultWaveGesoCount;
     /// 波状攻撃で次のゲソを出す間隔（秒）
     [SerializeField] public float waveGesoInterval = DefaultWaveGesoInterval;
+    /// 攻撃タイプをランダムに選択するか
+    [SerializeField] public bool randomizeAttackType = true;
+    /// ランダム選択しない場合に使う攻撃タイプ
+    [SerializeField] public KingGesoAttackType fixedAttackType = KingGesoAttackType.WaveThrust;
+    /// 波状突きの選択重み
+    [SerializeField] public float waveThrustWeight = 1.0f;
+    /// 挟み撃ち突きの選択重み
+    [SerializeField] public float pincerThrustWeight = 1.0f;
 
-    private HP _hp;
-    private IKingGesoState _state;
-    private Entity _targetEntity;
-    private Entity _cameraEntity;
-    private List<Entity> _activeGesos = new List<Entity>();
-    private bool _attackRequested;
+    private HP hp_;
+    private IKingGesoState state_;
+    private Entity targetEntity_;
+    private Entity cameraEntity_;
+    private List<Entity> activeGesos_ = new List<Entity>();
+    private bool attackRequested_;
 
 
     //=============================================================
@@ -46,26 +66,27 @@ public class KingGeso : MonoScript
     //=============================================================
     public override void Initialize()
     {
-        _hp = entity.GetScript<HP>();
-        if (_hp == null)
+        // HPコンポーネントを取得または追加
+        hp_ = entity.GetScript<HP>();
+        if (hp_ == null)
         {
-            _hp = entity.AddScript<HP>();
+            hp_ = entity.AddScript<HP>();
         }
 
-        _hp.MaxHp = maxHp > 0 ? maxHp : 1;
-        _hp.Initialize();
+        hp_.MaxHp = maxHp > 0 ? maxHp : 1;
+        hp_.Initialize();
 
         if (!String.IsNullOrEmpty(targetEntityName))
         {
-            _targetEntity = ecsGroup.FindEntity(targetEntityName);
+            targetEntity_ = ecsGroup.FindEntity(targetEntityName);
         }
         if (!String.IsNullOrEmpty(cameraEntityName))
         {
-            _cameraEntity = ecsGroup.FindEntity(cameraEntityName);
+            cameraEntity_ = ecsGroup.FindEntity(cameraEntityName);
         }
 
-        _activeGesos.Clear();
-        _attackRequested = false;
+        activeGesos_.Clear();
+        attackRequested_ = false;
         ChangeState(new KingGesoIdleState());
     }
 
@@ -77,9 +98,9 @@ public class KingGeso : MonoScript
         // --- デバッグ用：HキーでHPを10%減らす ---
         if (Input.TriggerKey(KeyCode.H))
         {
-            if (_hp != null)
+            if (hp_ != null)
             {
-                _hp.TakeDamage(1);
+                hp_.TakeDamage(1);
             }
         }
 
@@ -88,9 +109,9 @@ public class KingGeso : MonoScript
             RequestAttack();
         }
 
-        if (_state != null)
+        if (state_ != null)
         {
-            _state.Update(this);
+            state_.Update(this);
         }
 
         // --- デバッグ用：視線の表示 ---
@@ -102,7 +123,7 @@ public class KingGeso : MonoScript
     //=============================================================
     public void SetTarget(Entity target)
     {
-        _targetEntity = target;
+        targetEntity_ = target;
     }
 
     //=============================================================
@@ -110,7 +131,7 @@ public class KingGeso : MonoScript
     //=============================================================
     public void RequestAttack()
     {
-        _attackRequested = true;
+        attackRequested_ = true;
     }
 
     //=============================================================
@@ -118,12 +139,12 @@ public class KingGeso : MonoScript
     //=============================================================
     public void TakeDamage(float damage)
     {
-        if (_hp == null)
+        if (hp_ == null)
         {
             return;
         }
 
-        _hp.TakeDamage(damage);
+        hp_.TakeDamage(damage);
     }
 
     internal float IdleDuration
@@ -151,13 +172,41 @@ public class KingGeso : MonoScript
         get { return waveGesoInterval > 0.0f ? waveGesoInterval : DefaultWaveGesoInterval; }
     }
 
+    internal KingGesoAttackType SelectAttackType()
+    {
+        if (!randomizeAttackType)
+        {
+            return fixedAttackType;
+        }
+
+        // 攻撃タイプの選択重みを考慮してランダムに選択
+        float waveWeight = waveThrustWeight > 0.0f ? waveThrustWeight : 0.0f;
+        float pincerWeight = pincerThrustWeight > 0.0f ? pincerThrustWeight : 0.0f;
+        float totalWeight = waveWeight + pincerWeight;
+
+        // 重みが0以下の場合は固定攻撃タイプを返す
+        if (totalWeight <= 0.0f)
+        {
+            return fixedAttackType;
+        }
+
+        // ランダムに攻撃タイプを選択
+        float lottery = RandomUtil.NextFloat() * totalWeight;
+        if (lottery < waveWeight)
+        {
+            return KingGesoAttackType.WaveThrust;
+        }
+
+        return KingGesoAttackType.PincerThrust;
+    }
+
     //=============================================================
-    // 内部処理
+    // 攻撃リクエスト処理
     //=============================================================
     internal bool ConsumeAttackRequest()
     {
-        bool requested = _attackRequested;
-        _attackRequested = false;
+        bool requested = attackRequested_;
+        attackRequested_ = false;
         return requested;
     }
 
@@ -166,15 +215,15 @@ public class KingGeso : MonoScript
     //=============================================================
     internal void ChangeState(IKingGesoState nextState)
     {
-        if (_state != null)
+        if (state_ != null)
         {
-            _state.Exit(this);
+            state_.Exit(this);
         }
 
-        _state = nextState;
-        if (_state != null)
+        state_ = nextState;
+        if (state_  != null)
         {
-            _state.Enter(this);
+            state_.Enter(this);
         }
     }
 
@@ -182,6 +231,56 @@ public class KingGeso : MonoScript
     // ゲソのスポーン処理
     //=============================================================
     internal Entity SpawnGeso()
+    {
+        gesoSpawnOffset = CreateRandomScreenEdgeOffset();
+        return SpawnGesoAtPosition(GetScreenCenter() + gesoSpawnOffset);
+    }
+
+    //=============================================================
+    // ゲソのスポーン処理（挟み撃ち用）
+    //=============================================================
+    internal bool SpawnPincerGesos(List<Entity> spawnedGesos)
+    {
+        if (spawnedGesos == null)
+        {
+            return false;
+        }
+
+        Vector2 center = GetScreenCenter();
+        Vector2 target = GetTargetPosition();
+        Vector2 targetOffset = target - center;
+        float halfWidth = screenHalfWidth > 0.0f ? screenHalfWidth : 0.01f;
+        float halfHeight = screenHalfHeight > 0.0f ? screenHalfHeight : 0.01f;
+
+        Entity first;
+        Entity second;
+        if (RandomUtil.NextFloat() < 0.5f)
+        {
+            float y = Mathf.Clamp(targetOffset.y, -halfHeight, halfHeight);
+            first = SpawnGesoAtPosition(center + new Vector2(-halfWidth - screenEdgeMargin, y));
+            second = SpawnGesoAtPosition(center + new Vector2(halfWidth + screenEdgeMargin, y));
+        }
+        else
+        {
+            float x = Mathf.Clamp(targetOffset.x, -halfWidth, halfWidth);
+            first = SpawnGesoAtPosition(center + new Vector2(x, -halfHeight - screenEdgeMargin));
+            second = SpawnGesoAtPosition(center + new Vector2(x, halfHeight + screenEdgeMargin));
+        }
+
+        if (first == null || second == null)
+        {
+            return false;
+        }
+
+        spawnedGesos.Add(first);
+        spawnedGesos.Add(second);
+        return true;
+    }
+
+    //=============================================================
+    // ゲソのスポーン処理（指定位置）
+    //=============================================================
+    private Entity SpawnGesoAtPosition(Vector2 spawnPosition)
     {
         if (String.IsNullOrEmpty(gesoPrefabName))
         {
@@ -194,12 +293,9 @@ public class KingGeso : MonoScript
             return null;
         }
 
-        gesoSpawnOffset = CreateRandomScreenEdgeOffset();
-        Vector2 spawnPosition = GetScreenCenter() + gesoSpawnOffset;
-        // Vector2 spawnPosition = new Vector2(10.0f, 10.0f);
         geso.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, GetMovementDepth());
 
-        _activeGesos.Add(geso);
+        activeGesos_.Add(geso);
         return geso;
     }
 
@@ -225,7 +321,7 @@ public class KingGeso : MonoScript
         hand.rotationSpeed = gesoRotationSpeed;
         hand.moveDuration = gesoMoveDuration;
         hand.passThroughDistance = gesoPassThroughDistance;
-        return hand.CommandAttack(_targetEntity);
+        return hand.CommandAttack(targetEntity_);
     }
 
     //=============================================================
@@ -234,8 +330,8 @@ public class KingGeso : MonoScript
     internal void DestroyActiveGeso()
     {
 
-        List<Entity> activeGesos = new List<Entity>(_activeGesos);
-        _activeGesos.Clear();
+        List<Entity> activeGesos = new List<Entity>(activeGesos_);
+        activeGesos_.Clear();
 
         for (int i = 0; i < activeGesos.Count; i++)
         {
@@ -267,21 +363,33 @@ public class KingGeso : MonoScript
         }
     }
 
+
     private Vector2 GetScreenCenter()
     {
         Vector3 center = transform.worldPosition;
-        if (_cameraEntity != null && _cameraEntity.transform != null)
+        if (cameraEntity_ != null && cameraEntity_.transform != null)
         {
-            center = _cameraEntity.transform.worldPosition;
+            center = cameraEntity_.transform.worldPosition;
         }
         return new Vector2(center.x, center.y);
     }
 
+    private Vector2 GetTargetPosition()
+    {
+        if (targetEntity_ != null && targetEntity_.transform != null)
+        {
+            Vector3 targetPosition = targetEntity_.transform.worldPosition;
+            return new Vector2(targetPosition.x, targetPosition.y);
+        }
+
+        return GetScreenCenter();
+    }
+
     private float GetMovementDepth()
     {
-        if (_targetEntity != null && _targetEntity.transform != null)
+        if (targetEntity_ != null && targetEntity_.transform != null)
         {
-            return _targetEntity.transform.worldPosition.z;
+            return targetEntity_.transform.worldPosition.z;
         }
         return transform.worldPosition.z;
     }

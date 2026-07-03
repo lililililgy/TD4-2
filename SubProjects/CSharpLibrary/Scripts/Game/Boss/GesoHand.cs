@@ -31,32 +31,32 @@ public class GesoHand : MonoScript
     public bool CanAttack { get { return State == HandState.Idle || State == HandState.Aiming; } }
 
     // 手の元の回転
-    private Quaternion _homeRotation;
-    private Vector2 _homePosition;
-    private Vector2 _attackTargetPosition;
-    private float _movementDepth;
+    private Quaternion homeRotation_;
+    private Vector2 homePosition_;
+    private Vector2 attackTargetPosition_;
+    private float movementDepth_;
     // 攻撃対象のエンティティ
-    private Entity _target;
+    private Entity target_;
     // 現在の状態の経過時間
-    private float _stateTime;
+    private float stateTime_;
     // 攻撃イベントが送信されたかどうかを追跡するフラグ
-    private bool _attackEventSent;
+    private bool attackEventSent_;
 
     //弱点インスタンス
-    private GesoWeakPoint _weakPoint;
+    private GesoWeakPoint weakPoint_;
 
     //=============================
     // 初期化
     //=============================
     public override void Initialize()
     {
-        _homeRotation = transform.rotation;
-        _homePosition = ToPlane(transform.position);
-        _movementDepth = transform.position.z;
+        homeRotation_ = transform.rotation;
+        homePosition_ = ToPlane(transform.position);
+        movementDepth_ = transform.position.z;
         State = HandState.Idle;
-        _target = null;
-        _stateTime = 0.0f;
-        _attackEventSent = false;
+        target_ = null;
+        stateTime_ = 0.0f;
+        attackEventSent_ = false;
     }
 
     //=============================
@@ -91,7 +91,7 @@ public class GesoHand : MonoScript
             return;
         }
 
-        _target = target;
+        target_ = target;
         State = HandState.Aiming;
     }
 
@@ -105,15 +105,15 @@ public class GesoHand : MonoScript
             return false;
         }
 
-        _target = target;
-        _homeRotation = transform.rotation;
-        _homePosition = ToPlane(transform.position);
-        _movementDepth = transform.position.z;
+        target_ = target;
+        homeRotation_ = transform.rotation;
+        homePosition_ = ToPlane(transform.position);
+        movementDepth_ = transform.position.z;
         Vector2 targetPosition = ToPlane(target.transform.position);
-        Vector2 attackDirection = (targetPosition - _homePosition).Normalized();
-        _attackTargetPosition = targetPosition + attackDirection * passThroughDistance;
-        _stateTime = 0.0f;
-        _attackEventSent = false;
+        Vector2 attackDirection = (targetPosition - homePosition_).Normalized();
+        attackTargetPosition_ = targetPosition + attackDirection * passThroughDistance;
+        stateTime_ = 0.0f;
+        attackEventSent_ = false;
         State = HandState.Attacking;
         return true;
     }
@@ -134,26 +134,26 @@ public class GesoHand : MonoScript
     //=============================
     private void UpdateAttack()
     {
-        if (_target == null || _target.transform == null)
+        if (target_ == null || target_.transform == null)
         {
             BeginReturn();
             return;
         }
 
         // 攻撃開始時に記録した位置へ向きを合わせる
-        RotateTowardPosition(_attackTargetPosition);
+        RotateTowardPosition(attackTargetPosition_);
         // 攻撃対象の位置に向かって移動する
         float duration = moveDuration > 0.0f ? moveDuration : 0.001f;
-        float moveRatio = Mathf.Clamp01(_stateTime / duration);
-        SetPlanePosition(Lerp(_homePosition, _attackTargetPosition, moveRatio));
+        float moveRatio = Mathf.Clamp01(stateTime_ / duration);
+        SetPlanePosition(Lerp(homePosition_, attackTargetPosition_, moveRatio));
 
-        if (!_attackEventSent && moveRatio >= 1.0f)
+        if (!attackEventSent_ && moveRatio >= 1.0f)
         {
-            _attackEventSent = true;
+            attackEventSent_ = true;
         }
 
-        _stateTime += Time.deltaTime;
-        if (_stateTime >= attackDuration)
+        stateTime_ += Time.deltaTime;
+        if (stateTime_ >= attackDuration)
         {
             BeginReturn();
         }
@@ -164,18 +164,18 @@ public class GesoHand : MonoScript
     //=============================
     private void UpdateReturn()
     {
-        _stateTime += Time.deltaTime;
+        stateTime_ += Time.deltaTime;
         float duration = returnDuration > 0.0f ? returnDuration : 0.001f;
         float returnRatio = Mathf.Clamp01(Time.deltaTime / duration);
         Vector2 currentPosition = ToPlane(transform.position);
-        SetPlanePosition(Lerp(currentPosition, _homePosition, returnRatio));
-        transform.rotation = Quaternion.Slerp(transform.rotation, _homeRotation, returnRatio);
+        SetPlanePosition(Lerp(currentPosition, homePosition_, returnRatio));
+        transform.rotation = Quaternion.Slerp(transform.rotation, homeRotation_, returnRatio);
 
-        if (_stateTime >= returnDuration)
+        if (stateTime_ >= returnDuration)
         {
-            transform.rotation = _homeRotation;
-            SetPlanePosition(_homePosition);
-            _target = null;
+            transform.rotation = homeRotation_;
+            SetPlanePosition(homePosition_);
+            target_ = null;
             State = HandState.Idle;
         }
     }
@@ -185,13 +185,13 @@ public class GesoHand : MonoScript
     //=============================
     private void RotateTowardTarget()
     {
-        if (_target == null || _target.transform == null)
+        if (target_ == null || target_.transform == null)
         {
             BeginReturn();
             return;
         }
 
-        RotateTowardPosition(ToPlane(_target.transform.position));
+        RotateTowardPosition(ToPlane(target_.transform.position));
     }
 
     //============================
@@ -217,7 +217,7 @@ public class GesoHand : MonoScript
 
     private void SetPlanePosition(Vector2 position)
     {
-        transform.position = new Vector3(position.x, position.y, _movementDepth);
+        transform.position = new Vector3(position.x, position.y, movementDepth_);
     }
 
     private static Vector2 Lerp(Vector2 start, Vector2 end, float ratio)
@@ -230,7 +230,7 @@ public class GesoHand : MonoScript
     //=============================
     private void BeginReturn()
     {
-        _stateTime = 0.0f;
+        stateTime_ = 0.0f;
         State = HandState.Returning;
     }
 }

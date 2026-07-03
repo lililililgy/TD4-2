@@ -148,6 +148,8 @@
     <Compile Include="Scripts\Game\Boss\GesoWeakPoint.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso.cs" />
     <Compile Include="Scripts\Game\Boss\KingGesoState.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfishState.cs" />
     <Compile Include="Scripts\Game\Bullet.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
     <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
