@@ -157,7 +157,7 @@ internal sealed class KingGesoAttackState : IKingGesoState
         }
 
         // スポーンしたゲソを待機リストに追加
-        //_pendingGesos.Add(geso);
+        _pendingGesos.Add(geso);
         _spawnedCount++;
         return true;
     }
