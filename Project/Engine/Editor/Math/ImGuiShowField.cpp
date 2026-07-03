@@ -370,9 +370,11 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 							}
 						}
 
+						ImGui::PushID(i);
 						if (ImGui::CollapsingHeader(std::format("[{}]", i).c_str())) {
 							ImGui::Indent(); DrawGenericObject(list[i]); ImGui::Unindent();
 						}
+						ImGui::PopID();
 					}
 				}
 			}
@@ -481,6 +483,7 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 			count = size;
 		}
 		for(int i = 0; i < count; ++i) {
+			ImGui::PushID(i);
 			void* getArgs[1] = { &i }; MonoObject* itemObj = mono_runtime_invoke(getItemMethod, listObj, getArgs, nullptr);
 			std::string itemName = std::format("[{}]", i);
 			if(elemTypeId == MONO_TYPE_I4) { int v = *(int*)mono_object_unbox(itemObj); if(ImGui::DragInt(itemName.c_str(), &v)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
@@ -499,6 +502,7 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 					}
 				}
 			}
+			ImGui::PopID();
 		}
 		ImGui::Unindent();
 	}
