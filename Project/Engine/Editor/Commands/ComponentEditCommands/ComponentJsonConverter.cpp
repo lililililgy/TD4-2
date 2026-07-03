@@ -365,9 +365,16 @@ void ONEngine::to_json(nlohmann::json& j, const Line3DRenderer& l) {
 void ONEngine::from_json(const nlohmann::json& j, AnimationCurveKey& k) {
 	k.time = j.value("time", 0.0f);
 	k.value = j.value("value", 1.0f);
+	k.inTangent = j.value("inTangent", 0.0f);
+	k.outTangent = j.value("outTangent", 0.0f);
 }
 void ONEngine::to_json(nlohmann::json& j, const AnimationCurveKey& k) {
-	j = nlohmann::json{ {"time", k.time}, {"value", k.value} };
+	j = nlohmann::json{
+		{"time", k.time},
+		{"value", k.value},
+		{"inTangent", k.inTangent},
+		{"outTangent", k.outTangent}
+	};
 }
 
 void ONEngine::from_json(const nlohmann::json& j, AnimationCurve& c) {
@@ -397,17 +404,31 @@ void ONEngine::to_json(nlohmann::json& j, const MinMaxCurve& m) {
 void ONEngine::from_json(const nlohmann::json& j, GradientColorKey& k) {
 	k.color = j.value("color", Color::kWhite);
 	k.time = j.value("time", 0.0f);
+	k.inTangent = j.value("inTangent", 0.0f);
+	k.outTangent = j.value("outTangent", 0.0f);
 }
 void ONEngine::to_json(nlohmann::json& j, const GradientColorKey& k) {
-	j = nlohmann::json{ {"color", k.color}, {"time", k.time} };
+	j = nlohmann::json{
+		{"color", k.color},
+		{"time", k.time},
+		{"inTangent", k.inTangent},
+		{"outTangent", k.outTangent}
+	};
 }
 
 void ONEngine::from_json(const nlohmann::json& j, GradientAlphaKey& k) {
 	k.alpha = j.value("alpha", 1.0f);
 	k.time = j.value("time", 0.0f);
+	k.inTangent = j.value("inTangent", 0.0f);
+	k.outTangent = j.value("outTangent", 0.0f);
 }
 void ONEngine::to_json(nlohmann::json& j, const GradientAlphaKey& k) {
-	j = nlohmann::json{ {"alpha", k.alpha}, {"time", k.time} };
+	j = nlohmann::json{
+		{"alpha", k.alpha},
+		{"time", k.time},
+		{"inTangent", k.inTangent},
+		{"outTangent", k.outTangent}
+	};
 }
 
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystemGradient& g) {

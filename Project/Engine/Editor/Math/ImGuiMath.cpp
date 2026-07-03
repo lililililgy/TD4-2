@@ -143,9 +143,194 @@ void DrawMinMaxColor(const char* label, ONEngine::MinMaxColor& val) {
     ImGui::PopID();
 }
 
+// ImCurveEdit Delegate for ParticleSystemGradient (Red, Green, Blue, Alpha)
+class GradientCurveDelegate : public ImCurveEdit::Delegate {
+public:
+    GradientCurveDelegate(ONEngine::ParticleSystemGradient& gradient, float minY, float maxY)
+        : gradient_(gradient) {
+        min_ = ImVec2(0.0f, minY);
+        max_ = ImVec2(1.0f, maxY);
+        SyncFromGradient();
+    }
+
+    void SyncFromGradient() {
+        // Sort keys by time
+        std::sort(gradient_.colorKeys.begin(), gradient_.colorKeys.end(), [](const auto& a, const auto& b) { return a.time < b.time; });
+        std::sort(gradient_.alphaKeys.begin(), gradient_.alphaKeys.end(), [](const auto& a, const auto& b) { return a.time < b.time; });
+
+        // RGB
+        size_t colorCount = gradient_.colorKeys.size();
+        points_[0].resize(colorCount);
+        points_[1].resize(colorCount);
+        points_[2].resize(colorCount);
+        for (size_t i = 0; i < colorCount; i++) {
+            float t = std::clamp(gradient_.colorKeys[i].time, 0.0f, 1.0f);
+            points_[0][i] = ImVec2(t, gradient_.colorKeys[i].color.r);
+            points_[1][i] = ImVec2(t, gradient_.colorKeys[i].color.g);
+            points_[2][i] = ImVec2(t, gradient_.colorKeys[i].color.b);
+        }
+
+        // Alpha
+        size_t alphaCount = gradient_.alphaKeys.size();
+        points_[3].resize(alphaCount);
+        for (size_t i = 0; i < alphaCount; i++) {
+            float t = std::clamp(gradient_.alphaKeys[i].time, 0.0f, 1.0f);
+            points_[3][i] = ImVec2(t, gradient_.alphaKeys[i].alpha);
+        }
+    }
+
+    void SyncToGradient() {
+        // RGB
+        size_t colorCount = points_[0].size();
+        gradient_.colorKeys.resize(colorCount);
+        for (size_t i = 0; i < colorCount; i++) {
+            gradient_.colorKeys[i].time = points_[0][i].x;
+            gradient_.colorKeys[i].color.r = std::clamp(points_[0][i].y, 0.0f, 1.0f);
+            gradient_.colorKeys[i].color.g = std::clamp(points_[1][i].y, 0.0f, 1.0f);
+            gradient_.colorKeys[i].color.b = std::clamp(points_[2][i].y, 0.0f, 1.0f);
+        }
+
+        // Alpha
+        size_t alphaCount = points_[3].size();
+        gradient_.alphaKeys.resize(alphaCount);
+        for (size_t i = 0; i < alphaCount; i++) {
+            gradient_.alphaKeys[i].time = points_[3][i].x;
+            gradient_.alphaKeys[i].alpha = std::clamp(points_[3][i].y, 0.0f, 1.0f);
+        }
+    }
+
+    size_t GetCurveCount() override { return 4; }
+    bool IsVisible(size_t) override { return true; }
+    ImCurveEdit::CurveType GetCurveType(size_t) const override { return ImCurveEdit::CurveBezier; }
+    ImVec2& GetMin() override { return min_; }
+    ImVec2& GetMax() override { return max_; }
+
+    size_t GetPointCount(size_t curveIndex) override {
+        return points_[curveIndex].size();
+    }
+
+    uint32_t GetCurveColor(size_t curveIndex) override {
+        if (curveIndex == 0) return 0xFF0000FF; // Red
+        if (curveIndex == 1) return 0xFF00FF00; // Green
+        if (curveIndex == 2) return 0xFFFF0000; // Blue
+        return 0xFFFFFFFF; // White for Alpha
+    }
+
+    ImVec2* GetPoints(size_t curveIndex) override {
+        return points_[curveIndex].empty() ? nullptr : points_[curveIndex].data();
+    }
+
+    int EditPoint(size_t curveIndex, int pointIndex, ImVec2 value) override {
+        if (pointIndex < 0 || pointIndex >= (int)points_[curveIndex].size()) return pointIndex;
+
+        value.x = std::clamp(value.x, 0.0f, 1.0f);
+
+        if (curveIndex < 3) {
+            for (int c = 0; c < 3; c++) {
+                points_[c][pointIndex].x = value.x;
+            }
+            points_[curveIndex][pointIndex].y = value.y;
+        } else {
+            points_[curveIndex][pointIndex] = value;
+        }
+
+        SyncToGradient();
+        return pointIndex;
+    }
+
+    void AddPoint(size_t curveIndex, ImVec2 value) override {
+        value.x = std::clamp(value.x, 0.0f, 1.0f);
+        if (curveIndex < 3) {
+            ONEngine::GradientColorKey key;
+            key.time = value.x;
+            Color current = gradient_.Evaluate(value.x);
+            key.color.r = current.r;
+            key.color.g = current.g;
+            key.color.b = current.b;
+            if (curveIndex == 0) key.color.r = value.y;
+            if (curveIndex == 1) key.color.g = value.y;
+            if (curveIndex == 2) key.color.b = value.y;
+            gradient_.colorKeys.push_back(key);
+        } else {
+            ONEngine::GradientAlphaKey key;
+            key.time = value.x;
+            key.alpha = value.y;
+            gradient_.alphaKeys.push_back(key);
+        }
+        SyncFromGradient();
+        SyncToGradient();
+    }
+
+    float GetCurveValue(size_t curveIndex, float time) override {
+        Color c = gradient_.Evaluate(time);
+        if (curveIndex == 0) return c.r;
+        if (curveIndex == 1) return c.g;
+        if (curveIndex == 2) return c.b;
+        return c.a;
+    }
+
+private:
+    ONEngine::ParticleSystemGradient& gradient_;
+    std::vector<ImVec2> points_[4];
+    ImVec2 min_;
+    ImVec2 max_;
+};
+
 void DrawGradient(const char* label, ONEngine::ParticleSystemGradient& gradient) {
+    ImGui::PushID(label);
     if (ImGui::TreeNode(label)) {
+        float minY = 0.0f;
+        float maxY = 1.0f;
+
         float availW = ImGui::GetContentRegionAvail().x;
+
+        // ビジュアルグラデーションエディタ
+        GradientCurveDelegate delegate(gradient, minY, maxY);
+        float editorWidth = std::max(availW, 100.0f);
+
+        static ImVector<ImCurveEdit::EditPoint> selectedPoints;
+        selectedPoints.clear();
+
+        ImCurveEdit::Edit(delegate, ImVec2(editorWidth, 120), (unsigned int)ImGui::GetID("##gradientEdit"), NULL, &selectedPoints);
+
+        // 選択された制御点の接線（ハンドル）および値の編集UI
+        if (!selectedPoints.empty()) {
+            int curveIdx = selectedPoints[0].curveIndex;
+            int pointIdx = selectedPoints[0].pointIndex;
+            if (curveIdx >= 0 && curveIdx < 4) {
+                if (curveIdx < 3) {
+                    if (pointIdx >= 0 && pointIdx < (int)gradient.colorKeys.size()) {
+                        ImGui::Text("Selected Color Key #%d (Time: %.2f)", pointIdx, gradient.colorKeys[pointIdx].time);
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("In Tangent", &gradient.colorKeys[pointIdx].inTangent, 0.05f);
+                        ImGui::SameLine();
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("Out Tangent", &gradient.colorKeys[pointIdx].outTangent, 0.05f);
+
+                        ONEngine::Vector4 col = { gradient.colorKeys[pointIdx].color.r, gradient.colorKeys[pointIdx].color.g, gradient.colorKeys[pointIdx].color.b, 1.0f };
+                        if (ImGui::ColorEdit3("Color Value", &col.x)) {
+                            gradient.colorKeys[pointIdx].color.r = col.x;
+                            gradient.colorKeys[pointIdx].color.g = col.y;
+                            gradient.colorKeys[pointIdx].color.b = col.z;
+                        }
+                    }
+                } else {
+                    if (pointIdx >= 0 && pointIdx < (int)gradient.alphaKeys.size()) {
+                        ImGui::Text("Selected Alpha Key #%d (Time: %.2f)", pointIdx, gradient.alphaKeys[pointIdx].time);
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("In Tangent", &gradient.alphaKeys[pointIdx].inTangent, 0.05f);
+                        ImGui::SameLine();
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("Out Tangent", &gradient.alphaKeys[pointIdx].outTangent, 0.05f);
+
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("Alpha Value", &gradient.alphaKeys[pointIdx].alpha, 0.01f, 0.0f, 1.0f);
+                    }
+                }
+            }
+        }
+
+        // キーの手動追加・削除
         if (ImGui::Button("+ Color Key")) gradient.colorKeys.push_back({ Color::kWhite, 1.0f });
         for (size_t i = 0; i < gradient.colorKeys.size(); ++i) {
             ImGui::PushID((int)i);
@@ -155,7 +340,9 @@ void DrawGradient(const char* label, ONEngine::ParticleSystemGradient& gradient)
             }
             ImGui::SameLine();
             ImGui::SetNextItemWidth(availW * 0.35f);
-            ImGui::DragFloat("##time", &gradient.colorKeys[i].time, 0.01f, 0.0f, 1.0f);
+            if (ImGui::DragFloat("##time", &gradient.colorKeys[i].time, 0.01f, 0.0f, 1.0f)) {
+                gradient.colorKeys[i].time = std::clamp(gradient.colorKeys[i].time, 0.0f, 1.0f);
+            }
             ImGui::SameLine(); if (ImGui::Button("x")) { gradient.colorKeys.erase(gradient.colorKeys.begin() + i); ImGui::PopID(); break; }
             ImGui::PopID();
         }
@@ -163,15 +350,20 @@ void DrawGradient(const char* label, ONEngine::ParticleSystemGradient& gradient)
         for (size_t i = 0; i < gradient.alphaKeys.size(); ++i) {
             ImGui::PushID((int)i + 1000);
             ImGui::SetNextItemWidth(availW * 0.3f);
-            ImGui::DragFloat("##alpha", &gradient.alphaKeys[i].alpha, 0.01f, 0.0f, 1.0f);
+            if (ImGui::DragFloat("##alpha", &gradient.alphaKeys[i].alpha, 0.01f, 0.0f, 1.0f)) {
+                gradient.alphaKeys[i].alpha = std::clamp(gradient.alphaKeys[i].alpha, 0.0f, 1.0f);
+            }
             ImGui::SameLine();
             ImGui::SetNextItemWidth(availW * 0.3f);
-            ImGui::DragFloat("##time", &gradient.alphaKeys[i].time, 0.01f, 0.0f, 1.0f);
+            if (ImGui::DragFloat("##time", &gradient.alphaKeys[i].time, 0.01f, 0.0f, 1.0f)) {
+                gradient.alphaKeys[i].time = std::clamp(gradient.alphaKeys[i].time, 0.0f, 1.0f);
+            }
             ImGui::SameLine(); if (ImGui::Button("x")) { gradient.alphaKeys.erase(gradient.alphaKeys.begin() + i); ImGui::PopID(); break; }
             ImGui::PopID();
         }
         ImGui::TreePop();
     }
+    ImGui::PopID();
 }
 
 void DrawMinMaxGradient(const char* label, ONEngine::MinMaxGradient& val) {
@@ -222,7 +414,7 @@ public:
 
     size_t GetCurveCount() override { return 1; }
     bool IsVisible(size_t) override { return true; }
-    ImCurveEdit::CurveType GetCurveType(size_t) const override { return ImCurveEdit::CurveLinear; }
+    ImCurveEdit::CurveType GetCurveType(size_t) const override { return ImCurveEdit::CurveBezier; }
     ImVec2& GetMin() override { return min_; }
     ImVec2& GetMax() override { return max_; }
     size_t GetPointCount(size_t) override { return points_.size(); }
@@ -250,6 +442,10 @@ public:
         }
         points_.insert(points_.begin() + insertPos, value);
         SyncToCurve();
+    }
+
+    float GetCurveValue(size_t, float time) override {
+        return curve_.Evaluate(time);
     }
 
 private:
@@ -288,7 +484,25 @@ void DrawCurve(const char* label, ONEngine::AnimationCurve& curve) {
         // ビジュアルカーブエディタ
         AnimationCurveDelegate delegate(curve, minY, maxY);
         float editorWidth = std::max(availW, 100.0f);
-        ImCurveEdit::Edit(delegate, ImVec2(editorWidth, 120), (unsigned int)ImGui::GetID("##curveEdit"));
+        
+        static ImVector<ImCurveEdit::EditPoint> selectedPoints;
+        selectedPoints.clear();
+        
+        ImCurveEdit::Edit(delegate, ImVec2(editorWidth, 120), (unsigned int)ImGui::GetID("##curveEdit"), NULL, &selectedPoints);
+
+        // 選択された制御点の接線（ハンドル）を編集するUI
+        if (!selectedPoints.empty()) {
+            int selectedIdx = selectedPoints[0].pointIndex;
+            if (selectedIdx >= 0 && selectedIdx < (int)curve.keys.size()) {
+                ImGui::Text("Selected Key #%d (Time: %.2f)", selectedIdx, curve.keys[selectedIdx].time);
+                
+                ImGui::SetNextItemWidth(availW * 0.4f);
+                Editor::ImMathf::DragFloat("In Tangent", &curve.keys[selectedIdx].inTangent, 0.05f);
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(availW * 0.4f);
+                Editor::ImMathf::DragFloat("Out Tangent", &curve.keys[selectedIdx].outTangent, 0.05f);
+            }
+        }
 
         // キーの手動追加・削除
         if (ImGui::Button("+ Key")) curve.keys.push_back({ 1.0f, 1.0f });

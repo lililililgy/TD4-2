@@ -153,14 +153,20 @@
                     "curve": {
                         "keys": [
                             {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 0.13283208012580872,
                                 "value": 0.22891664505004883
                             },
                             {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 0.7092732191085815,
                                 "value": 1.0455000400543213
                             },
                             {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 0.9248119592666626,
                                 "value": 0.34874993562698364
                             }

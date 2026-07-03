@@ -178,13 +178,19 @@ void HierarchyWindow::DrawHierarchy() {
 	flatHierarchyGuids_.clear();
 
 	std::vector<std::string> groupsToDraw;
-	const auto& activeGroupNames = pEcs_->GetActiveGroupNames();
-	if (activeGroupNames.empty()) {
-		if (auto* currentGroup = pEcs_->GetCurrentGroup()) {
-			groupsToDraw.push_back(currentGroup->GetGroupName());
+	if (isMultiGroup_) {
+		const auto& activeGroupNames = pEcs_->GetActiveGroupNames();
+		if (activeGroupNames.empty()) {
+			if (auto* currentGroup = pEcs_->GetCurrentGroup()) {
+				groupsToDraw.push_back(currentGroup->GetGroupName());
+			}
+		} else {
+			groupsToDraw = activeGroupNames;
 		}
 	} else {
-		groupsToDraw = activeGroupNames;
+		if (pEcsGroup_) {
+			groupsToDraw.push_back(pEcsGroup_->GetGroupName());
+		}
 	}
 
 	for (const auto& groupName : groupsToDraw) {
@@ -601,7 +607,9 @@ void HierarchyWindow::HandleGlobalShortcuts() {
 
 /// NormalHierarchyWindow Implementation
 NormalHierarchyWindow::NormalHierarchyWindow(const std::string& windowName, ONEngine::EntityComponentSystem* ecs, EditorManager* editorManager, ONEngine::SceneManager* sceneManager)
-	: HierarchyWindow(windowName, ecs, ecs->GetCurrentGroup(), editorManager, sceneManager), pEcs_(ecs) {}
+	: HierarchyWindow(windowName, ecs, ecs->GetCurrentGroup(), editorManager, sceneManager), pEcs_(ecs) {
+	isMultiGroup_ = true;
+}
 
 void NormalHierarchyWindow::ShowImGui() {
 	pEcsGroup_ = pEcs_->GetCurrentGroup();

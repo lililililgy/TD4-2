@@ -42,10 +42,14 @@ namespace ONEngine {
     struct GradientColorKey {
         Color color;
         float time;
+        float inTangent = 0.0f;
+        float outTangent = 0.0f;
     };
     struct GradientAlphaKey {
         float alpha;
         float time;
+        float inTangent = 0.0f;
+        float outTangent = 0.0f;
     };
     struct ParticleSystemGradient {
         std::vector<GradientColorKey> colorKeys;
@@ -57,6 +61,8 @@ namespace ONEngine {
     struct AnimationCurveKey {
         float time;
         float value;
+        float inTangent = 0.0f;
+        float outTangent = 0.0f;
     };
     struct AnimationCurve {
         std::vector<AnimationCurveKey> keys;
