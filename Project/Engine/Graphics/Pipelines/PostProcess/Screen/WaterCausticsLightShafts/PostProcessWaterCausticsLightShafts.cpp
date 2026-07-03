@@ -36,7 +36,7 @@ void PostProcessWaterCausticsLightShafts::Initialize(ShaderCompiler* shaderCompi
 	paramsBuffer_.Create(dxm->GetDxDevice());
 }
 
-void PostProcessWaterCausticsLightShafts::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem) {
+void PostProcessWaterCausticsLightShafts::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem, ECSGroup* ecsGroup) {
 	CameraComponent* camera = nullptr;
 	if (textureName.find("debug") != std::string::npos) {
 		ECSGroup* debugGroup = entityComponentSystem->GetECSGroup("Debug");
@@ -45,7 +45,7 @@ void PostProcessWaterCausticsLightShafts::Execute(const std::string& textureName
 		}
 	}
 	if (!camera) {
-		ECSGroup* currentGroup = entityComponentSystem->GetCurrentGroup();
+		ECSGroup* currentGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
 		if (currentGroup) {
 			camera = currentGroup->GetMainCamera2D();
 		}

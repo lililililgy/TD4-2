@@ -416,6 +416,25 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupN
 	return result;
 }
 
+MonoObject* MonoScriptEngine::GetEcsGroupObject(const std::string& groupName) {
+	if(!getEcsGroupMethod_) {
+		Console::LogError("getEcsGroupMethod_ is null", LogCategory::ScriptEngine);
+		return nullptr;
+	}
+
+	void* args[1];
+	args[0] = mono_string_new(domain_, groupName.c_str());
+
+	MonoObject* exc = nullptr;
+	MonoObject* result = MonoScriptEngineUtils::SafeInvoke(getEcsGroupMethod_, nullptr, args, &exc);
+	if(exc) {
+		MonoScriptEngineUtils::HandleException(exc);
+		return nullptr;
+	}
+
+	return result;
+}
+
 GameEntity* MonoScriptEngine::GetOwnerEntity(MonoObject* obj) {
 	if(!obj || !image_ || !pEcs_) return nullptr;
 

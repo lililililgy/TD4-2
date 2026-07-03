@@ -93,6 +93,15 @@ namespace ImMathf {
 	/// @return true: 値が変更された, false: 値が変更されなかった
 	bool Checkbox(const std::string& label, bool* pv);
 
+	/// @brief スライダーでfloat値を調整します。
+	bool SliderFloat(const std::string& label, float* pv, float min, float max, const char* format = "%.3f");
+
+	/// @brief スライダーでVector3値を調整します。
+	bool SliderFloat3(const std::string& label, ONEngine::Vector3* pv, float min, float max, const char* format = "%.3f");
+
+	/// @brief カラーエディタでVector3値を調整します。
+	bool ColorEdit3(const std::string& label, ONEngine::Vector3* pv);
+
 }
 
 

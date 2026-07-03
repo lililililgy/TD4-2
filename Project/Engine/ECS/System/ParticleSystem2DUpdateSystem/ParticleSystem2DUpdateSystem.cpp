@@ -395,7 +395,7 @@ namespace ONEngine {
             if (!shape.enabled) continue;
 
             Matrix4x4 worldMat = transform->matWorld;
-            Vector4 color = Vector4(0.0f, 1.0f, 1.0f, 0.5f); // Cyan color for 2D gizmos
+            Vector4 color = Vector4(1.0f, 0.0f, 0.0f, 0.5f); // Red color for 2D gizmos
 
             float outerRadius = shape.radius;
             float innerRadius = shape.radius * (1.0f - shape.radiusThickness);

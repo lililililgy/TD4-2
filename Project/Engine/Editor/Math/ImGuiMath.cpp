@@ -11,10 +11,15 @@
 #include <algorithm>
 #include <cstdio> 
 #include <cmath> 
+#include <unordered_map>
 
 /// external
 #include <imgui_internal.h> // PushMultiItemsWidths に必要
 #include <Externals/imgui/dialog/ImGuiFileDialog.h>
+#include <ImCurveEdit.h>
+
+/// win32 (カーソルループ用)
+#include <Windows.h>
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -43,25 +48,29 @@ std::string variableName = "";
 void DrawMinMaxFloat(const char* label, ONEngine::MinMaxFloat& val) {
     ImGui::PushID(label);
     
-    float itemWidth = ImGui::GetContentRegionAvail().x * 0.5f;
     ImGui::TextUnformatted(label);
     ImGui::SameLine(ImGui::GetWindowWidth() * 0.4f);
     
+    float availW = ImGui::GetContentRegionAvail().x;
+    float buttonW = 24.0f;
+    float fieldW = availW - buttonW - ImGui::GetStyle().ItemSpacing.x;
+    
     if (val.state == ONEngine::MinMaxState::Constant) {
-        ImGui::SetNextItemWidth(itemWidth);
+        ImGui::SetNextItemWidth(fieldW);
         ImGui::DragFloat("##constant", &val.constant, 0.1f);
     } else if (val.state == ONEngine::MinMaxState::RandomBetweenTwoConstants) {
-        ImGui::SetNextItemWidth(itemWidth * 0.45f);
+        float halfW = (fieldW - ImGui::GetStyle().ItemSpacing.x * 2.0f - ImGui::CalcTextSize("-").x) * 0.5f;
+        ImGui::SetNextItemWidth(halfW);
         ImGui::DragFloat("##min", &val.minVal, 0.1f);
         ImGui::SameLine();
         ImGui::Text("-");
         ImGui::SameLine();
-        ImGui::SetNextItemWidth(itemWidth * 0.45f);
+        ImGui::SetNextItemWidth(halfW);
         ImGui::DragFloat("##max", &val.maxVal, 0.1f);
     }
 
     ImGui::SameLine();
-    if (ImGui::Button("v", ImVec2(20, 0))) {
+    if (ImGui::Button("v", ImVec2(buttonW, 0))) {
         ImGui::OpenPopup("MinMaxPopup");
     }
 
@@ -79,7 +88,9 @@ void DrawMinMaxColor(const char* label, ONEngine::MinMaxColor& val) {
     ImGui::TextUnformatted(label);
     ImGui::SameLine(ImGui::GetWindowWidth() * 0.4f);
 
-    float itemWidth = ImGui::GetContentRegionAvail().x * 0.5f;
+    float availW = ImGui::GetContentRegionAvail().x;
+    float buttonW = 24.0f;
+    float fieldW = availW - buttonW - ImGui::GetStyle().ItemSpacing.x;
 
     if (val.state == ONEngine::MinMaxState::Constant) {
         ONEngine::Vector4 editColor;
@@ -88,8 +99,8 @@ void DrawMinMaxColor(const char* label, ONEngine::MinMaxColor& val) {
         editColor.z = val.constant.b;
         editColor.w = val.constant.a;
 
-        ImGui::SetNextItemWidth(itemWidth);
-        if (Editor::ImGuiColorEdit("##constant", &editColor)) {
+        ImGui::SetNextItemWidth(fieldW);
+        if (ImGui::ColorEdit4("##constant", &editColor.x)) {
             val.constant.r = editColor.x;
             val.constant.g = editColor.y;
             val.constant.b = editColor.z;
@@ -101,16 +112,17 @@ void DrawMinMaxColor(const char* label, ONEngine::MinMaxColor& val) {
         ONEngine::Vector4 cmax;
         cmax.x = val.maxVal.r; cmax.y = val.maxVal.g; cmax.z = val.maxVal.b; cmax.w = val.maxVal.a;
         
-        ImGui::SetNextItemWidth(itemWidth * 0.45f);
-        if (Editor::ImGuiColorEdit("##min", &cmin)) {
+        // 2つ並べるときはNoInputsで小さくする
+        if (ImGui::ColorEdit4("##min", &cmin.x, ImGuiColorEditFlags_NoInputs)) {
             val.minVal.r = cmin.x;
             val.minVal.g = cmin.y;
             val.minVal.b = cmin.z;
             val.minVal.a = cmin.w;
         }
         ImGui::SameLine();
-        ImGui::SetNextItemWidth(itemWidth * 0.45f);
-        if (Editor::ImGuiColorEdit("##max", &cmax)) {
+        ImGui::Text("-");
+        ImGui::SameLine();
+        if (ImGui::ColorEdit4("##max", &cmax.x, ImGuiColorEditFlags_NoInputs)) {
             val.maxVal.r = cmax.x;
             val.maxVal.g = cmax.y;
             val.maxVal.b = cmax.z;
@@ -119,7 +131,7 @@ void DrawMinMaxColor(const char* label, ONEngine::MinMaxColor& val) {
     }
 
     ImGui::SameLine();
-    if (ImGui::Button("v", ImVec2(20, 0))) {
+    if (ImGui::Button("v", ImVec2(buttonW, 0))) {
         ImGui::OpenPopup("MinMaxPopup");
     }
     if (ImGui::BeginPopup("MinMaxPopup")) {
@@ -131,29 +143,227 @@ void DrawMinMaxColor(const char* label, ONEngine::MinMaxColor& val) {
     ImGui::PopID();
 }
 
+// ImCurveEdit Delegate for ParticleSystemGradient (Red, Green, Blue, Alpha)
+class GradientCurveDelegate : public ImCurveEdit::Delegate {
+public:
+    GradientCurveDelegate(ONEngine::ParticleSystemGradient& gradient, float minY, float maxY)
+        : gradient_(gradient) {
+        min_ = ImVec2(0.0f, minY);
+        max_ = ImVec2(1.0f, maxY);
+        SyncFromGradient();
+    }
+
+    void SyncFromGradient() {
+        // Sort keys by time
+        std::sort(gradient_.colorKeys.begin(), gradient_.colorKeys.end(), [](const auto& a, const auto& b) { return a.time < b.time; });
+        std::sort(gradient_.alphaKeys.begin(), gradient_.alphaKeys.end(), [](const auto& a, const auto& b) { return a.time < b.time; });
+
+        // RGB
+        size_t colorCount = gradient_.colorKeys.size();
+        points_[0].resize(colorCount);
+        points_[1].resize(colorCount);
+        points_[2].resize(colorCount);
+        for (size_t i = 0; i < colorCount; i++) {
+            float t = std::clamp(gradient_.colorKeys[i].time, 0.0f, 1.0f);
+            points_[0][i] = ImVec2(t, gradient_.colorKeys[i].color.r);
+            points_[1][i] = ImVec2(t, gradient_.colorKeys[i].color.g);
+            points_[2][i] = ImVec2(t, gradient_.colorKeys[i].color.b);
+        }
+
+        // Alpha
+        size_t alphaCount = gradient_.alphaKeys.size();
+        points_[3].resize(alphaCount);
+        for (size_t i = 0; i < alphaCount; i++) {
+            float t = std::clamp(gradient_.alphaKeys[i].time, 0.0f, 1.0f);
+            points_[3][i] = ImVec2(t, gradient_.alphaKeys[i].alpha);
+        }
+    }
+
+    void SyncToGradient() {
+        // RGB
+        size_t colorCount = points_[0].size();
+        gradient_.colorKeys.resize(colorCount);
+        for (size_t i = 0; i < colorCount; i++) {
+            gradient_.colorKeys[i].time = points_[0][i].x;
+            gradient_.colorKeys[i].color.r = std::clamp(points_[0][i].y, 0.0f, 1.0f);
+            gradient_.colorKeys[i].color.g = std::clamp(points_[1][i].y, 0.0f, 1.0f);
+            gradient_.colorKeys[i].color.b = std::clamp(points_[2][i].y, 0.0f, 1.0f);
+        }
+
+        // Alpha
+        size_t alphaCount = points_[3].size();
+        gradient_.alphaKeys.resize(alphaCount);
+        for (size_t i = 0; i < alphaCount; i++) {
+            gradient_.alphaKeys[i].time = points_[3][i].x;
+            gradient_.alphaKeys[i].alpha = std::clamp(points_[3][i].y, 0.0f, 1.0f);
+        }
+    }
+
+    size_t GetCurveCount() override { return 4; }
+    bool IsVisible(size_t) override { return true; }
+    ImCurveEdit::CurveType GetCurveType(size_t) const override { return ImCurveEdit::CurveBezier; }
+    ImVec2& GetMin() override { return min_; }
+    ImVec2& GetMax() override { return max_; }
+
+    size_t GetPointCount(size_t curveIndex) override {
+        return points_[curveIndex].size();
+    }
+
+    uint32_t GetCurveColor(size_t curveIndex) override {
+        if (curveIndex == 0) return 0xFF0000FF; // Red
+        if (curveIndex == 1) return 0xFF00FF00; // Green
+        if (curveIndex == 2) return 0xFFFF0000; // Blue
+        return 0xFFFFFFFF; // White for Alpha
+    }
+
+    ImVec2* GetPoints(size_t curveIndex) override {
+        return points_[curveIndex].empty() ? nullptr : points_[curveIndex].data();
+    }
+
+    int EditPoint(size_t curveIndex, int pointIndex, ImVec2 value) override {
+        if (pointIndex < 0 || pointIndex >= (int)points_[curveIndex].size()) return pointIndex;
+
+        value.x = std::clamp(value.x, 0.0f, 1.0f);
+
+        if (curveIndex < 3) {
+            for (int c = 0; c < 3; c++) {
+                points_[c][pointIndex].x = value.x;
+            }
+            points_[curveIndex][pointIndex].y = value.y;
+        } else {
+            points_[curveIndex][pointIndex] = value;
+        }
+
+        SyncToGradient();
+        return pointIndex;
+    }
+
+    void AddPoint(size_t curveIndex, ImVec2 value) override {
+        value.x = std::clamp(value.x, 0.0f, 1.0f);
+        if (curveIndex < 3) {
+            ONEngine::GradientColorKey key;
+            key.time = value.x;
+            Color current = gradient_.Evaluate(value.x);
+            key.color.r = current.r;
+            key.color.g = current.g;
+            key.color.b = current.b;
+            if (curveIndex == 0) key.color.r = value.y;
+            if (curveIndex == 1) key.color.g = value.y;
+            if (curveIndex == 2) key.color.b = value.y;
+            gradient_.colorKeys.push_back(key);
+        } else {
+            ONEngine::GradientAlphaKey key;
+            key.time = value.x;
+            key.alpha = value.y;
+            gradient_.alphaKeys.push_back(key);
+        }
+        SyncFromGradient();
+        SyncToGradient();
+    }
+
+    float GetCurveValue(size_t curveIndex, float time) override {
+        Color c = gradient_.Evaluate(time);
+        if (curveIndex == 0) return c.r;
+        if (curveIndex == 1) return c.g;
+        if (curveIndex == 2) return c.b;
+        return c.a;
+    }
+
+private:
+    ONEngine::ParticleSystemGradient& gradient_;
+    std::vector<ImVec2> points_[4];
+    ImVec2 min_;
+    ImVec2 max_;
+};
+
 void DrawGradient(const char* label, ONEngine::ParticleSystemGradient& gradient) {
+    ImGui::PushID(label);
     if (ImGui::TreeNode(label)) {
+        float minY = 0.0f;
+        float maxY = 1.0f;
+
+        float availW = ImGui::GetContentRegionAvail().x;
+
+        // ビジュアルグラデーションエディタ
+        GradientCurveDelegate delegate(gradient, minY, maxY);
+        float editorWidth = std::max(availW, 100.0f);
+
+        static ImVector<ImCurveEdit::EditPoint> selectedPoints;
+        selectedPoints.clear();
+
+        ImCurveEdit::Edit(delegate, ImVec2(editorWidth, 120), (unsigned int)ImGui::GetID("##gradientEdit"), NULL, &selectedPoints);
+
+        // 選択された制御点の接線（ハンドル）および値の編集UI
+        if (!selectedPoints.empty()) {
+            int curveIdx = selectedPoints[0].curveIndex;
+            int pointIdx = selectedPoints[0].pointIndex;
+            if (curveIdx >= 0 && curveIdx < 4) {
+                if (curveIdx < 3) {
+                    if (pointIdx >= 0 && pointIdx < (int)gradient.colorKeys.size()) {
+                        ImGui::Text("Selected Color Key #%d (Time: %.2f)", pointIdx, gradient.colorKeys[pointIdx].time);
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("In Tangent", &gradient.colorKeys[pointIdx].inTangent, 0.05f);
+                        ImGui::SameLine();
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("Out Tangent", &gradient.colorKeys[pointIdx].outTangent, 0.05f);
+
+                        ONEngine::Vector4 col = { gradient.colorKeys[pointIdx].color.r, gradient.colorKeys[pointIdx].color.g, gradient.colorKeys[pointIdx].color.b, 1.0f };
+                        if (ImGui::ColorEdit3("Color Value", &col.x)) {
+                            gradient.colorKeys[pointIdx].color.r = col.x;
+                            gradient.colorKeys[pointIdx].color.g = col.y;
+                            gradient.colorKeys[pointIdx].color.b = col.z;
+                        }
+                    }
+                } else {
+                    if (pointIdx >= 0 && pointIdx < (int)gradient.alphaKeys.size()) {
+                        ImGui::Text("Selected Alpha Key #%d (Time: %.2f)", pointIdx, gradient.alphaKeys[pointIdx].time);
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("In Tangent", &gradient.alphaKeys[pointIdx].inTangent, 0.05f);
+                        ImGui::SameLine();
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("Out Tangent", &gradient.alphaKeys[pointIdx].outTangent, 0.05f);
+
+                        ImGui::SetNextItemWidth(availW * 0.4f);
+                        Editor::ImMathf::DragFloat("Alpha Value", &gradient.alphaKeys[pointIdx].alpha, 0.01f, 0.0f, 1.0f);
+                    }
+                }
+            }
+        }
+
+        // キーの手動追加・削除
         if (ImGui::Button("+ Color Key")) gradient.colorKeys.push_back({ Color::kWhite, 1.0f });
         for (size_t i = 0; i < gradient.colorKeys.size(); ++i) {
             ImGui::PushID((int)i);
             ONEngine::Vector4 col = { gradient.colorKeys[i].color.r, gradient.colorKeys[i].color.g, gradient.colorKeys[i].color.b, 1.0f };
-            if (ImGui::ColorEdit3("##col", &col.x)) {
+            if (ImGui::ColorEdit3("##col", &col.x, ImGuiColorEditFlags_NoInputs)) {
                 gradient.colorKeys[i].color.r = col.x; gradient.colorKeys[i].color.g = col.y; gradient.colorKeys[i].color.b = col.z;
             }
-            ImGui::SameLine(); ImGui::DragFloat("Time", &gradient.colorKeys[i].time, 0.01f, 0.0f, 1.0f);
+            ImGui::SameLine();
+            ImGui::SetNextItemWidth(availW * 0.35f);
+            if (ImGui::DragFloat("##time", &gradient.colorKeys[i].time, 0.01f, 0.0f, 1.0f)) {
+                gradient.colorKeys[i].time = std::clamp(gradient.colorKeys[i].time, 0.0f, 1.0f);
+            }
             ImGui::SameLine(); if (ImGui::Button("x")) { gradient.colorKeys.erase(gradient.colorKeys.begin() + i); ImGui::PopID(); break; }
             ImGui::PopID();
         }
         if (ImGui::Button("+ Alpha Key")) gradient.alphaKeys.push_back({ 1.0f, 1.0f });
         for (size_t i = 0; i < gradient.alphaKeys.size(); ++i) {
             ImGui::PushID((int)i + 1000);
-            ImGui::DragFloat("Alpha", &gradient.alphaKeys[i].alpha, 0.01f, 0.0f, 1.0f);
-            ImGui::SameLine(); ImGui::DragFloat("Time", &gradient.alphaKeys[i].time, 0.01f, 0.0f, 1.0f);
+            ImGui::SetNextItemWidth(availW * 0.3f);
+            if (ImGui::DragFloat("##alpha", &gradient.alphaKeys[i].alpha, 0.01f, 0.0f, 1.0f)) {
+                gradient.alphaKeys[i].alpha = std::clamp(gradient.alphaKeys[i].alpha, 0.0f, 1.0f);
+            }
+            ImGui::SameLine();
+            ImGui::SetNextItemWidth(availW * 0.3f);
+            if (ImGui::DragFloat("##time", &gradient.alphaKeys[i].time, 0.01f, 0.0f, 1.0f)) {
+                gradient.alphaKeys[i].time = std::clamp(gradient.alphaKeys[i].time, 0.0f, 1.0f);
+            }
             ImGui::SameLine(); if (ImGui::Button("x")) { gradient.alphaKeys.erase(gradient.alphaKeys.begin() + i); ImGui::PopID(); break; }
             ImGui::PopID();
         }
         ImGui::TreePop();
     }
+    ImGui::PopID();
 }
 
 void DrawMinMaxGradient(const char* label, ONEngine::MinMaxGradient& val) {
@@ -178,18 +388,147 @@ void DrawMinMaxGradient(const char* label, ONEngine::MinMaxGradient& val) {
     ImGui::PopID();
 }
 
+// ImCurveEdit Delegate for AnimationCurve
+class AnimationCurveDelegate : public ImCurveEdit::Delegate {
+public:
+    AnimationCurveDelegate(ONEngine::AnimationCurve& curve, float minY, float maxY) : curve_(curve) {
+        min_ = ImVec2(0.0f, minY);
+        max_ = ImVec2(1.0f, maxY);
+        SyncFromCurve();
+    }
+
+    void SyncFromCurve() {
+        points_.resize(curve_.keys.size());
+        for (size_t i = 0; i < curve_.keys.size(); i++) {
+            points_[i] = ImVec2(std::clamp(curve_.keys[i].time, 0.0f, 1.0f), curve_.keys[i].value);
+        }
+    }
+
+    void SyncToCurve() {
+        curve_.keys.resize(points_.size());
+        for (size_t i = 0; i < points_.size(); i++) {
+            curve_.keys[i].time = std::clamp(points_[i].x, 0.0f, 1.0f);
+            curve_.keys[i].value = points_[i].y;
+        }
+    }
+
+    size_t GetCurveCount() override { return 1; }
+    bool IsVisible(size_t) override { return true; }
+    ImCurveEdit::CurveType GetCurveType(size_t) const override { return ImCurveEdit::CurveBezier; }
+    ImVec2& GetMin() override { return min_; }
+    ImVec2& GetMax() override { return max_; }
+    size_t GetPointCount(size_t) override { return points_.size(); }
+    uint32_t GetCurveColor(size_t) override { return 0xFF40FF40; } // Green curve
+    ImVec2* GetPoints(size_t) override { return points_.empty() ? nullptr : points_.data(); }
+
+    int EditPoint(size_t, int pointIndex, ImVec2 value) override {
+        if (pointIndex >= 0 && pointIndex < (int)points_.size()) {
+            value.x = std::clamp(value.x, 0.0f, 1.0f);
+            points_[pointIndex] = value;
+            SyncToCurve();
+        }
+        return pointIndex;
+    }
+
+    void AddPoint(size_t, ImVec2 value) override {
+        value.x = std::clamp(value.x, 0.0f, 1.0f);
+        // Insert sorted by time
+        size_t insertPos = points_.size();
+        for (size_t i = 0; i < points_.size(); i++) {
+            if (value.x < points_[i].x) {
+                insertPos = i;
+                break;
+            }
+        }
+        points_.insert(points_.begin() + insertPos, value);
+        SyncToCurve();
+    }
+
+    float GetCurveValue(size_t, float time) override {
+        return curve_.Evaluate(time);
+    }
+
+private:
+    ONEngine::AnimationCurve& curve_;
+    std::vector<ImVec2> points_;
+    ImVec2 min_;
+    ImVec2 max_;
+};
+
+// カーブエディタ: Y軸範囲を保持するための静的マップ
+static std::unordered_map<ImGuiID, ImVec2> sCurveYRanges;
+
 void DrawCurve(const char* label, ONEngine::AnimationCurve& curve) {
+    ImGui::PushID(label);
     if (ImGui::TreeNode(label)) {
+        // Y軸範囲の取得・初期化
+        ImGuiID curveId = ImGui::GetID("##curveRange");
+        auto it = sCurveYRanges.find(curveId);
+        if (it == sCurveYRanges.end()) {
+            sCurveYRanges[curveId] = ImVec2(0.0f, 1.0f);
+            it = sCurveYRanges.find(curveId);
+        }
+        float& minY = it->second.x;
+        float& maxY = it->second.y;
+
+        // Y軸範囲の調整UI
+        float availW = ImGui::GetContentRegionAvail().x;
+        ImGui::SetNextItemWidth(availW * 0.35f);
+        ImGui::DragFloat("Min Y", &minY, 0.01f);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(availW * 0.35f);
+        ImGui::DragFloat("Max Y", &maxY, 0.01f);
+
+        if (maxY <= minY) maxY = minY + 0.1f;
+
+        // ビジュアルカーブエディタ
+        AnimationCurveDelegate delegate(curve, minY, maxY);
+        float editorWidth = std::max(availW, 100.0f);
+        
+        static ImVector<ImCurveEdit::EditPoint> selectedPoints;
+        selectedPoints.clear();
+        
+        ImCurveEdit::Edit(delegate, ImVec2(editorWidth, 120), (unsigned int)ImGui::GetID("##curveEdit"), NULL, &selectedPoints);
+
+        // 選択された制御点の接線（ハンドル）を編集するUI
+        if (!selectedPoints.empty()) {
+            int selectedIdx = selectedPoints[0].pointIndex;
+            if (selectedIdx >= 0 && selectedIdx < (int)curve.keys.size()) {
+                ImGui::Text("Selected Key #%d (Time: %.2f)", selectedIdx, curve.keys[selectedIdx].time);
+                
+                ImGui::SetNextItemWidth(availW * 0.4f);
+                Editor::ImMathf::DragFloat("In Tangent", &curve.keys[selectedIdx].inTangent, 0.05f);
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(availW * 0.4f);
+                Editor::ImMathf::DragFloat("Out Tangent", &curve.keys[selectedIdx].outTangent, 0.05f);
+            }
+        }
+
+        // キーの手動追加・削除
         if (ImGui::Button("+ Key")) curve.keys.push_back({ 1.0f, 1.0f });
-        for (size_t i = 0; i < curve.keys.size(); ++i) {
-            ImGui::PushID((int)i);
-            ImGui::DragFloat("Time", &curve.keys[i].time, 0.01f, 0.0f, 1.0f); ImGui::SameLine();
-            ImGui::DragFloat("Value", &curve.keys[i].value, 0.01f);
-            ImGui::SameLine(); if (ImGui::Button("x")) { curve.keys.erase(curve.keys.begin() + i); ImGui::PopID(); break; }
-            ImGui::PopID();
+        ImGui::SameLine();
+        if (ImGui::Button("Clear")) curve.keys.clear();
+
+        // キー一覧（折りたたみ）
+        if (ImGui::TreeNode("Keys")) {
+            for (size_t i = 0; i < curve.keys.size(); ++i) {
+                ImGui::PushID((int)i);
+                ImGui::SetNextItemWidth(availW * 0.3f);
+                if (ImGui::DragFloat("##time", &curve.keys[i].time, 0.01f, 0.0f, 1.0f)) {
+                    curve.keys[i].time = std::clamp(curve.keys[i].time, 0.0f, 1.0f);
+                }
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(availW * 0.3f);
+                ImGui::DragFloat("##value", &curve.keys[i].value, 0.01f);
+                ImGui::SameLine();
+                if (ImGui::Button("x")) { curve.keys.erase(curve.keys.begin() + i); ImGui::PopID(); break; }
+                ImGui::PopID();
+            }
+            ImGui::TreePop();
         }
         ImGui::TreePop();
     }
+    ImGui::PopID();
 }
 
 void DrawMinMaxCurve(const char* label, ONEngine::MinMaxCurve& val) {
@@ -197,7 +536,12 @@ void DrawMinMaxCurve(const char* label, ONEngine::MinMaxCurve& val) {
     ImGui::TextUnformatted(label);
     ImGui::SameLine(ImGui::GetWindowWidth() * 0.4f);
 
+    float availW = ImGui::GetContentRegionAvail().x;
+    float buttonW = 24.0f;
+    float fieldW = availW - buttonW - ImGui::GetStyle().ItemSpacing.x;
+
     if (val.state == ONEngine::MinMaxState::Constant) {
+        ImGui::SetNextItemWidth(fieldW);
         ImGui::DragFloat("##constant", &val.constant, 0.1f);
     } else if (val.state == ONEngine::MinMaxState::Curve) {
         DrawCurve("Curve", val.curve);
@@ -207,7 +551,7 @@ void DrawMinMaxCurve(const char* label, ONEngine::MinMaxCurve& val) {
     }
 
     ImGui::SameLine();
-    if (ImGui::Button("v", ImVec2(20, 0))) ImGui::OpenPopup("MinMaxPopup");
+    if (ImGui::Button("v", ImVec2(buttonW, 0))) ImGui::OpenPopup("MinMaxPopup");
     if (ImGui::BeginPopup("MinMaxPopup")) {
         if (ImGui::MenuItem("Constant", nullptr, val.state == ONEngine::MinMaxState::Constant)) val.state = ONEngine::MinMaxState::Constant;
         if (ImGui::MenuItem("Curve", nullptr, val.state == ONEngine::MinMaxState::Curve)) val.state = ONEngine::MinMaxState::Curve;
@@ -285,12 +629,62 @@ bool ImMathf::InputFloat(const char* label, float* v, float step, float step_fas
 	return ImGui::InputFloat(label, v, step, step_fast, format, flags);
 }
 
+void ImMathf::LoopCursorIfDragging() {
+	if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left)) return;
+
+	POINT cursorPos;
+	::GetCursorPos(&cursorPos);
+
+	HMONITOR hMonitor = ::MonitorFromPoint(cursorPos, MONITOR_DEFAULTTONEAREST);
+	MONITORINFO monitorInfo{};
+	monitorInfo.cbSize = sizeof(MONITORINFO);
+	if (!::GetMonitorInfoA(hMonitor, &monitorInfo)) return;
+
+	RECT rc = monitorInfo.rcMonitor;
+	const int margin = 5;
+	bool wrapped = false;
+	POINT newPos = cursorPos;
+
+	if (cursorPos.x <= rc.left + margin) {
+		newPos.x = rc.right - margin - 1;
+		wrapped = true;
+	} else if (cursorPos.x >= rc.right - margin) {
+		newPos.x = rc.left + margin + 1;
+		wrapped = true;
+	}
+	if (cursorPos.y <= rc.top + margin) {
+		newPos.y = rc.bottom - margin - 1;
+		wrapped = true;
+	} else if (cursorPos.y >= rc.bottom - margin) {
+		newPos.y = rc.top + margin + 1;
+		wrapped = true;
+	}
+
+	if (wrapped) {
+		::SetCursorPos(newPos.x, newPos.y);
+		// ImGuiのマウス座標を補正してデルタの跳びを防ぐ
+		ImGuiIO& io = ImGui::GetIO();
+		ImVec2 delta = ImVec2(
+			(float)(newPos.x - cursorPos.x),
+			(float)(newPos.y - cursorPos.y)
+		);
+		io.MousePos.x += delta.x;
+		io.MousePosPrev.x += delta.x;
+		io.MousePos.y += delta.y;
+		io.MousePosPrev.y += delta.y;
+	}
+}
+
 bool ImMathf::DragFloat(const char* label, float* v, float speed, float min, float max, const char* format, ImGuiInputTextFlags flags) {
-	return ImGui::DragFloat(label, v, speed, min, max, format, flags);
+	bool result = ImGui::DragFloat(label, v, speed, min, max, format, flags);
+	if (ImGui::IsItemActive()) LoopCursorIfDragging();
+	return result;
 }
 
 bool ImMathf::DragFloat3(const char* label, ONEngine::Vector3* v, float speed, float min, float max, const char* format, ImGuiInputTextFlags flags) {
-	return ImGui::DragFloat3(label, &v->x, speed, min, max, format, flags);
+	bool result = ImGui::DragFloat3(label, &v->x, speed, min, max, format, flags);
+	if (ImGui::IsItemActive()) LoopCursorIfDragging();
+	return result;
 }
 
 bool ImMathf::MaterialEdit(const char* label, ONEngine::GPUMaterial* material, ONEngine::Asset::AssetCollection* assetCollection) {
@@ -536,7 +930,7 @@ void ONEngine::ParticleSystemDebug(ParticleSystem* ps) {
 		DrawMinMaxColor("Start Color", ps->main.startColor);
 		Editor::ImMathf::DragFloat("Gravity Modifier", &ps->main.gravityModifier);
 		Editor::ImMathf::InputEnum<SimulationSpace>("Simulation Space", &ps->main.simulationSpace);
-		ImGui::DragInt("Max Particles", &ps->main.maxParticles, 1, 1, 1000000);
+		Editor::ImMathf::DragInt("Max Particles", &ps->main.maxParticles, 1, 1, 1000000);
 	}
 	if (BeginModuleHeader("Emission", &ps->emission.enabled)) {
 		Editor::ImMathf::DragFloat("Rate over Time", &ps->emission.rateOverTime);
@@ -544,8 +938,13 @@ void ONEngine::ParticleSystemDebug(ParticleSystem* ps) {
 			if (ImGui::Button("+")) ps->emission.bursts.push_back({});
 			for (size_t i = 0; i < ps->emission.bursts.size(); ++i) {
 				ImGui::PushID((int)i);
-				ImGui::DragFloat("Time", &ps->emission.bursts[i].time, 0.01f); ImGui::SameLine();
-				ImGui::DragInt("Count", &ps->emission.bursts[i].count); ImGui::SameLine();
+				float burstAvailW = ImGui::GetContentRegionAvail().x;
+				ImGui::SetNextItemWidth(burstAvailW * 0.3f);
+				ImGui::DragFloat("##time", &ps->emission.bursts[i].time, 0.01f);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(burstAvailW * 0.3f);
+				ImGui::DragInt("##count", &ps->emission.bursts[i].count);
+				ImGui::SameLine();
 				if (ImGui::Button("x")) { ps->emission.bursts.erase(ps->emission.bursts.begin() + i); ImGui::PopID(); break; }
 				ImGui::PopID();
 			}
@@ -679,7 +1078,7 @@ void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
 		DrawMinMaxColor("Start Color", ps->main.startColor);
 		Editor::ImMathf::DragFloat("Gravity Modifier", &ps->main.gravityModifier);
 		Editor::ImMathf::InputEnum<SimulationSpace>("Simulation Space", &ps->main.simulationSpace);
-		ImGui::DragInt("Max Particles", &ps->main.maxParticles, 1, 1, 1000000);
+		Editor::ImMathf::DragInt("Max Particles", &ps->main.maxParticles, 1, 1, 1000000);
 	}
 	if (BeginModuleHeader("Emission", &ps->emission.enabled)) {
 		Editor::ImMathf::DragFloat("Rate over Time", &ps->emission.rateOverTime);
@@ -687,8 +1086,13 @@ void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
 			if (ImGui::Button("+")) ps->emission.bursts.push_back({});
 			for (size_t i = 0; i < ps->emission.bursts.size(); ++i) {
 				ImGui::PushID((int)i);
-				ImGui::DragFloat("Time", &ps->emission.bursts[i].time, 0.01f); ImGui::SameLine();
-				ImGui::DragInt("Count", &ps->emission.bursts[i].count); ImGui::SameLine();
+				float burstAvailW = ImGui::GetContentRegionAvail().x;
+				ImGui::SetNextItemWidth(burstAvailW * 0.3f);
+				ImGui::DragFloat("##time", &ps->emission.bursts[i].time, 0.01f);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(burstAvailW * 0.3f);
+				ImGui::DragInt("##count", &ps->emission.bursts[i].count);
+				ImGui::SameLine();
 				if (ImGui::Button("x")) { ps->emission.bursts.erase(ps->emission.bursts.begin() + i); ImGui::PopID(); break; }
 				ImGui::PopID();
 			}
@@ -754,8 +1158,16 @@ void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
 		}
 
 		Editor::ImMathf::InputEnum<ParticleSystemRenderer::BlendMode>("Blend Mode", &ps->renderer.blendMode);
+		Editor::ImMathf::InputEnum<FlipMode>("Flip Mode", &ps->renderer.flipMode);
 		DrawAssetGuidField("Material", ps->renderer.materialGuid, Asset::AssetType::Material);
 		DrawAssetGuidField("Mesh", ps->renderer.meshGuid, Asset::AssetType::Mesh);
+	}
+	EndModuleHeader();
+
+	if (BeginModuleHeader("Texture Sheet Animation", &ps->textureSheetAnimation.enabled)) {
+		Editor::ImMathf::DragInt("Tiles X", &ps->textureSheetAnimation.tilesX, 1, 1, 64);
+		Editor::ImMathf::DragInt("Tiles Y", &ps->textureSheetAnimation.tilesY, 1, 1, 64);
+		if (!ps->textureSheetAnimation.enabled) ImGui::EndDisabled();
 	}
 	EndModuleHeader();
 }

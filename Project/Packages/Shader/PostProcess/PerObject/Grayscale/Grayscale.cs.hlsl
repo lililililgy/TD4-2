@@ -18,5 +18,5 @@ void main(uint3 dispatchId : SV_DispatchThreadID) {
 	float4 color = colorTex.Sample(textureSampler, texCoord);
 
 	float value = dot(color.rgb, float3(0.2125f, 0.7154f, 0.0721f));
-	outputTex[dispatchId.xy] = float4(value, value, value, 1.0f);
+	outputTex[dispatchId.xy] = float4(value, value, value, color.a);
 }

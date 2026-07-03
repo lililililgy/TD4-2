@@ -31,10 +31,11 @@ void PostProcessGrayscale::Initialize(ShaderCompiler* shaderCompiler, DxManager*
 
 }
 
-void PostProcessGrayscale::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, [[maybe_unused]] EntityComponentSystem* entityComponentSystem) {
+void PostProcessGrayscale::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, [[maybe_unused]] EntityComponentSystem* entityComponentSystem, ECSGroup* ecsGroup) {
 
 	/// 配列の取得とタグの確認
-	ComponentArray<ScreenPostEffectTag>* screenPostEffectTagArray = entityComponentSystem->GetCurrentGroup()->GetComponentArray<ScreenPostEffectTag>();
+	ECSGroup* activeGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
+	ComponentArray<ScreenPostEffectTag>* screenPostEffectTagArray = activeGroup->GetComponentArray<ScreenPostEffectTag>();
 	if (!screenPostEffectTagArray || screenPostEffectTagArray->GetUsedComponents().empty()) {
 		return;
 	}
