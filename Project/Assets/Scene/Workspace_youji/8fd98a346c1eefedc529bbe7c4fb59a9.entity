@@ -127,7 +127,7 @@
                 }
             },
             "renderer": {
-                "blendMode": 0,
+                "blendMode": 1,
                 "flipMode": 0,
                 "materialGuid": "",
                 "meshGuid": "",

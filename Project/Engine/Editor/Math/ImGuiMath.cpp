@@ -208,14 +208,14 @@ public:
     void SyncFromCurve() {
         points_.resize(curve_.keys.size());
         for (size_t i = 0; i < curve_.keys.size(); i++) {
-            points_[i] = ImVec2(curve_.keys[i].time, curve_.keys[i].value);
+            points_[i] = ImVec2(std::clamp(curve_.keys[i].time, 0.0f, 1.0f), curve_.keys[i].value);
         }
     }
 
     void SyncToCurve() {
         curve_.keys.resize(points_.size());
         for (size_t i = 0; i < points_.size(); i++) {
-            curve_.keys[i].time = points_[i].x;
+            curve_.keys[i].time = std::clamp(points_[i].x, 0.0f, 1.0f);
             curve_.keys[i].value = points_[i].y;
         }
     }
@@ -231,6 +231,7 @@ public:
 
     int EditPoint(size_t, int pointIndex, ImVec2 value) override {
         if (pointIndex >= 0 && pointIndex < (int)points_.size()) {
+            value.x = std::clamp(value.x, 0.0f, 1.0f);
             points_[pointIndex] = value;
             SyncToCurve();
         }
@@ -238,6 +239,7 @@ public:
     }
 
     void AddPoint(size_t, ImVec2 value) override {
+        value.x = std::clamp(value.x, 0.0f, 1.0f);
         // Insert sorted by time
         size_t insertPos = points_.size();
         for (size_t i = 0; i < points_.size(); i++) {
@@ -298,7 +300,9 @@ void DrawCurve(const char* label, ONEngine::AnimationCurve& curve) {
             for (size_t i = 0; i < curve.keys.size(); ++i) {
                 ImGui::PushID((int)i);
                 ImGui::SetNextItemWidth(availW * 0.3f);
-                ImGui::DragFloat("##time", &curve.keys[i].time, 0.01f, 0.0f, 1.0f);
+                if (ImGui::DragFloat("##time", &curve.keys[i].time, 0.01f, 0.0f, 1.0f)) {
+                    curve.keys[i].time = std::clamp(curve.keys[i].time, 0.0f, 1.0f);
+                }
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(availW * 0.3f);
                 ImGui::DragFloat("##value", &curve.keys[i].value, 0.01f);
