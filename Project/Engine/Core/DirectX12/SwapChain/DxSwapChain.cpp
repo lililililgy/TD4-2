@@ -60,6 +60,13 @@ void DxSwapChain::Initialize(DxManager* dxm, Window* window) {
 		/// SwapChain4に引き渡す
 		result = swapChain1->QueryInterface(IID_PPV_ARGS(&swapChain_));
 		Assert(SUCCEEDED(result), "Failed to pass swap chain4");
+
+		/// DXGIによるAlt+Enterの自動フルスクリーン切り替えを無効化する
+		/// (EngineのWindowクラス側で独自にフルスクリーン制御を行っているため、競合によるクラッシュを防ぐ)
+		result = pDxManager_->GetDxDevice()->GetFactory()->MakeWindowAssociation(
+			pWindow_->GetHwnd(), DXGI_MWA_NO_ALT_ENTER
+		);
+		Assert(SUCCEEDED(result), "Failed to MakeWindowAssociation");
 	}
 	
 
