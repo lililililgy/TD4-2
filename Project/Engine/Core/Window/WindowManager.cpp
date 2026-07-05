@@ -1,4 +1,4 @@
-﻿#include "WindowManager.h"
+#include "WindowManager.h"
 
 using namespace ONEngine;
 
@@ -34,6 +34,17 @@ LRESULT WindowManager::MainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM
 #endif // DEBUG_MODE
 
 	switch (msg) {
+	case WM_SIZE:
+		if (gWindowManager && gWindowManager->pMainWindow_) {
+			if (wparam != SIZE_MINIMIZED) {
+				UINT width = LOWORD(lparam);
+				UINT height = HIWORD(lparam);
+				if (width > 0 && height > 0 && gWindowManager->pMainWindow_->dxSwapChain_) {
+					gWindowManager->pMainWindow_->dxSwapChain_->Resize(width, height);
+				}
+			}
+		}
+		return 0;
 	case WM_CLOSE:
 		if (gWindowManager) {
 			gWindowManager->SetCloseRequested(true);
@@ -54,6 +65,22 @@ LRESULT WindowManager::SubWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 #endif // DEBUG_MODE
 
 	switch (msg) {
+	case WM_SIZE:
+		if (gWindowManager) {
+			for (auto& window : gWindowManager->windows_) {
+				if (window->GetHwnd() == hwnd) {
+					if (wparam != SIZE_MINIMIZED) {
+						UINT width = LOWORD(lparam);
+						UINT height = HIWORD(lparam);
+						if (width > 0 && height > 0 && window->dxSwapChain_) {
+							window->dxSwapChain_->Resize(width, height);
+						}
+					}
+					break;
+				}
+			}
+		}
+		return 0;
 	case WM_CLOSE:
 	case WM_DESTROY: /// window破棄
 		DestroyWindow(hwnd);

@@ -61,10 +61,14 @@ void DxSwapChain::Initialize(DxManager* dxm, Window* window) {
 		result = swapChain1->QueryInterface(IID_PPV_ARGS(&swapChain_));
 		Assert(SUCCEEDED(result), "Failed to pass swap chain4");
 
-		/// DXGIによるAlt+Enterの自動フルスクリーン切り替えを無効化する
+		/// DXGIによるAlt+Enterの自動フルスクリーン切り替えおよびウィンドウ変更監視を無効化する
 		/// (EngineのWindowクラス側で独自にフルスクリーン制御を行っているため、競合によるクラッシュを防ぐ)
-		result = pDxManager_->GetDxDevice()->GetFactory()->MakeWindowAssociation(
-			pWindow_->GetHwnd(), DXGI_MWA_NO_ALT_ENTER
+		ComPtr<IDXGIFactory> parentFactory;
+		result = swapChain_->GetParent(IID_PPV_ARGS(&parentFactory));
+		Assert(SUCCEEDED(result), "Failed to get parent factory from swap chain");
+
+		result = parentFactory->MakeWindowAssociation(
+			pWindow_->GetHwnd(), DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_WINDOW_CHANGES
 		);
 		Assert(SUCCEEDED(result), "Failed to MakeWindowAssociation");
 	}
@@ -152,6 +156,57 @@ void DxSwapChain::Present() {
 
 	HRESULT hr = swapChain_->Present(1, presentFlags);
 	Assert(SUCCEEDED(hr), "Failed to present.");
+}
+
+void DxSwapChain::Resize(uint32_t width, uint32_t height) {
+	if (!swapChain_) {
+		return;
+	}
+
+	/// GPUの書き込み完了を同期し、バックバッファへの参照を全てクリアする
+	pDxManager_->GetDxCommand()->WaitForGpuComplete();
+
+	for (uint8_t i = 0u; i < kBufferCount; ++i) {
+		buffers_[i].Reset();
+	}
+
+	/// バッファのリサイズを実行
+	HRESULT hr = swapChain_->ResizeBuffers(
+		kBufferCount,
+		width,
+		height,
+		DXGI_FORMAT_UNKNOWN,
+		0
+	);
+	Assert(SUCCEEDED(hr), "Failed to ResizeBuffers");
+
+	/// RTVとバッファを再取得/作成
+	D3D12_RENDER_TARGET_VIEW_DESC desc{};
+	desc.Format        = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+	for (uint8_t i = 0u; i < kBufferCount; ++i) {
+		hr = swapChain_->GetBuffer(i, IID_PPV_ARGS(&buffers_[i]));
+		Assert(SUCCEEDED(hr), "Failed to get swap chain buffer after resize");
+
+		pDxManager_->GetDxDevice()->GetDevice()->CreateRenderTargetView(
+			buffers_[i].Get(), &desc, rtvHandles_[i]);
+	}
+
+	/// ビューポートとシザー矩形も新しいサイズに更新する
+	viewport_.Width     = static_cast<float>(width);
+	viewport_.Height    = static_cast<float>(height);
+	viewport_.TopLeftX  = 0.0f;
+	viewport_.TopLeftY  = 0.0f;
+	viewport_.MinDepth  = 0.0f;
+	viewport_.MaxDepth  = 1.0f;
+
+	scissorRect_.left   = 0;
+	scissorRect_.right  = static_cast<LONG>(width);
+	scissorRect_.top    = 0;
+	scissorRect_.bottom = static_cast<LONG>(height);
+
+	Console::Log("DxSwapChain resized successfully.");
 }
 
 
