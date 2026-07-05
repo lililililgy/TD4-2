@@ -18,7 +18,8 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
-#include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/BGMPlayer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/SEPlayer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Variables/Variables.h"
@@ -55,7 +56,8 @@ namespace {
 			Register<DirectionalLight>();
 			Register<PointLight>();
 			Register<SpotLight>();
-			Register<AudioSource>();
+			Register<BGMPlayer>();
+			Register<SEPlayer>();
 			Register<Effect>();
 			Register<ParticleSystem>();
 			Register<ParticleSystem2D>();

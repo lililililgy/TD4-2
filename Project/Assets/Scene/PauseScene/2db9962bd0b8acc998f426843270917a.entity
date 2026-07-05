@@ -23,7 +23,25 @@
             "type": "Transform"
         },
         {
+            "Test": {
+                "color": {
+                    "w": 0.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "Test"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "2db9962bd0b8acc998f426843270917a",

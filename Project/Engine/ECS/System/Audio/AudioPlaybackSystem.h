@@ -13,7 +13,8 @@
 
 namespace ONEngine {
 class ECSGroup;
-class AudioSource;
+class BGMPlayer;
+class SEPlayer;
 }
 
 namespace ONEngine::Asset {
@@ -44,20 +45,22 @@ private:
 	/// private : methods
 	/// ==================================================
 
-
 	/// 設定
-	void SetAudioClip(AudioSource* audioSource);
+	void SetBGMAudioClip(BGMPlayer* bgm);
+	void SetSEAudioClip(SEPlayer* se);
 
 	/// 再生
-	void PlayAudio(AudioSource* audioSource);
-	void PlayOneShot(Asset::AudioClip* audioClip, float volume, float pitch, const std::string& path);
+	void PlayBGM(BGMPlayer* bgm);
+	void PlaySE(SEPlayer* se);
+	void PlayOneShotSE(Asset::AudioClip* audioClip, float volume, float pitch, const std::string& path);
 
 	/// 状態の取得
-	int GetAudioState(AudioSource* audioSource);
+	int GetBGMState(BGMPlayer* bgm);
+	int GetSEState(SEPlayer* se);
 
 private:
 	/// ===================================================
-	/// private : methods
+	/// private : objects
 	/// ===================================================
 
 	/// other classes
@@ -67,8 +70,12 @@ private:
 	ComPtr<IXAudio2> xAudio2_ = nullptr;
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-	/// one shot audios
-	std::list<IXAudio2SourceVoice*> oneShotAudios_;
+	/// BGM (システム全体でアクティブなBGMは常に1つ)
+	IXAudio2SourceVoice* activeBGMVoice_ = nullptr;
+	BGMPlayer* activeBGMPlayer_ = nullptr;
+
+	/// SE (OneShotSEで再生されたボイス)
+	std::list<IXAudio2SourceVoice*> oneShotSEVoices_;
 
 	float masterVolume_;
 

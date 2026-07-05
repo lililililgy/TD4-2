@@ -11,7 +11,7 @@ public class PauseGroup : MonoScript {
 	}
 
 	public void OnUISelect(string selectElementName) {
-		AudioSource audio = entity.GetComponent<AudioSource>();
+		SEPlayer audio = entity.GetComponent<SEPlayer>();
 		if(audio) {
 			audio.Play();
 		}

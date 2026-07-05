@@ -7,7 +7,8 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/Terrain.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Light/Light.h"
-#include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/BGMPlayer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/SEPlayer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Effect/Effect.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
@@ -49,7 +50,8 @@ inline void AddComponentFactoryFunction(ComponentCollection* compCollection) {
 	compCollection->RegisterComponentFactory<DirectionalLight>();
 	compCollection->RegisterComponentFactory<PointLight>();
 	compCollection->RegisterComponentFactory<SpotLight>();
-	compCollection->RegisterComponentFactory<AudioSource>();
+	compCollection->RegisterComponentFactory<BGMPlayer>();
+	compCollection->RegisterComponentFactory<SEPlayer>();
 	compCollection->RegisterComponentFactory<Variables>();
 	compCollection->RegisterComponentFactory<Effect>();
 	compCollection->RegisterComponentFactory<ParticleSystem>();

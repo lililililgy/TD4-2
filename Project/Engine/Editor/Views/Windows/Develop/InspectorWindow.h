@@ -41,6 +41,7 @@ class InspectorWindow : public IEditorWindow {
 		Collider,	/// BoxColliderを筆頭に衝突判定に用いるコンポーネント
 		Script,		/// Script
 		Light,		/// Light
+		Audio,		/// Audio関連コンポーネント
 	};
 
 	using EditFunc = std::function<void(const std::vector<ONEngine::IComponent*>&)>;

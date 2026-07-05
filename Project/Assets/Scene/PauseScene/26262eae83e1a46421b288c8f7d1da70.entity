@@ -3,6 +3,13 @@
     "components": [
         {
             "enable": 1,
+            "path": "./Assets/Sounds/pause-ui-select.mp3",
+            "pitch": 1.0,
+            "type": "SEPlayer",
+            "volume": 1.0
+        },
+        {
+            "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
@@ -52,13 +59,6 @@
                 }
             ],
             "type": "Script"
-        },
-        {
-            "enable": 1,
-            "path": "./Assets/Sounds/pause-ui-select.mp3",
-            "pitch": 1.0,
-            "type": "AudioSource",
-            "volume": 1.0
         }
     ],
     "guid": "26262eae83e1a46421b288c8f7d1da70",
