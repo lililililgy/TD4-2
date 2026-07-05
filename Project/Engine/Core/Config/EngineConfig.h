@@ -1,6 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "Engine/Core/Utility/Math/Vector2.h"
+#include <string>
 
 namespace ONEngine {
 
@@ -9,6 +10,16 @@ namespace ONEngine {
 /// /////////////////////////////////////////////////
 namespace EngineConfig {
 static const Vector2 kWindowSize = { 1920.0f, 1080.0f };
+
+extern std::string startScene;
+extern std::string windowTitle;
+extern int windowWidth;
+extern int windowHeight;
+extern bool isFullscreen;
+extern bool enableVSync;
+
+void LoadConfig();
+void SaveConfig();
 }
 
 /// /////////////////////////////////////////////////

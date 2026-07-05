@@ -386,6 +386,8 @@ void MonoScriptEngine::ResetCS() {
 }
 
 MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& ecsGroupName, int32_t entityId) {
+	mono_thread_attach(domain_);
+
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if(!monoClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem", LogCategory::ScriptEngine);
@@ -399,7 +401,7 @@ MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& ecsGroupName, i
 	}
 
 	void* args[2];
-	args[0] = mono_string_new(mono_domain_get(), ecsGroupName.c_str());
+	args[0] = mono_string_new(domain_, ecsGroupName.c_str());
 	args[1] = &entityId;
 
 	MonoObject* exc = nullptr;
@@ -413,6 +415,8 @@ MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& ecsGroupName, i
 }
 
 MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupName, int32_t entityId, const std::string& behaviorName) {
+	mono_thread_attach(domain_);
+
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if(!monoClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem", LogCategory::ScriptEngine);
@@ -426,9 +430,9 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupN
 	}
 
 	void* args[3];
-	args[0] = mono_string_new(mono_domain_get(), ecsGroupName.c_str());
+	args[0] = mono_string_new(domain_, ecsGroupName.c_str());
 	args[1] = &entityId;
-	args[2] = mono_string_new(mono_domain_get(), behaviorName.c_str());
+	args[2] = mono_string_new(domain_, behaviorName.c_str());
 
 	MonoObject* exc = nullptr;
 	MonoObject* result = MonoScriptEngineUtils::SafeInvoke(method, nullptr, args, &exc);
@@ -441,6 +445,8 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupN
 }
 
 MonoObject* MonoScriptEngine::GetEcsGroupObject(const std::string& groupName) {
+	mono_thread_attach(domain_);
+
 	if(!getEcsGroupMethod_) {
 		Console::LogError("getEcsGroupMethod_ is null", LogCategory::ScriptEngine);
 		return nullptr;

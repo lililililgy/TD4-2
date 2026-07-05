@@ -214,18 +214,39 @@ void WindowManager::CreateGameWindow(const wchar_t* title, const Vector2& size, 
 
 	RegisterClass(&windowPtr->windowClass_);
 
-	windowPtr->wrc_ = { 0, 0, static_cast<int>(size.x), static_cast<int>(size.y) };
-	AdjustWindowRect(&windowPtr->wrc_, WS_OVERLAPPEDWINDOW, false);
+	int x = CW_USEDEFAULT;
+	int y = CW_USEDEFAULT;
+	int width = static_cast<int>(size.x);
+	int height = static_cast<int>(size.y);
+
+#ifndef DEBUG_MODE
+	// フルスクリーン判定 (Mainウィンドウのみ、且つ非デバッグモードのみ)
+	if (windowType == WindowType::Main && ONEngine::EngineConfig::isFullscreen) {
+		windowPtr->windowStyle_ = WS_POPUP;
+		x = 0;
+		y = 0;
+		width = GetSystemMetrics(SM_CXSCREEN);
+		height = GetSystemMetrics(SM_CYSCREEN);
+		windowPtr->wrc_ = { 0, 0, width, height };
+	} else {
+#endif
+		windowPtr->wrc_ = { 0, 0, width, height };
+		AdjustWindowRect(&windowPtr->wrc_, windowPtr->windowStyle_, false);
+		width = windowPtr->wrc_.right - windowPtr->wrc_.left;
+		height = windowPtr->wrc_.bottom - windowPtr->wrc_.top;
+#ifndef DEBUG_MODE
+	}
+#endif
 
 	windowPtr->hwnd_ = CreateWindowEx(
 		0,
 		windowPtr->windowClass_.lpszClassName,
 		title,
 		windowPtr->windowStyle_,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		windowPtr->wrc_.right - windowPtr->wrc_.left,
-		windowPtr->wrc_.bottom - windowPtr->wrc_.top,
+		x,
+		y,
+		width,
+		height,
 		nullptr,
 		nullptr,
 		windowPtr->windowClass_.hInstance,

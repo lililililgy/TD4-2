@@ -1,0 +1,1304 @@
+[04:45:20.184] [info] Logger initialized.
+[04:45:20.193] [info] Use Adapter:NVIDIA GeForce RTX 3060 Laptop GPU
+[04:45:20.394] [info] FeatureLevel : 12.2
+[04:45:20.394] [info] dx device create success!!
+[04:45:20.427] [info] dx command create success!!
+[04:45:20.427] [info] dx descriptor heap rtv create success!!
+[04:45:20.427] [info] dx descriptor heap cbv,srv,uav create success!!
+[04:45:20.427] [info] dx descriptor heap dsv create success!!
+[04:45:20.521] [info] dx swap chain create success!!
+[04:45:20.529] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Line2D.vs.hlsl", profile:"vs_6_0"
+[04:45:20.532] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Line2D.ps.hlsl", profile:"ps_6_0"
+[04:45:20.541] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Sprite/Sprite.vs.hlsl", profile:"vs_6_0"
+[04:45:20.551] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Sprite/Sprite.ps.hlsl", profile:"ps_6_0"
+[04:45:20.567] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/ParticleSystem2D/ParticleSystem2D.vs.hlsl", profile:"vs_6_0"
+[04:45:20.573] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/ParticleSystem2D/ParticleSystem2D.ps.hlsl", profile:"ps_6_0"
+[04:45:20.590] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Line3D.vs.hlsl", profile:"vs_6_0"
+[04:45:20.595] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Line3D.ps.hlsl", profile:"ps_6_0"
+[04:45:20.604] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Skybox/Skybox.vs.hlsl", profile:"vs_6_0"
+[04:45:20.610] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Skybox/Skybox.ps.hlsl", profile:"ps_6_0"
+[04:45:20.628] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/Mesh.vs.hlsl", profile:"vs_6_0"
+[04:45:20.644] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/Mesh.ps.hlsl", profile:"ps_6_0"
+[04:45:20.662] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/DissolveMesh.vs.hlsl", profile:"vs_6_0"
+[04:45:20.680] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/DissolveMesh.ps.hlsl", profile:"ps_6_0"
+[04:45:20.706] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/SkinMesh.vs.hlsl", profile:"vs_6_0"
+[04:45:20.722] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/SkinMesh.ps.hlsl", profile:"ps_6_0"
+[04:45:20.737] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Effect/Effect.vs.hlsl", profile:"vs_6_0"
+[04:45:20.747] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Effect/Effect.ps.hlsl", profile:"ps_6_0"
+[04:45:20.778] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/ParticleSystem/ParticleSystem.vs.hlsl", profile:"vs_6_0"
+[04:45:20.787] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/ParticleSystem/ParticleSystem.ps.hlsl", profile:"ps_6_0"
+[04:45:20.815] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Grass/Grass.as.hlsl", profile:"as_6_5"
+[04:45:20.842] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Grass/Grass.ms.hlsl", profile:"ms_6_5"
+[04:45:20.850] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Grass/Grass.ps.hlsl", profile:"ps_6_0"
+[04:45:20.863] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Gizmo3D.vs.hlsl", profile:"vs_6_0"
+[04:45:20.867] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Gizmo3D.ps.hlsl", profile:"ps_6_0"
+[04:45:20.880] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Gizmo3D.vs.hlsl", profile:"vs_6_0"
+[04:45:20.885] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Gizmo3D.ps.hlsl", profile:"ps_6_0"
+[04:45:20.921] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/PerObject/Lighting/Lighting.cs.hlsl", profile:"cs_6_6"
+[04:45:20.934] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/PerObject/Grayscale/Grayscale.cs.hlsl", profile:"cs_6_6"
+[04:45:20.946] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/PerObject/TerrainBrush/TerrainBrush.cs.hlsl", profile:"cs_6_6"
+[04:45:20.958] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/PerObject/VoxelTerrainBrush/VoxelTerrainBrush.cs.hlsl", profile:"cs_6_6"
+[04:45:20.971] [info] [Load Resource] type:Shader, path:"./Packages/Shader/PostProcess/PerObject/GaussianBlur/GaussianBlur.cs.hlsl", profile:"cs_6_6"
+[04:45:20.991] [info] [Load Resource] type:Shader, path:"./Packages/Shader/PostProcess/Screen/ShadowMap/ShadowMap.cs.hlsl", profile:"cs_6_6"
+[04:45:21.004] [info] [Load Resource] type:Shader, path:"./Packages/Shader/PostProcess/Screen/Fog/Fog.cs.hlsl", profile:"cs_6_6"
+[04:45:21.014] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/Grayscale/Grayscale.cs.hlsl", profile:"cs_6_6"
+[04:45:21.026] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/RadialBlur/RadialBlur.cs.hlsl", profile:"cs_6_6"
+[04:45:21.052] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/WaterCausticsLightShafts/WaterCausticsLightShafts.cs.hlsl", profile:"cs_6_6"
+[04:45:21.065] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/WaterDepthFogVignette/WaterDepthFogVignette.cs.hlsl", profile:"cs_6_6"
+[04:45:21.080] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/WaterColorGrading/WaterColorGrading.cs.hlsl", profile:"cs_6_6"
+[04:45:21.089] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/WaterDistortion/WaterDistortion.cs.hlsl", profile:"cs_6_6"
+[04:45:21.096] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/Fisheye/Fisheye.cs.hlsl", profile:"cs_6_6"
+[04:45:21.109] [info] [Success Texture Info] Path: "./Packages/Textures/white.png"
+[04:45:21.109] [info]  - DescriptorIndex: 0
+[04:45:21.109] [info] AssetCollection: Scanning directory: ./Packages/
+[04:45:21.113] [info] AssetCollection: Found 119 assets in ./Packages/
+[04:45:21.113] [info] AssetCollection: Scanning directory: ./Assets/
+[04:45:21.113] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Grass1.obj" (ext: ".obj")
+[04:45:21.113] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Bush2.obj" (ext: ".obj")
+[04:45:21.113] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Bush1.obj" (ext: ".obj")
+[04:45:21.113] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Bush3.obj" (ext: ".obj")
+[04:45:21.115] [info] AssetCollection: Found 93 assets in ./Assets/
+[04:45:21.121] [info]   Mesh[0]: "Grass1_Cube", Vertices: 152, Bones: 0
+[04:45:21.121] [info]   Mesh[0]: "Bush3_Icosphere.004", Vertices: 72, Bones: 0
+[04:45:21.121] [info]   Mesh[0]: "Bush1_Icosphere", Vertices: 113, Bones: 0
+[04:45:21.121] [info]   Mesh[0]: "Bush2_Icosphere.002", Vertices: 172, Bones: 0
+[04:45:21.122] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Grass1.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.122] [info]   Mesh[1]: "Tree.002", Vertices: 138, Bones: 0
+[04:45:21.122] [info]   Mesh[1]: "Tree", Vertices: 83, Bones: 0
+[04:45:21.122] [info]   Mesh[1]: "Tree.001", Vertices: 222, Bones: 0
+[04:45:21.123] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Grass2.obj" (ext: ".obj")
+[04:45:21.123] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Bush1.obj", Total Meshes: 2, Total Clips: 0
+[04:45:21.123] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Bush3.obj", Total Meshes: 2, Total Clips: 0
+[04:45:21.123] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Bush2.obj", Total Meshes: 2, Total Clips: 0
+[04:45:21.124] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Rock1.obj" (ext: ".obj")
+[04:45:21.124] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Grass3.obj" (ext: ".obj")
+[04:45:21.124] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Rock2.obj" (ext: ".obj")
+[04:45:21.131] [info]   Mesh[0]: "Grass2_Cube.003", Vertices: 366, Bones: 0
+[04:45:21.131] [info]   Mesh[0]: "Icosphere_Icosphere.002", Vertices: 102, Bones: 0
+[04:45:21.132] [info]   Mesh[0]: "Grass3_Cube.003", Vertices: 364, Bones: 0
+[04:45:21.132] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Grass2.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.132] [info]   Mesh[0]: "Rock_Icosphere.001", Vertices: 98, Bones: 0
+[04:45:21.133] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Rock2.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.133] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Rock3.obj" (ext: ".obj")
+[04:45:21.133] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Grass3.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.133] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Rock1.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.133] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Tree1.obj" (ext: ".obj")
+[04:45:21.133] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Tree2.obj" (ext: ".obj")
+[04:45:21.133] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Tree3.obj" (ext: ".obj")
+[04:45:21.139] [info]   Mesh[0]: "Rock3_Icosphere", Vertices: 84, Bones: 0
+[04:45:21.141] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Rock3.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.141] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Tree4.obj" (ext: ".obj")
+[04:45:21.142] [info]   Mesh[0]: "Tree2_Icosphere.001", Vertices: 536, Bones: 0
+[04:45:21.143] [info]   Mesh[1]: "Tree.004", Vertices: 550, Bones: 0
+[04:45:21.143] [info]   Mesh[0]: "Tree1_Icosphere.002", Vertices: 518, Bones: 0
+[04:45:21.143] [info]   Mesh[0]: "Tree3_Icosphere.001", Vertices: 598, Bones: 0
+[04:45:21.144] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Tree2.obj", Total Meshes: 2, Total Clips: 0
+[04:45:21.144] [info]   Mesh[1]: "Tree.003", Vertices: 356, Bones: 0
+[04:45:21.144] [info]   Mesh[1]: "Leaves.008", Vertices: 118, Bones: 0
+[04:45:21.144] [info] [Load] [Model] - Starting load: "./Packages/Models/Human/sneakWalk.gltf" (ext: ".gltf")
+[04:45:21.145] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Tree1.obj", Total Meshes: 2, Total Clips: 0
+[04:45:21.145] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Tree3.obj", Total Meshes: 2, Total Clips: 0
+[04:45:21.145] [info] [Load] [Model] - Starting load: "./Packages/Models/Human/walk.gltf" (ext: ".gltf")
+[04:45:21.145] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/cube.obj" (ext: ".obj")
+[04:45:21.150] [info]   Mesh[0]: "Tree4_Cylinder.003", Vertices: 665, Bones: 0
+[04:45:21.151] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[04:45:21.151] [info]   Mesh[1]: "Leaves.009", Vertices: 1035, Bones: 0
+[04:45:21.152] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/cube.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.152] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/cylinder.obj" (ext: ".obj")
+[04:45:21.152] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Tree4.obj", Total Meshes: 2, Total Clips: 0
+[04:45:21.153] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/frontToPlane.obj" (ext: ".obj")
+[04:45:21.159] [info]   Mesh[0]: "円柱", Vertices: 130, Bones: 0
+[04:45:21.159] [info]   Mesh[0]: "frontToPlane", Vertices: 4, Bones: 0
+[04:45:21.160] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/cylinder.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.160] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/frontToPlane.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.160] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/plane.obj" (ext: ".obj")
+[04:45:21.161] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/sphere.obj" (ext: ".obj")
+[04:45:21.166] [info]   Mesh[0]: "Retopology_hp_Plane.002", Vertices: 13538, Bones: 55
+[04:45:21.167] [info]   Mesh[0]: "平面", Vertices: 4, Bones: 0
+[04:45:21.168] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/plane.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.168] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/tube.obj" (ext: ".obj")
+[04:45:21.168] [info]   Mesh[0]: "Retopology_hp_Plane.002", Vertices: 13538, Bones: 55
+[04:45:21.169] [info] [Load] [AnimationClip] - name:"Armature|mixamo.com|Layer0", hash: 95722531, duration: 0.90s
+[04:45:21.169] [info]   Mesh[0]: "球", Vertices: 559, Bones: 0
+[04:45:21.170] [info] [Load] [Model] - Finished: "./Packages/Models/Human/sneakWalk.gltf", Total Meshes: 1, Total Clips: 1
+[04:45:21.170] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/sphere.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.171] [info] [Load] [AnimationClip] - name:"Armature|mixamo.com|Layer0", hash: 95722531, duration: 1.03s
+[04:45:21.172] [info] [Load] [Model] - Finished: "./Packages/Models/Human/walk.gltf", Total Meshes: 1, Total Clips: 1
+[04:45:21.174] [info]   Mesh[0]: "円柱", Vertices: 66, Bones: 0
+[04:45:21.174] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/tube.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.181] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/FileIcon.png"
+[04:45:21.181] [info]  - DescriptorIndex: 1
+[04:45:21.181] [info] [Success Texture Info] Path: "./Packages/Textures/Dirt.jpg"
+[04:45:21.181] [info]  - DescriptorIndex: 2
+[04:45:21.181] [info] [Success Texture Info] Path: "./Packages/Textures/Grass.jpg"
+[04:45:21.181] [info]  - DescriptorIndex: 3
+[04:45:21.184] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/FolderIcon.png"
+[04:45:21.184] [info]  - DescriptorIndex: 4
+[04:45:21.186] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/pause.png"
+[04:45:21.187] [info]  - DescriptorIndex: 5
+[04:45:21.187] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/lets-icons-sound-none-256.png"
+[04:45:21.187] [info]  - DescriptorIndex: 6
+[04:45:21.188] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/ph-file-c-sharp-none-256.png"
+[04:45:21.188] [info]  - DescriptorIndex: 7
+[04:45:21.188] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/play.png"
+[04:45:21.189] [info]  - DescriptorIndex: 8
+[04:45:21.189] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/reload.png"
+[04:45:21.189] [info]  - DescriptorIndex: 9
+[04:45:21.191] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/TerrainEditTextures/BrushModeIcon.png"
+[04:45:21.191] [info]  - DescriptorIndex: 10
+[04:45:21.194] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/skip.png"
+[04:45:21.194] [info]  - DescriptorIndex: 11
+[04:45:21.198] [error] [Load Failed] File is not a Texture3D DDS: "./Packages/Textures/kloofendal_48d_partly_cloudy_puresky_2k.dds"
+[04:45:21.200] [error] [Load Failed] File is not a Texture3D DDS: "./Packages/Textures/rostock_laage_airport_4k.dds"
+[04:45:21.203] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/ObjIcon.png"
+[04:45:21.203] [info]  - DescriptorIndex: 12
+[04:45:21.204] [warning] [GenerateMipMaps Failed] Using original image: "./Packages/Textures/Sample3DTexture.dds"
+[04:45:21.204] [warning] [GenerateMipMaps Failed] Using original image: "./Packages/Textures/Sample3DTexture.dds"
+[04:45:21.205] [info] [Texture DDS Info] Path: "./Packages/Textures/Sample3DTexture.dds"
+[04:45:21.207] [info] [Success Texture Info] Path: "./Packages/Textures/Snow.jpg"
+[04:45:21.207] [info]  - DescriptorIndex: 14
+[04:45:21.208] [info] [Success Texture Info] Path: "./Packages/Textures/rostock_laage_airport_4k.dds"
+[04:45:21.209] [info]  - DescriptorIndex: 15
+[04:45:21.213] [info] [Success Texture Info] Path: "./Assets/assets/backGround/cloud.png"
+[04:45:21.213] [info]  - DescriptorIndex: 16
+[04:45:21.215] [info] [Success Texture Info] Path: "./Assets/assets/backGround/fish.png"
+[04:45:21.215] [info]  - DescriptorIndex: 17
+[04:45:21.220] [info] [Success Texture Info] Path: "./Assets/assets/backGround/flockFish.png"
+[04:45:21.220] [info]  - DescriptorIndex: 18
+[04:45:21.222] [info] [Success Texture Info] Path: "./Assets/assets/backGround/foam.png"
+[04:45:21.222] [info]  - DescriptorIndex: 19
+[04:45:21.225] [info] [Success Texture Info] Path: "./Assets/assets/backGround/lock.png"
+[04:45:21.225] [info]  - DescriptorIndex: 20
+[04:45:21.227] [info] [Success Texture Info] Path: "./Assets/assets/backGround/sand.png"
+[04:45:21.227] [info]  - DescriptorIndex: 21
+[04:45:21.228] [info] [Success Texture Info] Path: "./Assets/assets/backGround/seaBackGround1x1.png"
+[04:45:21.228] [info]  - DescriptorIndex: 22
+[04:45:21.229] [info] [Success Texture Info] Path: "./Packages/Textures/uvChecker.png"
+[04:45:21.229] [info]  - DescriptorIndex: 23
+[04:45:21.231] [info] [Success Texture Info] Path: "./Assets/assets/backGround/seaweed.png"
+[04:45:21.232] [info]  - DescriptorIndex: 24
+[04:45:21.232] [info] [Success Texture Info] Path: "./Assets/assets/backGround/wave.png"
+[04:45:21.232] [info]  - DescriptorIndex: 25
+[04:45:21.234] [info] [Success Texture Info] Path: "./Assets/assets/background-sample.png"
+[04:45:21.234] [info]  - DescriptorIndex: 26
+[04:45:21.237] [info] [Success Texture Info] Path: "./Assets/assets/boss/giantSquid_arm.png"
+[04:45:21.237] [info]  - DescriptorIndex: 27
+[04:45:21.239] [info] [Success Texture Info] Path: "./Assets/assets/boss/giantSquid.png"
+[04:45:21.239] [info]  - DescriptorIndex: 28
+[04:45:21.239] [info] [Success Texture Info] Path: "./Assets/assets/boss/weakness.png"
+[04:45:21.239] [info]  - DescriptorIndex: 29
+[04:45:21.241] [info] [Success Texture Info] Path: "./Assets/assets/enemy/jar.png"
+[04:45:21.241] [info]  - DescriptorIndex: 30
+[04:45:21.241] [info] [Success Texture Info] Path: "./Assets/assets/egg.png"
+[04:45:21.241] [info]  - DescriptorIndex: 31
+[04:45:21.243] [info] [Success Texture Info] Path: "./Assets/assets/enemy/spike.png"
+[04:45:21.243] [info]  - DescriptorIndex: 32
+[04:45:21.244] [info] [Success Texture Info] Path: "./Assets/assets/enemy/jar2.png"
+[04:45:21.244] [info]  - DescriptorIndex: 33
+[04:45:21.246] [info] [Success Texture Info] Path: "./Assets/assets/enemy/spikeFish.png"
+[04:45:21.246] [info]  - DescriptorIndex: 34
+[04:45:21.247] [info] [Success Texture Info] Path: "./Assets/assets/enemy/spikeFish_spike.png"
+[04:45:21.247] [info]  - DescriptorIndex: 35
+[04:45:21.248] [info] [Success Texture Info] Path: "./Assets/assets/enemy/surfaceOctopus.png"
+[04:45:21.249] [info]  - DescriptorIndex: 36
+[04:45:21.250] [info] [Success Texture Info] Path: "./Assets/assets/enemy/utsubo.png"
+[04:45:21.250] [info]  - DescriptorIndex: 37
+[04:45:21.251] [info] [Success Texture Info] Path: "./Assets/assets/exp.png"
+[04:45:21.251] [info]  - DescriptorIndex: 38
+[04:45:21.253] [info] [Success Texture Info] Path: "./Assets/assets/fertilized_egg.png"
+[04:45:21.253] [info]  - DescriptorIndex: 39
+[04:45:21.253] [info] [Success Texture Info] Path: "./Assets/assets/geso.png"
+[04:45:21.253] [info]  - DescriptorIndex: 40
+[04:45:21.257] [info] [Success Texture Info] Path: "./Assets/assets/Golden dwarf moray.png"
+[04:45:21.257] [info]  - DescriptorIndex: 41
+[04:45:21.260] [info] [Success Texture Info] Path: "./Assets/assets/mendako.png"
+[04:45:21.260] [info]  - DescriptorIndex: 42
+[04:45:21.263] [info] [Success Texture Info] Path: "./Assets/assets/moray eel.png"
+[04:45:21.263] [info]  - DescriptorIndex: 43
+[04:45:21.265] [info] [Success Texture Info] Path: "./Assets/assets/player/egg.png"
+[04:45:21.265] [info]  - DescriptorIndex: 44
+[04:45:21.267] [info] [Success Texture Info] Path: "./Assets/assets/player/larva.png"
+[04:45:21.267] [info]  - DescriptorIndex: 45
+[04:45:21.269] [info] [Success Texture Info] Path: "./Assets/assets/player/larvaEgg.png"
+[04:45:21.269] [info]  - DescriptorIndex: 46
+[04:45:21.271] [info] [Success Texture Info] Path: "./Assets/assets/player/player.png"
+[04:45:21.271] [info]  - DescriptorIndex: 47
+[04:45:21.273] [info] [Success Texture Info] Path: "./Assets/assets/player/playerFace.png"
+[04:45:21.273] [info]  - DescriptorIndex: 48
+[04:45:21.274] [info] [Success Texture Info] Path: "./Assets/assets/player/playerFeet.png"
+[04:45:21.274] [info]  - DescriptorIndex: 49
+[04:45:21.276] [info] [Success Texture Info] Path: "./Assets/assets/player/playerHead.png"
+[04:45:21.276] [info]  - DescriptorIndex: 50
+[04:45:21.278] [info] [Success Texture Info] Path: "./Assets/assets/Porcupine fish.png"
+[04:45:21.278] [info]  - DescriptorIndex: 51
+[04:45:21.297] [info] [Success Texture Info] Path: "./Packages/Textures/Rock.png"
+[04:45:21.297] [info]  - DescriptorIndex: 52
+[04:45:21.302] [info] [Success Texture Info] Path: "./Assets/assets/title/title_choiceOutline.png"
+[04:45:21.302] [info]  - DescriptorIndex: 53
+[04:45:21.305] [info] [Success Texture Info] Path: "./Assets/assets/title/titleUI.png"
+[04:45:21.306] [info]  - DescriptorIndex: 54
+[04:45:21.306] [info] [Success Texture Info] Path: "./Assets/assets/title/title_endUI.png"
+[04:45:21.306] [info]  - DescriptorIndex: 55
+[04:45:21.310] [info] [Success Texture Info] Path: "./Assets/assets/title/title_optionUI.png"
+[04:45:21.311] [info]  - DescriptorIndex: 56
+[04:45:21.312] [info] [Success Texture Info] Path: "./Assets/assets/title/title_startUI.png"
+[04:45:21.312] [info]  - DescriptorIndex: 57
+[04:45:21.318] [info] [Success Texture Info] Path: "./Assets/assets/title.png"
+[04:45:21.318] [info]  - DescriptorIndex: 58
+[04:45:21.319] [info] [Success Texture Info] Path: "./Assets/assets/kinggeso.png"
+[04:45:21.319] [info]  - DescriptorIndex: 59
+[04:45:21.321] [info] [Success Texture Info] Path: "./Assets/assets/vase.png"
+[04:45:21.321] [info]  - DescriptorIndex: 60
+[04:45:21.342] [info] [Success Texture Info] Path: "./Assets/assets/tortoise-face.png"
+[04:45:21.343] [info]  - DescriptorIndex: 61
+[04:45:21.343] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_big.obj" (ext: ".obj")
+[04:45:21.352] [info]   Mesh[0]: "Cube", Vertices: 1776, Bones: 0
+[04:45:21.353] [info] [Success Texture Info] Path: "./Assets/assets/tortoise-hip.png"
+[04:45:21.353] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_big.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.353] [info]  - DescriptorIndex: 62
+[04:45:21.353] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_block1.obj" (ext: ".obj")
+[04:45:21.354] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_block2.obj" (ext: ".obj")
+[04:45:21.360] [info]   Mesh[0]: "立方体.002", Vertices: 96, Bones: 0
+[04:45:21.361] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_block1.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.361] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_block3.obj" (ext: ".obj")
+[04:45:21.361] [info] [Success Texture Info] Path: "./Packages/Textures/kloofendal_48d_partly_cloudy_puresky_2k.dds"
+[04:45:21.361] [info]  - DescriptorIndex: 63
+[04:45:21.362] [info]   Mesh[0]: "立方体.001", Vertices: 488, Bones: 0
+[04:45:21.362] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_block2.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.363] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_block4.obj" (ext: ".obj")
+[04:45:21.363] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/terrian.obj" (ext: ".obj")
+[04:45:21.368] [info]   Mesh[0]: "立方体", Vertices: 578, Bones: 0
+[04:45:21.369] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_block3.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.370] [info]   Mesh[0]: "立方体", Vertices: 48, Bones: 0
+[04:45:21.371] [info] [Success Texture Info] Path: "./Assets/Models/Block/terrian.png"
+[04:45:21.371] [info]  - DescriptorIndex: 64
+[04:45:21.371] [info] [Load] [Model] - Finished: "./Assets/Models/Block/terrian.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.371] [info]   Mesh[0]: "Cube", Vertices: 394, Bones: 0
+[04:45:21.371] [info] [Load] [Model] - Starting load: "./Assets/Models/Bomb/bomb.obj" (ext: ".obj")
+[04:45:21.372] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_block4.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.372] [info] [Load] [Model] - Starting load: "./Assets/Models/Boss/boss.obj" (ext: ".obj")
+[04:45:21.379] [info]   Mesh[0]: "立方体.027", Vertices: 2175, Bones: 0
+[04:45:21.380] [info]   Mesh[0]: "円柱.001", Vertices: 2520, Bones: 0
+[04:45:21.380] [info] [Load] [Model] - Finished: "./Assets/Models/Boss/boss.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.381] [info] [Load] [Model] - Finished: "./Assets/Models/Bomb/bomb.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.381] [info] [Load] [Model] - Starting load: "./Assets/Models/Boss/boss_animation.gltf" (ext: ".gltf")
+[04:45:21.386] [error] AssetLoader<Model>::ValidateModel: aiScene is null.
+[04:45:21.386] [error] [Load] [Model] - Assimp Error: "GLTF: Invalid byteLength exceeds size of actual data.", path: "./Assets/Models/Boss/boss_animation.gltf"
+[04:45:21.386] [info] [Load] [Model] - Starting load: "./Assets/Models/objects/FieldCell/FieldCell.obj" (ext: ".obj")
+[04:45:21.391] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[04:45:21.391] [info] [Load] [Model] - Finished: "./Assets/Models/objects/FieldCell/FieldCell.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.392] [info] [Load] [Model] - Starting load: "./Assets/Models/objects/Outscene/boss_head.gltf" (ext: ".gltf")
+[04:45:21.393] [info]   Mesh[0]: "立方体.002", Vertices: 436, Bones: 0
+[04:45:21.393] [info] [Load] [Model] - Finished: "./Assets/Models/objects/Outscene/boss_head.gltf", Total Meshes: 1, Total Clips: 0
+[04:45:21.393] [info] [Load] [Model] - Starting load: "./Assets/Models/objects/PlayerLeftHand/PlayerLeftHand.obj" (ext: ".obj")
+[04:45:21.398] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[04:45:21.399] [info] [Load] [Model] - Finished: "./Assets/Models/objects/PlayerLeftHand/PlayerLeftHand.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.399] [info] [Load] [Model] - Starting load: "./Assets/Models/objects/PlayerRightHand/PlayerRightHand.obj" (ext: ".obj")
+[04:45:21.404] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[04:45:21.405] [info] [Success Texture Info] Path: "./Assets/Models/Block/ruins.png"
+[04:45:21.405] [info]  - DescriptorIndex: 65
+[04:45:21.405] [info] [Load] [Model] - Finished: "./Assets/Models/objects/PlayerRightHand/PlayerRightHand.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.406] [info] [Load] [Model] - Starting load: "./Assets/Models/Outgame/bg/bonfire.gltf" (ext: ".gltf")
+[04:45:21.407] [info]   Mesh[0]: "円柱.001", Vertices: 624, Bones: 0
+[04:45:21.407] [info] [Load] [Model] - Finished: "./Assets/Models/Outgame/bg/bonfire.gltf", Total Meshes: 1, Total Clips: 0
+[04:45:21.408] [info] [Load] [Model] - Starting load: "./Assets/Models/Outgame/bg/ground.gltf" (ext: ".gltf")
+[04:45:21.414] [info]   Mesh[0]: "平面.002", Vertices: 10201, Bones: 0
+[04:45:21.416] [info] [Load] [Model] - Finished: "./Assets/Models/Outgame/bg/ground.gltf", Total Meshes: 1, Total Clips: 0
+[04:45:21.448] [info] [Success Texture Info] Path: "./Assets/Models/Bomb/bomb.png"
+[04:45:21.448] [info]  - DescriptorIndex: 66
+[04:45:21.449] [info] [Load] [Model] - Starting load: "./Assets/Models/Outgame/boss_head.gltf" (ext: ".gltf")
+[04:45:21.450] [info]   Mesh[0]: "円錐.009", Vertices: 1208, Bones: 0
+[04:45:21.451] [info] [Load] [Model] - Finished: "./Assets/Models/Outgame/boss_head.gltf", Total Meshes: 1, Total Clips: 0
+[04:45:21.451] [info] [Load] [Model] - Starting load: "./Assets/Models/pillar.obj" (ext: ".obj")
+[04:45:21.456] [info]   Mesh[0]: "立方体.003", Vertices: 734, Bones: 0
+[04:45:21.457] [info] [Load] [Model] - Finished: "./Assets/Models/pillar.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.457] [info] [Success Texture Info] Path: "./Assets/Models/Boss/boss.png"
+[04:45:21.457] [info]  - DescriptorIndex: 67
+[04:45:21.458] [info] [Load] [Model] - Starting load: "./Assets/Models/Player/hand.gltf" (ext: ".gltf")
+[04:45:21.461] [error] AssetLoader<Model>::ValidateModel: aiScene is null.
+[04:45:21.461] [error] [Load] [Model] - Assimp Error: "GLTF: could not open referenced file "hand.bin"", path: "./Assets/Models/Player/hand.gltf"
+[04:45:21.462] [info] [Load] [Model] - Starting load: "./Assets/Models/Player/hand.obj" (ext: ".obj")
+[04:45:21.467] [info]   Mesh[0]: "立方体", Vertices: 732, Bones: 0
+[04:45:21.468] [info] [Load] [Model] - Finished: "./Assets/Models/Player/hand.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.494] [info] [Success Texture Info] Path: "./Assets/Models/Outgame/bg/bonfire.png"
+[04:45:21.494] [info]  - DescriptorIndex: 68
+[04:45:21.495] [info] [Load] [Model] - Starting load: "./Assets/Models/primitive/front_cube.obj" (ext: ".obj")
+[04:45:21.500] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[04:45:21.500] [info] [Load] [Model] - Finished: "./Assets/Models/primitive/front_cube.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.501] [info] [Load] [Model] - Starting load: "./Assets/Models/Soldier/soldier.gltf" (ext: ".gltf")
+[04:45:21.503] [info]   Mesh[0]: "円柱", Vertices: 1243, Bones: 9
+[04:45:21.503] [info] [Load] [AnimationClip] - name:"appear", hash: 4138087844, duration: 0.33s
+[04:45:21.503] [info] [Load] [AnimationClip] - name:"dance", hash: 4162136220, duration: 1.33s
+[04:45:21.503] [info] [Load] [AnimationClip] - name:"leaving", hash: 17007323, duration: 0.33s
+[04:45:21.503] [info] [Load] [AnimationClip] - name:"move", hash: 407568404, duration: 0.33s
+[04:45:21.504] [info] [Load] [Model] - Finished: "./Assets/Models/Soldier/soldier.gltf", Total Meshes: 1, Total Clips: 4
+[04:45:21.504] [info] [Success Texture Info] Path: "./Assets/Models/Outgame/boss.png"
+[04:45:21.504] [info]  - DescriptorIndex: 69
+[04:45:21.504] [info] [Load] [Model] - Starting load: "./Assets/Models/Soldier/soldier.obj" (ext: ".obj")
+[04:45:21.511] [info]   Mesh[0]: "立方体", Vertices: 2206, Bones: 0
+[04:45:21.512] [info] [Load] [Model] - Finished: "./Assets/Models/Soldier/soldier.obj", Total Meshes: 1, Total Clips: 0
+[04:45:21.512] [info] [Load] [Model] - Starting load: "./Assets/Models/Soldier/soldier_support.gltf" (ext: ".gltf")
+[04:45:21.514] [info]   Mesh[0]: "立方体.001", Vertices: 1017, Bones: 9
+[04:45:21.514] [info] [Load] [AnimationClip] - name:"beating", hash: 4182670843, duration: 0.67s
+[04:45:21.515] [info] [Load] [Model] - Finished: "./Assets/Models/Soldier/soldier_support.gltf", Total Meshes: 1, Total Clips: 1
+[04:45:21.529] [info] [Success Texture Info] Path: "./Assets/Models/pillar.png"
+[04:45:21.529] [info]  - DescriptorIndex: 70
+[04:45:21.535] [info] [Success Texture Info] Path: "./Assets/Models/Player/hand.png"
+[04:45:21.535] [info]  - DescriptorIndex: 71
+[04:45:21.545] [info] [Success Texture Info] Path: "./Assets/Textures/AButton.png"
+[04:45:21.545] [info]  - DescriptorIndex: 72
+[04:45:21.555] [info] [Success Texture Info] Path: "./Assets/Textures/circle.png"
+[04:45:21.555] [info]  - DescriptorIndex: 73
+[04:45:21.562] [info] [Success Texture Info] Path: "./Assets/Textures/gradation.png"
+[04:45:21.563] [info]  - DescriptorIndex: 74
+[04:45:21.565] [info] [Success Texture Info] Path: "./Assets/Textures/larvaEgg.png"
+[04:45:21.565] [info]  - DescriptorIndex: 75
+[04:45:21.577] [info] [Success Texture Info] Path: "./Assets/Textures/gradationLine.png"
+[04:45:21.577] [info]  - DescriptorIndex: 76
+[04:45:21.582] [info] [Success Texture Info] Path: "./Assets/Models/Soldier/soldier.png"
+[04:45:21.582] [info]  - DescriptorIndex: 77
+[04:45:21.585] [info] [Success Texture Info] Path: "./Assets/Textures/seaweed.png"
+[04:45:21.585] [info]  - DescriptorIndex: 78
+[04:45:21.587] [info] [Success Texture Info] Path: "./Assets/Textures/noise.png"
+[04:45:21.587] [info]  - DescriptorIndex: 79
+[04:45:21.598] [info] [Success Texture Info] Path: "./Assets/Models/Soldier/soldier_support.png"
+[04:45:21.598] [info]  - DescriptorIndex: 80
+[04:45:21.600] [info] [Success Texture Info] Path: "./Assets/Textures/UI/checkpoint-restrat.png"
+[04:45:21.600] [info]  - DescriptorIndex: 81
+[04:45:21.601] [info] [Success Texture Info] Path: "./Assets/Textures/ring.png"
+[04:45:21.601] [info]  - DescriptorIndex: 82
+[04:45:21.606] [info] [Success Texture Info] Path: "./Assets/Textures/smoke.png"
+[04:45:21.606] [info]  - DescriptorIndex: 83
+[04:45:21.608] [info] [Success Texture Info] Path: "./Assets/Textures/UI/exit-game.png"
+[04:45:21.608] [info]  - DescriptorIndex: 84
+[04:45:21.609] [info] [Success Texture Info] Path: "./Assets/Textures/Vignette.png"
+[04:45:21.609] [info]  - DescriptorIndex: 85
+[04:45:21.610] [info] [Success Texture Info] Path: "./Assets/Textures/UI/main-menu.png"
+[04:45:21.610] [info]  - DescriptorIndex: 86
+[04:45:21.611] [info] [Success Texture Info] Path: "./Assets/Textures/UI/Resume.png"
+[04:45:21.611] [info]  - DescriptorIndex: 87
+[04:45:21.612] [info] dx depth stencil create success!!
+[04:45:21.618] [info] dx depth stencil create success!!
+[04:45:21.624] [info] dx depth stencil create success!!
+[04:45:21.630] [info] dx depth stencil create success!!
+[04:45:21.640] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/CopyImage/CopyImage.vs.hlsl", profile:"vs_6_0"
+[04:45:21.645] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/CopyImage/CopyImage.ps.hlsl", profile:"ps_6_0"
+[04:45:21.656] [info] dx swap chain create success!!
+[04:45:21.661] [info] Mono version: 6.12.0 (Visual Studio built mono)
+[04:45:21.661] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\config'.
+[04:45:21.664] [info] [Mono][info] Assembly Loader probing location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll'.
+[04:45:21.664] [info] [Mono][info] Image addref mscorlib[0000021676EB4F40] (asmctx DEFAULT) -> C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll[000002166DF840B0]: 2
+[04:45:21.664] [info] [Mono][info] Prepared to set up assembly 'mscorlib' (C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll)
+[04:45:21.665] [info] [Mono][info] AOT: image 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll.dll' not found: 指定されたファイルが見つかりません。
+
+[04:45:21.665] [info] [Mono][info] AOT: image 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\lib/mono/aot-cache/amd64/mscorlib.dll.dll' not found: 指定されたパスが見つかりません。
+
+[04:45:21.665] [info] [Mono][info] Assembly Loader loaded assembly from location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll'.
+[04:45:21.665] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll.config'.
+[04:45:21.665] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\assemblies\mscorlib\mscorlib.config'.
+[04:45:21.665] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\.mono\assemblies\mscorlib\mscorlib.config'.
+[04:45:21.678] [info] [Mono][info] Assembly mscorlib[0000021676EB4F40] added to domain MyRootDomain, ref_count=1
+[04:45:21.678] [info] [Mono][info] Assembly mscorlib[0000021676EB4F40] added to domain ReloadedDomain_1, ref_count=2
+[04:45:21.680] [info] Latest DLL found: ./Packages/Scripts\CSharpLibrary_20260706_041636.dll
+[04:45:21.680] [info] [Mono][info] Assembly Loader probing location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll'.
+[04:45:21.680] [info] [Mono][info] Image addref CSharpLibrary[0000021676BBA5F0] (asmctx DEFAULT) -> C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll[000002166DF82AC0]: 2
+[04:45:21.680] [info] [Mono][info] Prepared to set up assembly 'CSharpLibrary' (C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll)
+[04:45:21.681] [info] [Mono][info] Assembly CSharpLibrary[0000021676BBA5F0] added to domain ReloadedDomain_1, ref_count=1
+[04:45:21.681] [info] [Mono][info] Assembly Loader loaded assembly from location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll'.
+[04:45:21.681] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll.config'.
+[04:45:21.681] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\assemblies\CSharpLibrary\CSharpLibrary.config'.
+[04:45:21.681] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\.mono\assemblies\CSharpLibrary\CSharpLibrary.config'.
+[04:45:21.681] [info] [Mono][info] Requesting loading reference 0 (of 4) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll
+[04:45:21.681] [info] [Mono][info] Loading reference 0 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll asmctx DEFAULT, looking for mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[04:45:21.682] [info] [Mono][info] Assembly Ref addref CSharpLibrary[0000021676BBA5F0] -> mscorlib[0000021676EB4F40]: 3
+[04:45:21.682] [info] [Mono][info] Requesting loading reference 1 (of 4) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll
+[04:45:21.682] [info] [Mono][info] Loading reference 1 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll asmctx DEFAULT, looking for System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[04:45:21.682] [info] [Mono][info] Assembly Loader probing location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll'.
+[04:45:21.683] [info] [Mono][info] Image addref System.Core[0000021676BBAA70] (asmctx DEFAULT) -> C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll[000002166DF83210]: 2
+[04:45:21.683] [info] [Mono][info] Prepared to set up assembly 'System.Core' (C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll)
+[04:45:21.683] [info] [Mono][info] Assembly System.Core[0000021676BBAA70] added to domain ReloadedDomain_1, ref_count=1
+[04:45:21.683] [info] [Mono][info] Assembly Loader loaded assembly from location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll'.
+[04:45:21.683] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll.config'.
+[04:45:21.683] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\assemblies\System.Core\System.Core.config'.
+[04:45:21.683] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\.mono\assemblies\System.Core\System.Core.config'.
+[04:45:21.683] [info] [Mono][info] Assembly Ref addref CSharpLibrary[0000021676BBA5F0] -> System.Core[0000021676BBAA70]: 2
+[04:45:21.684] [info] [Mono][info] Requesting loading reference 0 (of 2) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll
+[04:45:21.684] [info] [Mono][info] Loading reference 0 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll asmctx DEFAULT, looking for mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[04:45:21.684] [info] [Mono][info] Assembly Ref addref System.Core[0000021676BBAA70] -> mscorlib[0000021676EB4F40]: 4
+[04:45:21.684] [info] [Mono][info] Requesting loading reference 1 (of 2) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll
+[04:45:21.684] [info] [Mono][info] Loading reference 1 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll asmctx DEFAULT, looking for System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[04:45:21.684] [info] [Mono][info] Assembly Loader probing location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll'.
+[04:45:21.685] [info] [Mono][info] Image addref System[0000021676BBA3B0] (asmctx DEFAULT) -> C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll[000002166DF84800]: 2
+[04:45:21.685] [info] [Mono][info] Prepared to set up assembly 'System' (C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll)
+[04:45:21.685] [info] [Mono][info] Assembly System[0000021676BBA3B0] added to domain ReloadedDomain_1, ref_count=1
+[04:45:21.685] [info] [Mono][info] Assembly Loader loaded assembly from location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll'.
+[04:45:21.685] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll.config'.
+[04:45:21.685] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\assemblies\System\System.config'.
+[04:45:21.685] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\.mono\assemblies\System\System.config'.
+[04:45:21.685] [info] [Mono][info] Assembly Ref addref System.Core[0000021676BBAA70] -> System[0000021676BBA3B0]: 2
+[04:45:21.686] [info] [Mono][info] Requesting loading reference 0 (of 6) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll
+[04:45:21.687] [info] [Mono][info] Loading reference 0 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll asmctx DEFAULT, looking for mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[04:45:21.687] [info] [Mono][info] Assembly Ref addref System[0000021676BBA3B0] -> mscorlib[0000021676EB4F40]: 5
+[04:45:21.861] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[04:45:21.861] [info] [CPP ECS] FromJson - Adding component 'CameraComponent' to entity 'MainCamera'
+[04:45:21.861] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'MainCamera'
+[04:45:21.861] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'MainCamera'
+[04:45:21.861] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[04:45:21.861] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Frame'
+[04:45:21.861] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Frame'
+[04:45:21.861] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'Frame'
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'AnimationPlayer' to entity 'Frame'
+[04:45:21.862] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'PauseMenu'
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'PauseMenu'
+[04:45:21.862] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Group_0'
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Group_0'
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'UIGroupComponent' to entity 'Group_0'
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'Group_0'
+[04:45:21.862] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'UIElementComponent' to entity 'resume'
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'resume'
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'resume'
+[04:45:21.862] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'resume'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'UILinkNavigationComponent' to entity 'resume'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'resume'
+[04:45:21.863] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'UIElementComponent' to entity 'main-menu'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'main-menu'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'main-menu'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'main-menu'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'UILinkNavigationComponent' to entity 'main-menu'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'main-menu'
+[04:45:21.863] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'UIElementComponent' to entity 'exit-game'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'exit-game'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'exit-game'
+[04:45:21.863] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'exit-game'
+[04:45:21.864] [info] [CPP ECS] FromJson - Adding component 'UILinkNavigationComponent' to entity 'exit-game'
+[04:45:21.864] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'exit-game'
+[04:45:21.864] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[04:45:21.864] [info] [CPP ECS] FromJson - Adding component 'UIElementComponent' to entity 'checkpoint'
+[04:45:21.864] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'checkpoint'
+[04:45:21.864] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'checkpoint'
+[04:45:21.864] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'checkpoint'
+[04:45:21.864] [info] [CPP ECS] FromJson - Adding component 'UILinkNavigationComponent' to entity 'checkpoint'
+[04:45:21.864] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'checkpoint'
+[04:45:21.880] [info] Successfully synced initial components to C# for group: PauseScene
+[04:45:21.881] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[04:45:21.881] [info] [CPP ECS] FromJson - Adding component 'CameraComponent' to entity 'DebugCamera2D'
+[04:45:21.881] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'DebugCamera2D'
+[04:45:21.881] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'DebugCamera2D'
+[04:45:21.881] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'DebugCamera2D'
+[04:45:21.881] [info] Successfully synced initial components to C# for group: Debug
+[04:45:21.887] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Editor/GameEntityPicking.cs.hlsl", profile:"cs_6_6"
+[04:45:21.889] [warning] ECSGroup with name 'GameScene' not found.
+[04:45:21.889] [info] ################################################################################
+[04:45:21.889] [info] #
+[04:45:21.889] [info] # Initialization completed in 1707 ms
+[04:45:21.889] [info] #
+[04:45:21.889] [info] ################################################################################
+[04:45:21.897] [info] [SetScriptVars] OK setting fields for: DebugCamera2D
+[04:45:21.897] [info] [SerializeField] field=isActive_ has=true
+[04:45:21.897] [info] [SerializeField] field=moveSpeed_ has=true
+[04:45:21.897] [info] [SerializeField] field=dragSensitivity_ has=true
+[04:45:21.897] [info] [SerializeField] field=position_ has=true
+[04:45:21.898] [info] [SerializeField] field=scale_ has=true
+[04:45:21.898] [info] [SerializeField] field=velocity_ has=true
+[04:45:21.898] [info] [SetScriptVars] OK setting fields for: DebugCamera2D
+[04:45:21.898] [info] [SerializeField] field=isActive_ has=true
+[04:45:21.898] [info] [SerializeField] field=moveSpeed_ has=true
+[04:45:21.898] [info] [SerializeField] field=dragSensitivity_ has=true
+[04:45:21.898] [info] [SerializeField] field=position_ has=true
+[04:45:21.898] [info] [SerializeField] field=scale_ has=true
+[04:45:21.898] [info] [SerializeField] field=velocity_ has=true
+[04:45:21.898] [info] [Mono][info] Requesting loading reference 3 (of 4) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll
+[04:45:21.898] [info] [Mono][info] Loading reference 3 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll asmctx DEFAULT, looking for System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[04:45:21.898] [info] [Mono][info] Assembly Ref addref CSharpLibrary[0000021676BBA5F0] -> System[0000021676BBA3B0]: 3
+[04:45:21.909] [info] [UI Hierarchy] Resolved element 'resume' parent group via GUID: 'Group_0'
+[04:45:21.909] [info] [UI Hierarchy] Resolved element 'main-menu' parent group via GUID: 'Group_0'
+[04:45:21.909] [info] [UI Hierarchy] Resolved element 'exit-game' parent group via GUID: 'Group_0'
+[04:45:21.909] [info] [UI Hierarchy] Resolved element 'checkpoint' parent group via GUID: 'Group_0'
+[04:45:21.909] [info] [UI Hierarchy] Resolved currentSelected: 'resume' (GUID: 7a55b245537f869f03e93d3b4296d439) for Group 'Group_0'
+[04:45:21.910] [info] Script UITest1 enable set to 1
+[04:45:21.910] [info] Script UITest1 enable set to 1
+[04:45:21.910] [info] Script UITest1 enable set to 1
+[04:45:21.910] [info] Script UITest1 enable set to 1
+[04:45:21.910] [info] Script PauseGroup enable set to 1
+[04:45:21.910] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.911] [info] [SetScriptVars] OK setting fields for: PauseGroup
+[04:45:21.911] [info] [SetScriptVars] OK setting fields for: PauseGroup
+[04:45:21.911] [info] [SetScriptVars] OK setting fields for: UITest1
+[04:45:21.911] [info] [SerializeField] attrs=null for field: isSelect
+[04:45:21.911] [info] [SerializeField] attrs=null for field: savePos
+[04:45:21.912] [info] [SerializeField] attrs=null for field: time
+[04:45:21.912] [info] [SetScriptVars] OK setting fields for: UITest1
+[04:45:21.912] [info] [SerializeField] attrs=null for field: isSelect
+[04:45:21.912] [info] [SerializeField] attrs=null for field: savePos
+[04:45:21.912] [info] [SerializeField] attrs=null for field: time
+[04:45:21.912] [info] [SetScriptVars] OK setting fields for: UITest1
+[04:45:21.912] [info] [SerializeField] attrs=null for field: isSelect
+[04:45:21.912] [info] [SerializeField] attrs=null for field: savePos
+[04:45:21.912] [info] [SerializeField] attrs=null for field: time
+[04:45:21.912] [info] [SetScriptVars] OK setting fields for: UITest1
+[04:45:21.912] [info] [SerializeField] attrs=null for field: isSelect
+[04:45:21.912] [info] [SerializeField] attrs=null for field: savePos
+[04:45:21.912] [info] [SerializeField] attrs=null for field: time
+[04:45:21.912] [info] [SetScriptVars] OK setting fields for: UITest1
+[04:45:21.912] [info] [SerializeField] attrs=null for field: isSelect
+[04:45:21.912] [info] [SerializeField] attrs=null for field: savePos
+[04:45:21.913] [info] [SerializeField] attrs=null for field: time
+[04:45:21.913] [info] [SetScriptVars] OK setting fields for: UITest1
+[04:45:21.913] [info] [SerializeField] attrs=null for field: isSelect
+[04:45:21.913] [info] [SerializeField] attrs=null for field: savePos
+[04:45:21.913] [info] [SerializeField] attrs=null for field: time
+[04:45:21.913] [info] [SetScriptVars] OK setting fields for: UITest1
+[04:45:21.913] [info] [SerializeField] attrs=null for field: isSelect
+[04:45:21.913] [info] [SerializeField] attrs=null for field: savePos
+[04:45:21.913] [info] [SerializeField] attrs=null for field: time
+[04:45:21.913] [info] [SetScriptVars] OK setting fields for: UITest1
+[04:45:21.913] [info] [SerializeField] attrs=null for field: isSelect
+[04:45:21.913] [info] [SerializeField] attrs=null for field: savePos
+[04:45:21.913] [info] [SerializeField] attrs=null for field: time
+[04:45:21.914] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.914] [info] [UI Navigation] Group 'Group_0' gained focus. Initial selection: 'resume' (GUID: 7a55b245537f869f03e93d3b4296d439)
+[04:45:21.914] [info] [UI Navigation] Focus Change: Group='Group_0', OldSelected='None', NewSelected='resume'
+[04:45:21.914] [info] [UI Navigation]   -> Calling OnSelect() on 'resume' (Script: 'UITest1')
+[04:45:21.916] [info] [UI Navigation]   -> Calling OnUISelect(elementId='resume') on Group 'Group_0' (Script: 'PauseGroup')
+[04:45:21.918] [info] dx depth stencil create success!!
+[04:45:21.923] [info] [RenderingFramework] Drawing group: PauseScene | Index: 0 | groupRenderTex: 2293691283488 | colorResource: 2295359705424 | ClearColor: (0.100000, 0.250000, 0.500000, 1.000000)
+[04:45:21.923] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:21.924] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:21.924] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.924] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.924] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.924] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.924] [error] PostProcessFog::Execute: main camera is null
+[04:45:21.925] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.925] [warning] [WaterCaustics] Execute skipped: ScreenPostEffectTag not found in group: PauseScene
+[04:45:21.925] [warning] [WaterDepthFog] Execute skipped: ScreenPostEffectTag not found in group: PauseScene
+[04:45:21.925] [warning] [WaterColorGrading] Execute skipped: ScreenPostEffectTag not found in group: PauseScene
+[04:45:21.925] [warning] [WaterDistortion] Execute skipped: ScreenPostEffectTag not found in group: PauseScene
+[04:45:21.931] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.935] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.935] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:21.935] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:21.935] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.935] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.935] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.935] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.935] [error] PostProcessFog::Execute: main camera is null
+[04:45:21.935] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.939] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.939] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.939] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:21.939] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:21.939] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.939] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.939] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.939] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.939] [error] PostProcessFog::Execute: main camera is null
+[04:45:21.940] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.943] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.943] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.943] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:21.943] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:21.943] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.943] [info] [Engine] CopyResource: Copying to resource at 2295359705424
+[04:45:21.943] [error] PostProcessFog::Execute: main camera is null
+[04:45:21.943] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.951] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.952] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.952] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:21.952] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:21.952] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.952] [error] PostProcessFog::Execute: main camera is null
+[04:45:21.952] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.961] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.961] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.962] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:21.962] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:21.962] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.962] [error] PostProcessFog::Execute: main camera is null
+[04:45:21.962] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.971] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.971] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.971] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:21.971] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:21.971] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.972] [error] PostProcessFog::Execute: main camera is null
+[04:45:21.972] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.981] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.981] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.981] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:21.981] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:21.981] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.981] [error] PostProcessFog::Execute: main camera is null
+[04:45:21.981] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.991] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.991] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:21.991] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:21.991] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:21.991] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:21.991] [error] PostProcessFog::Execute: main camera is null
+[04:45:21.992] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:22.000] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.001] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.001] [info] [RenderingCollection] DrawEntities2D executing. Group: PauseScene Camera: 2293693800960
+[04:45:22.001] [info] [SpritePipeline] Drawing 5 sorted sprites.
+[04:45:22.001] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:22.001] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.001] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/PauseScene
+[04:45:22.010] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.011] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.011] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.020] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.020] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.020] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.031] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.031] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.031] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.041] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.041] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.041] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.050] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.051] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.051] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.060] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.061] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.061] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.070] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.071] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.071] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.080] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.080] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.081] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.090] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.090] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.091] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.100] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.100] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.101] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.110] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.111] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.111] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.120] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.120] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.121] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.131] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.131] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.131] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.141] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.141] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.141] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.151] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.151] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.152] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.161] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.161] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.161] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.171] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.171] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.171] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.181] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.181] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.181] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.190] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.191] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.191] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.201] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.201] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.201] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.211] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.211] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.211] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.221] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.221] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.221] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.231] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.231] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.231] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.241] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.241] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.241] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.251] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.251] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.251] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.261] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.261] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.261] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.271] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.271] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.271] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.291] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.291] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.291] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.300] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.301] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.301] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.311] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.311] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.311] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.321] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.321] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.321] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.330] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.331] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.331] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.341] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.341] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.342] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.351] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.351] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.351] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.361] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.361] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.362] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.371] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.371] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.371] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.380] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.381] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.381] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.391] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.391] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.392] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.401] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.401] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.401] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.410] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.411] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.411] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.420] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.421] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.421] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.430] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.430] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.431] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.441] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.441] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.441] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.450] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.451] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.451] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.461] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.461] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.461] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.471] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.471] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.471] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.481] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.481] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.481] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.490] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.490] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.491] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.501] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.501] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.501] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.511] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.511] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.511] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.521] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.521] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.521] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.531] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.531] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.531] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.541] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.541] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.542] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.551] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.551] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.551] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.560] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.561] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.561] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.570] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.570] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.570] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.581] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.581] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.581] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.590] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.590] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.590] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.601] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.601] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.601] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.610] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.611] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.611] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.620] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.620] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.621] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.630] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.631] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.631] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.640] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.640] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.640] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.650] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.651] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.651] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.660] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.660] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.660] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.670] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.671] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.671] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.681] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.681] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.681] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.690] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.691] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.691] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.701] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.701] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.701] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.710] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.710] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.710] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.721] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.721] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.721] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.730] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.731] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.731] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.741] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.741] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.741] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.750] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.751] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.751] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.760] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.761] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.761] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.770] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.770] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.770] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.781] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.781] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.781] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.791] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.791] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.791] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.800] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.801] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.801] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.811] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.811] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.811] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.821] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.821] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.821] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.831] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.831] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.831] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.841] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.841] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.841] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.851] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.851] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.851] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.861] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.861] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.862] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.871] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.871] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.872] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.881] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.881] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.881] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.891] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.891] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.891] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.901] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.901] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.902] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.911] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.911] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.911] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.921] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.921] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.921] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.931] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.931] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.931] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.940] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.940] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.941] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.951] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.951] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.951] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.961] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.961] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.961] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.971] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.971] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.971] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.981] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.981] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.981] [error] PostProcessFog::Execute: main camera is null
+[04:45:22.990] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.991] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:22.991] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.001] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.001] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.001] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.012] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.013] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.013] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.021] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.022] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.022] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.032] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.032] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.032] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.042] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.042] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.042] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.051] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.052] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.052] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.061] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.062] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.062] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.072] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.072] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.072] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.081] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.082] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.082] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.092] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.092] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.092] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.101] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.101] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.101] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.111] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.111] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.111] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.121] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.121] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.121] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.131] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.131] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.131] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.141] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.141] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.141] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.151] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.151] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.151] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.161] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.161] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.161] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.171] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.171] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.171] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.181] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.181] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.181] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.191] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.191] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.191] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.201] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.201] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.201] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.211] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.211] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.211] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.221] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.221] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.221] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.231] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.231] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.231] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.241] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.241] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.241] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.251] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.252] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.252] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.261] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.261] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.262] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.271] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.271] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.271] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.281] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.281] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.281] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.291] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.291] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.291] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.301] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.301] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.301] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.311] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.311] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.311] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.321] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.321] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.321] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.331] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.331] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.331] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.341] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.341] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.341] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.351] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.351] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.351] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.361] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.361] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.361] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.371] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.371] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.371] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.381] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.381] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.381] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.391] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.391] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.392] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.401] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.401] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.402] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.411] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.411] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.411] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.421] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.421] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.421] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.431] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.432] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.432] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.443] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.444] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.444] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.452] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.452] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.452] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.464] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.464] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.464] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.470] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.470] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.471] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.483] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.483] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.483] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.490] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.490] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.490] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.500] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.501] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.501] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.510] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.510] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.511] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.520] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.520] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.521] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.530] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.530] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.530] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.540] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.540] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.540] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.550] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.550] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.551] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.560] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.561] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.561] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.570] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.570] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.570] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.580] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.580] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.580] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.590] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.590] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.591] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.600] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.600] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.601] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.610] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.610] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.611] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.620] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.620] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.621] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.630] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.630] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.631] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.640] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.641] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.641] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.650] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.650] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.651] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.660] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.660] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.661] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.670] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.670] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.671] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.680] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.680] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.681] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.690] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.690] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.691] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.700] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.700] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.701] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.710] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.710] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.711] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.720] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.720] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.721] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.730] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.731] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.731] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.740] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.740] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.741] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.750] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.750] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.751] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.760] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.760] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.761] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.770] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.770] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.771] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.780] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.780] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.781] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.790] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.790] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.791] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.800] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.801] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.801] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.810] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.810] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.810] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.820] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.820] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.821] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.830] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.830] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.830] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.840] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.840] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.841] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.851] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.851] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.851] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.860] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.860] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.861] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.870] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.870] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.871] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.880] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.881] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.881] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.890] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.891] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.891] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.900] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.900] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.901] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.910] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.910] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.910] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.920] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.920] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.921] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.930] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.930] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.930] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.940] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.940] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.940] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.950] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.950] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.951] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.960] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.960] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.961] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.970] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.970] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.971] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.980] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.980] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.981] [error] PostProcessFog::Execute: main camera is null
+[04:45:23.990] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.990] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:23.991] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.001] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.001] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.001] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.010] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.010] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.011] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.021] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.021] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.022] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.030] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.030] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.031] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.040] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.040] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.041] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.050] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.051] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.051] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.060] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.061] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.061] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.070] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.070] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.071] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.080] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.081] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.081] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.090] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.090] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.091] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.100] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.100] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.101] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.110] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.111] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.111] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.120] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.120] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.121] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.220] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.221] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.221] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.224] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.224] [info] [UI Hierarchy] Guessing prefab name from root entity name: 'PauseMenu' -> 'PauseMenu.prefab'
+[04:45:24.224] [error] PostProcessFog::Execute: main camera is null
+[04:45:24.227] [info] [SerializeField] field=isActive_ has=true
+[04:45:24.227] [info] [SerializeField] field=moveSpeed_ has=true
+[04:45:24.227] [info] [SerializeField] field=dragSensitivity_ has=true
+[04:45:24.227] [info] [SerializeField] field=position_ has=true
+[04:45:24.227] [info] [SerializeField] field=scale_ has=true
+[04:45:24.228] [info] [SerializeField] field=velocity_ has=true
+[04:45:24.230] [info] [Mono][info] GC_MAJOR: (user request) time 0.61ms, stw 0.69ms los size: 0K in use: 0K
+[04:45:24.230] [info] [Mono][info] GC_MAJOR_SWEEP: major size: 624K in use: 23K
+[04:45:24.241] [info] [Mono][info] Unloading domain MyRootDomain[000002166DFEAE20], assembly mscorlib[0000021676EB4F40], ref_count=5
+[04:45:24.241] [info] [Mono][info] Assembly image 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll' [000002166DF840B0] still loaded at shutdown.
+[04:45:24.241] [info] [Mono][info] Assembly image 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll' [000002166DF83210] still loaded at shutdown.
+[04:45:24.241] [info] [Mono][info] Assembly image 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll' [000002166DF84800] still loaded at shutdown.
+[04:45:24.241] [info] [Mono][info] Assembly image 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_041636.dll' [000002166DF82AC0] still loaded at shutdown.
+[04:45:24.242] [info] Logger finalized.

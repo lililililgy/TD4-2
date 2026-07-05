@@ -256,13 +256,17 @@ public class Entity {
 	public MonoScript AddScript(MonoScript mb) {
 		string scriptName = mb.GetType().Name;
 
+		Debug.LogInfo("Entity.AddScript - Requesting script: " + scriptName + " on Entity ID: " + entityId_);
+
 		/// スクリプトを得る
 		if (scripts_.ContainsKey(scriptName)) {
+			Debug.LogInfo("Entity.AddScript - Script already exists in dictionary: " + scriptName);
 			return scripts_[scriptName];
 		}
 
 		/// なかったので新しく作る
 		scripts_[scriptName] = mb;
+		Debug.LogInfo("Entity.AddScript - Added script to dictionary successfully: " + scriptName);
 		/// c++側でもスクリプトを追加
 		InternalAddScript(entityId_, scriptName, ecsGroupName_);
 		return mb;

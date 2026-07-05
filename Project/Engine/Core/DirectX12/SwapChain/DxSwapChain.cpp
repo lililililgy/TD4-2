@@ -154,7 +154,8 @@ void DxSwapChain::ClearBackBuffer(ID3D12GraphicsCommandList* commandList) {
 void DxSwapChain::Present() {
 	UINT presentFlags = 0;
 
-	HRESULT hr = swapChain_->Present(1, presentFlags);
+	UINT syncInterval = EngineConfig::enableVSync ? 1 : 0;
+	HRESULT hr = swapChain_->Present(syncInterval, presentFlags);
 	Assert(SUCCEEDED(hr), "Failed to present.");
 }
 

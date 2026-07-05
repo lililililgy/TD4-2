@@ -46,6 +46,9 @@ void GameFramework::Initialize(const GameFrameworkConfig& startSetting) {
 	/// ログ出力の初期化
 	Console::Initialize();
 
+	/// エンジン設定のロード
+	EngineConfig::LoadConfig();
+
 	CreateSubsystems();
 	InitializeCore(startSetting);
 	InitializeGraphics();
