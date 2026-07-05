@@ -10,4 +10,11 @@ public class PauseGroup : MonoScript {
 		SceneManager.Unload("PauseScene");
 	}
 
+	public void OnUISelect(string selectElementName) {
+		AudioSource audio = entity.GetComponent<AudioSource>();
+		if(audio) {
+			audio.Play();
+		}
+	}
+
 }

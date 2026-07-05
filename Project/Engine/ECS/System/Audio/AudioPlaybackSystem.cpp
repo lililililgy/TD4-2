@@ -47,10 +47,19 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 		/// 音の再生リクエストチェック
 		if(as->isPlayingRequest_) {
-			/// 再生状態ではなければ再生する
-			if(as->state_ != static_cast<int>(AudioState::Playing)) {
-				PlayAudio(as);
+			as->isPlayingRequest_ = false;
+			/// すでに再生中なら一旦停止する
+			if(as->state_ == static_cast<int>(AudioState::Playing)) {
+				for(auto& voice : as->sourceVoices_) {
+					if(voice) {
+						voice->Stop();
+						voice->FlushSourceBuffers();
+					}
+				}
+				as->sourceVoices_.clear();
+				as->state_ = static_cast<int>(AudioState::Stopped);
 			}
+			PlayAudio(as);
 		}
 
 		/// 音の停止リクエストチェック

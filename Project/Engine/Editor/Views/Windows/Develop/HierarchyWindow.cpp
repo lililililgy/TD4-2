@@ -36,7 +36,7 @@ HierarchyWindow::HierarchyWindow(
 	EditorManager* editorManager,
 	ONEngine::SceneManager* sceneManager)
 	: windowName_(windowName), pEcs_(ecs), pEcsGroup_(ecsGroup), pEditorManager_(editorManager),
-	pSceneManager_(sceneManager) {
+	pSceneManager_(sceneManager), lastEcsGroup_(nullptr), lastIsDebugging_(false) {
 
 	newName_.reserve(1024);
 	isNodeOpen_ = false;
@@ -60,6 +60,13 @@ void HierarchyWindow::ShowImGui() {
 
 	// スクロール可能なエリアを開始
 	ImGui::BeginChild("HierarchyScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+
+	// シーンロードなどでアクティブなECSグループや再生状態が変わった場合に、選択状態の展開処理を再トリガーする
+	if (pEcsGroup_ != lastEcsGroup_ || ONEngine::DebugConfig::isDebugging != lastIsDebugging_) {
+		lastEcsGroup_ = pEcsGroup_;
+		lastIsDebugging_ = ONEngine::DebugConfig::isDebugging;
+		lastSelectedGuid_ = ONEngine::Guid::kInvalid;
+	}
 
 	// 選択の変更を監視し、新しく選択されたEntityの先祖ノードを展開する
 	ONEngine::Guid currentSelected = ImGuiSelection::GetLastSelectedObject();

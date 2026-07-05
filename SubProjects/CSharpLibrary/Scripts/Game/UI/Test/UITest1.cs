@@ -15,10 +15,15 @@ public class UITest1 : MonoScript {
 		if (isSelect) {
 			float posY = Mathf.Sin(SteppedTimeEasing(Time.time * 3f, 1)) * 0.1f;
 			transform.position = savePos + new Vector3(0, posY, 0);
+		} else {
+			transform.position = savePos;
 		}
 	}
 
 
+	/// <summary>
+	/// 選択された時
+	/// </summary>
 	public void OnSelect() {
 		SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
 		if (renderer) {

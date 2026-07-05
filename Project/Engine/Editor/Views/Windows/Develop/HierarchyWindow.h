@@ -106,6 +106,8 @@ protected:
 	/// ----- other class ----- ///
 	ONEngine::EntityComponentSystem* pEcs_ = nullptr;
 	ONEngine::ECSGroup* pEcsGroup_ = nullptr;
+	ONEngine::ECSGroup* lastEcsGroup_ = nullptr;
+	bool lastIsDebugging_ = false;
 	EditorManager* pEditorManager_ = nullptr;
 	ONEngine::SceneManager* pSceneManager_ = nullptr;
 

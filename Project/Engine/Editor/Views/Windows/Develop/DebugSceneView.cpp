@@ -101,13 +101,13 @@ void DebugSceneView::SetGamePlay(bool isGamePlay) {
 		ONEngine::MonoScriptEngine::GetInstance().HotReload();
 
 		pSceneManager_->ReloadScene(true);
-		ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
+		// ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
 	} else {
 
 		/// 共通の処理（ゲーム開始、停止時に行う処理）
 		pSceneManager_->ReloadScene(true);
 		pSceneManager_->ClearTemporarySavedSceneName();
-		ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
+		// ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
 	}
 
 }

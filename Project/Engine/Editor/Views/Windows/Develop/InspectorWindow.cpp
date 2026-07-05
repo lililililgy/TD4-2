@@ -1,4 +1,4 @@
-﻿#include "InspectorWindow.h"
+#include "InspectorWindow.h"
 
 /// std
 #include <format>
@@ -175,12 +175,22 @@ void InspectorWindow::MultiEntityInspector(const std::vector<ONEngine::GameEntit
 std::vector<GameEntity*> InspectorWindow::GetSelectedEntities() {
 	std::vector<GameEntity*> res;
 	const auto& selectedGuids = ImGuiSelection::GetSelectedObjects();
+	std::vector<ONEngine::Guid> invalidGuids;
 	
 	for (const auto& guid : selectedGuids) {
 		if (!guid.CheckValid()) continue;
 		
 		GameEntity* entity = GetSelectedEntity(guid);
-		if (entity) res.push_back(entity);
+		if (entity) {
+			res.push_back(entity);
+		} else {
+			invalidGuids.push_back(guid);
+		}
+	}
+
+	// 存在しないEntityのGuidをクリーンアップ
+	for (const auto& guid : invalidGuids) {
+		ImGuiSelection::RemoveSelectedObject(guid);
 	}
 	
 	// 最後に選択したものがインスペクタの基準になるように順序を調整（オプション）
