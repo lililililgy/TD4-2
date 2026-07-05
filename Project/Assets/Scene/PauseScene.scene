@@ -39,6 +39,11 @@
             "guid": "8820e517ebe0c5a3b20230d236c64665",
             "parentGuid": "26262eae83e1a46421b288c8f7d1da70",
             "path": "./PauseScene/8820e517ebe0c5a3b20230d236c64665.entity"
+        },
+        {
+            "guid": "a6d9771e74bc8e7fd04c32d762afb5b1",
+            "parentGuid": null,
+            "path": "./PauseScene/a6d9771e74bc8e7fd04c32d762afb5b1.entity"
         }
     ]
 }

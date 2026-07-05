@@ -20,7 +20,9 @@ BGMPlayer::BGMPlayer()
 	: volume_(1.0f),
 	pitch_(1.0f),
 	state_(0),
-	isPlayingRequest_(false) {
+	isPlayingRequest_(false),
+	playOnAwake_(true),
+	hasPlayedOnAwake_(false) {
 }
 
 BGMPlayer::~BGMPlayer() {}
@@ -130,6 +132,12 @@ void ComponentDebug::BGMPlayerDebug(BGMPlayer* bgm) {
 		bgm->SetLoop(loop);
 	}
 
+	/// Play On Awake
+	bool playOnAwake = bgm->GetPlayOnAwake();
+	if (ImGui::Checkbox("Play On Awake", &playOnAwake)) {
+		bgm->SetPlayOnAwake(playOnAwake);
+	}
+
 	ImGui::Spacing();
 
 	/// 再生ボタン
@@ -150,7 +158,7 @@ void ComponentDebug::BGMPlayerDebug(BGMPlayer* bgm) {
 
 }
 
-void MonoInternalMethods::BGMPlayer_GetParams(uint64_t nativeHandle, float* volume, float* pitch, bool* loop) {
+void MonoInternalMethods::BGMPlayer_GetParams(uint64_t nativeHandle, float* volume, float* pitch, bool* loop, bool* playOnAwake) {
 	BGMPlayer* bgm = reinterpret_cast<BGMPlayer*>(nativeHandle);
 	if (!bgm) {
 		Console::LogError("BGMPlayer pointer is null");
@@ -160,9 +168,10 @@ void MonoInternalMethods::BGMPlayer_GetParams(uint64_t nativeHandle, float* volu
 	*volume = bgm->GetVolume();
 	*pitch = bgm->GetPitch();
 	*loop = bgm->GetLoop();
+	*playOnAwake = bgm->GetPlayOnAwake();
 }
 
-void MonoInternalMethods::BGMPlayer_SetParams(uint64_t nativeHandle, float volume, float pitch, bool loop) {
+void MonoInternalMethods::BGMPlayer_SetParams(uint64_t nativeHandle, float volume, float pitch, bool loop, bool playOnAwake) {
 	BGMPlayer* bgm = reinterpret_cast<BGMPlayer*>(nativeHandle);
 	if (!bgm) {
 		Console::LogError("BGMPlayer pointer is null in BGMPlayer_SetParams");
@@ -172,6 +181,7 @@ void MonoInternalMethods::BGMPlayer_SetParams(uint64_t nativeHandle, float volum
 	bgm->SetVolume(volume);
 	bgm->SetPitch(pitch);
 	bgm->SetLoop(loop);
+	bgm->SetPlayOnAwake(playOnAwake);
 }
 
 void MonoInternalMethods::BGMPlayer_Play(uint64_t nativeHandle) {
@@ -195,6 +205,7 @@ void ONEngine::from_json(const nlohmann::json& j, BGMPlayer& a) {
 	a.SetPitch(j.value("pitch", 1.0f));
 	a.SetAudioPath(j.value("path", std::string("")));
 	a.SetLoop(j.value("loop", true));
+	a.SetPlayOnAwake(j.value("playOnAwake", true));
 }
 
 void ONEngine::to_json(nlohmann::json& j, const BGMPlayer& a) {
@@ -204,6 +215,7 @@ void ONEngine::to_json(nlohmann::json& j, const BGMPlayer& a) {
 		{ "volume", a.GetVolume() },
 		{ "pitch", a.GetPitch() },
 		{ "path", a.GetAudioPath() },
-		{ "loop", a.GetLoop() }
+		{ "loop", a.GetLoop() },
+		{ "playOnAwake", a.GetPlayOnAwake() }
 	};
 }

@@ -1,6 +1,7 @@
 #include "AudioPlaybackSystem.h"
 
 /// engine
+#include "Engine/Core/Config/EngineConfig.h"
 #include "Engine/ECS/EntityComponentSystem/ECSGroup.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Audio/BGMPlayer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Audio/SEPlayer.h"
@@ -24,24 +25,124 @@ AudioPlaybackSystem::AudioPlaybackSystem(Asset::AssetCollection* assetCollection
 }
 
 AudioPlaybackSystem::~AudioPlaybackSystem() {
-	if (activeBGMVoice_) {
-		activeBGMVoice_->Stop();
-		activeBGMVoice_->DestroyVoice();
-		activeBGMVoice_ = nullptr;
+	// 1. すべてのソースボイスを確実に停止・破棄する
+	StopAllAudio();
+
+	// 2. マスタリングボイスを破棄
+	if (masterVoice_) {
+		masterVoice_->DestroyVoice();
+		masterVoice_ = nullptr;
 	}
-	for (auto voice : oneShotSEVoices_) {
+
+	// 3. XAudio2 インスタンスの解放
+	xAudio2_.Reset();
+}
+
+void AudioPlaybackSystem::StopAllAudio() {
+	// すべてのソースボイスを停止・破棄する
+	for (auto voice : allSourceVoices_) {
 		if (voice) {
 			voice->Stop();
 			voice->DestroyVoice();
 		}
 	}
+	allSourceVoices_.clear();
+
+	activeBGMVoice_ = nullptr;
+	activeBGMPlayer_ = nullptr;
 	oneShotSEVoices_.clear();
+	bgmLoopExited_ = false;
 }
 
 
-void AudioPlaybackSystem::OutsideOfRuntimeUpdate(ECSGroup* /*ecs*/) {}
+void AudioPlaybackSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
+	// シーン再生中は、停止時用のクリーンアップやhasPlayedOnAwake_のリセットを行わない
+	if (DebugConfig::isDebugging) {
+		return;
+	}
+
+	// 再生中だったBGMのクリーンアップ
+	if (activeBGMVoice_) {
+		activeBGMVoice_->Stop();
+		allSourceVoices_.remove(activeBGMVoice_);
+		activeBGMVoice_->DestroyVoice();
+		activeBGMVoice_ = nullptr;
+	}
+	if (activeBGMPlayer_) {
+		activeBGMPlayer_->state_ = static_cast<int>(AudioState::Stopped);
+		activeBGMPlayer_->sourceVoice_ = nullptr;
+		activeBGMPlayer_ = nullptr;
+	}
+	bgmLoopExited_ = false;
+
+	// OneShotSEのクリーンアップ
+	for (auto voice : oneShotSEVoices_) {
+		if (voice) {
+			voice->Stop();
+			allSourceVoices_.remove(voice);
+			voice->DestroyVoice();
+		}
+	}
+	oneShotSEVoices_.clear();
+
+	// BGMPlayerの再生フラグ・状態のリセット
+	ComponentArray<BGMPlayer>* bgmArray = ecs->GetComponentArray<BGMPlayer>();
+	if (bgmArray && !bgmArray->GetUsedComponents().empty()) {
+		for (auto& bgm : bgmArray->GetUsedComponents()) {
+			if (bgm) {
+				bgm->hasPlayedOnAwake_ = false;
+				bgm->state_ = static_cast<int>(AudioState::Stopped);
+				bgm->sourceVoice_ = nullptr;
+			}
+		}
+	}
+
+	// SEPlayerのボイスのクリーンアップと状態のリセット
+	ComponentArray<SEPlayer>* seArray = ecs->GetComponentArray<SEPlayer>();
+	if (seArray && !seArray->GetUsedComponents().empty()) {
+		for (auto& se : seArray->GetUsedComponents()) {
+			if (se) {
+				for (auto& voice : se->sourceVoices_) {
+					if (voice) {
+						voice->Stop();
+						allSourceVoices_.remove(voice);
+						voice->DestroyVoice();
+					}
+				}
+				se->sourceVoices_.clear();
+				se->state_ = static_cast<int>(AudioState::Stopped);
+			}
+		}
+	}
+}
 
 void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
+	// ==========================================
+	// 0. アクティブなBGMプレイヤーの生存確認（シーン遷移や破棄の検知）
+	// ==========================================
+	if (activeBGMPlayer_ && activeBGMVoice_) {
+		bool exists = false;
+		ComponentArray<BGMPlayer>* bgmArray = ecs->GetComponentArray<BGMPlayer>();
+		if (bgmArray) {
+			for (auto& bgm : bgmArray->GetUsedComponents()) {
+				if (bgm == activeBGMPlayer_) {
+					exists = true;
+					break;
+				}
+			}
+		}
+
+		if (!exists) {
+			activeBGMVoice_->Stop();
+			allSourceVoices_.remove(activeBGMVoice_);
+			activeBGMVoice_->DestroyVoice();
+			activeBGMVoice_ = nullptr;
+			activeBGMPlayer_ = nullptr;
+			bgmLoopExited_ = false;
+			Console::Log("[CPP Audio] BGM stopped because the source BGMPlayer was destroyed.");
+		}
+	}
+
 	// ==========================================
 	// 1. BGMPlayer の処理
 	// ==========================================
@@ -50,6 +151,12 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 		for (auto& bgm : bgmArray->GetUsedComponents()) {
 			if (!bgm || !bgm->enable) {
 				continue;
+			}
+
+			// Play On Awakeの判定
+			if (bgm->playOnAwake_ && !bgm->hasPlayedOnAwake_) {
+				bgm->hasPlayedOnAwake_ = true;
+				bgm->Play();
 			}
 
 			/// 音のクリップを設定
@@ -62,6 +169,7 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 				// 他のBGMが再生中なら停止して破棄
 				if (activeBGMVoice_) {
 					activeBGMVoice_->Stop();
+					allSourceVoices_.remove(activeBGMVoice_);
 					activeBGMVoice_->DestroyVoice();
 					activeBGMVoice_ = nullptr;
 				}
@@ -79,10 +187,12 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 				bgm->isStopRequest_ = false;
 				if (bgm == activeBGMPlayer_ && activeBGMVoice_) {
 					activeBGMVoice_->Stop();
+					allSourceVoices_.remove(activeBGMVoice_);
 					activeBGMVoice_->DestroyVoice();
 					activeBGMVoice_ = nullptr;
 					bgm->sourceVoice_ = nullptr;
 					activeBGMPlayer_ = nullptr;
+					bgmLoopExited_ = false;
 				}
 				bgm->state_ = static_cast<int>(AudioState::Stopped);
 			}
@@ -97,6 +207,13 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 			if (bgm == activeBGMPlayer_ && activeBGMVoice_) {
 				activeBGMVoice_->SetVolume(bgm->volume_);
 				activeBGMVoice_->SetFrequencyRatio(bgm->pitch_);
+
+				// ループが途中で解除された場合はExitLoopを呼び出す
+				if (!bgm->isLoop_ && !bgmLoopExited_) {
+					activeBGMVoice_->ExitLoop();
+					bgmLoopExited_ = true;
+					Console::Log("[CPP Audio] BGM Loop exited dynamically.");
+				}
 			}
 		}
 	}
@@ -126,6 +243,7 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 				for (auto& voice : se->sourceVoices_) {
 					if (voice) {
 						voice->Stop();
+						allSourceVoices_.remove(voice);
 						voice->DestroyVoice();
 					}
 				}
@@ -171,6 +289,7 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 		XAUDIO2_VOICE_STATE state;
 		voice->GetState(&state);
 		if (state.BuffersQueued == 0) {
+			allSourceVoices_.remove(voice);
 			voice->DestroyVoice();
 			itr = oneShotSEVoices_.erase(itr);
 			continue;
@@ -216,6 +335,9 @@ void AudioPlaybackSystem::PlayBGM(BGMPlayer* bgm) {
 
 	IXAudio2SourceVoice* sourceVoice = nullptr;
 	sourceVoice = bgm->pAudioClip_->CreateSourceVoice(xAudio2_.Get());
+	if (!sourceVoice) return;
+
+	allSourceVoices_.push_back(sourceVoice);
 
 	/// 再生する波形データの設定
 	const Asset::AudioStructs::SoundData& soundData = bgm->pAudioClip_->GetSoundData();
@@ -236,6 +358,7 @@ void AudioPlaybackSystem::PlayBGM(BGMPlayer* bgm) {
 	bgm->sourceVoice_ = sourceVoice;
 	activeBGMVoice_ = sourceVoice;
 	activeBGMPlayer_ = bgm;
+	bgmLoopExited_ = !bgm->isLoop_;
 }
 
 void AudioPlaybackSystem::PlaySE(SEPlayer* se) {
@@ -253,6 +376,9 @@ void AudioPlaybackSystem::PlaySE(SEPlayer* se) {
 
 	IXAudio2SourceVoice* sourceVoice = nullptr;
 	sourceVoice = se->pAudioClip_->CreateSourceVoice(xAudio2_.Get());
+	if (!sourceVoice) return;
+
+	allSourceVoices_.push_back(sourceVoice);
 
 	/// 再生する波形データの設定
 	const Asset::AudioStructs::SoundData& soundData = se->pAudioClip_->GetSoundData();
@@ -273,6 +399,9 @@ void AudioPlaybackSystem::PlaySE(SEPlayer* se) {
 void AudioPlaybackSystem::PlayOneShotSE(Asset::AudioClip* audioClip, float volume, float pitch, const std::string& /*path*/) {
 	IXAudio2SourceVoice* sourceVoice = nullptr;
 	sourceVoice = audioClip->CreateSourceVoice(xAudio2_.Get());
+	if (!sourceVoice) return;
+
+	allSourceVoices_.push_back(sourceVoice);
 
 	/// 再生する波形データの設定
 	const Asset::AudioStructs::SoundData& soundData = audioClip->GetSoundData();
@@ -299,11 +428,13 @@ int AudioPlaybackSystem::GetBGMState(BGMPlayer* bgm) {
 	bgm->sourceVoice_->GetState(&state);
 	if (state.BuffersQueued == 0) {
 		// ループなしで再生終了した場合など
+		allSourceVoices_.remove(bgm->sourceVoice_);
 		bgm->sourceVoice_->DestroyVoice();
 		bgm->sourceVoice_ = nullptr;
 		if (bgm == activeBGMPlayer_) {
 			activeBGMVoice_ = nullptr;
 			activeBGMPlayer_ = nullptr;
+			bgmLoopExited_ = false;
 		}
 		return static_cast<int>(AudioState::Stopped);
 	}
@@ -323,6 +454,7 @@ int AudioPlaybackSystem::GetSEState(SEPlayer* se) {
 		XAUDIO2_VOICE_STATE state;
 		sourceVoice->GetState(&state);
 		if (state.BuffersQueued == 0) {
+			allSourceVoices_.remove(sourceVoice);
 			sourceVoice->DestroyVoice(); // クリーンアップ
 			itr = sourceVoices.erase(itr);
 			continue;

@@ -20,9 +20,8 @@ public class Test : MonoScript {
 	}
 
 	public override void Update() {
-		SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
-		if(renderer) {
-			renderer.color = color;
+		if(Input.TriggerKey(KeyCode.Space)) {
+			SceneManager.LoadScene("TitleScene");
 		}
 	}
 }

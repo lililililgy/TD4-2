@@ -48,6 +48,8 @@ private:
 	bool isPlayingRequest_;
 	bool isStopRequest_ = false;
 	bool isLoop_ = true;
+	bool playOnAwake_ = true;
+	bool hasPlayedOnAwake_ = false;
 
 	/// 再生中の音声ソース
 	IXAudio2SourceVoice* sourceVoice_ = nullptr;
@@ -59,11 +61,13 @@ public:
 	void SetAudioPath(const std::string& path);
 	void SetAudioClip(Asset::AudioClip* clip);
 	void SetLoop(bool loop) { isLoop_ = loop; }
+	void SetPlayOnAwake(bool playOnAwake) { playOnAwake_ = playOnAwake; }
 
 	/// ----- getter ----- ///
 	float GetVolume() const;
 	float GetPitch() const;
 	bool GetLoop() const { return isLoop_; }
+	bool GetPlayOnAwake() const { return playOnAwake_; }
 	const std::string& GetAudioPath() const;
 	Asset::AudioClip* GetAudioClip() const;
 	int GetState() const;
@@ -75,8 +79,8 @@ void BGMPlayerDebug(BGMPlayer* bgm);
 }
 
 namespace MonoInternalMethods {
-void BGMPlayer_GetParams(uint64_t nativeHandle, float* volume, float* pitch, bool* loop);
-void BGMPlayer_SetParams(uint64_t nativeHandle, float volume, float pitch, bool loop);
+void BGMPlayer_GetParams(uint64_t nativeHandle, float* volume, float* pitch, bool* loop, bool* playOnAwake);
+void BGMPlayer_SetParams(uint64_t nativeHandle, float volume, float pitch, bool loop, bool playOnAwake);
 void BGMPlayer_Play(uint64_t nativeHandle);
 void BGMPlayer_Stop(uint64_t nativeHandle);
 }

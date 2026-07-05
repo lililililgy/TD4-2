@@ -18,6 +18,7 @@ using namespace ONEngine;
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
+#include "Engine/ECS/System/Audio/AudioPlaybackSystem.h"
 
 
 namespace {
@@ -222,11 +223,17 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 		// Clear all active scenes
 		if (pEcs_->GetActiveGroupNames().empty()) {
 			if (prevSceneGroup) {
+				if (auto* audioSys = prevSceneGroup->GetSystem<AudioPlaybackSystem>()) {
+					audioSys->StopAllAudio();
+				}
 				prevSceneGroup->RemoveEntityAll();
 			}
 		} else {
 			for (const auto& activeName : pEcs_->GetActiveGroupNames()) {
 				if (auto* group = pEcs_->GetECSGroup(activeName)) {
+					if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+						audioSys->StopAllAudio();
+					}
 					group->RemoveEntityAll();
 				}
 			}

@@ -85,6 +85,12 @@ public:
 	void OutsideOfRuntimeUpdateSystems();
 	void RuntimeUpdateSystems();
 
+	/// 取得
+	template<SystemType Sys>
+	Sys* GetSystem() {
+		return systemCollection_->GetSystem<Sys>();
+	}
+
 
 private:
 	/// ===================================================
