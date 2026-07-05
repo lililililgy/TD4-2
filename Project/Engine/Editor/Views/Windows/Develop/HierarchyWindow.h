@@ -3,6 +3,7 @@
 /// std
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 /// external
 #include <imgui.h>
@@ -122,10 +123,12 @@ protected:
 
 	/// ----- multi selection ----- ///
 	std::vector<ONEngine::Guid> flatHierarchyGuids_; ///< 現在表示されているエンティティのGuidリスト(順番保持)
-	ONEngine::Guid shiftStartGuid_; ///< Shift選択の開始地点
+	ONEngine::Guid shiftStartGuid_ = ONEngine::Guid::kInvalid; ///< Shift選択の開始地点
 	ONEngine::Guid clickedGuid_ = ONEngine::Guid::kInvalid;
 	bool wasShiftClicked_ = false;
 	bool wasCtrlClicked_ = false;
+	ONEngine::Guid lastSelectedGuid_ = ONEngine::Guid::kInvalid;
+	std::unordered_set<ONEngine::Guid> forceExpandGuids_;
 
 	/// ----- box selection ----- ///
 	bool isMarqueeSelecting_ = false;
