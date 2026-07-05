@@ -26,6 +26,9 @@ void SetDrawRect(const ONEngine::Vector2& pos, const ONEngine::Vector2& size);
 void Set2DMode(bool is2DMode);
 bool Is2DMode();
 
+void SetPivotMode(int mode);
+int GetPivotMode();
+
 
 ///// @brief 現在選択されているもののGuidリストを取得する (１つしか選択されていない場合もベクターで返す)
 ///// @return 選択されているエンティティのGuidリスト

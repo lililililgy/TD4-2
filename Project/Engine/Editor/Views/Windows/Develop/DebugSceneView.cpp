@@ -540,6 +540,20 @@ void DebugSceneView::DrawToolbar() {
 		}
 	}
 
+	ImGui::SameLine();
+	ImGui::Text("|");
+	ImGui::SameLine();
+
+	// Local/World モードの切り替え
+	int pivotMode = Editor::GetPivotMode();
+	if (ImGui::RadioButton("World", pivotMode == ImGuizmo::MODE::WORLD)) {
+		Editor::SetPivotMode(ImGuizmo::MODE::WORLD);
+	}
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Local", pivotMode == ImGuizmo::MODE::LOCAL)) {
+		Editor::SetPivotMode(ImGuizmo::MODE::LOCAL);
+	}
+
 	// ImGuiInfo の右寄せ表示
 	{
 		ImGui::SameLine();

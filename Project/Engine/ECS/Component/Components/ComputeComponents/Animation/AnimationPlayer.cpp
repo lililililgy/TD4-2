@@ -153,6 +153,7 @@ void AnimationPlayer::Reset() {
     isLooping = true;
     autoPlay = true;
     isBound = false;
+    playedOnAwake = false;
 }
 
 void AnimationPlayer::ClearBindings() {
@@ -289,6 +290,7 @@ void ONEngine::from_json(const nlohmann::json& j, AnimationPlayer& a) {
     a.isPlaying = j.value("isPlaying", false);
     a.isLooping = j.value("isLooping", true);
     a.autoPlay = j.value("autoPlay", true);
+    a.playedOnAwake = false;
 }
 
 void ONEngine::to_json(nlohmann::json& j, const AnimationPlayer& a) {

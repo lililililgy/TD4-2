@@ -5,20 +5,20 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -328.900146484375,
-                "y": 0.0,
+                "x": -211.42999267578125,
+                "y": -113.05000305175781,
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.9274941086769104,
+                "w": 0.9274942278862,
                 "x": 0.0,
                 "y": 0.0,
-                "z": -0.37383773922920227
+                "z": -0.37383750081062317
             },
             "scale": {
                 "x": 2500.0,
                 "y": 750.0,
-                "z": 765.8002319335938
+                "z": 1.0
             },
             "type": "Transform"
         },
@@ -51,6 +51,15 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "autoPlay": true,
+            "clipPath": "./Assets/Anims/PauseMenuOpen.anim",
+            "currentTime": 0.0,
+            "isLooping": false,
+            "isPlaying": false,
+            "speed": 1.0,
+            "type": "AnimationPlayer"
         }
     ],
     "guid": "fa77e265cd05bdb85ed13448a53d5a66",
