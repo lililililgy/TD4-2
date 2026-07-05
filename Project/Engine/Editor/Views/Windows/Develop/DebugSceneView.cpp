@@ -2,6 +2,15 @@
 
 /// std
 #include <array>
+#include <thread>
+#include <atomic>
+#include <windows.h>
+#include <filesystem>
+#include <fstream>
+
+/// engine
+#include "Engine/Editor/Manager/HotReloadManager.h"
+#include "Engine/Core/Utility/Time/Time.h"
 
 /// external
 #include <imgui.h>
@@ -33,6 +42,21 @@ std::string Format(const char* fmt, Args... args) {
 	std::snprintf(buf.data(), size, fmt, args...);
 	buf.pop_back(); // null文字削除
 	return buf;
+}
+
+std::string ConvertACPToUTF8(const std::string& acpStr) {
+	int wlen = MultiByteToWideChar(CP_ACP, 0, acpStr.c_str(), -1, NULL, 0);
+	if (wlen > 0) {
+		std::vector<wchar_t> wbuf(wlen);
+		MultiByteToWideChar(CP_ACP, 0, acpStr.c_str(), -1, wbuf.data(), wlen);
+		int ulen = WideCharToMultiByte(CP_UTF8, 0, wbuf.data(), -1, NULL, 0, NULL, NULL);
+		if (ulen > 0) {
+			std::vector<char> ubuf(ulen);
+			WideCharToMultiByte(CP_UTF8, 0, wbuf.data(), -1, ubuf.data(), ulen, NULL, NULL);
+			return std::string(ubuf.data());
+		}
+	}
+	return acpStr;
 }
 }
 
@@ -439,6 +463,39 @@ void DebugSceneView::DrawToolbar() {
 
 	ImGui::SameLine();
 
+	// C# Build button
+	if (isCSBuilding_) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
+		ImGui::Button("Building C#...");
+		ImGui::PopStyleColor(3);
+	} else {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.35f, 0.15f, 0.45f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.45f, 0.2f, 0.55f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.25f, 0.1f, 0.35f, 1.0f));
+		if (ImGui::Button("Build C#")) {
+			TriggerCSBuild();
+		}
+		ImGui::PopStyleColor(3);
+	}
+
+	if (showCSBuildResult_) {
+		ImGui::SameLine();
+		if (csBuildSuccess_) {
+			ImGui::TextColored(ImVec4(0.2f, 0.8f, 0.2f, 1.0f), "Build OK");
+		} else {
+			ImGui::TextColored(ImVec4(0.8f, 0.2f, 0.2f, 1.0f), "Build Failed");
+		}
+
+		csBuildResultTimer_ -= ONEngine::Time::DeltaTime();
+		if (csBuildResultTimer_ <= 0.0f) {
+			showCSBuildResult_ = false;
+		}
+	}
+
+	ImGui::SameLine();
+
 	// 2D/3D モードの切り替え
 	bool is2D = Editor::Is2DMode();
 	if (ImGui::RadioButton("2D", is2D)) {
@@ -537,6 +594,134 @@ void DebugSceneView::DrawGizmoAndOverlays(const ImVec2& imagePos, const ImVec2& 
 	if(isDrawSceneStats_) {
 		ShowDebugSceneView(imagePos);
 	}
+}
+
+void DebugSceneView::TriggerCSBuild() {
+	if (isCSBuilding_) return;
+
+	isCSBuilding_ = true;
+	showCSBuildResult_ = false;
+
+	std::thread buildThread([this]() {
+		ONEngine::Console::Log("Starting C# build...", ONEngine::LogCategory::ScriptEngine);
+
+		// Determine project root directory by traversing upwards
+		std::filesystem::path rootPath = std::filesystem::current_path();
+		std::filesystem::path checkPath = rootPath;
+		while (checkPath.has_parent_path()) {
+			if (std::filesystem::exists(checkPath / "SubProjects") && std::filesystem::exists(checkPath / "Project")) {
+				rootPath = checkPath;
+				break;
+			}
+			checkPath = checkPath.parent_path();
+		}
+
+		std::filesystem::path csprojPath = rootPath / "SubProjects" / "CSharpLibrary" / "CSharpLibrary.csproj";
+		std::filesystem::path logPath = rootPath / "temp_cs_build.log";
+
+		// Select dotnet executable path (prioritize absolute path)
+		std::wstring dotnetPath = L"dotnet";
+		if (std::filesystem::exists("C:\\Program Files\\dotnet\\dotnet.exe")) {
+			dotnetPath = L"\"C:\\Program Files\\dotnet\\dotnet.exe\"";
+		}
+
+		// Construct command line to run dotnet build directly
+		std::wstring cmdLine = dotnetPath + L" build \"" + csprojPath.wstring() + L"\"";
+
+		// Configure security attributes to make file handle inheritable
+		SECURITY_ATTRIBUTES sa;
+		sa.nLength = sizeof(sa);
+		sa.bInheritHandle = TRUE;
+		sa.lpSecurityDescriptor = NULL;
+
+		HANDLE hLogFile = CreateFileW(
+			logPath.wstring().c_str(),
+			GENERIC_WRITE,
+			FILE_SHARE_READ | FILE_SHARE_WRITE,
+			&sa,
+			CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL,
+			NULL
+		);
+
+		DWORD exitCode = 9999;
+		bool success = false;
+
+		if (hLogFile != INVALID_HANDLE_VALUE) {
+			STARTUPINFOW si;
+			PROCESS_INFORMATION pi;
+			ZeroMemory(&si, sizeof(si));
+			si.cb = sizeof(si);
+			si.hStdOutput = hLogFile;
+			si.hStdError = hLogFile;
+			si.dwFlags |= STARTF_USESTDHANDLES;
+			ZeroMemory(&pi, sizeof(pi));
+
+			// Execute build command directly (bInheritHandles must be TRUE)
+			if (CreateProcessW(
+				NULL,                   // No module name
+				cmdLine.data(),         // Command line
+				NULL,                   // Process handle not inheritable
+				NULL,                   // Thread handle not inheritable
+				TRUE,                   // Inherit handles
+				CREATE_NO_WINDOW,       // Do not create console window
+				NULL,                   // Use parent's environment block
+				NULL,                   // Use parent's starting directory 
+				&si,                    // Pointer to STARTUPINFO structure
+				&pi)                    // Pointer to PROCESS_INFORMATION structure
+			) {
+				WaitForSingleObject(pi.hProcess, INFINITE);
+				GetExitCodeProcess(pi.hProcess, &exitCode);
+				CloseHandle(pi.hProcess);
+				CloseHandle(pi.hThread);
+				success = (exitCode == 0);
+			} else {
+				DWORD err = GetLastError();
+				ONEngine::Console::LogError("Failed to launch build process (CreateProcessW failed with error: " + std::to_string(err) + ").", ONEngine::LogCategory::ScriptEngine);
+			}
+
+			// Close the log file handle so we can read it
+			CloseHandle(hLogFile);
+		} else {
+			DWORD err = GetLastError();
+			ONEngine::Console::LogError("Failed to create log file handle (CreateFileW failed with error: " + std::to_string(err) + ").", ONEngine::LogCategory::ScriptEngine);
+		}
+
+		// Read and log stdout/stderr of dotnet build
+		if (std::filesystem::exists(logPath)) {
+			std::ifstream logFile(logPath);
+			if (logFile.is_open()) {
+				std::string line;
+				while (std::getline(logFile, line)) {
+					std::string utf8Line = ConvertACPToUTF8(line);
+					if (success) {
+						ONEngine::Console::Log(utf8Line, ONEngine::LogCategory::ScriptEngine);
+					} else {
+						ONEngine::Console::LogError(utf8Line, ONEngine::LogCategory::ScriptEngine);
+					}
+				}
+				logFile.close();
+			}
+			std::error_code ec;
+			std::filesystem::remove(logPath, ec);
+		} else {
+			ONEngine::Console::LogError("Build log file not found at: " + ONEngine::ConvertString(logPath.wstring()), ONEngine::LogCategory::ScriptEngine);
+		}
+
+		csBuildSuccess_ = success;
+		isCSBuilding_ = false;
+		showCSBuildResult_ = true;
+		csBuildResultTimer_ = 3.0f; // show result for 3 seconds
+
+		if (success) {
+			ONEngine::Console::Log("C# build succeeded! Requesting script hot reload...", ONEngine::LogCategory::ScriptEngine);
+			HotReloadManager::GetInstance().RequestScriptHotReload();
+		} else {
+			ONEngine::Console::LogError("C# build failed! Exit code: " + std::to_string(exitCode) + ", Command: " + ONEngine::ConvertString(cmdLine), ONEngine::LogCategory::ScriptEngine);
+		}
+	});
+
+	buildThread.detach();
 }
 
 } /// namespace Editor

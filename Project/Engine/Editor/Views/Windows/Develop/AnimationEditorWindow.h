@@ -23,7 +23,7 @@ struct AnimationSequenceWrapper : public ImSequencer::SequenceInterface {
     AnimationSequenceWrapper() {}
 
     void SetClip(ONEngine::Asset::AnimationClip* clip) {
-        clip = clip;
+        this->clip = clip;
         if (clip) {
             mFrameMax = static_cast<int>(clip->duration * 60.0f);
             itemFrames.resize(clip->tracks.size());
