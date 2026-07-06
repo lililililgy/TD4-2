@@ -113,7 +113,7 @@ bool MaterialEdit(const std::string& label, ONEngine::Asset::Material* material,
 	/// ---------------------------------------------------
 	/// 色の編集
 	/// ---------------------------------------------------
-	edit |= ImMathf::DragFloat4("Base Color", &material->baseColor, 0.01f, 0.0f, 1.0f);
+	edit |= ColorEdit("Base Color", &material->baseColor);
 
 
 	/// Indentを付けて見やすくする

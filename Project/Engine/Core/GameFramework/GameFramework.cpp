@@ -169,7 +169,7 @@ void GameFramework::Update() {
 	sceneManager_->Update();
 
 	///!< ゲームデバッグモードの場合は更新処理を行う
-	if(DebugConfig::isDebugging) {
+	if(DebugConfig::isDebugging && !DebugConfig::isPause) {
 		entityComponentSystem_->Update();
 	}
 	CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::ECSUpdate);

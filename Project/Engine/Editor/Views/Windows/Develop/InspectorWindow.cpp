@@ -14,6 +14,11 @@
 #include "Engine/Editor/Commands/ComponentEditCommands/ComponentEditCommands.h"
 #include "Engine/Editor/Commands/WorldEditorCommands/WorldEditorCommands.h"
 #include "Engine/Editor/Commands/ImGuiCommand/ImGuiCommand.h"
+#include "Engine/Asset/AssetType.h"
+#include "Engine/Core/Utility/FileSystem/FileSystem.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
+#include "Engine/Editor/Math/AssetPayload.h"
 
 /// editor
 #include "Engine/Editor/Manager/EditorManager.h"
@@ -161,6 +166,95 @@ void InspectorWindow::EntityInspector() {
 	ImGui::Separator();
 	ShowEntityComponents(selectedEntity);
 	ShowAddComponentPopup(selectedEntity);
+
+	// ---- ドラッグ＆ドロップでのアタッチ処理 ----
+	ImVec2 remainingSpace = ImGui::GetContentRegionAvail();
+	if (remainingSpace.y < 50.0f) {
+		remainingSpace.y = 50.0f; // 最低限のドラッグ領域を確保
+	}
+	ImGui::InvisibleButton("##InspectorDragDropTarget", remainingSpace);
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+			if (payload->Data) {
+				Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+				std::string path = assetPayload->filePath;
+				std::string ext = ONEngine::FileSystem::FileExtension(path);
+				ONEngine::Asset::AssetType type = ONEngine::Asset::GetAssetTypeFromExtension(ext);
+
+				if (path.find(".cs") != std::string::npos) {
+					// スクリプトのアタッチ
+					Script* scriptComp = selectedEntity->GetComponent<Script>();
+					if (!scriptComp) {
+						pEditorManager_->ExecuteCommand<AddComponentCommand>(selectedEntity, "Script");
+						scriptComp = selectedEntity->GetComponent<Script>();
+					}
+					if (scriptComp) {
+						std::string name = path;
+						size_t lastSlash = name.find_last_of("/\\");
+						if (lastSlash != std::string::npos) {
+							name = name.substr(lastSlash + 1);
+						}
+						if (name.find(".cs") != std::string::npos) {
+							name = name.substr(0, name.find(".cs"));
+						}
+
+						std::string scriptName = name;
+						if (!scriptComp->Contains(scriptName)) {
+							Editor::EditCommand::Execute<Editor::LambdaCommand>(
+								[scriptComp, scriptName]() { scriptComp->AddScript(scriptName); },
+								[scriptComp, scriptName]() { scriptComp->RemoveScript(scriptName); }
+							);
+							Console::Log(std::format("Script '{}' attached to Entity '{}'.", scriptName, selectedEntity->GetName()));
+						}
+					}
+				} else if (type == ONEngine::Asset::AssetType::Texture) {
+					// テクスチャのアタッチ
+					if (auto sr = selectedEntity->GetComponent<SpriteRenderer>()) {
+						Guid oldGuid = sr->GetMaterialForAnimation().GetBaseTextureGuid();
+						Guid newGuid = assetPayload->guid;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[sr, newGuid]() { sr->GetMaterialForAnimation().SetBaseTextureGuid(newGuid); },
+							[sr, oldGuid]() { sr->GetMaterialForAnimation().SetBaseTextureGuid(oldGuid); }
+						);
+						Console::Log(std::format("Texture set to SpriteRenderer of '{}'.", selectedEntity->GetName()));
+					} else if (auto mr = selectedEntity->GetComponent<MeshRenderer>()) {
+						Guid oldGuid = mr->GetMaterialForAnimation().GetBaseTextureGuid();
+						Guid newGuid = assetPayload->guid;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[mr, newGuid]() { mr->GetMaterialForAnimation().SetBaseTextureGuid(newGuid); },
+							[mr, oldGuid]() { mr->GetMaterialForAnimation().SetBaseTextureGuid(oldGuid); }
+						);
+						Console::Log(std::format("Texture set to MeshRenderer of '{}'.", selectedEntity->GetName()));
+					} else if (auto dmr = selectedEntity->GetComponent<DissolveMeshRenderer>()) {
+						Guid oldGuid = dmr->GetMaterialForAnimation().GetBaseTextureGuid();
+						Guid newGuid = assetPayload->guid;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[dmr, newGuid]() { dmr->GetMaterialForAnimation().SetBaseTextureGuid(newGuid); },
+							[dmr, oldGuid]() { dmr->GetMaterialForAnimation().SetBaseTextureGuid(oldGuid); }
+						);
+						Console::Log(std::format("Texture set to DissolveMeshRenderer of '{}'.", selectedEntity->GetName()));
+					} else if (auto smr = selectedEntity->GetComponent<SkinMeshRenderer>()) {
+						std::string oldPath = smr->GetTexturePath();
+						std::string newPath = path;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[smr, newPath]() { smr->SetTexturePath(newPath); },
+							[smr, oldPath]() { smr->SetTexturePath(oldPath); }
+						);
+						Console::Log(std::format("Texture set to SkinMeshRenderer of '{}'.", selectedEntity->GetName()));
+					} else {
+						// どのレンダラーもなければSpriteRendererを追加して設定
+						pEditorManager_->ExecuteCommand<AddComponentCommand>(selectedEntity, "SpriteRenderer");
+						if (auto newSr = selectedEntity->GetComponent<SpriteRenderer>()) {
+							Guid newGuid = assetPayload->guid;
+							newSr->GetMaterialForAnimation().SetBaseTextureGuid(newGuid);
+							Console::Log(std::format("Added SpriteRenderer and set Texture to '{}'.", selectedEntity->GetName()));
+						}
+					}
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
 
 }
 
