@@ -5,34 +5,33 @@ param (
 
 $ErrorActionPreference = "Stop"
 
-# feature/ のプレフィックスを必要に応じて補完
 if (-not $BranchName.StartsWith("feature/")) {
     $FullBranchName = "feature/$BranchName"
 } else {
     $FullBranchName = $BranchName
 }
 
-# 1. 未コミットの変更があるかチェック
+# 1. Check for uncommitted changes
 $status = git status --porcelain
 if ($status) {
-    Write-Error "エラー: 未コミットの変更があります。コミットするか git stash で退避してから実行してください。"
+    Write-Error "Error: Uncommitted changes detected. Please commit or stash them before creating a new branch."
     exit 1
 }
 
-# 2. engineブランチにチェックアウト
-Write-Host "engineブランチにチェックアウトしています..." -ForegroundColor Cyan
+# 2. Checkout engine
+Write-Host "Checking out engine branch..." -ForegroundColor Cyan
 git checkout engine
 
-# 3. 最新の変更を取得
-Write-Host "最新の変更を取得しています..." -ForegroundColor Cyan
+# 3. Pull latest changes
+Write-Host "Pulling latest changes for engine..." -ForegroundColor Cyan
 try {
     git pull origin engine
 } catch {
-    Write-Warning "リモートからのpullに失敗しました。オフライン状態か、リモートが存在しない可能性があります。処理を続行します。"
+    Write-Warning "Failed to pull from remote origin. Proceeding locally."
 }
 
-# 4. 新規ブランチを作成・チェックアウト
-Write-Host "新規ブランチ '$FullBranchName' を作成し、切り替えています..." -ForegroundColor Cyan
+# 4. Create and checkout new branch
+Write-Host "Creating and switching to new branch '$FullBranchName'..." -ForegroundColor Cyan
 git checkout -b $FullBranchName
 
-Write-Host "完了しました。現在のブランチ: $FullBranchName" -ForegroundColor Green
+Write-Host "Success! Current branch: $FullBranchName" -ForegroundColor Green
