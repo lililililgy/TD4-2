@@ -54,6 +54,22 @@ void AudioPlaybackSystem::StopAllAudio() {
 	bgmLoopExited_ = false;
 }
 
+void AudioPlaybackSystem::PauseAllAudio() {
+	for (auto voice : allSourceVoices_) {
+		if (voice) {
+			voice->Stop(0);
+		}
+	}
+}
+
+void AudioPlaybackSystem::ResumeAllAudio() {
+	for (auto voice : allSourceVoices_) {
+		if (voice) {
+			voice->Start(0);
+		}
+	}
+}
+
 
 void AudioPlaybackSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 #ifdef DEBUG_MODE

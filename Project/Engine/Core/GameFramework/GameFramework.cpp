@@ -15,6 +15,7 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
 #include "Engine/Core/Threading/ThreadPool.h"
 #include "Engine/Core/Event/FrameEventQueue.h"
+#include "Engine/ECS/System/Audio/AudioPlaybackSystem.h"
 
 GameFramework::GameFramework() {}
 GameFramework::~GameFramework() {
@@ -178,6 +179,50 @@ void GameFramework::Update() {
 	entityComponentSystem_->OutsideOfUpdate();
 
 	sceneManager_->Update();
+
+	if (!DebugConfig::isDebugging) {
+		wasPause_ = false;
+	} else {
+		bool currentPause = DebugConfig::isPause;
+		if (currentPause != wasPause_) {
+			wasPause_ = currentPause;
+			if (currentPause) {
+				const auto& activeGroups = entityComponentSystem_->GetActiveGroupNames();
+				if (activeGroups.empty()) {
+					if (auto* group = entityComponentSystem_->GetCurrentGroup()) {
+						if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+							audioSys->PauseAllAudio();
+						}
+					}
+				} else {
+					for (const auto& name : activeGroups) {
+						if (auto* group = entityComponentSystem_->GetECSGroup(name)) {
+							if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+								audioSys->PauseAllAudio();
+							}
+						}
+					}
+				}
+			} else {
+				const auto& activeGroups = entityComponentSystem_->GetActiveGroupNames();
+				if (activeGroups.empty()) {
+					if (auto* group = entityComponentSystem_->GetCurrentGroup()) {
+						if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+							audioSys->ResumeAllAudio();
+						}
+					}
+				} else {
+					for (const auto& name : activeGroups) {
+						if (auto* group = entityComponentSystem_->GetECSGroup(name)) {
+							if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+								audioSys->ResumeAllAudio();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 	///!< ゲームデバッグモードの場合は更新処理を行う
 	if(DebugConfig::isDebugging && !DebugConfig::isPause) {

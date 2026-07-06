@@ -6,6 +6,7 @@
 /// engine
 #include "Engine/Core/Utility/Utility.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
+#include "Engine/Core/Config/EngineConfig.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 
@@ -65,6 +66,9 @@ void PrefabViewWindow::RenderView() {
 
 	// アスペクト比に合わせてサイズ調整
 	float aspectRatio = 16.0f / 9.0f;
+	if (ONEngine::EngineConfig::windowHeight > 0) {
+		aspectRatio = static_cast<float>(ONEngine::EngineConfig::windowWidth) / static_cast<float>(ONEngine::EngineConfig::windowHeight);
+	}
 	ImVec2 imageSize = availRegion;
 	if (imageSize.x / imageSize.y > aspectRatio) {
 		imageSize.x = imageSize.y * aspectRatio;

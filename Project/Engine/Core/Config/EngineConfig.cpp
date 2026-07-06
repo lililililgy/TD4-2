@@ -22,6 +22,7 @@ namespace ONEngine::EngineConfig {
 	int windowHeight = 1080;
 	bool isFullscreen = false;
 	bool enableVSync = true;
+	bool ignoreCSharpLog = false;
 
 	void LoadConfig() {
 		std::string configPath = "./Assets/engine_config.json";
@@ -66,6 +67,9 @@ namespace ONEngine::EngineConfig {
 					if (j.contains("enableVSync") && j["enableVSync"].is_boolean()) {
 						enableVSync = j["enableVSync"].get<bool>();
 					}
+					if (j.contains("ignoreCSharpLog") && j["ignoreCSharpLog"].is_boolean()) {
+						ignoreCSharpLog = j["ignoreCSharpLog"].get<bool>();
+					}
 				} catch (const std::exception&) {
 					// 読み込みに失敗した場合はデフォルト値のまま
 				}
@@ -83,6 +87,7 @@ namespace ONEngine::EngineConfig {
 		j["windowHeight"] = windowHeight;
 		j["isFullscreen"] = isFullscreen;
 		j["enableVSync"] = enableVSync;
+		j["ignoreCSharpLog"] = ignoreCSharpLog;
 		std::ofstream ofs(configPath);
 		if (ofs.is_open()) {
 			ofs << j.dump(4);
