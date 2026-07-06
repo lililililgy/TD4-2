@@ -117,7 +117,7 @@ void GameFramework::InitializeECS() {
 	LoadDebugScene();
 }
 
-void GameFramework::InitializeEditor(const GameFrameworkConfig& config) {
+void GameFramework::InitializeEditor(const GameFrameworkConfig& /*config*/) {
 #ifdef DEBUG_MODE
 	imGuiManager_->Initialize(renderingFramework_->GetAssetCollection());
 	imGuiManager_->SetImGuiWindow(windowManager_->GetMainWindow());

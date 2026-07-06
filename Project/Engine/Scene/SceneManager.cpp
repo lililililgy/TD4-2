@@ -248,7 +248,6 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 		}
 	}
 
-	bool wasAdditive = isNextSceneAdditive_;
 	isNextSceneAdditive_ = false; // Reset the flag
 
 	currentScene_ = std::move(nextScene_);

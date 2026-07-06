@@ -105,8 +105,8 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 	RegisterComponent<CustomMeshRenderer>(ComponentType::Renderer, [&](CustomMeshRenderer* comp) { CustomMeshRendererDebug(comp); });
 	RegisterComponent<DissolveMeshRenderer>(ComponentType::Renderer, [&](DissolveMeshRenderer* comp) { ShowGUI(comp, pAssetCollection_); });
 	RegisterComponent<SpriteRenderer>(ComponentType::Renderer, [&](SpriteRenderer* comp) { ComponentDebug::SpriteDebug(comp, pAssetCollection_); });
-	RegisterComponent<Line2DRenderer>(ComponentType::Renderer, [&](Line2DRenderer* comp) {});
-	RegisterComponent<Line3DRenderer>(ComponentType::Renderer, [&](Line3DRenderer* comp) {});
+	RegisterComponent<Line2DRenderer>(ComponentType::Renderer, [](Line2DRenderer* /*comp*/) {});
+	RegisterComponent<Line3DRenderer>(ComponentType::Renderer, [](Line3DRenderer* /*comp*/) {});
 	RegisterComponent<SkinMeshRenderer>(ComponentType::Renderer, [&](SkinMeshRenderer* comp) { ComponentDebug::SkinMeshRendererDebug(comp, pAssetCollection_); });
 	RegisterComponent<ScreenPostEffectTag>(ComponentType::Renderer, [&](ScreenPostEffectTag* comp) { ComponentDebug::ScreenPostEffectTagDebug(comp); });
 	RegisterComponent<Skybox>(ComponentType::Renderer, [&](Skybox* comp) { ComponentDebug::SkyboxDebug(comp); });
@@ -548,7 +548,6 @@ ImVec4 InspectorWindow::GetComponentBaseColor(ComponentType type) const {
 	case ComponentType::Audio:    return ImVec4(0.45f, 0.20f, 0.50f, 0.70f);
 	default:                      return ImGui::GetStyleColorVec4(ImGuiCol_Header);
 	}
-	return ImVec4();
 }
 
 
@@ -691,7 +690,7 @@ bool InspectorWindow::DrawMultiComponentHeaderUI(const std::vector<ONEngine::ICo
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 2.0f);
 
 	bool allEnabled = true;
-	bool firstEnabled = comps[0]->enable;
+	int firstEnabled = comps[0]->enable;
 	for (auto c : comps) if (c->enable != firstEnabled) { allEnabled = false; break; }
 
 	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
@@ -699,10 +698,10 @@ bool InspectorWindow::DrawMultiComponentHeaderUI(const std::vector<ONEngine::ICo
 	ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(1, 1, 1, 0.2f));
 	ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
 
-	bool enabled = firstEnabled;
+	bool enabled = (firstEnabled != 0);
 	if (allEnabled) {
 		if (ImGui::Checkbox("##enabled", &enabled)) {
-			for (auto c : comps) c->enable = enabled;
+			for (auto c : comps) c->enable = enabled ? 1 : 0;
 		}
 	} else {
 		if (ImGui::Button("-##mixed_enabled", ImVec2(ImGui::GetFrameHeight(), ImGui::GetFrameHeight()))) {

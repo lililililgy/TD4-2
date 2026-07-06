@@ -153,7 +153,8 @@ namespace {
 					for (auto& [k, v] : arg->fields) j[k] = VarToJson(v);
 				}
 				return j;
-			} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
+			} else {
+				static_assert(std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>, "Unhandled type in VarToJson");
 				json j = json::array();
 				for (const auto& o : arg) {
 					json oj = json::object();
@@ -165,7 +166,6 @@ namespace {
 				}
 				return j;
 			}
-			return json();
 			}, var);
 	}
 

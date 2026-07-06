@@ -130,8 +130,6 @@ void ComponentDebug::SkinMeshRendererDebug(SkinMeshRenderer* _smr, Asset::AssetC
 	std::string texturePath = _smr->GetTexturePath();
 
 	bool isPlaying = _smr->GetIsPlaying();
-	float animationTime = _smr->GetAnimationTime();
-	float duration = _smr->GetDuration();
 	float jointSize = _smr->GetDebugJointSize();
 	float rectSize = _smr->GetDebugRectSize();
 	Vector4 color = _smr->GetColor();
