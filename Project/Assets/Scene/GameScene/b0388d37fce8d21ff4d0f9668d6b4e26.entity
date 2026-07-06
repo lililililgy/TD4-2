@@ -2,15 +2,6 @@
     "active": true,
     "components": [
         {
-            "AttackCollision": {
-                "damage_": 10.201784133911133
-            },
-            "HP": {
-                "currentHp_": 1.0
-            },
-            "LevelingComponent": {
-                "currentLevel_": 2
-            },
             "PlayerMoveComponent": {
                 "paramReleaseSmoothTime_": 0.6000000238418579
             },

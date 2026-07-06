@@ -1,9 +1,1 @@
-{
-  "entities": [
-        {
-            "guid": "41f79c8d5ec07678cd92aaf6dbd03b16",
-            "parentGuid": null,
-            "path": "./Debug/41f79c8d5ec07678cd92aaf6dbd03b16.entity"
-        }
-    ]
-}
+{}

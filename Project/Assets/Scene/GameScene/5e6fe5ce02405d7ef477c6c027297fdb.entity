@@ -58,6 +58,7 @@
                     "y": -967.6799926757813
                 },
                 "heatWeightThreshold_": 3,
+                "isActive_": false,
                 "maxEnemyCount_": 12,
                 "maxSpawnCount_": 1,
                 "originName_": "Player",

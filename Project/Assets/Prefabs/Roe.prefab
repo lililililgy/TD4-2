@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 32.0,
-                "y": 32.0,
-                "z": 32.0
+                "x": 128.0,
+                "y": 128.0,
+                "z": 128.0
             },
             "type": "Transform"
         },
@@ -40,16 +40,29 @@
             },
             "RoeStateComponent": {
                 "growTime_": 0.5,
-                "maxScale_": 64.0,
-                "minScale_": 32.0
+                "maxScale_": 128.0,
+                "minScale_": 64.0
+            },
+            "SpriteAnimation": {
+                "cols": 2,
+                "endFrame": 2,
+                "fps": 8.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": false,
+                "rows": 2,
+                "startFrame": 0,
+                "totalFrames": 4
             },
             "TrailFollower": {
                 "chainName_": "Roe",
                 "leadMaxOffset_": 512.0,
                 "leadMinOffset_": 256.0,
                 "leaderName_": "Player",
+                "maxBendRad_": 0.0,
                 "maxSmoothSpeed_": 423.0,
                 "order_": 1,
+                "rotateToFace_": false,
                 "smoothTime_": 0.25999999046325684,
                 "unitMaxOffset_": 86.0,
                 "unitMinOffset_": 43.0
@@ -70,6 +83,10 @@
                 {
                     "enable": true,
                     "name": "RoeStateComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
                 }
             ],
             "type": "Script"
@@ -83,26 +100,26 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "da3917104a877fa8943d617ddba222c0",
+                "baseTextureGuid": "29c0252427caba6340a01e4ad8395680",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
                 "uvTransform": {
                     "position": {
-                        "x": 0.0,
-                        "y": 0.0
+                        "x": 0.5,
+                        "y": 0.5
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 1.0,
-                        "y": 1.0
+                        "x": 0.5,
+                        "y": 0.5
                     }
                 }
             },
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "df894814d6d863344dde87d1393aede2",
+    "guid": "03de1cdcd3fa890f5c071f34e960e073",
     "name": "Roe",
     "parentGuid": null,
     "prefabName": "Roe"
