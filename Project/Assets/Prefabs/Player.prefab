@@ -150,13 +150,13 @@
                 "accel_": 1024.0,
                 "canMove_": true,
                 "cooldown_": 12.0,
-                "decelMaxSmoothSpeed_": 1.0,
-                "decelSmoothTime_": 116.0,
+                "decelMaxSmoothSpeed_": 2048.0,
+                "decelSmoothTime_": 0.10000000149011612,
                 "duration_": 12.0,
                 "maxSpeed_": 782.0,
                 "moveForward_": true,
-                "rotateMaxSmoothSpeed_": 12.0,
-                "rotateSmoothTime_": 0.8999999761581421
+                "rotateMaxSmoothSpeed_": 1.0,
+                "rotateSmoothTime_": 12.0
             },
             "PlayerInputComponent": {
                 "dashButtons_": [
@@ -205,7 +205,7 @@
                 "maxSpeed_": 512.0,
                 "moveSpeed_": 20.0,
                 "paramReleaseMaxSmoothSpeed_": 32.0,
-                "paramReleaseSmoothTime_": 0.800000011920929,
+                "paramReleaseSmoothTime_": 0.6000000238418579,
                 "smoothTime_": 0.07999999821186066,
                 "velocity_": {
                     "x": 0.0,
@@ -216,11 +216,12 @@
             "PlayerNormalState": {
                 "accel_": 512.0,
                 "canMove_": true,
-                "decelMaxSmoothSpeed_": 32.0,
+                "decelMaxSmoothSpeed_": 512.0,
                 "decelSmoothTime_": 0.10000000149011612,
                 "maxSpeed_": 322.0,
-                "rotateMaxSmoothSpeed_": 8.0,
-                "rotateSmoothTime_": 0.12000000476837158
+                "minSpeed_": 32.0,
+                "rotateMaxSmoothSpeed_": 6.0,
+                "rotateSmoothTime_": 0.30000001192092896
             },
             "PlayerShotComponent": {
                 "bulletSpawnOffset_": {
@@ -242,6 +243,7 @@
                 "maxRoe_": 12,
                 "roePrefabName_": "Roe"
             },
+            "TrailLeader": {},
             "type": "Variables"
         },
         {

@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": -226.73193359375,
                 "z": 1.4156103134155273e-06
             },
             "rotate": {
@@ -23,19 +23,33 @@
             "type": "Transform"
         },
         {
+            "categoryBits": 2,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 4294967097,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
             "DamageRelay": {
                 "ownerName_": "Player"
             },
             "TrailFollower": {
                 "chainName_": "PlayerTail",
                 "leadMaxOffset_": 128.0,
-                "leadMinOffset_": 64.0,
+                "leadMinOffset_": 98.0,
                 "leaderName_": "Player",
+                "maxBendRad_": 2.0,
                 "maxSmoothSpeed_": 128.0,
                 "order_": 2,
+                "rotateToFace_": true,
                 "smoothTime_": 0.6000000238418579,
                 "unitMaxOffset_": 128.0,
-                "unitMinOffset_": 64.0
+                "unitMinOffset_": 98.0
             },
             "type": "Variables"
         },

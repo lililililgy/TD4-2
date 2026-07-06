@@ -34,24 +34,36 @@ public class Mover {
         if (desiredDir.LengthSq() <= kThresholdSpeed) {
             if (velocity_.LengthSq() < kThresholdSpeed) {
                 velocity_ = Vector3.zero;
-                return;
+            } else {
+                velocity_ = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
+                    velocity_, Vector3.zero, ref currentDecelSmoothSpeed_, param.decelSmoothTime_, Time.deltaTime, param.decelMaxSmoothSpeed_);
             }
-            velocity_ = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
-                velocity_, Vector3.zero, ref currentDecelSmoothSpeed_, param.decelSmoothTime_, Time.deltaTime, param.decelMaxSmoothSpeed_);
         } else {
-            // 加速（アニメーション中の current を使う）
-            Vector3 moveDir = new Vector3(desiredDir.x, desiredDir.y, 0.0f).Normalized();
-            Vector3 newVelo = velocity_ + moveDir * (currentAccel_ * Time.deltaTime);
+            // 入力（スティック）から「目標角度」を求める。角度は +Y 軸から +X 側へ測る（描画の cullRoll と同じ規約）。
+            float targetHeading = Mathf.Atan2(desiredDir.x, desiredDir.y);
 
-            velocity_ = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
-                velocity_.Normalized(), newVelo.Normalized(), ref rotateSmoothVel_, param.rotateSmoothTime_, Time.deltaTime, param.rotateMaxSmoothSpeed_) * newVelo.Length();
+            // 「現在の向き」を「目標角度」へ、フレームごとに一定角速度で回す（角度補間）。
+            // 反対を向いた時でも velocity を 0 にせず、旋回しながら推進し続ける。
+            if (!headingInitialized_) {
+                heading_ = targetHeading; // 初回入力はその方向にスナップ（0 からの空回りを防ぐ）
+                headingInitialized_ = true;
+            } else {
+                float diff = WrapPi(targetHeading - heading_);           // 最短回転方向の角度差
+                float maxStep = param.rotateMaxSmoothSpeed_ * Time.deltaTime; // このフレームで回せる最大角(rad)
+                heading_ = WrapPi(heading_ + Mathf.Clamp(diff, -maxStep, maxStep));
+            }
+
+            // 「現在の向き」に基づいた推進力を「現在の速度ベクトル」に加算する（ベクトル加算）。
+            Vector3 headingDir = new Vector3(Mathf.Sin(heading_), Mathf.Cos(heading_), 0.0f);
+            velocity_ += headingDir * (currentAccel_ * Time.deltaTime);
 
             if (velocity_.LengthSq() > currentMaxSpeed_ * currentMaxSpeed_) {
                 velocity_ = velocity_.Normalized() * currentMaxSpeed_;
             }
         }
 
-        float cullRoll = Mathf.Atan2(velocity_.x, velocity_.y);
+        // 機体は「現在の向き」を向く。初回入力前は velocity 由来で補完（heading 未確定のため）。
+        float cullRoll = headingInitialized_ ? heading_ : Mathf.Atan2(velocity_.x, velocity_.y);
         transform.rotate = Quaternion.MakeFromAxis(Vector3.back, cullRoll);
 
         transform.position += velocity_ * Time.deltaTime;
@@ -81,7 +93,10 @@ public class Mover {
     // 実行時の状態
     private Vector3 velocity_ = Vector3.zero;
     private Vector3 currentDecelSmoothSpeed_ = Vector3.zero;
-    private Vector3 rotateSmoothVel_ = Vector3.zero;
+
+    // 現在の向き（rad）。+Y 軸から +X 側へ測る。一定角速度で目標角度へ旋回する。
+    private float heading_ = 0.0f;
+    private bool headingInitialized_ = false;
 
     // 移動パラメーターのアニメーション（current を 目標 next へ追従させる）
     private float currentAccel_ = 0.0f;
