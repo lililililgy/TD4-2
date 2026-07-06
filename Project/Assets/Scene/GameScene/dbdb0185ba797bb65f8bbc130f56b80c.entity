@@ -23,7 +23,7 @@
             "type": "Transform"
         },
         {
-            "MovementArea ": {},
+            "MovementArea": {},
             "Test": {
                 "color": {
                     "w": 0.0,
@@ -47,7 +47,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "MovementArea "
+                    "name": "MovementArea"
                 },
                 {
                     "enable": true,
