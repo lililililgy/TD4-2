@@ -50,6 +50,7 @@ using namespace ONEngine;
 #include "../PostProcess/Screen/WaterDepthFogVignette/PostProcessWaterDepthFogVignette.h"
 #include "../PostProcess/Screen/WaterColorGrading/PostProcessWaterColorGrading.h"
 #include "../PostProcess/Screen/WaterCausticsLightShafts/PostProcessWaterCausticsLightShafts.h"
+#include "../PostProcess/Screen/Pixelate/PostProcessPixelate.h"
 
 RenderingPipelineCollection::RenderingPipelineCollection(ShaderCompiler* shaderCompiler, DxManager* dxm, EntityComponentSystem* pEntityComponentSystem, Asset::AssetCollection* assetCollection)
 	: pShaderCompiler_(shaderCompiler), pDxManager_(dxm), pEntityComponentSystem_(pEntityComponentSystem), pAssetCollection_(assetCollection) {}
@@ -117,6 +118,7 @@ void RenderingPipelineCollection::Initialize() {
 	GeneratePostProcessScreenPipeline<PostProcessWaterColorGrading>();
 	GeneratePostProcessScreenPipeline<PostProcessWaterDistortion>();
 	GeneratePostProcessScreenPipeline<PostProcessFisheye>();
+	GeneratePostProcessScreenPipeline<PostProcessPixelate>();
 }
 
 void RenderingPipelineCollection::PreDrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera) {

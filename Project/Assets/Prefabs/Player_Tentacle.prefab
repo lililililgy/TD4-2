@@ -78,6 +78,7 @@
                     }
                 }
             },
+            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         },
         {

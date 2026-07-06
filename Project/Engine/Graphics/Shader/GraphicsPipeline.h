@@ -196,6 +196,7 @@ namespace BlendMode {
 
 namespace StaticSampler {
 	D3D12_STATIC_SAMPLER_DESC ClampSampler();
+	D3D12_STATIC_SAMPLER_DESC PointSampler();
 }
 
 } /// ONEngine

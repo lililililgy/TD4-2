@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "5735d1ab7cd6a684edb5f34c20fb6613",
+    "name": "Pixelate.cs",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}
