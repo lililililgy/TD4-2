@@ -82,9 +82,9 @@
                     "type": "SpriteRenderer"
                 }
             ],
-            "guid": "ed0ce65e3b321cfd0f3b5f891116c113",
+            "guid": "5ed32ed7307d42dc28638d9b966c3688",
             "name": "SpikeFishAroundNeedle",
-            "parentGuid": "0ddfefefe7891522f08877c724fc53a4",
+            "parentGuid": "3eb5bbb9ffa22394fd0ca6deba14bbe1",
             "prefabName": "SpikeFishAroundNeedle"
         }
     ],
@@ -93,8 +93,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -1115.618896484375,
-                "y": -798.4718017578125,
+                "x": -1072.5771484375,
+                "y": -816.9142456054688,
                 "z": 1.4156103134155273e-06
             },
             "rotate": {
@@ -109,6 +109,18 @@
                 "z": 217.69992065429688
             },
             "type": "Transform"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 7,
+            "mass": 1.0,
+            "radius": 0.30000001192092896,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
         },
         {
             "ChaseController": {
@@ -229,7 +241,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "0ddfefefe7891522f08877c724fc53a4",
+    "guid": "3eb5bbb9ffa22394fd0ca6deba14bbe1",
     "name": "SpikeFish",
     "parentGuid": null,
     "prefabName": "SpikeFish"
