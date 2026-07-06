@@ -584,6 +584,9 @@ void DebugSceneView::DrawSceneTexture(ImVec2& outImagePos, ImVec2& outImageSize)
 
 	ImVec2 availRegion = ImGui::GetContentRegionAvail();
 	float aspectRatio = 16.0f / 9.0f;
+	if (ONEngine::EngineConfig::windowHeight > 0) {
+		aspectRatio = static_cast<float>(ONEngine::EngineConfig::windowWidth) / static_cast<float>(ONEngine::EngineConfig::windowHeight);
+	}
 
 	outImageSize = availRegion;
 	if(outImageSize.x / outImageSize.y > aspectRatio) {
