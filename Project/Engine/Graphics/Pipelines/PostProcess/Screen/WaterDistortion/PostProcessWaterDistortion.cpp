@@ -32,8 +32,8 @@ void PostProcessWaterDistortion::Initialize(ShaderCompiler* shaderCompiler, DxMa
 	paramsBuffer_.Create(dxm->GetDxDevice());
 }
 
-void PostProcessWaterDistortion::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem) {
-	ECSGroup* currentGroup = entityComponentSystem->GetCurrentGroup();
+void PostProcessWaterDistortion::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem, ECSGroup* ecsGroup) {
+	ECSGroup* currentGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
 	if (!currentGroup) {
 		static bool logged = false;
 		if (!logged) {

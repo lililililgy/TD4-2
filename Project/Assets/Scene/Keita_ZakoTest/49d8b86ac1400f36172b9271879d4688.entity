@@ -2,6 +2,21 @@
     "active": true,
     "components": [
         {
+            "position": {
+                "x": -1832.7515869140625,
+                "y": -819.386962890625
+            },
+            "rotate": {
+                "w": 0.9824718832969666,
+                "z": 0.1864108443260193
+            },
+            "type": "Transform"
+        },
+        {
+            "TrailLeader": {},
+            "type": "Variables"
+        },
+        {
             "material": {
                 "baseTextureGuid": "1e73117556377963597bd35043846a53"
             },

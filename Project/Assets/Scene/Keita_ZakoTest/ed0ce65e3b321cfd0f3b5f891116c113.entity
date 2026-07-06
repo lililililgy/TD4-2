@@ -1,0 +1,16 @@
+{
+    "active": true,
+    "components": [
+        {
+            "rotate": {
+                "w": 0.8303884863853455,
+                "z": -0.5571848750114441
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "ed0ce65e3b321cfd0f3b5f891116c113",
+    "name": "SpikeFishAroundNeedle",
+    "parentGuid": "0ddfefefe7891522f08877c724fc53a4",
+    "prefabName": "SpikeFishAroundNeedle"
+}

@@ -51,10 +51,12 @@ void PostProcessTerrainBrush::Initialize(ShaderCompiler* shaderCompiler, DxManag
 
 void PostProcessTerrainBrush::Execute(
 	const std::string& textureName, DxCommand* dxCommand,
-	Asset::AssetCollection* assetCollection, EntityComponentSystem* ecs) {
+	Asset::AssetCollection* assetCollection, EntityComponentSystem* ecs,
+	ECSGroup* ecsGroup) {
 
 	/// TerrainComponentの有無チェック
-	ComponentArray<Terrain>* terrainArray = ecs->GetCurrentGroup()->GetComponentArray<Terrain>();
+	ECSGroup* activeGroup = ecsGroup ? ecsGroup : ecs->GetCurrentGroup();
+	ComponentArray<Terrain>* terrainArray = activeGroup->GetComponentArray<Terrain>();
 	/// 両方とも存在しない、もしくは使用中のコンポーネントが無い場合は処理しない
 	if ((!terrainArray || terrainArray->GetUsedComponents().empty())) {
 		return;

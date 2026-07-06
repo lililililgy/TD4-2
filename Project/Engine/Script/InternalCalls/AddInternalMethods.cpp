@@ -241,6 +241,8 @@ void ONEngine::AddInputInternalCalls() {
 
 void ONEngine::AddSceneInternalCalls() {
 	mono_add_internal_call("SceneManager::InternalLoadScene", (void*)InternalLoadScene);
+	mono_add_internal_call("SceneManager::InternalAddScene", (void*)InternalAddScene);
+	mono_add_internal_call("SceneManager::InternalUnloadScene", (void*)InternalUnloadScene);
 }
 
 void ONEngine::AddGizmoInternalCalls() {

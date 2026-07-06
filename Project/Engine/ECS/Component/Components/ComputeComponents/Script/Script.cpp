@@ -221,7 +221,15 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 
 
 			if(monoClass) {
-				MonoClass* serializeFieldClass = mono_class_from_name(mono_class_get_image(monoClass), "", "SerializeField");
+				MonoImage* klassImage = mono_class_get_image(monoClass);
+				MonoClass* serializeFieldClass = mono_class_from_name(klassImage, "", "SerializeField");
+				MonoClass* serializeFieldClassEngine = nullptr;
+
+				MonoImage* engineImage = MonoScriptEngine::GetInstance().Image();
+				if (engineImage && engineImage != klassImage) {
+					serializeFieldClassEngine = mono_class_from_name(engineImage, "", "SerializeField");
+				}
+
 				MonoClassField* field = nullptr;
 				void* iter = nullptr;
 
@@ -229,7 +237,16 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 					const char* fieldName = mono_field_get_name(field);
 
 					MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(monoClass, field);
-					if(attrs && mono_custom_attrs_has_attr(attrs, serializeFieldClass)) {
+					bool hasAttr = false;
+					if (attrs) {
+						if (serializeFieldClass && mono_custom_attrs_has_attr(attrs, serializeFieldClass)) {
+							hasAttr = true;
+						} else if (serializeFieldClassEngine && mono_custom_attrs_has_attr(attrs, serializeFieldClassEngine)) {
+							hasAttr = true;
+						}
+					}
+
+					if(hasAttr) {
 						// 値の取得
 						MonoType* fieldType = mono_field_get_type(field);
 						int type = mono_type_get_type(fieldType);

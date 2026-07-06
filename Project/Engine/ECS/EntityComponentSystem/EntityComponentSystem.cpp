@@ -4,6 +4,7 @@ using namespace ONEngine;
 
 /// std
 #include <numbers>
+#include <algorithm>
 
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
@@ -139,12 +140,32 @@ void EntityComponentSystem::Initialize(Asset::AssetCollection* _assetCollection)
 
 void EntityComponentSystem::Update() {
 	debugGroup_->RuntimeUpdateSystems();
-	GetCurrentGroup()->RuntimeUpdateSystems();
+	if (activeGroupNames_.empty()) {
+		if (auto* group = GetCurrentGroup()) {
+			group->RuntimeUpdateSystems();
+		}
+	} else {
+		for (const auto& groupName : activeGroupNames_) {
+			if (auto* group = GetECSGroup(groupName)) {
+				group->RuntimeUpdateSystems();
+			}
+		}
+	}
 }
 
 void EntityComponentSystem::OutsideOfUpdate() {
 	debugGroup_->OutsideOfRuntimeUpdateSystems();
-	GetCurrentGroup()->OutsideOfRuntimeUpdateSystems();
+	if (activeGroupNames_.empty()) {
+		if (auto* group = GetCurrentGroup()) {
+			group->OutsideOfRuntimeUpdateSystems();
+		}
+	} else {
+		for (const auto& groupName : activeGroupNames_) {
+			if (auto* group = GetECSGroup(groupName)) {
+				group->OutsideOfRuntimeUpdateSystems();
+			}
+		}
+	}
 }
 
 void EntityComponentSystem::DebuggingUpdate() {
@@ -221,6 +242,27 @@ void EntityComponentSystem::SetCurrentGroupName(const std::string& _name) {
 
 const std::string& EntityComponentSystem::GetCurrentGroupName() const {
 	return currentGroupName_;
+}
+
+void EntityComponentSystem::AddActiveGroupName(const std::string& _name) {
+	if (std::find(activeGroupNames_.begin(), activeGroupNames_.end(), _name) == activeGroupNames_.end()) {
+		activeGroupNames_.push_back(_name);
+	}
+}
+
+void EntityComponentSystem::RemoveActiveGroupName(const std::string& _name) {
+	auto it = std::remove(activeGroupNames_.begin(), activeGroupNames_.end(), _name);
+	if (it != activeGroupNames_.end()) {
+		activeGroupNames_.erase(it, activeGroupNames_.end());
+	}
+}
+
+void EntityComponentSystem::ClearActiveGroupNames() {
+	activeGroupNames_.clear();
+}
+
+const std::vector<std::string>& EntityComponentSystem::GetActiveGroupNames() const {
+	return activeGroupNames_;
 }
 
 const std::unordered_map<std::string, std::unique_ptr<ECSGroup>>& EntityComponentSystem::GetECSGroups() const {

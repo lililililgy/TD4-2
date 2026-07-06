@@ -92,6 +92,26 @@ void Editor::DebugSceneView::ShowDebugSceneView(const ImVec2& imagePos) {
 	std::vector<OverlaySection> leftSections;
 
 	{
+		// アクティブシーン セクション
+		const auto& activeScenes = pEcs_->GetActiveGroupNames();
+		std::string currentScene = pEcs_->GetCurrentGroupName();
+
+		OverlaySection sceneSection;
+		sceneSection.name = "アクティブシーン";
+		sceneSection.opened = true;
+
+		sceneSection.items.push_back({ "Current Scene", currentScene, IM_COL32(100, 255, 100, 255) });
+		if (activeScenes.empty()) {
+			sceneSection.items.push_back({ "Active Scenes", "None (Single)", IM_COL32(255, 255, 255, 255) });
+		} else {
+			for (size_t i = 0; i < activeScenes.size(); ++i) {
+				sceneSection.items.push_back({ "Scene [" + std::to_string(i) + "]", activeScenes[i], IM_COL32(255, 255, 255, 255) });
+			}
+		}
+		leftSections.push_back(sceneSection);
+	}
+
+	{
 		// 地形描画 セクション
 		double regularCellTime = ONEngine::GPUTimeStamp::GetInstance().GetTimeStampMSec(ONEngine::GPUTimeStampID::VoxelTerrainRegularCell); // ms
 		double transitionCellTime = ONEngine::GPUTimeStamp::GetInstance().GetTimeStampMSec(ONEngine::GPUTimeStampID::VoxelTerrainTransitionCell); // ms

@@ -3,10 +3,10 @@
     "components": [
         {
             "enable": 1,
-            "matrixCalcFlags": 3,
+            "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 1.4901161193847656e-08,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,36 +16,25 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 67.80001831054688,
-                "y": 67.8000717163086,
-                "z": 67.8000717163086
+                "x": 1000.0,
+                "y": 1000.0,
+                "z": 1000.0
             },
             "type": "Transform"
         },
         {
-            "GesoWeakPoint": {},
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "GesoWeakPoint"
-                }
-            ],
-            "type": "Script"
         },
         {
             "enable": 1,
             "material": {
                 "baseColor": {
-                    "w": 1.0,
-                    "x": 1.0,
+                    "w": 0.47999998927116394,
+                    "x": 0.0,
                     "y": 1.0,
-                    "z": 1.0
+                    "z": 0.0
                 },
-                "baseTextureGuid": "2b1b8b572356f6c42b296f1a5cd80124",
+                "baseTextureGuid": "00000000000000000000000000000000",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -62,25 +51,10 @@
                 }
             },
             "type": "SpriteRenderer"
-        },
-        {
-            "categoryBits": 8,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": true,
-            "maskBits": 4294967295,
-            "mass": 1.0,
-            "size": {
-                "x": 90.09999084472656,
-                "y": 90.10000610351563
-            },
-            "state": "Dynamic",
-            "type": "BoxCollider2D",
-            "useOwnerScale": false
         }
     ],
-    "guid": "c28a24de98be8dd7315867697a54ec9c",
-    "name": "weakPoint",
-    "parentGuid": "d494b79e4e2565acee4afeb894c8102d",
+    "guid": "fdc0a69b9f03f088a93928956e048156",
+    "name": "Sprite_2_1",
+    "parentGuid": null,
     "prefabName": ""
 }

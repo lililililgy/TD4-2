@@ -142,6 +142,10 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
         perSystemData.speedScale = ps->renderer.speedScale;
         perSystemData.lengthScale = ps->renderer.lengthScale;
         perSystemData.instanceOffset = static_cast<uint32_t>(globalParticleIndex);
+        perSystemData.flipMode = static_cast<uint32_t>(ps->renderer.flipMode);
+        perSystemData.textureSheetEnabled = ps->textureSheetAnimation.enabled ? 1u : 0u;
+        perSystemData.tilesX = static_cast<uint32_t>(ps->textureSheetAnimation.tilesX);
+        perSystemData.tilesY = static_cast<uint32_t>(ps->textureSheetAnimation.tilesY);
 
         size_t blendMode = static_cast<size_t>(ps->renderer.blendMode);
         if (blendMode >= pipelines_.size()) blendMode = 0; 

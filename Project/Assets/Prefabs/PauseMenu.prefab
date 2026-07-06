@@ -1,0 +1,257 @@
+{
+    "active": true,
+    "children": [
+        {
+            "active": true,
+            "children": [
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "resume",
+                            "elementIndex": 0,
+                            "enable": 1,
+                            "groupId": "83177a50ff1e00e8de600f154bbbfed1",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {},
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 402.0,
+                        "y": 426.0
+                    },
+                    "guid": "4d5358e9b176bc18d7e3991e63114544",
+                    "name": "Element_1",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "main-menu",
+                            "elementIndex": 2,
+                            "enable": 1,
+                            "groupId": "83177a50ff1e00e8de600f154bbbfed1",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {},
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 882.0,
+                        "y": 426.0
+                    },
+                    "guid": "cbb244dc7adfc5a1598a7a325dbc7191",
+                    "name": "Element_2",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "exit-game",
+                            "elementIndex": 3,
+                            "enable": 1,
+                            "groupId": "83177a50ff1e00e8de600f154bbbfed1",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {},
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 1138.0,
+                        "y": 426.0
+                    },
+                    "guid": "485cf25c177c32f32c3403a740eeb309",
+                    "name": "Element_3",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "restart",
+                            "elementIndex": 1,
+                            "enable": 1,
+                            "groupId": "83177a50ff1e00e8de600f154bbbfed1",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {},
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 650.0,
+                        "y": 426.0
+                    },
+                    "guid": "6a32371e5a9895626a273db0561becb6",
+                    "name": "Element_4",
+                    "prefabName": ""
+                }
+            ],
+            "components": [
+                {
+                    "enable": 1,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "cancelKeys": [
+                        "Escape",
+                        "GamepadB"
+                    ],
+                    "currentSelected": "",
+                    "enable": 1,
+                    "isFocused": false,
+                    "isVisible": true,
+                    "parentGroup": "",
+                    "submitKeys": [
+                        "Return",
+                        "Space",
+                        "GamepadA"
+                    ],
+                    "type": "UIGroupComponent"
+                }
+            ],
+            "editorPosition": {
+                "x": 410.0,
+                "y": -4.0
+            },
+            "guid": "83177a50ff1e00e8de600f154bbbfed1",
+            "name": "Group_0",
+            "prefabName": ""
+        }
+    ],
+    "components": [
+        {
+            "enable": 1,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "6d83c2ad2bd3f50ffb5b00804180eda5",
+    "name": "PauseMenu",
+    "prefabName": ""
+}

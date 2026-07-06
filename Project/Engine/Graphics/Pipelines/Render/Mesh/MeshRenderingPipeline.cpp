@@ -90,13 +90,7 @@ void MeshRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager
 	}
 
 
-	{	/// buffer create
-
-		transformBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
-		materialBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
-		textureIdBuffer_.Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
-
-	}
+	pDxManager_ = dxm;
 
 }
 
@@ -136,12 +130,17 @@ void MeshRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, D
 	transformIndex_ = 0;
 	instanceIndex_ = 0;
 
+	const std::string& groupName = ecs->GetGroupName();
+	auto* transformBuffer = GetOrCreateTransformBuffer(groupName);
+	auto* materialBuffer = GetOrCreateMaterialBuffer(groupName);
+	auto* textureIdBuffer = GetOrCreateTextureIdBuffer(groupName);
+
 	/// 1. Backgroundの描画
 	if (queueMap.count(RenderQueue::Background)) {
 		pipeline_->SetPipelineStateForCommandList(dxCommand);
 		camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
 		cmdList->SetGraphicsRootDescriptorTable(3, (*textures.begin()).GetSRVGPUHandle());
-		Drawing(cmdList, queueMap[RenderQueue::Background], textures);
+		Drawing(cmdList, queueMap[RenderQueue::Background], textures, materialBuffer, textureIdBuffer, transformBuffer);
 	}
 
 	/// 2. Telegraphの描画 (専用のZ-Test無視パイプライン)
@@ -149,7 +148,7 @@ void MeshRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, D
 		telegraphPipeline_->SetPipelineStateForCommandList(dxCommand);
 		camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
 		cmdList->SetGraphicsRootDescriptorTable(3, (*textures.begin()).GetSRVGPUHandle());
-		Drawing(cmdList, queueMap[RenderQueue::Telegraph], textures);
+		Drawing(cmdList, queueMap[RenderQueue::Telegraph], textures, materialBuffer, textureIdBuffer, transformBuffer);
 	}
 
 	/// 3. Defaultの描画 (通常のパイプライン)
@@ -157,14 +156,21 @@ void MeshRenderingPipeline::Draw(class ECSGroup* ecs, CameraComponent* camera, D
 		pipeline_->SetPipelineStateForCommandList(dxCommand);
 		camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, 0);
 		cmdList->SetGraphicsRootDescriptorTable(3, (*textures.begin()).GetSRVGPUHandle());
-		Drawing(cmdList, queueMap[RenderQueue::Default], textures);
+		Drawing(cmdList, queueMap[RenderQueue::Default], textures, materialBuffer, textureIdBuffer, transformBuffer);
 	}
 
 
 	GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::MeshRendering);
 }
 
-void MeshRenderingPipeline::Drawing(ID3D12GraphicsCommandList* cmdList, std::unordered_map<std::string, std::list<MeshRenderer*>>& pathMeshMap, const std::vector<Asset::Texture>& textures) {
+void MeshRenderingPipeline::Drawing(
+	ID3D12GraphicsCommandList* cmdList,
+	std::unordered_map<std::string, std::list<MeshRenderer*>>& pathMeshMap,
+	const std::vector<Asset::Texture>& textures,
+	StructuredBuffer<GPUMaterial>* materialBuffer,
+	StructuredBuffer<uint32_t>* textureIdBuffer,
+	StructuredBuffer<Matrix4x4>* transformBuffer
+) {
 	for (auto& [meshPath, renderers] : pathMeshMap) {
 
 		/// modelの取得、なければ次へ
@@ -183,18 +189,18 @@ void MeshRenderingPipeline::Drawing(ID3D12GraphicsCommandList* cmdList, std::uno
 				continue;
 			}
 
-			materialBuffer_.SetMappedData(
+			materialBuffer->SetMappedData(
 				transformIndex_,
 				renderer->GetGpuMaterial()
 			);
 
-			textureIdBuffer_.SetMappedData(
+			textureIdBuffer->SetMappedData(
 				transformIndex_,
 				textures[renderer->GetGpuMaterial().baseTextureId].GetSRVDescriptorIndex()
 			);
 
 			/// transform のセット
-			transformBuffer_.SetMappedData(
+			transformBuffer->SetMappedData(
 				transformIndex_,
 				renderer->GetOwner()->GetTransform()->GetMatWorld()
 			);
@@ -204,9 +210,9 @@ void MeshRenderingPipeline::Drawing(ID3D12GraphicsCommandList* cmdList, std::uno
 		}
 
 		/// 上でセットしたデータをバインド
-		materialBuffer_.SRVBindForGraphicsCommandList(cmdList, 1);
-		textureIdBuffer_.SRVBindForGraphicsCommandList(cmdList, 2);
-		transformBuffer_.SRVBindForGraphicsCommandList(cmdList, 4);
+		materialBuffer->SRVBindForGraphicsCommandList(cmdList, 1);
+		textureIdBuffer->SRVBindForGraphicsCommandList(cmdList, 2);
+		transformBuffer->SRVBindForGraphicsCommandList(cmdList, 4);
 
 		/// 現在のinstance idをセット
 		cmdList->SetGraphicsRoot32BitConstant(5, instanceIndex_, 0);
@@ -227,5 +233,38 @@ void MeshRenderingPipeline::Drawing(ID3D12GraphicsCommandList* cmdList, std::uno
 
 		instanceIndex_ += static_cast<UINT>(renderers.size());
 	}
+}
+
+StructuredBuffer<Matrix4x4>* MeshRenderingPipeline::GetOrCreateTransformBuffer(const std::string& groupName) {
+	auto it = transformBuffers_.find(groupName);
+	if (it != transformBuffers_.end()) {
+		return it->second.get();
+	}
+	auto buffer = std::make_unique<StructuredBuffer<Matrix4x4>>();
+	buffer->Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap());
+	transformBuffers_[groupName] = std::move(buffer);
+	return transformBuffers_[groupName].get();
+}
+
+StructuredBuffer<GPUMaterial>* MeshRenderingPipeline::GetOrCreateMaterialBuffer(const std::string& groupName) {
+	auto it = materialBuffers_.find(groupName);
+	if (it != materialBuffers_.end()) {
+		return it->second.get();
+	}
+	auto buffer = std::make_unique<StructuredBuffer<GPUMaterial>>();
+	buffer->Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap());
+	materialBuffers_[groupName] = std::move(buffer);
+	return materialBuffers_[groupName].get();
+}
+
+StructuredBuffer<uint32_t>* MeshRenderingPipeline::GetOrCreateTextureIdBuffer(const std::string& groupName) {
+	auto it = textureIdBuffers_.find(groupName);
+	if (it != textureIdBuffers_.end()) {
+		return it->second.get();
+	}
+	auto buffer = std::make_unique<StructuredBuffer<uint32_t>>();
+	buffer->Create(static_cast<uint32_t>(kMaxRenderingMeshCount_), pDxManager_->GetDxDevice(), pDxManager_->GetDxSRVHeap());
+	textureIdBuffers_[groupName] = std::move(buffer);
+	return textureIdBuffers_[groupName].get();
 }
 

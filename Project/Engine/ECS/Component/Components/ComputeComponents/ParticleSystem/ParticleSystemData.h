@@ -42,10 +42,14 @@ namespace ONEngine {
     struct GradientColorKey {
         Color color;
         float time;
+        float inTangent = 0.0f;
+        float outTangent = 0.0f;
     };
     struct GradientAlphaKey {
         float alpha;
         float time;
+        float inTangent = 0.0f;
+        float outTangent = 0.0f;
     };
     struct ParticleSystemGradient {
         std::vector<GradientColorKey> colorKeys;
@@ -57,6 +61,8 @@ namespace ONEngine {
     struct AnimationCurveKey {
         float time;
         float value;
+        float inTangent = 0.0f;
+        float outTangent = 0.0f;
     };
     struct AnimationCurve {
         std::vector<AnimationCurveKey> keys;
@@ -158,6 +164,13 @@ namespace ONEngine {
         }
     };
 
+    enum class FlipMode : uint8_t {
+        None,
+        X,
+        Y,
+        Both
+    };
+
     struct ParticleSystemRenderer {
         enum class RenderMode : uint8_t {
             Billboard,
@@ -186,9 +199,16 @@ namespace ONEngine {
 
         float speedScale = 0.0f;
         float lengthScale = 2.0f;
+        FlipMode flipMode = FlipMode::None;
 
         std::string materialGuid; // Reference to material asset
         std::string meshGuid;     // For Mesh mode
+    };
+
+    struct ParticleSystemTextureSheetAnimation {
+        bool enabled = false;
+        int tilesX = 1;
+        int tilesY = 1;
     };
 
 }

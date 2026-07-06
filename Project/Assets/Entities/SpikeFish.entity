@@ -1,5 +1,13 @@
 {
     "active": true,
+    "components": [
+        {
+            "SpikeFishAttack": {
+                "needleNum": 16
+            },
+            "type": "Variables"
+        }
+    ],
     "guid": "0ddfefefe7891522f08877c724fc53a4",
     "name": "SpikeFish",
     "parentGuid": null,
