@@ -165,6 +165,7 @@ void RenderingFramework::DrawScene() {
 		const std::string& groupName = groupsToDraw[i];
 		ECSGroup* ecsGroup = pEntityComponentSystem_->GetECSGroup(groupName);
 		if (!ecsGroup) continue;
+		if (ecsGroup->IsDrawPaused()) continue;
 
 		Vector4 clearColor = (i == 0) ? Vector4(0.1f, 0.25f, 0.5f, 1.0f) : Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 

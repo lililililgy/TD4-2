@@ -20,8 +20,16 @@ public class Test : MonoScript {
 	}
 
 	public override void Update() {
-		if(Input.TriggerKey(KeyCode.Space)) {
-			SceneManager.LoadScene("TitleScene");
+		if (Input.TriggerKey(KeyCode.Space)) {
+			SceneManager.Add("TitleScene");
+		}
+
+		if (Input.TriggerKey(KeyCode.P)) {
+			SceneManager.SetUpdatePaused("TitleScene", true);
+		}
+
+		if (Input.TriggerKey(KeyCode.O)) {
+			SceneManager.SetUpdatePaused("TitleScene", false);
 		}
 	}
 }

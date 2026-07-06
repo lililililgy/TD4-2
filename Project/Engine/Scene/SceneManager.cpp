@@ -278,6 +278,36 @@ const std::string& SceneManager::GetCurrentSceneName() const {
 	return currentScene_;
 }
 
+void SceneManager::SetUpdatePaused(const std::string& sceneName, bool paused) {
+	if (ECSGroup* group = pEcs_->GetECSGroup(sceneName)) {
+		group->SetUpdatePaused(paused);
+	} else {
+		Console::LogWarning("SetUpdatePaused: ECSGroup '" + sceneName + "' not found.");
+	}
+}
+
+bool SceneManager::IsUpdatePaused(const std::string& sceneName) {
+	if (ECSGroup* group = pEcs_->GetECSGroup(sceneName)) {
+		return group->IsUpdatePaused();
+	}
+	return false;
+}
+
+void SceneManager::SetDrawPaused(const std::string& sceneName, bool paused) {
+	if (ECSGroup* group = pEcs_->GetECSGroup(sceneName)) {
+		group->SetDrawPaused(paused);
+	} else {
+		Console::LogWarning("SetDrawPaused: ECSGroup '" + sceneName + "' not found.");
+	}
+}
+
+bool SceneManager::IsDrawPaused(const std::string& sceneName) {
+	if (ECSGroup* group = pEcs_->GetECSGroup(sceneName)) {
+		return group->IsDrawPaused();
+	}
+	return false;
+}
+
 
 
 void MonoInternalMethods::InternalLoadScene(MonoString* sceneName) {
@@ -305,4 +335,40 @@ void MonoInternalMethods::InternalUnloadScene(MonoString* sceneName) {
 	}
 
 	mono_free(cstr);
+}
+
+void MonoInternalMethods::InternalSetUpdatePaused(MonoString* sceneName, bool paused) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	if (gSceneManager) {
+		gSceneManager->SetUpdatePaused(cstr, paused);
+	}
+	mono_free(cstr);
+}
+
+bool MonoInternalMethods::InternalIsUpdatePaused(MonoString* sceneName) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	bool result = false;
+	if (gSceneManager) {
+		result = gSceneManager->IsUpdatePaused(cstr);
+	}
+	mono_free(cstr);
+	return result;
+}
+
+void MonoInternalMethods::InternalSetDrawPaused(MonoString* sceneName, bool paused) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	if (gSceneManager) {
+		gSceneManager->SetDrawPaused(cstr, paused);
+	}
+	mono_free(cstr);
+}
+
+bool MonoInternalMethods::InternalIsDrawPaused(MonoString* sceneName) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	bool result = false;
+	if (gSceneManager) {
+		result = gSceneManager->IsDrawPaused(cstr);
+	}
+	mono_free(cstr);
+	return result;
 }

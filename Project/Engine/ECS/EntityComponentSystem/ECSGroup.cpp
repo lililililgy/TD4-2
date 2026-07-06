@@ -168,3 +168,19 @@ CameraComponent* ECSGroup::GetMainCamera2D() {
 const std::string& ECSGroup::GetGroupName() const {
 	return groupName_;
 }
+
+void ECSGroup::SetUpdatePaused(bool paused) {
+	isUpdatePaused_ = paused;
+}
+
+bool ECSGroup::IsUpdatePaused() const {
+	return isUpdatePaused_;
+}
+
+void ECSGroup::SetDrawPaused(bool paused) {
+	isDrawPaused_ = paused;
+}
+
+bool ECSGroup::IsDrawPaused() const {
+	return isDrawPaused_;
+}

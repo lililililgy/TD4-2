@@ -249,6 +249,10 @@ void ONEngine::AddSceneInternalCalls() {
 	mono_add_internal_call("SceneManager::InternalLoadScene", (void*)InternalLoadScene);
 	mono_add_internal_call("SceneManager::InternalAddScene", (void*)InternalAddScene);
 	mono_add_internal_call("SceneManager::InternalUnloadScene", (void*)InternalUnloadScene);
+	mono_add_internal_call("SceneManager::InternalSetUpdatePaused", (void*)InternalSetUpdatePaused);
+	mono_add_internal_call("SceneManager::InternalIsUpdatePaused", (void*)InternalIsUpdatePaused);
+	mono_add_internal_call("SceneManager::InternalSetDrawPaused", (void*)InternalSetDrawPaused);
+	mono_add_internal_call("SceneManager::InternalIsDrawPaused", (void*)InternalIsDrawPaused);
 }
 
 void ONEngine::AddGizmoInternalCalls() {

@@ -56,10 +56,15 @@ void AudioPlaybackSystem::StopAllAudio() {
 
 
 void AudioPlaybackSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
+#ifdef DEBUG_MODE
 	// シーン再生中は、停止時用のクリーンアップやhasPlayedOnAwake_のリセットを行わない
 	if (DebugConfig::isDebugging) {
 		return;
 	}
+#else
+	// Releaseビルドでは常に実行状態のため、Outsideでのクリーンアップやリセットはスキップする
+	return;
+#endif
 
 	// 再生中だったBGMのクリーンアップ
 	if (activeBGMVoice_) {

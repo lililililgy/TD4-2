@@ -99,6 +99,8 @@ private:
 
 	/// ----- parameters ----- ///
 	std::string groupName_;
+	bool isUpdatePaused_ = false;
+	bool isDrawPaused_ = false;
 
 	/// ----- collections ----- ///
 	std::unique_ptr<EntityCollection> entityCollection_;
@@ -119,6 +121,9 @@ public:
 	void SetMainCamera(CameraComponent* camera);
 	void SetMainCamera2D(CameraComponent* camera);
 
+	void SetUpdatePaused(bool paused);
+	void SetDrawPaused(bool paused);
+
 
 	/// ----- getter ----- ///
 
@@ -133,6 +138,9 @@ public:
 	CameraComponent* GetMainCamera2D();
 
 	const std::string& GetGroupName() const;
+
+	bool IsUpdatePaused() const;
+	bool IsDrawPaused() const;
 };
 
 /// ===================================================
