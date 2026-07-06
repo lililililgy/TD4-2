@@ -116,6 +116,9 @@ void RenderingFramework::Draw() {
 	
 	pWindowManager_->MainWindowPostDraw();
 
+	/// 毎フレームの描画の最後にGizmoのデータをリセット
+	Gizmo::Reset();
+
 #else
 	/// ----- release build の描画 ----- ///
 	releaseBuildSubWindow_->PreDraw();
@@ -216,9 +219,6 @@ void RenderingFramework::DrawScene() {
 
 		// 2D Draw
 		renderingPipelineCollection_->DrawEntities2D(ecsGroup, camera2d);
-
-		// Gizmos
-		renderingPipelineCollection_->DrawGizmos(ecsGroup, camera, camera2d);
 
 		// Transition the group's RTV to SRV for post-processing and blending
 		groupRenderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
@@ -407,16 +407,6 @@ void RenderingFramework::DrawPrefab() {
 	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false); // Clear=false
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
-
-	CameraComponent* mainCamera2D = nullptr;
-	if (auto gameGroup = pEntityComponentSystem_->GetECSGroup("GameScene")) {
-		mainCamera2D = gameGroup->GetMainCamera2D();
-	} else {
-		mainCamera2D = camera2D;
-	}
-
-	/// Gizmo描画 (最後)
-	renderingPipelineCollection_->DrawGizmos(debugGroup, camera, mainCamera2D);
 
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 
