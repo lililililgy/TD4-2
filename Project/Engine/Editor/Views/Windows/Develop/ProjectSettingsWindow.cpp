@@ -10,6 +10,7 @@
 /// engine
 #include "Engine/Core/Config/EngineConfig.h"
 #include "Engine/Core/Utility/Tools/Log.h"
+#include "Engine/Script/MonoScriptEngine.h"
 
 using namespace Editor;
 
@@ -159,6 +160,16 @@ void ProjectSettingsWindow::ShowImGui() {
 		ONEngine::EngineConfig::enableVSync = enableVSync;
 		ONEngine::EngineConfig::SaveConfig();
 		ONEngine::Console::Log(std::string("ProjectSettings: VSync ") + (enableVSync ? "Enabled" : "Disabled"));
+	}
+
+	ImGui::Spacing();
+
+	bool ignoreCSharpLog = ONEngine::EngineConfig::ignoreCSharpLog;
+	if (ImGui::Checkbox("Ignore C# Log", &ignoreCSharpLog)) {
+		ONEngine::EngineConfig::ignoreCSharpLog = ignoreCSharpLog;
+		ONEngine::EngineConfig::SaveConfig();
+		ONEngine::MonoScriptEngine::GetInstance().ApplyCSharpLogSetting();
+		ONEngine::Console::Log(std::string("ProjectSettings: Ignore C# Log ") + (ignoreCSharpLog ? "Enabled" : "Disabled"));
 	}
 
 	ImGui::Separator();

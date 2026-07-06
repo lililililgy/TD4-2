@@ -57,6 +57,9 @@ public:
 	/// CSのHotReloadを行う
 	void HotReload();
 
+	/// C#のログ無視設定を同期・適用
+	void ApplyCSharpLogSetting();
+
 	void SetEcsPtr(class EntityComponentSystem* ecs);
 
 	/// DLLのパスを探す

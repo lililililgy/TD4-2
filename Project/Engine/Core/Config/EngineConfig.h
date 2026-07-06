@@ -17,6 +17,7 @@ extern int windowWidth;
 extern int windowHeight;
 extern bool isFullscreen;
 extern bool enableVSync;
+extern bool ignoreCSharpLog;
 
 void LoadConfig();
 void SaveConfig();

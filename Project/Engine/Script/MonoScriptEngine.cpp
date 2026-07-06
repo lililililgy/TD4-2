@@ -23,6 +23,7 @@ using namespace ONEngine;
 
 
 /// engine
+#include "Engine/Core/Config/EngineConfig.h"
 #include "Engine/Core/Utility/Utility.h"
 #include "Engine/Core/Utility/FileSystem/FileSystem.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
@@ -219,6 +220,8 @@ void MonoScriptEngine::RegisterFunctions() {
 		updateAiIntentsMethod_ = GetMethodFromCS("", "AIUpdater", "UpdateIntents", 4);
 		notifyEventCompletedMethod_ = GetMethodFromCS("", "BlackboardManager", "SetBool", 3);
 	}
+
+	ApplyCSharpLogSetting();
 }
 
 void MonoScriptEngine::HotReload() {
@@ -305,6 +308,19 @@ void MonoScriptEngine::HotReload() {
 	SetIsHotReloadRequest(true);
 
 	Console::Log("Reloaded assembly successfully in new domain.", LogCategory::ScriptEngine);
+}
+
+void MonoScriptEngine::ApplyCSharpLogSetting() {
+	if (!image_ || !domain_) return;
+
+	MonoClass* debugClass = mono_class_from_name(image_, "", "Debug");
+	if (debugClass) {
+		MonoClassField* ignoreLogField = mono_class_get_field_from_name(debugClass, "IgnoreLog");
+		if (ignoreLogField) {
+			mono_bool value = EngineConfig::ignoreCSharpLog ? 1 : 0;
+			mono_field_static_set_value(mono_class_vtable(domain_, debugClass), ignoreLogField, &value);
+		}
+	}
 }
 
 void MonoScriptEngine::SetEcsPtr(EntityComponentSystem* ecs) {
