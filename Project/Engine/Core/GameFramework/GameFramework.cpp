@@ -21,6 +21,15 @@ GameFramework::~GameFramework() {
 	/// gpuの処理が終わるまで待つ
 	dxManager_->GetDxCommand()->WaitForGpuComplete();
 
+	/// シーン再生中なら停止処理を行う
+	if (DebugConfig::isDebugging) {
+		DebugConfig::isDebugging = false;
+		if (sceneManager_) {
+			sceneManager_->ReloadScene(true);
+			sceneManager_->ClearTemporarySavedSceneName();
+		}
+	}
+
 	/// debug用のシーンを保存
 	if (sceneManager_ && entityComponentSystem_) {
 		sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
@@ -30,9 +39,11 @@ GameFramework::~GameFramework() {
 	editorManager_.reset();
 	imGuiManager_->Finalize();
 	imGuiManager_.reset();
-	entityComponentSystem_.reset();
 
+	// ECSの破棄前にMonoScriptEngineをFinalizeしてC#側のラッパーをクリーンアップ
 	MonoScriptEngine::GetInstance().Finalize();
+
+	entityComponentSystem_.reset();
 
 	Time::Finalize();
 	Input::Finalize();
