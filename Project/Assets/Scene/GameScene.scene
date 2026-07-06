@@ -79,6 +79,11 @@
             "guid": "49606b24cabf44f082b38f399f5200e9",
             "parentGuid": null,
             "path": "./GameScene/49606b24cabf44f082b38f399f5200e9.entity"
+        },
+        {
+            "guid": "dbdb0185ba797bb65f8bbc130f56b80c",
+            "parentGuid": null,
+            "path": "./GameScene/dbdb0185ba797bb65f8bbc130f56b80c.entity"
         }
     ]
 }

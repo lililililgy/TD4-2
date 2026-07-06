@@ -14,6 +14,7 @@ public class EnemyHeatMap
     private Dictionary<int, int> heatMap_;
     // 現在の敵の総数。ヒートマップの合計値と一致するはず。
     [SerializeField] private int enemyCount_ = 0;
+    [SerializeField] private List<string> enemies_ = new List<string>();
 
     public override void Initialize() {
         heatMap_ = new Dictionary<int, int>();
@@ -23,6 +24,7 @@ public class EnemyHeatMap
     public override void Update() {
         enemyCount_ = 0;
         heatMap_.Clear();
+        enemies_.Clear();
     }
 
     public override void OnCollisionStay(Entity collision) {
@@ -31,6 +33,8 @@ public class EnemyHeatMap
         Vector2 enemyPos = new Vector2(enemyT.position.x, enemyT.position.y);
 
         AddHeat(enemyPos);
+
+        enemies_.Add(collision.name);
 
         enemyCount_++;
     }
