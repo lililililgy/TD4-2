@@ -6,6 +6,10 @@ param (
 
 $ErrorActionPreference = "Stop"
 
+# Prevent Git from prompting for credentials in non-interactive environment
+$env:GIT_TERMINAL_PROMPT = "0"
+$env:GIT_ASKPASS = "echo"
+
 # 1. Verify current branch
 $currentBranch = (git branch --show-current).Trim()
 Write-Host "Current branch: $currentBranch" -ForegroundColor Cyan
