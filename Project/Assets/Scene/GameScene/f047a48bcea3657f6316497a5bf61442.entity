@@ -1,28 +1,5 @@
 {
     "active": true,
-    "components": [
-        {
-            "categoryBits": 2,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 4294967097,
-            "mass": 1.0,
-            "radius": 0.5,
-            "state": "Dynamic",
-            "type": "CircleCollider",
-            "useOwnerScale": true
-        },
-        {
-            "TrailFollower": {
-                "leadMinOffset_": 98.0,
-                "maxBendRad_": 2.0,
-                "rotateToFace_": true,
-                "unitMinOffset_": 98.0
-            },
-            "type": "Variables"
-        }
-    ],
     "guid": "f047a48bcea3657f6316497a5bf61442",
     "name": "Player_Tentacle",
     "parentGuid": null,

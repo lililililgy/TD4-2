@@ -35,6 +35,7 @@ public class Biome {
 
 // 敵のスポーンシステム
 public class EnemySpawnSystem : MonoScript {
+    [SerializeField] private bool isActive_ = false;
     [SerializeField] private string originName_ = "EnemySpawnOrigin";
     // スポーン範囲
     [SerializeField] private Vector2 spawnAreaMin_;
@@ -94,6 +95,8 @@ public class EnemySpawnSystem : MonoScript {
     }
 
     public override void Update() {
+        if (!isActive_) return;
+
         spawnTimer_ += Time.deltaTime;
 
         // スポーンセルの重みをクリアする

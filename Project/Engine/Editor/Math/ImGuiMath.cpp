@@ -25,7 +25,6 @@
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Light/Light.h"
-#include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Effect/Effect.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/CustomMeshRenderer.h"
@@ -34,6 +33,7 @@
 #include "Engine/Editor/Manager/EditCommand.h"
 #include "Engine/Editor/Commands/ImGuiCommand/ImGuiCommand.h" 
 #include "Engine/Editor/Math/AssetPayload.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
 
 using namespace Editor;
 using namespace ONEngine;
@@ -597,7 +597,13 @@ void DrawAssetGuidField(const char* label, std::string& guidStr, ONEngine::Asset
             if (targetType == Asset::AssetType::Mesh && droppedType == Asset::AssetType::Mesh) isCompatible = true; // For mesh, .obj/.gltf are Mesh type
             
             if (isCompatible) {
-                guidStr = assetPayload->guid.ToString();
+                std::string oldGuidStr = guidStr;
+                std::string newGuidStr = assetPayload->guid.ToString();
+                std::string* pGuidStr = &guidStr;
+                EditCommand::Execute<LambdaCommand>(
+                    [pGuidStr, newGuidStr]() { *pGuidStr = newGuidStr; },
+                    [pGuidStr, oldGuidStr]() { *pGuidStr = oldGuidStr; }
+                );
             }
         }
         ImGui::EndDragDropTarget();
@@ -707,7 +713,12 @@ bool ImMathf::MaterialEdit(const char* label, ONEngine::GPUMaterial* material, O
                 if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
                     AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
                     if(ONEngine::Asset::GetAssetTypeFromExtension(ONEngine::FileSystem::FileExtension(assetPayload->filePath)) == ONEngine::Asset::AssetType::Texture) {
-                        material->baseTextureId = static_cast<int32_t>(assetCollection->GetTextureIndex(assetPayload->filePath));
+                        int32_t oldId = material->baseTextureId;
+                        int32_t newId = static_cast<int32_t>(assetCollection->GetTextureIndex(assetPayload->filePath));
+                        EditCommand::Execute<LambdaCommand>(
+                            [material, newId]() { material->baseTextureId = newId; },
+                            [material, oldId]() { material->baseTextureId = oldId; }
+                        );
                         isEdit = true;
                     }
                 }
@@ -782,54 +793,6 @@ void Editor::ImGuiInputTextReadOnly(const char* label, const std::string& text) 
 
 bool Editor::ImGuiColorEdit(const char* label, ONEngine::Vector4* color) {
 	return ImMathf::ColorEdit(label, color);
-}
-
-void ONEngine::AudioSourceDebug(AudioSource* audioSource) {
-	if(!audioSource) return;
-	if(ImGui::CollapsingHeader("AudioSource", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool enabled = (audioSource->enable != 0);
-		if (ImGui::Checkbox("enable", &enabled)) {
-			audioSource->enable = enabled ? 1 : 0;
-		}
-
-		// --- Audio Path with Drag & Drop Support ---
-		std::string path = audioSource->GetAudioPath();
-		ImGui::Text("audio path");
-		Editor::ImGuiInputTextReadOnly("##audio", path);
-		
-		if (ImGui::BeginDragDropTarget()) {
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
-				if (payload->Data) {
-					using namespace Editor;
-					AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
-					std::string droppedPath = assetPayload->filePath;
-					
-					// 拡張子チェック (mp3, wav, etc...)
-					std::string ext = FileSystem::FileExtension(droppedPath);
-					if (ext == ".mp3" || ext == ".wav" || ext == ".ogg") {
-						audioSource->SetAudioPath(droppedPath);
-						Console::Log(std::format("Audio path set to: {}", droppedPath));
-					} else {
-						Console::LogError("Invalid audio format. Please use .mp3, .wav, or .ogg.");
-					}
-				}
-			}
-			ImGui::EndDragDropTarget();
-		}
-
-		float volume = audioSource->GetVolume();
-		if (ImGui::DragFloat("volume", &volume, 0.01f, 0.0f, 1.0f)) {
-			audioSource->SetVolume(volume);
-		}
-        bool loop = audioSource->GetLoop();
-        if (ImGui::Checkbox("loop", &loop)) {
-            audioSource->SetLoop(loop);
-        }
-
-		if (ImGui::Button("Play")) {
-			audioSource->Play();
-		}
-	}
 }
 
 void ONEngine::CustomMeshRendererDebug(CustomMeshRenderer* customMeshRenderer) {

@@ -36,7 +36,7 @@ HierarchyWindow::HierarchyWindow(
 	EditorManager* editorManager,
 	ONEngine::SceneManager* sceneManager)
 	: windowName_(windowName), pEcs_(ecs), pEcsGroup_(ecsGroup), pEditorManager_(editorManager),
-	pSceneManager_(sceneManager) {
+	pSceneManager_(sceneManager), lastEcsGroup_(nullptr), lastIsDebugging_(false) {
 
 	newName_.reserve(1024);
 	isNodeOpen_ = false;
@@ -60,6 +60,36 @@ void HierarchyWindow::ShowImGui() {
 
 	// スクロール可能なエリアを開始
 	ImGui::BeginChild("HierarchyScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+
+	// シーンロードなどでアクティブなECSグループや再生状態が変わった場合に、選択状態の展開処理を再トリガーする
+	if (pEcsGroup_ != lastEcsGroup_ || ONEngine::DebugConfig::isDebugging != lastIsDebugging_) {
+		lastEcsGroup_ = pEcsGroup_;
+		lastIsDebugging_ = ONEngine::DebugConfig::isDebugging;
+		lastSelectedGuid_ = ONEngine::Guid::kInvalid;
+	}
+
+	// 選択の変更を監視し、新しく選択されたEntityの先祖ノードを展開する
+	ONEngine::Guid currentSelected = ImGuiSelection::GetLastSelectedObject();
+	if (currentSelected != lastSelectedGuid_) {
+		lastSelectedGuid_ = currentSelected;
+		forceExpandGuids_.clear();
+		if (currentSelected.CheckValid() && ImGuiSelection::GetSelectionType() == SelectionType::Entity) {
+			ONEngine::GameEntity* selectedEntity = nullptr;
+			for (const auto& groupPair : pEcs_->GetECSGroups()) {
+				if (auto* ent = groupPair.second->GetEntityFromGuid(currentSelected)) {
+					selectedEntity = ent;
+					break;
+				}
+			}
+			if (selectedEntity) {
+				ONEngine::GameEntity* parent = selectedEntity->GetParent();
+				while (parent) {
+					forceExpandGuids_.insert(parent->GetGuid());
+					parent = parent->GetParent();
+				}
+			}
+		}
+	}
 
 	/// ヒエラルキーの描画
 	DrawHierarchy();
@@ -155,7 +185,7 @@ void HierarchyWindow::DrawMenuScene() {
 			showNewScenePopup_ = true;
 			newSceneName_ = "NewScene";
 		}
-		if (ImGui::MenuItem("Save Scene")) {
+		if (ImGui::MenuItem("Save Scene", nullptr, false, !ONEngine::DebugConfig::isDebugging)) {
 			pSceneManager_->SaveCurrentScene();
 		}
 		if (ImGui::MenuItem("Load Scene")) {
@@ -165,7 +195,7 @@ void HierarchyWindow::DrawMenuScene() {
 			IGFD::FileDialogConfig config;
 			config.path = scenePath.string();
 			// ディレクトリを表示しないように設定
-			config.userFileAttributes = [](IGFD::FileInfos* infos, IGFD::UserDatas userDatas) -> bool {
+			config.userFileAttributes = [](IGFD::FileInfos* infos, IGFD::UserDatas /*userDatas*/) -> bool {
 				return !infos->fileType.isDir();
 			};
 			ImGuiFileDialog::Instance()->OpenDialog("LoadSceneDialog", "Choose Scene", ".scene", config);
@@ -272,6 +302,7 @@ void HierarchyWindow::DrawHierarchy() {
 	// ---------------------------------------------------
 	if(ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsAnyItemActive() && !ImGui::GetIO().KeyCtrl) {
 		ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
+		shiftStartGuid_ = ONEngine::Guid::kInvalid;
 	}
 
 	// ---------------------------------------------------
@@ -399,6 +430,12 @@ void HierarchyWindow::DrawEntity(ONEngine::GameEntity* entity) {
 	bool hasChildren = !entity->GetChildren().empty();
 	flatHierarchyGuids_.push_back(entity->GetGuid());
 
+	// ピッキング等の選択時に親ノードを自動展開する
+	if (forceExpandGuids_.contains(entity->GetGuid())) {
+		ImGui::SetNextItemOpen(true);
+		forceExpandGuids_.erase(entity->GetGuid());
+	}
+
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 	ImGui::PushID(entity->GetId());
 	bool isSelected = ImGuiSelection::IsSelected(entity->GetGuid());
@@ -424,11 +461,33 @@ void HierarchyWindow::DrawEntity(ONEngine::GameEntity* entity) {
 
 	if(ImGui::IsItemHovered()) {
 		if(ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-			if(ImGui::GetIO().KeyCtrl) {
+			if(ImGui::GetIO().KeyShift) {
+				ONEngine::Guid clickedGuid = entity->GetGuid();
+				if (!shiftStartGuid_.CheckValid()) {
+					shiftStartGuid_ = clickedGuid;
+				}
+				auto startIt = std::find(flatHierarchyGuids_.begin(), flatHierarchyGuids_.end(), shiftStartGuid_);
+				auto endIt = std::find(flatHierarchyGuids_.begin(), flatHierarchyGuids_.end(), clickedGuid);
+				if (startIt != flatHierarchyGuids_.end() && endIt != flatHierarchyGuids_.end()) {
+					if (!ImGui::GetIO().KeyCtrl) {
+						ImGuiSelection::ClearSelection();
+					}
+					size_t startIndex = std::distance(flatHierarchyGuids_.begin(), startIt);
+					size_t endIndex = std::distance(flatHierarchyGuids_.begin(), endIt);
+					size_t low = (std::min)(startIndex, endIndex);
+					size_t high = (std::max)(startIndex, endIndex);
+					for (size_t i = low; i <= high; ++i) {
+						ImGuiSelection::AddSelectedObject(flatHierarchyGuids_[i], SelectionType::Entity);
+					}
+				}
+			}
+			else if(ImGui::GetIO().KeyCtrl) {
 				if(isSelected) ImGuiSelection::RemoveSelectedObject(entity->GetGuid());
 				else ImGuiSelection::AddSelectedObject(entity->GetGuid(), SelectionType::Entity);
+				shiftStartGuid_ = entity->GetGuid();
 			} else {
 				ImGuiSelection::SetSelectedObject(entity->GetGuid(), SelectionType::Entity);
+				shiftStartGuid_ = entity->GetGuid();
 			}
 		}
 		if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {

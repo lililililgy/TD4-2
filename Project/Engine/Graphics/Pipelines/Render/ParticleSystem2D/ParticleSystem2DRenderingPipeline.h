@@ -27,6 +27,8 @@ class ParticleSystem2DRenderingPipeline : public IRenderingPipeline {
         float padding;
     };
 
+#pragma warning(push)
+#pragma warning(disable: 4324)
     struct alignas(16) PerSystemData {
         Matrix4x4 emitterWorldMatrix;
         uint32_t renderMode;
@@ -40,6 +42,7 @@ class ParticleSystem2DRenderingPipeline : public IRenderingPipeline {
         uint32_t tilesY;
         uint32_t padding[2];
     };
+#pragma warning(pop)
 
     enum ROOT_PARAM {
         CBV_VIEW_PROJECTION,

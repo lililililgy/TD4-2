@@ -150,9 +150,9 @@ void from_json(const nlohmann::json& j, Animator& animator) {
 
             if (layerJson.contains("states")) {
                 const auto& statesJson = layerJson.at("states");
-                for (uint32_t j = 0; j < (uint32_t)statesJson.size() && j < MAX_ANIMATION_STATES_PER_LAYER; ++j) {
-                    const auto& stateJson = statesJson[j];
-                    AnimationState& state = layer.states[j];
+                for (uint32_t stateIdx = 0; stateIdx < (uint32_t)statesJson.size() && stateIdx < MAX_ANIMATION_STATES_PER_LAYER; ++stateIdx) {
+                    const auto& stateJson = statesJson[stateIdx];
+                    AnimationState& state = layer.states[stateIdx];
 
                     if (stateJson.contains("clipId")) state.clipId = stateJson.at("clipId").get<uint32_t>();
                     if (stateJson.contains("time")) state.time = stateJson.at("time").get<float>();
@@ -182,8 +182,8 @@ void to_json(nlohmann::json& j, const Animator& animator) {
         };
 
         auto statesJson = nlohmann::json::array();
-        for (uint32_t j = 0; j < MAX_ANIMATION_STATES_PER_LAYER; ++j) {
-            const AnimationState& state = layer.states[j];
+        for (uint32_t stateIdx = 0; stateIdx < MAX_ANIMATION_STATES_PER_LAYER; ++stateIdx) {
+            const AnimationState& state = layer.states[stateIdx];
             statesJson.push_back(nlohmann::json{
                 { "clipId", state.clipId },
                 { "time", state.time },

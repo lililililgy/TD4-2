@@ -1,0 +1,49 @@
+{
+    "entities": [
+        {
+            "guid": "7559438ab40ee6ebe6da76843d53f737",
+            "parentGuid": null,
+            "path": "./PauseScene/7559438ab40ee6ebe6da76843d53f737.entity"
+        },
+        {
+            "guid": "fa77e265cd05bdb85ed13448a53d5a66",
+            "parentGuid": null,
+            "path": "./PauseScene/fa77e265cd05bdb85ed13448a53d5a66.entity"
+        },
+        {
+            "guid": "2db9962bd0b8acc998f426843270917a",
+            "parentGuid": null,
+            "path": "./PauseScene/2db9962bd0b8acc998f426843270917a.entity"
+        },
+        {
+            "guid": "26262eae83e1a46421b288c8f7d1da70",
+            "parentGuid": "2db9962bd0b8acc998f426843270917a",
+            "path": "./PauseScene/26262eae83e1a46421b288c8f7d1da70.entity"
+        },
+        {
+            "guid": "7a55b245537f869f03e93d3b4296d439",
+            "parentGuid": "26262eae83e1a46421b288c8f7d1da70",
+            "path": "./PauseScene/7a55b245537f869f03e93d3b4296d439.entity"
+        },
+        {
+            "guid": "0abbe7a8d0ac19bd95a8fd428bec2603",
+            "parentGuid": "26262eae83e1a46421b288c8f7d1da70",
+            "path": "./PauseScene/0abbe7a8d0ac19bd95a8fd428bec2603.entity"
+        },
+        {
+            "guid": "064af8e8912a8913f68d5651177146d1",
+            "parentGuid": "26262eae83e1a46421b288c8f7d1da70",
+            "path": "./PauseScene/064af8e8912a8913f68d5651177146d1.entity"
+        },
+        {
+            "guid": "8820e517ebe0c5a3b20230d236c64665",
+            "parentGuid": "26262eae83e1a46421b288c8f7d1da70",
+            "path": "./PauseScene/8820e517ebe0c5a3b20230d236c64665.entity"
+        },
+        {
+            "guid": "a6d9771e74bc8e7fd04c32d762afb5b1",
+            "parentGuid": null,
+            "path": "./PauseScene/a6d9771e74bc8e7fd04c32d762afb5b1.entity"
+        }
+    ]
+}

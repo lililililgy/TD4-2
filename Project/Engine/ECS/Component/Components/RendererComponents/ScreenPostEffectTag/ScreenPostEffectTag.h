@@ -17,6 +17,7 @@ enum PostEffectType {
 	PostEffectType_WaterDepthFogVignette,///< 深度フォグ & ビネット
 	PostEffectType_WaterColorGrading,   ///< カラーグレーディング & 吸収
 	PostEffectType_WaterCausticsLightShafts, ///< コースティクス & ライトシャフト
+	PostEffectType_Pixelate,   ///< ピクセレート (解像度落とし)
 	PostEffectType_Count	   ///< 要素数
 };
 
@@ -36,8 +37,8 @@ public:
 
 	/// @brief ポストエフェクトの有効/無効を設定する
 	/// @param type 対象 of ポストエフェクトの種類
-	/// @param enable true: 有効 false: 無効
-	void SetPostEffectEnable(PostEffectType type, bool enable);
+	/// @param isEnable true: 有効 false: 無効
+	void SetPostEffectEnable(PostEffectType type, bool isEnable);
 
 	/// @brief 指定した種類のポストエフェクトが有効かどうかを返す
 	/// @param type 確認するポストエフェクトの種類
@@ -95,6 +96,12 @@ public:
 	float GetWaterLightShaftsIntensity() const;
 	void SetWaterLightDirection(const Vector3& dir);
 	Vector3 GetWaterLightDirection() const;
+
+	/// Pixelate
+	void SetPixelSizeX(float size);
+	float GetPixelSizeX() const;
+	void SetPixelSizeY(float size);
+	float GetPixelSizeY() const;
 
 private:
 	/// ===================================================

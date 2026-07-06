@@ -35,7 +35,9 @@ namespace {
 			causticsSpeed(1.0f),
 			causticsIntensity(1.5f),
 			lightShaftsIntensity(1.5f),
-			lightDirection(0.2f, -0.9f, 0.3f)
+			lightDirection(0.2f, -0.9f, 0.3f),
+			pixelSizeX(8.0f),
+			pixelSizeY(8.0f)
 		{
 			flags.fill(false);
 		}
@@ -47,7 +49,8 @@ namespace {
 			"Water Distortion",
 			"Water Depth Fog & Vignette",
 			"Water Color Grading & Absorption",
-			"Water Caustics & Light Shafts"
+			"Water Caustics & Light Shafts",
+			"Pixelate"
 		};
 		float fisheyeStrength;
 		float fisheyeScale;
@@ -75,14 +78,18 @@ namespace {
 		float causticsIntensity;
 		float lightShaftsIntensity;
 		Vector3 lightDirection;
+
+		// Pixelate
+		float pixelSizeX;
+		float pixelSizeY;
 	};
 
 	Flags gFlags;
 
 } /// namespace
 
-void ScreenPostEffectTag::SetPostEffectEnable(PostEffectType type, bool enable) {
-	gFlags.flags[static_cast<size_t>(type)] = enable;
+void ScreenPostEffectTag::SetPostEffectEnable(PostEffectType type, bool isEnable) {
+	gFlags.flags[static_cast<size_t>(type)] = isEnable;
 }
 
 bool ScreenPostEffectTag::GetPostEffectEnable(PostEffectType type) const {
@@ -145,6 +152,12 @@ float ScreenPostEffectTag::GetWaterLightShaftsIntensity() const { return gFlags.
 void ScreenPostEffectTag::SetWaterLightDirection(const Vector3& dir) { gFlags.lightDirection = dir; }
 Vector3 ScreenPostEffectTag::GetWaterLightDirection() const { return gFlags.lightDirection; }
 
+// Pixelate
+void ScreenPostEffectTag::SetPixelSizeX(float size) { gFlags.pixelSizeX = size; }
+float ScreenPostEffectTag::GetPixelSizeX() const { return gFlags.pixelSizeX; }
+void ScreenPostEffectTag::SetPixelSizeY(float size) { gFlags.pixelSizeY = size; }
+float ScreenPostEffectTag::GetPixelSizeY() const { return gFlags.pixelSizeY; }
+
 
 
 void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* component) {
@@ -202,6 +215,14 @@ void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* component) {
 		Editor::ImMathf::SliderFloat("Caustics Intensity##Caustics", &gFlags.causticsIntensity, 0.0f, 2.0f);
 		Editor::ImMathf::SliderFloat("Light Shafts Intensity##Caustics", &gFlags.lightShaftsIntensity, 0.0f, 2.0f);
 		Editor::ImMathf::SliderFloat3("Light Direction##Caustics", &gFlags.lightDirection, -1.0f, 1.0f);
+	}
+
+	if (gFlags.flags[PostEffectType_Pixelate]) {
+		ImGui::Separator();
+		ImGui::Text("Pixelate Settings");
+
+		Editor::ImMathf::SliderFloat("Pixel Size X##Pixelate", &gFlags.pixelSizeX, 1.0f, 64.0f, "%.1f");
+		Editor::ImMathf::SliderFloat("Pixel Size Y##Pixelate", &gFlags.pixelSizeY, 1.0f, 64.0f, "%.1f");
 	}
 }
 
@@ -262,6 +283,10 @@ void ONEngine::from_json(const nlohmann::json& j, ScreenPostEffectTag& c) {
 		auto dir = j["lightDirection"];
 		c.SetWaterLightDirection(Vector3(dir[0].get<float>(), dir[1].get<float>(), dir[2].get<float>()));
 	}
+
+	// Pixelate
+	if (j.contains("pixelSizeX")) c.SetPixelSizeX(j["pixelSizeX"].get<float>());
+	if (j.contains("pixelSizeY")) c.SetPixelSizeY(j["pixelSizeY"].get<float>());
 }
 
 void ONEngine::to_json(nlohmann::json& j, const ScreenPostEffectTag& c) {
@@ -306,4 +331,8 @@ void ONEngine::to_json(nlohmann::json& j, const ScreenPostEffectTag& c) {
 	j["lightShaftsIntensity"] = c.GetWaterLightShaftsIntensity();
 	Vector3 dir = c.GetWaterLightDirection();
 	j["lightDirection"] = { dir.x, dir.y, dir.z };
+
+	// Pixelate
+	j["pixelSizeX"] = c.GetPixelSizeX();
+	j["pixelSizeY"] = c.GetPixelSizeY();
 }

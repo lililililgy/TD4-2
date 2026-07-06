@@ -40,6 +40,7 @@ public:
     bool isLooping = true;
     bool autoPlay = true;
     bool shouldApplyOnce = false; // Stop時などに一度だけ値を適用するためのフラグ
+    bool playedOnAwake = false;   // プレイ開始時の自動再生フラグ（非シリアライズ）
 
     /// アニメーション対象のプロパティを解決したキャッシュ
     struct PropertyBinding {

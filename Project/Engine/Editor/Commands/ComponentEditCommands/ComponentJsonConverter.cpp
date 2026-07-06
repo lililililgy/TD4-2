@@ -18,7 +18,8 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
-#include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/BGMPlayer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/SEPlayer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Variables/Variables.h"
@@ -55,7 +56,8 @@ namespace {
 			Register<DirectionalLight>();
 			Register<PointLight>();
 			Register<SpotLight>();
-			Register<AudioSource>();
+			Register<BGMPlayer>();
+			Register<SEPlayer>();
 			Register<Effect>();
 			Register<ParticleSystem>();
 			Register<ParticleSystem2D>();
@@ -554,7 +556,7 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystemMain& m) {
 	m.startRotation = j.value("startRotation", MinMaxFloat(0.0f));
 	m.startColor = j.value("startColor", MinMaxColor(Color::kWhite));
 	m.gravityModifier = j.value("gravityModifier", 0.0f);
-	m.simulationSpace = static_cast<SimulationSpace>(j.value("simulationSpace", static_cast<uint8_t>(SimulationSpace::Local)));
+	m.simulationSpace = static_cast<SimulationSpace>(j.value("simulationSpace", static_cast<uint8_t>(SimulationSpace::World)));
 	m.maxParticles = j.value("maxParticles", 1000);
 	m.playOnAwake = j.value("playOnAwake", true);
 }

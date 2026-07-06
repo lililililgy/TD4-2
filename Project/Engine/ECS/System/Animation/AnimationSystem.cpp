@@ -12,11 +12,17 @@
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/Core/Utility/Math/Interpolation.h"
 #include "Engine/Script/MonoScriptEngine.h"
+#include "Engine/Core/Config/EngineConfig.h"
 
 using namespace ONEngine;
 
 void AnimationSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
+#ifdef DEBUG_MODE
+    if (DebugConfig::isDebugging) return;
     Update(ecs, Time::UnscaledDeltaTime());
+#else
+    (void)ecs;
+#endif
 }
 
 void AnimationSystem::RuntimeUpdate(ECSGroup* ecs) {
@@ -54,6 +60,17 @@ void AnimationSystem::Update(ECSGroup* ecs, float deltaTime) {
     for (auto& player : playerArray->GetUsedComponents()) {
         if (!player || !player->enable) continue;
         
+        // プレイ開始時の自動再生処理 (autoPlay)
+#ifdef DEBUG_MODE
+        bool isPlayMode = DebugConfig::isDebugging;
+#else
+        bool isPlayMode = true; // スタンドアロンビルドは常にプレイモード
+#endif
+        if (isPlayMode && player->autoPlay && !player->playedOnAwake) {
+            player->playedOnAwake = true;
+            player->Play();
+        }
+
         // 再生中ではない、かつ強制適用フラグも立っていないならスキップ
         if (!player->isPlaying && !player->shouldApplyOnce) continue;
 

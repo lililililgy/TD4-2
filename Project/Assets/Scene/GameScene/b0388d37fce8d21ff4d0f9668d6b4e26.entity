@@ -1,28 +1,5 @@
 {
     "active": true,
-    "components": [
-        {
-            "AttackCollision": {
-                "damage_": 10.201784133911133
-            },
-            "HP": {
-                "currentHp_": 1.0
-            },
-            "LevelingComponent": {
-                "currentLevel_": 2
-            },
-            "PlayerMoveComponent": {
-                "paramReleaseSmoothTime_": 0.6000000238418579
-            },
-            "PlayerNormalState": {
-                "minSpeed_": 32.0,
-                "rotateMaxSmoothSpeed_": 21.299999237060547,
-                "rotateSmoothTime_": 2.799999952316284
-            },
-            "TrailLeader": {},
-            "type": "Variables"
-        }
-    ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
     "name": "Player",
     "parentGuid": null,

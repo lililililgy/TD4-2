@@ -25,7 +25,7 @@ void CopyImageRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxMa
 
 		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); ///< texture
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_PIXEL, 0);      ///< texture
-		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_PIXEL, 0);        ///< texture sampler
+		pipeline_->AddStaticSampler(StaticSampler::PointSampler(), D3D12_SHADER_VISIBILITY_PIXEL, 0);        ///< texture sampler
 
 		pipeline_->SetCullMode(D3D12_CULL_MODE_NONE);
 		pipeline_->SetFillMode(D3D12_FILL_MODE_SOLID);

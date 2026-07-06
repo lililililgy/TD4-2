@@ -15,25 +15,42 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
 #include "Engine/Core/Threading/ThreadPool.h"
 #include "Engine/Core/Event/FrameEventQueue.h"
+#include "Engine/ECS/System/Audio/AudioPlaybackSystem.h"
 
 GameFramework::GameFramework() {}
 GameFramework::~GameFramework() {
 	/// gpuの処理が終わるまで待つ
 	dxManager_->GetDxCommand()->WaitForGpuComplete();
 
+	/// シーン再生中なら停止処理を行う
+	if (DebugConfig::isDebugging) {
+		DebugConfig::isDebugging = false;
+		if (sceneManager_) {
+			sceneManager_->ReloadScene(true);
+			sceneManager_->ClearTemporarySavedSceneName();
+		}
+	}
+
 	/// debug用のシーンを保存
 	if (sceneManager_ && entityComponentSystem_) {
 		sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
 	}
 
+	// ライフサイクルの依存関係を解決するため、明示的に先に破棄
+	editorManager_.reset();
+	imGuiManager_->Finalize();
+	imGuiManager_.reset();
+
+	// ECSの破棄前にMonoScriptEngineをFinalizeしてC#側のラッパーをクリーンアップ
 	MonoScriptEngine::GetInstance().Finalize();
+
+	entityComponentSystem_.reset();
 
 	Time::Finalize();
 	Input::Finalize();
 	Console::Finalize();
 	ThreadPool::Instance().Shutdown();
 
-	imGuiManager_->Finalize();
 	/// engineの終了処理
 	windowManager_->Finalize();
 }
@@ -45,6 +62,9 @@ void GameFramework::Initialize(const GameFrameworkConfig& startSetting) {
 
 	/// ログ出力の初期化
 	Console::Initialize();
+
+	/// エンジン設定のロード
+	EngineConfig::LoadConfig();
 
 	CreateSubsystems();
 	InitializeCore(startSetting);
@@ -109,7 +129,7 @@ void GameFramework::InitializeECS() {
 	LoadDebugScene();
 }
 
-void GameFramework::InitializeEditor(const GameFrameworkConfig& config) {
+void GameFramework::InitializeEditor(const GameFrameworkConfig& /*config*/) {
 #ifdef DEBUG_MODE
 	imGuiManager_->Initialize(renderingFramework_->GetAssetCollection());
 	imGuiManager_->SetImGuiWindow(windowManager_->GetMainWindow());
@@ -160,8 +180,52 @@ void GameFramework::Update() {
 
 	sceneManager_->Update();
 
+	if (!DebugConfig::isDebugging) {
+		wasPause_ = false;
+	} else {
+		bool currentPause = DebugConfig::isPause;
+		if (currentPause != wasPause_) {
+			wasPause_ = currentPause;
+			if (currentPause) {
+				const auto& activeGroups = entityComponentSystem_->GetActiveGroupNames();
+				if (activeGroups.empty()) {
+					if (auto* group = entityComponentSystem_->GetCurrentGroup()) {
+						if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+							audioSys->PauseAllAudio();
+						}
+					}
+				} else {
+					for (const auto& name : activeGroups) {
+						if (auto* group = entityComponentSystem_->GetECSGroup(name)) {
+							if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+								audioSys->PauseAllAudio();
+							}
+						}
+					}
+				}
+			} else {
+				const auto& activeGroups = entityComponentSystem_->GetActiveGroupNames();
+				if (activeGroups.empty()) {
+					if (auto* group = entityComponentSystem_->GetCurrentGroup()) {
+						if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+							audioSys->ResumeAllAudio();
+						}
+					}
+				} else {
+					for (const auto& name : activeGroups) {
+						if (auto* group = entityComponentSystem_->GetECSGroup(name)) {
+							if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+								audioSys->ResumeAllAudio();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	///!< ゲームデバッグモードの場合は更新処理を行う
-	if(DebugConfig::isDebugging) {
+	if(DebugConfig::isDebugging && !DebugConfig::isPause) {
 		entityComponentSystem_->Update();
 	}
 	CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::ECSUpdate);

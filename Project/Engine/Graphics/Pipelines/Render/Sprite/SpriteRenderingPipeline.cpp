@@ -1,4 +1,5 @@
 #include "SpriteRenderingPipeline.h"
+#include <cmath>
 
 using namespace ONEngine;
 
@@ -145,10 +146,16 @@ void SpriteRenderingPipeline::Draw(class ECSGroup* ecsGroup, CameraComponent* ca
 			/// setup
 			sr->RenderingSetup(pAssetCollection_);
 			
+			Matrix4x4 matWorld = owner->GetTransform()->GetMatWorld();
+			if (sr->IsPixelPerfect()) {
+				matWorld.m[3][0] = std::round(matWorld.m[3][0]);
+				matWorld.m[3][1] = std::round(matWorld.m[3][1]);
+			}
+
 			renderingDataList.push_back({
 				sr,
 				owner->GetPosition().z, // Z値を保存
-				owner->GetTransform()->GetMatWorld()
+				matWorld
 			});
 		}
 	}

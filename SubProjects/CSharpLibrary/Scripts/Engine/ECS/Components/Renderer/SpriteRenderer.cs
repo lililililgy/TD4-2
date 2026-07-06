@@ -68,6 +68,20 @@ class SpriteRenderer : Component {
 		}
 	}
 
+	public bool isPixelPerfect {
+		get {
+			if (nativeHandle != 0) {
+				return InternalGetPixelPerfect(nativeHandle);
+			}
+			return false;
+		}
+		set {
+			if (nativeHandle != 0) {
+				InternalSetPixelPerfect(nativeHandle, value);
+			}
+		}
+	}
+
 
 	/// -------------------------------------------
 	/// internal methods
@@ -84,5 +98,11 @@ class SpriteRenderer : Component {
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalSetColor(ulong nativeHandle, Vector4 color);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern bool InternalGetPixelPerfect(ulong nativeHandle);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetPixelPerfect(ulong nativeHandle, bool enable);
 
 }

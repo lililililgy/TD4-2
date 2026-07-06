@@ -1,4 +1,4 @@
-﻿#include "Gizmo2DRenderingPipeline.h"
+#include "Gizmo2DRenderingPipeline.h"
 
 using namespace ONEngine;
 
@@ -64,7 +64,7 @@ void Gizmo2DRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxMana
 	}
 }
 
-void Gizmo2DRenderingPipeline::Draw(class ECSGroup* /*ecsGroup*/, CameraComponent* camera, DxCommand* dxCommand) {
+void Gizmo2DRenderingPipeline::Draw(class ECSGroup* /*ecsGroup*/, [[maybe_unused]] CameraComponent* camera, [[maybe_unused]] DxCommand* dxCommand) {
 #ifdef DEBUG_MODE
 	if (!camera || !camera->enable || !camera->IsMakeViewProjection()) {
 		return;

@@ -1,0 +1,70 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -211.42999267578125,
+                "y": -113.05000305175781,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.9274942278862,
+                "x": 0.0,
+                "y": 0.0,
+                "z": -0.37383750081062317
+            },
+            "scale": {
+                "x": 2500.0,
+                "y": 750.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 0.5,
+                    "x": 0.800000011920929,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "isPixelPerfect": true,
+            "type": "SpriteRenderer"
+        },
+        {
+            "autoPlay": true,
+            "clipPath": "./Assets/Anims/PauseMenuOpen.anim",
+            "currentTime": 0.0,
+            "isLooping": false,
+            "isPlaying": false,
+            "speed": 1.0,
+            "type": "AnimationPlayer"
+        }
+    ],
+    "guid": "fa77e265cd05bdb85ed13448a53d5a66",
+    "name": "Frame",
+    "parentGuid": null,
+    "prefabName": ""
+}

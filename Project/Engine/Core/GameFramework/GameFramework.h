@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -80,6 +80,8 @@ private:
 
 	std::unique_ptr<Editor::ImGuiManager> imGuiManager_;
 	std::unique_ptr<Editor::EditorManager> editorManager_;
+
+	bool wasPause_ = false;
 };
 
 } // namespace ONEngine

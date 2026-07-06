@@ -22,7 +22,7 @@ std::optional<Shader> AssetLoader<Shader>::Load(const std::string& filepath, Met
 	return shader;
 }
 
-std::optional<Shader> AssetLoader<Shader>::Reload(const std::string& filepath, Shader* src, Meta<Shader::MetaData> meta) {
+std::optional<Shader> AssetLoader<Shader>::Reload(const std::string& filepath, Shader* /*src*/, Meta<Shader::MetaData> meta) {
 	/// ----- Shaderの再読み込み処理 ----- ///
 	return Load(filepath, meta);
 }

@@ -50,6 +50,7 @@ using namespace ONEngine;
 #include "../PostProcess/Screen/WaterDepthFogVignette/PostProcessWaterDepthFogVignette.h"
 #include "../PostProcess/Screen/WaterColorGrading/PostProcessWaterColorGrading.h"
 #include "../PostProcess/Screen/WaterCausticsLightShafts/PostProcessWaterCausticsLightShafts.h"
+#include "../PostProcess/Screen/Pixelate/PostProcessPixelate.h"
 
 RenderingPipelineCollection::RenderingPipelineCollection(ShaderCompiler* shaderCompiler, DxManager* dxm, EntityComponentSystem* pEntityComponentSystem, Asset::AssetCollection* assetCollection)
 	: pShaderCompiler_(shaderCompiler), pDxManager_(dxm), pEntityComponentSystem_(pEntityComponentSystem), pAssetCollection_(assetCollection) {}
@@ -117,6 +118,7 @@ void RenderingPipelineCollection::Initialize() {
 	GeneratePostProcessScreenPipeline<PostProcessWaterColorGrading>();
 	GeneratePostProcessScreenPipeline<PostProcessWaterDistortion>();
 	GeneratePostProcessScreenPipeline<PostProcessFisheye>();
+	GeneratePostProcessScreenPipeline<PostProcessPixelate>();
 }
 
 void RenderingPipelineCollection::PreDrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
@@ -145,7 +147,7 @@ void RenderingPipelineCollection::PreDrawEntities(ECSGroup* ecsGroup, CameraComp
 	}
 }
 
-void RenderingPipelineCollection::DrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+void RenderingPipelineCollection::DrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* /*_2dCamera*/) {
 	if(!ecsGroup) return;
 
 	/// 3dカメラが有効なら3D描画を実行
@@ -163,7 +165,7 @@ void RenderingPipelineCollection::DrawParticles(ECSGroup* ecsGroup, CameraCompon
 	}
 }
 
-void RenderingPipelineCollection::DrawGizmos(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+void RenderingPipelineCollection::DrawGizmos(ECSGroup* ecsGroup, [[maybe_unused]] CameraComponent* _3dCamera, [[maybe_unused]] CameraComponent* _2dCamera) {
 	if(!ecsGroup) return;
 #ifdef DEBUG_MODE
 	if(gizmo3D_) {
@@ -201,7 +203,7 @@ void RenderingPipelineCollection::DrawEntities2D(ECSGroup* ecsGroup, CameraCompo
 	}
 }
 
-void RenderingPipelineCollection::DrawSelectedPrefab(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+void RenderingPipelineCollection::DrawSelectedPrefab(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* /*_2dCamera*/) {
 	if(!ecsGroup) return;
 
 	/// 3dカメラが有効なら3D描画を実行

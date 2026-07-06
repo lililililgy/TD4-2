@@ -14,6 +14,8 @@
 #include "Engine/Editor/Math/ImGuiMath.h"
 #include "Engine/Editor/Math/AssetDebugger.h"
 #include "Engine/Editor/Math/AssetPayload.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
 
 using namespace ONEngine;
 
@@ -201,7 +203,12 @@ void ComponentDebug::MeshRendererDebug(MeshRenderer* mr, Asset::AssetCollection*
 
 				/// メッシュのパスが有効な形式か確認
 				if (type == Asset::AssetType::Mesh) {
-					mr->SetMeshPath(path);
+					std::string oldPath = mr->GetMeshPath();
+					std::string newPath = path;
+					Editor::EditCommand::Execute<Editor::LambdaCommand>(
+						[mr, newPath]() { mr->SetMeshPath(newPath); },
+						[mr, oldPath]() { mr->SetMeshPath(oldPath); }
+					);
 
 					Console::Log(std::format("Mesh path set to: {}", path));
 				} else {
@@ -261,7 +268,12 @@ void ComponentDebug::MeshRendererDebug(MeshRenderer* mr, Asset::AssetCollection*
 				/// テクスチャのパスが有効な形式か確認
 				const Asset::AssetType type = Asset::GetAssetTypeFromExtension(FileSystem::FileExtension(path));
 				if (type == Asset::AssetType::Texture) {
-					mr->material_.SetBaseTextureGuid(assetPayload->guid);
+					Guid oldGuid = mr->material_.GetBaseTextureGuid();
+					Guid newGuid = assetPayload->guid;
+					Editor::EditCommand::Execute<Editor::LambdaCommand>(
+						[mr, newGuid]() { mr->material_.SetBaseTextureGuid(newGuid); },
+						[mr, oldGuid]() { mr->material_.SetBaseTextureGuid(oldGuid); }
+					);
 
 					Console::Log(std::format("Texture path set to: {}", path));
 				} else {

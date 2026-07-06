@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 12.0,
-                "y": 5.0,
-                "z": 1.890000581741333
+                "x": 6.349204063415527,
+                "y": 2.6455018520355225,
+                "z": 1.0
             },
             "type": "Transform"
         },
@@ -27,7 +27,8 @@
                 "cellSize_": {
                     "x": 256.0,
                     "y": 256.0
-                }
+                },
+                "enemyCount_": 0
             },
             "EnemySpawnSystem": {
                 "biomeNames_": [
@@ -58,6 +59,7 @@
                     "y": -967.6799926757813
                 },
                 "heatWeightThreshold_": 3,
+                "isActive_": false,
                 "maxEnemyCount_": 12,
                 "maxSpawnCount_": 1,
                 "originName_": "Player",

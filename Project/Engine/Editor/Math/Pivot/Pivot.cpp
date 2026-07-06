@@ -122,6 +122,8 @@ public:
 	ONEngine::Matrix4x4 pivotMatrix_ = ONEngine::Matrix4x4::kIdentity;
 
 	bool is2DMode_ = false;
+	int manipulateMode_ = 0; // ImGuizmo::MODE::WORLD
+	int manipulateOperation_ = 7; // ImGuizmo::OPERATION::TRANSLATE
 
 };
 
@@ -144,7 +146,12 @@ void Editor::UpdatePivot(ONEngine::EntityComponentSystem* ecs) {
 		return;
 	}
 
-	ONEngine::CameraComponent* cameraComp = ecs->GetECSGroup("Debug")->GetMainCamera();
+	ONEngine::CameraComponent* cameraComp = nullptr;
+	if (gPivotInstance.is2DMode_) {
+		cameraComp = ecs->GetECSGroup("Debug")->GetMainCamera2D();
+	} else {
+		cameraComp = ecs->GetECSGroup("Debug")->GetMainCamera();
+	}
 	if(!cameraComp) {
 		return;
 	}
@@ -159,26 +166,23 @@ void Editor::UpdatePivot(ONEngine::EntityComponentSystem* ecs) {
 		gPivotInstance.drawRectSize_.y
 	);
 
-	static int manipulateOperation_ = ImGuizmo::OPERATION::TRANSLATE;
-	static int manipulateMode_ = ImGuizmo::MODE::WORLD;
-
 	{
 		/// 操作モードの選択
 		if(ONEngine::Input::TriggerKey(DIK_W)) {
-			manipulateOperation_ = ImGuizmo::OPERATION::TRANSLATE; // 移動
+			gPivotInstance.manipulateOperation_ = ImGuizmo::OPERATION::TRANSLATE; // 移動
 		} else if(ONEngine::Input::TriggerKey(DIK_E)) {
-			manipulateOperation_ = ImGuizmo::OPERATION::ROTATE; // 回転
+			gPivotInstance.manipulateOperation_ = ImGuizmo::OPERATION::ROTATE; // 回転
 		} else if(ONEngine::Input::TriggerKey(DIK_R)) {
-			manipulateOperation_ = ImGuizmo::OPERATION::SCALE; // 拡縮
+			gPivotInstance.manipulateOperation_ = ImGuizmo::OPERATION::SCALE; // 拡縮
 		} else if(ONEngine::Input::TriggerKey(DIK_Q)) {
-			manipulateOperation_ = 0; // 操作なし
+			gPivotInstance.manipulateOperation_ = 0; // 操作なし
 		}
 
 		/// モードの選択
 		if(ONEngine::Input::TriggerKey(DIK_1)) {
-			manipulateMode_ = ImGuizmo::MODE::WORLD; // ワールド座標
+			gPivotInstance.manipulateMode_ = ImGuizmo::MODE::WORLD; // ワールド座標
 		} else if(ONEngine::Input::TriggerKey(DIK_2)) {
-			manipulateMode_ = ImGuizmo::MODE::LOCAL; // ローカル座標
+			gPivotInstance.manipulateMode_ = ImGuizmo::MODE::LOCAL; // ローカル座標
 		}
 	}
 
@@ -196,7 +200,14 @@ void Editor::UpdatePivot(ONEngine::EntityComponentSystem* ecs) {
 		viewMatrix = ONEngine::Matrix4x4::MakeTranslate({ -camPos.x, -camPos.y, 1000.0f });
 
 		/// 投影行列：平行投影。Z範囲を広く取り、クリッピングを防ぐ。
-		ONEngine::Vector2 orthoSize = ONEngine::EngineConfig::kWindowSize;
+		ONEngine::Vector3 camScale = ONEngine::Vector3::One;
+		if (auto* owner = cameraComp->GetOwner()) {
+			camScale = owner->GetScale();
+		}
+		ONEngine::Vector2 orthoSize = {
+			ONEngine::EngineConfig::kWindowSize.x * camScale.x,
+			ONEngine::EngineConfig::kWindowSize.y * camScale.y
+		};
 
 		projectionMatrix = ONEngine::CameraMath::MakeOrthographicMatrix(
 			-orthoSize.x / 2.0f, orthoSize.x / 2.0f,
@@ -205,7 +216,7 @@ void Editor::UpdatePivot(ONEngine::EntityComponentSystem* ecs) {
 		);
 	}
 
-	int currentOperation = manipulateOperation_;
+	int currentOperation = gPivotInstance.manipulateOperation_;
 	if (gPivotInstance.is2DMode_) {
 		if (currentOperation == ImGuizmo::OPERATION::TRANSLATE) {
 			currentOperation = ImGuizmo::OPERATION::TRANSLATE_X | ImGuizmo::OPERATION::TRANSLATE_Y;
@@ -220,7 +231,7 @@ void Editor::UpdatePivot(ONEngine::EntityComponentSystem* ecs) {
 		&viewMatrix.m[0][0],
 		&projectionMatrix.m[0][0],
 		(ImGuizmo::OPERATION)currentOperation, // TRANSLATE, ROTATE, SCALE
-		(ImGuizmo::MODE)manipulateMode_, // WORLD or LOCAL
+		(ImGuizmo::MODE)gPivotInstance.manipulateMode_, // WORLD or LOCAL
 		&gPivotInstance.pivotMatrix_.m[0][0]
 	);
 
@@ -244,7 +255,7 @@ void Editor::UpdatePivot(ONEngine::EntityComponentSystem* ecs) {
 		ImGuizmo::DecomposeMatrixToComponents(&gPivotInstance.pivotMatrix_.m[0][0], translation, rotation, scale);
 
 		ONEngine::Vector3 translationV = ONEngine::Vector3(translation[0], translation[1], translation[2]);
-		ONEngine::Vector3 eulerRotation = ONEngine::Vector3(rotation[0] * ONEngine::Math::Deg2Rad, rotation[1] * ONEngine::Math::Deg2Rad, rotation[2] * ONEngine::Math::Deg2Rad);
+		ONEngine::Vector3 eulerRotation = ONEngine::Vector3(rotation[0], rotation[1], rotation[2]);
 		ONEngine::Vector3 scaleV = ONEngine::Vector3(scale[0], scale[1], scale[2]);
 
 		if(ONEngine::GameEntity* owner = transform->GetOwner()) {
@@ -307,5 +318,13 @@ void Editor::Set2DMode(bool is2DMode) {
 
 bool Editor::Is2DMode() {
 	return gPivotInstance.is2DMode_;
+}
+
+void Editor::SetPivotMode(int mode) {
+	gPivotInstance.manipulateMode_ = mode;
+}
+
+int Editor::GetPivotMode() {
+	return gPivotInstance.manipulateMode_;
 }
 

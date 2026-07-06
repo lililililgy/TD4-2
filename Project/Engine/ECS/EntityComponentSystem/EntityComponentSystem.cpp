@@ -142,12 +142,16 @@ void EntityComponentSystem::Update() {
 	debugGroup_->RuntimeUpdateSystems();
 	if (activeGroupNames_.empty()) {
 		if (auto* group = GetCurrentGroup()) {
-			group->RuntimeUpdateSystems();
+			if (!group->IsUpdatePaused()) {
+				group->RuntimeUpdateSystems();
+			}
 		}
 	} else {
 		for (const auto& groupName : activeGroupNames_) {
 			if (auto* group = GetECSGroup(groupName)) {
-				group->RuntimeUpdateSystems();
+				if (!group->IsUpdatePaused()) {
+					group->RuntimeUpdateSystems();
+				}
 			}
 		}
 	}
@@ -660,7 +664,7 @@ void ONEngine::MonoInternalMethods::Internal_UpdateBlackboardValue(uint32_t keyH
     }
 }
 
-void ONEngine::MonoInternalMethods::Internal_OnBreakpointHit(uint32_t nodeIdHash) {
+void ONEngine::MonoInternalMethods::Internal_OnBreakpointHit(uint32_t /*nodeIdHash*/) {
     // ブレークポイントヒット時にゲームを一時停止（デバッグ用）
     ONEngine::DebugConfig::isPause = true; 
     // ※ONEngineにグローバルなPauseフラグがあると仮定。

@@ -11,7 +11,8 @@
 
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/Terrain.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Light/Light.h"
-#include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/BGMPlayer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/SEPlayer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Effect/Effect.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Terrain/TerrainCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
@@ -160,11 +161,16 @@ namespace {
 	}
 
 	void AddAudioInternalCalls() {
-		mono_add_internal_call("AudioSource::InternalGetParams", (void*)InternalGetParams);
-		mono_add_internal_call("AudioSource::InternalSetParams", (void*)InternalSetParams);
-		mono_add_internal_call("AudioSource::InternalPlay", (void*)InternalPlay);
-		mono_add_internal_call("AudioSource::InternalStop", (void*)InternalStop);
-		mono_add_internal_call("AudioSource::InternalPlayOneShot", (void*)InternalPlayOneShot);
+		mono_add_internal_call("BGMPlayer::InternalGetParams", (void*)BGMPlayer_GetParams);
+		mono_add_internal_call("BGMPlayer::InternalSetParams", (void*)BGMPlayer_SetParams);
+		mono_add_internal_call("BGMPlayer::InternalPlay", (void*)BGMPlayer_Play);
+		mono_add_internal_call("BGMPlayer::InternalStop", (void*)BGMPlayer_Stop);
+
+		mono_add_internal_call("SEPlayer::InternalGetParams", (void*)SEPlayer_GetParams);
+		mono_add_internal_call("SEPlayer::InternalSetParams", (void*)SEPlayer_SetParams);
+		mono_add_internal_call("SEPlayer::InternalPlay", (void*)SEPlayer_Play);
+		mono_add_internal_call("SEPlayer::InternalStop", (void*)SEPlayer_Stop);
+		mono_add_internal_call("SEPlayer::InternalPlayOneShot", (void*)SEPlayer_PlayOneShot);
 	}
 }
 
@@ -188,6 +194,8 @@ void ONEngine::AddComponentInternalCalls() {
 	mono_add_internal_call("SpriteRenderer::InternalGetColor", (void*)InternalGetColor);
 	mono_add_internal_call("SpriteRenderer::InternalSetColor", (void*)InternalSetColor);
 	mono_add_internal_call("SpriteRenderer::InternalGetTextureSize", (void*)InternalGetTextureSize);
+	mono_add_internal_call("SpriteRenderer::InternalGetPixelPerfect", (void*)InternalGetPixelPerfect);
+	mono_add_internal_call("SpriteRenderer::InternalSetPixelPerfect", (void*)InternalSetPixelPerfect);
 
 }
 
@@ -243,6 +251,10 @@ void ONEngine::AddSceneInternalCalls() {
 	mono_add_internal_call("SceneManager::InternalLoadScene", (void*)InternalLoadScene);
 	mono_add_internal_call("SceneManager::InternalAddScene", (void*)InternalAddScene);
 	mono_add_internal_call("SceneManager::InternalUnloadScene", (void*)InternalUnloadScene);
+	mono_add_internal_call("SceneManager::InternalSetUpdatePaused", (void*)InternalSetUpdatePaused);
+	mono_add_internal_call("SceneManager::InternalIsUpdatePaused", (void*)InternalIsUpdatePaused);
+	mono_add_internal_call("SceneManager::InternalSetDrawPaused", (void*)InternalSetDrawPaused);
+	mono_add_internal_call("SceneManager::InternalIsDrawPaused", (void*)InternalIsDrawPaused);
 }
 
 void ONEngine::AddGizmoInternalCalls() {
