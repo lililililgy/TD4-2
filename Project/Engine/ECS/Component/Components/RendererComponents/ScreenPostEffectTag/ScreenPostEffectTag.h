@@ -36,8 +36,8 @@ public:
 
 	/// @brief ポストエフェクトの有効/無効を設定する
 	/// @param type 対象 of ポストエフェクトの種類
-	/// @param enable true: 有効 false: 無効
-	void SetPostEffectEnable(PostEffectType type, bool enable);
+	/// @param isEnable true: 有効 false: 無効
+	void SetPostEffectEnable(PostEffectType type, bool isEnable);
 
 	/// @brief 指定した種類のポストエフェクトが有効かどうかを返す
 	/// @param type 確認するポストエフェクトの種類

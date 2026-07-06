@@ -14,6 +14,11 @@
 #include "Engine/Editor/Commands/ComponentEditCommands/ComponentEditCommands.h"
 #include "Engine/Editor/Commands/WorldEditorCommands/WorldEditorCommands.h"
 #include "Engine/Editor/Commands/ImGuiCommand/ImGuiCommand.h"
+#include "Engine/Asset/AssetType.h"
+#include "Engine/Core/Utility/FileSystem/FileSystem.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
+#include "Engine/Editor/Math/AssetPayload.h"
 
 /// editor
 #include "Engine/Editor/Manager/EditorManager.h"
@@ -100,8 +105,8 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 	RegisterComponent<CustomMeshRenderer>(ComponentType::Renderer, [&](CustomMeshRenderer* comp) { CustomMeshRendererDebug(comp); });
 	RegisterComponent<DissolveMeshRenderer>(ComponentType::Renderer, [&](DissolveMeshRenderer* comp) { ShowGUI(comp, pAssetCollection_); });
 	RegisterComponent<SpriteRenderer>(ComponentType::Renderer, [&](SpriteRenderer* comp) { ComponentDebug::SpriteDebug(comp, pAssetCollection_); });
-	RegisterComponent<Line2DRenderer>(ComponentType::Renderer, [&](Line2DRenderer* comp) {});
-	RegisterComponent<Line3DRenderer>(ComponentType::Renderer, [&](Line3DRenderer* comp) {});
+	RegisterComponent<Line2DRenderer>(ComponentType::Renderer, [](Line2DRenderer* /*comp*/) {});
+	RegisterComponent<Line3DRenderer>(ComponentType::Renderer, [](Line3DRenderer* /*comp*/) {});
 	RegisterComponent<SkinMeshRenderer>(ComponentType::Renderer, [&](SkinMeshRenderer* comp) { ComponentDebug::SkinMeshRendererDebug(comp, pAssetCollection_); });
 	RegisterComponent<ScreenPostEffectTag>(ComponentType::Renderer, [&](ScreenPostEffectTag* comp) { ComponentDebug::ScreenPostEffectTagDebug(comp); });
 	RegisterComponent<Skybox>(ComponentType::Renderer, [&](Skybox* comp) { ComponentDebug::SkyboxDebug(comp); });
@@ -161,6 +166,95 @@ void InspectorWindow::EntityInspector() {
 	ImGui::Separator();
 	ShowEntityComponents(selectedEntity);
 	ShowAddComponentPopup(selectedEntity);
+
+	// ---- ドラッグ＆ドロップでのアタッチ処理 ----
+	ImVec2 remainingSpace = ImGui::GetContentRegionAvail();
+	if (remainingSpace.y < 50.0f) {
+		remainingSpace.y = 50.0f; // 最低限のドラッグ領域を確保
+	}
+	ImGui::InvisibleButton("##InspectorDragDropTarget", remainingSpace);
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+			if (payload->Data) {
+				Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+				std::string path = assetPayload->filePath;
+				std::string ext = ONEngine::FileSystem::FileExtension(path);
+				ONEngine::Asset::AssetType type = ONEngine::Asset::GetAssetTypeFromExtension(ext);
+
+				if (path.find(".cs") != std::string::npos) {
+					// スクリプトのアタッチ
+					Script* scriptComp = selectedEntity->GetComponent<Script>();
+					if (!scriptComp) {
+						pEditorManager_->ExecuteCommand<AddComponentCommand>(selectedEntity, "Script");
+						scriptComp = selectedEntity->GetComponent<Script>();
+					}
+					if (scriptComp) {
+						std::string name = path;
+						size_t lastSlash = name.find_last_of("/\\");
+						if (lastSlash != std::string::npos) {
+							name = name.substr(lastSlash + 1);
+						}
+						if (name.find(".cs") != std::string::npos) {
+							name = name.substr(0, name.find(".cs"));
+						}
+
+						std::string scriptName = name;
+						if (!scriptComp->Contains(scriptName)) {
+							Editor::EditCommand::Execute<Editor::LambdaCommand>(
+								[scriptComp, scriptName]() { scriptComp->AddScript(scriptName); },
+								[scriptComp, scriptName]() { scriptComp->RemoveScript(scriptName); }
+							);
+							Console::Log(std::format("Script '{}' attached to Entity '{}'.", scriptName, selectedEntity->GetName()));
+						}
+					}
+				} else if (type == ONEngine::Asset::AssetType::Texture) {
+					// テクスチャのアタッチ
+					if (auto sr = selectedEntity->GetComponent<SpriteRenderer>()) {
+						Guid oldGuid = sr->GetMaterialForAnimation().GetBaseTextureGuid();
+						Guid newGuid = assetPayload->guid;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[sr, newGuid]() { sr->GetMaterialForAnimation().SetBaseTextureGuid(newGuid); },
+							[sr, oldGuid]() { sr->GetMaterialForAnimation().SetBaseTextureGuid(oldGuid); }
+						);
+						Console::Log(std::format("Texture set to SpriteRenderer of '{}'.", selectedEntity->GetName()));
+					} else if (auto mr = selectedEntity->GetComponent<MeshRenderer>()) {
+						Guid oldGuid = mr->GetMaterialForAnimation().GetBaseTextureGuid();
+						Guid newGuid = assetPayload->guid;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[mr, newGuid]() { mr->GetMaterialForAnimation().SetBaseTextureGuid(newGuid); },
+							[mr, oldGuid]() { mr->GetMaterialForAnimation().SetBaseTextureGuid(oldGuid); }
+						);
+						Console::Log(std::format("Texture set to MeshRenderer of '{}'.", selectedEntity->GetName()));
+					} else if (auto dmr = selectedEntity->GetComponent<DissolveMeshRenderer>()) {
+						Guid oldGuid = dmr->GetMaterialForAnimation().GetBaseTextureGuid();
+						Guid newGuid = assetPayload->guid;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[dmr, newGuid]() { dmr->GetMaterialForAnimation().SetBaseTextureGuid(newGuid); },
+							[dmr, oldGuid]() { dmr->GetMaterialForAnimation().SetBaseTextureGuid(oldGuid); }
+						);
+						Console::Log(std::format("Texture set to DissolveMeshRenderer of '{}'.", selectedEntity->GetName()));
+					} else if (auto smr = selectedEntity->GetComponent<SkinMeshRenderer>()) {
+						std::string oldPath = smr->GetTexturePath();
+						std::string newPath = path;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[smr, newPath]() { smr->SetTexturePath(newPath); },
+							[smr, oldPath]() { smr->SetTexturePath(oldPath); }
+						);
+						Console::Log(std::format("Texture set to SkinMeshRenderer of '{}'.", selectedEntity->GetName()));
+					} else {
+						// どのレンダラーもなければSpriteRendererを追加して設定
+						pEditorManager_->ExecuteCommand<AddComponentCommand>(selectedEntity, "SpriteRenderer");
+						if (auto newSr = selectedEntity->GetComponent<SpriteRenderer>()) {
+							Guid newGuid = assetPayload->guid;
+							newSr->GetMaterialForAnimation().SetBaseTextureGuid(newGuid);
+							Console::Log(std::format("Added SpriteRenderer and set Texture to '{}'.", selectedEntity->GetName()));
+						}
+					}
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
 
 }
 
@@ -454,7 +548,6 @@ ImVec4 InspectorWindow::GetComponentBaseColor(ComponentType type) const {
 	case ComponentType::Audio:    return ImVec4(0.45f, 0.20f, 0.50f, 0.70f);
 	default:                      return ImGui::GetStyleColorVec4(ImGuiCol_Header);
 	}
-	return ImVec4();
 }
 
 
@@ -597,7 +690,7 @@ bool InspectorWindow::DrawMultiComponentHeaderUI(const std::vector<ONEngine::ICo
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 2.0f);
 
 	bool allEnabled = true;
-	bool firstEnabled = comps[0]->enable;
+	int firstEnabled = comps[0]->enable;
 	for (auto c : comps) if (c->enable != firstEnabled) { allEnabled = false; break; }
 
 	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
@@ -605,10 +698,10 @@ bool InspectorWindow::DrawMultiComponentHeaderUI(const std::vector<ONEngine::ICo
 	ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(1, 1, 1, 0.2f));
 	ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
 
-	bool enabled = firstEnabled;
+	bool enabled = (firstEnabled != 0);
 	if (allEnabled) {
 		if (ImGui::Checkbox("##enabled", &enabled)) {
-			for (auto c : comps) c->enable = enabled;
+			for (auto c : comps) c->enable = enabled ? 1 : 0;
 		}
 	} else {
 		if (ImGui::Button("-##mixed_enabled", ImVec2(ImGui::GetFrameHeight(), ImGui::GetFrameHeight()))) {

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// directX
 #include <d3d11.h>
@@ -68,6 +68,9 @@ public:
 
 	/// @brief ログのvectorを返す
 	static const std::vector<LogEntry>& GetLogVector();
+
+	/// @brief ログの更新カウンターを取得する
+	static uint64_t GetUpdateCounter();
 
 	/// @brief ログのバッファをクリアする
 	/// @param category 指定したカテゴリのみクリアする。デフォルト(std::nullopt)は全てクリア

@@ -90,6 +90,7 @@ void DebugSceneView::ShowImGui() {
 
 void DebugSceneView::SetGamePlay(bool isGamePlay) {
 	ONEngine::DebugConfig::isDebugging = isGamePlay;
+	ONEngine::DebugConfig::isPause = false; // 一時停止状態をリセット
 
 	/// ゲームの開始処理
 	if(ONEngine::DebugConfig::isDebugging) {
@@ -445,8 +446,17 @@ void DebugSceneView::DrawToolbar() {
 	}
 
 	// 一時停止ボタン
+	bool isPause = ONEngine::DebugConfig::isPause;
+	if(isPause) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.125f, 0.263f, 0.388f, 1.0f));
+	}
 	if(ImGui::ImageButton("##pause", ImTextureID(buttons[1]->GetSRVGPUHandle().ptr), buttonSize)) {
-		ONEngine::DebugConfig::isDebugging = false;
+		if(isGameDebug) {
+			ONEngine::DebugConfig::isPause = !isPause;
+		}
+	}
+	if(isPause) {
+		ImGui::PopStyleColor(1);
 	}
 
 	ImGui::SameLine();

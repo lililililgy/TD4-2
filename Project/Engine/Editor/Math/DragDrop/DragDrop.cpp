@@ -9,7 +9,7 @@
 
 using namespace Editor;
 
-void Editor::DragDrop::SetDragDropPayload(const std::string& filepath, const ONEngine::Guid& guid, ONEngine::Asset::AssetCollection* ac) {
+void Editor::DragDrop::SetDragDropPayload(const std::string& filepath, const ONEngine::Guid& /*guid*/, ONEngine::Asset::AssetCollection* ac) {
 	if(ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
 		static AssetPayload payload;
 		payload.filePath = filepath;

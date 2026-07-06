@@ -145,7 +145,7 @@ void RenderingPipelineCollection::PreDrawEntities(ECSGroup* ecsGroup, CameraComp
 	}
 }
 
-void RenderingPipelineCollection::DrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+void RenderingPipelineCollection::DrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* /*_2dCamera*/) {
 	if(!ecsGroup) return;
 
 	/// 3dカメラが有効なら3D描画を実行
@@ -163,7 +163,7 @@ void RenderingPipelineCollection::DrawParticles(ECSGroup* ecsGroup, CameraCompon
 	}
 }
 
-void RenderingPipelineCollection::DrawGizmos(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+void RenderingPipelineCollection::DrawGizmos(ECSGroup* ecsGroup, [[maybe_unused]] CameraComponent* _3dCamera, [[maybe_unused]] CameraComponent* _2dCamera) {
 	if(!ecsGroup) return;
 #ifdef DEBUG_MODE
 	if(gizmo3D_) {
@@ -201,7 +201,7 @@ void RenderingPipelineCollection::DrawEntities2D(ECSGroup* ecsGroup, CameraCompo
 	}
 }
 
-void RenderingPipelineCollection::DrawSelectedPrefab(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+void RenderingPipelineCollection::DrawSelectedPrefab(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* /*_2dCamera*/) {
 	if(!ecsGroup) return;
 
 	/// 3dカメラが有効なら3D描画を実行

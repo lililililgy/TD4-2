@@ -81,8 +81,8 @@ namespace {
 
 } /// namespace
 
-void ScreenPostEffectTag::SetPostEffectEnable(PostEffectType type, bool enable) {
-	gFlags.flags[static_cast<size_t>(type)] = enable;
+void ScreenPostEffectTag::SetPostEffectEnable(PostEffectType type, bool isEnable) {
+	gFlags.flags[static_cast<size_t>(type)] = isEnable;
 }
 
 bool ScreenPostEffectTag::GetPostEffectEnable(PostEffectType type) const {
