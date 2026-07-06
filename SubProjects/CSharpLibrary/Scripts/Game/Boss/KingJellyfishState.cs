@@ -119,6 +119,11 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         }
 
         chargeRecovered = true;
+        if (chargeStarted)
+        {
+            owner.DeployChargeDamageField();
+        }
+
         recoveryElapsed += Time.deltaTime;
         if (recoveryElapsed < owner.ChargeRecoveryDuration)
         {

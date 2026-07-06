@@ -41,6 +41,9 @@ public class KingJellyfish : MonoScript {
     [SerializeField] public float chargeInertiaRate = 0.5f;
     [SerializeField] public float chargePassThroughDistance = 300.0f;
     [SerializeField] public float chargeDamage = 20.0f;
+    [SerializeField] public string chargeDamageFieldPrefabName = "JellyfishChargeDamageField";
+    [SerializeField] public float chargeDamageFieldWidth = 180.0f;
+    [SerializeField] public float chargeDamageFieldDuration = 0.6f;
     [SerializeField] public bool randomizeAttackType = true;
     [SerializeField] public KingJellyfishAttackTypeEnum fixedAttackType = KingJellyfishAttackTypeEnum.ChargeAttack;
     [SerializeField] public float chargeAttackWeight = 1.0f;
@@ -63,9 +66,11 @@ public class KingJellyfish : MonoScript {
     private bool attackRequested_;
     private int currentActionLoopCount_;
 
+    private Vector2 chargeStartPosition_;
     private Vector2 chargeTargetPosition_;
     private Vector2 chargeMoveDirection_;
     private Vector2 chargeRecoveryVelocity_;
+    private bool chargeDamageFieldDeployed_;
     private Vector2 arcMoveStartPosition_;
     private Vector2 arcMoveEndPosition_;
     private Vector2 arcMoveLastPosition_;
@@ -231,9 +236,11 @@ public class KingJellyfish : MonoScript {
             direction = Vector2.down;
         }
 
+        chargeStartPosition_ = start;
         chargeTargetPosition_ = target + direction * chargePassThroughDistance;
         chargeMoveDirection_ = direction;
         chargeRecoveryVelocity_ = direction * (ChargeSpeed * ChargeInertiaRate);
+        chargeDamageFieldDeployed_ = false;
         movementDepth_ = transform.position.z;
         RotateTowardPosition(chargeTargetPosition_);
         return true;
@@ -282,6 +289,7 @@ public class KingJellyfish : MonoScript {
         if (remainingDistance <= 0.001f)
         {
             SetPlanePosition(chargeTargetPosition_);
+            DeployChargeDamageField();
             return true;
         }
 
@@ -291,6 +299,7 @@ public class KingJellyfish : MonoScript {
         {
             SetPlanePosition(chargeTargetPosition_);
             RotateTowardPosition(chargeTargetPosition_);
+            DeployChargeDamageField();
             return true;
         }
 
@@ -316,6 +325,66 @@ public class KingJellyfish : MonoScript {
 
         // 回復中もターゲットの位置に向かって回転する
         RotateTowardPosition(chargeTargetPosition_);
+    }
+
+    //=============================
+    // 体当たり攻撃のダメージフィールド生成処理
+    //=============================
+    internal void DeployChargeDamageField()
+    {
+        if (chargeDamageFieldDeployed_)
+        {
+            return;
+        }
+
+        chargeDamageFieldDeployed_ = true;
+        CreateChargeDamageField(chargeStartPosition_, chargeTargetPosition_);
+    }
+
+    private void CreateChargeDamageField(Vector2 start, Vector2 end)
+    {
+        if (String.IsNullOrEmpty(chargeDamageFieldPrefabName))
+        {
+            return;
+        }
+
+        Entity damageField = ecsGroup.CreateEntity(chargeDamageFieldPrefabName);
+        if (damageField == null)
+        {
+            return;
+        }
+
+        ConfigureChargeDamageField(damageField, start, end);
+    }
+
+    private void ConfigureChargeDamageField(Entity damageField, Vector2 start, Vector2 end)
+    {
+        Vector2 move = end - start;
+        float length = move.Length();
+        if (length <= 0.001f)
+        {
+            damageField.Destroy();
+            return;
+        }
+
+        Vector2 direction = move.Normalized();
+        Vector2 center = start + direction * (length * 0.5f);
+        damageField.transform.position = new Vector3(center.x, center.y, transform.position.z);
+        damageField.transform.scale = new Vector3(ChargeDamageFieldWidth, length, 1.0f);
+        float angle = Mathf.Atan2(direction.x, direction.y);
+        damageField.transform.rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
+
+        JellyfishChargeDamageField damageFieldScript = damageField.GetScript<JellyfishChargeDamageField>();
+        if (damageFieldScript != null)
+        {
+            damageFieldScript.Configure(start, end, ChargeDamageFieldWidth, chargeDamage, ChargeDamageFieldDuration, transform.position.z);
+        }
+
+        AttackCollision attackCollision = damageField.GetScript<AttackCollision>();
+        if (attackCollision != null)
+        {
+            attackCollision.Damage = chargeDamage;
+        }
     }
 
     //=============================
@@ -509,6 +578,16 @@ public class KingJellyfish : MonoScript {
     internal float ChargeRecoveryDuration
     {
         get { return chargeRecoveryDuration > 0 ? chargeRecoveryDuration : 0.01f; }
+    }
+
+    internal float ChargeDamageFieldWidth
+    {
+        get { return chargeDamageFieldWidth > 0.0f ? chargeDamageFieldWidth : 1.0f; }
+    }
+
+    internal float ChargeDamageFieldDuration
+    {
+        get { return chargeDamageFieldDuration > 0.0f ? chargeDamageFieldDuration : ChargeMoveDuration; }
     }
 
     internal float IdleDuration

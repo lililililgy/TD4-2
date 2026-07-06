@@ -36,6 +36,9 @@
                 "cameraEntityName": "Camera",
                 "chargeAttackWeight": 1.0,
                 "chargeDamage": 20.0,
+                "chargeDamageFieldDuration": 0.6000000238418579,
+                "chargeDamageFieldPrefabName": "JellyfishChargeDamageField",
+                "chargeDamageFieldWidth": 180.0,
                 "chargeInertiaRate": 0.9990000128746033,
                 "chargeMoveDuration": 2.5999999046325684,
                 "chargePassThroughDistance": 300.0,
@@ -81,6 +84,21 @@
             "type": "Script"
         },
         {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 0,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        },
+        {
             "enable": 1,
             "material": {
                 "baseColor": {
@@ -106,21 +124,6 @@
                 }
             },
             "type": "SpriteRenderer"
-        },
-        {
-            "categoryBits": 1,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 0,
-            "mass": 1.0,
-            "size": {
-                "x": 1.0,
-                "y": 1.0
-            },
-            "state": "Dynamic",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
         }
     ],
     "guid": "2a75a187cc14795397a4b907fc812b10",
