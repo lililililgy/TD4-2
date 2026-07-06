@@ -86,12 +86,33 @@ if ($mergeStatus -ne 0) {
     exit 1
 }
 
-# 6. Push to origin
+# 6. Push to origin with a 10-second timeout to prevent hangs
 Write-Host "Pushing merged engine branch to origin..." -ForegroundColor Cyan
 try {
-    git push origin engine
+    $pinfo = New-Object System.Diagnostics.ProcessStartInfo
+    $pinfo.FileName = "git"
+    $pinfo.Arguments = "push origin engine"
+    $pinfo.UseShellExecute = $false
+    $pinfo.RedirectStandardOutput = $true
+    $pinfo.RedirectStandardError = $true
+    $pinfo.CreateNoWindow = $true
+
+    $p = New-Object System.Diagnostics.Process
+    $p.StartInfo = $pinfo
+    $p.Start() | Out-Null
+    
+    if (-not $p.WaitForExit(10000)) { # 10 seconds timeout
+        Write-Warning "Git push timed out. Terminating push process. Local merge is complete."
+        $p.Kill()
+    } else {
+        if ($p.ExitCode -ne 0) {
+            Write-Warning "Git push exited with code $($p.ExitCode). Local merge is complete."
+        } else {
+            Write-Host "Push successful." -ForegroundColor Green
+        }
+    }
 } catch {
-    Write-Warning "Failed to push to remote origin. Local merge is complete."
+    Write-Warning "Failed to push to remote origin. Error: $_. Local merge is complete."
 }
 
 # 7. Cleanup task branch
