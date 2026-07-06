@@ -104,6 +104,7 @@ private:
 	bool showRenamePopup_ = false;
 	bool showCreateFolderPopup_ = false;
 	bool showCreateScriptPopup_ = false;
+	std::string errorMessage_;
 
 	FileWatcher fileWatcher_;
 

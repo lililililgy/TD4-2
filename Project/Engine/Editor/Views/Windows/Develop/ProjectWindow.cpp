@@ -31,6 +31,98 @@ using namespace Editor;
 
 namespace {
 
+bool IsValidCSharpIdentifier(const std::string& name, std::string& outErrorReason) {
+	if (name.empty()) {
+		outErrorReason = "クラス名が空です。";
+		return false;
+	}
+
+	static const std::unordered_set<std::string> keywords = {
+		"abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked",
+		"class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else",
+		"enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for",
+		"foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock",
+		"long", "namespace", "new", "null", "object", "operator", "out", "override", "params",
+		"private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed",
+		"short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw",
+		"true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using",
+		"virtual", "void", "volatile", "while"
+	};
+
+	if (keywords.find(name) != keywords.end()) {
+		outErrorReason = "C#の予約キーワードはクラス名として使用できません。";
+		return false;
+	}
+
+	for (size_t i = 0; i < name.length(); ) {
+		unsigned char c = static_cast<unsigned char>(name[i]);
+
+		if (c < 128) {
+			if (i == 0) {
+				if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')) {
+					outErrorReason = "クラス名の先頭文字は英字またはアンダースコアである必要があります。";
+					return false;
+				}
+			} else {
+				if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_')) {
+					outErrorReason = "クラス名に空白や記号（英数字・アンダースコア以外）は使用できません。";
+					return false;
+				}
+			}
+			i += 1;
+		} else {
+			int len = 0;
+			if ((c & 0xE0) == 0xC0) len = 2;
+			else if ((c & 0xF0) == 0xE0) len = 3;
+			else if ((c & 0xF8) == 0xF0) len = 4;
+			else {
+				outErrorReason = "不正な文字コードが含まれています。";
+				return false;
+			}
+
+			if (i + len > name.length()) {
+				outErrorReason = "文字コードが破損しています。";
+				return false;
+			}
+
+			// 全角スペース (UTF-8: E3 80 80)
+			if (len == 3 && 
+				static_cast<unsigned char>(name[i]) == 0xE3 && 
+				static_cast<unsigned char>(name[i+1]) == 0x80 && 
+				static_cast<unsigned char>(name[i+2]) == 0x80) {
+				outErrorReason = "クラス名に全角スペースは使用できません。";
+				return false;
+			}
+
+			// CJK記号・句読点 (E3 80 81 - E3 80 BF)
+			if (len == 3 && 
+				static_cast<unsigned char>(name[i]) == 0xE3 && 
+				static_cast<unsigned char>(name[i+1]) == 0x80) {
+				unsigned char third = static_cast<unsigned char>(name[i+2]);
+				if (third >= 0x81 && third <= 0xBF) {
+					outErrorReason = "クラス名に記号は使用できません。";
+					return false;
+				}
+			}
+
+			// 全角記号 (EF BC 81 - EF BC 9F)
+			if (len == 3 && 
+				static_cast<unsigned char>(name[i]) == 0xEF && 
+				static_cast<unsigned char>(name[i+1]) == 0xBC) {
+				unsigned char third = static_cast<unsigned char>(name[i+2]);
+				if (third >= 0x81 && third <= 0x9F) {
+					outErrorReason = "クラス名に記号は使用できません。";
+					return false;
+				}
+			}
+
+			i += len;
+		}
+	}
+
+	return true;
+}
+
 /// @brief .slnファイルからの絶対パス
 const std::filesystem::path kRootPath = std::filesystem::absolute("./");
 
@@ -148,6 +240,7 @@ void ProjectWindow::ShowImGui() {
 					showCreateScriptPopup_ = true;
 					targetPath_ = currentPath_;
 					inputBuffer_ = "NewScript";
+					errorMessage_.clear();
 				}
 				if(!isValidScriptPath && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
 					ImGui::SetTooltip("C# scripts can only be created in the CSharpLibrary/Scripts folder.");
@@ -273,29 +366,44 @@ void ProjectWindow::ShowImGui() {
 	if(ImGui::BeginPopupModal("Create C# Script", &showCreateScriptPopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
 		ImGui::Text("Enter script name:");
 		ImGuiInputText("##scriptName", &inputBuffer_);
+
+		if(!errorMessage_.empty()) {
+			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "%s", errorMessage_.c_str());
+		}
+
 		if(ImGui::Button("OK", ImVec2(120, 0))) {
-			try {
-				std::string className = inputBuffer_;
-				std::filesystem::path newScript = targetPath_ / (className + ".cs");
-				if(!std::filesystem::exists(newScript)) {
-					std::ofstream ofs(newScript);
-					ofs << "using System;\n";
-					ofs << "using System.Collections.Generic;\n\n";
-					ofs << "public class " << className << " : MonoScript {\n";
-					ofs << "\tpublic override void Initialize() {\n\t\t\n\t}\n\n";
-					ofs << "\tpublic override void Update() {\n\t\t\n\t}\n";
-					ofs << "}\n";
-					ofs.close();
-					UpdateFileCache(targetPath_);
+			std::string className = inputBuffer_;
+			std::string errorReason;
+			if(!IsValidCSharpIdentifier(className, errorReason)) {
+				errorMessage_ = errorReason;
+			} else {
+				try {
+					std::filesystem::path newScript = targetPath_ / (className + ".cs");
+					if(!std::filesystem::exists(newScript)) {
+						std::ofstream ofs(newScript);
+						ofs << "using System;\n";
+						ofs << "using System.Collections.Generic;\n\n";
+						ofs << "public class " << className << " : MonoScript {\n";
+						ofs << "\tpublic override void Initialize() {\n\t\t\n\t}\n\n";
+						ofs << "\tpublic override void Update() {\n\t\t\n\t}\n";
+						ofs << "}\n";
+						ofs.close();
+						UpdateFileCache(targetPath_);
 
-					// スクリプト作成後にPremakeを実行してプロジェクトを更新 (Projectフォルダからの相対パス)
-					//system("powershell.exe -ExecutionPolicy Bypass -File ../SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
+						// スクリプト作成後にPremakeを実行してプロジェクトを更新 (Projectフォルダからの相対パス)
+						//system("powershell.exe -ExecutionPolicy Bypass -File ../SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
 
-					// プロジェクトが更新されたのでホットリロードを要求（ビルドは手動または起動時に行われる想定）
-					//HotReloadManager::GetInstance().RequestScriptHotReload();
+						// プロジェクトが更新されたのでホットリロードを要求（ビルドは手動または起動時に行われる想定）
+						//HotReloadManager::GetInstance().RequestScriptHotReload();
+						
+						showCreateScriptPopup_ = false;
+					} else {
+						errorMessage_ = "同名のファイルが既に存在します。";
+					}
+				} catch(...) {
+					errorMessage_ = "ファイルの作成に失敗しました。";
 				}
-			} catch(...) {}
-			showCreateScriptPopup_ = false;
+			}
 		}
 		ImGui::SameLine();
 		if(ImGui::Button("Cancel", ImVec2(120, 0))) { showCreateScriptPopup_ = false; }

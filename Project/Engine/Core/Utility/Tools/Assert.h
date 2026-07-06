@@ -11,6 +11,8 @@
 /// engine
 #include "Log.h"
 #include "Engine/Core/Config/EngineConfig.h"
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 
 namespace ONEngine {
@@ -37,12 +39,24 @@ inline void Assert(bool condition, const char* errorMessage, const std::source_l
 		errorMsg += "\nLine: ";
 		errorMsg += std::to_string(location.line());
 
-		/// ポップアップウィンドウを表示
-		MessageBoxA(nullptr, errorMsg.c_str(), "ONEngine Assertion", MB_OK | MB_ICONERROR);
-		Console::Log("[ASSERTION ERROR] " + errorMsg); // Log the last part if any
+		if (EngineConfig::isTestMode) {
+			nlohmann::json results;
+			results["success"] = false;
+			results["message"] = errorMsg;
+			std::ofstream ofs(EngineConfig::testOutputPath);
+			if (ofs.is_open()) {
+				ofs << results.dump(4);
+				ofs.close();
+			}
+			exit(1);
+		} else {
+			/// ポップアップウィンドウを表示
+			MessageBoxA(nullptr, errorMsg.c_str(), "ONEngine Assertion", MB_OK | MB_ICONERROR);
+			Console::Log("[ASSERTION ERROR] " + errorMsg); // Log the last part if any
 
-		Console::Shutdown();
-		__debugbreak();
+			Console::Shutdown();
+			__debugbreak();
+		}
 	}
 }
 
