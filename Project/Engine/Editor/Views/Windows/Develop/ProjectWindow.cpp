@@ -212,6 +212,7 @@ void ProjectWindow::ShowImGui() {
 					DrawDirectoryTree(root);
 				}
 			}
+			ImGui::Dummy(ImVec2(0.0f, 100.0f)); // 余分にスクロールできるようにするための余白
 		}
 		ImGui::EndChild();
 
@@ -561,6 +562,7 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 	// ここから下をスクロール可能にする
 	if(ImGui::BeginChild("FileListScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar)) {
 		DrawFileList(directory, requestChangeDir, nextTargetDir);
+		ImGui::Dummy(ImVec2(0.0f, 100.0f)); // 余分にスクロールできるようにするための余白
 	}
 	ImGui::EndChild();
 
