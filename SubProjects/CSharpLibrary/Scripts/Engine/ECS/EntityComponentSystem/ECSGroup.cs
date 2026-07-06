@@ -62,12 +62,12 @@ public class ECSGroup {
 	public void AddScript(int entityId, MonoScript behavior, bool enable) {
 		Entity entity;
 		if (entities_.TryGetValue(entityId, out entity)) {
-			//Debug.LogInfo("ECSGroup.AddScript - Adding script to Entity ID: " + entityId + ", Script Name: " + behavior.GetType().Name);
+			Debug.LogInfo("ECSGroup.AddScript - Adding script to Entity ID: " + entityId + ", Script Name: " + behavior.GetType().Name);
 			behavior.CreateBehavior(entityId, behavior.GetType().Name, this);
 			behavior.enable = enable;
 			entity.AddScript(behavior);
 		} else {
-			//Debug.LogError("Entity.AddScript - Entity not found with ID: " + entityId);
+			Debug.LogError("ECSGroup.AddScript - Entity not found with ID: " + entityId);
 		}
 	}
 

@@ -255,7 +255,8 @@ void ComponentDebug::TransformDebug(const std::vector<Transform*>& transforms) {
 	}
 
 	if (posChanged) {
-		for (auto t : transforms) { t->position = pos; t->Update(); }
+		Vector3 delta = pos - first->position;
+		for (auto t : transforms) { t->position += delta; t->Update(); }
 	}
 
 	if (posDeactivated) {
@@ -286,8 +287,9 @@ void ComponentDebug::TransformDebug(const std::vector<Transform*>& transforms) {
 	}
 
 	if (rotChanged) {
+		Vector3 delta = euler - first->euler;
 		for (auto t : transforms) { 
-			t->euler = euler; 
+			t->euler += delta; 
 			t->SyncQuaternionFromEuler(); 
 			t->Update(); 
 		}
@@ -321,7 +323,8 @@ void ComponentDebug::TransformDebug(const std::vector<Transform*>& transforms) {
 	}
 
 	if (scaleChanged) {
-		for (auto t : transforms) { t->scale = scale; t->Update(); }
+		Vector3 delta = scale - first->scale;
+		for (auto t : transforms) { t->scale += delta; t->Update(); }
 	}
 
 	if (scaleDeactivated) {

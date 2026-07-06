@@ -26,6 +26,12 @@ GameFramework::~GameFramework() {
 		sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
 	}
 
+	// ライフサイクルの依存関係を解決するため、明示的に先に破棄
+	editorManager_.reset();
+	imGuiManager_->Finalize();
+	imGuiManager_.reset();
+	entityComponentSystem_.reset();
+
 	MonoScriptEngine::GetInstance().Finalize();
 
 	Time::Finalize();
@@ -33,7 +39,6 @@ GameFramework::~GameFramework() {
 	Console::Finalize();
 	ThreadPool::Instance().Shutdown();
 
-	imGuiManager_->Finalize();
 	/// engineの終了処理
 	windowManager_->Finalize();
 }
@@ -45,6 +50,9 @@ void GameFramework::Initialize(const GameFrameworkConfig& startSetting) {
 
 	/// ログ出力の初期化
 	Console::Initialize();
+
+	/// エンジン設定のロード
+	EngineConfig::LoadConfig();
 
 	CreateSubsystems();
 	InitializeCore(startSetting);

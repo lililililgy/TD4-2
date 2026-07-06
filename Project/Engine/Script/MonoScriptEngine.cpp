@@ -1,6 +1,9 @@
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
 
+#include <windows.h>
+#include <filesystem>
+
 using namespace ONEngine;
 
 /// std
@@ -50,6 +53,18 @@ void ApplicationQuit() {
 	PostQuitMessage(0);
 }
 
+std::string GetUtf8Path(const std::filesystem::path& path) {
+	std::filesystem::path absPath = std::filesystem::absolute(path);
+	std::wstring wpath = absPath.wstring();
+	int len = WideCharToMultiByte(CP_UTF8, 0, wpath.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	if (len > 0) {
+		std::string utf8Path(len - 1, '\0');
+		WideCharToMultiByte(CP_UTF8, 0, wpath.c_str(), -1, &utf8Path[0], len, nullptr, nullptr);
+		return utf8Path;
+	}
+	return absPath.string();
+}
+
 }
 
 
@@ -63,8 +78,12 @@ MonoScriptEngine& MonoScriptEngine::GetInstance() {
 
 void MonoScriptEngine::Initialize() {
 
-	SetEnvironmentVariableA("PATH", "Packages/mono/bin;C:/Windows/System32");
-	SetEnvironmentVariableA("MONO_PATH", "Packages/mono/lib/4.5");
+	std::wstring monoBin = std::filesystem::absolute("Packages/mono/bin").wstring();
+	std::wstring newPathEnv = monoBin + L";C:\\Windows\\System32";
+	SetEnvironmentVariableW(L"PATH", newPathEnv.c_str());
+
+	std::wstring monoLib = std::filesystem::absolute("Packages/mono/lib/4.5").wstring();
+	SetEnvironmentVariableW(L"MONO_PATH", monoLib.c_str());
 
 #if defined(DEBUG_MODE)
 	/// デバッグモード用のオプション設定 (環境変数を使用してSoft Debuggerを確実に起動)
@@ -87,7 +106,9 @@ void MonoScriptEngine::Initialize() {
 	Console::Log("Mono version: " + std::string(mono_get_runtime_build_info()), LogCategory::ScriptEngine);
 
 	/// Monoの検索パス設定
-	mono_set_dirs("./Packages/Scripts/lib", "./Externals/mono/etc");
+	std::string scriptsLib = GetUtf8Path("Packages/Scripts/lib");
+	std::string monoEtc = GetUtf8Path("Externals/mono/etc");
+	mono_set_dirs(scriptsLib.c_str(), monoEtc.c_str());
 	mono_config_parse(nullptr);
 
 	/// JIT初期化 (v4.x CLRターゲット)
@@ -112,7 +133,7 @@ void MonoScriptEngine::Initialize() {
 		return;
 	}
 
-	currentDllPath_ = *latestDll;
+	currentDllPath_ = GetUtf8Path(*latestDll);
 	assembly_ = mono_domain_assembly_open(domain_, currentDllPath_.c_str());
 	if(!assembly_) {
 		Console::LogError("Failed to load CSharpLibrary.dll", LogCategory::ScriptEngine);
@@ -224,13 +245,16 @@ void MonoScriptEngine::HotReload() {
 		return;
 	}
 
+	std::string utf8DllPath = GetUtf8Path(*latestDll);
+
 	// コピー中の可能性があるため、ファイルが完全に書き込まれロック解除されるまで待つ
 	{
 		int retryCount = 0;
 		const int maxRetries = 20; // 最大2秒
 		bool fileReady = false;
+		std::filesystem::path dllPath(*latestDll);
 		while (retryCount < maxRetries) {
-			std::ifstream file(*latestDll, std::ios::binary | std::ios::in);
+			std::ifstream file(dllPath, std::ios::binary | std::ios::in);
 			if (file.good()) {
 				fileReady = true;
 				break;
@@ -239,7 +263,7 @@ void MonoScriptEngine::HotReload() {
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 		if (!fileReady) {
-			Console::LogError("Latest DLL is still locked or inaccessible: " + *latestDll, LogCategory::ScriptEngine);
+			Console::LogError("Latest DLL is still locked or inaccessible: " + utf8DllPath, LogCategory::ScriptEngine);
 			mono_domain_set(oldDomain, true);
 			mono_domain_unload(domain_);
 			domain_ = oldDomain;
@@ -247,7 +271,7 @@ void MonoScriptEngine::HotReload() {
 		}
 	}
 
-	assembly_ = mono_domain_assembly_open(domain_, latestDll->c_str());
+	assembly_ = mono_domain_assembly_open(domain_, utf8DllPath.c_str());
 	if(!assembly_) {
 		Console::LogError("Failed to load assembly in new domain", LogCategory::ScriptEngine);
 		mono_domain_set(oldDomain, true);
@@ -276,7 +300,7 @@ void MonoScriptEngine::HotReload() {
 		domainsToUnload_.push_back(oldDomain);
 	}
 
-	currentDllPath_ = *latestDll;
+	currentDllPath_ = utf8DllPath;
 
 	SetIsHotReloadRequest(true);
 
@@ -362,6 +386,8 @@ void MonoScriptEngine::ResetCS() {
 }
 
 MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& ecsGroupName, int32_t entityId) {
+	mono_thread_attach(domain_);
+
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if(!monoClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem", LogCategory::ScriptEngine);
@@ -375,7 +401,7 @@ MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& ecsGroupName, i
 	}
 
 	void* args[2];
-	args[0] = mono_string_new(mono_domain_get(), ecsGroupName.c_str());
+	args[0] = mono_string_new(domain_, ecsGroupName.c_str());
 	args[1] = &entityId;
 
 	MonoObject* exc = nullptr;
@@ -389,6 +415,8 @@ MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& ecsGroupName, i
 }
 
 MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupName, int32_t entityId, const std::string& behaviorName) {
+	mono_thread_attach(domain_);
+
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if(!monoClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem", LogCategory::ScriptEngine);
@@ -402,9 +430,9 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupN
 	}
 
 	void* args[3];
-	args[0] = mono_string_new(mono_domain_get(), ecsGroupName.c_str());
+	args[0] = mono_string_new(domain_, ecsGroupName.c_str());
 	args[1] = &entityId;
-	args[2] = mono_string_new(mono_domain_get(), behaviorName.c_str());
+	args[2] = mono_string_new(domain_, behaviorName.c_str());
 
 	MonoObject* exc = nullptr;
 	MonoObject* result = MonoScriptEngineUtils::SafeInvoke(method, nullptr, args, &exc);
@@ -417,6 +445,8 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupN
 }
 
 MonoObject* MonoScriptEngine::GetEcsGroupObject(const std::string& groupName) {
+	mono_thread_attach(domain_);
+
 	if(!getEcsGroupMethod_) {
 		Console::LogError("getEcsGroupMethod_ is null", LogCategory::ScriptEngine);
 		return nullptr;

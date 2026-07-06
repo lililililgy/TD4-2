@@ -1,4 +1,4 @@
-﻿#include "WindowManager.h"
+#include "WindowManager.h"
 
 using namespace ONEngine;
 
@@ -34,6 +34,17 @@ LRESULT WindowManager::MainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM
 #endif // DEBUG_MODE
 
 	switch (msg) {
+	case WM_SIZE:
+		if (gWindowManager && gWindowManager->pMainWindow_) {
+			if (wparam != SIZE_MINIMIZED) {
+				UINT width = LOWORD(lparam);
+				UINT height = HIWORD(lparam);
+				if (width > 0 && height > 0 && gWindowManager->pMainWindow_->dxSwapChain_) {
+					gWindowManager->pMainWindow_->dxSwapChain_->Resize(width, height);
+				}
+			}
+		}
+		return 0;
 	case WM_CLOSE:
 		if (gWindowManager) {
 			gWindowManager->SetCloseRequested(true);
@@ -54,6 +65,22 @@ LRESULT WindowManager::SubWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 #endif // DEBUG_MODE
 
 	switch (msg) {
+	case WM_SIZE:
+		if (gWindowManager) {
+			for (auto& window : gWindowManager->windows_) {
+				if (window->GetHwnd() == hwnd) {
+					if (wparam != SIZE_MINIMIZED) {
+						UINT width = LOWORD(lparam);
+						UINT height = HIWORD(lparam);
+						if (width > 0 && height > 0 && window->dxSwapChain_) {
+							window->dxSwapChain_->Resize(width, height);
+						}
+					}
+					break;
+				}
+			}
+		}
+		return 0;
 	case WM_CLOSE:
 	case WM_DESTROY: /// window破棄
 		DestroyWindow(hwnd);
@@ -187,18 +214,39 @@ void WindowManager::CreateGameWindow(const wchar_t* title, const Vector2& size, 
 
 	RegisterClass(&windowPtr->windowClass_);
 
-	windowPtr->wrc_ = { 0, 0, static_cast<int>(size.x), static_cast<int>(size.y) };
-	AdjustWindowRect(&windowPtr->wrc_, WS_OVERLAPPEDWINDOW, false);
+	int x = CW_USEDEFAULT;
+	int y = CW_USEDEFAULT;
+	int width = static_cast<int>(size.x);
+	int height = static_cast<int>(size.y);
+
+#ifndef DEBUG_MODE
+	// フルスクリーン判定 (Mainウィンドウのみ、且つ非デバッグモードのみ)
+	if (windowType == WindowType::Main && ONEngine::EngineConfig::isFullscreen) {
+		windowPtr->windowStyle_ = WS_POPUP;
+		x = 0;
+		y = 0;
+		width = GetSystemMetrics(SM_CXSCREEN);
+		height = GetSystemMetrics(SM_CYSCREEN);
+		windowPtr->wrc_ = { 0, 0, width, height };
+	} else {
+#endif
+		windowPtr->wrc_ = { 0, 0, width, height };
+		AdjustWindowRect(&windowPtr->wrc_, windowPtr->windowStyle_, false);
+		width = windowPtr->wrc_.right - windowPtr->wrc_.left;
+		height = windowPtr->wrc_.bottom - windowPtr->wrc_.top;
+#ifndef DEBUG_MODE
+	}
+#endif
 
 	windowPtr->hwnd_ = CreateWindowEx(
 		0,
 		windowPtr->windowClass_.lpszClassName,
 		title,
 		windowPtr->windowStyle_,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		windowPtr->wrc_.right - windowPtr->wrc_.left,
-		windowPtr->wrc_.bottom - windowPtr->wrc_.top,
+		x,
+		y,
+		width,
+		height,
 		nullptr,
 		nullptr,
 		windowPtr->windowClass_.hInstance,

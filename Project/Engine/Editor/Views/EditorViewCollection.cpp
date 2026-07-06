@@ -16,6 +16,7 @@
 #include "Tabs/EventTab.h"
 #include "Tabs/AnimationTab.h"
 #include "Tabs/UITab.h"
+#include "Tabs/SettingsTab.h"
 #include "Engine/Core/Event/GameEventData.h"
 
 using namespace Editor;
@@ -41,6 +42,7 @@ EditorViewCollection::EditorViewCollection(
 	AddViewContainer("Event", std::make_unique<EventTab>());
 	AddViewContainer("Animation", std::make_unique<AnimationTab>(assetCollection));
 	AddViewContainer("UI", std::make_unique<UITab>(dxm, ecs, assetCollection, editorManager, sceneManager));
+	AddViewContainer("Settings", std::make_unique<SettingsTab>());
 
 	// game windowで開始
 	selectedMenuIndex_ = 0;

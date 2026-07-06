@@ -114,11 +114,25 @@ void UIHierarchySystem::UpdateUIHierarchy(ECSGroup* ecs) {
 			GameEntity* bestElement = nullptr;
 			int32_t minIndex = INT32_MAX;
 
+			// まず "Element_1" という名前の要素があるか探す
 			for (auto& elem : elementArray->GetUsedComponents()) {
 				if (elem->groupEntity == groupOwner) {
-					if (elem->elementIndex < minIndex) {
-						minIndex = elem->elementIndex;
+					if (elem->GetOwner() && elem->GetOwner()->GetName() == "Element_1") {
 						bestElement = elem->GetOwner();
+						minIndex = elem->elementIndex;
+						break;
+					}
+				}
+			}
+
+			// なければ、elementIndex が最も小さい要素を自動設定する
+			if (!bestElement) {
+				for (auto& elem : elementArray->GetUsedComponents()) {
+					if (elem->groupEntity == groupOwner) {
+						if (elem->elementIndex < minIndex) {
+							minIndex = elem->elementIndex;
+							bestElement = elem->GetOwner();
+						}
 					}
 				}
 			}
@@ -126,8 +140,8 @@ void UIHierarchySystem::UpdateUIHierarchy(ECSGroup* ecs) {
 			if (bestElement) {
 				groupComp->currentSelected = bestElement;
 				groupComp->currentSelectedGuid = bestElement->GetGuid();
-				ONEngine::Console::Log(std::format("[UI Hierarchy] Fallback: No currentSelected specified for Group '{}'. Automatically selected element with lowest index: '{}' (Index: {})", 
-					groupOwner->GetName(), bestElement->GetName(), minIndex));
+				ONEngine::Console::Log(std::format("[UI Hierarchy] Fallback: Automatically selected element: '{}' (GUID: {}, Index: {}) for Group '{}'", 
+					bestElement->GetName(), groupComp->currentSelectedGuid.ToString(), minIndex, groupOwner->GetName()));
 			} else {
 				// 毎フレームの警告ログのスパムを防ぐため、初回のみまたは警告を一度だけにする対策として、ここでは出力しない（または警告レベルを下げる）
 				static std::unordered_set<Guid> warnedGroups;
@@ -253,8 +267,20 @@ void UIHierarchySystem::UpdateUIHierarchy(ECSGroup* ecs) {
 			}
 		}
 
-		// D. UILinkNavigationComponent の links をリマップして書き換える
 		bool remappedAny = false;
+
+		// D. UIGroupComponent の currentSelectedGuid をリマップして書き換える
+		if (groupComp->currentSelectedGuid.CheckValid()) {
+			Guid oldSel = groupComp->currentSelectedGuid;
+			if (oldToNewMap.count(oldSel)) {
+				groupComp->currentSelectedGuid = oldToNewMap[oldSel];
+				groupComp->currentSelected = ecs->GetEntityFromGuid(groupComp->currentSelectedGuid);
+				remappedAny = true;
+				ONEngine::Console::Log(std::format("[UI Hierarchy] Remapped currentSelected GUID for Group '{}'", groupOwner->GetName()));
+			}
+		}
+
+		// E. UILinkNavigationComponent の links をリマップして書き換える
 		if (elementArray) {
 			for (auto& elem : elementArray->GetUsedComponents()) {
 				if (elem->groupEntity == groupOwner) {

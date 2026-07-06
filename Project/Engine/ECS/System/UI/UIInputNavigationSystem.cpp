@@ -12,6 +12,7 @@
 
 /// externals
 #include <mono/jit/jit.h>
+#include <mono/metadata/threads.h>
 
 using namespace ONEngine;
 
@@ -32,6 +33,8 @@ void InvokeScriptMethod(MonoObject* obj, const std::string& methodName, void** a
 }
 
 void NotifyFocusChange(ECSGroup* ecs, GameEntity* groupOwner, GameEntity* oldSelected, GameEntity* newSelected) {
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	std::string groupName = ecs->GetGroupName();
 	ONEngine::Console::Log(std::format("[UI Navigation] Focus Change: Group='{}', OldSelected='{}', NewSelected='{}'", 
 		groupOwner ? groupOwner->GetName() : "None", 
@@ -80,7 +83,7 @@ void NotifyFocusChange(ECSGroup* ecs, GameEntity* groupOwner, GameEntity* oldSel
 				}
 			}
 
-			MonoString* monoStr = mono_string_new(mono_domain_get(), elementId.c_str());
+			MonoString* monoStr = mono_string_new(MonoScriptEngine::GetInstance().Domain(), elementId.c_str());
 			void* args[1];
 			args[0] = monoStr;
 
@@ -99,6 +102,8 @@ void NotifyFocusChange(ECSGroup* ecs, GameEntity* groupOwner, GameEntity* oldSel
 
 void NotifySubmit(ECSGroup* ecs, GameEntity* groupOwner, GameEntity* selected) {
 	if (!selected) return;
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	std::string groupName = ecs->GetGroupName();
 	ONEngine::Console::Log(std::format("[UI Navigation] Submit Event: Element='{}' in Group='{}'", selected->GetName(), groupOwner ? groupOwner->GetName() : "None"));
 
@@ -123,7 +128,7 @@ void NotifySubmit(ECSGroup* ecs, GameEntity* groupOwner, GameEntity* selected) {
 				elementId = elemComp->elementId;
 			}
 
-			MonoString* monoStr = mono_string_new(mono_domain_get(), elementId.c_str());
+			MonoString* monoStr = mono_string_new(MonoScriptEngine::GetInstance().Domain(), elementId.c_str());
 			void* args[1];
 			args[0] = monoStr;
 
@@ -142,6 +147,8 @@ void NotifySubmit(ECSGroup* ecs, GameEntity* groupOwner, GameEntity* selected) {
 
 void NotifyCancel(ECSGroup* ecs, GameEntity* groupOwner) {
 	if (!groupOwner) return;
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	std::string groupName = ecs->GetGroupName();
 	ONEngine::Console::Log(std::format("[UI Navigation] Cancel Event: Group='{}'", groupOwner->GetName()));
 

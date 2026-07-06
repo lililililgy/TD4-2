@@ -1,4 +1,4 @@
-﻿#include "InspectorWindow.h"
+#include "InspectorWindow.h"
 
 /// std
 #include <format>
@@ -23,7 +23,8 @@
 
 /// compute
 #include "Engine/ECS/Component/Components/ComputeComponents/Light/Light.h"
-#include "Engine/ECS/Component/Components/ComputeComponents/Audio/AudioSource.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/BGMPlayer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/SEPlayer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Effect/Effect.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
@@ -70,7 +71,8 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 
 	/// compute
 	RegisterComponentMulti<Transform>(ComponentType::Compute, [&](const std::vector<Transform*>& comps) { ComponentDebug::TransformDebug(comps); });
-	RegisterComponent<AudioSource>(ComponentType::Compute, [&](AudioSource* comp) { ComponentDebug::AudioSourceDebug(comp); });
+	RegisterComponent<BGMPlayer>(ComponentType::Audio, [&](BGMPlayer* comp) { ComponentDebug::BGMPlayerDebug(comp); });
+	RegisterComponent<SEPlayer>(ComponentType::Audio, [&](SEPlayer* comp) { ComponentDebug::SEPlayerDebug(comp); });
 	RegisterComponent<Variables>(ComponentType::Compute, [&](Variables* comp) { ComponentDebug::VariablesDebug(comp); });
 	RegisterComponent<AnimationPlayer>(ComponentType::Compute, [&](AnimationPlayer* comp) { ComponentDebug::AnimationPlayerDebug(comp); });
 	RegisterComponent<Effect>(ComponentType::Compute, [&](Effect* comp) { ComponentDebug::EffectDebug(comp); });
@@ -175,12 +177,22 @@ void InspectorWindow::MultiEntityInspector(const std::vector<ONEngine::GameEntit
 std::vector<GameEntity*> InspectorWindow::GetSelectedEntities() {
 	std::vector<GameEntity*> res;
 	const auto& selectedGuids = ImGuiSelection::GetSelectedObjects();
+	std::vector<ONEngine::Guid> invalidGuids;
 	
 	for (const auto& guid : selectedGuids) {
 		if (!guid.CheckValid()) continue;
 		
 		GameEntity* entity = GetSelectedEntity(guid);
-		if (entity) res.push_back(entity);
+		if (entity) {
+			res.push_back(entity);
+		} else {
+			invalidGuids.push_back(guid);
+		}
+	}
+
+	// 存在しないEntityのGuidをクリーンアップ
+	for (const auto& guid : invalidGuids) {
+		ImGuiSelection::RemoveSelectedObject(guid);
 	}
 	
 	// 最後に選択したものがインスペクタの基準になるように順序を調整（オプション）
@@ -439,6 +451,7 @@ ImVec4 InspectorWindow::GetComponentBaseColor(ComponentType type) const {
 	case ComponentType::Renderer: return ImVec4(0.20f, 0.40f, 0.25f, 0.70f);
 	case ComponentType::Collider: return ImVec4(0.50f, 0.30f, 0.15f, 0.70f);
 	case ComponentType::Light:    return ImVec4(0.50f, 0.40f, 0.10f, 0.70f);
+	case ComponentType::Audio:    return ImVec4(0.45f, 0.20f, 0.50f, 0.70f);
 	default:                      return ImGui::GetStyleColorVec4(ImGuiCol_Header);
 	}
 	return ImVec4();

@@ -24,6 +24,7 @@
         },
         {
             "AddSceneTest": {},
+            "TestPauseStart": {},
             "type": "Variables"
         },
         {
@@ -31,7 +32,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "AddSceneTest"
+                    "name": "TestPauseStart"
                 }
             ],
             "type": "Script"

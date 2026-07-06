@@ -140,8 +140,14 @@ public:
 	EDITOR_STATE Undo() override;
 
 private:
+	void SerializeRecursive(ONEngine::GameEntity* entity, nlohmann::json& json);
+	ONEngine::GameEntity* RestoreEntityRecursive(const nlohmann::json& json, ONEngine::GameEntity* parent);
+
+private:
 	ONEngine::ECSGroup* pEcsGroup_;
 	ONEngine::GameEntity* pEntity_;
+	nlohmann::json entityJson_;
+	ONEngine::Guid parentGuid_ = ONEngine::Guid::kInvalid;
 };
 
 

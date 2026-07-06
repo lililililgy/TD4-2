@@ -127,6 +127,16 @@ public:
 
 	/// @brief 現在のシーン名を取得する
 	const std::string& GetCurrentSceneName() const;
+
+	/// @brief シーンの更新を一時停止するかどうかを設定する
+	void SetUpdatePaused(const std::string& sceneName, bool paused);
+	/// @brief シーンの更新が一時停止しているかどうかを取得する
+	bool IsUpdatePaused(const std::string& sceneName);
+
+	/// @brief シーンの描画を一時停止するかどうかを設定する
+	void SetDrawPaused(const std::string& sceneName, bool paused);
+	/// @brief シーンの描画が一時停止しているかどうかを取得する
+	bool IsDrawPaused(const std::string& sceneName);
 };
 
 
@@ -136,6 +146,10 @@ namespace MonoInternalMethods {
 void InternalLoadScene(MonoString* sceneName);
 void InternalAddScene(MonoString* sceneName);
 void InternalUnloadScene(MonoString* sceneName);
+void InternalSetUpdatePaused(MonoString* sceneName, bool paused);
+bool InternalIsUpdatePaused(MonoString* sceneName);
+void InternalSetDrawPaused(MonoString* sceneName, bool paused);
+bool InternalIsDrawPaused(MonoString* sceneName);
 }
 
 } /// ONEngine

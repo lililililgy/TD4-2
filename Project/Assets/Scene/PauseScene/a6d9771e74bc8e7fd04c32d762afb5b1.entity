@@ -1,0 +1,60 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "loop": true,
+            "path": "./Assets/Sounds/test-bgm.mp3",
+            "pitch": 1.0,
+            "playOnAwake": true,
+            "type": "BGMPlayer",
+            "volume": 1.0
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "Test": {
+                "color": {
+                    "w": 0.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "Test"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "a6d9771e74bc8e7fd04c32d762afb5b1",
+    "name": "BGM",
+    "parentGuid": null,
+    "prefabName": ""
+}

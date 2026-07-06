@@ -17,6 +17,8 @@
 #include "Engine/Editor/Math/AssetPayload.h"
 #include "Engine/Editor/Math/AssetDebugger.h"
 #include "Engine/Editor/Math/ImGuiSelection.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
 
 using namespace ONEngine;
 
@@ -191,8 +193,13 @@ bool ComponentDebug::TerrainTextureEditModeDebug(std::array<std::string, 4>* tex
 						/// パスの拡張子をチェック
 						const std::string extension = FileSystem::FileExtension(path);
 						if (CheckAssetType(extension, Asset::AssetType::Texture)) {
-
-							text = path;
+							std::string oldPath = text;
+							std::string newPath = path;
+							std::string* pText = &text;
+							Editor::EditCommand::Execute<Editor::LambdaCommand>(
+								[pText, newPath]() { *pText = newPath; },
+								[pText, oldPath]() { *pText = oldPath; }
+							);
 						} else {
 							Console::LogError("Invalid entity format. Please use \".prefab\"");
 						}

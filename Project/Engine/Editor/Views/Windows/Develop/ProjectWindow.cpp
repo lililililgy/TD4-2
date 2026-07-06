@@ -692,7 +692,9 @@ void ProjectWindow::PopupContextMenu(const std::filesystem::path& filepath, std:
 		}
 
 		if(ImGui::MenuItem("Copy Path")) {
-			ImGui::SetClipboardText(filepath.string().c_str());
+			std::string pathStr = filepath.string();
+			std::replace(pathStr.begin(), pathStr.end(), '\\', '/');
+			ImGui::SetClipboardText(pathStr.c_str());
 		}
 
 		// --- 削除機能の追加 ---

@@ -8,6 +8,7 @@ using namespace ONEngine;
 
 /// external
 #include <mono/metadata/mono-gc.h>
+#include <mono/metadata/threads.h>
 
 /// engine
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
@@ -91,18 +92,17 @@ void ScriptUpdateSystem::AddAllEntitiesAndComponents(ECSGroup* ecsGroup) {
 }
 
 bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	/// runtime中に生成したオブジェクトは無視
 	//if (entity->GetId() < 0) {
 	//	return false;
 	//}
 
 	/// スクリプトが有効でない場合はスキップ
-	if (gcHandle_ == 0) {
-		return false;
-	}
-	MonoObject* ecsGroupObj = mono_gchandle_get_target(gcHandle_);
+	MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
 	if(!ecsGroupObj) {
-		Console::LogError("Failed to get ecsGroupObj from gcHandle for group: " + ecsGroupName_);
+		Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
 		return false;
 	}
 
@@ -149,7 +149,7 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			}
 
 			/// インスタンスを生成
-			MonoObject* scriptInstance = mono_object_new(mono_domain_get(), behaviorClass);
+			MonoObject* scriptInstance = mono_object_new(MonoScriptEngine::GetInstance().Domain(), behaviorClass);
 			mono_runtime_object_init(scriptInstance); /// クラスの初期化、コンストラクタをイメージ
 			if(!script) {
 				continue;
@@ -182,24 +182,19 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 }
 
 void ScriptUpdateSystem::CallUpdateEcsGroup() {
+	if(updateEntitiesMethod_) {
+		/// 更新関数を呼び出す
+		MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
+		if(!ecsGroupObj) {
+			Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
+			return;
+		}
 
-	/// 関数呼び出しの条件
-	if(gcHandle_ != 0) {
-		if(updateEntitiesMethod_) {
+		MonoObject* exc = nullptr;
+		MonoScriptEngineUtils::SafeInvoke(updateEntitiesMethod_, ecsGroupObj, nullptr, &exc);
 
-			/// 更新関数を呼び出す
-			MonoObject* ecsGroupObj = mono_gchandle_get_target(gcHandle_);
-			if(!ecsGroupObj) {
-				Console::LogError("Failed to get ecsGroupObj from gcHandle for group: " + ecsGroupName_);
-				return;
-			}
-
-			MonoObject* exc = nullptr;
-			MonoScriptEngineUtils::SafeInvoke(updateEntitiesMethod_, ecsGroupObj, nullptr, &exc);
-
-			if(exc) {
-				MonoScriptEngineUtils::HandleException(exc);
-			}
+		if(exc) {
+			MonoScriptEngineUtils::HandleException(exc);
 		}
 	}
 }
@@ -253,7 +248,7 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 		return;
 	}
 
-	gcHandle_ = mono_gchandle_new(ecsGroup, false);
+	gcHandle_ = 0; // gcHandle_ is no longer used for group reference caching
 
 	/// 呼び出し対象の関数を取得
 	updateEntitiesMethod_ = mono_class_get_method_from_name(monoClass_, "UpdateEntities", 0);
