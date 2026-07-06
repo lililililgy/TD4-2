@@ -152,6 +152,7 @@ void MonoScriptEngine::Initialize() {
 
 void MonoScriptEngine::Finalize() {
 	if(rootDomain_) {
+		ResetCS();
 		mono_jit_cleanup(rootDomain_);
 		rootDomain_ = nullptr;
 		domain_ = nullptr;
@@ -380,6 +381,10 @@ std::optional<std::string> MonoScriptEngine::FindLatestDll(const std::string& di
 }
 
 void MonoScriptEngine::ResetCS() {
+	if (!image_ || !domain_) {
+		return;
+	}
+
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if(!monoClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem", LogCategory::ScriptEngine);

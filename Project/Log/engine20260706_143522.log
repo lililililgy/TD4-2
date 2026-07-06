@@ -1,0 +1,1629 @@
+[14:35:22.894] [info] Logger initialized.
+[14:35:22.911] [info] Use Adapter:NVIDIA GeForce RTX 3060 Laptop GPU
+[14:35:23.246] [info] FeatureLevel : 12.2
+[14:35:23.246] [info] dx device create success!!
+[14:35:23.293] [info] dx command create success!!
+[14:35:23.293] [info] dx descriptor heap rtv create success!!
+[14:35:23.294] [info] dx descriptor heap cbv,srv,uav create success!!
+[14:35:23.294] [info] dx descriptor heap dsv create success!!
+[14:35:23.505] [info] dx swap chain create success!!
+[14:35:23.514] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Line2D.vs.hlsl", profile:"vs_6_0"
+[14:35:23.517] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Line2D.ps.hlsl", profile:"ps_6_0"
+[14:35:23.530] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Sprite/Sprite.vs.hlsl", profile:"vs_6_0"
+[14:35:23.539] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Sprite/Sprite.ps.hlsl", profile:"ps_6_0"
+[14:35:23.553] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/ParticleSystem2D/ParticleSystem2D.vs.hlsl", profile:"vs_6_0"
+[14:35:23.560] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/ParticleSystem2D/ParticleSystem2D.ps.hlsl", profile:"ps_6_0"
+[14:35:23.581] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Line3D.vs.hlsl", profile:"vs_6_0"
+[14:35:23.585] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Line3D.ps.hlsl", profile:"ps_6_0"
+[14:35:23.593] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Skybox/Skybox.vs.hlsl", profile:"vs_6_0"
+[14:35:23.598] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Skybox/Skybox.ps.hlsl", profile:"ps_6_0"
+[14:35:23.611] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/Mesh.vs.hlsl", profile:"vs_6_0"
+[14:35:23.619] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/Mesh.ps.hlsl", profile:"ps_6_0"
+[14:35:23.631] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/DissolveMesh.vs.hlsl", profile:"vs_6_0"
+[14:35:23.643] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/DissolveMesh.ps.hlsl", profile:"ps_6_0"
+[14:35:23.664] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/SkinMesh.vs.hlsl", profile:"vs_6_0"
+[14:35:23.675] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Mesh/SkinMesh.ps.hlsl", profile:"ps_6_0"
+[14:35:23.686] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Effect/Effect.vs.hlsl", profile:"vs_6_0"
+[14:35:23.694] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/Effect/Effect.ps.hlsl", profile:"ps_6_0"
+[14:35:23.719] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/ParticleSystem/ParticleSystem.vs.hlsl", profile:"vs_6_0"
+[14:35:23.725] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/ParticleSystem/ParticleSystem.ps.hlsl", profile:"ps_6_0"
+[14:35:23.749] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Grass/Grass.as.hlsl", profile:"as_6_5"
+[14:35:23.774] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Grass/Grass.ms.hlsl", profile:"ms_6_5"
+[14:35:23.782] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Grass/Grass.ps.hlsl", profile:"ps_6_0"
+[14:35:23.792] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Gizmo3D.vs.hlsl", profile:"vs_6_0"
+[14:35:23.795] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Gizmo3D.ps.hlsl", profile:"ps_6_0"
+[14:35:23.805] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Gizmo3D.vs.hlsl", profile:"vs_6_0"
+[14:35:23.808] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Render/Line/Gizmo3D.ps.hlsl", profile:"ps_6_0"
+[14:35:23.832] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/PerObject/Lighting/Lighting.cs.hlsl", profile:"cs_6_6"
+[14:35:23.840] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/PerObject/Grayscale/Grayscale.cs.hlsl", profile:"cs_6_6"
+[14:35:23.848] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/PerObject/TerrainBrush/TerrainBrush.cs.hlsl", profile:"cs_6_6"
+[14:35:23.857] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/PerObject/VoxelTerrainBrush/VoxelTerrainBrush.cs.hlsl", profile:"cs_6_6"
+[14:35:23.866] [info] [Load Resource] type:Shader, path:"./Packages/Shader/PostProcess/PerObject/GaussianBlur/GaussianBlur.cs.hlsl", profile:"cs_6_6"
+[14:35:23.884] [info] [Load Resource] type:Shader, path:"./Packages/Shader/PostProcess/Screen/ShadowMap/ShadowMap.cs.hlsl", profile:"cs_6_6"
+[14:35:23.897] [info] [Load Resource] type:Shader, path:"./Packages/Shader/PostProcess/Screen/Fog/Fog.cs.hlsl", profile:"cs_6_6"
+[14:35:23.903] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/Grayscale/Grayscale.cs.hlsl", profile:"cs_6_6"
+[14:35:23.910] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/RadialBlur/RadialBlur.cs.hlsl", profile:"cs_6_6"
+[14:35:23.927] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/WaterCausticsLightShafts/WaterCausticsLightShafts.cs.hlsl", profile:"cs_6_6"
+[14:35:23.939] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/WaterDepthFogVignette/WaterDepthFogVignette.cs.hlsl", profile:"cs_6_6"
+[14:35:23.952] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/WaterColorGrading/WaterColorGrading.cs.hlsl", profile:"cs_6_6"
+[14:35:23.962] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/WaterDistortion/WaterDistortion.cs.hlsl", profile:"cs_6_6"
+[14:35:23.970] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/Fisheye/Fisheye.cs.hlsl", profile:"cs_6_6"
+[14:35:23.978] [info] [Load Resource] type:Shader, path:"Packages/Shader/PostProcess/Screen/Pixelate/Pixelate.cs.hlsl", profile:"cs_6_6"
+[14:35:24.049] [info] [Success Texture Info] Path: "./Packages/Textures/white.png"
+[14:35:24.049] [info]  - DescriptorIndex: 0
+[14:35:24.050] [info] AssetCollection: Scanning directory: ./Packages/
+[14:35:24.055] [info] AssetCollection: Found 120 assets in ./Packages/
+[14:35:24.056] [info] AssetCollection: Scanning directory: ./Assets/
+[14:35:24.056] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Bush1.obj" (ext: ".obj")
+[14:35:24.056] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Bush3.obj" (ext: ".obj")
+[14:35:24.056] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Bush2.obj" (ext: ".obj")
+[14:35:24.056] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Grass1.obj" (ext: ".obj")
+[14:35:24.060] [info] AssetCollection: Found 94 assets in ./Assets/
+[14:35:24.067] [info]   Mesh[0]: "Bush1_Icosphere", Vertices: 113, Bones: 0
+[14:35:24.067] [info]   Mesh[0]: "Grass1_Cube", Vertices: 152, Bones: 0
+[14:35:24.067] [info]   Mesh[0]: "Bush2_Icosphere.002", Vertices: 172, Bones: 0
+[14:35:24.067] [info]   Mesh[0]: "Bush3_Icosphere.004", Vertices: 72, Bones: 0
+[14:35:24.068] [info]   Mesh[1]: "Tree", Vertices: 83, Bones: 0
+[14:35:24.068] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Grass1.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.068] [info]   Mesh[1]: "Tree.001", Vertices: 222, Bones: 0
+[14:35:24.068] [info]   Mesh[1]: "Tree.002", Vertices: 138, Bones: 0
+[14:35:24.068] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Grass2.obj" (ext: ".obj")
+[14:35:24.069] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Bush1.obj", Total Meshes: 2, Total Clips: 0
+[14:35:24.069] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Bush2.obj", Total Meshes: 2, Total Clips: 0
+[14:35:24.069] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Grass3.obj" (ext: ".obj")
+[14:35:24.069] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Bush3.obj", Total Meshes: 2, Total Clips: 0
+[14:35:24.070] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Rock1.obj" (ext: ".obj")
+[14:35:24.070] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Rock2.obj" (ext: ".obj")
+[14:35:24.080] [info]   Mesh[0]: "Grass2_Cube.003", Vertices: 366, Bones: 0
+[14:35:24.081] [info]   Mesh[0]: "Rock_Icosphere.001", Vertices: 98, Bones: 0
+[14:35:24.081] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Grass2.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.081] [info]   Mesh[0]: "Icosphere_Icosphere.002", Vertices: 102, Bones: 0
+[14:35:24.082] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Rock3.obj" (ext: ".obj")
+[14:35:24.082] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Rock1.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.082] [info]   Mesh[0]: "Grass3_Cube.003", Vertices: 364, Bones: 0
+[14:35:24.082] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Rock2.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.082] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Tree1.obj" (ext: ".obj")
+[14:35:24.083] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Tree2.obj" (ext: ".obj")
+[14:35:24.083] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Grass3.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.083] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Tree3.obj" (ext: ".obj")
+[14:35:24.092] [info]   Mesh[0]: "Rock3_Icosphere", Vertices: 84, Bones: 0
+[14:35:24.093] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Rock3.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.094] [info] [Load] [Model] - Starting load: "./Packages/Models/BackgroundObjects/Tree4.obj" (ext: ".obj")
+[14:35:24.094] [info]   Mesh[0]: "Tree1_Icosphere.002", Vertices: 518, Bones: 0
+[14:35:24.095] [info]   Mesh[1]: "Tree.003", Vertices: 356, Bones: 0
+[14:35:24.096] [info]   Mesh[0]: "Tree3_Icosphere.001", Vertices: 598, Bones: 0
+[14:35:24.096] [info]   Mesh[0]: "Tree2_Icosphere.001", Vertices: 536, Bones: 0
+[14:35:24.096] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Tree1.obj", Total Meshes: 2, Total Clips: 0
+[14:35:24.096] [info] [Load] [Model] - Starting load: "./Packages/Models/Human/sneakWalk.gltf" (ext: ".gltf")
+[14:35:24.097] [info]   Mesh[1]: "Leaves.008", Vertices: 118, Bones: 0
+[14:35:24.097] [info]   Mesh[1]: "Tree.004", Vertices: 550, Bones: 0
+[14:35:24.097] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Tree3.obj", Total Meshes: 2, Total Clips: 0
+[14:35:24.098] [info] [Load] [Model] - Starting load: "./Packages/Models/Human/walk.gltf" (ext: ".gltf")
+[14:35:24.098] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Tree2.obj", Total Meshes: 2, Total Clips: 0
+[14:35:24.098] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/cube.obj" (ext: ".obj")
+[14:35:24.106] [info]   Mesh[0]: "Tree4_Cylinder.003", Vertices: 665, Bones: 0
+[14:35:24.106] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[14:35:24.107] [info]   Mesh[1]: "Leaves.009", Vertices: 1035, Bones: 0
+[14:35:24.107] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/cube.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.107] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/cylinder.obj" (ext: ".obj")
+[14:35:24.108] [info] [Load] [Model] - Finished: "./Packages/Models/BackgroundObjects/Tree4.obj", Total Meshes: 2, Total Clips: 0
+[14:35:24.108] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/frontToPlane.obj" (ext: ".obj")
+[14:35:24.116] [info]   Mesh[0]: "円柱", Vertices: 130, Bones: 0
+[14:35:24.117] [info]   Mesh[0]: "frontToPlane", Vertices: 4, Bones: 0
+[14:35:24.118] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/cylinder.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.118] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/frontToPlane.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.118] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/plane.obj" (ext: ".obj")
+[14:35:24.118] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/sphere.obj" (ext: ".obj")
+[14:35:24.121] [info]   Mesh[0]: "Retopology_hp_Plane.002", Vertices: 13538, Bones: 55
+[14:35:24.124] [info]   Mesh[0]: "Retopology_hp_Plane.002", Vertices: 13538, Bones: 55
+[14:35:24.125] [info] [Load] [AnimationClip] - name:"Armature|mixamo.com|Layer0", hash: 95722531, duration: 0.90s
+[14:35:24.127] [info]   Mesh[0]: "平面", Vertices: 4, Bones: 0
+[14:35:24.127] [info] [Load] [Model] - Finished: "./Packages/Models/Human/sneakWalk.gltf", Total Meshes: 1, Total Clips: 1
+[14:35:24.127] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/plane.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.128] [info] [Load] [AnimationClip] - name:"Armature|mixamo.com|Layer0", hash: 95722531, duration: 1.03s
+[14:35:24.128] [info] [Load] [Model] - Starting load: "./Packages/Models/primitive/tube.obj" (ext: ".obj")
+[14:35:24.130] [info] [Load] [Model] - Finished: "./Packages/Models/Human/walk.gltf", Total Meshes: 1, Total Clips: 1
+[14:35:24.131] [info]   Mesh[0]: "球", Vertices: 559, Bones: 0
+[14:35:24.132] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/sphere.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.135] [info]   Mesh[0]: "円柱", Vertices: 66, Bones: 0
+[14:35:24.136] [info] [Load] [Model] - Finished: "./Packages/Models/primitive/tube.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.152] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/FileIcon.png"
+[14:35:24.152] [info]  - DescriptorIndex: 1
+[14:35:24.152] [info] [Success Texture Info] Path: "./Packages/Textures/Grass.jpg"
+[14:35:24.152] [info]  - DescriptorIndex: 2
+[14:35:24.152] [info] [Success Texture Info] Path: "./Packages/Textures/Dirt.jpg"
+[14:35:24.152] [info]  - DescriptorIndex: 3
+[14:35:24.157] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/FolderIcon.png"
+[14:35:24.157] [info]  - DescriptorIndex: 4
+[14:35:24.160] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/pause.png"
+[14:35:24.160] [info]  - DescriptorIndex: 5
+[14:35:24.161] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/lets-icons-sound-none-256.png"
+[14:35:24.161] [info]  - DescriptorIndex: 6
+[14:35:24.161] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/ph-file-c-sharp-none-256.png"
+[14:35:24.161] [info]  - DescriptorIndex: 7
+[14:35:24.163] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/play.png"
+[14:35:24.163] [info]  - DescriptorIndex: 8
+[14:35:24.164] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/reload.png"
+[14:35:24.164] [info]  - DescriptorIndex: 9
+[14:35:24.167] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/TerrainEditTextures/BrushModeIcon.png"
+[14:35:24.167] [info]  - DescriptorIndex: 10
+[14:35:24.171] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/skip.png"
+[14:35:24.171] [info]  - DescriptorIndex: 11
+[14:35:24.175] [error] [Load Failed] File is not a Texture3D DDS: "./Packages/Textures/kloofendal_48d_partly_cloudy_puresky_2k.dds"
+[14:35:24.177] [error] [Load Failed] File is not a Texture3D DDS: "./Packages/Textures/rostock_laage_airport_4k.dds"
+[14:35:24.190] [info] [Success Texture Info] Path: "./Packages/Textures/rostock_laage_airport_4k.dds"
+[14:35:24.190] [info]  - DescriptorIndex: 12
+[14:35:24.190] [info] [Success Texture Info] Path: "./Packages/Textures/ImGui/FileIcons/ObjIcon.png"
+[14:35:24.190] [info]  - DescriptorIndex: 13
+[14:35:24.192] [warning] [GenerateMipMaps Failed] Using original image: "./Packages/Textures/Sample3DTexture.dds"
+[14:35:24.192] [warning] [GenerateMipMaps Failed] Using original image: "./Packages/Textures/Sample3DTexture.dds"
+[14:35:24.193] [info] [Success Texture Info] Path: "./Packages/Textures/Snow.jpg"
+[14:35:24.193] [info]  - DescriptorIndex: 14
+[14:35:24.194] [info] [Texture DDS Info] Path: "./Packages/Textures/Sample3DTexture.dds"
+[14:35:24.200] [info] [Success Texture Info] Path: "./Assets/assets/backGround/cloud.png"
+[14:35:24.201] [info]  - DescriptorIndex: 16
+[14:35:24.204] [info] [Success Texture Info] Path: "./Assets/assets/backGround/fish.png"
+[14:35:24.204] [info]  - DescriptorIndex: 17
+[14:35:24.210] [info] [Success Texture Info] Path: "./Assets/assets/backGround/flockFish.png"
+[14:35:24.211] [info]  - DescriptorIndex: 18
+[14:35:24.215] [info] [Success Texture Info] Path: "./Assets/assets/backGround/foam.png"
+[14:35:24.215] [info]  - DescriptorIndex: 19
+[14:35:24.218] [info] [Success Texture Info] Path: "./Assets/assets/backGround/lock.png"
+[14:35:24.218] [info]  - DescriptorIndex: 20
+[14:35:24.220] [info] [Success Texture Info] Path: "./Assets/assets/backGround/sand.png"
+[14:35:24.220] [info]  - DescriptorIndex: 21
+[14:35:24.222] [info] [Success Texture Info] Path: "./Assets/assets/backGround/seaBackGround1x1.png"
+[14:35:24.222] [info]  - DescriptorIndex: 22
+[14:35:24.226] [info] [Success Texture Info] Path: "./Assets/assets/backGround/seaweed.png"
+[14:35:24.226] [info]  - DescriptorIndex: 23
+[14:35:24.227] [info] [Success Texture Info] Path: "./Packages/Textures/uvChecker.png"
+[14:35:24.228] [info]  - DescriptorIndex: 24
+[14:35:24.229] [info] [Success Texture Info] Path: "./Assets/assets/backGround/wave.png"
+[14:35:24.229] [info]  - DescriptorIndex: 25
+[14:35:24.232] [info] [Success Texture Info] Path: "./Assets/assets/background-sample.png"
+[14:35:24.232] [info]  - DescriptorIndex: 26
+[14:35:24.236] [info] [Success Texture Info] Path: "./Assets/assets/boss/giantSquid_arm.png"
+[14:35:24.236] [info]  - DescriptorIndex: 27
+[14:35:24.238] [info] [Success Texture Info] Path: "./Assets/assets/boss/weakness.png"
+[14:35:24.238] [info]  - DescriptorIndex: 28
+[14:35:24.241] [info] [Success Texture Info] Path: "./Assets/assets/egg.png"
+[14:35:24.241] [info]  - DescriptorIndex: 29
+[14:35:24.243] [info] [Success Texture Info] Path: "./Assets/assets/enemy/jar.png"
+[14:35:24.244] [info]  - DescriptorIndex: 30
+[14:35:24.246] [info] [Success Texture Info] Path: "./Assets/assets/enemy/jar2.png"
+[14:35:24.247] [info]  - DescriptorIndex: 31
+[14:35:24.249] [info] [Success Texture Info] Path: "./Assets/assets/enemy/spike.png"
+[14:35:24.249] [info]  - DescriptorIndex: 32
+[14:35:24.252] [info] [Success Texture Info] Path: "./Assets/assets/enemy/spikeFish.png"
+[14:35:24.252] [info]  - DescriptorIndex: 33
+[14:35:24.255] [info] [Success Texture Info] Path: "./Assets/assets/enemy/spikeFish_spike.png"
+[14:35:24.255] [info]  - DescriptorIndex: 34
+[14:35:24.259] [info] [Success Texture Info] Path: "./Assets/assets/enemy/surfaceOctopus.png"
+[14:35:24.259] [info]  - DescriptorIndex: 35
+[14:35:24.261] [info] [Success Texture Info] Path: "./Assets/assets/enemy/utsubo.png"
+[14:35:24.261] [info]  - DescriptorIndex: 36
+[14:35:24.263] [info] [Success Texture Info] Path: "./Assets/assets/exp.png"
+[14:35:24.263] [info]  - DescriptorIndex: 37
+[14:35:24.264] [info] [Success Texture Info] Path: "./Assets/assets/boss/giantSquid.png"
+[14:35:24.264] [info]  - DescriptorIndex: 38
+[14:35:24.265] [info] [Success Texture Info] Path: "./Assets/assets/fertilized_egg.png"
+[14:35:24.265] [info]  - DescriptorIndex: 39
+[14:35:24.268] [info] [Success Texture Info] Path: "./Assets/assets/geso.png"
+[14:35:24.268] [info]  - DescriptorIndex: 40
+[14:35:24.269] [info] [Success Texture Info] Path: "./Assets/assets/Golden dwarf moray.png"
+[14:35:24.269] [info]  - DescriptorIndex: 41
+[14:35:24.271] [info] [Success Texture Info] Path: "./Assets/assets/mendako.png"
+[14:35:24.271] [info]  - DescriptorIndex: 42
+[14:35:24.274] [info] [Success Texture Info] Path: "./Assets/assets/moray eel.png"
+[14:35:24.274] [info]  - DescriptorIndex: 43
+[14:35:24.276] [info] [Success Texture Info] Path: "./Assets/assets/player/egg.png"
+[14:35:24.276] [info]  - DescriptorIndex: 44
+[14:35:24.277] [info] [Success Texture Info] Path: "./Assets/assets/player/larva.png"
+[14:35:24.277] [info]  - DescriptorIndex: 45
+[14:35:24.281] [info] [Success Texture Info] Path: "./Assets/assets/player/larvaEgg.png"
+[14:35:24.281] [info]  - DescriptorIndex: 46
+[14:35:24.283] [info] [Success Texture Info] Path: "./Assets/assets/player/player.png"
+[14:35:24.283] [info]  - DescriptorIndex: 47
+[14:35:24.285] [info] [Success Texture Info] Path: "./Assets/assets/player/playerFace.png"
+[14:35:24.285] [info]  - DescriptorIndex: 48
+[14:35:24.286] [info] [Success Texture Info] Path: "./Assets/assets/player/playerFeet.png"
+[14:35:24.286] [info]  - DescriptorIndex: 49
+[14:35:24.288] [info] [Success Texture Info] Path: "./Assets/assets/player/playerHead.png"
+[14:35:24.288] [info]  - DescriptorIndex: 50
+[14:35:24.290] [info] [Success Texture Info] Path: "./Assets/assets/Porcupine fish.png"
+[14:35:24.290] [info]  - DescriptorIndex: 51
+[14:35:24.298] [info] [Success Texture Info] Path: "./Packages/Textures/Rock.png"
+[14:35:24.298] [info]  - DescriptorIndex: 52
+[14:35:24.305] [info] [Success Texture Info] Path: "./Assets/assets/title/title_choiceOutline.png"
+[14:35:24.306] [info]  - DescriptorIndex: 53
+[14:35:24.310] [info] [Success Texture Info] Path: "./Assets/assets/title/title_endUI.png"
+[14:35:24.310] [info]  - DescriptorIndex: 54
+[14:35:24.315] [info] [Success Texture Info] Path: "./Assets/assets/title/title_optionUI.png"
+[14:35:24.315] [info]  - DescriptorIndex: 55
+[14:35:24.321] [info] [Success Texture Info] Path: "./Assets/assets/title/title_startUI.png"
+[14:35:24.321] [info]  - DescriptorIndex: 56
+[14:35:24.331] [info] [Success Texture Info] Path: "./Assets/assets/title.png"
+[14:35:24.331] [info]  - DescriptorIndex: 57
+[14:35:24.332] [info] [Success Texture Info] Path: "./Assets/assets/kinggeso.png"
+[14:35:24.332] [info]  - DescriptorIndex: 58
+[14:35:24.332] [info] [Success Texture Info] Path: "./Assets/assets/title/titleUI.png"
+[14:35:24.332] [info]  - DescriptorIndex: 59
+[14:35:24.334] [info] [Success Texture Info] Path: "./Assets/assets/vase.png"
+[14:35:24.334] [info]  - DescriptorIndex: 60
+[14:35:24.362] [info] [Success Texture Info] Path: "./Assets/assets/tortoise-hip.png"
+[14:35:24.362] [info]  - DescriptorIndex: 61
+[14:35:24.366] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_big.obj" (ext: ".obj")
+[14:35:24.367] [info] [Success Texture Info] Path: "./Assets/assets/tortoise-face.png"
+[14:35:24.367] [info]  - DescriptorIndex: 62
+[14:35:24.368] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_block1.obj" (ext: ".obj")
+[14:35:24.369] [info] [Success Texture Info] Path: "./Packages/Textures/kloofendal_48d_partly_cloudy_puresky_2k.dds"
+[14:35:24.369] [info]  - DescriptorIndex: 63
+[14:35:24.371] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_block2.obj" (ext: ".obj")
+[14:35:24.375] [info]   Mesh[0]: "立方体.002", Vertices: 96, Bones: 0
+[14:35:24.376] [info]   Mesh[0]: "Cube", Vertices: 1776, Bones: 0
+[14:35:24.377] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_block1.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.377] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_big.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.377] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_block3.obj" (ext: ".obj")
+[14:35:24.378] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/ruins_block4.obj" (ext: ".obj")
+[14:35:24.379] [info]   Mesh[0]: "立方体.001", Vertices: 488, Bones: 0
+[14:35:24.380] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_block2.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.380] [info] [Load] [Model] - Starting load: "./Assets/Models/Block/terrian.obj" (ext: ".obj")
+[14:35:24.385] [info]   Mesh[0]: "Cube", Vertices: 394, Bones: 0
+[14:35:24.386] [info]   Mesh[0]: "立方体", Vertices: 578, Bones: 0
+[14:35:24.386] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_block4.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.386] [info] [Load] [Model] - Finished: "./Assets/Models/Block/ruins_block3.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.387] [info] [Load] [Model] - Starting load: "./Assets/Models/Bomb/bomb.obj" (ext: ".obj")
+[14:35:24.388] [info]   Mesh[0]: "立方体", Vertices: 48, Bones: 0
+[14:35:24.388] [info] [Success Texture Info] Path: "./Assets/Models/Block/terrian.png"
+[14:35:24.388] [info]  - DescriptorIndex: 64
+[14:35:24.389] [info] [Load] [Model] - Finished: "./Assets/Models/Block/terrian.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.389] [info] [Load] [Model] - Starting load: "./Assets/Models/Boss/boss.obj" (ext: ".obj")
+[14:35:24.395] [info]   Mesh[0]: "円柱.001", Vertices: 2520, Bones: 0
+[14:35:24.396] [info] [Load] [Model] - Finished: "./Assets/Models/Bomb/bomb.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.397] [info]   Mesh[0]: "立方体.027", Vertices: 2175, Bones: 0
+[14:35:24.397] [info] [Load] [Model] - Finished: "./Assets/Models/Boss/boss.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.398] [info] [Load] [Model] - Starting load: "./Assets/Models/Boss/boss_animation.gltf" (ext: ".gltf")
+[14:35:24.403] [error] AssetLoader<Model>::ValidateModel: aiScene is null.
+[14:35:24.403] [error] [Load] [Model] - Assimp Error: "GLTF: Invalid byteLength exceeds size of actual data.", path: "./Assets/Models/Boss/boss_animation.gltf"
+[14:35:24.403] [info] [Load] [Model] - Starting load: "./Assets/Models/objects/FieldCell/FieldCell.obj" (ext: ".obj")
+[14:35:24.408] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[14:35:24.409] [info] [Load] [Model] - Finished: "./Assets/Models/objects/FieldCell/FieldCell.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.410] [info] [Load] [Model] - Starting load: "./Assets/Models/objects/Outscene/boss_head.gltf" (ext: ".gltf")
+[14:35:24.411] [info]   Mesh[0]: "立方体.002", Vertices: 436, Bones: 0
+[14:35:24.412] [info] [Load] [Model] - Finished: "./Assets/Models/objects/Outscene/boss_head.gltf", Total Meshes: 1, Total Clips: 0
+[14:35:24.412] [info] [Load] [Model] - Starting load: "./Assets/Models/objects/PlayerLeftHand/PlayerLeftHand.obj" (ext: ".obj")
+[14:35:24.418] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[14:35:24.418] [info] [Load] [Model] - Finished: "./Assets/Models/objects/PlayerLeftHand/PlayerLeftHand.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.419] [info] [Load] [Model] - Starting load: "./Assets/Models/objects/PlayerRightHand/PlayerRightHand.obj" (ext: ".obj")
+[14:35:24.424] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[14:35:24.425] [info] [Success Texture Info] Path: "./Assets/Models/Block/ruins.png"
+[14:35:24.425] [info]  - DescriptorIndex: 65
+[14:35:24.425] [info] [Load] [Model] - Finished: "./Assets/Models/objects/PlayerRightHand/PlayerRightHand.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.425] [info] [Load] [Model] - Starting load: "./Assets/Models/Outgame/bg/bonfire.gltf" (ext: ".gltf")
+[14:35:24.427] [info]   Mesh[0]: "円柱.001", Vertices: 624, Bones: 0
+[14:35:24.427] [info] [Load] [Model] - Finished: "./Assets/Models/Outgame/bg/bonfire.gltf", Total Meshes: 1, Total Clips: 0
+[14:35:24.428] [info] [Load] [Model] - Starting load: "./Assets/Models/Outgame/bg/ground.gltf" (ext: ".gltf")
+[14:35:24.437] [info]   Mesh[0]: "平面.002", Vertices: 10201, Bones: 0
+[14:35:24.440] [info] [Load] [Model] - Finished: "./Assets/Models/Outgame/bg/ground.gltf", Total Meshes: 1, Total Clips: 0
+[14:35:24.480] [info] [Success Texture Info] Path: "./Assets/Models/Bomb/bomb.png"
+[14:35:24.480] [info]  - DescriptorIndex: 66
+[14:35:24.481] [info] [Load] [Model] - Starting load: "./Assets/Models/Outgame/boss_head.gltf" (ext: ".gltf")
+[14:35:24.483] [info]   Mesh[0]: "円錐.009", Vertices: 1208, Bones: 0
+[14:35:24.484] [info] [Load] [Model] - Finished: "./Assets/Models/Outgame/boss_head.gltf", Total Meshes: 1, Total Clips: 0
+[14:35:24.484] [info] [Load] [Model] - Starting load: "./Assets/Models/pillar.obj" (ext: ".obj")
+[14:35:24.491] [info]   Mesh[0]: "立方体.003", Vertices: 734, Bones: 0
+[14:35:24.492] [info] [Load] [Model] - Finished: "./Assets/Models/pillar.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.501] [info] [Success Texture Info] Path: "./Assets/Models/Boss/boss.png"
+[14:35:24.501] [info]  - DescriptorIndex: 67
+[14:35:24.502] [info] [Load] [Model] - Starting load: "./Assets/Models/Player/hand.gltf" (ext: ".gltf")
+[14:35:24.507] [error] AssetLoader<Model>::ValidateModel: aiScene is null.
+[14:35:24.507] [error] [Load] [Model] - Assimp Error: "GLTF: could not open referenced file "hand.bin"", path: "./Assets/Models/Player/hand.gltf"
+[14:35:24.508] [info] [Load] [Model] - Starting load: "./Assets/Models/Player/hand.obj" (ext: ".obj")
+[14:35:24.514] [info]   Mesh[0]: "立方体", Vertices: 732, Bones: 0
+[14:35:24.515] [info] [Load] [Model] - Finished: "./Assets/Models/Player/hand.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.534] [info] [Success Texture Info] Path: "./Assets/Models/Outgame/boss.png"
+[14:35:24.534] [info]  - DescriptorIndex: 68
+[14:35:24.536] [info] [Load] [Model] - Starting load: "./Assets/Models/primitive/front_cube.obj" (ext: ".obj")
+[14:35:24.542] [info] [Success Texture Info] Path: "./Assets/Models/Outgame/bg/bonfire.png"
+[14:35:24.542] [info]  - DescriptorIndex: 69
+[14:35:24.542] [info]   Mesh[0]: "Cube", Vertices: 24, Bones: 0
+[14:35:24.543] [info] [Load] [Model] - Starting load: "./Assets/Models/Soldier/soldier.gltf" (ext: ".gltf")
+[14:35:24.543] [info] [Load] [Model] - Finished: "./Assets/Models/primitive/front_cube.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.544] [info] [Load] [Model] - Starting load: "./Assets/Models/Soldier/soldier.obj" (ext: ".obj")
+[14:35:24.546] [info]   Mesh[0]: "円柱", Vertices: 1243, Bones: 9
+[14:35:24.547] [info] [Load] [AnimationClip] - name:"appear", hash: 4138087844, duration: 0.33s
+[14:35:24.547] [info] [Load] [AnimationClip] - name:"dance", hash: 4162136220, duration: 1.33s
+[14:35:24.547] [info] [Load] [AnimationClip] - name:"leaving", hash: 17007323, duration: 0.33s
+[14:35:24.547] [info] [Load] [AnimationClip] - name:"move", hash: 407568404, duration: 0.33s
+[14:35:24.548] [info] [Load] [Model] - Finished: "./Assets/Models/Soldier/soldier.gltf", Total Meshes: 1, Total Clips: 4
+[14:35:24.553] [info]   Mesh[0]: "立方体", Vertices: 2206, Bones: 0
+[14:35:24.554] [info] [Load] [Model] - Finished: "./Assets/Models/Soldier/soldier.obj", Total Meshes: 1, Total Clips: 0
+[14:35:24.554] [info] [Load] [Model] - Starting load: "./Assets/Models/Soldier/soldier_support.gltf" (ext: ".gltf")
+[14:35:24.557] [info]   Mesh[0]: "立方体.001", Vertices: 1017, Bones: 9
+[14:35:24.557] [info] [Load] [AnimationClip] - name:"beating", hash: 4182670843, duration: 0.67s
+[14:35:24.558] [info] [Load] [Model] - Finished: "./Assets/Models/Soldier/soldier_support.gltf", Total Meshes: 1, Total Clips: 1
+[14:35:24.599] [info] [Success Texture Info] Path: "./Assets/Models/pillar.png"
+[14:35:24.599] [info]  - DescriptorIndex: 70
+[14:35:24.622] [info] [Success Texture Info] Path: "./Assets/Models/Player/hand.png"
+[14:35:24.622] [info]  - DescriptorIndex: 71
+[14:35:24.647] [info] [Load] [AudioClip] - path:"./Assets/Sounds/pause-ui-select.mp3"
+[14:35:24.659] [info] [Success Texture Info] Path: "./Assets/Models/Soldier/soldier.png"
+[14:35:24.659] [info]  - DescriptorIndex: 72
+[14:35:24.669] [info] [Success Texture Info] Path: "./Assets/Textures/AButton.png"
+[14:35:24.670] [info]  - DescriptorIndex: 73
+[14:35:24.678] [info] [Success Texture Info] Path: "./Assets/Models/Soldier/soldier_support.png"
+[14:35:24.679] [info]  - DescriptorIndex: 74
+[14:35:24.683] [info] [Success Texture Info] Path: "./Assets/Textures/circle.png"
+[14:35:24.684] [info]  - DescriptorIndex: 75
+[14:35:24.689] [info] [Success Texture Info] Path: "./Assets/Textures/gradation.png"
+[14:35:24.690] [info]  - DescriptorIndex: 76
+[14:35:24.707] [info] [Success Texture Info] Path: "./Assets/Textures/noise.png"
+[14:35:24.707] [info]  - DescriptorIndex: 77
+[14:35:24.707] [info] [Success Texture Info] Path: "./Assets/Textures/gradationLine.png"
+[14:35:24.707] [info]  - DescriptorIndex: 78
+[14:35:24.709] [info] [Success Texture Info] Path: "./Assets/Textures/seaweed.png"
+[14:35:24.709] [info]  - DescriptorIndex: 79
+[14:35:24.711] [info] [Success Texture Info] Path: "./Assets/Textures/ring.png"
+[14:35:24.711] [info]  - DescriptorIndex: 80
+[14:35:24.721] [info] [Success Texture Info] Path: "./Assets/Textures/UI/exit-game.png"
+[14:35:24.721] [info]  - DescriptorIndex: 81
+[14:35:24.724] [info] [Success Texture Info] Path: "./Assets/Textures/UI/checkpoint-restrat.png"
+[14:35:24.724] [info]  - DescriptorIndex: 82
+[14:35:24.730] [info] [Success Texture Info] Path: "./Assets/Textures/smoke.png"
+[14:35:24.730] [info]  - DescriptorIndex: 83
+[14:35:24.733] [info] [Success Texture Info] Path: "./Assets/Textures/Vignette.png"
+[14:35:24.733] [info]  - DescriptorIndex: 84
+[14:35:24.734] [info] [Success Texture Info] Path: "./Assets/Textures/UI/main-menu.png"
+[14:35:24.734] [info]  - DescriptorIndex: 85
+[14:35:24.735] [info] [Success Texture Info] Path: "./Assets/Textures/UI/Resume.png"
+[14:35:24.735] [info]  - DescriptorIndex: 86
+[14:35:24.836] [info] [Load] [AudioClip] - path:"./Assets/Sounds/test-bgm.mp3"
+[14:35:24.844] [info] dx depth stencil create success!!
+[14:35:24.851] [info] dx depth stencil create success!!
+[14:35:24.857] [info] dx depth stencil create success!!
+[14:35:24.864] [info] dx depth stencil create success!!
+[14:35:24.874] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/CopyImage/CopyImage.vs.hlsl", profile:"vs_6_0"
+[14:35:24.879] [info] [Load Resource] type:Shader, path:"Packages/Shader/Render/CopyImage/CopyImage.ps.hlsl", profile:"ps_6_0"
+[14:35:25.414] [info] dx swap chain create success!!
+[14:35:25.422] [info] Mono version: 6.12.0 (Visual Studio built mono)
+[14:35:25.423] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\config'.
+[14:35:25.428] [info] [Mono][info] Assembly Loader probing location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll'.
+[14:35:25.431] [info] [Mono][info] Image addref mscorlib[00000174F25FF210] (asmctx DEFAULT) -> C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll[00000174F1C8C560]: 2
+[14:35:25.432] [info] [Mono][info] Prepared to set up assembly 'mscorlib' (C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll)
+[14:35:25.432] [info] [Mono][info] AOT: image 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll.dll' not found: 指定されたファイルが見つかりません。
+
+[14:35:25.432] [info] [Mono][info] AOT: image 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\lib/mono/aot-cache/amd64/mscorlib.dll.dll' not found: 指定されたパスが見つかりません。
+
+[14:35:25.432] [info] [Mono][info] Assembly Loader loaded assembly from location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll'.
+[14:35:25.432] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\mscorlib.dll.config'.
+[14:35:25.432] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\assemblies\mscorlib\mscorlib.config'.
+[14:35:25.433] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\.mono\assemblies\mscorlib\mscorlib.config'.
+[14:35:25.446] [info] [Mono][info] Assembly mscorlib[00000174F25FF210] added to domain MyRootDomain, ref_count=1
+[14:35:25.446] [info] [Mono][info] Assembly mscorlib[00000174F25FF210] added to domain ReloadedDomain_1, ref_count=2
+[14:35:25.448] [info] Latest DLL found: ./Packages/Scripts\CSharpLibrary_20260706_140202.dll
+[14:35:25.448] [info] [Mono][info] Assembly Loader probing location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll'.
+[14:35:25.449] [info] [Mono][info] Image addref CSharpLibrary[00000175026DE510] (asmctx DEFAULT) -> C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll[00000174F1C8B6C0]: 2
+[14:35:25.449] [info] [Mono][info] Prepared to set up assembly 'CSharpLibrary' (C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll)
+[14:35:25.449] [info] [Mono][info] Assembly CSharpLibrary[00000175026DE510] added to domain ReloadedDomain_1, ref_count=1
+[14:35:25.449] [info] [Mono][info] Assembly Loader loaded assembly from location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll'.
+[14:35:25.449] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll.config'.
+[14:35:25.449] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\assemblies\CSharpLibrary\CSharpLibrary.config'.
+[14:35:25.450] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\.mono\assemblies\CSharpLibrary\CSharpLibrary.config'.
+[14:35:25.450] [info] [Mono][info] Requesting loading reference 0 (of 4) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll
+[14:35:25.450] [info] [Mono][info] Loading reference 0 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll asmctx DEFAULT, looking for mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[14:35:25.450] [info] [Mono][info] Assembly Ref addref CSharpLibrary[00000175026DE510] -> mscorlib[00000174F25FF210]: 3
+[14:35:25.451] [info] [Mono][info] Requesting loading reference 1 (of 4) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll
+[14:35:25.451] [info] [Mono][info] Loading reference 1 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll asmctx DEFAULT, looking for System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[14:35:25.451] [info] [Mono][info] Assembly Loader probing location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll'.
+[14:35:25.451] [info] [Mono][info] Image addref System.Core[00000175026DE150] (asmctx DEFAULT) -> C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll[00000174F1C8BE10]: 2
+[14:35:25.451] [info] [Mono][info] Prepared to set up assembly 'System.Core' (C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll)
+[14:35:25.451] [info] [Mono][info] Assembly System.Core[00000175026DE150] added to domain ReloadedDomain_1, ref_count=1
+[14:35:25.451] [info] [Mono][info] Assembly Loader loaded assembly from location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll'.
+[14:35:25.452] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll.config'.
+[14:35:25.452] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\assemblies\System.Core\System.Core.config'.
+[14:35:25.452] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\.mono\assemblies\System.Core\System.Core.config'.
+[14:35:25.452] [info] [Mono][info] Assembly Ref addref CSharpLibrary[00000175026DE510] -> System.Core[00000175026DE150]: 2
+[14:35:25.452] [info] [Mono][info] Requesting loading reference 0 (of 2) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll
+[14:35:25.452] [info] [Mono][info] Loading reference 0 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll asmctx DEFAULT, looking for mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[14:35:25.453] [info] [Mono][info] Assembly Ref addref System.Core[00000175026DE150] -> mscorlib[00000174F25FF210]: 4
+[14:35:25.453] [info] [Mono][info] Requesting loading reference 1 (of 2) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll
+[14:35:25.453] [info] [Mono][info] Loading reference 1 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.Core.dll asmctx DEFAULT, looking for System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[14:35:25.453] [info] [Mono][info] Assembly Loader probing location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll'.
+[14:35:25.453] [info] [Mono][info] Image addref System[00000175026DDE50] (asmctx DEFAULT) -> C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll[00000174F1C8AF70]: 2
+[14:35:25.453] [info] [Mono][info] Prepared to set up assembly 'System' (C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll)
+[14:35:25.453] [info] [Mono][info] Assembly System[00000175026DDE50] added to domain ReloadedDomain_1, ref_count=1
+[14:35:25.454] [info] [Mono][info] Assembly Loader loaded assembly from location: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll'.
+[14:35:25.454] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll.config'.
+[14:35:25.454] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono\etc\mono\assemblies\System\System.config'.
+[14:35:25.454] [info] [Mono][info] Config attempting to parse: 'C:\Users\k023g\.mono\assemblies\System\System.config'.
+[14:35:25.454] [info] [Mono][info] Assembly Ref addref System.Core[00000175026DE150] -> System[00000175026DDE50]: 2
+[14:35:25.455] [info] [Mono][info] Requesting loading reference 0 (of 6) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll
+[14:35:25.455] [info] [Mono][info] Loading reference 0 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\System.dll asmctx DEFAULT, looking for mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[14:35:25.455] [info] [Mono][info] Assembly Ref addref System[00000175026DDE50] -> mscorlib[00000174F25FF210]: 5
+[14:35:25.752] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.752] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Player'
+[14:35:25.753] [info] [CPP ECS] FromJson - Adding component 'CircleCollider' to entity 'Player'
+[14:35:25.753] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Player'
+[14:35:25.753] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'Player'
+[14:35:25.753] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'Player'
+[14:35:25.753] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Player'
+[14:35:25.754] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.754] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Player_Body'
+[14:35:25.754] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Player_Body'
+[14:35:25.754] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'Player_Body'
+[14:35:25.754] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'Player_Body'
+[14:35:25.754] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Player_Body'
+[14:35:25.754] [info] [CPP ECS] FromJson - Adding component 'CircleCollider' to entity 'Player_Body'
+[14:35:25.754] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Player_Body'
+[14:35:25.754] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.754] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Player_Tentacle'
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Player_Tentacle'
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'Player_Tentacle'
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'Player_Tentacle'
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Player_Tentacle'
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'CircleCollider' to entity 'Player_Tentacle'
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Player_Tentacle'
+[14:35:25.755] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'CameraComponent' to entity 'MainCamera'
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'MainCamera'
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'MainCamera'
+[14:35:25.755] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'MainCamera'
+[14:35:25.756] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.756] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Background'
+[14:35:25.756] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Background'
+[14:35:25.756] [info] [CPP ECS] FromJson - Adding component 'ScreenPostEffectTag' to entity 'Background'
+[14:35:25.756] [info] [CPP ECS] FromJson - Adding component 'ScreenPostEffectTag' to entity 'Background'
+[14:35:25.756] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.756] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'EnemySpawnSystem'
+[14:35:25.756] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'EnemySpawnSystem'
+[14:35:25.756] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'EnemySpawnSystem'
+[14:35:25.756] [info] [CPP ECS] FromJson - Adding component 'BoxCollider2D' to entity 'EnemySpawnSystem'
+[14:35:25.756] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.756] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'SkyZone'
+[14:35:25.757] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'SkyZone'
+[14:35:25.757] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'SkyZone'
+[14:35:25.757] [info] [CPP ECS] FromJson - Adding component 'BoxCollider2D' to entity 'SkyZone'
+[14:35:25.757] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.757] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'water surface'
+[14:35:25.757] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'water surface'
+[14:35:25.757] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'water surface'
+[14:35:25.757] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.757] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'sky'
+[14:35:25.757] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'sky'
+[14:35:25.757] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'sky'
+[14:35:25.757] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.758] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'underwater'
+[14:35:25.758] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'underwater'
+[14:35:25.758] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'underwater'
+[14:35:25.758] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.758] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'sand'
+[14:35:25.758] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'sand'
+[14:35:25.758] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'sand'
+[14:35:25.758] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.758] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'uvChecker'
+[14:35:25.758] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'uvChecker'
+[14:35:25.758] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'uvChecker'
+[14:35:25.758] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'cloudManager'
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'cloudManager'
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'cloudManager'
+[14:35:25.759] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'ExpAttractor'
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'CircleCollider' to entity 'ExpAttractor'
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'ExpAttractor'
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'ExpAttractor'
+[14:35:25.759] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'EpipelagicZone'
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'EpipelagicZone'
+[14:35:25.759] [info] [CPP ECS] FromJson - Adding component 'BoxCollider2D' to entity 'EpipelagicZone'
+[14:35:25.760] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'EpipelagicZone'
+[14:35:25.760] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.760] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'MesopelagicZone'
+[14:35:25.760] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'MesopelagicZone'
+[14:35:25.760] [info] [CPP ECS] FromJson - Adding component 'BoxCollider2D' to entity 'MesopelagicZone'
+[14:35:25.760] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'MesopelagicZone'
+[14:35:25.760] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.760] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Roe'
+[14:35:25.760] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Roe'
+[14:35:25.760] [info] [CPP ECS] FromJson - Adding component 'Script' to entity 'Roe'
+[14:35:25.760] [info] [CPP ECS] FromJson - Adding component 'SpriteRenderer' to entity 'Roe'
+[14:35:25.776] [info] Successfully synced initial components to C# for group: GameScene
+[14:35:25.777] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:25.777] [info] [CPP ECS] FromJson - Adding component 'CameraComponent' to entity 'Camera'
+[14:35:25.777] [info] [CPP ECS] FromJson - Adding component 'Transform' to entity 'Camera'
+[14:35:25.777] [info] [CPP ECS] FromJson - Adding component 'Variables' to entity 'Camera'
+[14:35:25.777] [info] Successfully synced initial components to C# for group: Debug
+[14:35:25.782] [info] [Load Resource] type:Shader, path:"./Packages/Shader/Editor/GameEntityPicking.cs.hlsl", profile:"cs_6_6"
+[14:35:25.784] [info] ################################################################################
+[14:35:25.784] [info] #
+[14:35:25.784] [info] # Initialization completed in 2893 ms
+[14:35:25.784] [info] #
+[14:35:25.785] [info] ################################################################################
+[14:35:25.794] [info] [Mono][info] Requesting loading reference 3 (of 4) of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll
+[14:35:25.794] [info] [Mono][info] Loading reference 3 of C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\Scripts\CSharpLibrary_20260706_140202.dll asmctx DEFAULT, looking for System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+[14:35:25.794] [info] [Mono][info] Assembly Ref addref CSharpLibrary[00000175026DE510] -> System[00000175026DDE50]: 3
+[14:35:25.809] [info] [SetScriptVars] OK setting fields for: PlayerInputComponent
+[14:35:25.810] [info] [SerializeField] attrs=null for field: moveDir_
+[14:35:25.810] [info] [SerializeField] attrs=null for field: isShootButtonPressed_
+[14:35:25.810] [info] [SerializeField] attrs=null for field: isDashButtonPressed_
+[14:35:25.810] [info] [SerializeField] attrs=null for field: isReloadButtonPressed_
+[14:35:25.810] [info] [SerializeField] field=shootKeys_ has=true
+[14:35:25.811] [info] [SerializeField] field=shotButtons_ has=true
+[14:35:25.811] [info] [SerializeField] field=dashKeys_ has=true
+[14:35:25.811] [info] [SerializeField] field=dashButtons_ has=true
+[14:35:25.811] [info] [SerializeField] field=reloadKeys_ has=true
+[14:35:25.811] [info] [SerializeField] field=reloadButtons_ has=true
+[14:35:25.811] [info] [SetScriptVars] OK setting fields for: PlayerInputComponent
+[14:35:25.812] [info] [SerializeField] attrs=null for field: moveDir_
+[14:35:25.812] [info] [SerializeField] attrs=null for field: isShootButtonPressed_
+[14:35:25.812] [info] [SerializeField] attrs=null for field: isDashButtonPressed_
+[14:35:25.812] [info] [SerializeField] attrs=null for field: isReloadButtonPressed_
+[14:35:25.812] [info] [SerializeField] field=shootKeys_ has=true
+[14:35:25.812] [info] [SerializeField] field=shotButtons_ has=true
+[14:35:25.812] [info] [SerializeField] field=dashKeys_ has=true
+[14:35:25.812] [info] [SerializeField] field=dashButtons_ has=true
+[14:35:25.812] [info] [SerializeField] field=reloadKeys_ has=true
+[14:35:25.812] [info] [SerializeField] field=reloadButtons_ has=true
+[14:35:25.813] [info] [SetScriptVars] OK setting fields for: PlayerStateComponent
+[14:35:25.813] [info] [SerializeField] attrs=null for field: normalState_
+[14:35:25.813] [info] [SerializeField] attrs=null for field: dashState_
+[14:35:25.813] [info] [SerializeField] attrs=null for field: transitions_
+[14:35:25.813] [info] [SerializeField] attrs=null for field: currentState_
+[14:35:25.814] [info] [SerializeField] field=currentStateName_ has=true
+[14:35:25.814] [info] [SerializeField] attrs=null for field: fallbackMoveParam_
+[14:35:25.814] [info] [SetScriptVars] OK setting fields for: PlayerStateComponent
+[14:35:25.814] [info] [SerializeField] attrs=null for field: normalState_
+[14:35:25.814] [info] [SerializeField] attrs=null for field: dashState_
+[14:35:25.814] [info] [SerializeField] attrs=null for field: transitions_
+[14:35:25.814] [info] [SerializeField] attrs=null for field: currentState_
+[14:35:25.814] [info] [SerializeField] field=currentStateName_ has=true
+[14:35:25.814] [info] [SerializeField] attrs=null for field: fallbackMoveParam_
+[14:35:25.815] [info] [SetScriptVars] OK setting fields for: LevelingComponent
+[14:35:25.815] [info] [SerializeField] field=maxLevel_ has=true
+[14:35:25.815] [info] [SerializeField] field=baseRequiredExp_ has=true
+[14:35:25.815] [info] [SerializeField] field=currentLevel_ has=true
+[14:35:25.816] [info] [SerializeField] field=currentExp_ has=true
+[14:35:25.816] [info] [SerializeField] attrs=null for field: addedExp_
+[14:35:25.816] [info] [SerializeField] attrs=null for field: totalGainedExp_
+[14:35:25.816] [info] [SerializeField] attrs=null for field: requiredExp_
+[14:35:25.816] [info] [SerializeField] attrs=null for field: isLevelUp_
+[14:35:25.816] [info] [SerializeField] attrs=null for field: pendingDestroyIds_
+[14:35:25.816] [info] [SetScriptVars] OK setting fields for: LevelingComponent
+[14:35:25.816] [info] [SerializeField] field=maxLevel_ has=true
+[14:35:25.816] [info] [SerializeField] field=baseRequiredExp_ has=true
+[14:35:25.816] [info] [SerializeField] field=currentLevel_ has=true
+[14:35:25.816] [info] [SerializeField] field=currentExp_ has=true
+[14:35:25.816] [info] [SerializeField] attrs=null for field: addedExp_
+[14:35:25.817] [info] [SerializeField] attrs=null for field: totalGainedExp_
+[14:35:25.817] [info] [SerializeField] attrs=null for field: requiredExp_
+[14:35:25.817] [info] [SerializeField] attrs=null for field: isLevelUp_
+[14:35:25.817] [info] [SerializeField] attrs=null for field: pendingDestroyIds_
+[14:35:25.817] [info] [SetScriptVars] OK setting fields for: PlayerNormalState
+[14:35:25.817] [info] [SerializeField] field=canMove_ has=true
+[14:35:25.817] [info] [SerializeField] field=accel_ has=true
+[14:35:25.817] [info] [SerializeField] field=maxSpeed_ has=true
+[14:35:25.817] [info] [SerializeField] field=decelSmoothTime_ has=true
+[14:35:25.817] [info] [SerializeField] field=decelMaxSmoothSpeed_ has=true
+[14:35:25.818] [info] [SerializeField] field=rotateSmoothTime_ has=true
+[14:35:25.818] [info] [SerializeField] field=rotateMaxSmoothSpeed_ has=true
+[14:35:25.818] [info] [SerializeField] attrs=null for field: moveParam_
+[14:35:25.818] [info] [SetScriptVars] OK setting fields for: PlayerNormalState
+[14:35:25.818] [info] [SerializeField] field=canMove_ has=true
+[14:35:25.818] [info] [SerializeField] field=accel_ has=true
+[14:35:25.818] [info] [SerializeField] field=maxSpeed_ has=true
+[14:35:25.818] [info] [SerializeField] field=decelSmoothTime_ has=true
+[14:35:25.818] [info] [SerializeField] field=decelMaxSmoothSpeed_ has=true
+[14:35:25.818] [info] [SerializeField] field=rotateSmoothTime_ has=true
+[14:35:25.818] [info] [SerializeField] field=rotateMaxSmoothSpeed_ has=true
+[14:35:25.818] [info] [SerializeField] attrs=null for field: moveParam_
+[14:35:25.819] [info] [SetScriptVars] OK setting fields for: PlayerDashState
+[14:35:25.819] [info] [SerializeField] field=canMove_ has=true
+[14:35:25.819] [info] [SerializeField] field=moveForward_ has=true
+[14:35:25.819] [info] [SerializeField] field=accel_ has=true
+[14:35:25.819] [info] [SerializeField] field=maxSpeed_ has=true
+[14:35:25.819] [info] [SerializeField] field=decelSmoothTime_ has=true
+[14:35:25.819] [info] [SerializeField] field=decelMaxSmoothSpeed_ has=true
+[14:35:25.819] [info] [SerializeField] field=rotateSmoothTime_ has=true
+[14:35:25.819] [info] [SerializeField] field=rotateMaxSmoothSpeed_ has=true
+[14:35:25.820] [info] [SerializeField] attrs=null for field: moveParam_
+[14:35:25.820] [info] [SetScriptVars] OK setting fields for: PlayerDashState
+[14:35:25.820] [info] [SerializeField] field=canMove_ has=true
+[14:35:25.820] [info] [SerializeField] field=moveForward_ has=true
+[14:35:25.820] [info] [SerializeField] field=accel_ has=true
+[14:35:25.820] [info] [SerializeField] field=maxSpeed_ has=true
+[14:35:25.820] [info] [SerializeField] field=decelSmoothTime_ has=true
+[14:35:25.820] [info] [SerializeField] field=decelMaxSmoothSpeed_ has=true
+[14:35:25.820] [info] [SerializeField] field=rotateSmoothTime_ has=true
+[14:35:25.820] [info] [SerializeField] field=rotateMaxSmoothSpeed_ has=true
+[14:35:25.820] [info] [SerializeField] attrs=null for field: moveParam_
+[14:35:25.821] [info] [SetScriptVars] OK setting fields for: PlayerMoveComponent
+[14:35:25.821] [info] [SerializeField] field=paramReleaseSmoothTime_ has=true
+[14:35:25.821] [info] [SerializeField] field=paramReleaseMaxSmoothSpeed_ has=true
+[14:35:25.821] [info] [SerializeField] attrs=null for field: mover_
+[14:35:25.821] [info] [SerializeField] attrs=null for field: director_
+[14:35:25.821] [info] [SetScriptVars] OK setting fields for: PlayerMoveComponent
+[14:35:25.821] [info] [SerializeField] field=paramReleaseSmoothTime_ has=true
+[14:35:25.821] [info] [SerializeField] field=paramReleaseMaxSmoothSpeed_ has=true
+[14:35:25.821] [info] [SerializeField] attrs=null for field: mover_
+[14:35:25.821] [info] [SerializeField] attrs=null for field: director_
+[14:35:25.822] [info] [SetScriptVars] OK setting fields for: PlayerShotComponent
+[14:35:25.822] [info] [SerializeField] attrs=null for field: roeManager_
+[14:35:25.822] [info] [SerializeField] attrs=null for field: shootCooldown_
+[14:35:25.822] [info] [SerializeField] field=shootCooldownTime_ has=true
+[14:35:25.822] [info] [SerializeField] field=bulletSpawnOffset_ has=true
+[14:35:25.822] [info] [SetScriptVars] OK setting fields for: PlayerShotComponent
+[14:35:25.822] [info] [SerializeField] attrs=null for field: roeManager_
+[14:35:25.822] [info] [SerializeField] attrs=null for field: shootCooldown_
+[14:35:25.822] [info] [SerializeField] field=shootCooldownTime_ has=true
+[14:35:25.822] [info] [SerializeField] field=bulletSpawnOffset_ has=true
+[14:35:25.823] [info] [SetScriptVars] OK setting fields for: RoeManager
+[14:35:25.823] [info] [SerializeField] field=roePrefabName_ has=true
+[14:35:25.823] [info] [SerializeField] field=maxRoe_ has=true
+[14:35:25.823] [info] [SerializeField] field=maxAmmo_ has=true
+[14:35:25.823] [info] [SerializeField] attrs=null for field: roe_
+[14:35:25.823] [info] [SerializeField] attrs=null for field: lastDistributedPlayerExp_
+[14:35:25.823] [info] [SetScriptVars] OK setting fields for: RoeManager
+[14:35:25.823] [info] [SerializeField] field=roePrefabName_ has=true
+[14:35:25.823] [info] [SerializeField] field=maxRoe_ has=true
+[14:35:25.823] [info] [SerializeField] field=maxAmmo_ has=true
+[14:35:25.823] [info] [SerializeField] attrs=null for field: roe_
+[14:35:25.823] [info] [SerializeField] attrs=null for field: lastDistributedPlayerExp_
+[14:35:25.824] [info] [SetScriptVars] OK setting fields for: TrailLeader
+[14:35:25.824] [info] [SerializeField] attrs=null for field: members_
+[14:35:25.824] [info] [SerializeField] attrs=null for field: groups_
+[14:35:25.824] [info] [SerializeField] attrs=null for field: kEps
+[14:35:25.824] [info] [SetScriptVars] OK setting fields for: TrailLeader
+[14:35:25.824] [info] [SerializeField] attrs=null for field: members_
+[14:35:25.824] [info] [SerializeField] attrs=null for field: groups_
+[14:35:25.824] [info] [SerializeField] attrs=null for field: kEps
+[14:35:25.825] [info] [SetScriptVars] OK setting fields for: HP
+[14:35:25.825] [info] [SerializeField] field=maxHp_ has=true
+[14:35:25.825] [info] [SerializeField] field=currentHp_ has=true
+[14:35:25.825] [info] [SerializeField] field=disableAutoDestruction_ has=true
+[14:35:25.825] [info] [SerializeField] field=isInvincible_ has=true
+[14:35:25.825] [info] [SerializeField] field=directlyDamageable_ has=true
+[14:35:25.825] [info] [SerializeField] attrs=null for field: isDead_
+[14:35:25.825] [info] [SerializeField] attrs=null for field: lastCurrentHp_
+[14:35:25.825] [info] [SetScriptVars] OK setting fields for: HP
+[14:35:25.825] [info] [SerializeField] field=maxHp_ has=true
+[14:35:25.826] [info] [SerializeField] field=currentHp_ has=true
+[14:35:25.826] [info] [SerializeField] field=disableAutoDestruction_ has=true
+[14:35:25.826] [info] [SerializeField] field=isInvincible_ has=true
+[14:35:25.826] [info] [SerializeField] field=directlyDamageable_ has=true
+[14:35:25.826] [info] [SerializeField] attrs=null for field: isDead_
+[14:35:25.826] [info] [SerializeField] attrs=null for field: lastCurrentHp_
+[14:35:25.826] [info] [SetScriptVars] OK setting fields for: PlayerLifeComponent
+[14:35:25.826] [info] [SerializeField] attrs=null for field: roeManager_
+[14:35:25.826] [info] [SerializeField] attrs=null for field: hp_
+[14:35:25.826] [info] [SerializeField] attrs=null for field: isAlive_
+[14:35:25.826] [info] [SerializeField] attrs=null for field: hadLife_
+[14:35:25.827] [info] [SerializeField] attrs=null for field: lastSyncedHp_
+[14:35:25.827] [info] [SetScriptVars] OK setting fields for: PlayerLifeComponent
+[14:35:25.827] [info] [SerializeField] attrs=null for field: roeManager_
+[14:35:25.827] [info] [SerializeField] attrs=null for field: hp_
+[14:35:25.827] [info] [SerializeField] attrs=null for field: isAlive_
+[14:35:25.827] [info] [SerializeField] attrs=null for field: hadLife_
+[14:35:25.827] [info] [SerializeField] attrs=null for field: lastSyncedHp_
+[14:35:25.827] [info] [SetScriptVars] OK setting fields for: Magazine
+[14:35:25.827] [info] [SerializeField] attrs=null for field: roeManager_
+[14:35:25.827] [info] [SerializeField] field=reloadCooldown_ has=true
+[14:35:25.828] [info] [SerializeField] attrs=null for field: reloadTimer_
+[14:35:25.828] [info] [SetScriptVars] OK setting fields for: Magazine
+[14:35:25.828] [info] [SerializeField] attrs=null for field: roeManager_
+[14:35:25.828] [info] [SerializeField] field=reloadCooldown_ has=true
+[14:35:25.828] [info] [SerializeField] attrs=null for field: reloadTimer_
+[14:35:25.829] [info] [SetScriptVars] OK setting fields for: PlayerAttackComponent
+[14:35:25.829] [info] [SerializeField] field=damageCurve_ has=true
+[14:35:25.829] [info] [SerializeField] attrs=null for field: atkColl_
+[14:35:25.830] [info] [SerializeField] attrs=null for field: moveComp_
+[14:35:25.830] [info] [SetScriptVars] OK setting fields for: PlayerAttackComponent
+[14:35:25.830] [info] [SerializeField] field=damageCurve_ has=true
+[14:35:25.830] [info] [SerializeField] attrs=null for field: atkColl_
+[14:35:25.830] [info] [SerializeField] attrs=null for field: moveComp_
+[14:35:25.830] [info] [SetScriptVars] OK setting fields for: AttackCollision
+[14:35:25.830] [info] [SerializeField] field=damage_ has=true
+[14:35:25.830] [info] [SerializeField] field=destroyOnHit_ has=true
+[14:35:25.830] [info] [SetScriptVars] OK setting fields for: AttackCollision
+[14:35:25.830] [info] [SerializeField] field=damage_ has=true
+[14:35:25.831] [info] [SerializeField] field=destroyOnHit_ has=true
+[14:35:25.831] [info] [SetScriptVars] OK setting fields for: TrailFollower
+[14:35:25.831] [info] [SerializeField] field=leaderName_ has=true
+[14:35:25.831] [info] [SerializeField] field=chainName_ has=true
+[14:35:25.831] [info] [SerializeField] field=rotateToFace_ has=true
+[14:35:25.831] [info] [SerializeField] field=order_ has=true
+[14:35:25.831] [info] [SerializeField] field=leadMinOffset_ has=true
+[14:35:25.831] [info] [SerializeField] field=leadMaxOffset_ has=true
+[14:35:25.831] [info] [SerializeField] field=unitMinOffset_ has=true
+[14:35:25.832] [info] [SerializeField] field=unitMaxOffset_ has=true
+[14:35:25.832] [info] [SerializeField] field=maxBendRad_ has=true
+[14:35:25.832] [info] [SerializeField] field=smoothTime_ has=true
+[14:35:25.832] [info] [SerializeField] field=maxSmoothSpeed_ has=true
+[14:35:25.832] [info] [SerializeField] attrs=null for field: smoothVel_
+[14:35:25.832] [info] [SerializeField] attrs=null for field: registered_
+[14:35:25.832] [info] [SerializeField] attrs=null for field: kEps
+[14:35:25.832] [info] [SerializeField] attrs=null for field: FaceEpsilonSq
+[14:35:25.832] [info] [SetScriptVars] OK setting fields for: TrailFollower
+[14:35:25.832] [info] [SerializeField] field=leaderName_ has=true
+[14:35:25.832] [info] [SerializeField] field=chainName_ has=true
+[14:35:25.832] [info] [SerializeField] field=rotateToFace_ has=true
+[14:35:25.832] [info] [SerializeField] field=order_ has=true
+[14:35:25.833] [info] [SerializeField] field=leadMinOffset_ has=true
+[14:35:25.833] [info] [SerializeField] field=leadMaxOffset_ has=true
+[14:35:25.833] [info] [SerializeField] field=unitMinOffset_ has=true
+[14:35:25.833] [info] [SerializeField] field=unitMaxOffset_ has=true
+[14:35:25.833] [info] [SerializeField] field=maxBendRad_ has=true
+[14:35:25.833] [info] [SerializeField] field=smoothTime_ has=true
+[14:35:25.833] [info] [SerializeField] field=maxSmoothSpeed_ has=true
+[14:35:25.833] [info] [SerializeField] attrs=null for field: smoothVel_
+[14:35:25.833] [info] [SerializeField] attrs=null for field: registered_
+[14:35:25.833] [info] [SerializeField] attrs=null for field: kEps
+[14:35:25.833] [info] [SerializeField] attrs=null for field: FaceEpsilonSq
+[14:35:25.834] [info] [SetScriptVars] OK setting fields for: DamageRelay
+[14:35:25.834] [info] [SerializeField] field=ownerName_ has=true
+[14:35:25.834] [info] [SerializeField] attrs=null for field: ownerHp_
+[14:35:25.834] [info] [SetScriptVars] OK setting fields for: DamageRelay
+[14:35:25.834] [info] [SerializeField] field=ownerName_ has=true
+[14:35:25.834] [info] [SerializeField] attrs=null for field: ownerHp_
+[14:35:25.834] [info] [SetScriptVars] OK setting fields for: TrailFollower
+[14:35:25.834] [info] [SerializeField] field=leaderName_ has=true
+[14:35:25.834] [info] [SerializeField] field=chainName_ has=true
+[14:35:25.834] [info] [SerializeField] field=rotateToFace_ has=true
+[14:35:25.834] [info] [SerializeField] field=order_ has=true
+[14:35:25.835] [info] [SerializeField] field=leadMinOffset_ has=true
+[14:35:25.835] [info] [SerializeField] field=leadMaxOffset_ has=true
+[14:35:25.835] [info] [SerializeField] field=unitMinOffset_ has=true
+[14:35:25.835] [info] [SerializeField] field=unitMaxOffset_ has=true
+[14:35:25.835] [info] [SerializeField] field=maxBendRad_ has=true
+[14:35:25.835] [info] [SerializeField] field=smoothTime_ has=true
+[14:35:25.835] [info] [SerializeField] field=maxSmoothSpeed_ has=true
+[14:35:25.835] [info] [SerializeField] attrs=null for field: smoothVel_
+[14:35:25.835] [info] [SerializeField] attrs=null for field: registered_
+[14:35:25.835] [info] [SerializeField] attrs=null for field: kEps
+[14:35:25.835] [info] [SerializeField] attrs=null for field: FaceEpsilonSq
+[14:35:25.835] [info] [SetScriptVars] OK setting fields for: TrailFollower
+[14:35:25.836] [info] [SerializeField] field=leaderName_ has=true
+[14:35:25.836] [info] [SerializeField] field=chainName_ has=true
+[14:35:25.836] [info] [SerializeField] field=rotateToFace_ has=true
+[14:35:25.836] [info] [SerializeField] field=order_ has=true
+[14:35:25.836] [info] [SerializeField] field=leadMinOffset_ has=true
+[14:35:25.836] [info] [SerializeField] field=leadMaxOffset_ has=true
+[14:35:25.836] [info] [SerializeField] field=unitMinOffset_ has=true
+[14:35:25.836] [info] [SerializeField] field=unitMaxOffset_ has=true
+[14:35:25.836] [info] [SerializeField] field=maxBendRad_ has=true
+[14:35:25.836] [info] [SerializeField] field=smoothTime_ has=true
+[14:35:25.836] [info] [SerializeField] field=maxSmoothSpeed_ has=true
+[14:35:25.836] [info] [SerializeField] attrs=null for field: smoothVel_
+[14:35:25.836] [info] [SerializeField] attrs=null for field: registered_
+[14:35:25.837] [info] [SerializeField] attrs=null for field: kEps
+[14:35:25.837] [info] [SerializeField] attrs=null for field: FaceEpsilonSq
+[14:35:25.837] [info] [SetScriptVars] OK setting fields for: DamageRelay
+[14:35:25.837] [info] [SerializeField] field=ownerName_ has=true
+[14:35:25.837] [info] [SerializeField] attrs=null for field: ownerHp_
+[14:35:25.837] [info] [SetScriptVars] OK setting fields for: DamageRelay
+[14:35:25.837] [info] [SerializeField] field=ownerName_ has=true
+[14:35:25.837] [info] [SerializeField] attrs=null for field: ownerHp_
+[14:35:25.837] [info] [SetScriptVars] OK setting fields for: PlayerFollowCamera
+[14:35:25.837] [info] [SerializeField] field=targetName_ has=true
+[14:35:25.838] [info] [SerializeField] field=offset_ has=true
+[14:35:25.838] [info] [SerializeField] field=smoothTime_ has=true
+[14:35:25.838] [info] [SerializeField] field=maxSmoothSpeed_ has=true
+[14:35:25.838] [info] [SerializeField] attrs=null for field: target_
+[14:35:25.838] [info] [SerializeField] attrs=null for field: smoothVel_
+[14:35:25.838] [info] [SetScriptVars] OK setting fields for: PlayerFollowCamera
+[14:35:25.838] [info] [SerializeField] field=targetName_ has=true
+[14:35:25.838] [info] [SerializeField] field=offset_ has=true
+[14:35:25.838] [info] [SerializeField] field=smoothTime_ has=true
+[14:35:25.838] [info] [SerializeField] field=maxSmoothSpeed_ has=true
+[14:35:25.838] [info] [SerializeField] attrs=null for field: target_
+[14:35:25.838] [info] [SerializeField] attrs=null for field: smoothVel_
+[14:35:25.840] [info] [SetScriptVars] OK setting fields for: EnemySpawnSystem
+[14:35:25.840] [info] [SerializeField] field=isActive_ has=true
+[14:35:25.840] [info] [SerializeField] field=originName_ has=true
+[14:35:25.840] [info] [SerializeField] field=spawnAreaMin_ has=true
+[14:35:25.840] [info] [SerializeField] field=spawnAreaMax_ has=true
+[14:35:25.840] [info] [SerializeField] field=exclusionAreaMin_ has=true
+[14:35:25.840] [info] [SerializeField] field=exclusionAreaMax_ has=true
+[14:35:25.840] [info] [SerializeField] field=spawnInterval_ has=true
+[14:35:25.840] [info] [SerializeField] attrs=null for field: spawnTimer_
+[14:35:25.841] [info] [SerializeField] field=maxSpawnCount_ has=true
+[14:35:25.841] [info] [SerializeField] field=heatWeightThreshold_ has=true
+[14:35:25.841] [info] [SerializeField] field=convolutionRadius_ has=true
+[14:35:25.841] [info] [SerializeField] field=maxEnemyCount_ has=true
+[14:35:25.841] [info] [SerializeField] field=defaultSpawnTable_ has=true
+[14:35:25.841] [info] [SerializeField] field=biomeNames_ has=true
+[14:35:25.841] [info] [SerializeField] attrs=null for field: biomeAreas_
+[14:35:25.841] [info] [SerializeField] attrs=null for field: spawnCellWeights_
+[14:35:25.841] [info] [SerializeField] attrs=null for field: defaultBiome_
+[14:35:25.842] [info] [SetScriptVars] OK setting fields for: EnemySpawnSystem
+[14:35:25.842] [info] [SerializeField] field=isActive_ has=true
+[14:35:25.842] [info] [SerializeField] field=originName_ has=true
+[14:35:25.842] [info] [SerializeField] field=spawnAreaMin_ has=true
+[14:35:25.842] [info] [SerializeField] field=spawnAreaMax_ has=true
+[14:35:25.842] [info] [SerializeField] field=exclusionAreaMin_ has=true
+[14:35:25.842] [info] [SerializeField] field=exclusionAreaMax_ has=true
+[14:35:25.842] [info] [SerializeField] field=spawnInterval_ has=true
+[14:35:25.842] [info] [SerializeField] attrs=null for field: spawnTimer_
+[14:35:25.842] [info] [SerializeField] field=maxSpawnCount_ has=true
+[14:35:25.842] [info] [SerializeField] field=heatWeightThreshold_ has=true
+[14:35:25.842] [info] [SerializeField] field=convolutionRadius_ has=true
+[14:35:25.842] [info] [SerializeField] field=maxEnemyCount_ has=true
+[14:35:25.843] [info] [SerializeField] field=defaultSpawnTable_ has=true
+[14:35:25.843] [info] [SerializeField] field=biomeNames_ has=true
+[14:35:25.843] [info] [SerializeField] attrs=null for field: biomeAreas_
+[14:35:25.843] [info] [SerializeField] attrs=null for field: spawnCellWeights_
+[14:35:25.843] [info] [SerializeField] attrs=null for field: defaultBiome_
+[14:35:25.843] [info] [SetScriptVars] OK setting fields for: EnemyHeatMap
+[14:35:25.843] [info] [SerializeField] field=cellSize_ has=true
+[14:35:25.843] [info] [SerializeField] attrs=null for field: heatMap_
+[14:35:25.843] [info] [SerializeField] attrs=null for field: enemyCount_
+[14:35:25.844] [info] [SetScriptVars] OK setting fields for: EnemyHeatMap
+[14:35:25.844] [info] [SerializeField] field=cellSize_ has=true
+[14:35:25.844] [info] [SerializeField] attrs=null for field: heatMap_
+[14:35:25.844] [info] [SerializeField] attrs=null for field: enemyCount_
+[14:35:25.844] [info] [SetScriptVars] OK setting fields for: BiomeArea
+[14:35:25.844] [info] [SerializeField] field=spawnTable_ has=true
+[14:35:25.844] [info] [SerializeField] field=halfExtents_ has=true
+[14:35:25.844] [info] [SerializeField] attrs=null for field: biome_
+[14:35:25.844] [info] [SetScriptVars] OK setting fields for: BiomeArea
+[14:35:25.845] [info] [SerializeField] field=spawnTable_ has=true
+[14:35:25.845] [info] [SerializeField] field=halfExtents_ has=true
+[14:35:25.845] [info] [SerializeField] attrs=null for field: biome_
+[14:35:25.845] [info] [SetScriptVars] OK setting fields for: CloudManager
+[14:35:25.845] [info] [SerializeField] attrs=null for field: spawnCT
+[14:35:25.845] [info] [SerializeField] field=spawnTime has=true
+[14:35:25.845] [info] [SetScriptVars] OK setting fields for: CloudManager
+[14:35:25.845] [info] [SerializeField] attrs=null for field: spawnCT
+[14:35:25.845] [info] [SerializeField] field=spawnTime has=true
+[14:35:25.846] [info] [SetScriptVars] OK setting fields for: Attractor
+[14:35:25.846] [info] [SerializeField] field=pullSpeed_ has=true
+[14:35:25.846] [info] [SerializeField] field=stopDistance_ has=true
+[14:35:25.846] [info] [SerializeField] attrs=null for field: targetIds_
+[14:35:25.846] [info] [SetScriptVars] OK setting fields for: Attractor
+[14:35:25.846] [info] [SerializeField] field=pullSpeed_ has=true
+[14:35:25.846] [info] [SerializeField] field=stopDistance_ has=true
+[14:35:25.846] [info] [SerializeField] attrs=null for field: targetIds_
+[14:35:25.846] [info] [SetScriptVars] OK setting fields for: BiomeArea
+[14:35:25.846] [info] [SerializeField] field=spawnTable_ has=true
+[14:35:25.847] [info] [SerializeField] field=halfExtents_ has=true
+[14:35:25.847] [info] [SerializeField] attrs=null for field: biome_
+[14:35:25.847] [info] [SetScriptVars] OK setting fields for: BiomeArea
+[14:35:25.847] [info] [SerializeField] field=spawnTable_ has=true
+[14:35:25.847] [info] [SerializeField] field=halfExtents_ has=true
+[14:35:25.847] [info] [SerializeField] attrs=null for field: biome_
+[14:35:25.847] [info] [SetScriptVars] OK setting fields for: BiomeArea
+[14:35:25.847] [info] [SerializeField] field=spawnTable_ has=true
+[14:35:25.847] [info] [SerializeField] field=halfExtents_ has=true
+[14:35:25.847] [info] [SerializeField] attrs=null for field: biome_
+[14:35:25.847] [info] [SetScriptVars] OK setting fields for: BiomeArea
+[14:35:25.848] [info] [SerializeField] field=spawnTable_ has=true
+[14:35:25.848] [info] [SerializeField] field=halfExtents_ has=true
+[14:35:25.848] [info] [SerializeField] attrs=null for field: biome_
+[14:35:25.848] [info] [SetScriptVars] OK setting fields for: TrailFollower
+[14:35:25.848] [info] [SerializeField] field=leaderName_ has=true
+[14:35:25.848] [info] [SerializeField] field=chainName_ has=true
+[14:35:25.848] [info] [SerializeField] field=rotateToFace_ has=true
+[14:35:25.848] [info] [SerializeField] field=order_ has=true
+[14:35:25.848] [info] [SerializeField] field=leadMinOffset_ has=true
+[14:35:25.848] [info] [SerializeField] field=leadMaxOffset_ has=true
+[14:35:25.848] [info] [SerializeField] field=unitMinOffset_ has=true
+[14:35:25.849] [info] [SerializeField] field=unitMaxOffset_ has=true
+[14:35:25.849] [info] [SerializeField] field=maxBendRad_ has=true
+[14:35:25.849] [info] [SerializeField] field=smoothTime_ has=true
+[14:35:25.849] [info] [SerializeField] field=maxSmoothSpeed_ has=true
+[14:35:25.849] [info] [SerializeField] attrs=null for field: smoothVel_
+[14:35:25.849] [info] [SerializeField] attrs=null for field: registered_
+[14:35:25.849] [info] [SerializeField] attrs=null for field: kEps
+[14:35:25.849] [info] [SerializeField] attrs=null for field: FaceEpsilonSq
+[14:35:25.849] [info] [SetScriptVars] OK setting fields for: TrailFollower
+[14:35:25.849] [info] [SerializeField] field=leaderName_ has=true
+[14:35:25.849] [info] [SerializeField] field=chainName_ has=true
+[14:35:25.849] [info] [SerializeField] field=rotateToFace_ has=true
+[14:35:25.850] [info] [SerializeField] field=order_ has=true
+[14:35:25.850] [info] [SerializeField] field=leadMinOffset_ has=true
+[14:35:25.850] [info] [SerializeField] field=leadMaxOffset_ has=true
+[14:35:25.850] [info] [SerializeField] field=unitMinOffset_ has=true
+[14:35:25.850] [info] [SerializeField] field=unitMaxOffset_ has=true
+[14:35:25.850] [info] [SerializeField] field=maxBendRad_ has=true
+[14:35:25.850] [info] [SerializeField] field=smoothTime_ has=true
+[14:35:25.850] [info] [SerializeField] field=maxSmoothSpeed_ has=true
+[14:35:25.850] [info] [SerializeField] attrs=null for field: smoothVel_
+[14:35:25.850] [info] [SerializeField] attrs=null for field: registered_
+[14:35:25.850] [info] [SerializeField] attrs=null for field: kEps
+[14:35:25.850] [info] [SerializeField] attrs=null for field: FaceEpsilonSq
+[14:35:25.850] [info] [SetScriptVars] OK setting fields for: LevelingComponent
+[14:35:25.850] [info] [SerializeField] field=maxLevel_ has=true
+[14:35:25.851] [info] [SerializeField] field=baseRequiredExp_ has=true
+[14:35:25.851] [info] [SerializeField] field=currentLevel_ has=true
+[14:35:25.851] [info] [SerializeField] field=currentExp_ has=true
+[14:35:25.851] [info] [SerializeField] attrs=null for field: addedExp_
+[14:35:25.851] [info] [SerializeField] attrs=null for field: totalGainedExp_
+[14:35:25.851] [info] [SerializeField] attrs=null for field: requiredExp_
+[14:35:25.851] [info] [SerializeField] attrs=null for field: isLevelUp_
+[14:35:25.851] [info] [SerializeField] attrs=null for field: pendingDestroyIds_
+[14:35:25.851] [info] [SetScriptVars] OK setting fields for: LevelingComponent
+[14:35:25.851] [info] [SerializeField] field=maxLevel_ has=true
+[14:35:25.851] [info] [SerializeField] field=baseRequiredExp_ has=true
+[14:35:25.851] [info] [SerializeField] field=currentLevel_ has=true
+[14:35:25.851] [info] [SerializeField] field=currentExp_ has=true
+[14:35:25.852] [info] [SerializeField] attrs=null for field: addedExp_
+[14:35:25.852] [info] [SerializeField] attrs=null for field: totalGainedExp_
+[14:35:25.852] [info] [SerializeField] attrs=null for field: requiredExp_
+[14:35:25.852] [info] [SerializeField] attrs=null for field: isLevelUp_
+[14:35:25.852] [info] [SerializeField] attrs=null for field: pendingDestroyIds_
+[14:35:25.852] [info] [SetScriptVars] OK setting fields for: RoeStateComponent
+[14:35:25.852] [info] [SerializeField] field=minScale_ has=true
+[14:35:25.852] [info] [SerializeField] field=maxScale_ has=true
+[14:35:25.852] [info] [SerializeField] attrs=null for field: currentState_
+[14:35:25.852] [info] [SetScriptVars] OK setting fields for: RoeStateComponent
+[14:35:25.852] [info] [SerializeField] field=minScale_ has=true
+[14:35:25.853] [info] [SerializeField] field=maxScale_ has=true
+[14:35:25.853] [info] [SerializeField] attrs=null for field: currentState_
+[14:35:25.853] [info] [SetScriptVars] OK setting fields for: SpriteAnimation
+[14:35:25.853] [info] [SerializeField] attrs=null for field: spriteRenderer
+[14:35:25.853] [info] [SerializeField] attrs=null for field: timer
+[14:35:25.853] [info] [SerializeField] attrs=null for field: currentFrame
+[14:35:25.853] [info] [SerializeField] attrs=null for field: isFinished
+[14:35:25.853] [info] [SerializeField] field=OnAnimationFinished has=false
+[14:35:25.853] [info] [SerializeField] field=OnFrameChanged has=false
+[14:35:25.854] [info] [SetScriptVars] OK setting fields for: SpriteAnimation
+[14:35:25.854] [info] [SerializeField] attrs=null for field: spriteRenderer
+[14:35:25.854] [info] [SerializeField] attrs=null for field: timer
+[14:35:25.854] [info] [SerializeField] attrs=null for field: currentFrame
+[14:35:25.854] [info] [SerializeField] attrs=null for field: isFinished
+[14:35:25.854] [info] [SerializeField] field=OnAnimationFinished has=false
+[14:35:25.854] [info] [SerializeField] field=OnFrameChanged has=false
+[14:35:25.890] [info] dx depth stencil create success!!
+[14:35:25.898] [info] [RenderingFramework] Drawing group: GameScene | Index: 0 | groupRenderTex: 1603034365120 | colorResource: 1601788093504 | ClearColor: (0.100000, 0.250000, 0.500000, 1.000000)
+[14:35:25.898] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:25.899] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:25.900] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:25.900] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.900] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.900] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.901] [error] PostProcessFog::Execute: main camera is null
+[14:35:25.901] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:25.901] [info] [WaterCaustics] Execution started successfully. Group=GameScene, TextureName=./Assets/Scene/RenderTexture/GameScene
+[14:35:25.901] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.901] [info] [WaterDepthFog] Execution started successfully. Group=GameScene, TextureName=./Assets/Scene/RenderTexture/GameScene
+[14:35:25.901] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.901] [info] [WaterColorGrading] Execution started successfully. Group=GameScene, TextureName=./Assets/Scene/RenderTexture/GameScene
+[14:35:25.901] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.901] [info] [WaterDistortion] Execution started successfully. Group=GameScene, TextureName=./Assets/Scene/RenderTexture/GameScene
+[14:35:25.901] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.901] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.902] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.960] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:25.960] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:25.960] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:25.960] [info] [Engine] CopyResource: Copying to resource at 1601788093504
+[14:35:25.960] [error] PostProcessFog::Execute: main camera is null
+[14:35:25.960] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:25.989] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:25.989] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:25.989] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:25.989] [error] PostProcessFog::Execute: main camera is null
+[14:35:25.989] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.008] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:26.008] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:26.008] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.008] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.008] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.026] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:26.026] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:26.026] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.026] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.026] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.045] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:26.046] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:26.046] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.046] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.046] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.063] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:26.063] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:26.063] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.063] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.064] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.081] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:26.081] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:26.081] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.081] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.082] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.099] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:26.099] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:26.099] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.099] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.099] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.116] [info] [RenderingCollection] DrawEntities2D executing. Group: GameScene Camera: 1603027337376
+[14:35:26.116] [info] [SpritePipeline] Drawing 9 sorted sprites.
+[14:35:26.117] [info] [RenderingCollection] ExecutePostProcess3D for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.117] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.117] [info] [RenderingCollection] ExecutePostProcessScreen for scene: ./Assets/Scene/RenderTexture/GameScene
+[14:35:26.134] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.151] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.169] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.186] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.204] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.221] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.229] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.233] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.239] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.265] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.282] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.300] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.315] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.332] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.349] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.365] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.382] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.399] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.415] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.432] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.449] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.466] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.482] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.499] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.516] [info] [SOURCE_DETECTOR] C# requested CreateEntity: Prefab = Cloud
+[14:35:26.516] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:26.517] [info] [Mono][info] DllImport attempting to load: 'BCrypt.dll'.
+[14:35:26.518] [info] [Mono][info] DllImport error loading library 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\BCrypt.dll': '指定されたファイルが見つかりません。
+'.
+[14:35:26.518] [info] [Mono][info] DllImport error loading library 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\BCrypt.dll': '指定されたファイルが見つかりません。
+'.
+[14:35:26.518] [info] [Mono][info] DllImport error loading library 'C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Packages\mono\lib\4.5\BCrypt.dll': '指定されたファイルが見つかりません。
+'.
+[14:35:26.518] [info] [Mono][info] DllImport loaded library 'BCrypt.dll'.
+[14:35:26.518] [info] [Mono][info] DllImport searching in: 'BCrypt.dll' ('BCrypt.dll').
+[14:35:26.519] [info] [Mono][info] Searching for 'BCryptGenRandom'.
+[14:35:26.519] [info] [Mono][info] Probing 'BCryptGenRandomW'.
+[14:35:26.519] [info] [Mono][info] Could not find 'BCryptGenRandomW' due to '指定されたプロシージャが見つかりません。
+'.
+[14:35:26.519] [info] [Mono][info] Probing 'BCryptGenRandom'.
+[14:35:26.519] [info] [Mono][info] Found as 'BCryptGenRandom'.
+[14:35:26.521] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.532] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.549] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.565] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.583] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.599] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.616] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.633] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.649] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.666] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.682] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.699] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.715] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.732] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.749] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.766] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.782] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.799] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.815] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.832] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.849] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.865] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.882] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.899] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.915] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.932] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.949] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.966] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.982] [error] PostProcessFog::Execute: main camera is null
+[14:35:26.999] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.016] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.032] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.049] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.065] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.082] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.099] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.115] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.132] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.149] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.165] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.182] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.199] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.215] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.232] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.249] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.265] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.282] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.299] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.315] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.332] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.349] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.365] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.382] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.398] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.415] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.432] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.449] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.465] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.482] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.498] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.515] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.532] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.548] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.565] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.582] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.598] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.615] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.632] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.649] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.666] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.683] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.699] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.716] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.732] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.749] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.765] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.782] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.799] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.816] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.832] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.849] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.865] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.882] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.899] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.915] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.932] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.949] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.965] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.982] [error] PostProcessFog::Execute: main camera is null
+[14:35:27.999] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.016] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.033] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.050] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.066] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.083] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.100] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.116] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.133] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.150] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.167] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.183] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.200] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.216] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.233] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.250] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.266] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.283] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.299] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.316] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.333] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.350] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.367] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.383] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.400] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.416] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.433] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.450] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.466] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.483] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.500] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.516] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.533] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.550] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.567] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.583] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.600] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.616] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.633] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.650] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.667] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.683] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.700] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.717] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.734] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.750] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.766] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.783] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.801] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.817] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.833] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.850] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.867] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.883] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.900] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.916] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.933] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.949] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.966] [error] PostProcessFog::Execute: main camera is null
+[14:35:28.983] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.000] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.017] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.033] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.049] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.066] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.083] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.100] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.116] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.133] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.150] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.166] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.183] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.200] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.217] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.233] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.250] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.266] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.284] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.301] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.317] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.334] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.350] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.367] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.384] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.401] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.417] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.433] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.451] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.467] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.484] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.500] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.517] [info] [SOURCE_DETECTOR] C# requested CreateEntity: Prefab = Cloud
+[14:35:29.517] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:29.518] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.534] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.551] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.567] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.586] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.600] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.616] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.633] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.650] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.666] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.683] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.699] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.716] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.732] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.749] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.765] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.782] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.798] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.815] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.832] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.849] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.866] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.883] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.900] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.916] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.932] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.948] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.966] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.982] [error] PostProcessFog::Execute: main camera is null
+[14:35:29.999] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.016] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.032] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.049] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.066] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.082] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.100] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.116] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.133] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.149] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.166] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.182] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.199] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.216] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.232] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.249] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.265] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.282] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.299] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.316] [info] [Mono][info] GC_MINOR: (Nursery full) time 0.56ms, stw 0.57ms promoted 39K major size: 720K in use: 63K los size: 0K in use: 0K
+[14:35:30.317] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.333] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.349] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.366] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.383] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.399] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.415] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.432] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.448] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.465] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.482] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.499] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.516] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.532] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.549] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.566] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.582] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.599] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.615] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.632] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.649] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.665] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.683] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.699] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.716] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.732] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.749] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.765] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.783] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.799] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.815] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.832] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.849] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.866] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.882] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.898] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.916] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.932] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.948] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.965] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.982] [error] PostProcessFog::Execute: main camera is null
+[14:35:30.998] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.016] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.032] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.050] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.066] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.082] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.099] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.115] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.132] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.149] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.165] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.182] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.198] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.215] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.232] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.249] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.266] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.282] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.298] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.315] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.332] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.349] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.365] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.382] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.399] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.415] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.432] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.448] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.465] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.482] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.498] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.515] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.532] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.549] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.565] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.584] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.599] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.616] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.632] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.649] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.665] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.682] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.700] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.717] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.733] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.749] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.766] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.783] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.800] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.816] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.833] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.850] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.866] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.883] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.900] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.916] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.933] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.949] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.966] [error] PostProcessFog::Execute: main camera is null
+[14:35:31.983] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.000] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.017] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.034] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.050] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.066] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.083] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.100] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.117] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.133] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.150] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.167] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.184] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.200] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.217] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.233] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.250] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.267] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.283] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.301] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.316] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.334] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.351] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.367] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.383] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.400] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.416] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.433] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.450] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.466] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.483] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.500] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.516] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.533] [info] [SOURCE_DETECTOR] C# requested CreateEntity: Prefab = Cloud
+[14:35:32.533] [info] [SOURCE_DETECTOR] Engine creating Entity (Internal)
+[14:35:32.534] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.550] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.566] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.583] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.600] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.617] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.633] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.650] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.667] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.683] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.700] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.717] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.733] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.750] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.766] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.783] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.800] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.816] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.833] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.850] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.866] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.883] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.900] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.917] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.933] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.950] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.966] [error] PostProcessFog::Execute: main camera is null
+[14:35:32.983] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.000] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.016] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.034] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.050] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.066] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.083] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.100] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.117] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.134] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.150] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.167] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.183] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.200] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.216] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.233] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.250] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.267] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.284] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.301] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.317] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.334] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.350] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.366] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.383] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.400] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.416] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.433] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.451] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.467] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.484] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.500] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.517] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.533] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.550] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.567] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.583] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.600] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.616] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.633] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.650] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.667] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.683] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.699] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.717] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.734] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.750] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.767] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.783] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.800] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.817] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.833] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.850] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.867] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.884] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.900] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.916] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.933] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.951] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.967] [error] PostProcessFog::Execute: main camera is null
+[14:35:33.983] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.000] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.017] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.035] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.050] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.067] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.084] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.100] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.117] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.134] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.150] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.167] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.183] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.200] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.217] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.233] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.250] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.267] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.283] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.300] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.316] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.333] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.350] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.366] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.384] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.400] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.417] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.433] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.450] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.467] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.483] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.500] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.517] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.534] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.550] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.567] [info] [Mono][info] GC_MINOR: (Nursery full) time 0.21ms, stw 0.21ms promoted 1K major size: 720K in use: 64K los size: 0K in use: 0K
+[14:35:34.567] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.584] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.601] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.616] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.633] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.650] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.667] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.684] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.699] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.716] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.733] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.750] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.767] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.784] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.800] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.816] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.833] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.850] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.866] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.883] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.900] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.916] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.933] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.950] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.966] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.982] [error] PostProcessFog::Execute: main camera is null
+[14:35:34.999] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.016] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.034] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.050] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.067] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.083] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.100] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.116] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.133] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.150] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.166] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.183] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.200] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.216] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.233] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.250] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.267] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.283] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.301] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.317] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.335] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.350] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.368] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.383] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.400] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.417] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.434] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.451] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.466] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.483] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.500] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.517] [error] PostProcessFog::Execute: main camera is null
+[14:35:35.534] [in

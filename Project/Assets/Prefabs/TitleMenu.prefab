@@ -57,6 +57,7 @@
                                     }
                                 }
                             },
+                            "isPixelPerfect": true,
                             "type": "SpriteRenderer"
                         },
                         {
@@ -146,6 +147,7 @@
                                     }
                                 }
                             },
+                            "isPixelPerfect": true,
                             "type": "SpriteRenderer"
                         },
                         {
@@ -237,6 +239,7 @@
                                     }
                                 }
                             },
+                            "isPixelPerfect": true,
                             "type": "SpriteRenderer"
                         },
                         {

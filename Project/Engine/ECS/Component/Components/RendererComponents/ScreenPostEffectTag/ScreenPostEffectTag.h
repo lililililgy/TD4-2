@@ -17,6 +17,7 @@ enum PostEffectType {
 	PostEffectType_WaterDepthFogVignette,///< 深度フォグ & ビネット
 	PostEffectType_WaterColorGrading,   ///< カラーグレーディング & 吸収
 	PostEffectType_WaterCausticsLightShafts, ///< コースティクス & ライトシャフト
+	PostEffectType_Pixelate,   ///< ピクセレート (解像度落とし)
 	PostEffectType_Count	   ///< 要素数
 };
 
@@ -95,6 +96,12 @@ public:
 	float GetWaterLightShaftsIntensity() const;
 	void SetWaterLightDirection(const Vector3& dir);
 	Vector3 GetWaterLightDirection() const;
+
+	/// Pixelate
+	void SetPixelSizeX(float size);
+	float GetPixelSizeX() const;
+	void SetPixelSizeY(float size);
+	float GetPixelSizeY() const;
 
 private:
 	/// ===================================================
