@@ -23,13 +23,14 @@ internal sealed class KingJellyfishIdleState : IKingJellyfishState
     public void Enter(KingJellyfish owner)
     {
         elapsed = 0.0f;
+        owner.ResetActionLoop();
     }
     public void Update(KingJellyfish owner)
     {
         elapsed += Time.deltaTime;
         if (owner.ConsumeAttackRequest() || elapsed >= owner.IdleDuration)
         {
-            owner.ChangeState(new KingJellyfishAttackState());
+            owner.ChangeState(new KingJellyfishMoveState());
         }
     }
     public void Exit(KingJellyfish owner)
@@ -45,12 +46,18 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
     private float elapsed;
     private KingJellyfishAttackTypeEnum attackType;
     private bool chargeStarted;
+    private bool chargeRecovered;
+    private float recoveryElapsed;
+    private bool laserFired;
 
     public void Enter(KingJellyfish owner)
     {
         elapsed = 0.0f;
         attackType = owner.SelectAttackType();
         chargeStarted = false;
+        chargeRecovered = false;
+        recoveryElapsed = 0.0f;
+        laserFired = false;
 
         if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack)
         {
@@ -60,7 +67,7 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         else
         {
             // 全方位ビーム攻撃の準備
-            owner.ChangeState(new KingJellyfishIdleState());
+            owner.UpdateLaserTell();
         }
     }
 
@@ -70,6 +77,12 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack)
         {
             UpdateChargeAttack(owner);
+            return;
+        }
+
+        if (attackType == KingJellyfishAttackTypeEnum.Omnidirectional_Beam)
+        {
+            UpdateOmnidirectionalLaser(owner);
         }
     }
 
@@ -82,7 +95,6 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
     {
         float tellEndTime = owner.ChargeTellDuration;
         float moveEndTime = tellEndTime + owner.ChargeMoveDuration;
-        float recoveryEndTime = moveEndTime + owner.ChargeRecoveryDuration;
 
         if (elapsed < tellEndTime)
         {
@@ -90,7 +102,7 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
             return;
         }
 
-        if (elapsed < moveEndTime)
+        if (!chargeRecovered && elapsed < moveEndTime)
         {
             if (!chargeStarted)
             {
@@ -102,13 +114,59 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
                 }
             }
 
-            owner.UpdateChargeAttack(elapsed - tellEndTime);
+            chargeRecovered = owner.UpdateChargeAttack();
             return;
+        }
+
+        chargeRecovered = true;
+        recoveryElapsed += Time.deltaTime;
+        if (recoveryElapsed < owner.ChargeRecoveryDuration)
+        {
+            owner.UpdateChargeRecovery(recoveryElapsed);
+            return;
+        }
+
+        if (owner.ConsumeActionLoop())
+        {
+            owner.ChangeState(new KingJellyfishMoveState());
+            return;
+        }
+
+        owner.ChangeState(new KingJellyfishIdleState());
+    }
+
+    //==========================================
+    // キングクラゲの全方位ビーム攻撃状態の更新処理
+    //==========================================
+    private void UpdateOmnidirectionalLaser(KingJellyfish owner)
+    {
+        float tellEndTime = owner.LaserTellDuration;
+        float fireEndTime = tellEndTime + owner.LaserFireDuration;
+        float recoveryEndTime = fireEndTime + owner.LaserRecoveryDuration;
+
+        // ビーム攻撃の準備中
+        if (elapsed < tellEndTime)
+        {
+            owner.UpdateLaserTell();
+            return;
+        }
+
+        // ビーム攻撃の発射中
+        if (!laserFired)
+        {
+            owner.FireOmnidirectionalLaser();
+            laserFired = true;
         }
 
         if (elapsed < recoveryEndTime)
         {
-            owner.UpdateChargeRecovery();
+            owner.UpdateLaserRecovery();
+            return;
+        }
+
+        if (owner.ConsumeActionLoop())
+        {
+            owner.ChangeState(new KingJellyfishMoveState());
             return;
         }
 
@@ -122,14 +180,37 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
 //==========================================
 internal sealed class KingJellyfishMoveState : IKingJellyfishState
 {
+    private float elapsed;
+    private bool moveFinished;
+    private float inertiaElapsed;
+
     public void Enter(KingJellyfish owner)
     {
-        // 移動時の処理
+        elapsed = 0.0f;
+        moveFinished = false;
+        inertiaElapsed = 0.0f;
+        owner.BeginArcMove();
     }
+
     public void Update(KingJellyfish owner)
     {
+        if (!moveFinished)
+        {
+            elapsed += Time.deltaTime;
+            moveFinished = owner.UpdateArcMove(elapsed);
+            return;
+        }
 
+        inertiaElapsed += Time.deltaTime;
+        if (inertiaElapsed < owner.MoveInertiaDuration)
+        {
+            owner.UpdateArcMoveInertia(inertiaElapsed);
+            return;
+        }
+
+        owner.ChangeState(new KingJellyfishAttackState());
     }
+
     public void Exit(KingJellyfish owner)
     {
 

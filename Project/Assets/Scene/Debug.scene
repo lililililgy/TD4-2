@@ -3,7 +3,7 @@
         {
             "guid": "34553175e0a4c30f36960fb684247eed",
             "parentGuid": null,
-            "path": "./Debug/c637a1f9ab906c96d025f8f91578b0d1.entity"
+            "path": "./Debug/34553175e0a4c30f36960fb684247eed.entity"
         },
         {
             "guid": "619b46bd9b63819f892a38013d5d5740",
@@ -19,6 +19,16 @@
             "guid": "d22390f74a81c5e05310ad072ffabbca",
             "parentGuid": "619b46bd9b63819f892a38013d5d5740",
             "path": "./Debug/d22390f74a81c5e05310ad072ffabbca.entity"
+        },
+        {
+            "guid": "05f53afeba2dd6b4d672992c30bbb70c",
+            "parentGuid": null,
+            "path": "./Debug/05f53afeba2dd6b4d672992c30bbb70c.entity"
+        },
+        {
+            "guid": "00ab0df5d2f286525bc26028f130f2f1",
+            "parentGuid": null,
+            "path": "./Debug/00ab0df5d2f286525bc26028f130f2f1.entity"
         }
     ]
 }

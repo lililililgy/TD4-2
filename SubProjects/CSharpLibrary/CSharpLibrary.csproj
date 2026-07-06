@@ -146,6 +146,7 @@
     <Compile Include="Scripts\Game\Background\CloudManager.cs" />
     <Compile Include="Scripts\Game\Boss\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\GesoWeakPoint.cs" />
+    <Compile Include="Scripts\Game\Boss\JellyfishLaser.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso.cs" />
     <Compile Include="Scripts\Game\Boss\KingGesoState.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish.cs" />

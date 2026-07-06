@@ -1,0 +1,99 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 100.0,
+                "y": 3600.0,
+                "z": 0.0
+            },
+            "type": "Transform"
+        },
+        {
+            "AttackCollision": {
+                "damage_": 15.0,
+                "destroyOnHit_": false
+            },
+            "JellyfishLaser": {
+                "damage": 1.0,
+                "duration": 3.0,
+                "length": 12000.0,
+                "width": 100.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "JellyfishLaser"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 0.75,
+                    "x": 0.20000000298023224,
+                    "y": 0.800000011920929,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "2b1b8b572356f6c42b296f1a5cd80124",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 4294967042,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "00ab0df5d2f286525bc26028f130f2f1",
+    "name": "JellyfishLaser",
+    "parentGuid": null,
+    "prefabName": "JellyfishLaser"
+}

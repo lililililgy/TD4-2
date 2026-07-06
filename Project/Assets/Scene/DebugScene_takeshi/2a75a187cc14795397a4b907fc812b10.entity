@@ -5,20 +5,20 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -676.1506958007813,
-                "y": -144.66058349609375,
+                "x": 512.7865600585938,
+                "y": -151.79234313964844,
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.5393092632293701,
+                "w": 0.09438684582710266,
                 "x": -0.0,
                 "y": -0.0,
-                "z": 0.8421077728271484
+                "z": 0.9955356121063232
             },
             "scale": {
-                "x": 149.09999084472656,
-                "y": 149.0999755859375,
-                "z": 149.0999755859375
+                "x": 783.4000244140625,
+                "y": 783.4003295898438,
+                "z": 783.4003295898438
             },
             "type": "Transform"
         },
@@ -31,16 +31,37 @@
                 "maxHp_": 10.0
             },
             "KingJellyfish": {
+                "actionLoopCount": 3,
                 "attackDuration": 1.0,
                 "cameraEntityName": "Camera",
+                "chargeAttackWeight": 1.0,
                 "chargeDamage": 20.0,
-                "chargeMoveDuration": 0.6000000238418579,
+                "chargeInertiaRate": 0.9990000128746033,
+                "chargeMoveDuration": 2.5999999046325684,
                 "chargePassThroughDistance": 300.0,
                 "chargeRecoveryDuration": 0.800000011920929,
+                "chargeSpeed": 3000.0,
                 "chargeTellDuration": 0.800000011920929,
                 "fixedAttackType": 0,
                 "idleDuration": 2.0,
+                "laserCount": 8,
+                "laserDamage": 15.0,
+                "laserFireDuration": 0.4000000059604645,
+                "laserLength": 3600.0,
+                "laserPrefabName": "JellyfishLaser",
+                "laserRecoveryDuration": 0.6000000238418579,
+                "laserTellDuration": 0.800000011920929,
+                "laserWidth": 160.0,
                 "maxHp": 10,
+                "moveArcHeight": 120.0,
+                "moveDistance": 300.0,
+                "moveDuration": 1.2000000476837158,
+                "moveInertiaDuration": 0.5,
+                "moveInertiaRate": 0.3499999940395355,
+                "moveSpeed": 250.0,
+                "moveTowardTarget": true,
+                "omnidirectionalBeamWeight": 1.0,
+                "randomizeAttackType": true,
                 "targetEntityName": "Player"
             },
             "type": "Variables"
@@ -64,9 +85,9 @@
             "material": {
                 "baseColor": {
                     "w": 1.0,
-                    "x": 1.0,
+                    "x": 0.0,
                     "y": 1.0,
-                    "z": 1.0
+                    "z": 0.0
                 },
                 "baseTextureGuid": "b097081ca8fb83a55b05f8dbaf4e6930",
                 "guid": "00000000000000000000000000000000",
