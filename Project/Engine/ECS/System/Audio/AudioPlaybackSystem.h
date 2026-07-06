@@ -43,6 +43,11 @@ public:
 	/// すべての音を停止・破棄する（シーン遷移時など）
 	void StopAllAudio();
 
+	/// すべての音を一時停止する
+	void PauseAllAudio();
+	/// 一時停止したすべての音を再開する
+	void ResumeAllAudio();
+
 private:
 	/// ==================================================
 	/// private : methods

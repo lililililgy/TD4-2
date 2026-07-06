@@ -1,4 +1,5 @@
-﻿#include "Time.h"
+#include "Time.h"
+#include "Engine/Core/Config/EngineConfig.h"
 
 using namespace ONEngine;
 
@@ -57,9 +58,13 @@ namespace {
 		time_ = std::chrono::high_resolution_clock::now();
 
 		unscaledDeltaTime_ = duration.count() / 1000.0f;  ///< 秒に変換
-		deltaTime_ = unscaledDeltaTime_ * timeScale_;  ///< 時間のスケールを適用
-
-		gameTime_ += deltaTime_;
+		
+		if (DebugConfig::isDebugging && DebugConfig::isPause) {
+			deltaTime_ = 0.0f;
+		} else {
+			deltaTime_ = unscaledDeltaTime_ * timeScale_;  ///< 時間のスケールを適用
+			gameTime_ += deltaTime_;
+		}
 	}
 
 

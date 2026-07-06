@@ -413,50 +413,47 @@ void DebugSceneView::HandleCameraFocus() {
 /// ツールバーの表示(再生ボタン、設定チェックボックスなど)
 ///
 void DebugSceneView::DrawToolbar() {
-	std::array<const ONEngine::Asset::Texture*, 2> buttons = {
-		pAssetCollection_->GetTexture("./Packages/Textures/ImGui/play.png"),
-		pAssetCollection_->GetTexture("./Packages/Textures/ImGui/pause.png")
-	};
-
-	// dds用フォールバック
-	std::array<std::string, 2> paths = {
-		"./Packages/Textures/ImGui/play.dds",
-		"./Packages/Textures/ImGui/pause.dds"
-	};
-	for(uint8_t i = 0; i < 2; ++i) {
-		if(!buttons[i]) {
-			buttons[i] = pAssetCollection_->GetTexture(paths[i]);
-		}
-	}
-
-	ImVec2 buttonSize = ImVec2(12.0f, 12.0f);
 	bool isGameDebug = ONEngine::DebugConfig::isDebugging;
+	bool isPause = ONEngine::DebugConfig::isPause;
 
-	if(isGameDebug) {
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.125f, 0.263f, 0.388f, 1.0f));
+	// 再生・停止ボタン
+	if (isGameDebug) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.7f, 0.15f, 0.15f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.5f, 0.08f, 0.08f, 1.0f));
+		if (ImGui::Button("Stop")) {
+			SetGamePlay(false);
+		}
+		ImGui::PopStyleColor(3);
+	} else {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.6f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.15f, 0.7f, 0.15f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.08f, 0.5f, 0.08f, 1.0f));
+		if (ImGui::Button("Start")) {
+			SetGamePlay(true);
+		}
+		ImGui::PopStyleColor(3);
 	}
 
-	if(ImGui::ImageButton("##play", ImTextureID(buttons[0]->GetSRVGPUHandle().ptr), buttonSize)) {
-		SetGamePlay(!isGameDebug);
-	}
 	ImGui::SameLine();
 
-	if(isGameDebug) {
-		ImGui::PopStyleColor(1);
-	}
-
-	// 一時停止ボタン
-	bool isPause = ONEngine::DebugConfig::isPause;
-	if(isPause) {
+	// 一時停止・再開ボタン
+	if (isPause) {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.125f, 0.263f, 0.388f, 1.0f));
-	}
-	if(ImGui::ImageButton("##pause", ImTextureID(buttons[1]->GetSRVGPUHandle().ptr), buttonSize)) {
-		if(isGameDebug) {
-			ONEngine::DebugConfig::isPause = !isPause;
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.18f, 0.35f, 0.5f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.2f, 0.3f, 1.0f));
+		if (ImGui::Button("Resume (Unpause)")) {
+			if (isGameDebug) {
+				ONEngine::DebugConfig::isPause = false;
+			}
 		}
-	}
-	if(isPause) {
-		ImGui::PopStyleColor(1);
+		ImGui::PopStyleColor(3);
+	} else {
+		if (ImGui::Button("Pause")) {
+			if (isGameDebug) {
+				ONEngine::DebugConfig::isPause = true;
+			}
+		}
 	}
 
 	ImGui::SameLine();
