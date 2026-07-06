@@ -95,6 +95,11 @@ void SceneManager::SaveScene(const std::string& name, ECSGroup* ecsGroup) {
 }
 
 void SceneManager::SaveCurrentScene() {
+	if (DebugConfig::isDebugging) {
+		Console::LogWarning("Cannot save scene while the game is playing.");
+		return;
+	}
+
 	if (currentScene_.empty()) {
 		Console::LogError("No current scene to save.");
 		return;

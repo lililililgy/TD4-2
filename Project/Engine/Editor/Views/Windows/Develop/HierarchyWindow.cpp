@@ -185,7 +185,7 @@ void HierarchyWindow::DrawMenuScene() {
 			showNewScenePopup_ = true;
 			newSceneName_ = "NewScene";
 		}
-		if (ImGui::MenuItem("Save Scene")) {
+		if (ImGui::MenuItem("Save Scene", nullptr, false, !ONEngine::DebugConfig::isDebugging)) {
 			pSceneManager_->SaveCurrentScene();
 		}
 		if (ImGui::MenuItem("Load Scene")) {
