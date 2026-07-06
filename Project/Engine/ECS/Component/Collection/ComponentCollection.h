@@ -102,9 +102,9 @@ inline Comp* ComponentCollection::AddComponent() {
 	}
 
 	Comp* comp = static_cast<Comp*>(factoryMap_[hash]());
-	comp.id = arrayMap_[hash]->GetComponentIndex();
+	comp->id = static_cast<uint32_t>(arrayMap_[hash]->GetComponentIndex(comp));
 
-	return static_cast<Comp*>(factoryMap_[hash]());
+	return comp;
 }
 
 template<IsComponent Comp>

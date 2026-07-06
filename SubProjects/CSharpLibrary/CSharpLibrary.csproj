@@ -162,9 +162,13 @@
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
+    <Compile Include="Scripts\Game\Enemy\BiomeArea.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
+    <Compile Include="Scripts\Game\Enemy\SpawnEntry.cs" />
+    <Compile Include="Scripts\Game\EnemySpawnSystem.cs" />
     <Compile Include="Scripts\Game\Experience\ExperiencePoint.cs" />
     <Compile Include="Scripts\Game\Experience\LevelingComponent.cs" />
+    <Compile Include="Scripts\Game\Map\EnemyHeatMap.cs" />
     <Compile Include="Scripts\Game\Movement\MoveDirector.cs" />
     <Compile Include="Scripts\Game\Movement\MoveParam.cs" />
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
@@ -187,6 +191,7 @@
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\ChaseController.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\SmallFryChaseMove.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\TargetRangeDetector.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\FlapjackOctopus\FlapjackOctopus.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEel.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEelPot.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\SpawnFromPot\MorayEelSpawnMove.cs" />
