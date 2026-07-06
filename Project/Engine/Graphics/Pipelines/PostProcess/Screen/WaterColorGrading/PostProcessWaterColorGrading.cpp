@@ -35,7 +35,7 @@ void PostProcessWaterColorGrading::Initialize(ShaderCompiler* shaderCompiler, Dx
 	paramsBuffer_.Create(dxm->GetDxDevice());
 }
 
-void PostProcessWaterColorGrading::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem) {
+void PostProcessWaterColorGrading::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem, ECSGroup* ecsGroup) {
 	CameraComponent* camera = nullptr;
 	if (textureName.find("debug") != std::string::npos) {
 		ECSGroup* debugGroup = entityComponentSystem->GetECSGroup("Debug");
@@ -44,7 +44,7 @@ void PostProcessWaterColorGrading::Execute(const std::string& textureName, DxCom
 		}
 	}
 	if (!camera) {
-		ECSGroup* currentGroup = entityComponentSystem->GetCurrentGroup();
+		ECSGroup* currentGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
 		if (currentGroup) {
 			camera = currentGroup->GetMainCamera2D();
 		}

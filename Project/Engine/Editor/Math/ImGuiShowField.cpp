@@ -28,6 +28,27 @@
 using namespace Editor;
 
 namespace {
+bool HasSerializeField(MonoClassField* field) {
+	MonoClass* klass = mono_field_get_parent(field);
+	MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
+	if (!attrs) return false;
+
+	MonoClass* serializeFieldAttr = mono_class_from_name(ONEngine::MonoScriptEngine::GetInstance().Image(), "", "SerializeField");
+
+	bool has = serializeFieldAttr && mono_custom_attrs_has_attr(attrs, serializeFieldAttr);
+	mono_custom_attrs_free(attrs);
+	return has;
+}
+
+bool IsPublicField(MonoClassField* field) {
+	uint32_t flags = mono_field_get_flags(field);
+	return (flags & 0x0006) == 0x0006;
+}
+
+bool ShouldSerialize(MonoClassField* field) {
+	return IsPublicField(field) || HasSerializeField(field);
+}
+
 std::unordered_map<int, std::unique_ptr<CSGui::ImGuiShowField>> gFieldDrawers;
 
 void RegisterFieldDrawers() {
@@ -186,10 +207,30 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 		int value = group.Get<int>(name);
 		if(type == MONO_TYPE_ENUM) {
 			MonoClass* fieldClass = mono_class_from_mono_type(mono_field_get_type(field));
-			if (DrawEnumCombo(fieldClass, name, value)) group.Add(name, value);
+			int oldValue = value;
+			if (DrawEnumCombo(fieldClass, name, value)) {
+				ONEngine::GameEntity* entity = vars->GetOwner();
+				if (entity && oldValue != value) {
+					EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_ENUM, oldValue, value);
+				} else {
+					group.Add(name, value);
+				}
+			}
 			break;
 		}
-		if(ImGui::DragInt(name, &value)) group.Add(name, value);
+		static int startIntValue = 0;
+		if (ImGui::IsItemActivated()) {
+			startIntValue = value;
+		}
+		if(ImGui::DragInt(name, &value)) {
+			group.Add(name, value);
+		}
+		if (ImGui::IsItemDeactivatedAfterEdit()) {
+			ONEngine::GameEntity* entity = vars->GetOwner();
+			if (entity && startIntValue != value) {
+				EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_I4, startIntValue, value);
+			}
+		}
 		break;
 	}
 	case MONO_TYPE_R4:
@@ -203,7 +244,19 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 			group.Add(name, defaultValue);
 		}
 		float value = group.Get<float>(name);
-		if(ImGui::DragFloat(name, &value)) group.Add(name, value);
+		static float startFloatValue = 0.0f;
+		if (ImGui::IsItemActivated()) {
+			startFloatValue = value;
+		}
+		if(ImGui::DragFloat(name, &value)) {
+			group.Add(name, value);
+		}
+		if (ImGui::IsItemDeactivatedAfterEdit()) {
+			ONEngine::GameEntity* entity = vars->GetOwner();
+			if (entity && startFloatValue != value) {
+				EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_R4, startFloatValue, value);
+			}
+		}
 		break;
 	}
 	case MONO_TYPE_BOOLEAN:
@@ -218,7 +271,15 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 			group.Add(name, defaultValue);
 		}
 		bool value = group.Get<bool>(name);
-		if(ImGui::Checkbox(name, &value)) group.Add(name, value);
+		bool oldValue = value;
+		if(ImGui::Checkbox(name, &value)) {
+			ONEngine::GameEntity* entity = vars->GetOwner();
+			if (entity && oldValue != value) {
+				EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_BOOLEAN, oldValue, value);
+			} else {
+				group.Add(name, value);
+			}
+		}
 		break;
 	}
 	case MONO_TYPE_STRING:
@@ -227,7 +288,19 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 			group.Add(name, std::string(""));
 		}
 		std::string value = group.Get<std::string>(name);
-		if(ImGuiInputText(name, &value)) group.Add(name, value);
+		static std::string startStrValue = "";
+		if (ImGui::IsItemActivated()) {
+			startStrValue = value;
+		}
+		if(ImGuiInputText(name, &value)) {
+			group.Add(name, value);
+		}
+		if (ImGui::IsItemDeactivatedAfterEdit()) {
+			ONEngine::GameEntity* entity = vars->GetOwner();
+			if (entity && startStrValue != value) {
+				EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_STRING, startStrValue, value);
+			}
+		}
 		break;
 	}
 	case MONO_TYPE_VALUETYPE:
@@ -239,19 +312,55 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 				group.Add(name, ONEngine::Vector2::Zero);
 			}
 			ONEngine::Vector2 value = group.Get<ONEngine::Vector2>(name);
-			if(ImGui::DragFloat2(name, &value.x)) group.Add(name, value);
+			static ONEngine::Vector2 startVec2Value = ONEngine::Vector2::Zero;
+			if (ImGui::IsItemActivated()) {
+				startVec2Value = value;
+			}
+			if(ImGui::DragFloat2(name, &value.x)) {
+				group.Add(name, value);
+			}
+			if (ImGui::IsItemDeactivatedAfterEdit()) {
+				ONEngine::GameEntity* entity = vars->GetOwner();
+				if (entity && (startVec2Value.x != value.x || startVec2Value.y != value.y)) {
+					EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_VALUETYPE, startVec2Value, value);
+				}
+			}
 		} else if(strcmp(className, "Vector3") == 0) {
 			if(!group.Has(name) || !std::holds_alternative<ONEngine::Vector3>(group.Get(name))) {
 				group.Add(name, ONEngine::Vector3::Zero);
 			}
 			ONEngine::Vector3 value = group.Get<ONEngine::Vector3>(name);
-			if(ImGui::DragFloat3(name, &value.x)) group.Add(name, value);
+			static ONEngine::Vector3 startVec3Value = ONEngine::Vector3::Zero;
+			if (ImGui::IsItemActivated()) {
+				startVec3Value = value;
+			}
+			if(ImGui::DragFloat3(name, &value.x)) {
+				group.Add(name, value);
+			}
+			if (ImGui::IsItemDeactivatedAfterEdit()) {
+				ONEngine::GameEntity* entity = vars->GetOwner();
+				if (entity && (startVec3Value.x != value.x || startVec3Value.y != value.y || startVec3Value.z != value.z)) {
+					EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_VALUETYPE, startVec3Value, value);
+				}
+			}
 		} else if(strcmp(className, "Vector4") == 0) {
 			if(!group.Has(name) || !std::holds_alternative<ONEngine::Vector4>(group.Get(name))) {
 				group.Add(name, ONEngine::Vector4::Zero);
 			}
 			ONEngine::Vector4 value = group.Get<ONEngine::Vector4>(name);
-			if(ImGui::DragFloat4(name, &value.x)) group.Add(name, value);
+			static ONEngine::Vector4 startVec4Value = ONEngine::Vector4::Zero;
+			if (ImGui::IsItemActivated()) {
+				startVec4Value = value;
+			}
+			if(ImGui::DragFloat4(name, &value.x)) {
+				group.Add(name, value);
+			}
+			if (ImGui::IsItemDeactivatedAfterEdit()) {
+				ONEngine::GameEntity* entity = vars->GetOwner();
+				if (entity && (startVec4Value.x != value.x || startVec4Value.y != value.y || startVec4Value.z != value.z || startVec4Value.w != value.w)) {
+					EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_VALUETYPE, startVec4Value, value);
+				}
+			}
 		} else if(!mono_class_is_enum(fieldClass)) {
 			// カスタム構造体
 			if (!group.Has(name) || !std::holds_alternative<std::shared_ptr<ONEngine::Variables::GenericObject>>(group.Get(name))) {
@@ -324,7 +433,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 						size_t oldSize = list.size(); list.resize(size);
 						for (size_t i = oldSize; i < list.size(); ++i) {
 							auto elemVar = ONEngine::Variables::MonoObjectToVar(nullptr, elemType);
-							if (std::holds_alternative<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar)) {
+							if (std::holds_alternative<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar) && std::get<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar) != nullptr) {
 								list[i] = std::get<std::shared_ptr<ONEngine::Variables::GenericObject>>(elemVar);
 							} else {
 								list[i] = std::make_shared<ONEngine::Variables::GenericObject>();
@@ -333,9 +442,27 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 						}
 					}
 					for (int i = 0; i < (int)list.size(); ++i) {
+						if (list[i]) {
+							if (list[i]->typeName.empty()) {
+								list[i]->typeName = mono_class_get_name(elemClass);
+							}
+							void* iter = nullptr;
+							MonoClassField* f = nullptr;
+							while ((f = mono_class_get_fields(elemClass, &iter))) {
+								if (ShouldSerialize(f)) {
+									std::string fieldName = mono_field_get_name(f);
+									if (!list[i]->fields.contains(fieldName)) {
+										list[i]->fields[fieldName] = ONEngine::Variables::MonoObjectToVar(nullptr, mono_field_get_type(f));
+									}
+								}
+							}
+						}
+
+						ImGui::PushID(i);
 						if (ImGui::CollapsingHeader(std::format("[{}]", i).c_str())) {
 							ImGui::Indent(); DrawGenericObject(list[i]); ImGui::Unindent();
 						}
+						ImGui::PopID();
 					}
 				}
 			}
@@ -444,6 +571,7 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 			count = size;
 		}
 		for(int i = 0; i < count; ++i) {
+			ImGui::PushID(i);
 			void* getArgs[1] = { &i }; MonoObject* itemObj = mono_runtime_invoke(getItemMethod, listObj, getArgs, nullptr);
 			std::string itemName = std::format("[{}]", i);
 			if(elemTypeId == MONO_TYPE_I4) { int v = *(int*)mono_object_unbox(itemObj); if(ImGui::DragInt(itemName.c_str(), &v)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
@@ -462,6 +590,7 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 					}
 				}
 			}
+			ImGui::PopID();
 		}
 		ImGui::Unindent();
 	}

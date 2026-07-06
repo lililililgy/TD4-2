@@ -2,6 +2,17 @@
     "active": true,
     "components": [
         {
+            "position": {
+                "x": 97.40485382080078,
+                "y": -58.83186721801758
+            },
+            "rotate": {
+                "w": 0.4836779236793518,
+                "z": -0.8752460479736328
+            },
+            "type": "Transform"
+        },
+        {
             "categoryBits": 2,
             "enable": 1,
             "freezeY": false,
@@ -17,6 +28,7 @@
             "TrailFollower": {
                 "leadMinOffset_": 98.0,
                 "maxBendRad_": 2.0,
+                "rotateToFace_": true,
                 "unitMinOffset_": 98.0
             },
             "type": "Variables"

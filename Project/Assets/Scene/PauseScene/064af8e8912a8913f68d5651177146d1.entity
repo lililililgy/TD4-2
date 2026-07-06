@@ -2,39 +2,36 @@
     "active": true,
     "components": [
         {
+            "elementId": "exit-game",
+            "elementIndex": 3,
             "enable": 1,
-            "matrixCalcFlags": 3,
+            "groupId": "26262eae83e1a46421b288c8f7d1da70",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 1.4901161193847656e-08,
+                "x": 1.0,
+                "y": -4.0,
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 67.80001831054688,
-                "y": 67.8000717163086,
-                "z": 67.8000717163086
+                "x": 8.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
-            "GesoWeakPoint": {},
+            "UITest1": {},
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "GesoWeakPoint"
-                }
-            ],
-            "type": "Script"
         },
         {
             "enable": 1,
@@ -45,7 +42,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "2b1b8b572356f6c42b296f1a5cd80124",
+                "baseTextureGuid": "3c667a9c8898c994979a53fc3a2e4da8",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -64,23 +61,27 @@
             "type": "SpriteRenderer"
         },
         {
-            "categoryBits": 8,
             "enable": 1,
-            "freezeY": false,
-            "isTrigger": true,
-            "maskBits": 4294967295,
-            "mass": 1.0,
-            "size": {
-                "x": 90.09999084472656,
-                "y": 90.10000610351563
+            "links": {
+                "GamepadDPadUp": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "UpArrow": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "W": "0abbe7a8d0ac19bd95a8fd428bec2603"
             },
-            "state": "Dynamic",
-            "type": "BoxCollider2D",
-            "useOwnerScale": false
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "UITest1"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "c28a24de98be8dd7315867697a54ec9c",
-    "name": "weakPoint",
-    "parentGuid": "d494b79e4e2565acee4afeb894c8102d",
+    "guid": "064af8e8912a8913f68d5651177146d1",
+    "name": "exit-game",
+    "parentGuid": "26262eae83e1a46421b288c8f7d1da70",
     "prefabName": ""
 }

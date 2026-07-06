@@ -70,6 +70,7 @@ namespace ImCurveEdit
       virtual ImVec2* GetPoints(size_t curveIndex) = 0;
       virtual int EditPoint(size_t curveIndex, int pointIndex, ImVec2 value) = 0;
       virtual void AddPoint(size_t curveIndex, ImVec2 value) = 0;
+      virtual float GetCurveValue(size_t /*curveIndex*/, float /*time*/) { return 0.0f; }
       virtual unsigned int GetBackgroundColor() { return 0xFF202020; }
       // handle undo/redo thru this functions
       virtual void BeginEdit(int /*index*/) {}

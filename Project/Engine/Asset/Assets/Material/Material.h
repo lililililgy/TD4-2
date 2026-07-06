@@ -65,8 +65,8 @@ public:
 	const Guid& GetBaseTextureGuid() const;
 
 	/// @brief base textureのGuidを設定
-	/// @param guid base textureのGuid
-	void SetBaseTextureGuid(const Guid& guid);
+	/// @param textureGuid base textureのGuid
+	void SetBaseTextureGuid(const Guid& textureGuid);
 
 
 	/// @brief 法線テクスチャのGuidを持っているかチェック
@@ -78,8 +78,8 @@ public:
 	const Guid& GetNormalTextureGuid() const;
 
 	/// @brief normal textureのGuidを設定
-	/// @param guid normal textureのGuid
-	void SetNormalTextureGuid(const Guid& guid);
+	/// @param textureGuid normal textureのGuid
+	void SetNormalTextureGuid(const Guid& textureGuid);
 
 private:
 	/// ==================================================

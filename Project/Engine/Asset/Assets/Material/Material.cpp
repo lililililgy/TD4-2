@@ -123,13 +123,13 @@ const Guid& Material::GetBaseTextureGuid() const {
 	return baseTextureGuid_.value();
 }
 
-void Material::SetBaseTextureGuid(const Guid& guid) {
+void Material::SetBaseTextureGuid(const Guid& textureGuid) {
 	/// ----- base texture guidの設定 ----- ///
 	if(baseTextureGuid_.has_value()) {
-		baseTextureGuid_.value() = guid;
+		baseTextureGuid_.value() = textureGuid;
 	} else {
 		baseTextureGuid_ = std::make_optional<Guid>();
-		baseTextureGuid_ = guid;
+		baseTextureGuid_ = textureGuid;
 	}
 }
 
@@ -141,13 +141,13 @@ const Guid& Material::GetNormalTextureGuid() const {
 	return normalTextureGuid_.value();
 }
 
-void Material::SetNormalTextureGuid(const Guid& guid) {
+void Material::SetNormalTextureGuid(const Guid& textureGuid) {
 	/// ----- 法線 texture の guid を登録 ----- ///
 	if(normalTextureGuid_.has_value()) {
-		normalTextureGuid_.value() = guid;
+		normalTextureGuid_.value() = textureGuid;
 	} else {
 		normalTextureGuid_ = std::make_optional<Guid>();
-		normalTextureGuid_ = guid;
+		normalTextureGuid_ = textureGuid;
 	}
 }
 

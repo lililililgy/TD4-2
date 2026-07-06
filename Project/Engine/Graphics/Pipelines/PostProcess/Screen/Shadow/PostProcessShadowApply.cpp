@@ -60,12 +60,12 @@ void PostProcessShadowApply::Initialize(ShaderCompiler* shaderCompiler, DxManage
 	}
 }
 
-void PostProcessShadowApply::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* ecs) {
+void PostProcessShadowApply::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* ecs, ECSGroup* ecsGroup) {
 
 	/// ---------------------------------------------------
 	/// 現在のGroupからShadowCasterを取得
 	/// ---------------------------------------------------
-	ECSGroup* currentGroup = ecs->GetCurrentGroup();
+	ECSGroup* currentGroup = ecsGroup ? ecsGroup : ecs->GetCurrentGroup();
 	if (!currentGroup) {
 		return;
 	}

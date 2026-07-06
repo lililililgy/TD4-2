@@ -1,0 +1,57 @@
+{
+    "duration": 0.5,
+    "endFrame": 30,
+    "loop": false,
+    "name": "PauseMenuOpen",
+    "startFrame": 0,
+    "tracks": [
+        {
+            "component": "Transform",
+            "keyframes": [
+                {
+                    "in": "Linear",
+                    "t": 0.0,
+                    "v": {
+                        "x": -2017.0400390625,
+                        "y": 1624.8199462890625,
+                        "z": 0.0
+                    }
+                },
+                {
+                    "in": "Linear",
+                    "t": 0.24838708341121674,
+                    "v": {
+                        "x": -211.42999267578125,
+                        "y": -113.05000305175781,
+                        "z": 0.0
+                    }
+                }
+            ],
+            "property": "position"
+        },
+        {
+            "component": "Transform",
+            "keyframes": [
+                {
+                    "in": "Linear",
+                    "t": 0.0,
+                    "v": {
+                        "x": 2500.0,
+                        "y": 10.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "in": "Linear",
+                    "t": 0.5,
+                    "v": {
+                        "x": 2500.0,
+                        "y": 750.0,
+                        "z": 1.0
+                    }
+                }
+            ],
+            "property": "scale"
+        }
+    ]
+}

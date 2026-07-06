@@ -121,11 +121,12 @@
     <Compile Include="Scripts\Engine\ECS\Components\ComponentCollection.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\AgentIntentComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Animator.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Compute\AudioSource.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\BGMPlayer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\BoxCollider.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\BoxCollider2D.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\CameraComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\CircleCollider.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\SEPlayer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\SphereCollider.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Transform.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\UIElementComponent.cs" />
@@ -164,9 +165,13 @@
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
+    <Compile Include="Scripts\Game\Enemy\BiomeArea.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
+    <Compile Include="Scripts\Game\Enemy\SpawnEntry.cs" />
+    <Compile Include="Scripts\Game\EnemySpawnSystem.cs" />
     <Compile Include="Scripts\Game\Experience\ExperiencePoint.cs" />
     <Compile Include="Scripts\Game\Experience\LevelingComponent.cs" />
+    <Compile Include="Scripts\Game\Map\EnemyHeatMap.cs" />
     <Compile Include="Scripts\Game\Movement\MoveDirector.cs" />
     <Compile Include="Scripts\Game\Movement\MoveParam.cs" />
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
@@ -189,6 +194,7 @@
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\ChaseController.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\SmallFryChaseMove.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\TargetRangeDetector.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\FlapjackOctopus\FlapjackOctopus.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEel.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\MorayEelPot.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\MorayEel\SpawnFromPot\MorayEelSpawnMove.cs" />
@@ -196,6 +202,8 @@
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFish.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishAroundNeedle.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishNeedle.cs" />
+    <Compile Include="Scripts\Game\UI\Pause\PauseGroup.cs" />
+    <Compile Include="Scripts\Game\UI\Pause\TestPauseStart.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest1.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest2.cs" />
     <Compile Include="Scripts\Game\UI\Test\UITest3.cs" />
@@ -205,9 +213,11 @@
     <Compile Include="Scripts\Game\UI\Title\OpenOption.cs" />
     <Compile Include="Scripts\Math\SmoothDamp.cs" />
     <Compile Include="Scripts\Test.cs" />
+    <Compile Include="Scripts\Test\AddSceneTest.cs" />
     <Compile Include="Scripts\Test\ColliderTest1.cs" />
     <Compile Include="Scripts\Test\ColliderTest2.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
+    <Compile Include="Scripts\Test\TestSceneScript.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

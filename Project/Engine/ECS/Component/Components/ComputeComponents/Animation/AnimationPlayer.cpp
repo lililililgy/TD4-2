@@ -26,6 +26,8 @@
 #include "Engine/Editor/Math/ImGuiMath.h"
 #include "Engine/Editor/Math/AssetDebugger.h"
 #include "Engine/Editor/Math/AssetPayload.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
 
 using namespace ONEngine;
 
@@ -153,6 +155,7 @@ void AnimationPlayer::Reset() {
     isLooping = true;
     autoPlay = true;
     isBound = false;
+    playedOnAwake = false;
 }
 
 void AnimationPlayer::ClearBindings() {
@@ -289,6 +292,7 @@ void ONEngine::from_json(const nlohmann::json& j, AnimationPlayer& a) {
     a.isPlaying = j.value("isPlaying", false);
     a.isLooping = j.value("isLooping", true);
     a.autoPlay = j.value("autoPlay", true);
+    a.playedOnAwake = false;
 }
 
 void ONEngine::to_json(nlohmann::json& j, const AnimationPlayer& a) {
@@ -319,7 +323,12 @@ void ComponentDebug::AnimationPlayerDebug(AnimationPlayer* player) {
             if (payload->Data) {
                 Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
                 std::string path = assetPayload->filePath;
-                player->SetClip(path);
+                std::string oldPath = player->clipPath;
+                std::string newPath = path;
+                Editor::EditCommand::Execute<Editor::LambdaCommand>(
+                    [player, newPath]() { player->SetClip(newPath); },
+                    [player, oldPath]() { player->SetClip(oldPath); }
+                );
             }
         }
         ImGui::EndDragDropTarget();

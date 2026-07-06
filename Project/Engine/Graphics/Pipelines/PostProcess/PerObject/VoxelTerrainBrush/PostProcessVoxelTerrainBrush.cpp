@@ -52,10 +52,12 @@ void PostProcessVoxelTerrainBrush::Initialize(ShaderCompiler* shaderCompiler, Dx
 
 void PostProcessVoxelTerrainBrush::Execute(
 	const std::string& textureName, DxCommand* dxCommand,
-	Asset::AssetCollection* assetCollection, EntityComponentSystem* ecs) {
+	Asset::AssetCollection* assetCollection, EntityComponentSystem* ecs,
+	ECSGroup* ecsGroup) {
 
 	/// TerrainComponentの有無チェック
-	ComponentArray<VoxelTerrain>* voxelTerrainArray = ecs->GetCurrentGroup()->GetComponentArray<VoxelTerrain>();
+	ECSGroup* activeGroup = ecsGroup ? ecsGroup : ecs->GetCurrentGroup();
+	ComponentArray<VoxelTerrain>* voxelTerrainArray = activeGroup->GetComponentArray<VoxelTerrain>();
 	/// 両方とも存在しない、もしくは使用中のコンポーネントが無い場合は処理しない
 	if(!CheckComponentArrayEnable(voxelTerrainArray)) {
 		return;

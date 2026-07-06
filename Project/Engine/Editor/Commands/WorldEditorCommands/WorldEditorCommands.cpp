@@ -256,13 +256,74 @@ EDITOR_STATE DeleteEntityCommand::Execute() {
 		return EDITOR_STATE_FAILED;
 	}
 
+	/// 親のGUIDを保存
+	parentGuid_ = pEntity_->GetParent() ? pEntity_->GetParent()->GetGuid() : ONEngine::Guid::kInvalid;
+
+	/// jsonにシリアライズ
+	entityJson_ = ONEngine::EntityJsonConverter::ToJson(pEntity_, true);
+	SerializeRecursive(pEntity_, entityJson_);
+
 	pEcsGroup_->RemoveEntity(pEntity_);
 
 	return EDITOR_STATE_FINISH;
 }
 
 EDITOR_STATE DeleteEntityCommand::Undo() {
+	if (entityJson_.empty()) {
+		ONEngine::Console::LogError("DeleteEntityCommand : No JSON data to restore");
+		return EDITOR_STATE_FAILED;
+	}
+
+	pEntity_ = RestoreEntityRecursive(entityJson_, nullptr);
+	if (!pEntity_) {
+		return EDITOR_STATE_FAILED;
+	}
+
+	if (parentGuid_ != ONEngine::Guid::kInvalid) {
+		ONEngine::GameEntity* parent = pEcsGroup_->GetEntityCollection()->GetEntityFromGuid(parentGuid_);
+		if (parent) {
+			pEntity_->SetParent(parent);
+		}
+	}
+
 	return EDITOR_STATE_FINISH;
+}
+
+void DeleteEntityCommand::SerializeRecursive(ONEngine::GameEntity* entity, nlohmann::json& json) {
+	for (auto& child : entity->GetChildren()) {
+		if (child->GetId() < 0) {
+			continue;
+		}
+
+		nlohmann::json childJson = ONEngine::EntityJsonConverter::ToJson(child, true);
+		SerializeRecursive(child, childJson);
+		json["children"].push_back(childJson);
+	}
+}
+
+ONEngine::GameEntity* DeleteEntityCommand::RestoreEntityRecursive(const nlohmann::json& json, ONEngine::GameEntity* parent) {
+	std::string guidStr = json.value("guid", "");
+	ONEngine::Guid guid = ONEngine::Guid::FromString(guidStr);
+
+	ONEngine::GameEntity* entity = pEcsGroup_->GenerateEntity(guid, false);
+	if (!entity) {
+		ONEngine::Console::LogError("DeleteEntityCommand : Failed to generate entity from GUID during Restore");
+		return nullptr;
+	}
+
+	if (parent) {
+		entity->SetParent(parent);
+	}
+
+	ONEngine::EntityJsonConverter::FromJson(json, entity, pEcsGroup_->GetGroupName());
+
+	if (json.contains("children")) {
+		for (auto& childJson : json["children"]) {
+			RestoreEntityRecursive(childJson, entity);
+		}
+	}
+
+	return entity;
 }
 
 

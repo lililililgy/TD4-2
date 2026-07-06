@@ -7,7 +7,7 @@ public class SpikeFishAroundNeedle : MonoScript
     [SerializeField] private float popInDuration   = 0.3f;   // coolTime終了直前、ポップインにかける秒数
     [SerializeField] private float maxAngularSpeed = 720.0f; // 発射直前の最大回転速度 (deg/s)
 
-    // transform.scale には触れず、この倍率を baseScale に掛けて適用する
+    // この倍率を baseScale に掛けて適用する
     public float ScaleMult { get; private set; } = 0.0f;
 
     // 回復完了 = 攻撃可能
@@ -32,14 +32,14 @@ public class SpikeFishAroundNeedle : MonoScript
         BeginRecovery();
     }
 
-    // SpikeFishAttack から発射直前(チャージ完了時)に呼ぶ
+    // SpikeFishAttack から発射直前に呼ぶ
     public void PlayFireAnimation()
     {
         spriteAnim_?.ResetAnimation();
         spriteAnim_?.Play();
     }
 
-    // SpikeFishAttack からアニメーション終了時に呼ぶ。最終フレームのまま止まるため元のUV位置へ戻す
+    // SpikeFishAttack からアニメーション終了時に元のUV位置へ戻す
     public void ResetFireAnimation()
     {
         spriteAnim_?.ResetAnimation();
@@ -66,20 +66,27 @@ public class SpikeFishAroundNeedle : MonoScript
         isCharging_ = false;
         angularVel_ = 0.0f;
 
+        // 針の数の分だけ等間隔で角度を計算して生成する
         int count = Math.Max(1, fireNeedleNum);
         float intervalRad = (Mathf.PI * 2.0f) / count;
         for (int i = 0; i < count; i++)
         {
+            // NeedleEntityを生成する
             Entity needle = ecsGroup.CreateEntity(needleName_);
-            if (needle == null) { continue; }
+            if (needle == null) { 
+                continue;
+            }
 
+            // 針の方向を計算する
             float angle = currentAngle_ + i * intervalRad;
             Vector3 dir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);
 
+            // 針の位置と方向を設定する
             needle.transform.position = WorldPosition(transform);
             needle.GetScript<SpikeFishNeedle>()?.SetDirection(dir);
         }
 
+        // 発射後はスケール0にして針の復活処理を開始
         ScaleMult = 0.0f;
         ApplyScale();
         BeginRecovery();
@@ -100,7 +107,8 @@ public class SpikeFishAroundNeedle : MonoScript
 
     private void UpdateCharging()
     {
-        angularVel_   += chargeAccel_ * Time.deltaTime;
+        // チャージ中は加速度で角速度を増加させ、角度を更新する
+        angularVel_ += chargeAccel_ * Time.deltaTime;
         currentAngle_ += angularVel_  * Time.deltaTime;
         transform.rotate = Quaternion.MakeFromAxis(Vector3.back, currentAngle_);
     }

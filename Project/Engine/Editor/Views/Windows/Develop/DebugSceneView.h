@@ -3,6 +3,8 @@
 /// std
 #include <string>
 #include <vector>
+#include <thread>
+#include <atomic>
 
 /// externals
 #include <imgui.h>
@@ -65,6 +67,7 @@ private:
 	void DrawToolbar();
 	void DrawSceneTexture(ImVec2& outImagePos, ImVec2& outImageSize);
 	void DrawGizmoAndOverlays(const ImVec2& imagePos, const ImVec2& imageSize);
+	void TriggerCSBuild();
 
 
 private:
@@ -81,6 +84,12 @@ private:
 	bool isDrawSceneStats_ = true;
 
 	OverlaySection sceneStatsSection_;
+
+	// C# Build variables
+	std::atomic<bool> isCSBuilding_ = false;
+	std::atomic<bool> csBuildSuccess_ = false;
+	std::atomic<bool> showCSBuildResult_ = false;
+	float csBuildResultTimer_ = 0.0f;
 
 };
 

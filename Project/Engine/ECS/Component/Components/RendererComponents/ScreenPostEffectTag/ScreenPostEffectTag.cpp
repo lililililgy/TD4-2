@@ -3,6 +3,10 @@
 /// std
 #include <vector>
 #include <string>
+#include <array>
+
+/// editor
+#include "Engine/Editor/Commands/ImGuiCommand/ImGuiCommand.h"
 
 /// external
 #include <imgui.h>
@@ -14,7 +18,6 @@ namespace {
 
 	struct Flags {
 		Flags() : 
-			flags(PostEffectType_Count, false), 
 			fisheyeStrength(0.15f), 
 			fisheyeScale(0.9f),
 			distortionStrength(0.015f),
@@ -33,8 +36,10 @@ namespace {
 			causticsIntensity(1.5f),
 			lightShaftsIntensity(1.5f),
 			lightDirection(0.2f, -0.9f, 0.3f)
-		{}
-		std::vector<bool> flags;
+		{
+			flags.fill(false);
+		}
+		std::array<bool, PostEffectType_Count> flags;
 		std::vector<std::string> flagNames = {
 			"Grayscale",
 			"Radial Blur",
@@ -76,8 +81,8 @@ namespace {
 
 } /// namespace
 
-void ScreenPostEffectTag::SetPostEffectEnable(PostEffectType type, bool enable) {
-	gFlags.flags[static_cast<size_t>(type)] = enable;
+void ScreenPostEffectTag::SetPostEffectEnable(PostEffectType type, bool isEnable) {
+	gFlags.flags[static_cast<size_t>(type)] = isEnable;
 }
 
 bool ScreenPostEffectTag::GetPostEffectEnable(PostEffectType type) const {
@@ -148,128 +153,56 @@ void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* component) {
 	}
 
 	for (size_t i = 0; i < gFlags.flags.size(); ++i) {
-		bool flag = gFlags.flags[i];
-
-		ImGui::Checkbox(gFlags.flagNames[i].c_str(), &flag);
-
-		gFlags.flags[i] = flag;
+		Editor::ImMathf::Checkbox(gFlags.flagNames[i], &gFlags.flags[i]);
 	}
 
 	if (gFlags.flags[PostEffectType_Fisheye]) {
 		ImGui::Separator();
 		ImGui::Text("Fisheye Settings");
 
-		float strength = gFlags.fisheyeStrength;
-		if (ImGui::SliderFloat("Distortion Strength##Fisheye", &strength, -1.0f, 1.0f)) {
-			gFlags.fisheyeStrength = strength;
-		}
-
-		float scale = gFlags.fisheyeScale;
-		if (ImGui::SliderFloat("View Scale##Fisheye", &scale, 0.1f, 2.0f)) {
-			gFlags.fisheyeScale = scale;
-		}
+		Editor::ImMathf::SliderFloat("Distortion Strength##Fisheye", &gFlags.fisheyeStrength, -1.0f, 1.0f);
+		Editor::ImMathf::SliderFloat("View Scale##Fisheye", &gFlags.fisheyeScale, 0.1f, 2.0f);
 	}
 
 	if (gFlags.flags[PostEffectType_WaterDistortion]) {
 		ImGui::Separator();
 		ImGui::Text("Water Distortion Settings");
 
-		float strength = gFlags.distortionStrength;
-		if (ImGui::SliderFloat("Strength##Distortion", &strength, 0.0f, 0.1f, "%.4f")) {
-			gFlags.distortionStrength = strength;
-		}
-
-		float speed = gFlags.distortionSpeed;
-		if (ImGui::SliderFloat("Speed##Distortion", &speed, 0.0f, 10.0f)) {
-			gFlags.distortionSpeed = speed;
-		}
-
-		float freq = gFlags.distortionFrequency;
-		if (ImGui::SliderFloat("Frequency##Distortion", &freq, 0.1f, 50.0f)) {
-			gFlags.distortionFrequency = freq;
-		}
+		Editor::ImMathf::SliderFloat("Strength##Distortion", &gFlags.distortionStrength, 0.0f, 0.1f, "%.4f");
+		Editor::ImMathf::SliderFloat("Speed##Distortion", &gFlags.distortionSpeed, 0.0f, 10.0f);
+		Editor::ImMathf::SliderFloat("Frequency##Distortion", &gFlags.distortionFrequency, 0.1f, 50.0f);
 	}
 
 	if (gFlags.flags[PostEffectType_WaterDepthFogVignette]) {
 		ImGui::Separator();
 		ImGui::Text("Water Depth Fog & Vignette Settings");
 
-		float color[3] = { gFlags.fogColor.x, gFlags.fogColor.y, gFlags.fogColor.z };
-		if (ImGui::ColorEdit3("Fog Color##DepthFog", color)) {
-			gFlags.fogColor = Vector3(color[0], color[1], color[2]);
-		}
-
-		float density = gFlags.fogDensity;
-		if (ImGui::SliderFloat("Fog Density##DepthFog", &density, 0.0f, 0.1f, "%.4f")) {
-			gFlags.fogDensity = density;
-		}
-
-		float surfaceY = gFlags.fogWaterSurfaceY;
-		if (ImGui::SliderFloat("Water Surface Y##DepthFog", &surfaceY, -100.0f, 100.0f)) {
-			gFlags.fogWaterSurfaceY = surfaceY;
-		}
-
-		float vignette = gFlags.vignetteStrength;
-		if (ImGui::SliderFloat("Vignette Strength##DepthFog", &vignette, 0.0f, 2.0f)) {
-			gFlags.vignetteStrength = vignette;
-		}
+		Editor::ImMathf::ColorEdit3("Fog Color##DepthFog", &gFlags.fogColor);
+		Editor::ImMathf::SliderFloat("Fog Density##DepthFog", &gFlags.fogDensity, 0.0f, 0.1f, "%.4f");
+		Editor::ImMathf::SliderFloat("Water Surface Y##DepthFog", &gFlags.fogWaterSurfaceY, -100.0f, 100.0f);
+		Editor::ImMathf::SliderFloat("Vignette Strength##DepthFog", &gFlags.vignetteStrength, 0.0f, 2.0f);
 	}
 
 	if (gFlags.flags[PostEffectType_WaterColorGrading]) {
 		ImGui::Separator();
 		ImGui::Text("Water Color Grading & Absorption Settings");
 
-		float coeffs[3] = { gFlags.absorptionCoefficients.x, gFlags.absorptionCoefficients.y, gFlags.absorptionCoefficients.z };
-		if (ImGui::SliderFloat3("Absorption Coeffs##Absorption", coeffs, 0.0f, 1.0f, "%.3f")) {
-			gFlags.absorptionCoefficients = Vector3(coeffs[0], coeffs[1], coeffs[2]);
-		}
-
-		float contrast = gFlags.contrast;
-		if (ImGui::SliderFloat("Contrast##ColorGrading", &contrast, 0.5f, 2.0f)) {
-			gFlags.contrast = contrast;
-		}
-
-		float sat = gFlags.saturation;
-		if (ImGui::SliderFloat("Saturation##ColorGrading", &sat, 0.0f, 2.0f)) {
-			gFlags.saturation = sat;
-		}
-
-		float filter[3] = { gFlags.colorFilter.x, gFlags.colorFilter.y, gFlags.colorFilter.z };
-		if (ImGui::ColorEdit3("Color Filter##ColorGrading", filter)) {
-			gFlags.colorFilter = Vector3(filter[0], filter[1], filter[2]);
-		}
+		Editor::ImMathf::SliderFloat3("Absorption Coeffs##Absorption", &gFlags.absorptionCoefficients, 0.0f, 1.0f, "%.3f");
+		Editor::ImMathf::SliderFloat("Contrast##ColorGrading", &gFlags.contrast, 0.5f, 2.0f);
+		Editor::ImMathf::SliderFloat("Saturation##ColorGrading", &gFlags.saturation, 0.0f, 2.0f);
+		Editor::ImMathf::ColorEdit3("Color Filter##ColorGrading", &gFlags.colorFilter);
 	}
 
 	if (gFlags.flags[PostEffectType_WaterCausticsLightShafts]) {
 		ImGui::Separator();
 		ImGui::Text("Water Caustics & Light Shafts Settings");
 
-		float scale = gFlags.causticsScale;
-		if (ImGui::SliderFloat("Caustics Scale##Caustics", &scale, 0.01f, 5.0f)) {
-			gFlags.causticsScale = scale;
-		}
-
-		float speed = gFlags.causticsSpeed;
-		if (ImGui::SliderFloat("Caustics Speed##Caustics", &speed, 0.0f, 5.0f)) {
-			gFlags.causticsSpeed = speed;
-		}
-
-		float intensity = gFlags.causticsIntensity;
-		if (ImGui::SliderFloat("Caustics Intensity##Caustics", &intensity, 0.0f, 2.0f)) {
-			gFlags.causticsIntensity = intensity;
-		}
-
-		float shafts = gFlags.lightShaftsIntensity;
-		if (ImGui::SliderFloat("Light Shafts Intensity##Caustics", &shafts, 0.0f, 2.0f)) {
-			gFlags.lightShaftsIntensity = shafts;
-		}
-
-		float dir[3] = { gFlags.lightDirection.x, gFlags.lightDirection.y, gFlags.lightDirection.z };
-		if (ImGui::SliderFloat3("Light Direction##Caustics", dir, -1.0f, 1.0f)) {
-			gFlags.lightDirection = Vector3(dir[0], dir[1], dir[2]);
-		}
+		Editor::ImMathf::SliderFloat("Caustics Scale##Caustics", &gFlags.causticsScale, 0.01f, 5.0f);
+		Editor::ImMathf::SliderFloat("Caustics Speed##Caustics", &gFlags.causticsSpeed, 0.0f, 5.0f);
+		Editor::ImMathf::SliderFloat("Caustics Intensity##Caustics", &gFlags.causticsIntensity, 0.0f, 2.0f);
+		Editor::ImMathf::SliderFloat("Light Shafts Intensity##Caustics", &gFlags.lightShaftsIntensity, 0.0f, 2.0f);
+		Editor::ImMathf::SliderFloat3("Light Direction##Caustics", &gFlags.lightDirection, -1.0f, 1.0f);
 	}
-
 }
 
 void ONEngine::from_json(const nlohmann::json& j, ScreenPostEffectTag& c) {

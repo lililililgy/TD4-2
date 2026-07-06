@@ -39,7 +39,6 @@ void ComponentDebug::ShadowCasterDebug(ShadowCaster* shadowCaster) {
 
 
 	if (ImGui::Button("toggle camera type")) {
-		ShadowCaster* shadowCaster = shadowCaster;
 		CameraComponent* camera = shadowCaster->GetShadowCasterCamera();
 		if (camera) {
 			int currentType = camera->GetCameraType();

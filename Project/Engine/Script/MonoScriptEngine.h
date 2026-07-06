@@ -57,6 +57,9 @@ public:
 	/// CSのHotReloadを行う
 	void HotReload();
 
+	/// C#のログ無視設定を同期・適用
+	void ApplyCSharpLogSetting();
+
 	void SetEcsPtr(class EntityComponentSystem* ecs);
 
 	/// DLLのパスを探す
@@ -70,6 +73,9 @@ public:
 
 	/// @brief C++で初期化したコンポーネントデータをCS側に同期する
 	void SyncInitialComponentsToCS(ECSGroup* ecsGroup);
+
+	/// C#側のECSGroupインスタンスを取得
+	MonoObject* GetEcsGroupObject(const std::string& groupName);
 
 	/// C#側のEntityを取得
 	MonoObject* GetEntityFromCS(const std::string& ecsGroupName, int32_t entityId);

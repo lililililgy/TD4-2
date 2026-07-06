@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <unordered_map>
@@ -29,6 +29,17 @@ public:
 
 	/// @brief runtime中の更新処理を行う
 	void RuntimeUpdate(class ECSGroup* ecs);
+
+	/// @brief 特定のシステムを取得する
+	template<typename T>
+	T* GetSystem() {
+		for (auto& sys : systems_) {
+			if (auto target = dynamic_cast<T*>(sys.get())) {
+				return target;
+			}
+		}
+		return nullptr;
+	}
 
 private:
 	/// ===================================================

@@ -50,6 +50,14 @@ struct Mathf {
 		return (int)System.Math.Pow(f, p);
 	}
 
+	static public float Floor(float x) {
+		int i = (int)x;
+		if (x < 0f && x != i) {
+			return (float)(i - 1);
+		}
+		return (float)i;
+	}
+
 	/// --------------------------------------------
 	/// 便利な計算
 	/// --------------------------------------------

@@ -18,6 +18,9 @@
 
 /// editor
 #include "Engine/Editor/EditorUtils.h"
+#include "Engine/Editor/Math/AssetPayload.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
 
 namespace ONEngine {
 
@@ -152,7 +155,13 @@ void ComponentDebug::VoxelTerrainDebug(VoxelTerrain* vt, DxManager* dxm, Asset::
 						const std::string path = assetPayload->filePath;
 						if(ONEngine::Asset::CheckAssetType(ONEngine::FileSystem::FileExtension(path), ONEngine::Asset::AssetType::Texture)) {
 							const ONEngine::Guid& dropGuid = assetPayload->guid;
-							guid = dropGuid;
+							Guid oldGuid = guid;
+							Guid newGuid = dropGuid;
+							Guid* pGuid = &guid;
+							Editor::EditCommand::Execute<Editor::LambdaCommand>(
+								[pGuid, newGuid]() { *pGuid = newGuid; },
+								[pGuid, oldGuid]() { *pGuid = oldGuid; }
+							);
 						}
 					}
 				}

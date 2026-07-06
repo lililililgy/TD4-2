@@ -14,6 +14,7 @@ namespace ONEngine {
 class DxManager;
 class DxCommand;
 class EntityComponentSystem;
+class ECSGroup;
 }
 
 namespace ONEngine::Asset {
@@ -45,7 +46,8 @@ public:
 		const std::string& textureName,
 		DxCommand* dxCommand,
 		Asset::AssetCollection* assetCollection,
-		EntityComponentSystem* pEntityComponentSystem
+		EntityComponentSystem* pEntityComponentSystem,
+		ECSGroup* ecsGroup = nullptr
 	) = 0;
 
 protected:

@@ -7,6 +7,9 @@
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/ECS/Entity/GameEntity/GameEntity.h"
 #include "Engine/Editor/EditorUtils.h"
+#include "Engine/Editor/Math/AssetPayload.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
 
 using namespace ONEngine;
 
@@ -34,7 +37,12 @@ void ONEngine::ShowGUI(DissolveMeshRenderer* dmr, Asset::AssetCollection* ac) {
 			if (payload->Data) {
 				Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
 				if (ac->GetAssetTypeFromGuid(assetPayload->guid) == Asset::AssetType::Mesh) {
-					dmr->meshGuid_ = assetPayload->guid;
+					Guid oldGuid = dmr->meshGuid_;
+					Guid newGuid = assetPayload->guid;
+					Editor::EditCommand::Execute<Editor::LambdaCommand>(
+						[dmr, newGuid]() { dmr->meshGuid_ = newGuid; },
+						[dmr, oldGuid]() { dmr->meshGuid_ = oldGuid; }
+					);
 					Console::Log(std::format("Mesh path set to: {}", assetPayload->filePath));
 				}
 			}
@@ -79,7 +87,12 @@ void ONEngine::ShowGUI(DissolveMeshRenderer* dmr, Asset::AssetCollection* ac) {
 			if (payload->Data) {
 				Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
 				if (ac->GetAssetTypeFromGuid(assetPayload->guid) == Asset::AssetType::Texture) {
-					dmr->dissolveTexture_ = assetPayload->guid;
+					Guid oldGuid = dmr->dissolveTexture_;
+					Guid newGuid = assetPayload->guid;
+					Editor::EditCommand::Execute<Editor::LambdaCommand>(
+						[dmr, newGuid]() { dmr->dissolveTexture_ = newGuid; },
+						[dmr, oldGuid]() { dmr->dissolveTexture_ = oldGuid; }
+					);
 					Console::Log(std::format("Dissolve Texture path set to: {}", assetPayload->filePath));
 				}
 			}

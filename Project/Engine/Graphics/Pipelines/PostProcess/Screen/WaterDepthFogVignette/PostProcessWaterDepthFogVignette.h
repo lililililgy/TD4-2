@@ -35,7 +35,8 @@ public:
 		const std::string& textureName,
 		DxCommand* dxCommand,
 		Asset::AssetCollection* assetCollection,
-		EntityComponentSystem* entityComponentSystem
+		EntityComponentSystem* entityComponentSystem,
+		ECSGroup* ecsGroup = nullptr
 	) override;
 
 private:

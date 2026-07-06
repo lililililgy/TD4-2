@@ -1,4 +1,4 @@
-﻿#include "RenderingFramework.h"
+#include "RenderingFramework.h"
 
 using namespace ONEngine;
 
@@ -56,10 +56,11 @@ void RenderingFramework::Initialize(DxManager* dxm, WindowManager* windowManager
 	uavTexture->Initialize("postProcessResult", pDxManager_, assetCollection_.get());
 
 
-#ifdef DEBUG_MODE
-#else
 	copyImagePipeline_ = std::make_unique<CopyImageRenderingPipeline>(assetCollection_.get());
 	copyImagePipeline_->Initialize(shaderCompiler_.get(), pDxManager_);
+
+#ifdef DEBUG_MODE
+#else
 	releaseBuildSubWindow_ = pWindowManager_->GenerateWindow(L"test", Vector2::HD, WindowManager::WindowType::Sub);
 	pWindowManager_->HideGameWindow(releaseBuildSubWindow_);
 #endif // DEBUG_MODE
@@ -115,6 +116,9 @@ void RenderingFramework::Draw() {
 	
 	pWindowManager_->MainWindowPostDraw();
 
+	/// 毎フレームの描画の最後にGizmoのデータをリセット
+	Gizmo::Reset();
+
 #else
 	/// ----- release build の描画 ----- ///
 	releaseBuildSubWindow_->PreDraw();
@@ -136,89 +140,115 @@ void RenderingFramework::Draw() {
 void RenderingFramework::PreDraw(ECSGroup* ecsGroup) {
 	CameraComponent* camera = ecsGroup->GetMainCamera();
 	CameraComponent* camera2d = ecsGroup->GetMainCamera2D();
-	renderingPipelineCollection_->PreDrawEntities(camera, camera2d);
+	renderingPipelineCollection_->PreDrawEntities(ecsGroup, camera, camera2d);
 }
 
 void RenderingFramework::DrawScene() {
-	CameraComponent* camera = pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera();
-	if (!camera) {
-		camera = pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera2D();
-	}
-	
-	// 実行チェックログ
-	static int drawSceneLogCount = 0;
-	if (drawSceneLogCount < 10) {
-		std::string reason = "";
-		if (!camera) reason = "Camera is null";
-		else if (!camera->enable) reason = "Camera is disabled";
-		else if (!camera->IsMakeViewProjection()) reason = "Projection failed";
-		
-		if (reason != "") {
-			ONEngine::Console::Log("[RenderingFramework] DrawScene early return: " + reason, ONEngine::LogCategory::Engine);
-		} else {
-			ONEngine::Console::Log("[RenderingFramework] DrawScene started successfully", ONEngine::LogCategory::Engine);
+	// 1. Clear the main destination RTV (RENDER_TEXTURE_SCENE)
+	SceneRenderTexture* mainRenderTex = renderTextures_[RENDER_TEXTURE_SCENE].get();
+	mainRenderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
+	mainRenderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap());
+
+	// 2. Determine groups to draw
+	std::vector<std::string> groupsToDraw;
+	const auto& activeGroupNames = pEntityComponentSystem_->GetActiveGroupNames();
+	if (activeGroupNames.empty()) {
+		if (auto* currentGroup = pEntityComponentSystem_->GetCurrentGroup()) {
+			groupsToDraw.push_back(currentGroup->GetGroupName());
 		}
-		drawSceneLogCount++;
+	} else {
+		groupsToDraw = activeGroupNames;
 	}
 
-	if(!camera || !camera->enable || !camera->IsMakeViewProjection()) {
-		return;
-	}
-
-	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::MainScene);
-
-	SceneRenderTexture* renderTex = renderTextures_[RENDER_TEXTURE_SCENE].get();
-
-	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
-	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap());
-	/// 3D描画
-	renderingPipelineCollection_->DrawEntities(camera, nullptr);
-	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
-
-	GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::MainScene);
-
-	/// 3D用ポストエフェクト
-	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::PostProcess);
-	renderingPipelineCollection_->ExecutePostProcess3D(renderTex->GetName());
-	GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::PostProcess);
-
-	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
-	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false); // Clear=false
-	
-	// ビューポートを再設定 (ポストプロセスでリセットされている可能性があるため)
 	D3D12_VIEWPORT viewport = { 0.0f, 0.0f, EngineConfig::kWindowSize.x, EngineConfig::kWindowSize.y, 0.0f, 1.0f };
 	D3D12_RECT scissor = { 0, 0, (LONG)EngineConfig::kWindowSize.x, (LONG)EngineConfig::kWindowSize.y };
-	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
-	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
 
-	/// パーティクル描画 (3Dポスト後、2D前)
-	renderingPipelineCollection_->DrawParticles(camera);
+	// 3. Render all groups in order to their separate RTVs and blend them onto the main RTV
+	for (size_t i = 0; i < groupsToDraw.size(); ++i) {
+		const std::string& groupName = groupsToDraw[i];
+		ECSGroup* ecsGroup = pEntityComponentSystem_->GetECSGroup(groupName);
+		if (!ecsGroup) continue;
+		if (ecsGroup->IsDrawPaused()) continue;
 
-	/// 2Dオーバーレイ描画
-	renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera2D());
+		Vector4 clearColor = (i == 0) ? Vector4(0.1f, 0.25f, 0.5f, 1.0f) : Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	// 2D描画後に画面全体ポストプロセスを適用するためにSRVに遷移
-	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
+		CameraComponent* camera = ecsGroup->GetMainCamera();
+		if (!camera) {
+			camera = ecsGroup->GetMainCamera2D();
+		}
+		if (!camera || !camera->enable || !camera->IsMakeViewProjection()) {
+			static std::unordered_map<std::string, bool> skippedLogged;
+			if (!skippedLogged[groupName]) {
+				Console::LogWarning("[RenderingFramework] Skipping group: " + groupName + 
+					" (Camera is " + (camera ? (camera->enable ? "Projection Failed" : "Disabled") : "Null") + ")", LogCategory::Engine);
+				skippedLogged[groupName] = true;
+			}
+			continue;
+		}
 
-	/// 画面全体用ポストエフェクト (2DUI、パーティクルを含めて適用)
-	renderingPipelineCollection_->ExecutePostProcessScreen(renderTex->GetName());
+		SceneRenderTexture* groupRenderTex = GetOrCreateSceneRenderTexture(groupName, clearColor);
 
-	// ギズモ描画のためにRenderTargetに再遷移
-	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
-	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false); // Clear=false
-	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
-	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
+		static std::unordered_map<std::string, bool> drawnLogged;
+		if (!drawnLogged[groupName]) {
+			auto* colorRes = groupRenderTex->GetRenderTexture(0)->GetDxResource().Get();
+			Console::Log("[RenderingFramework] Drawing group: " + groupName + 
+				" | Index: " + std::to_string(i) + 
+				" | groupRenderTex: " + std::to_string((uint64_t)groupRenderTex) +
+				" | colorResource: " + std::to_string((uint64_t)colorRes) +
+				" | ClearColor: (" + std::to_string(clearColor.x) + ", " + std::to_string(clearColor.y) + ", " + std::to_string(clearColor.z) + ", " + std::to_string(clearColor.w) + ")", 
+				LogCategory::Engine);
+			drawnLogged[groupName] = true;
+		}
+		// PreDraw for this group
+		CameraComponent* camera2d = ecsGroup->GetMainCamera2D();
+		renderingPipelineCollection_->PreDrawEntities(ecsGroup, camera, camera2d);
 
-	/// Gizmo描画 (最後、デバッグ表示のためポストプロセス後)
-	renderingPipelineCollection_->DrawGizmos(camera, pEntityComponentSystem_->GetCurrentGroup()->GetMainCamera2D());
+		// Set render target to the group's RTV and clear it
+		groupRenderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
+		groupRenderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), true);
 
-	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
+		// 3D Draw
+		renderingPipelineCollection_->DrawEntities(ecsGroup, camera, nullptr);
+
+		// Set viewports and scissor rects
+		pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
+		pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
+
+		// Particles
+		renderingPipelineCollection_->DrawParticles(ecsGroup, camera);
+
+		// 2D Draw
+		renderingPipelineCollection_->DrawEntities2D(ecsGroup, camera2d);
+
+		// Transition the group's RTV to SRV for post-processing and blending
+		groupRenderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
+
+		// Execute post-processing on the group's RTV
+		GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::PostProcess);
+		renderingPipelineCollection_->ExecutePostProcess3D(groupRenderTex->GetName(), ecsGroup);
+		GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::PostProcess);
+
+		renderingPipelineCollection_->ExecutePostProcessScreen(groupRenderTex->GetName(), ecsGroup);
+
+		// Blend/Draw this group's texture onto the main scene RTV
+		mainRenderTex->SetRenderTargetColorOnly(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false);
+		pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
+		pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
+
+		copyImagePipeline_->DrawTexture(groupRenderTex->GetName() + "Scene", pDxManager_->GetDxCommand());
+	}
+
+	// 4. Transition main scene texture to SRV for presentation
+	mainRenderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 }
 
 void RenderingFramework::DrawDebug() {
-	CameraComponent* camera = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera();
+	ECSGroup* debugGroup = pEntityComponentSystem_->GetECSGroup("Debug");
+	if (!debugGroup) return;
+
+	CameraComponent* camera = debugGroup->GetMainCamera();
 	if (!camera) {
-		camera = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
+		camera = debugGroup->GetMainCamera2D();
 	}
 
 	// 実行チェックログ
@@ -241,6 +271,9 @@ void RenderingFramework::DrawDebug() {
 		return;
 	}
 
+	CameraComponent* camera2D = debugGroup->GetMainCamera2D();
+	renderingPipelineCollection_->PreDrawEntities(debugGroup, camera, camera2D);
+
 	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::DebugDraw);
 
 	SceneRenderTexture* renderTex = renderTextures_[RENDER_TEXTURE_DEBUG].get();
@@ -248,7 +281,7 @@ void RenderingFramework::DrawDebug() {
 	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
 	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap());
 	/// 3D描画
-	renderingPipelineCollection_->DrawEntities(camera, nullptr);
+	renderingPipelineCollection_->DrawEntities(debugGroup, camera, nullptr);
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 
 	renderingPipelineCollection_->ExecutePostProcess3D(renderTex->GetName());
@@ -263,13 +296,26 @@ void RenderingFramework::DrawDebug() {
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
 
 	/// パーティクル描画
-	renderingPipelineCollection_->DrawParticles(camera);
+	renderingPipelineCollection_->DrawParticles(debugGroup, camera);
 
 	// デバッグ用の2D描画
-	renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D(), "Debug");
+	renderingPipelineCollection_->DrawEntities2D(debugGroup, camera2D);
 
-	if (pEntityComponentSystem_->GetCurrentGroup()) {
-		renderingPipelineCollection_->DrawEntities2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D(), pEntityComponentSystem_->GetCurrentGroup()->GetGroupName());
+	std::vector<std::string> groupsToDraw;
+	const auto& activeGroupNames = pEntityComponentSystem_->GetActiveGroupNames();
+	if (activeGroupNames.empty()) {
+		if (auto* currentGroup = pEntityComponentSystem_->GetCurrentGroup()) {
+			groupsToDraw.push_back(currentGroup->GetGroupName());
+		}
+	} else {
+		groupsToDraw = activeGroupNames;
+	}
+
+	for (const auto& groupName : groupsToDraw) {
+		if (auto* ecsGroup = pEntityComponentSystem_->GetECSGroup(groupName)) {
+			renderingPipelineCollection_->DrawEntities(ecsGroup, camera, nullptr);
+			renderingPipelineCollection_->DrawEntities2D(ecsGroup, camera2D);
+		}
 	}
 
 	// 2D描画後に画面全体ポストプロセスを適用するためにSRVに遷移
@@ -284,10 +330,8 @@ void RenderingFramework::DrawDebug() {
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
 
-	CameraComponent* camera2D = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
-
 	/// Gizmo描画 (最後)
-	renderingPipelineCollection_->DrawGizmos(camera, camera2D);
+	renderingPipelineCollection_->DrawGizmos(debugGroup, camera, camera2D);
 
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 
@@ -295,9 +339,12 @@ void RenderingFramework::DrawDebug() {
 }
 
 void RenderingFramework::DrawPrefab() {
-	CameraComponent* camera = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera();
+	ECSGroup* debugGroup = pEntityComponentSystem_->GetECSGroup("Debug");
+	if (!debugGroup) return;
+
+	CameraComponent* camera = debugGroup->GetMainCamera();
 	if (!camera) {
-		camera = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
+		camera = debugGroup->GetMainCamera2D();
 	}
 
 	// 実行チェックログ
@@ -320,6 +367,9 @@ void RenderingFramework::DrawPrefab() {
 		return;
 	}
 
+	CameraComponent* camera2D = debugGroup->GetMainCamera2D();
+	renderingPipelineCollection_->PreDrawEntities(debugGroup, camera, camera2D);
+
 	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::PrefabDraw);
 
 	SceneRenderTexture* renderTex = renderTextures_[RENDER_TEXTURE_PREFAB].get();
@@ -327,7 +377,7 @@ void RenderingFramework::DrawPrefab() {
 	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
 	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap());
 	/// 3D描画
-	renderingPipelineCollection_->DrawSelectedPrefab(camera, nullptr);
+	renderingPipelineCollection_->DrawSelectedPrefab(debugGroup, camera, nullptr);
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 
 	renderingPipelineCollection_->ExecutePostProcess3D(renderTex->GetName());
@@ -342,9 +392,9 @@ void RenderingFramework::DrawPrefab() {
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
 
 	/// パーティクル描画
-	renderingPipelineCollection_->DrawParticles(camera);
+	renderingPipelineCollection_->DrawParticles(debugGroup, camera);
 
-	renderingPipelineCollection_->DrawSelectedPrefab2D(pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D());
+	renderingPipelineCollection_->DrawSelectedPrefab2D(debugGroup, camera2D);
 
 	// 2D描画後に画面全体ポストプロセスを適用するためにSRVに遷移
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
@@ -357,16 +407,6 @@ void RenderingFramework::DrawPrefab() {
 	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap(), false); // Clear=false
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetViewports(1, &viewport);
 	pDxManager_->GetDxCommand()->GetCommandList()->RSSetScissorRects(1, &scissor);
-
-	CameraComponent* camera2D = nullptr;
-	if (auto gameGroup = pEntityComponentSystem_->GetECSGroup("GameScene")) {
-		camera2D = gameGroup->GetMainCamera2D();
-	} else {
-		camera2D = pEntityComponentSystem_->GetECSGroup("Debug")->GetMainCamera2D();
-	}
-
-	/// Gizmo描画 (最後)
-	renderingPipelineCollection_->DrawGizmos(camera, camera2D);
 
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 
@@ -402,7 +442,7 @@ void RenderingFramework::DrawShadowMap() {
 	SceneRenderTexture* renderTex = renderTextures_[RENDER_TEXTURE_SHADOW_MAP].get();
 	renderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
 	renderTex->SetRenderTarget(pDxManager_->GetDxCommand(), pDxManager_->GetDxDSVHeap());
-	renderingPipelineCollection_->DrawEntities(shadowCamera, nullptr);
+	renderingPipelineCollection_->DrawEntities(currentGroup, shadowCamera, nullptr);
 	renderTex->CreateBarrierPixelShaderResource(pDxManager_->GetDxCommand());
 
 	GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::ShadowMap);
@@ -439,5 +479,23 @@ void RenderingFramework::SetImGuiManager(Editor::ImGuiManager* imGuiManager) {
 
 ShaderCompiler* RenderingFramework::GetShaderCompiler() const {
 	return shaderCompiler_.get();
+}
+
+SceneRenderTexture* RenderingFramework::GetOrCreateSceneRenderTexture(const std::string& groupName, const Vector4& clearColor) {
+	auto it = sceneRenderTextures_.find(groupName);
+	if (it != sceneRenderTextures_.end()) {
+		return it->second.get();
+	}
+
+	auto renderTex = std::make_unique<SceneRenderTexture>();
+	renderTex->Initialize(
+		RenderInfo::kRenderTargetDir + groupName,
+		clearColor, EngineConfig::kWindowSize,
+		pDxManager_, assetCollection_.get()
+	);
+
+	auto* ptr = renderTex.get();
+	sceneRenderTextures_[groupName] = std::move(renderTex);
+	return ptr;
 }
 

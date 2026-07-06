@@ -89,13 +89,13 @@ uint32_t ECSGroup::CountEntity(const std::string& name) {
 	const auto& entities = entityCollection_->GetEntities();
 	return static_cast<uint32_t>(std::count_if(entities.begin(), entities.end(),
 		[&name](const std::unique_ptr<GameEntity>& entity) {
-			std::string name = entity->GetName();
+			std::string entityName = entity->GetName();
 			/// 後ろから"_"を検索、"_"を含む場合はその前までを比較する
-			if (name.find_last_of('_') != std::string::npos) {
-				return name.substr(0, name.find_last_of('_')) == name;
+			if (entityName.find_last_of('_') != std::string::npos) {
+				return entityName.substr(0, entityName.find_last_of('_')) == name;
 			}
 
-			return name == name;
+			return entityName == name;
 		}
 	));
 }
@@ -167,4 +167,20 @@ CameraComponent* ECSGroup::GetMainCamera2D() {
 
 const std::string& ECSGroup::GetGroupName() const {
 	return groupName_;
+}
+
+void ECSGroup::SetUpdatePaused(bool paused) {
+	isUpdatePaused_ = paused;
+}
+
+bool ECSGroup::IsUpdatePaused() const {
+	return isUpdatePaused_;
+}
+
+void ECSGroup::SetDrawPaused(bool paused) {
+	isDrawPaused_ = paused;
+}
+
+bool ECSGroup::IsDrawPaused() const {
+	return isDrawPaused_;
 }

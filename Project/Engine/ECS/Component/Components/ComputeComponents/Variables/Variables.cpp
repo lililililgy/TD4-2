@@ -15,6 +15,7 @@
 #include <mono/metadata/loader.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/class.h>
+#include <mono/metadata/threads.h>
 
 /// engine
 #include "Engine/Core/Utility/Math/Math.h"
@@ -50,11 +51,26 @@ namespace {
 	bool HasSerializeField(MonoClassField* field) {
 		MonoClass* klass = mono_field_get_parent(field);
 		MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
-		if (!attrs) return false;
+		if (!attrs) {
+			Console::Log(std::format("[SerializeField] attrs=null for field: {}", mono_field_get_name(field)), ONEngine::LogCategory::ScriptEngine);
+			return false;
+		}
 
-		MonoClass* serializeFieldAttr = mono_class_from_name(MonoScriptEngine::GetInstance().Image(), "", "SerializeField");
-
+		MonoImage* klassImage = mono_class_get_image(klass);
+		MonoClass* serializeFieldAttr = mono_class_from_name(klassImage, "", "SerializeField");
 		bool has = serializeFieldAttr && mono_custom_attrs_has_attr(attrs, serializeFieldAttr);
+
+		if (!has) {
+			MonoImage* engineImage = MonoScriptEngine::GetInstance().Image();
+			if (engineImage && engineImage != klassImage) {
+				MonoClass* serializeFieldAttrEngine = mono_class_from_name(engineImage, "", "SerializeField");
+				if (serializeFieldAttrEngine && mono_custom_attrs_has_attr(attrs, serializeFieldAttrEngine)) {
+					has = true;
+				}
+			}
+		}
+
+		Console::Log(std::format("[SerializeField] field={} has={}", mono_field_get_name(field), has ? "true" : "false"), ONEngine::LogCategory::ScriptEngine);
 		mono_custom_attrs_free(attrs);
 		return has;
 	}
@@ -65,6 +81,9 @@ namespace {
 	}
 
 	bool ShouldSerialize(MonoClassField* field) {
+		// Releaseビルドでは SafeInvoke を経由しない Mono API 呼び出し前に
+		// 必ずスレッドをドメインにアタッチする必要がある
+		mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
 		return IsPublicField(field) || HasSerializeField(field);
 	}
 
@@ -134,7 +153,8 @@ namespace {
 					for (auto& [k, v] : arg->fields) j[k] = VarToJson(v);
 				}
 				return j;
-			} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
+			} else {
+				static_assert(std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>, "Unhandled type in VarToJson");
 				json j = json::array();
 				for (const auto& o : arg) {
 					json oj = json::object();
@@ -146,7 +166,6 @@ namespace {
 				}
 				return j;
 			}
-			return json();
 			}, var);
 	}
 
@@ -177,7 +196,21 @@ Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 			}
 			return gen;
 		}
-		case MONO_TYPE_CLASS: return std::shared_ptr<GenericObject>(nullptr);
+		case MONO_TYPE_CLASS:
+		{
+			MonoClass* klass = mono_class_from_mono_type((MonoType*)type);
+			if (!klass) return std::shared_ptr<GenericObject>(nullptr);
+			const char* name = mono_class_get_name(klass);
+			if (strcmp(name, "String") == 0) return std::string("");
+
+			auto gen = std::make_shared<Variables::GenericObject>();
+			gen->typeName = name;
+			void* iter = nullptr; MonoClassField* f;
+			while ((f = mono_class_get_fields(klass, &iter))) {
+				if (ShouldSerialize(f)) gen->fields[mono_field_get_name(f)] = MonoObjectToVar(nullptr, mono_field_get_type(f));
+			}
+			return gen;
+		}
 		case MONO_TYPE_GENERICINST: return std::vector<int>();
 		default: return 0;
 		}
@@ -484,6 +517,9 @@ void Variables::SaveJson(const std::string& path) {
 }
 
 void Variables::RegisterScriptVariables() {
+	// Releaseビルドでのスレッドアタッチを保証する
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	Script* script = GetOwner()->GetComponent<Script>();
 	if (!script) return;
 
@@ -513,6 +549,9 @@ void Variables::RegisterScriptVariables() {
 }
 
 void Variables::ReloadScriptVariables() {
+	// Releaseビルドでのスレッドアタッチを保証する
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	Script* script = GetOwner()->GetComponent<Script>();
 	if (!script) return;
 
@@ -540,15 +579,33 @@ void Variables::ReloadScriptVariables() {
 }
 
 void Variables::SetScriptVariables(const std::string& scriptName) {
+	// Releaseビルドでは SafeInvoke を経由しない Mono API (mono_field_set_value 等) を
+	// 直接呼び出すため、スレッドをドメインにアタッチしておく
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	GameEntity* owner = GetOwner();
-	if (!owner) return;
+	if (!owner) {
+		Console::Log("[SetScriptVars] owner is null for script: " + scriptName, ONEngine::LogCategory::ScriptEngine);
+		return;
+	}
 	Script* script = owner->GetComponent<Script>();
-	if (!script || !HasGroup(scriptName)) return;
+	if (!script) {
+		Console::Log("[SetScriptVars] no Script component for: " + scriptName, ONEngine::LogCategory::ScriptEngine);
+		return;
+	}
+	if (!HasGroup(scriptName)) {
+		Console::Log("[SetScriptVars] no group for scriptName: " + scriptName + "  groups: " + std::to_string(groups_.size()), ONEngine::LogCategory::ScriptEngine);
+		return;
+	}
 
 	Group& group = groups_[groupKeyMap_.at(scriptName)];
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 	MonoObject* safeObj = monoEngine.GetMonoBehaviorFromCS(owner->GetECSGroup()->GetGroupName(), owner->GetId(), scriptName);
-	if (!safeObj) return;
+	if (!safeObj) {
+		Console::Log("[SetScriptVars] GetMonoBehaviorFromCS returned null for: " + scriptName, ONEngine::LogCategory::ScriptEngine);
+		return;
+	}
+	Console::Log("[SetScriptVars] OK setting fields for: " + scriptName, ONEngine::LogCategory::ScriptEngine);
 
 	MonoClass* monoClass = mono_object_get_class(safeObj);
 	void* iter = nullptr;
