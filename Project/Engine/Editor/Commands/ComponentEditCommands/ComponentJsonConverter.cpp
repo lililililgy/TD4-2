@@ -556,7 +556,7 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystemMain& m) {
 	m.startRotation = j.value("startRotation", MinMaxFloat(0.0f));
 	m.startColor = j.value("startColor", MinMaxColor(Color::kWhite));
 	m.gravityModifier = j.value("gravityModifier", 0.0f);
-	m.simulationSpace = static_cast<SimulationSpace>(j.value("simulationSpace", static_cast<uint8_t>(SimulationSpace::Local)));
+	m.simulationSpace = static_cast<SimulationSpace>(j.value("simulationSpace", static_cast<uint8_t>(SimulationSpace::World)));
 	m.maxParticles = j.value("maxParticles", 1000);
 	m.playOnAwake = j.value("playOnAwake", true);
 }

@@ -102,7 +102,7 @@ namespace ONEngine {
         MinMaxFloat startRotation = MinMaxFloat(0.0f);
         MinMaxColor startColor = MinMaxColor(Color::kWhite);
         float gravityModifier = 0.0f;
-        SimulationSpace simulationSpace = SimulationSpace::Local;
+        SimulationSpace simulationSpace = SimulationSpace::World;
         int maxParticles = 1000;
         bool playOnAwake = true;
     };
