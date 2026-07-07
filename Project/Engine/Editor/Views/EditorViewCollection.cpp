@@ -1,4 +1,4 @@
-#include "EditorViewCollection.h"
+﻿#include "EditorViewCollection.h"
 
 /// external
 #include <imgui.h>
@@ -38,7 +38,6 @@ EditorViewCollection::EditorViewCollection(
 	AddViewContainer("Develop", std::make_unique<DevelopTab>(dxm, ecs, assetCollection, editorManager, sceneManager));
 	AddViewContainer("Game", std::make_unique<GameTab>(assetCollection));
 	AddViewContainer("Prefab", std::make_unique<PrefabTab>(dxm, ecs, assetCollection, editorManager, sceneManager));
-	AddViewContainer("Editor", std::make_unique<EditorTab>());
 	AddViewContainer("AI", std::make_unique<AITab>(dxm, ecs, editorManager, sceneManager));
 	AddViewContainer("Event", std::make_unique<EventTab>());
 	AddViewContainer("Animation", std::make_unique<AnimationTab>(assetCollection));
