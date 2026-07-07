@@ -453,6 +453,7 @@ void ProjectWindow::DrawDirectoryTree(const std::filesystem::path& directory) {
 		UpdateFileCache(currentPath_);
 		searchBuffer_.clear(); // フォルダ選択で検索解除
 		isSearching_ = false;
+		selectedFileIndex_ = -1;
 	}
 
 	if(isOpen) {
@@ -572,6 +573,7 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 		UpdateFileCache(currentPath_);
 		searchBuffer_.clear();
 		isSearching_ = false;
+		selectedFileIndex_ = -1;
 	}
 }
 
@@ -692,42 +694,13 @@ void ProjectWindow::DrawFileList(const std::filesystem::path& directory, bool& o
 
 					ImGui::PushID(static_cast<int>(index));
 
-					ImGui::BeginGroup();
+					bool isSelected = (selectedFileIndex_ == static_cast<int>(index));
+					ImVec2 pos = ImGui::GetCursorScreenPos();
+					float itemHeight = cellSize + 20.0f;
 
-					// アイコン描画（キャッシュ済み）
-					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
-					if(file.displayTexture) {
-						ImGui::ImageButton("##Icon", (ImTextureID)(uintptr_t)file.displayTexture->GetSRVGPUHandle().ptr, { iconSize, iconSize });
-					} else {
-						ImGui::Button("Icon", { iconSize, iconSize });
-					}
-					ImGui::PopStyleVar();
-
-					// 名前描画
-					ImGui::TextWrapped("%s", name.c_str());
-
-					ImGui::EndGroup(); // グループ化ここまで
-
-					// --- D&D処理 ---
-					if(ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
-						static AssetPayload payload;
-						payload.filePath = file.relativePath; // キャッシュ済みの相対パスを利用
-						payload.guid = pAssetCollection_->GetAssetGuidFromPath(payload.filePath);
-
-						const AssetPayload* assetPtr = &payload;
-						ImGui::SetDragDropPayload("AssetData", &assetPtr, sizeof(AssetPayload*));
-
-						// ドラッグ中のプレビュー描画
-						if(file.displayTexture) {
-							ImGui::Image((ImTextureID)(uintptr_t)file.displayTexture->GetSRVGPUHandle().ptr, { 32.0f, 32.0f });
-							ImGui::SameLine();
-						}
-						ImGui::Text("%s", name.c_str());
-						ImGui::EndDragDropSource();
-					}
-
-					// --- クリック判定 ---
-					if(ImGui::IsItemHovered()) {
+					// Selectableを配置して背景ハイライトと選択イベントを処理
+					if(ImGui::Selectable("##Selectable", isSelected, ImGuiSelectableFlags_AllowDoubleClick, ImVec2(cellSize, itemHeight))) {
+						selectedFileIndex_ = static_cast<int>(index);
 						if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 							if(file.isDirectory) {
 								outRequestChangeDir = true;
@@ -737,10 +710,58 @@ void ProjectWindow::DrawFileList(const std::filesystem::path& directory, bool& o
 								ImGuiSelection::SetSelectedObject(guid, SelectionType::Asset);
 							}
 						}
-						if(ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-							ImGui::OpenPopup("FileContextMenu");
-						}
 					}
+
+					// 右クリックでも選択する
+					if(ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+						selectedFileIndex_ = static_cast<int>(index);
+						ImGui::OpenPopup("FileContextMenu");
+					}
+
+					// セルの終端カーソル位置を記録
+					ImVec2 nextCursorPos = ImGui::GetCursorScreenPos();
+
+					// D&D処理（Selectableをドラッグ元にする）
+					if(ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+						static AssetPayload payload;
+						payload.filePath = file.relativePath;
+						payload.guid = pAssetCollection_->GetAssetGuidFromPath(payload.filePath);
+
+						const AssetPayload* assetPtr = &payload;
+						ImGui::SetDragDropPayload("AssetData", &assetPtr, sizeof(AssetPayload*));
+
+						if(file.displayTexture) {
+							ImGui::Image((ImTextureID)(uintptr_t)file.displayTexture->GetSRVGPUHandle().ptr, { 32.0f, 32.0f });
+							ImGui::SameLine();
+						}
+						ImGui::Text("%s", name.c_str());
+						ImGui::EndDragDropSource();
+					}
+
+					// 重ねて描画するために位置を上に戻す
+					ImGui::SetCursorScreenPos(pos);
+					ImGui::BeginGroup();
+
+					// アイコン描画
+					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
+					if(file.displayTexture) {
+						// Selectableの上にあるためImageを使用
+						ImGui::Image((ImTextureID)(uintptr_t)file.displayTexture->GetSRVGPUHandle().ptr, { iconSize, iconSize });
+					} else {
+						ImGui::Button("Icon", { iconSize, iconSize });
+					}
+					ImGui::PopStyleVar();
+
+					// 名前描画
+					ImGui::SetCursorPosX(pos.x + 4.0f);
+					ImGui::PushTextWrapPos(pos.x + cellSize - 4.0f);
+					ImGui::TextWrapped("%s", name.c_str());
+					ImGui::PopTextWrapPos();
+
+					ImGui::EndGroup();
+
+					// カーソル位置をSelectableの直後に戻す
+					ImGui::SetCursorScreenPos(nextCursorPos);
 
 					// コンテキストメニューの呼び出し（削除予約パスを渡す）
 					PopupContextMenu(file.path, pendingDeletePath);
@@ -750,6 +771,95 @@ void ProjectWindow::DrawFileList(const std::filesystem::path& directory, bool& o
 			}
 		}
 		ImGui::EndTable();
+	}
+
+	// 空スペースクリックでの選択解除
+	if(ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsAnyItemHovered()) {
+		selectedFileIndex_ = -1;
+	}
+
+	// --- キーボード操作の処理 ---
+	if(ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows)) {
+		// Backspace: 親フォルダに戻る
+		if(ImGui::IsKeyPressed(ImGuiKey_Backspace)) {
+			bool isAtRoot = false;
+			try {
+				for(const auto& root : rootPaths_) {
+					if(std::filesystem::exists(directory) && std::filesystem::exists(root) && std::filesystem::equivalent(directory, root)) {
+						isAtRoot = true;
+						break;
+					}
+				}
+			} catch(...) {
+				isAtRoot = true;
+			}
+			if(!isAtRoot) {
+				outRequestChangeDir = true;
+				outNextTargetDir = directory.parent_path();
+			}
+		}
+
+		// Enter: フォルダに入る、またはファイルを開く
+		if(ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter)) {
+			if(selectedFileIndex_ >= 0 && selectedFileIndex_ < static_cast<int>(files.size())) {
+				auto& file = files[selectedFileIndex_];
+				if(file.isDirectory) {
+					outRequestChangeDir = true;
+					outNextTargetDir = file.path;
+				} else {
+					const ONEngine::Guid& guid = pAssetCollection_->GetAssetGuidFromPath(file.relativePath);
+					ImGuiSelection::SetSelectedObject(guid, SelectionType::Asset);
+				}
+			}
+		}
+
+		// Delete: 削除
+		if(ImGui::IsKeyPressed(ImGuiKey_Delete)) {
+			if(selectedFileIndex_ >= 0 && selectedFileIndex_ < static_cast<int>(files.size())) {
+				pendingDeletePath = files[selectedFileIndex_].path;
+				selectedFileIndex_ = -1;
+			}
+		}
+
+		// F2: リネームポップアップを開く
+		if(ImGui::IsKeyPressed(ImGuiKey_F2)) {
+			if(selectedFileIndex_ >= 0 && selectedFileIndex_ < static_cast<int>(files.size())) {
+				auto& file = files[selectedFileIndex_];
+				showRenamePopup_ = true;
+				targetPath_ = file.path;
+				inputBuffer_ = file.path.stem().string();
+			}
+		}
+
+		// 矢印キーでの選択移動
+		if(ImGui::IsKeyPressed(ImGuiKey_LeftArrow)) {
+			if(selectedFileIndex_ > 0) {
+				selectedFileIndex_--;
+			} else if(selectedFileIndex_ == -1 && !files.empty()) {
+				selectedFileIndex_ = 0;
+			}
+		}
+		if(ImGui::IsKeyPressed(ImGuiKey_RightArrow)) {
+			if(selectedFileIndex_ < static_cast<int>(files.size()) - 1) {
+				selectedFileIndex_++;
+			} else if(selectedFileIndex_ == -1 && !files.empty()) {
+				selectedFileIndex_ = 0;
+			}
+		}
+		if(ImGui::IsKeyPressed(ImGuiKey_UpArrow)) {
+			if(selectedFileIndex_ >= columnCount) {
+				selectedFileIndex_ -= columnCount;
+			} else if(selectedFileIndex_ == -1 && !files.empty()) {
+				selectedFileIndex_ = 0;
+			}
+		}
+		if(ImGui::IsKeyPressed(ImGuiKey_DownArrow)) {
+			if(selectedFileIndex_ + columnCount < static_cast<int>(files.size())) {
+				selectedFileIndex_ += columnCount;
+			} else if(selectedFileIndex_ == -1 && !files.empty()) {
+				selectedFileIndex_ = 0;
+			}
+		}
 	}
 
 	// 描画ループを完全に抜けた後で、安全に削除処理とキャッシュ更新を行う

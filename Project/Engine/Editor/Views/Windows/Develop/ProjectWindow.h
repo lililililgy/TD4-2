@@ -108,6 +108,8 @@ private:
 
 	FileWatcher fileWatcher_;
 
+	int selectedFileIndex_ = -1;
+
 };
 
 } /// Editor
