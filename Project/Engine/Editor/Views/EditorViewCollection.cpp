@@ -106,6 +106,10 @@ void EditorViewCollection::AddViewContainer(const std::string& name, std::unique
 		child->pImGuiManager_ = pImGuiManager_;
 		child->SetParentContainer(window.get());
 	}
+	for(auto& child : window->pendingAdditions_) {
+		child->pImGuiManager_ = pImGuiManager_;
+		child->SetParentContainer(window.get());
+	}
 
 	parentWindows_.push_back(std::move(window));
 }
@@ -206,6 +210,7 @@ void IEditorWindowContainer::UpdateViews() {
 
 IEditorWindow* IEditorWindowContainer::AddView(std::unique_ptr<class IEditorWindow> child) {
 	child->SetParentContainer(this);
+	child->pImGuiManager_ = this->pImGuiManager_;
 	class IEditorWindow* childPtr = child.get();
 	pendingAdditions_.push_back(std::move(child));
 	return childPtr;
