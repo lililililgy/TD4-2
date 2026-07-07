@@ -473,10 +473,11 @@ void ProjectWindow::DrawDirectoryTree(const std::filesystem::path& directory) {
 void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 	// --- 検索バーとフィルタの描画 (固定部) ---
 	float filterWidth = 100.0f;
+	float buttonWidth = 24.0f;
 	float spacing = 8.0f;
 	float totalWidth = ImGui::GetContentRegionAvail().x;
 
-	ImGui::PushItemWidth(totalWidth - filterWidth - spacing);
+	ImGui::PushItemWidth(totalWidth - filterWidth - buttonWidth - (spacing * 2.0f));
 	if(ImGuiInputText("##ProjectSearch", &searchBuffer_, ImGuiInputTextFlags_AutoSelectAll, "search file...")) {
 	}
 	if(ImGui::IsItemDeactivatedAfterEdit() || !searchBuffer_.empty()) {
@@ -497,6 +498,21 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 		isFiltering_ = false;
 	}
 	ImGui::PopItemWidth();
+
+	ImGui::SameLine(0, spacing);
+
+	if(ImGui::Button("+", ImVec2(buttonWidth, 0.0f))) {
+		if(GetParentContainer()) {
+			static int projectWindowCounter = 1;
+			int id = ++projectWindowCounter;
+			std::string name = std::format("Project ({})##Project_{}", id, id);
+
+			auto newWindow = std::make_unique<ProjectWindow>(pAssetCollection_);
+			newWindow->SetWindowName(name);
+
+			GetParentContainer()->AddView(std::move(newWindow));
+		}
+	}
 
 	// 検索文字列が空でない場合にグローバル検索を実行
 	if(isSearching_) {

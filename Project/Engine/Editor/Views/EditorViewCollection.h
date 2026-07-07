@@ -137,6 +137,9 @@ public:
 	bool CanClose() const { return canClose_; }
 	void SetCanClose(bool canClose) { canClose_ = canClose; }
 
+	class IEditorWindowContainer* GetParentContainer() const { return pParentContainer_; }
+	void SetParentContainer(class IEditorWindowContainer* parent) { pParentContainer_ = parent; }
+
 protected:
 	/// ===================================================
 	/// protected : objects
@@ -144,6 +147,7 @@ protected:
 	ImGuiManager* pImGuiManager_;
 	bool isOpen_ = true;
 	bool canClose_ = true;
+	class IEditorWindowContainer* pParentContainer_ = nullptr;
 };
 
 

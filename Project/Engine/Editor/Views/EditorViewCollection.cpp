@@ -104,6 +104,7 @@ void EditorViewCollection::AddViewContainer(const std::string& name, std::unique
 	window->pImGuiManager_ = pImGuiManager_;
 	for(auto& child : window->children_) {
 		child->pImGuiManager_ = pImGuiManager_;
+		child->SetParentContainer(window.get());
 	}
 
 	parentWindows_.push_back(std::move(window));
@@ -132,23 +133,6 @@ void EditorViewCollection::MainMenuUpdate() {
 		}
 
 		++i;
-	}
-
-	// Windowメニューの追加
-	if (ImGui::BeginMenu("Window")) {
-		if (ImGui::MenuItem("New Project Window")) {
-			if (selectedMenuIndex_ >= 0 && selectedMenuIndex_ < static_cast<int>(parentWindows_.size())) {
-				static int projectWindowCounter = 1;
-				int id = ++projectWindowCounter;
-				std::string name = std::format("Project ({})##Project_{}", id, id);
-				
-				auto newWindow = std::make_unique<ProjectWindow>(pAssetCollection_);
-				newWindow->SetWindowName(name);
-				
-				parentWindows_[selectedMenuIndex_]->AddView(std::move(newWindow));
-			}
-		}
-		ImGui::EndMenu();
 	}
 
 	ImGui::EndMainMenuBar();
@@ -213,6 +197,7 @@ void IEditorWindowContainer::UpdateViews() {
 }
 
 IEditorWindow* IEditorWindowContainer::AddView(std::unique_ptr<class IEditorWindow> child) {
+	child->SetParentContainer(this);
 	class IEditorWindow* childPtr = child.get();
 	children_.push_back(std::move(child));
 	return childPtr;
