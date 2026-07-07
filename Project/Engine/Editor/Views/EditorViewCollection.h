@@ -67,6 +67,7 @@ private:
 	/// ----- other class ----- ///
 	ImGuiManager* pImGuiManager_;
 	ONEngine::SceneManager* pSceneManager_;
+	ONEngine::Asset::AssetCollection* pAssetCollection_;
 
 	/// ----- collection window ----- ///
 	std::vector<std::unique_ptr<IEditorWindowContainer>> parentWindows_;
@@ -129,11 +130,15 @@ public:
 	virtual ~IEditorWindow() = default;
 	virtual void ShowImGui() = 0;
 
+	bool IsOpen() const { return isOpen_; }
+	void SetOpen(bool open) { isOpen_ = open; }
+
 protected:
 	/// ===================================================
 	/// protected : objects
 	/// ===================================================
 	ImGuiManager* pImGuiManager_;
+	bool isOpen_ = true;
 };
 
 

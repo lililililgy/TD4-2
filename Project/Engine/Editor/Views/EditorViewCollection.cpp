@@ -9,6 +9,7 @@
 #include "Engine/Scene/SceneManager.h"
 #include "Engine/Editor/Manager/ImGuiManager.h"
 #include "Tabs/DevelopTab.h"
+#include "Windows/Develop/ProjectWindow.h"
 #include "Tabs/GameTab.h"
 #include "Tabs/PrefabTab.h"
 #include "Tabs/EditorTab.h"
@@ -31,7 +32,7 @@ EditorViewCollection::EditorViewCollection(
 	ImGuiManager* imGuiManager,
 	EditorManager* editorManager,
 	ONEngine::SceneManager* sceneManager)
-	: pImGuiManager_(imGuiManager), pSceneManager_(sceneManager) {
+	: pImGuiManager_(imGuiManager), pSceneManager_(sceneManager), pAssetCollection_(assetCollection) {
 
 	/// ここでwindowを生成する
 	AddViewContainer("Develop", std::make_unique<DevelopTab>(dxm, ecs, assetCollection, editorManager, sceneManager));
@@ -134,6 +135,23 @@ void EditorViewCollection::MainMenuUpdate() {
 		++i;
 	}
 
+	// Windowメニューの追加
+	if (ImGui::BeginMenu("Window")) {
+		if (ImGui::MenuItem("New Project Window")) {
+			if (selectedMenuIndex_ >= 0 && selectedMenuIndex_ < static_cast<int>(parentWindows_.size())) {
+				static int projectWindowCounter = 1;
+				int id = ++projectWindowCounter;
+				std::string name = std::format("Project ({})##Project_{}", id, id);
+				
+				auto newWindow = std::make_unique<ProjectWindow>(pAssetCollection_);
+				newWindow->SetWindowName(name);
+				
+				parentWindows_[selectedMenuIndex_]->AddView(std::move(newWindow));
+			}
+		}
+		ImGui::EndMenu();
+	}
+
 	ImGui::EndMainMenuBar();
 }
 
@@ -171,6 +189,10 @@ void Editor::IEditorWindowContainer::ShowImGui() {
 }
 
 void IEditorWindowContainer::UpdateViews() {
+	std::erase_if(children_, [](const auto& child) {
+		return !child->IsOpen();
+	});
+
 	for(auto& child : children_) {
 		child->ShowImGui();
 	}

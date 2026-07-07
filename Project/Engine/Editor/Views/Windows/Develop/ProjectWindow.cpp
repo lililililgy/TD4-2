@@ -202,7 +202,7 @@ void ProjectWindow::ShowImGui() {
 		}
 	}
 
-	if(ImGui::Begin(windowName_.c_str())) {
+	if(ImGui::Begin(windowName_.c_str(), &isOpen_)) {
 		ImGui::Columns(2);
 
 		// 左側：フォルダツリー
