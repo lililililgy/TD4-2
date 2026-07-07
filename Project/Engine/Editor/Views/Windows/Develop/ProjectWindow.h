@@ -38,6 +38,8 @@ public:
 	/// @brief imgui windowの描画処理
 	void ShowImGui() override;
 
+	const char* GetWindowType() const override { return "ProjectWindow"; }
+
 	/// @brief ImGui::Beginに用いるウィンドウ名を設定する
 	/// @param windowName ウィンドウ名
 	void SetWindowName(const std::string& windowName);

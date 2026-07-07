@@ -202,7 +202,8 @@ void ProjectWindow::ShowImGui() {
 		}
 	}
 
-	if(ImGui::Begin(windowName_.c_str(), &isOpen_)) {
+	bool* p_open = canClose_ ? &isOpen_ : nullptr;
+	if(ImGui::Begin(windowName_.c_str(), p_open)) {
 		ImGui::Columns(2);
 
 		// 左側：フォルダツリー
@@ -753,7 +754,7 @@ void ProjectWindow::DrawFileList(const std::filesystem::path& directory, bool& o
 					ImGui::PopStyleVar();
 
 					// 名前描画
-					ImGui::SetCursorPosX(pos.x + 4.0f);
+					ImGui::SetCursorScreenPos(ImVec2(pos.x + 4.0f, pos.y + iconSize + 12.0f));
 					ImGui::PushTextWrapPos(pos.x + cellSize - 4.0f);
 					ImGui::TextWrapped("%s", name.c_str());
 					ImGui::PopTextWrapPos();

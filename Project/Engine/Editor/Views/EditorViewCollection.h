@@ -133,12 +133,17 @@ public:
 	bool IsOpen() const { return isOpen_; }
 	void SetOpen(bool open) { isOpen_ = open; }
 
+	virtual const char* GetWindowType() const { return "Unknown"; }
+	bool CanClose() const { return canClose_; }
+	void SetCanClose(bool canClose) { canClose_ = canClose; }
+
 protected:
 	/// ===================================================
 	/// protected : objects
 	/// ===================================================
 	ImGuiManager* pImGuiManager_;
 	bool isOpen_ = true;
+	bool canClose_ = true;
 };
 
 

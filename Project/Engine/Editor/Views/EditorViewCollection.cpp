@@ -192,6 +192,21 @@ void IEditorWindowContainer::UpdateViews() {
 		return !child->IsOpen();
 	});
 
+	// ProjectWindowの数を数える
+	int projectWindowCount = 0;
+	for (const auto& child : children_) {
+		if (std::string(child->GetWindowType()) == "ProjectWindow") {
+			projectWindowCount++;
+		}
+	}
+
+	// 閉じられるかどうかのフラグを更新
+	for (auto& child : children_) {
+		if (std::string(child->GetWindowType()) == "ProjectWindow") {
+			child->SetCanClose(projectWindowCount > 1);
+		}
+	}
+
 	for(auto& child : children_) {
 		child->ShowImGui();
 	}
