@@ -141,6 +141,8 @@ public:
 	class IEditorWindowContainer* GetParentContainer() const { return pParentContainer_; }
 	void SetParentContainer(class IEditorWindowContainer* parent) { pParentContainer_ = parent; }
 
+	void SetImGuiManager(ImGuiManager* pImGuiManager) { pImGuiManager_ = pImGuiManager; }
+
 protected:
 	/// ===================================================
 	/// protected : objects
