@@ -23,22 +23,13 @@
             "type": "Transform"
         },
         {
-            "MovementArea": {},
-            "Test": {
-                "color": {
-                    "w": 0.0,
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "min": {
-                    "x": 0.0,
-                    "y": 0.0
-                },
-                "testVector2": {
-                    "x": 0.0,
-                    "y": 0.0
-                }
+            "GameSceneController": {
+                "openPauseKeyInputs": [
+                    0
+                ],
+                "openPausePadInputs": [
+                    16
+                ]
             },
             "type": "Variables"
         },
@@ -47,14 +38,14 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "MovementArea"
+                    "name": "GameSceneController"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "dbdb0185ba797bb65f8bbc130f56b80c",
-    "name": "TestStage",
+    "guid": "b2a7b199ab1291bba0ed6d4ad609b18f",
+    "name": "GameController",
     "parentGuid": null,
     "prefabName": ""
 }

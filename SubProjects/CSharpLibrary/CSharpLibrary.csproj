@@ -160,6 +160,7 @@
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
+    <Compile Include="Scripts\Game\Controller\GameSceneController.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
     <Compile Include="Scripts\Game\Enemy\BiomeArea.cs" />
