@@ -112,6 +112,7 @@ protected:
 	/// ----- member objects ----- ///
 
 	std::vector<std::unique_ptr<class IEditorWindow>> children_;
+	std::vector<std::unique_ptr<class IEditorWindow>> pendingAdditions_;
 	std::string windowName_;
 
 };

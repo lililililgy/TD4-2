@@ -172,6 +172,14 @@ void Editor::IEditorWindowContainer::ShowImGui() {
 }
 
 void IEditorWindowContainer::UpdateViews() {
+	// 保留されていた追加ウィンドウを安全に children_ に移動する
+	if (!pendingAdditions_.empty()) {
+		for (auto& child : pendingAdditions_) {
+			children_.push_back(std::move(child));
+		}
+		pendingAdditions_.clear();
+	}
+
 	std::erase_if(children_, [](const auto& child) {
 		return !child->IsOpen();
 	});
@@ -199,6 +207,6 @@ void IEditorWindowContainer::UpdateViews() {
 IEditorWindow* IEditorWindowContainer::AddView(std::unique_ptr<class IEditorWindow> child) {
 	child->SetParentContainer(this);
 	class IEditorWindow* childPtr = child.get();
-	children_.push_back(std::move(child));
+	pendingAdditions_.push_back(std::move(child));
 	return childPtr;
 }
