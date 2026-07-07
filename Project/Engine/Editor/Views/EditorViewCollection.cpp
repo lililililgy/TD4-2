@@ -52,6 +52,24 @@ EditorViewCollection::EditorViewCollection(
 EditorViewCollection::~EditorViewCollection() {}
 
 void EditorViewCollection::Update() {
+	if (ONEngine::EngineConfig::isTestMode) {
+		static int testFrame = 0;
+		static IEditorWindow* testTabPtr = nullptr;
+		testFrame++;
+
+		if (testFrame == 10) {
+			if (selectedMenuIndex_ >= 0 && selectedMenuIndex_ < static_cast<int>(parentWindows_.size())) {
+				auto newWindow = std::make_unique<ProjectWindow>(pAssetCollection_);
+				newWindow->SetWindowName("Project (TestTab)##Project_TestTab");
+				testTabPtr = parentWindows_[selectedMenuIndex_]->AddView(std::move(newWindow));
+			}
+		}
+		else if (testFrame == 40) {
+			if (testTabPtr) {
+				testTabPtr->SetOpen(false);
+			}
+		}
+	}
 
 	MainMenuUpdate();
 
