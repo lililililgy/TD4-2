@@ -67,8 +67,7 @@ public:
 
 	/// @brief ImGuiのマウス位置を更新する
 	/// @param winHwnd ImGuiを描画しているWindowのHWND
-	/// @param renderTargetSize RenderTargetのサイズ(px)
-	void UpdateMousePosition(HWND winHwnd, const ONEngine::Vector2& renderTargetSize);
+	void UpdateMousePosition(HWND winHwnd);
 
 
 	/// @brief ImGuiのスタイルを出力する

@@ -715,8 +715,7 @@ void ImGuiManager::Update() {
 	sceneImageInfos_.clear();
 
 	UpdateMousePosition(
-		pWindowManager_->GetMainWindow()->GetHwnd(),
-		ONEngine::EngineConfig::kWindowSize
+		pWindowManager_->GetMainWindow()->GetHwnd()
 	);
 
 	ImGui::NewFrame();
@@ -724,7 +723,6 @@ void ImGuiManager::Update() {
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
-	io.DisplaySize = ImVec2(ONEngine::EngineConfig::kWindowSize.x, ONEngine::EngineConfig::kWindowSize.y);
 	io.DeltaTime = ONEngine::Time::UnscaledDeltaTime();
 
 	imGuiWindowCollection_->Update();
@@ -742,28 +740,13 @@ void ImGuiManager::AddSceneImageInfo(const std::string& name, const ImGuiSceneIm
 	sceneImageInfos_[name] = info;
 }
 
-void ImGuiManager::UpdateMousePosition(HWND winHwnd, const ONEngine::Vector2& renderTargetSize) {
+void ImGuiManager::UpdateMousePosition(HWND winHwnd) {
 	POINT point;
 	GetCursorPos(&point);
 
 	ScreenToClient(winHwnd, &point);
 
-	RECT clientRect;
-	GetClientRect(winHwnd, &clientRect);
-
-	ONEngine::Vector2 clientSize = {
-		static_cast<float>(clientRect.right - clientRect.left),
-		static_cast<float>(clientRect.bottom - clientRect.top)
-	};
-
-	/// 補正
-	ONEngine::Vector2 scale = renderTargetSize / clientSize;
-	ONEngine::Vector2 corrected = {
-		point.x * scale.x,
-		point.y * scale.y
-	};
-
-	ImGui::GetIO().AddMousePosEvent(corrected.x, corrected.y);
+	ImGui::GetIO().AddMousePosEvent(static_cast<float>(point.x), static_cast<float>(point.y));
 }
 
 void ImGuiManager::OutputImGuiStyle(const std::string& fileName) const {
