@@ -149,15 +149,7 @@ namespace {
 		mono_add_internal_call("CircleCollider::InternalIsUseOwnerScaleCircle", (void*)InternalIsUseOwnerScaleCircle);
 		mono_add_internal_call("CircleCollider::InternalSetUseOwnerScaleCircle", (void*)InternalSetUseOwnerScaleCircle);
 
-		/// BoxCollider2D
-		mono_add_internal_call("BoxCollider2D::InternalGetSizeBox2D", (void*)InternalGetSizeBox2D);
-		mono_add_internal_call("BoxCollider2D::InternalSetSizeBox2D", (void*)InternalSetSizeBox2D);
-		mono_add_internal_call("BoxCollider2D::InternalIsTriggerBox2D", (void*)InternalIsTriggerBox2D);
-		mono_add_internal_call("BoxCollider2D::InternalSetTriggerBox2D", (void*)InternalSetTriggerBox2D);
-		mono_add_internal_call("BoxCollider2D::InternalGetMassBox2D", (void*)InternalGetMassBox2D);
-		mono_add_internal_call("BoxCollider2D::InternalSetMassBox2D", (void*)InternalSetMassBox2D);
-		mono_add_internal_call("BoxCollider2D::InternalIsUseOwnerScaleBox2D", (void*)InternalIsUseOwnerScaleBox2D);
-		mono_add_internal_call("BoxCollider2D::InternalSetUseOwnerScaleBox2D", (void*)InternalSetUseOwnerScaleBox2D);
+
 	}
 
 	void AddAudioInternalCalls() {
