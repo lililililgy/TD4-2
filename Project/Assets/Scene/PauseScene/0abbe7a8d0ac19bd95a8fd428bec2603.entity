@@ -12,24 +12,41 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -1.0,
-                "y": -2.0,
+                "x": 3.0,
+                "y": -2.4000000953674316,
                 "z": 0.0
             },
             "rotate": {
                 "w": 1.0,
                 "x": 0.0,
-                "y": 0.0,
+                "y": -0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 8.0,
+                "x": 15.0,
                 "y": 1.0,
                 "z": 1.0
             },
             "type": "Transform"
         },
         {
+            "PauseBackMainMenu": {
+                "defaultColor": {
+                    "w": 0.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "height": 0.0,
+                "selectedColor": {
+                    "w": 0.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "speed": 0.0,
+                "time": 0.0
+            },
             "UITest1": {},
             "type": "Variables"
         },
@@ -78,7 +95,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "UITest1"
+                    "name": "PauseBackMainMenu"
                 }
             ],
             "type": "Script"

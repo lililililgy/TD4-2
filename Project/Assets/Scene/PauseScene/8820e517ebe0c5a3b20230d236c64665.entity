@@ -12,24 +12,25 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -2.0,
-                "y": 0.0,
+                "x": 3.700000047683716,
+                "y": -1.2000000476837158,
                 "z": 0.0
             },
             "rotate": {
                 "w": 1.0,
                 "x": 0.0,
-                "y": 0.0,
+                "y": -0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 11.71875,
+                "x": 15.0,
                 "y": 1.0,
                 "z": 1.0
             },
             "type": "Transform"
         },
         {
+            "PauseStartCheckPoint": {},
             "UITest1": {},
             "type": "Variables"
         },
@@ -78,7 +79,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "UITest1"
+                    "name": "PauseStartCheckPoint"
                 }
             ],
             "type": "Script"

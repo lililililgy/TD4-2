@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
 
-public class PauseExitGame : MonoScript {
-	public override void Initialize() {
-		
+public class PauseExitGame : PauseCommon {
+	void OnSelect() {
+		isSelect = true;
 	}
 
-	public override void Update() {
-		
+	void OnDeselect() {
+		isSelect = false;
 	}
+
+	void OnSubmit() {
+		Application.Quit();
+	}
+
 }
