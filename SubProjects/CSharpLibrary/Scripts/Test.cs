@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 
 
-public class Test : MonoScript {
+public class Test : MonoScript
+{
 
 
 	//[SerializeField] float testFloats = 1f;
@@ -16,21 +17,13 @@ public class Test : MonoScript {
 	[SerializeField] Vector4 color = Vector4.red;
 	[SerializeField] private Vector2 min = Vector2.zero;
 
-    public override void Initialize() {
-		
+	public override void Initialize()
+	{
+
 	}
 
-	public override void Update() {
-		if (Input.TriggerKey(KeyCode.Space)) {
-			SceneManager.Add("TitleScene");
-		}
-
-		if (Input.TriggerKey(KeyCode.P)) {
-			SceneManager.SetUpdatePaused("TitleScene", true);
-		}
-
-		if (Input.TriggerKey(KeyCode.O)) {
-			SceneManager.SetUpdatePaused("TitleScene", false);
-		}
+	public override void Update()
+	{
+		color = new Vector4(1, 0, 0, 1);
 	}
 }

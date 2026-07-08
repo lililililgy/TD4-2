@@ -88,18 +88,19 @@ void MonoScriptEngine::Initialize() {
 
 #if defined(DEBUG_MODE)
 	/// デバッグモード用のオプション設定 (環境変数を使用せず、直接Soft Debuggerオプションをパースして確実に起動)
-	// ただし、自動テスト (--test-mode) で起動された場合はアタッチ待ち (suspend) を無効にする
-	bool isTestMode = false;
+	// デフォルトではアタッチ待ち (suspend) を行わず即時起動するが、
+	// 引数に --wait-dbg が明示的に指定された場合のみ接続待ちを行う
+	bool waitDebug = false;
 	LPWSTR cmdLine = GetCommandLineW();
-	if (cmdLine && wcsstr(cmdLine, L"--test-mode") != nullptr) {
-		isTestMode = true;
+	if (cmdLine && wcsstr(cmdLine, L"--wait-dbg") != nullptr) {
+		waitDebug = true;
 	}
 
 	const char* debugOptions[] = {
 		"--soft-breakpoints",
-		isTestMode 
-			? "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n"
-			: "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y"
+		waitDebug 
+			? "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y"
+			: "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n"
 	};
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
