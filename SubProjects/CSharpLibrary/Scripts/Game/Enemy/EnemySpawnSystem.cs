@@ -36,7 +36,9 @@ public class Biome {
 // 敵のスポーンシステム
 public class EnemySpawnSystem : MonoScript {
     [SerializeField] private bool isActive_ = false;
+
     [SerializeField] private string originName_ = "EnemySpawnOrigin";
+    [SerializeField] private string heatMapEntityName_ = "EnemyHeatMap";
     // スポーン範囲
     [SerializeField] private Vector2 spawnAreaMin_;
     [SerializeField] private Vector2 spawnAreaMax_;
@@ -104,7 +106,8 @@ public class EnemySpawnSystem : MonoScript {
         CalculateSpawnCellWeights();
 
         // スポーン可能な敵の総数が上限に達している場合はスポーンしない
-        EnemyHeatMap heatMap = entity.GetScript<EnemyHeatMap>();
+        Entity heatMapEnt = ecsGroup.FindEntity(heatMapEntityName_);
+        EnemyHeatMap heatMap = heatMapEnt?.GetScript<EnemyHeatMap>();
         if (heatMap == null) return;
         if (heatMap.GetEnemyCount() >= maxEnemyCount_) return;
 

@@ -16,8 +16,8 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 6.349204063415527,
-                "y": 2.6455018520355225,
+                "x": 3.369999885559082,
+                "y": 1.899999976158142,
                 "z": 1.0
             },
             "type": "Transform"
@@ -28,6 +28,7 @@
                     "x": 256.0,
                     "y": 256.0
                 },
+                "enemies_": [],
                 "enemyCount_": 0
             },
             "EnemySpawnSystem": {
@@ -58,20 +59,32 @@
                     "x": -1725.43994140625,
                     "y": -967.6799926757813
                 },
+                "heatMapEntityName_": "Stage",
                 "heatWeightThreshold_": 3,
                 "isActive_": false,
                 "maxEnemyCount_": 12,
                 "maxSpawnCount_": 1,
                 "originName_": "Player",
                 "spawnAreaMax_": {
-                    "x": 1984.0,
-                    "y": 1116.0
+                    "x": 2237.39990234375,
+                    "y": 1254.83203125
                 },
                 "spawnAreaMin_": {
-                    "x": -1984.0,
-                    "y": -1116.0
+                    "x": -2237.39990234375,
+                    "y": -1254.83203125
                 },
                 "spawnInterval_": 1.0
+            },
+            "MovementAreaClamper": {
+                "existArea_": false,
+                "fixedCollisionBounds_": false,
+                "fixedPos_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "movementAreaEntityName_": "Stage",
+                "radius_": 2237.39990234375
             },
             "TrailFollower": {
                 "chainName_": "System",
@@ -93,11 +106,15 @@
             "scripts": [
                 {
                     "enable": true,
+                    "name": "TrailFollower"
+                },
+                {
+                    "enable": true,
                     "name": "EnemySpawnSystem"
                 },
                 {
                     "enable": true,
-                    "name": "EnemyHeatMap"
+                    "name": "MovementAreaClamper"
                 }
             ],
             "type": "Script"

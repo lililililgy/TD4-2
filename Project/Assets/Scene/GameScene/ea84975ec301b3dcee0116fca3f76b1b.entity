@@ -6,35 +6,30 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 24000.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
-                "y": -0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "scale": {
                 "x": 1000.0,
-                "y": 250.0,
-                "z": 1.0
+                "y": 1000.0,
+                "z": 1000.0
             },
             "type": "Transform"
         },
         {
-            "BiomeArea": {
-                "halfExtents_": {
-                    "x": 0.0,
-                    "y": 0.0
+            "EnemyHeatMap": {
+                "cellSize_": {
+                    "x": 256.0,
+                    "y": 256.0
                 },
-                "spawnTable_": [
-                    {
-                        "__type": "SpawnEntry",
-                        "enemyType": "MorayEelPot",
-                        "weight": 6.0
-                    }
-                ]
+                "enemies_": [],
+                "enemyCount_": 0
             },
             "MovementArea": {
                 "fixedCollisionBounds_": true,
@@ -54,17 +49,17 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "BiomeArea"
+                    "name": "MovementArea"
                 },
                 {
                     "enable": true,
-                    "name": "MovementArea"
+                    "name": "EnemyHeatMap"
                 }
             ],
             "type": "Script"
         },
         {
-            "categoryBits": 1,
+            "categoryBits": 32,
             "enable": 1,
             "freezeY": false,
             "isTrigger": false,
@@ -79,8 +74,8 @@
             "useOwnerScale": true
         }
     ],
-    "guid": "13f6261efbbe22f150b278ad24482dc1",
-    "name": "SkyZone",
+    "guid": "ea84975ec301b3dcee0116fca3f76b1b",
+    "name": "Stage",
     "parentGuid": null,
     "prefabName": ""
 }
