@@ -10,9 +10,9 @@ Write-Host "=========================================" -ForegroundColor Cyan
 # --- 1. [Auto] SerializeField Verification ---
 Write-Host "`n[1/2] Verifying SerializeField (Auto)..." -ForegroundColor Yellow
 
-$EngineExe = "$PSScriptRoot/Project/Engine/Bin/Debug/ONEngine.exe"
+$EngineExe = "$PSScriptRoot/Generated/Outputs/Debug/ONEngine.exe"
 if (-not (Test-Path $EngineExe)) {
-    $EngineExe = "$PSScriptRoot/Project/Engine/Bin/Development/ONEngine.exe"
+    $EngineExe = "$PSScriptRoot/Generated/Outputs/Development/ONEngine.exe"
 }
 
 if (-not (Test-Path $EngineExe)) {
