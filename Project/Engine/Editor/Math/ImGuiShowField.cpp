@@ -162,6 +162,12 @@ void DrawGenericObjectWithTracking(std::shared_ptr<ONEngine::Variables::GenericO
 	}
 }
 
+ModifyScriptVariableCommand::VariantValue ToCommandVar(const ONEngine::Variables::Var& var) {
+	return std::visit([](auto&& arg) -> ModifyScriptVariableCommand::VariantValue {
+		return arg;
+	}, var);
+}
+
 } /// namespace
 
 
@@ -405,7 +411,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 					ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
 					list.resize(size);
 					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
-						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, oldVal, group.Get(name));
+						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
 					}
 				}
 				bool anyActive = false;
@@ -423,7 +429,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 				if (anyDeactivated) {
 					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
 						if (startListValues.contains(key)) {
-							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, startListValues[key], group.Get(name));
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
 							startListValues.erase(key);
 						}
 					}
@@ -437,7 +443,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 					ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
 					list.resize(size);
 					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
-						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, oldVal, group.Get(name));
+						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
 					}
 				}
 				bool anyActive = false;
@@ -455,7 +461,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 				if (anyDeactivated) {
 					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
 						if (startListValues.contains(key)) {
-							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, startListValues[key], group.Get(name));
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
 							startListValues.erase(key);
 						}
 					}
@@ -469,7 +475,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 					ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
 					list.resize(size);
 					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
-						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, oldVal, group.Get(name));
+						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
 					}
 				}
 				for (int i = 0; i < (int)list.size(); ++i) {
@@ -479,7 +485,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 						ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
 						list[i] = b;
 						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
-							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, oldVal, group.Get(name));
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
 						} else {
 							vars->SetScriptVariables(groupName);
 						}
@@ -495,7 +501,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 					ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
 					list.resize(size);
 					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
-						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, oldVal, group.Get(name));
+						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
 					}
 				}
 				bool anyActive = false;
@@ -513,7 +519,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 				if (anyDeactivated) {
 					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
 						if (startListValues.contains(key)) {
-							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, startListValues[key], group.Get(name));
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
 							startListValues.erase(key);
 						}
 					}
@@ -529,7 +535,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 						ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
 						list.resize(size);
 						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
-							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, oldVal, group.Get(name));
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
 						}
 					}
 					bool anyActive = false;
@@ -547,7 +553,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 					if (anyDeactivated) {
 						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
 							if (startListValues.contains(key)) {
-								EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, startListValues[key], group.Get(name));
+								EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
 								startListValues.erase(key);
 							}
 						}
@@ -561,7 +567,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 						ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
 						list.resize(size);
 						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
-							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, oldVal, group.Get(name));
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
 						}
 					}
 					for (int i = 0; i < (int)list.size(); ++i) {
@@ -571,7 +577,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 							ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
 							list[i] = val;
 							if (ONEngine::GameEntity* entity = vars->GetOwner()) {
-								EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, oldVal, group.Get(name));
+								EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
 							} else {
 								vars->SetScriptVariables(groupName);
 							}
@@ -597,7 +603,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 							}
 						}
 						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
-							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, oldVal, group.Get(name));
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
 						}
 					}
 					bool anyActive = false;
@@ -647,7 +653,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 					if (anyDeactivated) {
 						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
 							if (startListValues.contains(key)) {
-								EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, startListValues[key], group.Get(name));
+								EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
 								startListValues.erase(key);
 							}
 						}

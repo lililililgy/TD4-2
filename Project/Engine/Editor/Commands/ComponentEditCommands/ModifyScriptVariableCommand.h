@@ -25,7 +25,17 @@ namespace Editor {
 /// ///////////////////////////////////////////////
 class ModifyScriptVariableCommand : public IEditCommand {
 public:
-    using VariantValue = ONEngine::Variables::Var;
+    using VariantValue = std::variant<
+        int, float, double, bool, std::string, 
+        ONEngine::Vector2, ONEngine::Vector3, ONEngine::Vector4, 
+        std::shared_ptr<ONEngine::Variables::GenericObject>,
+        std::vector<int>,
+        std::vector<float>,
+        std::vector<bool>,
+        std::vector<std::string>,
+        std::vector<ONEngine::Vector3>,
+        std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>
+    >;
 
     ModifyScriptVariableCommand(ONEngine::GameEntity* entity, const std::string& scriptName, const std::string& fieldName, int monoType, const VariantValue& oldValue, const VariantValue& newValue);
     ~ModifyScriptVariableCommand() override = default;
