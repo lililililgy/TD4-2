@@ -232,41 +232,45 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 					serializeFieldClassEngine = mono_class_from_name(engineImage, "", "SerializeField");
 				}
 
-				MonoClassField* field = nullptr;
-				void* iter = nullptr;
+				MonoClass* currentClass = monoClass;
+				while (currentClass) {
+					MonoClassField* field = nullptr;
+					void* iter = nullptr;
 
-				while((field = mono_class_get_fields(monoClass, &iter))) {
-					const char* fieldName = mono_field_get_name(field);
+					while((field = mono_class_get_fields(currentClass, &iter))) {
+						const char* fieldName = mono_field_get_name(field);
 
-					MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(monoClass, field);
-					bool hasAttr = false;
-					if (attrs) {
-						if (serializeFieldClass && mono_custom_attrs_has_attr(attrs, serializeFieldClass)) {
-							hasAttr = true;
-						} else if (serializeFieldClassEngine && mono_custom_attrs_has_attr(attrs, serializeFieldClassEngine)) {
-							hasAttr = true;
-						}
-					}
-
-					if(hasAttr) {
-						// 値の取得
-						MonoType* fieldType = mono_field_get_type(field);
-						int type = mono_type_get_type(fieldType);
-
-						Console::Log(std::format("[UndoDebug] Found [SerializeField] field: '{}' (type: {}) in script '{}'", fieldName, type, script.scriptName));
-
-						if(safeObj) {
-							ShowField(script.scriptName, type, safeObj, field, fieldName);
-						} else {
-							Variables* var = entity->GetComponent<Variables>();
-							if (!var) {
-								var = entity->AddComponent<Variables>();
-								Console::Log(std::format("ScriptDebug: Added missing Variables component to entity '{}'.", entity->GetName()));
+						MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(currentClass, field);
+						bool hasAttr = false;
+						if (attrs) {
+							if (serializeFieldClass && mono_custom_attrs_has_attr(attrs, serializeFieldClass)) {
+								hasAttr = true;
+							} else if (serializeFieldClassEngine && mono_custom_attrs_has_attr(attrs, serializeFieldClassEngine)) {
+								hasAttr = true;
 							}
-							ShowFieldForVariables(var, script.scriptName, type, field, fieldName);
 						}
+
+						if(hasAttr) {
+							// 値の取得
+							MonoType* fieldType = mono_field_get_type(field);
+							int type = mono_type_get_type(fieldType);
+
+							Console::Log(std::format("[UndoDebug] Found [SerializeField] field: '{}' (type: {}) in script '{}'", fieldName, type, script.scriptName));
+
+							if(safeObj) {
+								ShowField(script.scriptName, type, safeObj, field, fieldName);
+							} else {
+								Variables* var = entity->GetComponent<Variables>();
+								if (!var) {
+									var = entity->AddComponent<Variables>();
+									Console::Log(std::format("ScriptDebug: Added missing Variables component to entity '{}'.", entity->GetName()));
+								}
+								ShowFieldForVariables(var, script.scriptName, type, field, fieldName);
+							}
+						}
+						if(attrs) mono_custom_attrs_free(attrs);
 					}
-					if(attrs) mono_custom_attrs_free(attrs);
+					currentClass = mono_class_get_parent(currentClass);
 				}
 			}
 
