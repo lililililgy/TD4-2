@@ -78,35 +78,35 @@
                     2
                 ],
                 "valStruct": {
-                    "__type": "TestStruct",
+                    "__type": "SerializeFieldTestStruct",
                     "intVal": 99,
                     "floatVal": 4.5
                 },
                 "valListStruct": [
                     {
-                        "__type": "TestStruct",
+                        "__type": "SerializeFieldTestStruct",
                         "intVal": 101,
                         "floatVal": 1.5
                     },
                     {
-                        "__type": "TestStruct",
+                        "__type": "SerializeFieldTestStruct",
                         "intVal": 102,
                         "floatVal": 2.5
                     }
                 ],
                 "valClass": {
-                    "__type": "TestClass",
+                    "__type": "SerializeFieldTestClass",
                     "intVal": 999,
                     "strVal": "nested class"
                 },
                 "valListClass": [
                     {
-                        "__type": "TestClass",
+                        "__type": "SerializeFieldTestClass",
                         "intVal": 888,
                         "strVal": "elem1"
                     },
                     {
-                        "__type": "TestClass",
+                        "__type": "SerializeFieldTestClass",
                         "intVal": 777,
                         "strVal": "elem2"
                     }

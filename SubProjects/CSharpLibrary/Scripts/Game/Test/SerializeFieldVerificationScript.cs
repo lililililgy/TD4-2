@@ -7,12 +7,12 @@ public enum TestEnum {
 	C
 }
 
-public struct TestStruct {
+public struct SerializeFieldTestStruct {
 	[SerializeField] public int intVal;
 	[SerializeField] public float floatVal;
 }
 
-public class TestClass {
+public class SerializeFieldTestClass {
 	[SerializeField] public int intVal;
 	[SerializeField] public string strVal;
 }
@@ -35,11 +35,11 @@ public class SerializeFieldVerificationScript : MonoScript {
 	[SerializeField] List<Vector3> valListVec3 = null;
 	[SerializeField] List<TestEnum> valListEnum = null;
 
-	[SerializeField] TestStruct valStruct;
-	[SerializeField] List<TestStruct> valListStruct = null;
+	[SerializeField] SerializeFieldTestStruct valStruct;
+	[SerializeField] List<SerializeFieldTestStruct> valListStruct = null;
 
-	[SerializeField] TestClass valClass = null;
-	[SerializeField] List<TestClass> valListClass = null;
+	[SerializeField] SerializeFieldTestClass valClass = null;
+	[SerializeField] List<SerializeFieldTestClass> valListClass = null;
 
 	public override void Initialize() {
 		if (valInt != 42) throw new Exception("valInt assertion failed: " + valInt);

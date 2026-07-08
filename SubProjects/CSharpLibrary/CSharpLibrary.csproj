@@ -203,6 +203,7 @@
     <Compile Include="Scripts\Game\Stage\MovementArea.cs" />
     <Compile Include="Scripts\Game\Stage\MovementAreaClamper.cs" />
     <Compile Include="Scripts\Game\Test\InheritSerializeFieldTestScript.cs" />
+    <Compile Include="Scripts\Game\Test\SerializeFieldVerificationScript.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseBackMainMenu.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseCommon.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseExitGame.cs" />
