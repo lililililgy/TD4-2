@@ -5,19 +5,19 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -211.42999267578125,
-                "y": -113.05000305175781,
+                "x": 0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.9274942278862,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
-                "z": -0.37383750081062317
+                "z": 0.0
             },
             "scale": {
-                "x": 2500.0,
-                "y": 750.0,
+                "x": 1980.0,
+                "y": 1980.0,
                 "z": 1.0
             },
             "type": "Transform"
@@ -27,11 +27,11 @@
         },
         {
             "enable": 1,
-            "isPixelPerfect": true,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
-                    "w": 1.0,
-                    "x": 0.800000011920929,
+                    "w": 0.27843138575553894,
+                    "x": 1.0,
                     "y": 1.0,
                     "z": 1.0
                 },
@@ -52,19 +52,10 @@
                 }
             },
             "type": "SpriteRenderer"
-        },
-        {
-            "autoPlay": true,
-            "clipPath": "./Assets/Anims/PauseMenuOpen.anim",
-            "currentTime": 0.0,
-            "isLooping": false,
-            "isPlaying": false,
-            "speed": 1.0,
-            "type": "AnimationPlayer"
         }
     ],
-    "guid": "fa77e265cd05bdb85ed13448a53d5a66",
-    "name": "Frame",
+    "guid": "d06066957d1d9e8f28b61b1a6634b924",
+    "name": "Background",
     "parentGuid": null,
     "prefabName": ""
 }
