@@ -87,8 +87,12 @@ void MonoScriptEngine::Initialize() {
 	SetEnvironmentVariableW(L"MONO_PATH", monoLib.c_str());
 
 #if defined(DEBUG_MODE)
-	/// デバッグモード用のオプション設定 (環境変数を使用してSoft Debuggerを確実に起動)
-	SetEnvironmentVariableA("MONO_ENV_OPTIONS", "--soft-breakpoints --debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y");
+	/// デバッグモード用のオプション設定 (環境変数を使用せず、直接Soft Debuggerオプションをパースして確実に起動)
+	const char* debugOptions[] = {
+		"--soft-breakpoints",
+		"--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y"
+	};
+	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 #else
 	/// 高速化用オプション (argv[0]としてダミーを配置)
