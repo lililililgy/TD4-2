@@ -9,6 +9,7 @@
 #include "Engine/Scene/SceneManager.h"
 #include "Engine/Editor/Manager/ImGuiManager.h"
 #include "Tabs/DevelopTab.h"
+#include "Windows/Develop/ProjectWindow.h"
 #include "Tabs/GameTab.h"
 #include "Tabs/PrefabTab.h"
 #include "Tabs/EditorTab.h"
@@ -31,13 +32,12 @@ EditorViewCollection::EditorViewCollection(
 	ImGuiManager* imGuiManager,
 	EditorManager* editorManager,
 	ONEngine::SceneManager* sceneManager)
-	: pImGuiManager_(imGuiManager), pSceneManager_(sceneManager) {
+	: pImGuiManager_(imGuiManager), pSceneManager_(sceneManager), pAssetCollection_(assetCollection) {
 
 	/// ここでwindowを生成する
 	AddViewContainer("Develop", std::make_unique<DevelopTab>(dxm, ecs, assetCollection, editorManager, sceneManager));
 	AddViewContainer("Game", std::make_unique<GameTab>(assetCollection));
 	AddViewContainer("Prefab", std::make_unique<PrefabTab>(dxm, ecs, assetCollection, editorManager, sceneManager));
-	AddViewContainer("Editor", std::make_unique<EditorTab>());
 	AddViewContainer("AI", std::make_unique<AITab>(dxm, ecs, editorManager, sceneManager));
 	AddViewContainer("Event", std::make_unique<EventTab>());
 	AddViewContainer("Animation", std::make_unique<AnimationTab>(assetCollection));
@@ -51,7 +51,6 @@ EditorViewCollection::EditorViewCollection(
 EditorViewCollection::~EditorViewCollection() {}
 
 void EditorViewCollection::Update() {
-
 	MainMenuUpdate();
 
 	/// 終了リクエストの確認
@@ -103,7 +102,12 @@ void EditorViewCollection::AddViewContainer(const std::string& name, std::unique
 	parentWindowNames_.push_back(name);
 	window->pImGuiManager_ = pImGuiManager_;
 	for(auto& child : window->children_) {
-		child->pImGuiManager_ = pImGuiManager_;
+		child->SetImGuiManager(pImGuiManager_);
+		child->SetParentContainer(window.get());
+	}
+	for(auto& child : window->pendingAdditions_) {
+		child->SetImGuiManager(pImGuiManager_);
+		child->SetParentContainer(window.get());
 	}
 
 	parentWindows_.push_back(std::move(window));
@@ -171,13 +175,42 @@ void Editor::IEditorWindowContainer::ShowImGui() {
 }
 
 void IEditorWindowContainer::UpdateViews() {
+	// 保留されていた追加ウィンドウを安全に children_ に移動する
+	if (!pendingAdditions_.empty()) {
+		for (auto& child : pendingAdditions_) {
+			children_.push_back(std::move(child));
+		}
+		pendingAdditions_.clear();
+	}
+
+	std::erase_if(children_, [](const auto& child) {
+		return !child->IsOpen();
+	});
+
+	// ProjectWindowの数を数える
+	int projectWindowCount = 0;
+	for (const auto& child : children_) {
+		if (std::string(child->GetWindowType()) == "ProjectWindow") {
+			projectWindowCount++;
+		}
+	}
+
+	// 閉じられるかどうかのフラグを更新
+	for (auto& child : children_) {
+		if (std::string(child->GetWindowType()) == "ProjectWindow") {
+			child->SetCanClose(projectWindowCount > 1);
+		}
+	}
+
 	for(auto& child : children_) {
 		child->ShowImGui();
 	}
 }
 
 IEditorWindow* IEditorWindowContainer::AddView(std::unique_ptr<class IEditorWindow> child) {
+	child->SetParentContainer(this);
+	child->SetImGuiManager(this->pImGuiManager_);
 	class IEditorWindow* childPtr = child.get();
-	children_.push_back(std::move(child));
+	pendingAdditions_.push_back(std::move(child));
 	return childPtr;
 }

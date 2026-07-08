@@ -58,6 +58,10 @@ void HierarchyWindow::ShowImGui() {
 	DrawMenuBar();
 	ImGui::Separator();
 
+	/// 検索バーとカウントの描画
+	DrawSearchBarAndCount();
+	ImGui::Separator();
+
 	// スクロール可能なエリアを開始
 	ImGui::BeginChild("HierarchyScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 
@@ -206,6 +210,11 @@ void HierarchyWindow::DrawMenuScene() {
 
 void HierarchyWindow::DrawHierarchy() {
 	flatHierarchyGuids_.clear();
+	entityMatchesCache_.clear();
+	descendantMatchesCache_.clear();
+
+	totalEntityCount_ = 0;
+	matchEntityCount_ = 0;
 
 	std::vector<std::string> groupsToDraw;
 	if (isMultiGroup_) {
@@ -221,6 +230,34 @@ void HierarchyWindow::DrawHierarchy() {
 		if (pEcsGroup_) {
 			groupsToDraw.push_back(pEcsGroup_->GetGroupName());
 		}
+	}
+
+	// 事前計算とカウント集計
+	for (const auto& groupName : groupsToDraw) {
+		ONEngine::ECSGroup* group = pEcs_->GetECSGroup(groupName);
+		if (!group) continue;
+
+		const auto& entities = group->GetEntities();
+		totalEntityCount_ += entities.size();
+
+		if (!searchText_.empty()) {
+			for (const auto& entity : entities) {
+				if (!entity->GetParent()) {
+					ComputeMatches(entity.get(), searchText_);
+				}
+			}
+		}
+	}
+
+	// マッチ数のカウント
+	if (!searchText_.empty()) {
+		for (const auto& pair : entityMatchesCache_) {
+			if (pair.second) {
+				matchEntityCount_++;
+			}
+		}
+	} else {
+		matchEntityCount_ = totalEntityCount_;
 	}
 
 	for (const auto& groupName : groupsToDraw) {
@@ -274,6 +311,12 @@ void HierarchyWindow::DrawHierarchy() {
 			for (const auto& entity : entities) {
 				// ルートエンティティのみ開始
 				if (!entity->GetParent()) {
+					if (!searchText_.empty()) {
+						auto it = descendantMatchesCache_.find(entity->GetGuid());
+						if (it == descendantMatchesCache_.end() || !it->second) {
+							continue;
+						}
+					}
 					DrawReorderSeparator(nullptr, rootIndex);
 					DrawEntity(entity.get());
 					rootIndex++;
@@ -329,6 +372,12 @@ void HierarchyWindow::DrawHierarchy() {
 			ImGui::GetForegroundDrawList()->AddRect(marqueeMin_, marqueeMax_, ImColor(100, 150, 255, 200));
 		}
 	}
+
+#ifdef DEBUG_MODE
+	if (ONEngine::EngineConfig::isTestMode) {
+		RunAutomaticTests();
+	}
+#endif
 }
 
 void HierarchyWindow::DrawReorderSeparator(ONEngine::GameEntity* parent, uint32_t index) {
@@ -436,6 +485,21 @@ void HierarchyWindow::DrawEntity(ONEngine::GameEntity* entity) {
 		forceExpandGuids_.erase(entity->GetGuid());
 	}
 
+	// 検索時、子孫にマッチするものがある場合は展開する
+	if (!searchText_.empty()) {
+		bool childMatches = false;
+		for (auto* child : entity->GetChildren()) {
+			auto it = descendantMatchesCache_.find(child->GetGuid());
+			if (it != descendantMatchesCache_.end() && it->second) {
+				childMatches = true;
+				break;
+			}
+		}
+		if (childMatches) {
+			ImGui::SetNextItemOpen(true);
+		}
+	}
+
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 	ImGui::PushID(entity->GetId());
 	bool isSelected = ImGuiSelection::IsSelected(entity->GetGuid());
@@ -511,7 +575,21 @@ void HierarchyWindow::DrawEntity(ONEngine::GameEntity* entity) {
 	if(renameEntityGuid_ == entity->GetGuid()) {
 		EntityRename(entity);
 	} else {
+		bool isSelfMatch = false;
+		if (!searchText_.empty()) {
+			auto it = entityMatchesCache_.find(entity->GetGuid());
+			if (it != entityMatchesCache_.end() && it->second) {
+				isSelfMatch = true;
+			}
+		}
+
+		if (isSelfMatch) {
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.8f, 0.2f, 1.0f)); // 黄色（ハイライト）
+		}
 		ImGui::Text("%s", entity->GetName().c_str());
+		if (isSelfMatch) {
+			ImGui::PopStyleColor();
+		}
 	}
 
 	HandleEntityShortcuts(entity, isSelected);
@@ -520,6 +598,12 @@ void HierarchyWindow::DrawEntity(ONEngine::GameEntity* entity) {
 	if(hasChildren && nodeOpen) {
 		uint32_t childIndex = 0;
 		for(auto* child : entity->GetChildren()) {
+			if (!searchText_.empty()) {
+				auto it = descendantMatchesCache_.find(child->GetGuid());
+				if (it == descendantMatchesCache_.end() || !it->second) {
+					continue;
+				}
+			}
 			DrawReorderSeparator(entity, childIndex);
 			DrawEntity(child);
 			childIndex++;
@@ -676,5 +760,134 @@ void NormalHierarchyWindow::ShowImGui() {
 }
 
 void NormalHierarchyWindow::DrawSceneDialog() {}
+
+void HierarchyWindow::DrawSearchBarAndCount() {
+	ImGui::PushID("HierarchySearch");
+	float availableWidth = ImGui::GetContentRegionAvail().x;
+
+	std::string countText;
+	if (searchText_.empty()) {
+		countText = std::to_string(totalEntityCount_) + " Entities";
+	} else {
+		countText = std::to_string(matchEntityCount_) + " / " + std::to_string(totalEntityCount_) + " Matches";
+	}
+
+	float textWidth = ImGui::CalcTextSize(countText.c_str()).x;
+	float searchInputWidth = availableWidth - textWidth - ImGui::GetStyle().ItemSpacing.x * 3.0f;
+	if (searchInputWidth < 50.0f) searchInputWidth = 50.0f;
+
+	ImGui::SetNextItemWidth(searchInputWidth);
+	Editor::ImGuiInputText("##Search", &searchText_, 0, "Search...");
+
+	ImGui::SameLine();
+	ImGui::TextDisabled("%s", countText.c_str());
+
+	ImGui::PopID();
+}
+
+bool HierarchyWindow::ComputeMatches(ONEngine::GameEntity* entity, const std::string& query) {
+	auto toLower = [](std::string s) {
+		std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+		return s;
+	};
+	std::string nameLower = toLower(entity->GetName());
+	std::string queryLower = toLower(query);
+	bool selfMatch = (nameLower.find(queryLower) != std::string::npos);
+	entityMatchesCache_[entity->GetGuid()] = selfMatch;
+
+	bool descMatch = selfMatch;
+	for (auto* child : entity->GetChildren()) {
+		if (ComputeMatches(child, query)) {
+			descMatch = true;
+		}
+	}
+	descendantMatchesCache_[entity->GetGuid()] = descMatch;
+	return descMatch;
+}
+
+void HierarchyWindow::RunAutomaticTests() {
+	static bool testsRun = false;
+	if (testsRun) return;
+	testsRun = true;
+
+	ONEngine::Console::Log("[AutoTest] Starting HierarchyWindow automatic tests...");
+
+	// バックアップ
+	std::string origSearch = searchText_;
+
+	// テスト1: 検索なし状態のカウント検証
+	searchText_ = "";
+	size_t expectedTotal = 0;
+	if (pEcsGroup_) {
+		expectedTotal = pEcsGroup_->GetEntities().size();
+	}
+	if (totalEntityCount_ != expectedTotal) {
+		ONEngine::Console::LogError("[AutoTest] Test 1 Failed: totalEntityCount_ (" + std::to_string(totalEntityCount_) + ") does not match group entities count (" + std::to_string(expectedTotal) + ")");
+		exit(1);
+	}
+
+	// テスト2: 存在しないEntityの検索
+	searchText_ = "NON_EXISTENT_ENTITY_NAME_FOR_TESTING";
+	entityMatchesCache_.clear();
+	descendantMatchesCache_.clear();
+	if (pEcsGroup_) {
+		for (const auto& entity : pEcsGroup_->GetEntities()) {
+			if (!entity->GetParent()) {
+				ComputeMatches(entity.get(), searchText_);
+			}
+		}
+	}
+	size_t test2Matches = 0;
+	for (const auto& pair : entityMatchesCache_) {
+		if (pair.second) test2Matches++;
+	}
+	if (test2Matches != 0) {
+		ONEngine::Console::LogError("[AutoTest] Test 2 Failed: match count for non-existent entity is not 0 (got " + std::to_string(test2Matches) + ")");
+		exit(1);
+	}
+
+	// テスト3: 部分一致での検索 (Entityが存在する場合)
+	if (pEcsGroup_ && !pEcsGroup_->GetEntities().empty()) {
+		std::string targetName = pEcsGroup_->GetEntities()[0]->GetName();
+		if (!targetName.empty()) {
+			std::string subQuery = targetName.substr(0, targetName.length() / 2 + 1);
+			searchText_ = subQuery;
+			
+			entityMatchesCache_.clear();
+			descendantMatchesCache_.clear();
+			for (const auto& entity : pEcsGroup_->GetEntities()) {
+				if (!entity->GetParent()) {
+					ComputeMatches(entity.get(), searchText_);
+				}
+			}
+			
+			size_t expectedMatches = 0;
+			auto toLower = [](std::string s) {
+				std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+				return s;
+			};
+			std::string queryLower = toLower(searchText_);
+			for (const auto& entity : pEcsGroup_->GetEntities()) {
+				std::string nameLower = toLower(entity->GetName());
+				if (nameLower.find(queryLower) != std::string::npos) {
+					expectedMatches++;
+				}
+			}
+			
+			size_t actualMatches = 0;
+			for (const auto& pair : entityMatchesCache_) {
+				if (pair.second) actualMatches++;
+			}
+			
+			if (actualMatches != expectedMatches) {
+				ONEngine::Console::LogError("[AutoTest] Test 3 Failed: match count for query '" + searchText_ + "' expected " + std::to_string(expectedMatches) + " but got " + std::to_string(actualMatches));
+				exit(1);
+			}
+		}
+	}
+
+	searchText_ = origSearch;
+	ONEngine::Console::Log("[AutoTest] HierarchyWindow automatic tests passed successfully!");
+}
 
 } /// namespace Editor

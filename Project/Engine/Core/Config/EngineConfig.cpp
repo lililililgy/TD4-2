@@ -2,6 +2,8 @@
 #include <fstream>
 #include <filesystem>
 #include <nlohmann/json.hpp>
+#include <windows.h>
+#include <shellapi.h>
 
 using namespace ONEngine;
 
@@ -23,6 +25,12 @@ namespace ONEngine::EngineConfig {
 	bool isFullscreen = false;
 	bool enableVSync = true;
 	bool ignoreCSharpLog = false;
+
+	bool isTestMode = false;
+	std::string testScene = "";
+	std::string testInputPath = "";
+	int testDuration = 180;
+	std::string testOutputPath = "./test_results.json";
 
 	void LoadConfig() {
 		std::string configPath = "./Assets/engine_config.json";
@@ -93,5 +101,36 @@ namespace ONEngine::EngineConfig {
 			ofs << j.dump(4);
 			ofs.close();
 		}
+	}
+
+	void ParseCommandLine() {
+		int argc;
+		LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+		if (!argv) return;
+
+		for (int i = 1; i < argc; ++i) {
+			std::wstring argW = argv[i];
+			std::string arg(argW.begin(), argW.end());
+			if (arg == "--test-mode" || arg == "-test") {
+				isTestMode = true;
+			} else if (arg == "--test-scene" && i + 1 < argc) {
+				std::wstring valW = argv[++i];
+				testScene = std::string(valW.begin(), valW.end());
+			} else if (arg == "--test-input" && i + 1 < argc) {
+				std::wstring valW = argv[++i];
+				testInputPath = std::string(valW.begin(), valW.end());
+			} else if (arg == "--test-duration" && i + 1 < argc) {
+				try {
+					std::wstring valW = argv[++i];
+					testDuration = std::stoi(std::string(valW.begin(), valW.end()));
+				} catch (...) {
+					testDuration = 180;
+				}
+			} else if (arg == "--test-output" && i + 1 < argc) {
+				std::wstring valW = argv[++i];
+				testOutputPath = std::string(valW.begin(), valW.end());
+			}
+		}
+		LocalFree(argv);
 	}
 }
