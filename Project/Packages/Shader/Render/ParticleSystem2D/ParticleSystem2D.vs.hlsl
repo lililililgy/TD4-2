@@ -39,7 +39,8 @@ cbuffer PerSystemData : register(b2) {
     uint textureSheetEnabled;
     uint tilesX;
     uint tilesY;
-    uint2 pad;
+    float fps;
+    uint pad;
 }
 
 VSOutput main(VSInput input, uint instanceId : SV_InstanceID) {
@@ -84,12 +85,11 @@ VSOutput main(VSInput input, uint instanceId : SV_InstanceID) {
     
     // Texture Sheet Animation
     if (textureSheetEnabled != 0 && tilesX > 0 && tilesY > 0) {
-        float normalizedTime = 1.0f - (p.remainingLifetime / max(p.startLifetime, 0.0001f));
-        normalizedTime = saturate(normalizedTime);
-        
+        float elapsed = max(p.startLifetime - p.remainingLifetime, 0.0f);
         uint totalFrames = tilesX * tilesY;
-        uint frameIndex = (uint)(normalizedTime * (float)(totalFrames - 1) + 0.5f);
-        frameIndex = min(frameIndex, totalFrames - 1);
+        
+        uint frameIndex = (uint)(elapsed * fps);
+        frameIndex = frameIndex % totalFrames;
         
         uint col = frameIndex % tilesX;
         uint row = frameIndex / tilesX;
@@ -112,11 +112,9 @@ VSOutput main(VSInput input, uint instanceId : SV_InstanceID) {
         
         if (textureSheetEnabled != 0 && tilesX > 0 && tilesY > 0) {
             // Flip within the current tile
-            float normalizedTime = 1.0f - (p.remainingLifetime / max(p.startLifetime, 0.0001f));
-            normalizedTime = saturate(normalizedTime);
+            float elapsed = max(p.startLifetime - p.remainingLifetime, 0.0f);
             uint totalFrames = tilesX * tilesY;
-            uint frameIndex = (uint)(normalizedTime * (float)(totalFrames - 1) + 0.5f);
-            frameIndex = min(frameIndex, totalFrames - 1);
+            uint frameIndex = (uint)(elapsed * fps) % totalFrames;
             uint col = frameIndex % tilesX;
             uint row = frameIndex / tilesX;
             float tileW = 1.0f / (float)tilesX;
