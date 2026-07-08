@@ -35,12 +35,13 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 0.21863800287246704,
+                    "y": 0.2037486881017685,
+                    "z": 0.2037486881017685
                 },
                 "baseTextureGuid": "4cb974ddf0c7f00104e5058c35fa1c57",
                 "guid": "00000000000000000000000000000000",
@@ -58,7 +59,6 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         },
         {
@@ -72,12 +72,7 @@
         },
         {
             "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "UITest1"
-                }
-            ],
+            "scripts": null,
             "type": "Script"
         }
     ],
