@@ -209,6 +209,7 @@ namespace ONEngine {
         bool enabled = false;
         int tilesX = 1;
         int tilesY = 1;
+        float fps = 12.0f;
     };
 
 }

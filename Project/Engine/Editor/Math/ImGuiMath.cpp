@@ -1130,6 +1130,7 @@ void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
 	if (BeginModuleHeader("Texture Sheet Animation", &ps->textureSheetAnimation.enabled)) {
 		Editor::ImMathf::DragInt("Tiles X", &ps->textureSheetAnimation.tilesX, 1, 1, 64);
 		Editor::ImMathf::DragInt("Tiles Y", &ps->textureSheetAnimation.tilesY, 1, 1, 64);
+		Editor::ImMathf::DragFloat("FPS", &ps->textureSheetAnimation.fps, 0.05f, 0.0f, 120.0f);
 		if (!ps->textureSheetAnimation.enabled) ImGui::EndDisabled();
 	}
 	EndModuleHeader();

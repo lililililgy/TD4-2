@@ -148,42 +148,4 @@ const Vector2& BoxCollider2D::GetSize() const {
 	return size_;
 }
 
-Vector2 ONEngine::InternalGetSizeBox2D(uint64_t nativeHandle) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	return c ? c->GetSize() : Vector2::Zero;
-}
 
-void ONEngine::InternalSetSizeBox2D(uint64_t nativeHandle, Vector2 size) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	if(c) c->SetSize(size);
-}
-
-bool ONEngine::InternalIsTriggerBox2D(uint64_t nativeHandle) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	return c ? c->IsTrigger() : false;
-}
-
-void ONEngine::InternalSetTriggerBox2D(uint64_t nativeHandle, bool trigger) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	if(c) c->SetTrigger(trigger);
-}
-
-float ONEngine::InternalGetMassBox2D(uint64_t nativeHandle) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	return c ? c->GetMass() : 1.0f;
-}
-
-void ONEngine::InternalSetMassBox2D(uint64_t nativeHandle, float mass) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	if(c) c->SetMass(mass);
-}
-
-bool ONEngine::InternalIsUseOwnerScaleBox2D(uint64_t nativeHandle) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	return c ? c->IsUseOwnerScale() : true;
-}
-
-void ONEngine::InternalSetUseOwnerScaleBox2D(uint64_t nativeHandle, bool use) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	if(c) c->SetUseOwnerScale(use);
-}

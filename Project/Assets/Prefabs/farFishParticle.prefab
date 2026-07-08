@@ -113,6 +113,7 @@
             },
             "renderer": {
                 "blendMode": 0,
+                "flipMode": 0,
                 "materialGuid": "7f3899744142fce7a4c3f8690c681f5c",
                 "meshGuid": "",
                 "renderMode": 0
@@ -146,6 +147,11 @@
                     "state": 0
                 }
             },
+            "textureSheetAnimation": {
+                "enabled": true,
+                "tilesX": 2,
+                "tilesY": 1
+            },
             "type": "ParticleSystem2D",
             "velocityOverLifetime": {
                 "enabled": true,
@@ -171,6 +177,8 @@
                     "curveMax": {
                         "keys": [
                             {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 1.0,
                                 "value": 500.0
                             }
@@ -179,6 +187,8 @@
                     "curveMin": {
                         "keys": [
                             {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 1.0,
                                 "value": 200.0
                             }
@@ -218,5 +228,5 @@
     "guid": "95b397c6e75e78100a962a5e6aa59a96",
     "name": "farFishParticle",
     "parentGuid": null,
-    "prefabName": ""
+    "prefabName": "farFishParticle"
 }

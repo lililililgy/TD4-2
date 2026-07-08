@@ -47,14 +47,4 @@ public:
 
 };
 
-/// @brief Mono Internal Calls
-Vector2 InternalGetSizeBox2D(uint64_t nativeHandle);
-void InternalSetSizeBox2D(uint64_t nativeHandle, Vector2 size);
-bool InternalIsTriggerBox2D(uint64_t nativeHandle);
-void InternalSetTriggerBox2D(uint64_t nativeHandle, bool trigger);
-float InternalGetMassBox2D(uint64_t nativeHandle);
-void InternalSetMassBox2D(uint64_t nativeHandle, float mass);
-bool InternalIsUseOwnerScaleBox2D(uint64_t nativeHandle);
-void InternalSetUseOwnerScaleBox2D(uint64_t nativeHandle, bool use);
-
 } /// ONEngine

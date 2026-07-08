@@ -40,7 +40,8 @@ class ParticleSystem2DRenderingPipeline : public IRenderingPipeline {
         uint32_t textureSheetEnabled;
         uint32_t tilesX;
         uint32_t tilesY;
-        uint32_t padding[2];
+        float fps;
+        uint32_t padding;
     };
 #pragma warning(pop)
 
