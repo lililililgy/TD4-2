@@ -54,7 +54,7 @@ Copy-Item $TargetFile $BackupFile
 
 # Temporarily modify C# file
 $Content = Get-Content $TargetFile -Raw
-$HotReloadCode = "`n`t`tDebug.Log(\"=== HOT RELOAD SUCCESS ===\");`n"
+$HotReloadCode = "`n`t`tDebug.Log(`"=== HOT RELOAD SUCCESS ===`");`n"
 $NewContent = $Content -replace 'public override void Update\(\) \{', "public override void Update() {${HotReloadCode}"
 
 Set-Content $TargetFile $NewContent -NoNewline
