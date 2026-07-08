@@ -24,8 +24,11 @@ if (-not (Test-Path $EngineExe)) {
 $TestOutput = "$PSScriptRoot/Generated/verify_serialize_field.json"
 if (Test-Path $TestOutput) { Remove-Item $TestOutput }
 
+$AbsoluteInputPath = [System.IO.Path]::GetFullPath("$PSScriptRoot/Project/Assets/Tests/InheritSerializeField_test.json")
+
 Write-Host "Running test scene..."
-& $EngineExe --test-mode --test-duration 120 --test-output $TestOutput --test-scene InheritSerializeFieldTest --test-input "$PSScriptRoot/Project/Assets/Tests/InheritSerializeField_test.json" | Out-Null
+$process = Start-Process -FilePath $EngineExe -ArgumentList @("--test-mode", "--test-duration", "120", "--test-output", $TestOutput, "--test-scene", "InheritSerializeFieldTest", "--test-input", $AbsoluteInputPath) -WorkingDirectory "$PSScriptRoot/Project" -PassThru -NoNewWindow
+$process | Wait-Process
 
 if (Test-Path $TestOutput) {
     $Result = Get-Content $TestOutput | ConvertFrom-Json
