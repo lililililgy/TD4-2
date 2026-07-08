@@ -32,7 +32,7 @@ $process | Wait-Process
 
 if (Test-Path $TestOutput) {
     $Result = Get-Content $TestOutput | ConvertFrom-Json
-    if ($Result.result -eq "passed") {
+    if ($Result.success) {
         Write-Host "[PASSED] SerializeField inheritance & deserialization is working properly." -ForegroundColor Green
     } else {
         Write-Error "[FAILED] SerializeField test scene failed."
