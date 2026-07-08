@@ -1,9 +1,9 @@
 {
     "entities": [
         {
-            "guid": "b655092edbbada5e6ea180e4ec07dcea",
+            "guid": "93fc07e0dffa8ea88b44c80fa3bb7ebd",
             "parentGuid": null,
-            "path": "./Debug/b655092edbbada5e6ea180e4ec07dcea.entity"
+            "path": "./Debug/93fc07e0dffa8ea88b44c80fa3bb7ebd.entity"
         }
     ]
 }

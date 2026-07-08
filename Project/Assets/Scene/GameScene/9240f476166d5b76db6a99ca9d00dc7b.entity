@@ -1,0 +1,71 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 4.369999885559082,
+                "y": 2.4508438110351563,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "TrailFollower": {
+                "chainName_": "System",
+                "leadMaxOffset_": 0.0,
+                "leadMinOffset_": 0.0,
+                "leaderName_": "Player",
+                "maxBendRad_": 0.0,
+                "maxSmoothSpeed_": 0.0,
+                "order_": 0,
+                "rotateToFace_": false,
+                "smoothTime_": 0.0,
+                "unitMaxOffset_": 0.0,
+                "unitMinOffset_": 0.0
+            },
+            "type": "Variables"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 8,
+            "mass": 1.0,
+            "size": {
+                "x": 1024.0,
+                "y": 1024.0
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "TrailFollower"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "9240f476166d5b76db6a99ca9d00dc7b",
+    "name": "EnemyDespawnTimerResetArea",
+    "parentGuid": null,
+    "prefabName": ""
+}
