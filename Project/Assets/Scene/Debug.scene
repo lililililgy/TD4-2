@@ -1,1 +1,9 @@
-{}
+{
+    "entities": [
+        {
+            "guid": "8c1bed94191086240653f52f6eff7f19",
+            "parentGuid": null,
+            "path": "./Debug/8c1bed94191086240653f52f6eff7f19.entity"
+        }
+    ]
+}

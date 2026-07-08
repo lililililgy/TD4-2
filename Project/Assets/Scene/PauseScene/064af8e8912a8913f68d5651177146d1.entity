@@ -30,6 +30,7 @@
             "type": "Transform"
         },
         {
+            "PauseExitGame": {},
             "UITest1": {},
             "type": "Variables"
         },
@@ -75,7 +76,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "UITest1"
+                    "name": "PauseExitGame"
                 }
             ],
             "type": "Script"

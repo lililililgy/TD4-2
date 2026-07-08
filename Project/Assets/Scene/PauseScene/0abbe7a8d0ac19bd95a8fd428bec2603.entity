@@ -30,6 +30,7 @@
             "type": "Transform"
         },
         {
+            "PauseBackMainMenu": {},
             "UITest1": {},
             "type": "Variables"
         },
@@ -78,7 +79,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "UITest1"
+                    "name": "PauseBackMainMenu"
                 }
             ],
             "type": "Script"

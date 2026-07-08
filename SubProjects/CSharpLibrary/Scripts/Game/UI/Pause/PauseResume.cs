@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 
 public class PauseResume : PauseCommon {
-	public override void Initialize() {
-		
+	void OnSelect() {
+		isSelect = true;
 	}
 
+	void OnDeselect() {
+		isSelect = false;
+	}
 }

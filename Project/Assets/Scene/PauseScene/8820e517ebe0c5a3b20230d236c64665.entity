@@ -30,6 +30,7 @@
             "type": "Transform"
         },
         {
+            "PauseStartCheckPoint": {},
             "UITest1": {},
             "type": "Variables"
         },
@@ -78,7 +79,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "UITest1"
+                    "name": "PauseStartCheckPoint"
                 }
             ],
             "type": "Script"
