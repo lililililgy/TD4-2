@@ -27,10 +27,16 @@ public class GameSceneController : MonoScript {
 			if (Input.TriggerKey(openPauseKeyInputs[i])) {
 				return true;
 			}
+		}
 
+		for (int i = 0; i < openPausePadInputs.Count; i++) {
 			if (Input.TriggerGamepad(openPausePadInputs[i])) {
 				return true;
 			}
+		}
+
+		if(Input.TriggerKey(KeyCode.Escape)) {
+			return true;
 		}
 
 		return false;

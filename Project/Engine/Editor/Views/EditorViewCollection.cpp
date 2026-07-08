@@ -159,9 +159,8 @@ void Editor::IEditorWindowContainer::ShowImGui() {
 	imGuiFlags_ |= ImGuiWindowFlags_NoTitleBar;
 	imGuiFlags_ |= ImGuiWindowFlags_NoBringToFrontOnFocus;
 
-	ImGuiIO& io = ImGui::GetIO();
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
-	ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y - 20));
+	ImGui::SetNextWindowSize(ImVec2(ONEngine::EngineConfig::kWindowSize.x, ONEngine::EngineConfig::kWindowSize.y));
 	if(!ImGui::Begin(windowName_.c_str(), nullptr, imGuiFlags_)) {
 		ImGui::End();
 		return;
