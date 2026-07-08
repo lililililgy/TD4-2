@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 24000.0,
+                "y": -24035.810546875,
                 "z": 0.0
             },
             "rotate": {
@@ -32,7 +32,7 @@
                     {
                         "__type": "SpawnEntry",
                         "enemyType": "MorayEelPot",
-                        "weight": 6.0
+                        "weight": 3.0
                     }
                 ]
             },
@@ -45,23 +45,11 @@
                 "min_": {
                     "x": 0.0,
                     "y": 0.0
-                }
+                },
+                "radius": 0.0,
+                "test": 0.0
             },
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "BiomeArea"
-                },
-                {
-                    "enable": true,
-                    "name": "MovementArea"
-                }
-            ],
-            "type": "Script"
         },
         {
             "categoryBits": 1,
@@ -77,10 +65,24 @@
             "state": "Static",
             "type": "BoxCollider2D",
             "useOwnerScale": true
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "BiomeArea"
+                },
+                {
+                    "enable": true,
+                    "name": "MovementArea"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "13f6261efbbe22f150b278ad24482dc1",
-    "name": "SkyZone",
+    "guid": "ea3fbbacef4c82cb9807e72766edb052",
+    "name": "AbyssopelagicZone",
     "parentGuid": null,
     "prefabName": ""
 }
