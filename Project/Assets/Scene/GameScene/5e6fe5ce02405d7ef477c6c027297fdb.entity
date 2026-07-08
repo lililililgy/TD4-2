@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 3.369999885559082,
-                "y": 1.899999976158142,
-                "z": 1.0
+                "x": 4.369921684265137,
+                "y": 2.4508438110351563,
+                "z": 1.2899178266525269
             },
             "type": "Transform"
         },
@@ -123,14 +123,14 @@
             "categoryBits": 1,
             "enable": 1,
             "freezeY": false,
-            "isTrigger": false,
+            "isTrigger": true,
             "maskBits": 8,
             "mass": 1.0,
             "size": {
                 "x": 1024.0,
                 "y": 1024.0
             },
-            "state": "Static",
+            "state": "Dynamic",
             "type": "BoxCollider2D",
             "useOwnerScale": true
         }

@@ -129,6 +129,12 @@ public class EnemySpawnSystem : MonoScript {
         }
     }
 
+    public override void OnCollisionStay(Entity collision) {
+        DespawnTimer despawnTimer = collision.GetScript<DespawnTimer>();
+        if (despawnTimer == null) return;
+        despawnTimer.ResetTimer();
+    }
+
     // スポーン地点に適用するバイオームを解決する。
     // biomeAreas_ をリスト順（＝優先度）に走査し、最初にヒットしたエリアの Biome を返す。
     // 該当エリアが無ければ defaultBiome_（defaultSpawnTable_）にフォールバックする。
