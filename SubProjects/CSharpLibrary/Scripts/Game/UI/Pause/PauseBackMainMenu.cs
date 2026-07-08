@@ -9,4 +9,9 @@ public class PauseBackMainMenu : PauseCommon {
 	void OnDeselect() {
 		isSelect = false;
 	}
+
+	void OnSubmit() {
+		SceneManager.LoadScene("TitleScene");
+	}
+
 }

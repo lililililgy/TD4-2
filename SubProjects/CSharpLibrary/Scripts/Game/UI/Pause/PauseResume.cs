@@ -9,4 +9,9 @@ public class PauseResume : PauseCommon {
 	void OnDeselect() {
 		isSelect = false;
 	}
+
+	void OnSubmit() {
+		SceneManager.SetUpdatePaused("GameScene", false);
+		//SceneManager.Unload("PauseScene");
+	}
 }

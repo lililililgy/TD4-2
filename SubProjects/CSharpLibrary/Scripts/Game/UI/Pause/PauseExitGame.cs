@@ -9,4 +9,9 @@ public class PauseExitGame : PauseCommon {
 	void OnDeselect() {
 		isSelect = false;
 	}
+
+	void OnSubmit() {
+		Application.Quit();
+	}
+
 }
