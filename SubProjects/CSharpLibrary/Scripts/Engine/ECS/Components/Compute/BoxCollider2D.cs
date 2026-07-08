@@ -3,47 +3,118 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 public class BoxCollider2D : Component {
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct BatchData {
+        public uint compId;
+        public Vector2 size;
+        public int isTrigger;
+        public float mass;
+        public int useOwnerScale;
+    }
+
+    private BatchData batchData;
+
+    public BatchData GetBatchData() {
+        return batchData;
+    }
+
+    public override void SyncFromNative(string ecsGroupName) {
+        if (nativeHandle == 0) return;
+
+        BatchData[] batch = new BatchData[1];
+        batch[0].compId = compId;
+        ComponentBatchManager.InternalGetBatch(typeof(BoxCollider2D), batch, 1, ecsGroupName);
+
+        batchData.size = batch[0].size;
+        batchData.isTrigger = batch[0].isTrigger;
+        batchData.mass = batch[0].mass;
+        batchData.useOwnerScale = batch[0].useOwnerScale;
+    }
+
+    public void ApplyBatchData(BatchData data) {
+        batchData.size = data.size;
+        batchData.isTrigger = data.isTrigger;
+        batchData.mass = data.mass;
+        batchData.useOwnerScale = data.useOwnerScale;
+    }
+
     public Vector2 size {
-        get { return InternalGetSizeBox2D(nativeHandle); }
-        set { InternalSetSizeBox2D(nativeHandle, value); }
+        get {
+            return batchData.size;
+        }
+        set {
+            batchData.size = value;
+            if (nativeHandle != 0) {
+                ComponentBatchManager.InternalSetBatch(typeof(BoxCollider2D), new BatchData[] {
+                    new BatchData {
+                        compId = compId,
+                        size = value,
+                        isTrigger = batchData.isTrigger,
+                        mass = batchData.mass,
+                        useOwnerScale = batchData.useOwnerScale
+                    }
+                }, 1, entity.ecsGroupName);
+            }
+        }
     }
 
     public bool isTrigger {
-        get { return InternalIsTriggerBox2D(nativeHandle); }
-        set { InternalSetTriggerBox2D(nativeHandle, value); }
+        get {
+            return batchData.isTrigger != 0;
+        }
+        set {
+            batchData.isTrigger = value ? 1 : 0;
+            if (nativeHandle != 0) {
+                ComponentBatchManager.InternalSetBatch(typeof(BoxCollider2D), new BatchData[] {
+                    new BatchData {
+                        compId = compId,
+                        size = batchData.size,
+                        isTrigger = batchData.isTrigger,
+                        mass = batchData.mass,
+                        useOwnerScale = batchData.useOwnerScale
+                    }
+                }, 1, entity.ecsGroupName);
+            }
+        }
     }
 
     public float mass {
-        get { return InternalGetMassBox2D(nativeHandle); }
-        set { InternalSetMassBox2D(nativeHandle, value); }
+        get {
+            return batchData.mass;
+        }
+        set {
+            batchData.mass = value;
+            if (nativeHandle != 0) {
+                ComponentBatchManager.InternalSetBatch(typeof(BoxCollider2D), new BatchData[] {
+                    new BatchData {
+                        compId = compId,
+                        size = batchData.size,
+                        isTrigger = batchData.isTrigger,
+                        mass = value,
+                        useOwnerScale = batchData.useOwnerScale
+                    }
+                }, 1, entity.ecsGroupName);
+            }
+        }
     }
 
     public bool useOwnerScale {
-        get { return InternalIsUseOwnerScaleBox2D(nativeHandle); }
-        set { InternalSetUseOwnerScaleBox2D(nativeHandle, value); }
+        get {
+            return batchData.useOwnerScale != 0;
+        }
+        set {
+            batchData.useOwnerScale = value ? 1 : 0;
+            if (nativeHandle != 0) {
+                ComponentBatchManager.InternalSetBatch(typeof(BoxCollider2D), new BatchData[] {
+                    new BatchData {
+                        compId = compId,
+                        size = batchData.size,
+                        isTrigger = batchData.isTrigger,
+                        mass = batchData.mass,
+                        useOwnerScale = batchData.useOwnerScale
+                    }
+                }, 1, entity.ecsGroupName);
+            }
+        }
     }
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern float InternalGetMassBox2D(ulong nativeHandle);
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetMassBox2D(ulong nativeHandle, float mass);
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern Vector2 InternalGetSizeBox2D(ulong nativeHandle);
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetSizeBox2D(ulong nativeHandle, Vector2 size);
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern bool InternalIsTriggerBox2D(ulong nativeHandle);
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetTriggerBox2D(ulong nativeHandle, bool trigger);
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern bool InternalIsUseOwnerScaleBox2D(ulong nativeHandle);
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetUseOwnerScaleBox2D(ulong nativeHandle, bool use);
 }
