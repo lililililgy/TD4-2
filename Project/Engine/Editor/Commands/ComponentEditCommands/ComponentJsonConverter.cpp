@@ -495,6 +495,7 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystem2D& p) {
 		p.textureSheetAnimation.enabled = ta.value("enabled", false);
 		p.textureSheetAnimation.tilesX = ta.value("tilesX", 1);
 		p.textureSheetAnimation.tilesY = ta.value("tilesY", 1);
+		p.textureSheetAnimation.fps = ta.value("fps", 12.0f);
 	}
 }
 
@@ -509,7 +510,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystem2D& p) {
 		{ "sizeOverLifetime", p.sizeOverLifetime },
 		{ "velocityOverLifetime", p.velocityOverLifetime },
 		{ "renderer", p.renderer },
-		{ "textureSheetAnimation", nlohmann::json{{ "enabled", p.textureSheetAnimation.enabled }, { "tilesX", p.textureSheetAnimation.tilesX }, { "tilesY", p.textureSheetAnimation.tilesY }} },
+		{ "textureSheetAnimation", nlohmann::json{{ "enabled", p.textureSheetAnimation.enabled }, { "tilesX", p.textureSheetAnimation.tilesX }, { "tilesY", p.textureSheetAnimation.tilesY }, { "fps", p.textureSheetAnimation.fps }} },
 	};
 }
 
