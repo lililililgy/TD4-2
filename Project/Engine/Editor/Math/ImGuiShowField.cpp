@@ -393,39 +393,40 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 		if (ImGui::CollapsingHeader(name)) {
 			ImGui::Indent();
 			if (elemTypeId == MONO_TYPE_I4) {
-				if (!group.Has(name)) group.Add(name, std::vector<int>());
+				if (!group.Has(name) || !std::holds_alternative<std::vector<int>>(group.Get(name))) group.Add(name, std::vector<int>());
 				auto& list = std::get<std::vector<int>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 				int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
 				for (int i = 0; i < (int)list.size(); ++i) ImGui::DragInt(std::format("[{}]", i).c_str(), &list[i]);
 			} else if (elemTypeId == MONO_TYPE_R4) {
-				if (!group.Has(name)) group.Add(name, std::vector<float>());
+				if (!group.Has(name) || !std::holds_alternative<std::vector<float>>(group.Get(name))) group.Add(name, std::vector<float>());
 				auto& list = std::get<std::vector<float>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 				int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
 				for (int i = 0; i < (int)list.size(); ++i) ImGui::DragFloat(std::format("[{}]", i).c_str(), &list[i]);
 			} else if (elemTypeId == MONO_TYPE_BOOLEAN) {
-				if (!group.Has(name)) group.Add(name, std::vector<bool>());
+				if (!group.Has(name) || !std::holds_alternative<std::vector<bool>>(group.Get(name))) group.Add(name, std::vector<bool>());
 				auto& list = std::get<std::vector<bool>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 				int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
 				for (int i = 0; i < (int)list.size(); ++i) { bool b = list[i]; if (ImGui::Checkbox(std::format("[{}]", i).c_str(), &b)) list[i] = b; }
 			} else if (elemTypeId == MONO_TYPE_STRING) {
-				if (!group.Has(name)) group.Add(name, std::vector<std::string>());
+				if (!group.Has(name) || !std::holds_alternative<std::vector<std::string>>(group.Get(name))) group.Add(name, std::vector<std::string>());
 				auto& list = std::get<std::vector<std::string>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 				int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
 				for (int i = 0; i < (int)list.size(); ++i) ImGuiInputText(std::format("[{}]", i).c_str(), &list[i]);
 			} else if (elemTypeId == MONO_TYPE_VALUETYPE || elemTypeId == MONO_TYPE_CLASS) {
 				MonoClass* elemClass = mono_class_from_mono_type(elemType);
 				if (strcmp(mono_class_get_name(elemClass), "Vector3") == 0) {
-					if (!group.Has(name)) group.Add(name, std::vector<ONEngine::Vector3>());
+					if (!group.Has(name) || !std::holds_alternative<std::vector<ONEngine::Vector3>>(group.Get(name))) group.Add(name, std::vector<ONEngine::Vector3>());
 					auto& list = std::get<std::vector<ONEngine::Vector3>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 					int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
 					for (int i = 0; i < (int)list.size(); ++i) ImGui::DragFloat3(std::format("[{}]", i).c_str(), &list[i].x);
 				} else if (mono_class_is_enum(elemClass)) {
-					if (!group.Has(name)) group.Add(name, std::vector<int>());
+					if (!group.Has(name) || !std::holds_alternative<std::vector<int>>(group.Get(name))) group.Add(name, std::vector<int>());
 					auto& list = std::get<std::vector<int>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 					int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
 					for (int i = 0; i < (int)list.size(); ++i) DrawEnumCombo(elemClass, std::format("[{}]", i).c_str(), list[i]);
 				} else {
-					if (!group.Has(name)) group.Add(name, std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>());
+					if (!group.Has(name) || !std::holds_alternative<std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>>(group.Get(name)))
+						group.Add(name, std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>());
 					auto& list = std::get<std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 					int size = (int)list.size();
 					if (ImGui::InputInt("Size", &size)) {
