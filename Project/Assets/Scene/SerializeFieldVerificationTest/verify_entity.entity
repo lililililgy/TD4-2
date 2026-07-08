@@ -110,7 +110,10 @@
                         "intVal": 777,
                         "strVal": "elem2"
                     }
-                ]
+                ],
+                "emptyListInt": [],
+                "emptyListStruct": [],
+                "emptyListClass": []
             },
             "type": "Variables"
         },

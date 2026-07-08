@@ -41,6 +41,11 @@ public class SerializeFieldVerificationScript : MonoScript {
 	[SerializeField] SerializeFieldTestClass valClass = null;
 	[SerializeField] List<SerializeFieldTestClass> valListClass = null;
 
+	// 空リストの検証用変数
+	[SerializeField] List<int> emptyListInt = null;
+	[SerializeField] List<SerializeFieldTestStruct> emptyListStruct = null;
+	[SerializeField] List<SerializeFieldTestClass> emptyListClass = null;
+
 	public override void Initialize() {
 		if (valInt != 42) throw new Exception("valInt assertion failed: " + valInt);
 		if (Math.Abs(valFloat - 3.14f) > 0.001f) throw new Exception("valFloat assertion failed: " + valFloat);
@@ -87,6 +92,14 @@ public class SerializeFieldVerificationScript : MonoScript {
 			valListClass[1] == null || valListClass[1].intVal != 777 || valListClass[1].strVal != "elem2")
 			throw new Exception("valListClass assertion failed");
 
-		Debug.Log("SerializeFieldVerificationScript: All SerializeField assertions passed successfully!");
+		// 空リストの検証
+		if (emptyListInt == null || emptyListInt.Count != 0)
+			throw new Exception("emptyListInt assertion failed: should be empty (Count == 0)");
+		if (emptyListStruct == null || emptyListStruct.Count != 0)
+			throw new Exception("emptyListStruct assertion failed: should be empty (Count == 0)");
+		if (emptyListClass == null || emptyListClass.Count != 0)
+			throw new Exception("emptyListClass assertion failed: should be empty (Count == 0)");
+
+		Debug.Log("SerializeFieldVerificationScript: All SerializeField assertions (including empty lists) passed successfully!");
 	}
 }
