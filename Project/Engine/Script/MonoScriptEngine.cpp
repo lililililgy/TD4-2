@@ -148,12 +148,12 @@ void MonoScriptEngine::Initialize() {
 		Console::LogError("[Mono] C# project build failed!\n" + buildOutput, LogCategory::ScriptEngine);
 	}
 
-	std::wstring monoBin = std::filesystem::absolute("Packages/mono/bin").wstring();
-	std::wstring newPathEnv = L"PATH=" + monoBin + L";C:\\Windows\\System32";
-	_wputenv(newPathEnv.c_str());
+	std::string monoBin = std::filesystem::absolute("Packages/mono/bin").string();
+	std::string newPathEnv = "PATH=" + monoBin + ";C:\\Windows\\System32";
+	_putenv(newPathEnv.c_str());
 
-	std::wstring monoLib = L"MONO_PATH=" + std::filesystem::absolute("Packages/mono/lib/4.5").wstring();
-	_wputenv(monoLib.c_str());
+	std::string monoLib = "MONO_PATH=" + std::filesystem::absolute("Packages/mono/lib/4.5").string();
+	_putenv(monoLib.c_str());
 
 #if defined(DEBUG_MODE)
 	/// デバッグモード用のオプション設定 (環境変数を使用せず、直接Soft Debuggerオプションをパースして確実に起動)
@@ -167,9 +167,9 @@ void MonoScriptEngine::Initialize() {
 
 	// 環境変数からも確実にオプションを読み込ませるため、明示的にセットする
 	if (waitDebug) {
-		_wputenv(L"MONO_ENV_OPTIONS=--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y");
+		_putenv("MONO_ENV_OPTIONS=--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y");
 	} else {
-		_wputenv(L"MONO_ENV_OPTIONS=--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n");
+		_putenv("MONO_ENV_OPTIONS=--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n");
 	}
 
 	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
