@@ -1,0 +1,33 @@
+{
+    "active": true,
+    "components": [
+        {
+            "matrixCalcFlags": 1,
+            "position": {
+                "x": -148.20001220703125,
+                "y": 46.100013732910156,
+                "z": -1.0
+            },
+            "rotate": {
+                "w": 0.9990482330322266,
+                "z": 0.04361938685178757
+            },
+            "scale": {
+                "x": 200.0,
+                "y": 200.0,
+                "z": 200.0
+            },
+            "type": "Transform"
+        },
+        {
+            "material": {
+                "baseTextureGuid": "00ecb6a6aa4e6602201781732f7295c8"
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "5896805ba7fcfdf5c9c2d155c2964334",
+    "name": "lock",
+    "parentGuid": "89964bdd4dc41107df15fba0ecf42b40",
+    "prefabName": "lock"
+}

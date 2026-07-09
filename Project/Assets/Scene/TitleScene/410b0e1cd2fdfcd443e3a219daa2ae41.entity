@@ -1,0 +1,18 @@
+{
+    "active": true,
+    "components": [
+        {
+            "matrixCalcFlags": 1,
+            "position": {
+                "x": 0.0,
+                "y": 104.50000762939453,
+                "z": -1.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "410b0e1cd2fdfcd443e3a219daa2ae41",
+    "name": "seaweed",
+    "parentGuid": "89964bdd4dc41107df15fba0ecf42b40",
+    "prefabName": "seaweed"
+}

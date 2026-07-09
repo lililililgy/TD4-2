@@ -6,8 +6,8 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": -600.2000122070313,
-                "z": 0.0
+                "y": -640.0,
+                "z": 0.5
             },
             "rotate": {
                 "w": 0.0,
@@ -48,20 +48,20 @@
                 "bursts": [],
                 "enabled": true,
                 "rateOverDistance": 0.0,
-                "rateOverTime": 1.100000023841858
+                "rateOverTime": 2.0
             },
             "enable": 1,
             "main": {
                 "duration": 5.0,
                 "gravityModifier": 0.0,
                 "looping": true,
-                "maxParticles": 1000,
+                "maxParticles": 1004,
                 "playOnAwake": true,
                 "prewarm": false,
                 "simulationSpace": 0,
                 "startColor": {
                     "constant": {
-                        "a": 0.2235294133424759,
+                        "a": 1.0,
                         "b": 1.0,
                         "g": 1.0,
                         "r": 1.0
@@ -87,10 +87,10 @@
                     "state": 0
                 },
                 "startLifetime": {
-                    "constant": 12.699999809265137,
-                    "max": 1.0,
-                    "min": 0.0,
-                    "state": 0
+                    "constant": 11.0,
+                    "max": 6.0,
+                    "min": 4.0,
+                    "state": 1
                 },
                 "startRotation": {
                     "constant": 0.0,
@@ -99,22 +99,22 @@
                     "state": 0
                 },
                 "startSize": {
-                    "constant": 66.5,
-                    "max": 80.0,
-                    "min": 30.0,
-                    "state": 1
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
                 },
                 "startSpeed": {
-                    "constant": 119.9000015258789,
+                    "constant": 100.0,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
                 }
             },
             "renderer": {
-                "blendMode": 0,
+                "blendMode": 1,
                 "flipMode": 0,
-                "materialGuid": "da3917104a877fa8943d617ddba222c0",
+                "materialGuid": "9fff9b5634a388277ce329c2e4c373b6",
                 "meshGuid": "",
                 "renderMode": 0
             },
@@ -122,8 +122,8 @@
                 "angle": 25.0,
                 "arc": 360.0,
                 "boxScale": {
-                    "x": 2000.0,
-                    "y": 1.0,
+                    "x": 1580.0,
+                    "y": 200.0,
                     "z": 1.0
                 },
                 "enabled": true,
@@ -132,19 +132,33 @@
                 "type": 3
             },
             "sizeOverLifetime": {
-                "enabled": false,
+                "enabled": true,
                 "size": {
-                    "constant": 1.0,
+                    "constant": 54.79999923706055,
                     "curve": {
                         "keys": []
                     },
                     "curveMax": {
-                        "keys": []
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 5.0,
+                                "value": 50.0
+                            }
+                        ]
                     },
                     "curveMin": {
-                        "keys": []
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 5.0,
+                                "value": 20.0
+                            }
+                        ]
                     },
-                    "state": 0
+                    "state": 3
                 }
             },
             "textureSheetAnimation": {
@@ -155,7 +169,7 @@
             },
             "type": "ParticleSystem2D",
             "velocityOverLifetime": {
-                "enabled": false,
+                "enabled": true,
                 "space": 0,
                 "speedModifier": {
                     "constant": 1.0,
@@ -171,12 +185,19 @@
                     "state": 0
                 },
                 "x": {
-                    "constant": 26.399999618530273,
+                    "constant": 1.0,
                     "curve": {
                         "keys": []
                     },
                     "curveMax": {
-                        "keys": []
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 100.0
+                            }
+                        ]
                     },
                     "curveMin": {
                         "keys": [
@@ -184,24 +205,38 @@
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 1.0,
-                                "value": 1.0
+                                "value": -50.0
                             }
                         ]
                     },
-                    "state": 0
+                    "state": 3
                 },
                 "y": {
-                    "constant": 16.700000762939453,
+                    "constant": 1.0,
                     "curve": {
                         "keys": []
                     },
                     "curveMax": {
-                        "keys": []
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 300.0
+                            }
+                        ]
                     },
                     "curveMin": {
-                        "keys": []
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 50.0
+                            }
+                        ]
                     },
-                    "state": 0
+                    "state": 3
                 },
                 "z": {
                     "constant": 1.0,
@@ -219,8 +254,8 @@
             }
         }
     ],
-    "guid": "2f183c2cac4e5fb5db1ccfdd4d006899",
-    "name": "Bobble",
+    "guid": "1c89285e96e659c38e8e19657db74bd3",
+    "name": "foamParticle",
     "parentGuid": null,
     "prefabName": ""
 }
