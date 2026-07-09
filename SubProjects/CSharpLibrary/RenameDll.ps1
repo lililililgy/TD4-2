@@ -1,4 +1,4 @@
-﻿# エラー発生時に処理を停止する設定
+# エラー発生時に処理を停止する設定
 $ErrorActionPreference = "Stop"
 
 # --- スクリプトの配置場所を基準に出力フォルダを決定 ---
@@ -20,13 +20,15 @@ $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 
 # リネーム後のファイル名
 $RenamedDll = "CSharpLibrary_${Timestamp}.dll"
-$RenamedPdb = "CSharpLibrary_${Timestamp}.pdb"
+$RenamedPdb1 = "CSharpLibrary_${Timestamp}.pdb"
+$RenamedPdb2 = "CSharpLibrary_${Timestamp}.dll.pdb"
 
 # フルパスの組み立て
 $SourceDllPath = Join-Path $OutputDir $OriginalDll
 $DestDllPath   = Join-Path $OutputDir $RenamedDll
 $SourcePdbPath = Join-Path $OutputDir $OriginalPdb
-$DestPdbPath   = Join-Path $OutputDir $RenamedPdb
+$DestPdbPath1  = Join-Path $OutputDir $RenamedPdb1
+$DestPdbPath2  = Join-Path $OutputDir $RenamedPdb2
 
 Write-Host "Attempting to copy from '$SourceDllPath' to '$DestDllPath'"
 
@@ -42,7 +44,8 @@ try {
 if (Test-Path -Path $SourcePdbPath) {
     Write-Host "Copying PDB..."
     try {
-        Copy-Item -Path $SourcePdbPath -Destination $DestPdbPath -Force
+        Copy-Item -Path $SourcePdbPath -Destination $DestPdbPath1 -Force
+        Copy-Item -Path $SourcePdbPath -Destination $DestPdbPath2 -Force
     } catch {
         Write-Warning "Failed to copy PDB (continuing): $_"
     }
