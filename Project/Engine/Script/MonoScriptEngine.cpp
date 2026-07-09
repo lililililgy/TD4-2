@@ -170,6 +170,8 @@ void MonoScriptEngine::Initialize() {
 		return;
 	}
 
+	Console::Log("[Mono] Successfully loaded assembly DLL: " + currentDllPath_, LogCategory::ScriptEngine);
+
 	image_ = mono_assembly_get_image(assembly_);
 	if(!image_) {
 		Console::LogError("Failed to get image from assembly", LogCategory::ScriptEngine);
@@ -321,6 +323,9 @@ void MonoScriptEngine::HotReload() {
 		domain_ = oldDomain;
 		return;
 	}
+
+	currentDllPath_ = utf8DllPath;
+	Console::Log("[Mono] Successfully loaded assembly DLL (HotReload): " + currentDllPath_, LogCategory::ScriptEngine);
 
 	image_ = mono_assembly_get_image(assembly_);
 	RegisterFunctions();
