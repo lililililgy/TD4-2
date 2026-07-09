@@ -47,9 +47,7 @@ public class JellyfishLaser : MonoScript
         // レーザーの中心位置を計算
         Vector2 center = origin + normalized * (length * 0.5f);
         transform.position = new Vector3(center.x, center.y, depth);
-        transform.scale = new Vector3(width, length, 1.0f);
-
-        // レーザーの回転角度を計算して設定
+       // レーザーの回転角度を計算して設定
         float angle = Mathf.Atan2(normalized.x, normalized.y);
         transform.rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
 
