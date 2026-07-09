@@ -149,11 +149,12 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	std::string monoBin = std::filesystem::absolute("Packages/mono/bin").string();
-	std::string newPathEnv = "PATH=" + monoBin + ";C:\\Windows\\System32";
-	_putenv(newPathEnv.c_str());
+	SetEnvironmentVariableA("PATH", (monoBin + ";C:\\Windows\\System32").c_str());
+	_putenv(("PATH=" + monoBin + ";C:\\Windows\\System32").c_str());
 
-	std::string monoLib = "MONO_PATH=" + std::filesystem::absolute("Packages/mono/lib/4.5").string();
-	_putenv(monoLib.c_str());
+	std::string monoLib = std::filesystem::absolute("Packages/mono/lib/4.5").string();
+	SetEnvironmentVariableA("MONO_PATH", monoLib.c_str());
+	_putenv(("MONO_PATH=" + monoLib).c_str());
 
 #if defined(DEBUG_MODE)
 	/// デバッグモード用のオプション設定 (環境変数を使用せず、直接Soft Debuggerオプションをパースして確実に起動)
@@ -165,21 +166,21 @@ void MonoScriptEngine::Initialize() {
 		waitDebug = false;
 	}
 
-	// 環境変数からも確実にオプションを読み込ませるため、明示的にセットする
-	if (waitDebug) {
-		_putenv("MONO_ENV_OPTIONS=--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y");
-	} else {
-		_putenv("MONO_ENV_OPTIONS=--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n");
-	}
+	// アドレスはポートのみ（55555）を指定してバインドエラーを回避
+	std::string debugAgentOpt = waitDebug 
+		? "--debugger-agent=transport=dt_socket,address=55555,server=y,suspend=y"
+		: "--debugger-agent=transport=dt_socket,address=55555,server=y,suspend=n";
+
+	// OSとCRTの両方の環境変数テーブルに確実に設定
+	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOpt.c_str());
+	_putenv(("MONO_ENV_OPTIONS=" + debugAgentOpt).c_str());
 
 	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
 
+	// mono_jit_parse_options には --debugger-agent を渡さず、環境変数に一本化する
 	const char* debugOptions[] = {
 		"ONEngine",
-		"--soft-breakpoints",
-		waitDebug 
-			? "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y"
-			: "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n"
+		"--soft-breakpoints"
 	};
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
