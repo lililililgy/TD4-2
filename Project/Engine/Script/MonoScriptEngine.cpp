@@ -78,6 +78,14 @@ MonoScriptEngine& MonoScriptEngine::GetInstance() {
 }
 
 void MonoScriptEngine::Initialize() {
+	Console::Log("[Mono] Building C# project...", LogCategory::ScriptEngine);
+	std::string buildOutput;
+	bool buildSuccess = BuildCSharpProject(buildOutput);
+	if (buildSuccess) {
+		Console::Log("[Mono] C# project built successfully.", LogCategory::ScriptEngine);
+	} else {
+		Console::LogError("[Mono] C# project build failed!\n" + buildOutput, LogCategory::ScriptEngine);
+	}
 
 	std::wstring monoBin = std::filesystem::absolute("Packages/mono/bin").wstring();
 	std::wstring newPathEnv = monoBin + L";C:\\Windows\\System32";
@@ -240,6 +248,15 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
+	Console::Log("[Mono] HotReload: Rebuilding C# project...", LogCategory::ScriptEngine);
+	std::string buildOutput;
+	bool buildSuccess = BuildCSharpProject(buildOutput);
+	if (!buildSuccess) {
+		Console::LogError("[Mono] HotReload: C# project build failed! Reload aborted.\n" + buildOutput, LogCategory::ScriptEngine);
+		return;
+	}
+	Console::Log("[Mono] HotReload: C# project built successfully. Reloading DLL...", LogCategory::ScriptEngine);
+
 	// デバッグモード時でも再生ごとのリセットを優先するため、Hot Reloadを有効化
 
 	MonoDomain* oldDomain = domain_;
@@ -949,3 +966,85 @@ MonoObject* ONEngine::MonoScriptEngineUtils::SafeInvoke(MonoMethod* method, void
 
 	return nullptr;
 }
+
+bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
+	std::wstring config = L"Debug";
+#if !defined(DEBUG_MODE)
+	config = L"Release";
+#endif
+
+	std::wstring cmd = L"dotnet build \"../SubProjects/CSharpLibrary/CSharpLibrary.csproj\" -c " + config + L" -p:Platform=x64";
+
+	HANDLE hReadPipe, hWritePipe;
+	SECURITY_ATTRIBUTES saAttr;
+	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+	saAttr.bInheritHandle = TRUE;
+	saAttr.lpSecurityDescriptor = NULL;
+
+	if (!CreatePipe(&hReadPipe, &hWritePipe, &saAttr, 0)) {
+		outMessage = "Failed to create pipe for dotnet build.";
+		return false;
+	}
+
+	if (!SetHandleInformation(hReadPipe, HANDLE_FLAG_INHERIT, 0)) {
+		outMessage = "Failed to set handle information.";
+		CloseHandle(hReadPipe);
+		CloseHandle(hWritePipe);
+		return false;
+	}
+
+	STARTUPINFOW si;
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	si.hStdError = hWritePipe;
+	si.hStdOutput = hWritePipe;
+	si.dwFlags |= STARTF_USESTDHANDLES;
+
+	ZeroMemory(&pi, sizeof(pi));
+
+	std::vector<wchar_t> cmdBuffer(cmd.begin(), cmd.end());
+	cmdBuffer.push_back(L'\0');
+
+	BOOL success = CreateProcessW(
+		NULL,
+		cmdBuffer.data(),
+		NULL,
+		NULL,
+		TRUE,
+		CREATE_NO_WINDOW,
+		NULL,
+		NULL,
+		&si,
+		&pi
+	);
+
+	CloseHandle(hWritePipe);
+
+	if (!success) {
+		outMessage = "dotnet command not found or failed to execute. Please ensure .NET SDK is installed.";
+		CloseHandle(hReadPipe);
+		return false;
+	}
+
+	std::string output;
+	char buffer[4096];
+	DWORD bytesRead;
+	while (ReadFile(hReadPipe, buffer, sizeof(buffer) - 1, &bytesRead, NULL) && bytesRead > 0) {
+		buffer[bytesRead] = '\0';
+		output += buffer;
+	}
+
+	WaitForSingleObject(pi.hProcess, INFINITE);
+
+	DWORD exitCode = 0;
+	GetExitCodeProcess(pi.hProcess, &exitCode);
+
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+	CloseHandle(hReadPipe);
+
+	outMessage = output;
+	return (exitCode == 0);
+}
+
