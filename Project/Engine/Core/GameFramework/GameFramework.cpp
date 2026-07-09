@@ -202,8 +202,15 @@ void GameFramework::Update() {
 					if (tag) {
 						bool isFisheyeEnabled = tag->GetPostEffectEnable(PostEffectType_Fisheye);
 						bool isWaterDistortionEnabled = tag->GetPostEffectEnable(PostEffectType_WaterDistortion);
+						bool isWaterCausticsEnabled = tag->GetPostEffectEnable(PostEffectType_WaterCausticsLightShafts);
+						bool isWaterColorGradingEnabled = tag->GetPostEffectEnable(PostEffectType_WaterColorGrading);
+						bool isWaterDepthFogEnabled = tag->GetPostEffectEnable(PostEffectType_WaterDepthFogVignette);
+
 						ONEngine::Assert(isFisheyeEnabled, "Fisheye posteffect should still be enabled in GameScene");
 						ONEngine::Assert(isWaterDistortionEnabled, "WaterDistortion posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterCausticsEnabled, "WaterCaustics posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterColorGradingEnabled, "WaterColorGrading posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterDepthFogEnabled, "WaterDepthFog posteffect should still be enabled in GameScene");
 					}
 				}
 			}
