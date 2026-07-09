@@ -104,6 +104,8 @@ void MonoScriptEngine::Initialize() {
 		waitDebug = false;
 	}
 
+	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
+
 	const char* debugOptions[] = {
 		"ONEngine",
 		"--soft-breakpoints",
@@ -114,6 +116,7 @@ void MonoScriptEngine::Initialize() {
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 #else
+	Console::Log("[Mono] Non-Debug Mode: Debugger Disabled (suspend=n)", LogCategory::ScriptEngine);
 	/// 高速化用オプション (argv[0]としてダミーを配置)
 	const char* options[] = {
 		"ONEngine",
