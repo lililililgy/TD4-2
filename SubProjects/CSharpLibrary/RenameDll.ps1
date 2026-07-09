@@ -1,29 +1,28 @@
-# エラー発生時に処理を停止する設定
+# Stop execution on error
 $ErrorActionPreference = "Stop"
 
-# --- スクリプトの配置場所を基準に出力フォルダを決定 ---
-# $PSScriptRoot はこのスクリプトが存在するフォルダのパスです
+# Determine output directory relative to script path
 $OutputDir = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($PSScriptRoot, "..\..\Project\Packages\Scripts"))
 
-# 出力フォルダが存在するかチェック
+# Check output directory exists
 if (-not (Test-Path -Path $OutputDir)) {
     Write-Error "ERROR: Output folder does not exist: $OutputDir"
     exit 2
 }
 
-# オリジナルのファイル名
+# Original filenames
 $OriginalDll = "CSharpLibrary.dll"
 $OriginalPdb = "CSharpLibrary.pdb"
 
-# --- タイムスタンプの取得 (yyyyMMdd_HHmmss 形式) ---
+# Get timestamp (yyyyMMdd_HHmmss format)
 $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 
-# リネーム後のファイル名
+# Target filenames
 $RenamedDll = "CSharpLibrary_${Timestamp}.dll"
 $RenamedPdb1 = "CSharpLibrary_${Timestamp}.pdb"
 $RenamedPdb2 = "CSharpLibrary_${Timestamp}.dll.pdb"
 
-# フルパスの組み立て
+# Build full paths
 $SourceDllPath = Join-Path $OutputDir $OriginalDll
 $DestDllPath   = Join-Path $OutputDir $RenamedDll
 $SourcePdbPath = Join-Path $OutputDir $OriginalPdb
@@ -32,7 +31,7 @@ $DestPdbPath2  = Join-Path $OutputDir $RenamedPdb2
 
 Write-Host "Attempting to copy from '$SourceDllPath' to '$DestDllPath'"
 
-# DLL のコピー
+# Copy DLL
 try {
     Copy-Item -Path $SourceDllPath -Destination $DestDllPath -Force
 } catch {
@@ -40,7 +39,7 @@ try {
     exit 3
 }
 
-# PDB のコピー（存在する場合のみ）
+# Copy PDB (if exists)
 if (Test-Path -Path $SourcePdbPath) {
     Write-Host "Copying PDB..."
     try {
