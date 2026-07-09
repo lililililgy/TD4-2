@@ -96,6 +96,9 @@ void MonoScriptEngine::Initialize() {
 
 #if defined(DEBUG_MODE)
 	/// デバッグモード用のオプション設定 (環境変数を使用せず、直接Soft Debuggerオプションをパースして確実に起動)
+	// 環境変数の干渉を防ぐため、事前にクリアする
+	SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", nullptr);
+
 	// デフォルトではアタッチ待ち (suspend) を行うが、
 	// 自動テスト環境 (--test-mode) では接続待ちを行わず即時起動する
 	bool waitDebug = true;
