@@ -105,6 +105,7 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	const char* debugOptions[] = {
+		"ONEngine",
 		"--soft-breakpoints",
 		waitDebug 
 			? "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y"
