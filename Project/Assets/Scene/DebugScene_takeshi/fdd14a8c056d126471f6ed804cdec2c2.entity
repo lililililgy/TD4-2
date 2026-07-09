@@ -11,10 +11,6 @@
                 "z": -0.591576874256134
             },
             "type": "Transform"
-        },
-        {
-            "TrailLeader": {},
-            "type": "Variables"
         }
     ],
     "guid": "fdd14a8c056d126471f6ed804cdec2c2",

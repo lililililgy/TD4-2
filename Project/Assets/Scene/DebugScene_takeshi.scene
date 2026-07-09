@@ -34,6 +34,11 @@
             "guid": "8ef96d013013f25139e7cdb116d191da",
             "parentGuid": null,
             "path": "./DebugScene_takeshi/8ef96d013013f25139e7cdb116d191da.entity"
+        },
+        {
+            "guid": "fd699c02287ffb7593425d82e7c7add5",
+            "parentGuid": "2a75a187cc14795397a4b907fc812b10",
+            "path": "./DebugScene_takeshi/fd699c02287ffb7593425d82e7c7add5.entity"
         }
     ]
 }
