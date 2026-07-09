@@ -1,3 +1,5 @@
+#include <winsock2.h>
+#pragma comment(lib, "ws2_32.lib")
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
 
@@ -33,6 +35,36 @@ using namespace ONEngine;
 #include "InternalCalls/EventInternalCalls.h"
 
 namespace {
+// デバッグ用ポート競合検知関数
+bool IsDebugPortInUse(unsigned short port) {
+	WSADATA wsaData;
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+		return false;
+	}
+	SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (s == INVALID_SOCKET) {
+		WSACleanup();
+		return false;
+	}
+
+	sockaddr_in addr;
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	addr.sin_port = htons(port);
+
+	bool inUse = false;
+	if (bind(s, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) {
+		int err = WSAGetLastError();
+		if (err == WSAEADDRINUSE) {
+			inUse = true;
+		}
+	}
+
+	closesocket(s);
+	WSACleanup();
+	return inUse;
+}
+
 void LogCallback(const char* log_domain, const char* log_level, const char* message, mono_bool fatal, void*) {
 	const char* domain = log_domain ? log_domain : "null";
 	const char* level = log_level ? log_level : "null";
@@ -148,39 +180,71 @@ void MonoScriptEngine::Initialize() {
 		Console::LogError("[Mono] C# project build failed!\n" + buildOutput, LogCategory::ScriptEngine);
 	}
 
-	std::string monoBin = std::filesystem::absolute("Packages/mono/bin").string();
-	SetEnvironmentVariableA("PATH", (monoBin + ";C:\\Windows\\System32").c_str());
-	_putenv(("PATH=" + monoBin + ";C:\\Windows\\System32").c_str());
+	// PATH 設定 (OSレベルA/W & CRTレベルA/W)
+	std::string monoBinA = std::filesystem::absolute("Packages/mono/bin").string();
+	std::wstring monoBinW = std::filesystem::absolute("Packages/mono/bin").wstring();
+	SetEnvironmentVariableA("PATH", (monoBinA + ";C:\\Windows\\System32").c_str());
+	SetEnvironmentVariableW(L"PATH", (monoBinW + L";C:\\Windows\\System32").c_str());
+	_putenv(("PATH=" + monoBinA + ";C:\\Windows\\System32").c_str());
+	_wputenv((L"PATH=" + monoBinW + L";C:\\Windows\\System32").c_str());
 
-	std::string monoLib = std::filesystem::absolute("Packages/mono/lib/4.5").string();
-	SetEnvironmentVariableA("MONO_PATH", monoLib.c_str());
-	_putenv(("MONO_PATH=" + monoLib).c_str());
+	// MONO_PATH 設定 (OSレベルA/W & CRTレベルA/W)
+	std::string monoLibA = std::filesystem::absolute("Packages/mono/lib/4.5").string();
+	std::wstring monoLibW = std::filesystem::absolute("Packages/mono/lib/4.5").wstring();
+	SetEnvironmentVariableA("MONO_PATH", monoLibA.c_str());
+	SetEnvironmentVariableW(L"MONO_PATH", monoLibW.c_str());
+	_putenv(("MONO_PATH=" + monoLibA).c_str());
+	_wputenv((L"MONO_PATH=" + monoLibW).c_str());
 
 #if defined(DEBUG_MODE)
-	/// デバッグモード用のオプション設定 (環境変数を使用せず、直接Soft Debuggerオプションをパースして確実に起動)
-	// デフォルトではアタッチ待ち (suspend) を行うが、
-	// 自動テスト環境 (--test-mode) では接続待ちを行わず即時起動する
+	// Monoの診断ログ出力を詳細化
+	SetEnvironmentVariableA("MONO_LOG_LEVEL", "debug");
+	_putenv("MONO_LOG_LEVEL=debug");
+	SetEnvironmentVariableA("MONO_LOG_MASK", "asm,dll,gc,cfg");
+	_putenv("MONO_LOG_MASK=asm,dll,gc,cfg");
+
+	// デバッグシーケンスポイント生成を強化
+	SetEnvironmentVariableA("MONO_DEBUG", "gen-compact-seq-points");
+	_putenv("MONO_DEBUG=gen-compact-seq-points");
+
+	/// デバッグモード用のオプション設定
 	bool waitDebug = true;
 	LPWSTR cmdLine = GetCommandLineW();
 	if (cmdLine && wcsstr(cmdLine, L"--test-mode") != nullptr) {
 		waitDebug = false;
 	}
 
-	// アドレスはポートのみ（55555）を指定してバインドエラーを回避
-	std::string debugAgentOpt = waitDebug 
-		? "--debugger-agent=transport=dt_socket,address=55555,server=y,suspend=y"
-		: "--debugger-agent=transport=dt_socket,address=55555,server=y,suspend=n";
+	// ポートが既に他のプロセスに占有されているか事前に競合検知
+	if (waitDebug && IsDebugPortInUse(55555)) {
+		Console::LogError("[Mono] WARNING: Debugger port 55555 is ALREADY IN USE by another process! Mono Debugger binding may fail.", LogCategory::ScriptEngine);
+	}
 
-	// OSとCRTの両方の環境変数テーブルに確実に設定
-	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOpt.c_str());
-	_putenv(("MONO_ENV_OPTIONS=" + debugAgentOpt).c_str());
+	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド
+	std::string debugAgentOptA = waitDebug 
+		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+	std::wstring debugAgentOptW = waitDebug 
+		? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+
+	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応)
+	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
+	SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", debugAgentOptW.c_str());
+	_putenv(("MONO_ENV_OPTIONS=" + debugAgentOptA).c_str());
+	_wputenv((L"MONO_ENV_OPTIONS=" + debugAgentOptW).c_str());
+
+	SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
+	SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str());
+	_putenv(("MONO_OPTIONS=" + debugAgentOptA).c_str());
+	_wputenv((L"MONO_OPTIONS=" + debugAgentOptW).c_str());
 
 	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
 
-	// mono_jit_parse_options には --debugger-agent を渡さず、環境変数に一本化する
+	// mono_jit_parse_options にもデバッガオプションを確実に渡す
 	const char* debugOptions[] = {
 		"ONEngine",
-		"--soft-breakpoints"
+		"--soft-breakpoints",
+		debugAgentOptA.c_str()
 	};
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
@@ -213,6 +277,11 @@ void MonoScriptEngine::Initialize() {
 		Console::LogError("Failed to initialize Mono JIT", LogCategory::ScriptEngine);
 		return;
 	}
+
+#if defined(DEBUG_MODE)
+	// ルートドメイン用のデバッグ情報を登録
+	mono_debug_domain_create(rootDomain_);
+#endif
 
 	// デバッグモード時でも、再生ごとのC#状態リセットを確実にするため、
 	// AppDomainを常に再作成するように変更
@@ -691,6 +760,11 @@ MonoDomain* MonoScriptEngine::CreateReloadDomain() {
 		Console::LogError("Failed to create Mono domain for hot reload: " + domainName, LogCategory::ScriptEngine);
 		return nullptr;
 	}
+
+#if defined(DEBUG_MODE)
+	// ホットリロード時の新しいドメイン用のデバッグ情報を登録
+	mono_debug_domain_create(domain);
+#endif
 
 	return domain;
 }
