@@ -20,6 +20,7 @@ using namespace ONEngine;
 #include <mono/metadata/blob.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/threads.h>
+#include <mono/metadata/image.h>
 
 
 /// engine
@@ -54,9 +55,8 @@ void ApplicationQuit() {
 	PostQuitMessage(0);
 }
 
-void LoadDebugSymbols(MonoImage* image, const std::string& dllPath) {
+MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dllPath) {
 #if defined(DEBUG_MODE)
-	// DLLのパスからPDBのパスを生成する (例: CSharpLibrary_xxx.dll -> CSharpLibrary_xxx.pdb)
 	std::string pdbPath = dllPath;
 	size_t extPos = pdbPath.find_last_of('.');
 	if (extPos != std::string::npos) {
@@ -65,28 +65,54 @@ void LoadDebugSymbols(MonoImage* image, const std::string& dllPath) {
 		pdbPath += ".pdb";
 	}
 
-	if (!std::filesystem::exists(pdbPath)) {
-		Console::LogWarning("[Mono] Debug symbols not found: " + pdbPath, LogCategory::ScriptEngine);
-		return;
-	}
-
+	std::ifstream dllFile(dllPath, std::ios::binary | std::ios::ate);
 	std::ifstream pdbFile(pdbPath, std::ios::binary | std::ios::ate);
-	if (!pdbFile.is_open()) {
-		Console::LogError("[Mono] Failed to open debug symbols file: " + pdbPath, LogCategory::ScriptEngine);
-		return;
-	}
 
-	std::streamsize size = pdbFile.tellg();
-	pdbFile.seekg(0, std::ios::beg);
-	std::vector<char> buffer(size);
-	if (pdbFile.read(buffer.data(), size)) {
-		// mono_debug_open_image_from_memory を使ってデバッグ情報を明示的に登録
-		mono_debug_open_image_from_memory(image, (const mono_byte*)buffer.data(), (int)size);
-		Console::Log("[Mono] Successfully loaded debug symbols: " + pdbPath, LogCategory::ScriptEngine);
-	} else {
-		Console::LogError("[Mono] Failed to read debug symbols file: " + pdbPath, LogCategory::ScriptEngine);
+	if (dllFile.is_open() && pdbFile.is_open()) {
+		std::streamsize dllSize = dllFile.tellg();
+		dllFile.seekg(0, std::ios::beg);
+		std::vector<char> dllBuffer(dllSize);
+
+		std::streamsize pdbSize = pdbFile.tellg();
+		pdbFile.seekg(0, std::ios::beg);
+		std::vector<char> pdbBuffer(pdbSize);
+
+		if (dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(pdbBuffer.data(), pdbSize)) {
+			MonoImageOpenStatus status = MONO_IMAGE_OK;
+			// DLLデータからMonoImageをオープン
+			MonoImage* image = mono_image_open_from_data_with_name(
+				dllBuffer.data(), 
+				(uint32_t)dllSize, 
+				true, // need_copy
+				&status, 
+				false, // refonly
+				dllPath.c_str() // DLLのパス（依存解決用）
+			);
+
+			if (image && status == MONO_IMAGE_OK) {
+				// アセンブリロードの前にデバッグ情報を登録
+				mono_debug_open_image_from_memory(image, (const mono_byte*)pdbBuffer.data(), (int)pdbSize);
+				
+				// ImageからAssemblyをロード
+				MonoAssembly* assembly = mono_assembly_load_from_full(
+					image,
+					dllPath.c_str(),
+					&status,
+					false
+				);
+
+				mono_image_close(image);
+
+				if (assembly) {
+					Console::Log("[Mono] Successfully loaded assembly and debug symbols from memory: " + dllPath, LogCategory::ScriptEngine);
+					return assembly;
+				}
+			}
+		}
 	}
+	Console::LogWarning("[Mono] Failed to load assembly from memory with symbols. Falling back to file load: " + dllPath, LogCategory::ScriptEngine);
 #endif
+	return mono_domain_assembly_open(domain, dllPath.c_str());
 }
 
 std::string GetUtf8Path(const std::filesystem::path& path) {
@@ -203,22 +229,17 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	currentDllPath_ = GetUtf8Path(*latestDll);
-	assembly_ = mono_domain_assembly_open(domain_, currentDllPath_.c_str());
+	assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_);
 	if(!assembly_) {
 		Console::LogError("Failed to load CSharpLibrary.dll", LogCategory::ScriptEngine);
 		return;
 	}
-
-	Console::Log("[Mono] Successfully loaded assembly DLL: " + currentDllPath_, LogCategory::ScriptEngine);
 
 	image_ = mono_assembly_get_image(assembly_);
 	if(!image_) {
 		Console::LogError("Failed to get image from assembly", LogCategory::ScriptEngine);
 		return;
 	}
-
-	// デバッグシンボルのロード
-	LoadDebugSymbols(image_, currentDllPath_);
 
 	RegisterFunctions();
 }
@@ -357,7 +378,7 @@ void MonoScriptEngine::HotReload() {
 		}
 	}
 
-	assembly_ = mono_domain_assembly_open(domain_, utf8DllPath.c_str());
+	assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath);
 	if(!assembly_) {
 		Console::LogError("Failed to load assembly in new domain", LogCategory::ScriptEngine);
 		mono_domain_set(oldDomain, true);
@@ -367,13 +388,7 @@ void MonoScriptEngine::HotReload() {
 	}
 
 	currentDllPath_ = utf8DllPath;
-	Console::Log("[Mono] Successfully loaded assembly DLL (HotReload): " + currentDllPath_, LogCategory::ScriptEngine);
-
 	image_ = mono_assembly_get_image(assembly_);
-
-	// デバッグシンボルのロード
-	LoadDebugSymbols(image_, currentDllPath_);
-
 	RegisterFunctions();
 
 	// ComponentBatchManagerの再初期化
