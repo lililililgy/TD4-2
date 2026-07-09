@@ -180,32 +180,39 @@ void MonoScriptEngine::Initialize() {
 		Console::LogError("[Mono] C# project build failed!\n" + buildOutput, LogCategory::ScriptEngine);
 	}
 
-	// PATH 設定 (OSレベルA/W & CRTレベルA/W)
-	std::string monoBinA = std::filesystem::absolute("Packages/mono/bin").string();
-	std::wstring monoBinW = std::filesystem::absolute("Packages/mono/bin").wstring();
+	// PATH 設定 (OSレベルA/W & CRTレベルA/W) - staticにしてメモリを永続化
+	static std::string monoBinA = std::filesystem::absolute("Packages/mono/bin").string();
+	static std::wstring monoBinW = std::filesystem::absolute("Packages/mono/bin").wstring();
+	static std::string pathEnvA = "PATH=" + monoBinA + ";C:\\Windows\\System32";
+	static std::wstring pathEnvW = L"PATH=" + monoBinW + L";C:\\Windows\\System32";
 	SetEnvironmentVariableA("PATH", (monoBinA + ";C:\\Windows\\System32").c_str());
 	SetEnvironmentVariableW(L"PATH", (monoBinW + L";C:\\Windows\\System32").c_str());
-	_putenv(("PATH=" + monoBinA + ";C:\\Windows\\System32").c_str());
-	_wputenv((L"PATH=" + monoBinW + L";C:\\Windows\\System32").c_str());
+	_putenv(pathEnvA.c_str());
+	_wputenv(pathEnvW.c_str());
 
-	// MONO_PATH 設定 (OSレベルA/W & CRTレベルA/W)
-	std::string monoLibA = std::filesystem::absolute("Packages/mono/lib/4.5").string();
-	std::wstring monoLibW = std::filesystem::absolute("Packages/mono/lib/4.5").wstring();
+	// MONO_PATH 設定 (OSレベルA/W & CRTレベルA/W) - staticにしてメモリを永続化
+	static std::string monoLibA = std::filesystem::absolute("Packages/mono/lib/4.5").string();
+	static std::wstring monoLibW = std::filesystem::absolute("Packages/mono/lib/4.5").wstring();
+	static std::string monoPathEnvA = "MONO_PATH=" + monoLibA;
+	static std::wstring monoPathEnvW = L"MONO_PATH=" + monoLibW;
 	SetEnvironmentVariableA("MONO_PATH", monoLibA.c_str());
 	SetEnvironmentVariableW(L"MONO_PATH", monoLibW.c_str());
-	_putenv(("MONO_PATH=" + monoLibA).c_str());
-	_wputenv((L"MONO_PATH=" + monoLibW).c_str());
+	_putenv(monoPathEnvA.c_str());
+	_wputenv(monoPathEnvW.c_str());
 
 #if defined(DEBUG_MODE)
-	// Monoの診断ログ出力を詳細化
+	// Monoの診断ログ出力を詳細化 - staticにしてメモリを永続化
+	static std::string logEnv1 = "MONO_LOG_LEVEL=debug";
+	static std::string logEnv2 = "MONO_LOG_MASK=asm,dll,gc,cfg";
 	SetEnvironmentVariableA("MONO_LOG_LEVEL", "debug");
-	_putenv("MONO_LOG_LEVEL=debug");
+	_putenv(logEnv1.c_str());
 	SetEnvironmentVariableA("MONO_LOG_MASK", "asm,dll,gc,cfg");
-	_putenv("MONO_LOG_MASK=asm,dll,gc,cfg");
+	_putenv(logEnv2.c_str());
 
-	// デバッグシーケンスポイント生成を強化
+	// デバッグシーケンスポイント生成を強化 - staticにしてメモリを永続化
+	static std::string debugEnv1 = "MONO_DEBUG=gen-compact-seq-points";
 	SetEnvironmentVariableA("MONO_DEBUG", "gen-compact-seq-points");
-	_putenv("MONO_DEBUG=gen-compact-seq-points");
+	_putenv(debugEnv1.c_str());
 
 	/// デバッグモード用のオプション設定
 	bool waitDebug = true;
@@ -219,28 +226,34 @@ void MonoScriptEngine::Initialize() {
 		Console::LogError("[Mono] WARNING: Debugger port 55555 is ALREADY IN USE by another process! Mono Debugger binding may fail.", LogCategory::ScriptEngine);
 	}
 
-	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド
-	std::string debugAgentOptA = waitDebug 
+	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
+	static std::string debugAgentOptA;
+	static std::wstring debugAgentOptW;
+	debugAgentOptA = waitDebug 
 		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
 		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
-	std::wstring debugAgentOptW = waitDebug 
+	debugAgentOptW = waitDebug 
 		? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
 		: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
 
-	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応)
+	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
+	static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
+	static std::wstring monoEnvOptW = L"MONO_ENV_OPTIONS=" + debugAgentOptW;
 	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
 	SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", debugAgentOptW.c_str());
-	_putenv(("MONO_ENV_OPTIONS=" + debugAgentOptA).c_str());
-	_wputenv((L"MONO_ENV_OPTIONS=" + debugAgentOptW).c_str());
+	_putenv(monoEnvOptA.c_str());
+	_wputenv(monoEnvOptW.c_str());
 
+	static std::string monoOptA = "MONO_OPTIONS=" + debugAgentOptA;
+	static std::wstring monoOptW = L"MONO_OPTIONS=" + debugAgentOptW;
 	SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
 	SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str());
-	_putenv(("MONO_OPTIONS=" + debugAgentOptA).c_str());
-	_wputenv((L"MONO_OPTIONS=" + debugAgentOptW).c_str());
+	_putenv(monoOptA.c_str());
+	_wputenv(monoOptW.c_str());
 
 	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
 
-	// mono_jit_parse_options にもデバッガオプションを確実に渡す
+	// mono_jit_parse_options にもデバッガオプションを確実に渡す (ポインタが永続メモリを指すようにする)
 	const char* debugOptions[] = {
 		"ONEngine",
 		"--soft-breakpoints",
