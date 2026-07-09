@@ -54,6 +54,41 @@ void ApplicationQuit() {
 	PostQuitMessage(0);
 }
 
+void LoadDebugSymbols(MonoImage* image, const std::string& dllPath) {
+#if defined(DEBUG_MODE)
+	// DLLのパスからPDBのパスを生成する (例: CSharpLibrary_xxx.dll -> CSharpLibrary_xxx.pdb)
+	std::string pdbPath = dllPath;
+	size_t extPos = pdbPath.find_last_of('.');
+	if (extPos != std::string::npos) {
+		pdbPath = pdbPath.substr(0, extPos) + ".pdb";
+	} else {
+		pdbPath += ".pdb";
+	}
+
+	if (!std::filesystem::exists(pdbPath)) {
+		Console::LogWarning("[Mono] Debug symbols not found: " + pdbPath, LogCategory::ScriptEngine);
+		return;
+	}
+
+	std::ifstream pdbFile(pdbPath, std::ios::binary | std::ios::ate);
+	if (!pdbFile.is_open()) {
+		Console::LogError("[Mono] Failed to open debug symbols file: " + pdbPath, LogCategory::ScriptEngine);
+		return;
+	}
+
+	std::streamsize size = pdbFile.tellg();
+	pdbFile.seekg(0, std::ios::beg);
+	std::vector<char> buffer(size);
+	if (pdbFile.read(buffer.data(), size)) {
+		// mono_debug_open_image_from_memory を使ってデバッグ情報を明示的に登録
+		mono_debug_open_image_from_memory(image, (const mono_byte*)buffer.data(), (int)size);
+		Console::Log("[Mono] Successfully loaded debug symbols: " + pdbPath, LogCategory::ScriptEngine);
+	} else {
+		Console::LogError("[Mono] Failed to read debug symbols file: " + pdbPath, LogCategory::ScriptEngine);
+	}
+#endif
+}
+
 std::string GetUtf8Path(const std::filesystem::path& path) {
 	std::filesystem::path absPath = std::filesystem::absolute(path);
 	std::wstring wpath = absPath.wstring();
@@ -181,6 +216,9 @@ void MonoScriptEngine::Initialize() {
 		Console::LogError("Failed to get image from assembly", LogCategory::ScriptEngine);
 		return;
 	}
+
+	// デバッグシンボルのロード
+	LoadDebugSymbols(image_, currentDllPath_);
 
 	RegisterFunctions();
 }
@@ -332,6 +370,10 @@ void MonoScriptEngine::HotReload() {
 	Console::Log("[Mono] Successfully loaded assembly DLL (HotReload): " + currentDllPath_, LogCategory::ScriptEngine);
 
 	image_ = mono_assembly_get_image(assembly_);
+
+	// デバッグシンボルのロード
+	LoadDebugSymbols(image_, currentDllPath_);
+
 	RegisterFunctions();
 
 	// ComponentBatchManagerの再初期化
