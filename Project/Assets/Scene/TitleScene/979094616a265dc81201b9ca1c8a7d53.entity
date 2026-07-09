@@ -1,0 +1,30 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": -8.300028800964355,
+                "y": 101.50003814697266,
+                "z": 0.10000000149011612
+            },
+            "rotate": {
+                "w": 1.0
+            },
+            "scale": {
+                "x": 200.0,
+                "y": 200.0
+            },
+            "type": "Transform"
+        },
+        {
+            "material": {
+                "baseTextureGuid": "40a2a079d395a583123ad279b93ba55a"
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "979094616a265dc81201b9ca1c8a7d53",
+    "name": "coral",
+    "parentGuid": "89964bdd4dc41107df15fba0ecf42b40",
+    "prefabName": "coral"
+}

@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 3,
             "position": {
-                "x": 278.1002502441406,
-                "y": 139.59994506835938,
+                "x": -70.79999542236328,
+                "y": 121.70000457763672,
                 "z": -0.10000000149011612
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 100.0,
+                "x": 200.0,
                 "y": 200.0,
-                "z": 0.0
+                "z": 186.6668701171875
             },
             "type": "Transform"
         },
@@ -35,7 +35,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "f972705e35ed09b3006877e8f5e532fb",
+                "baseTextureGuid": "b98d85b56ef3ac2b02f60bc88cb7656b",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,8 +54,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "5182a99134aeccc7b02fe6c544f25ca9",
-    "name": "seaweed",
-    "parentGuid": "b82ef25627d3d464a44a651f25e717dc",
+    "guid": "cfc6dcdaf8e324cdaa2491082624fa4c",
+    "name": "coral",
+    "parentGuid": "d167576da2502df5ba4a1b4f5f13bbcb",
     "prefabName": ""
 }

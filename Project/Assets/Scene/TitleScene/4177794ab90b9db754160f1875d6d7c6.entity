@@ -5,20 +5,20 @@
             "enable": 1,
             "matrixCalcFlags": 3,
             "position": {
-                "x": 278.1002502441406,
-                "y": 139.59994506835938,
-                "z": -0.10000000149011612
+                "x": 304.79986572265625,
+                "y": 22.900007247924805,
+                "z": -0.5999999046325684
             },
             "rotate": {
-                "w": 0.0,
+                "w": 0.9972501993179321,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": -0.07410848885774612
             },
             "scale": {
-                "x": 100.0,
-                "y": 200.0,
-                "z": 0.0
+                "x": 120.0,
+                "y": 75.0,
+                "z": 100.0
             },
             "type": "Transform"
         },
@@ -35,7 +35,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "f972705e35ed09b3006877e8f5e532fb",
+                "baseTextureGuid": "4041325c0bdc1ae8b56e812eba2f4fef",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,8 +54,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "5182a99134aeccc7b02fe6c544f25ca9",
-    "name": "seaweed",
+    "guid": "4177794ab90b9db754160f1875d6d7c6",
+    "name": "lock",
     "parentGuid": "b82ef25627d3d464a44a651f25e717dc",
     "prefabName": ""
 }
