@@ -96,15 +96,19 @@ void MonoScriptEngine::Initialize() {
 
 #if defined(DEBUG_MODE)
 	/// デバッグモード用のオプション設定 (環境変数を使用せず、直接Soft Debuggerオプションをパースして確実に起動)
-	// 環境変数の干渉を防ぐため、事前にクリアする
-	SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", nullptr);
-
 	// デフォルトではアタッチ待ち (suspend) を行うが、
 	// 自動テスト環境 (--test-mode) では接続待ちを行わず即時起動する
 	bool waitDebug = true;
 	LPWSTR cmdLine = GetCommandLineW();
 	if (cmdLine && wcsstr(cmdLine, L"--test-mode") != nullptr) {
 		waitDebug = false;
+	}
+
+	// 環境変数からも確実にオプションを読み込ませるため、明示的にセットする
+	if (waitDebug) {
+		SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", L"--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y");
+	} else {
+		SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", L"--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n");
 	}
 
 	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
