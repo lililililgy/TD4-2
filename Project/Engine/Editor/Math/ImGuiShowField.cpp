@@ -162,6 +162,12 @@ void DrawGenericObjectWithTracking(std::shared_ptr<ONEngine::Variables::GenericO
 	}
 }
 
+ModifyScriptVariableCommand::VariantValue ToCommandVar(const ONEngine::Variables::Var& var) {
+	return std::visit([](auto&& arg) -> ModifyScriptVariableCommand::VariantValue {
+		return arg;
+	}, var);
+}
+
 } /// namespace
 
 
@@ -390,46 +396,202 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 		MonoMethod* getItemMethod = mono_class_get_method_from_name(fieldClass, "get_Item", 1);
 		MonoType* elemType = mono_signature_get_return_type(mono_method_signature(getItemMethod));
 		int elemTypeId = mono_type_get_type(elemType);
+
+		std::string key = std::format("{}_{}_{}", (void*)vars, groupName, name);
+		static std::unordered_map<std::string, ONEngine::Variables::Var> startListValues;
+
 		if (ImGui::CollapsingHeader(name)) {
 			ImGui::Indent();
 			if (elemTypeId == MONO_TYPE_I4) {
-				if (!group.Has(name)) group.Add(name, std::vector<int>());
+				if (!group.Has(name) || !std::holds_alternative<std::vector<int>>(group.Get(name))) group.Add(name, std::vector<int>());
 				auto& list = std::get<std::vector<int>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
-				int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
-				for (int i = 0; i < (int)list.size(); ++i) ImGui::DragInt(std::format("[{}]", i).c_str(), &list[i]);
+				int size = (int)list.size();
+				if (ImGui::InputInt("Size", &size)) {
+					if (size < 0) size = 0;
+					ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
+					list.resize(size);
+					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
+					}
+				}
+				bool anyActive = false;
+				bool anyDeactivated = false;
+				bool changed = false;
+				for (int i = 0; i < (int)list.size(); ++i) {
+					ImGui::PushID(i);
+					if (ImGui::DragInt(std::format("[{}]", i).c_str(), &list[i])) changed = true;
+					if (ImGui::IsItemActivated()) anyActive = true;
+					if (ImGui::IsItemDeactivatedAfterEdit()) anyDeactivated = true;
+					ImGui::PopID();
+				}
+				if (changed) vars->SetScriptVariables(groupName);
+				if (anyActive) startListValues[key] = ONEngine::Variables::CloneVar(group.Get(name));
+				if (anyDeactivated) {
+					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+						if (startListValues.contains(key)) {
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
+							startListValues.erase(key);
+						}
+					}
+				}
 			} else if (elemTypeId == MONO_TYPE_R4) {
-				if (!group.Has(name)) group.Add(name, std::vector<float>());
+				if (!group.Has(name) || !std::holds_alternative<std::vector<float>>(group.Get(name))) group.Add(name, std::vector<float>());
 				auto& list = std::get<std::vector<float>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
-				int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
-				for (int i = 0; i < (int)list.size(); ++i) ImGui::DragFloat(std::format("[{}]", i).c_str(), &list[i]);
+				int size = (int)list.size();
+				if (ImGui::InputInt("Size", &size)) {
+					if (size < 0) size = 0;
+					ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
+					list.resize(size);
+					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
+					}
+				}
+				bool anyActive = false;
+				bool anyDeactivated = false;
+				bool changed = false;
+				for (int i = 0; i < (int)list.size(); ++i) {
+					ImGui::PushID(i);
+					if (ImGui::DragFloat(std::format("[{}]", i).c_str(), &list[i])) changed = true;
+					if (ImGui::IsItemActivated()) anyActive = true;
+					if (ImGui::IsItemDeactivatedAfterEdit()) anyDeactivated = true;
+					ImGui::PopID();
+				}
+				if (changed) vars->SetScriptVariables(groupName);
+				if (anyActive) startListValues[key] = ONEngine::Variables::CloneVar(group.Get(name));
+				if (anyDeactivated) {
+					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+						if (startListValues.contains(key)) {
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
+							startListValues.erase(key);
+						}
+					}
+				}
 			} else if (elemTypeId == MONO_TYPE_BOOLEAN) {
-				if (!group.Has(name)) group.Add(name, std::vector<bool>());
+				if (!group.Has(name) || !std::holds_alternative<std::vector<bool>>(group.Get(name))) group.Add(name, std::vector<bool>());
 				auto& list = std::get<std::vector<bool>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
-				int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
-				for (int i = 0; i < (int)list.size(); ++i) { bool b = list[i]; if (ImGui::Checkbox(std::format("[{}]", i).c_str(), &b)) list[i] = b; }
+				int size = (int)list.size();
+				if (ImGui::InputInt("Size", &size)) {
+					if (size < 0) size = 0;
+					ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
+					list.resize(size);
+					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
+					}
+				}
+				for (int i = 0; i < (int)list.size(); ++i) {
+					ImGui::PushID(i);
+					bool b = list[i];
+					if (ImGui::Checkbox(std::format("[{}]", i).c_str(), &b)) {
+						ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
+						list[i] = b;
+						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
+						} else {
+							vars->SetScriptVariables(groupName);
+						}
+					}
+					ImGui::PopID();
+				}
 			} else if (elemTypeId == MONO_TYPE_STRING) {
-				if (!group.Has(name)) group.Add(name, std::vector<std::string>());
+				if (!group.Has(name) || !std::holds_alternative<std::vector<std::string>>(group.Get(name))) group.Add(name, std::vector<std::string>());
 				auto& list = std::get<std::vector<std::string>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
-				int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
-				for (int i = 0; i < (int)list.size(); ++i) ImGuiInputText(std::format("[{}]", i).c_str(), &list[i]);
+				int size = (int)list.size();
+				if (ImGui::InputInt("Size", &size)) {
+					if (size < 0) size = 0;
+					ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
+					list.resize(size);
+					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+						EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
+					}
+				}
+				bool anyActive = false;
+				bool anyDeactivated = false;
+				bool changed = false;
+				for (int i = 0; i < (int)list.size(); ++i) {
+					ImGui::PushID(i);
+					if (ImGuiInputText(std::format("[{}]", i).c_str(), &list[i])) changed = true;
+					if (ImGui::IsItemActivated()) anyActive = true;
+					if (ImGui::IsItemDeactivatedAfterEdit()) anyDeactivated = true;
+					ImGui::PopID();
+				}
+				if (changed) vars->SetScriptVariables(groupName);
+				if (anyActive) startListValues[key] = ONEngine::Variables::CloneVar(group.Get(name));
+				if (anyDeactivated) {
+					if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+						if (startListValues.contains(key)) {
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
+							startListValues.erase(key);
+						}
+					}
+				}
 			} else if (elemTypeId == MONO_TYPE_VALUETYPE || elemTypeId == MONO_TYPE_CLASS) {
 				MonoClass* elemClass = mono_class_from_mono_type(elemType);
 				if (strcmp(mono_class_get_name(elemClass), "Vector3") == 0) {
-					if (!group.Has(name)) group.Add(name, std::vector<ONEngine::Vector3>());
+					if (!group.Has(name) || !std::holds_alternative<std::vector<ONEngine::Vector3>>(group.Get(name))) group.Add(name, std::vector<ONEngine::Vector3>());
 					auto& list = std::get<std::vector<ONEngine::Vector3>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
-					int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
-					for (int i = 0; i < (int)list.size(); ++i) ImGui::DragFloat3(std::format("[{}]", i).c_str(), &list[i].x);
+					int size = (int)list.size();
+					if (ImGui::InputInt("Size", &size)) {
+						if (size < 0) size = 0;
+						ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
+						list.resize(size);
+						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
+						}
+					}
+					bool anyActive = false;
+					bool anyDeactivated = false;
+					bool changed = false;
+					for (int i = 0; i < (int)list.size(); ++i) {
+						ImGui::PushID(i);
+						if (ImGui::DragFloat3(std::format("[{}]", i).c_str(), &list[i].x)) changed = true;
+						if (ImGui::IsItemActivated()) anyActive = true;
+						if (ImGui::IsItemDeactivatedAfterEdit()) anyDeactivated = true;
+						ImGui::PopID();
+					}
+					if (changed) vars->SetScriptVariables(groupName);
+					if (anyActive) startListValues[key] = ONEngine::Variables::CloneVar(group.Get(name));
+					if (anyDeactivated) {
+						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+							if (startListValues.contains(key)) {
+								EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
+								startListValues.erase(key);
+							}
+						}
+					}
 				} else if (mono_class_is_enum(elemClass)) {
-					if (!group.Has(name)) group.Add(name, std::vector<int>());
+					if (!group.Has(name) || !std::holds_alternative<std::vector<int>>(group.Get(name))) group.Add(name, std::vector<int>());
 					auto& list = std::get<std::vector<int>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
-					int size = (int)list.size(); if (ImGui::InputInt("Size", &size)) { if (size < 0) size = 0; list.resize(size); }
-					for (int i = 0; i < (int)list.size(); ++i) DrawEnumCombo(elemClass, std::format("[{}]", i).c_str(), list[i]);
+					int size = (int)list.size();
+					if (ImGui::InputInt("Size", &size)) {
+						if (size < 0) size = 0;
+						ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
+						list.resize(size);
+						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
+						}
+					}
+					for (int i = 0; i < (int)list.size(); ++i) {
+						ImGui::PushID(i);
+						int val = list[i];
+						if (DrawEnumCombo(elemClass, std::format("[{}]", i).c_str(), val)) {
+							ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
+							list[i] = val;
+							if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+								EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
+							} else {
+								vars->SetScriptVariables(groupName);
+							}
+						}
+						ImGui::PopID();
+					}
 				} else {
-					if (!group.Has(name)) group.Add(name, std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>());
+					if (!group.Has(name) || !std::holds_alternative<std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>>(group.Get(name)))
+						group.Add(name, std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>());
 					auto& list = std::get<std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 					int size = (int)list.size();
 					if (ImGui::InputInt("Size", &size)) {
 						if (size < 0) size = 0;
+						ONEngine::Variables::Var oldVal = ONEngine::Variables::CloneVar(group.Get(name));
 						size_t oldSize = list.size(); list.resize(size);
 						for (size_t i = oldSize; i < list.size(); ++i) {
 							auto elemVar = ONEngine::Variables::MonoObjectToVar(nullptr, elemType);
@@ -440,7 +602,13 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 								list[i]->typeName = mono_class_get_name(elemClass);
 							}
 						}
+						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
+						}
 					}
+					bool anyActive = false;
+					bool anyDeactivated = false;
+					bool changed = false;
 					for (int i = 0; i < (int)list.size(); ++i) {
 						if (list[i]) {
 							if (list[i]->typeName.empty()) {
@@ -460,9 +628,35 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 
 						ImGui::PushID(i);
 						if (ImGui::CollapsingHeader(std::format("[{}]", i).c_str())) {
-							ImGui::Indent(); DrawGenericObject(list[i]); ImGui::Unindent();
+							ImGui::Indent();
+							
+							auto tempGeneric = ONEngine::Variables::CloneGenericObject(list[i]);
+							bool anyItemActive = false;
+							bool anyItemDeactivatedAfterEdit = false;
+							
+							DrawGenericObjectWithTracking(tempGeneric, anyItemActive, anyItemDeactivatedAfterEdit);
+							
+							if (anyItemActive) anyActive = true;
+							if (anyItemDeactivatedAfterEdit) anyDeactivated = true;
+							
+							if (tempGeneric && !ONEngine::Variables::IsEqualGenericObject(list[i], tempGeneric)) {
+								list[i] = tempGeneric;
+								changed = true;
+							}
+							
+							ImGui::Unindent();
 						}
 						ImGui::PopID();
+					}
+					if (changed) vars->SetScriptVariables(groupName);
+					if (anyActive) startListValues[key] = ONEngine::Variables::CloneVar(group.Get(name));
+					if (anyDeactivated) {
+						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
+							if (startListValues.contains(key)) {
+								EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(startListValues[key]), ToCommandVar(group.Get(name)));
+								startListValues.erase(key);
+							}
+						}
 					}
 				}
 			}

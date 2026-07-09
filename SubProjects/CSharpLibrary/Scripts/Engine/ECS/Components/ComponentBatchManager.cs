@@ -93,6 +93,32 @@ static class ComponentBatchManager {
 			return batch;
 		});
 
+		// --- BoxCollider2D の登録 ---
+		RegisterConverter<BoxCollider2D, BoxCollider2D.BatchData>((ComponentArray<BoxCollider2D> array) => {
+			int count = array.Count;
+			BoxCollider2D.BatchData[] batch = new BoxCollider2D.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				var batchData = comp.GetBatchData();
+				batch[i].compId = comp.compId;
+				batch[i].size = batchData.size;
+				batch[i].isTrigger = batchData.isTrigger;
+				batch[i].mass = batchData.mass;
+				batch[i].useOwnerScale = batchData.useOwnerScale;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<BoxCollider2D, BoxCollider2D.BatchData>((ComponentArray<BoxCollider2D> array) => {
+			int count = array.Count;
+			BoxCollider2D.BatchData[] batch = new BoxCollider2D.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
+
 		// --- DissolveMeshRenderer の登録 ---
 		RegisterConverter<DissolveMeshRenderer, DissolveMeshRenderer.BatchData>((ComponentArray<DissolveMeshRenderer> array) => {
 			int count = array.Count;
@@ -306,6 +332,14 @@ static class ComponentBatchManager {
 				var comp = spriteArray.Get(i);
 				comp.color = spriteBatch[i].color;
 				comp.uvTransform = spriteBatch[i].uvTransform;
+			}
+		} else if (componentType == typeof(BoxCollider2D)) {
+			var colliderArray = (ComponentArray<BoxCollider2D>)array;
+			var colliderBatch = (BoxCollider2D.BatchData[])batch;
+
+			for (int i = 0; i < colliderBatch.Length; i++) {
+				var comp = colliderArray.Get(i);
+				comp.ApplyBatchData(colliderBatch[i]);
 			}
 		} else if (componentType == typeof(AgentIntentComponent)) {
 			var agentArray = (ComponentArray<AgentIntentComponent>)array;

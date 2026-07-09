@@ -10,10 +10,10 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": -1.401298464324817e-45,
-                "x": -0.31065064668655396,
-                "y": 0.9505242109298706,
-                "z": 1.401298464324817e-45
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
             },
             "scale": {
                 "x": 243.5471954345703,
@@ -53,6 +53,9 @@
                 "stopAtRushDistance": false,
                 "targetEntityName": "Player",
                 "waitTime": 1.7999999523162842
+            },
+            "DespawnTimer": {
+                "despawnTime_": 12.0
             },
             "HP": {
                 "currentHp_": 30.0,
@@ -99,12 +102,17 @@
                 {
                     "enable": true,
                     "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "DespawnTimer"
                 }
             ],
             "type": "Script"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -131,7 +139,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "8837b2baa9f9608ced51cc58b8583fa0",
+    "guid": "4a6484eb380c57f50d23827e8752eec1",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

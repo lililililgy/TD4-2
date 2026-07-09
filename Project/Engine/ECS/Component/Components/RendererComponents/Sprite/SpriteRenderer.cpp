@@ -32,6 +32,11 @@ void ComponentDebug::SpriteDebug(SpriteRenderer* sr, Asset::AssetCollection* ass
 
 	Editor::ImMathf::MaterialEdit("Material", &sr->material_, assetCollection, false);
 
+	bool isPerfect = sr->IsPixelPerfect();
+	if (ImGui::Checkbox("Pixel Perfect", &isPerfect)) {
+		sr->SetPixelPerfect(isPerfect);
+	}
+
 	ImGui::Unindent(indentValue);
 }
 
@@ -40,13 +45,15 @@ void ONEngine::to_json(nlohmann::json& j, const SpriteRenderer& sr) {
 	j = nlohmann::json{
 		{ "type", "SpriteRenderer" },
 		{ "enable", sr.enable },
-		{ "material", sr.material_ }
+		{ "material", sr.material_ },
+		{ "isPixelPerfect", sr.isPixelPerfect_ }
 	};
 }
 
 void ONEngine::from_json(const nlohmann::json& j, SpriteRenderer& sr) {
 	sr.enable = j.value("enable", static_cast<int>(true));
 	sr.material_ = j.value("material", Asset::Material{});
+	sr.isPixelPerfect_ = j.value("isPixelPerfect", false);
 }
 
 
@@ -96,6 +103,10 @@ void SpriteRenderer::SetUVTransform(const UVTransform& uvTransform) {
 	material_.uvTransform = uvTransform;
 }
 
+void SpriteRenderer::SetPixelPerfect(bool enable) {
+	isPixelPerfect_ = enable;
+}
+
 const Vector4& SpriteRenderer::GetColor() const {
 	return gpuMaterial_.baseColor;
 }
@@ -106,6 +117,10 @@ const GPUMaterial& SpriteRenderer::GetGpuMaterial() const {
 
 const UVTransform& SpriteRenderer::GetUVTransform() const {
 	return material_.uvTransform;
+}
+
+bool SpriteRenderer::IsPixelPerfect() const {
+	return isPixelPerfect_;
 }
 
 Vector2 SpriteRenderer::GetTextureSize(Asset::AssetCollection* assetCollection) const {
@@ -153,4 +168,22 @@ Vector2 MonoInternalMethods::InternalGetTextureSize(uint64_t nativeHandle) {
 
 	Console::LogError("MonoInternalMethods::InternalGetTextureSize() | native handle is invalid");
 	return Vector2(0.0f, 0.0f);
+}
+
+bool MonoInternalMethods::InternalGetPixelPerfect(uint64_t nativeHandle) {
+	SpriteRenderer* sr = reinterpret_cast<SpriteRenderer*>(nativeHandle);
+	if (sr) {
+		return sr->IsPixelPerfect();
+	}
+	Console::LogError("MonoInternalMethods::InternalGetPixelPerfect() | native handle is invalid");
+	return false;
+}
+
+void MonoInternalMethods::InternalSetPixelPerfect(uint64_t nativeHandle, bool enable) {
+	SpriteRenderer* sr = reinterpret_cast<SpriteRenderer*>(nativeHandle);
+	if (sr) {
+		sr->SetPixelPerfect(enable);
+		return;
+	}
+	Console::LogError("MonoInternalMethods::InternalSetPixelPerfect() | native handle is invalid");
 }

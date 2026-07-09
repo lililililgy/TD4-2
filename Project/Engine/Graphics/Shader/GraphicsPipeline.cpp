@@ -502,3 +502,24 @@ D3D12_STATIC_SAMPLER_DESC StaticSampler::ClampSampler() {
 
 	return sampler;
 }
+
+D3D12_STATIC_SAMPLER_DESC StaticSampler::PointSampler() {
+	D3D12_STATIC_SAMPLER_DESC sampler = {};
+
+	sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+
+	sampler.MipLODBias = 0.0f;
+	sampler.MaxAnisotropy = 16;
+	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+
+	sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
+	sampler.MinLOD = 0.0f;
+	sampler.MaxLOD = D3D12_FLOAT32_MAX;
+
+	sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	return sampler;
+}

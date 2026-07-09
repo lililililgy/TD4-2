@@ -7,6 +7,9 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ONEngine::Console console;
 
+	/// コマンドライン引数をパース
+	ONEngine::EngineConfig::ParseCommandLine();
+
 	/// 設定ファイルをロード
 	ONEngine::EngineConfig::LoadConfig();
 

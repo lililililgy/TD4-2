@@ -31,6 +31,98 @@ using namespace Editor;
 
 namespace {
 
+bool IsValidCSharpIdentifier(const std::string& name, std::string& outErrorReason) {
+	if (name.empty()) {
+		outErrorReason = "クラス名が空です。";
+		return false;
+	}
+
+	static const std::unordered_set<std::string> keywords = {
+		"abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked",
+		"class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else",
+		"enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for",
+		"foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock",
+		"long", "namespace", "new", "null", "object", "operator", "out", "override", "params",
+		"private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed",
+		"short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw",
+		"true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using",
+		"virtual", "void", "volatile", "while"
+	};
+
+	if (keywords.find(name) != keywords.end()) {
+		outErrorReason = "C#の予約キーワードはクラス名として使用できません。";
+		return false;
+	}
+
+	for (size_t i = 0; i < name.length(); ) {
+		unsigned char c = static_cast<unsigned char>(name[i]);
+
+		if (c < 128) {
+			if (i == 0) {
+				if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')) {
+					outErrorReason = "クラス名の先頭文字は英字またはアンダースコアである必要があります。";
+					return false;
+				}
+			} else {
+				if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_')) {
+					outErrorReason = "クラス名に空白や記号（英数字・アンダースコア以外）は使用できません。";
+					return false;
+				}
+			}
+			i += 1;
+		} else {
+			int len = 0;
+			if ((c & 0xE0) == 0xC0) len = 2;
+			else if ((c & 0xF0) == 0xE0) len = 3;
+			else if ((c & 0xF8) == 0xF0) len = 4;
+			else {
+				outErrorReason = "不正な文字コードが含まれています。";
+				return false;
+			}
+
+			if (i + len > name.length()) {
+				outErrorReason = "文字コードが破損しています。";
+				return false;
+			}
+
+			// 全角スペース (UTF-8: E3 80 80)
+			if (len == 3 && 
+				static_cast<unsigned char>(name[i]) == 0xE3 && 
+				static_cast<unsigned char>(name[i+1]) == 0x80 && 
+				static_cast<unsigned char>(name[i+2]) == 0x80) {
+				outErrorReason = "クラス名に全角スペースは使用できません。";
+				return false;
+			}
+
+			// CJK記号・句読点 (E3 80 81 - E3 80 BF)
+			if (len == 3 && 
+				static_cast<unsigned char>(name[i]) == 0xE3 && 
+				static_cast<unsigned char>(name[i+1]) == 0x80) {
+				unsigned char third = static_cast<unsigned char>(name[i+2]);
+				if (third >= 0x81 && third <= 0xBF) {
+					outErrorReason = "クラス名に記号は使用できません。";
+					return false;
+				}
+			}
+
+			// 全角記号 (EF BC 81 - EF BC 9F)
+			if (len == 3 && 
+				static_cast<unsigned char>(name[i]) == 0xEF && 
+				static_cast<unsigned char>(name[i+1]) == 0xBC) {
+				unsigned char third = static_cast<unsigned char>(name[i+2]);
+				if (third >= 0x81 && third <= 0x9F) {
+					outErrorReason = "クラス名に記号は使用できません。";
+					return false;
+				}
+			}
+
+			i += len;
+		}
+	}
+
+	return true;
+}
+
 /// @brief .slnファイルからの絶対パス
 const std::filesystem::path kRootPath = std::filesystem::absolute("./");
 
@@ -110,7 +202,8 @@ void ProjectWindow::ShowImGui() {
 		}
 	}
 
-	if(ImGui::Begin(windowName_.c_str())) {
+	bool* p_open = canClose_ ? &isOpen_ : nullptr;
+	if(ImGui::Begin(windowName_.c_str(), p_open)) {
 		ImGui::Columns(2);
 
 		// 左側：フォルダツリー
@@ -120,6 +213,7 @@ void ProjectWindow::ShowImGui() {
 					DrawDirectoryTree(root);
 				}
 			}
+			ImGui::Dummy(ImVec2(0.0f, 100.0f)); // 余分にスクロールできるようにするための余白
 		}
 		ImGui::EndChild();
 
@@ -148,6 +242,7 @@ void ProjectWindow::ShowImGui() {
 					showCreateScriptPopup_ = true;
 					targetPath_ = currentPath_;
 					inputBuffer_ = "NewScript";
+					errorMessage_.clear();
 				}
 				if(!isValidScriptPath && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
 					ImGui::SetTooltip("C# scripts can only be created in the CSharpLibrary/Scripts folder.");
@@ -273,29 +368,44 @@ void ProjectWindow::ShowImGui() {
 	if(ImGui::BeginPopupModal("Create C# Script", &showCreateScriptPopup_, ImGuiWindowFlags_AlwaysAutoResize)) {
 		ImGui::Text("Enter script name:");
 		ImGuiInputText("##scriptName", &inputBuffer_);
+
+		if(!errorMessage_.empty()) {
+			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "%s", errorMessage_.c_str());
+		}
+
 		if(ImGui::Button("OK", ImVec2(120, 0))) {
-			try {
-				std::string className = inputBuffer_;
-				std::filesystem::path newScript = targetPath_ / (className + ".cs");
-				if(!std::filesystem::exists(newScript)) {
-					std::ofstream ofs(newScript);
-					ofs << "using System;\n";
-					ofs << "using System.Collections.Generic;\n\n";
-					ofs << "public class " << className << " : MonoScript {\n";
-					ofs << "\tpublic override void Initialize() {\n\t\t\n\t}\n\n";
-					ofs << "\tpublic override void Update() {\n\t\t\n\t}\n";
-					ofs << "}\n";
-					ofs.close();
-					UpdateFileCache(targetPath_);
+			std::string className = inputBuffer_;
+			std::string errorReason;
+			if(!IsValidCSharpIdentifier(className, errorReason)) {
+				errorMessage_ = errorReason;
+			} else {
+				try {
+					std::filesystem::path newScript = targetPath_ / (className + ".cs");
+					if(!std::filesystem::exists(newScript)) {
+						std::ofstream ofs(newScript);
+						ofs << "using System;\n";
+						ofs << "using System.Collections.Generic;\n\n";
+						ofs << "public class " << className << " : MonoScript {\n";
+						ofs << "\tpublic override void Initialize() {\n\t\t\n\t}\n\n";
+						ofs << "\tpublic override void Update() {\n\t\t\n\t}\n";
+						ofs << "}\n";
+						ofs.close();
+						UpdateFileCache(targetPath_);
 
-					// スクリプト作成後にPremakeを実行してプロジェクトを更新 (Projectフォルダからの相対パス)
-					//system("powershell.exe -ExecutionPolicy Bypass -File ../SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
+						// スクリプト作成後にPremakeを実行してプロジェクトを更新 (Projectフォルダからの相対パス)
+						//system("powershell.exe -ExecutionPolicy Bypass -File ../SubProjects/CSharpLibrary/GenerateProject_CS.ps1");
 
-					// プロジェクトが更新されたのでホットリロードを要求（ビルドは手動または起動時に行われる想定）
-					//HotReloadManager::GetInstance().RequestScriptHotReload();
+						// プロジェクトが更新されたのでホットリロードを要求（ビルドは手動または起動時に行われる想定）
+						//HotReloadManager::GetInstance().RequestScriptHotReload();
+						
+						showCreateScriptPopup_ = false;
+					} else {
+						errorMessage_ = "同名のファイルが既に存在します。";
+					}
+				} catch(...) {
+					errorMessage_ = "ファイルの作成に失敗しました。";
 				}
-			} catch(...) {}
-			showCreateScriptPopup_ = false;
+			}
 		}
 		ImGui::SameLine();
 		if(ImGui::Button("Cancel", ImVec2(120, 0))) { showCreateScriptPopup_ = false; }
@@ -344,6 +454,7 @@ void ProjectWindow::DrawDirectoryTree(const std::filesystem::path& directory) {
 		UpdateFileCache(currentPath_);
 		searchBuffer_.clear(); // フォルダ選択で検索解除
 		isSearching_ = false;
+		selectedFileIndex_ = -1;
 	}
 
 	if(isOpen) {
@@ -362,10 +473,11 @@ void ProjectWindow::DrawDirectoryTree(const std::filesystem::path& directory) {
 void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 	// --- 検索バーとフィルタの描画 (固定部) ---
 	float filterWidth = 100.0f;
+	float buttonWidth = 24.0f;
 	float spacing = 8.0f;
 	float totalWidth = ImGui::GetContentRegionAvail().x;
 
-	ImGui::PushItemWidth(totalWidth - filterWidth - spacing);
+	ImGui::PushItemWidth(totalWidth - filterWidth - buttonWidth - (spacing * 2.0f));
 	if(ImGuiInputText("##ProjectSearch", &searchBuffer_, ImGuiInputTextFlags_AutoSelectAll, "search file...")) {
 	}
 	if(ImGui::IsItemDeactivatedAfterEdit() || !searchBuffer_.empty()) {
@@ -386,6 +498,21 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 		isFiltering_ = false;
 	}
 	ImGui::PopItemWidth();
+
+	ImGui::SameLine(0, spacing);
+
+	if(ImGui::Button("+", ImVec2(buttonWidth, 0.0f))) {
+		if(GetParentContainer()) {
+			static int projectWindowCounter = 1;
+			int id = ++projectWindowCounter;
+			std::string name = std::format("Project ({})##Project_{}", id, id);
+
+			auto newWindow = std::make_unique<ProjectWindow>(pAssetCollection_);
+			newWindow->SetWindowName(name);
+
+			GetParentContainer()->AddView(std::move(newWindow));
+		}
+	}
 
 	// 検索文字列が空でない場合にグローバル検索を実行
 	if(isSearching_) {
@@ -453,6 +580,7 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 	// ここから下をスクロール可能にする
 	if(ImGui::BeginChild("FileListScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar)) {
 		DrawFileList(directory, requestChangeDir, nextTargetDir);
+		ImGui::Dummy(ImVec2(0.0f, 100.0f)); // 余分にスクロールできるようにするための余白
 	}
 	ImGui::EndChild();
 
@@ -462,6 +590,7 @@ void ProjectWindow::DrawFileView(const std::filesystem::path& directory) {
 		UpdateFileCache(currentPath_);
 		searchBuffer_.clear();
 		isSearching_ = false;
+		selectedFileIndex_ = -1;
 	}
 }
 
@@ -582,42 +711,13 @@ void ProjectWindow::DrawFileList(const std::filesystem::path& directory, bool& o
 
 					ImGui::PushID(static_cast<int>(index));
 
-					ImGui::BeginGroup();
+					bool isSelected = (selectedFileIndex_ == static_cast<int>(index));
+					ImVec2 pos = ImGui::GetCursorScreenPos();
+					float itemHeight = cellSize + 20.0f;
 
-					// アイコン描画（キャッシュ済み）
-					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
-					if(file.displayTexture) {
-						ImGui::ImageButton("##Icon", (ImTextureID)(uintptr_t)file.displayTexture->GetSRVGPUHandle().ptr, { iconSize, iconSize });
-					} else {
-						ImGui::Button("Icon", { iconSize, iconSize });
-					}
-					ImGui::PopStyleVar();
-
-					// 名前描画
-					ImGui::TextWrapped("%s", name.c_str());
-
-					ImGui::EndGroup(); // グループ化ここまで
-
-					// --- D&D処理 ---
-					if(ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
-						static AssetPayload payload;
-						payload.filePath = file.relativePath; // キャッシュ済みの相対パスを利用
-						payload.guid = pAssetCollection_->GetAssetGuidFromPath(payload.filePath);
-
-						const AssetPayload* assetPtr = &payload;
-						ImGui::SetDragDropPayload("AssetData", &assetPtr, sizeof(AssetPayload*));
-
-						// ドラッグ中のプレビュー描画
-						if(file.displayTexture) {
-							ImGui::Image((ImTextureID)(uintptr_t)file.displayTexture->GetSRVGPUHandle().ptr, { 32.0f, 32.0f });
-							ImGui::SameLine();
-						}
-						ImGui::Text("%s", name.c_str());
-						ImGui::EndDragDropSource();
-					}
-
-					// --- クリック判定 ---
-					if(ImGui::IsItemHovered()) {
+					// Selectableを配置して背景ハイライトと選択イベントを処理
+					if(ImGui::Selectable("##Selectable", isSelected, ImGuiSelectableFlags_AllowDoubleClick, ImVec2(cellSize, itemHeight))) {
+						selectedFileIndex_ = static_cast<int>(index);
 						if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 							if(file.isDirectory) {
 								outRequestChangeDir = true;
@@ -627,10 +727,58 @@ void ProjectWindow::DrawFileList(const std::filesystem::path& directory, bool& o
 								ImGuiSelection::SetSelectedObject(guid, SelectionType::Asset);
 							}
 						}
-						if(ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-							ImGui::OpenPopup("FileContextMenu");
-						}
 					}
+
+					// 右クリックでも選択する
+					if(ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+						selectedFileIndex_ = static_cast<int>(index);
+						ImGui::OpenPopup("FileContextMenu");
+					}
+
+					// セルの終端カーソル位置を記録
+					ImVec2 nextCursorPos = ImGui::GetCursorScreenPos();
+
+					// D&D処理（Selectableをドラッグ元にする）
+					if(ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+						static AssetPayload payload;
+						payload.filePath = file.relativePath;
+						payload.guid = pAssetCollection_->GetAssetGuidFromPath(payload.filePath);
+
+						const AssetPayload* assetPtr = &payload;
+						ImGui::SetDragDropPayload("AssetData", &assetPtr, sizeof(AssetPayload*));
+
+						if(file.displayTexture) {
+							ImGui::Image((ImTextureID)(uintptr_t)file.displayTexture->GetSRVGPUHandle().ptr, { 32.0f, 32.0f });
+							ImGui::SameLine();
+						}
+						ImGui::Text("%s", name.c_str());
+						ImGui::EndDragDropSource();
+					}
+
+					// 重ねて描画するために位置を上に戻す
+					ImGui::SetCursorScreenPos(pos);
+					ImGui::BeginGroup();
+
+					// アイコン描画
+					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
+					if(file.displayTexture) {
+						// Selectableの上にあるためImageを使用
+						ImGui::Image((ImTextureID)(uintptr_t)file.displayTexture->GetSRVGPUHandle().ptr, { iconSize, iconSize });
+					} else {
+						ImGui::Button("Icon", { iconSize, iconSize });
+					}
+					ImGui::PopStyleVar();
+
+					// 名前描画
+					ImGui::SetCursorScreenPos(ImVec2(pos.x + 4.0f, pos.y + iconSize + 12.0f));
+					ImGui::PushTextWrapPos(pos.x + cellSize - 4.0f);
+					ImGui::TextWrapped("%s", name.c_str());
+					ImGui::PopTextWrapPos();
+
+					ImGui::EndGroup();
+
+					// カーソル位置をSelectableの直後に戻す
+					ImGui::SetCursorScreenPos(nextCursorPos);
 
 					// コンテキストメニューの呼び出し（削除予約パスを渡す）
 					PopupContextMenu(file.path, pendingDeletePath);
@@ -640,6 +788,95 @@ void ProjectWindow::DrawFileList(const std::filesystem::path& directory, bool& o
 			}
 		}
 		ImGui::EndTable();
+	}
+
+	// 空スペースクリックでの選択解除
+	if(ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsAnyItemHovered()) {
+		selectedFileIndex_ = -1;
+	}
+
+	// --- キーボード操作の処理 ---
+	if(ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows)) {
+		// Backspace: 親フォルダに戻る
+		if(ImGui::IsKeyPressed(ImGuiKey_Backspace)) {
+			bool isAtRoot = false;
+			try {
+				for(const auto& root : rootPaths_) {
+					if(std::filesystem::exists(directory) && std::filesystem::exists(root) && std::filesystem::equivalent(directory, root)) {
+						isAtRoot = true;
+						break;
+					}
+				}
+			} catch(...) {
+				isAtRoot = true;
+			}
+			if(!isAtRoot) {
+				outRequestChangeDir = true;
+				outNextTargetDir = directory.parent_path();
+			}
+		}
+
+		// Enter: フォルダに入る、またはファイルを開く
+		if(ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter)) {
+			if(selectedFileIndex_ >= 0 && selectedFileIndex_ < static_cast<int>(files.size())) {
+				auto& file = files[selectedFileIndex_];
+				if(file.isDirectory) {
+					outRequestChangeDir = true;
+					outNextTargetDir = file.path;
+				} else {
+					const ONEngine::Guid& guid = pAssetCollection_->GetAssetGuidFromPath(file.relativePath);
+					ImGuiSelection::SetSelectedObject(guid, SelectionType::Asset);
+				}
+			}
+		}
+
+		// Delete: 削除
+		if(ImGui::IsKeyPressed(ImGuiKey_Delete)) {
+			if(selectedFileIndex_ >= 0 && selectedFileIndex_ < static_cast<int>(files.size())) {
+				pendingDeletePath = files[selectedFileIndex_].path;
+				selectedFileIndex_ = -1;
+			}
+		}
+
+		// F2: リネームポップアップを開く
+		if(ImGui::IsKeyPressed(ImGuiKey_F2)) {
+			if(selectedFileIndex_ >= 0 && selectedFileIndex_ < static_cast<int>(files.size())) {
+				auto& file = files[selectedFileIndex_];
+				showRenamePopup_ = true;
+				targetPath_ = file.path;
+				inputBuffer_ = file.path.stem().string();
+			}
+		}
+
+		// 矢印キーでの選択移動
+		if(ImGui::IsKeyPressed(ImGuiKey_LeftArrow)) {
+			if(selectedFileIndex_ > 0) {
+				selectedFileIndex_--;
+			} else if(selectedFileIndex_ == -1 && !files.empty()) {
+				selectedFileIndex_ = 0;
+			}
+		}
+		if(ImGui::IsKeyPressed(ImGuiKey_RightArrow)) {
+			if(selectedFileIndex_ < static_cast<int>(files.size()) - 1) {
+				selectedFileIndex_++;
+			} else if(selectedFileIndex_ == -1 && !files.empty()) {
+				selectedFileIndex_ = 0;
+			}
+		}
+		if(ImGui::IsKeyPressed(ImGuiKey_UpArrow)) {
+			if(selectedFileIndex_ >= columnCount) {
+				selectedFileIndex_ -= columnCount;
+			} else if(selectedFileIndex_ == -1 && !files.empty()) {
+				selectedFileIndex_ = 0;
+			}
+		}
+		if(ImGui::IsKeyPressed(ImGuiKey_DownArrow)) {
+			if(selectedFileIndex_ + columnCount < static_cast<int>(files.size())) {
+				selectedFileIndex_ += columnCount;
+			} else if(selectedFileIndex_ == -1 && !files.empty()) {
+				selectedFileIndex_ = 0;
+			}
+		}
 	}
 
 	// 描画ループを完全に抜けた後で、安全に削除処理とキャッシュ更新を行う

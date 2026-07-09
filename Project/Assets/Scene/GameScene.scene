@@ -1,6 +1,16 @@
 {
     "entities": [
         {
+            "guid": "b2a7b199ab1291bba0ed6d4ad609b18f",
+            "parentGuid": null,
+            "path": "./GameScene/b2a7b199ab1291bba0ed6d4ad609b18f.entity"
+        },
+        {
+            "guid": "ea84975ec301b3dcee0116fca3f76b1b",
+            "parentGuid": null,
+            "path": "./GameScene/ea84975ec301b3dcee0116fca3f76b1b.entity"
+        },
+        {
             "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
             "parentGuid": null,
             "path": "./GameScene/b0388d37fce8d21ff4d0f9668d6b4e26.entity"
@@ -81,9 +91,9 @@
             "path": "./GameScene/49606b24cabf44f082b38f399f5200e9.entity"
         },
         {
-            "guid": "03de1cdcd3fa890f5c071f34e960e073",
+            "guid": "ea3fbbacef4c82cb9807e72766edb052",
             "parentGuid": null,
-            "path": "./GameScene/03de1cdcd3fa890f5c071f34e960e073.entity"
+            "path": "./GameScene/ea3fbbacef4c82cb9807e72766edb052.entity"
         }
     ]
 }

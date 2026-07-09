@@ -6,18 +6,18 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 1542.6998291015625,
+                "y": 24000.0,
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
-                "y": 0.0,
+                "y": -0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 12.0,
-                "y": 2.0,
+                "x": 1000.0,
+                "y": 250.0,
                 "z": 1.0
             },
             "type": "Transform"
@@ -36,6 +36,17 @@
                     }
                 ]
             },
+            "MovementArea": {
+                "fixedCollisionBounds_": true,
+                "max_": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "min_": {
+                    "x": 0.0,
+                    "y": 0.0
+                }
+            },
             "type": "Variables"
         },
         {
@@ -44,6 +55,10 @@
                 {
                     "enable": true,
                     "name": "BiomeArea"
+                },
+                {
+                    "enable": true,
+                    "name": "MovementArea"
                 }
             ],
             "type": "Script"
@@ -56,8 +71,8 @@
             "maskBits": 0,
             "mass": 1.0,
             "size": {
-                "x": 1024.0,
-                "y": 1024.0
+                "x": 64.0,
+                "y": 64.0
             },
             "state": "Static",
             "type": "BoxCollider2D",

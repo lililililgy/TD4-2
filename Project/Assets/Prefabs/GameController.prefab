@@ -3,15 +3,6 @@
     "components": [
         {
             "enable": 1,
-            "loop": true,
-            "path": "./Assets/Sounds/test-bgm.mp3",
-            "pitch": 1.0,
-            "playOnAwake": true,
-            "type": "BGMPlayer",
-            "volume": 1.0
-        },
-        {
-            "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
@@ -32,13 +23,13 @@
             "type": "Transform"
         },
         {
-            "Test": {
-                "color": {
-                    "w": 0.0,
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                }
+            "GameSceneController": {
+                "openPauseKeyInputs": [
+                    0
+                ],
+                "openPausePadInputs": [
+                    16
+                ]
             },
             "type": "Variables"
         },
@@ -47,14 +38,14 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "Test"
+                    "name": "GameSceneController"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "a6d9771e74bc8e7fd04c32d762afb5b1",
-    "name": "BGM",
+    "guid": "b2a7b199ab1291bba0ed6d4ad609b18f",
+    "name": "GameController",
     "parentGuid": null,
     "prefabName": ""
 }

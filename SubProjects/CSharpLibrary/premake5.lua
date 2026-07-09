@@ -54,3 +54,26 @@ project "CSharpLibrary"
             [[powershell -NoProfile -ExecutionPolicy Bypass -File "$(ProjectDir)RenameDll.ps1"]],
             [[call "$(ProjectDir)KeepLatest.bat"]]
         }
+
+-- Hook vs2022 onProject to patch csproj files dynamically to use portable pdb
+local vs2022 = premake.action.get("vs2022")
+local baseOnProject = vs2022.onProject
+vs2022.onProject = function(prj)
+    baseOnProject(prj)
+    if prj.language == "C#" then
+        local path = prj.name .. ".csproj"
+        local f = io.open(path, "r")
+        if f then
+            local content = f:read("*all")
+            f:close()
+            -- Replace <DebugType>...</DebugType> with <DebugType>portable</DebugType>
+            local newContent, count = string.gsub(content, "<DebugType>[%w_]+</DebugType>", "<DebugType>portable</DebugType>")
+            if count > 0 then
+                f = io.open(path, "w")
+                f:write(newContent)
+                f:close()
+                print("Hook: Successfully patched DebugType to portable in " .. path)
+            end
+        end
+    end
+end

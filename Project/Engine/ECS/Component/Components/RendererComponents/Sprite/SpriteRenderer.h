@@ -72,6 +72,7 @@ public:
 	/// ----- setter ----- ///
 	void SetColor(const Vector4& color);
 	void SetUVTransform(const UVTransform& uvTransform);
+	void SetPixelPerfect(bool enable);
 
 	/// ----- getter ----- ///
 	const Vector4& GetColor() const;
@@ -82,8 +83,13 @@ public:
 
 	Vector2 GetTextureSize(Asset::AssetCollection* assetCollection) const;
 
+	bool IsPixelPerfect() const;
+
 	/// @brief アニメーション制御用マテリアルへの参照取得
 	Asset::Material& GetMaterialForAnimation() { return material_; }
+
+private:
+	bool isPixelPerfect_ = false;
 
 };
 
@@ -101,6 +107,9 @@ namespace MonoInternalMethods {
 	void InternalSetColor(uint64_t nativeHandle, Vector4 color);
 
 	Vector2 InternalGetTextureSize(uint64_t nativeHandle);
+
+	bool InternalGetPixelPerfect(uint64_t nativeHandle);
+	void InternalSetPixelPerfect(uint64_t nativeHandle, bool enable);
 }
 
 } /// ONEngine

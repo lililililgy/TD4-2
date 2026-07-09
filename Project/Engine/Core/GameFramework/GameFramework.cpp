@@ -5,6 +5,8 @@ using namespace ONEngine;
 
 /// std
 #include <chrono>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 
 /// engine
@@ -126,7 +128,16 @@ void GameFramework::InitializeECS() {
 
 	/// scene managerの初期化
 	sceneManager_->Initialize(renderingFramework_->GetAssetCollection());
-	LoadDebugScene();
+	if (EngineConfig::isTestMode && !EngineConfig::testScene.empty()) {
+		sceneManager_->GetSceneIO()->Input(EngineConfig::testScene, entityComponentSystem_->GetECSGroup("Debug"));
+	} else {
+		LoadDebugScene();
+	}
+
+	if (EngineConfig::isTestMode) {
+		DebugConfig::isDebugging = true;
+		DebugConfig::isPause = false;
+	}
 }
 
 void GameFramework::InitializeEditor(const GameFrameworkConfig& /*config*/) {
@@ -166,6 +177,24 @@ void GameFramework::Update() {
 	/// 更新処理
 	Input::Update();
 	Time::Update();
+
+	if (EngineConfig::isTestMode) {
+		static int testFrameCount = 0;
+		testFrameCount++;
+		if (testFrameCount >= EngineConfig::testDuration) {
+			nlohmann::json results;
+			results["success"] = true;
+			results["message"] = "Test duration reached without assertion failures.";
+			results["frames"] = testFrameCount;
+			std::ofstream ofs(EngineConfig::testOutputPath);
+			if (ofs.is_open()) {
+				ofs << results.dump(4);
+				ofs.close();
+			}
+			PostQuitMessage(0);
+			exit(0);
+		}
+	}
 
 	renderingFramework_->HeapBindToCommandList();
 	windowManager_->Update();

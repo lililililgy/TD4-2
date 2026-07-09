@@ -27,9 +27,10 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
-                    "w": 0.5,
+                    "w": 1.0,
                     "x": 0.800000011920929,
                     "y": 1.0,
                     "z": 1.0

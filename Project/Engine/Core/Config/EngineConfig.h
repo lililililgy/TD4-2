@@ -19,8 +19,16 @@ extern bool isFullscreen;
 extern bool enableVSync;
 extern bool ignoreCSharpLog;
 
+// Test Mode settings
+extern bool isTestMode;
+extern std::string testScene;
+extern std::string testInputPath;
+extern int testDuration;
+extern std::string testOutputPath;
+
 void LoadConfig();
 void SaveConfig();
+void ParseCommandLine();
 }
 
 /// /////////////////////////////////////////////////

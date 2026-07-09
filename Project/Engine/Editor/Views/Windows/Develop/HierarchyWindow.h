@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 
 /// external
 #include <imgui.h>
@@ -44,6 +45,15 @@ protected:
 	/// ===================================================
 	/// protected : methods
 	/// ===================================================
+
+	/// @brief 検索バーとEntity数の描画
+	void DrawSearchBarAndCount();
+
+	/// @brief Entityが検索クエリにマッチするか判定しキャッシュする
+	bool ComputeMatches(ONEngine::GameEntity* entity, const std::string& query);
+
+	/// @brief テストモード時の自動検証処理
+	void RunAutomaticTests();
 
 	/// @brief Prefabのドラッグアンドドロップ処理
 	void PrefabDragAndDrop();
@@ -112,6 +122,13 @@ protected:
 	ONEngine::SceneManager* pSceneManager_ = nullptr;
 
 	std::string windowName_ = "Hierarchy";
+
+	/// ----- search and count ----- ///
+	std::string searchText_ = "";
+	size_t totalEntityCount_ = 0;
+	size_t matchEntityCount_ = 0;
+	std::unordered_map<ONEngine::Guid, bool> entityMatchesCache_;
+	std::unordered_map<ONEngine::Guid, bool> descendantMatchesCache_;
 
 	/// ----- hierarchy ----- ///
 	bool isNodeOpen_;
