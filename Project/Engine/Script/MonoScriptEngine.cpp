@@ -1357,6 +1357,10 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 				}
 				activePdbBuffer_ = std::move(tempPdbBuffer);
 
+				if (oldDomain && oldDomain != rootDomain_) {
+					domainsToUnload_.push_back(oldDomain);
+				}
+
 				SetIsHotReloadRequest(true);
 				isDebuggerSyncSuccess_ = true;
 				Console::Log("[Mono] Debugger synchronization complete. Breakpoints should now bind.", LogCategory::ScriptEngine);
@@ -1375,6 +1379,10 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 			isDebuggerSyncSuccess_ = false;
 			Console::LogWarning("[Mono] Debugger newly attached during gameplay. Fast reload skipped to prevent crash. Game execution suspended for debugger synchronization.", LogCategory::ScriptEngine);
 		}
+	}
+	if (!currentAttached && wasDebuggerAttached_) {
+		Console::Log("[Mono] Debugger detached. Safely cleaning up accumulated zombie domains...", LogCategory::ScriptEngine);
+		ClearPendingDomains();
 	}
 	wasDebuggerAttached_ = currentAttached;
 #endif
