@@ -137,25 +137,31 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 		outPdbBuffer.resize(pdbSize);
 
 		if (dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(outPdbBuffer.data(), pdbSize)) {
+			// 論理アセンブリ名（CSharpLibrary.dll）に置き換えて Mono に報告し、デバッガがソースコードとマッピングできるようにする
+			std::string logicalDllPath = dllPath;
+			size_t lastSlash = logicalDllPath.find_last_of("/\\");
+			std::string dir = (lastSlash != std::string::npos) ? logicalDllPath.substr(0, lastSlash + 1) : "";
+			std::string logicalPath = dir + "CSharpLibrary.dll";
+
 			MonoImageOpenStatus status = MONO_IMAGE_OK;
-			// DLLデータからMonoImageをオープン (実際のパスを報告)
+			// DLLデータからMonoImageをオープン (論理パスを報告)
 			MonoImage* image = mono_image_open_from_data_with_name(
 				dllBuffer.data(), 
 				(uint32_t)dllSize, 
 				true, // need_copy
 				&status, 
 				false, // refonly
-				dllPath.c_str()
+				logicalPath.c_str()
 			);
 
 			if (image && status == MONO_IMAGE_OK) {
 				// アセンブリロードの前にデバッグ情報を登録
 				mono_debug_open_image_from_memory(image, (const mono_byte*)outPdbBuffer.data(), (int)pdbSize);
 				
-				// ImageからAssemblyをロード (実際のパスを報告)
+				// ImageからAssemblyをロード (論理パスを報告)
 				MonoAssembly* assembly = mono_assembly_load_from_full(
 					image,
-					dllPath.c_str(),
+					logicalPath.c_str(),
 					&status,
 					false
 				);
@@ -163,7 +169,7 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 				mono_image_close(image);
 
 				if (assembly) {
-					Console::Log("[Mono] Successfully loaded assembly and debug symbols from memory: " + dllPath + " (logical: " + dllPath + ")", LogCategory::ScriptEngine);
+					Console::Log("[Mono] Successfully loaded assembly and debug symbols from memory: " + dllPath + " (logical: " + logicalPath + ")", LogCategory::ScriptEngine);
 					return assembly;
 				}
 			}
