@@ -544,10 +544,10 @@ void MonoScriptEngine::HotReload() {
 	std::string buildOutput;
 	bool buildSuccess = BuildCSharpProject(buildOutput);
 	if (!buildSuccess) {
-		Console::LogError("[Mono] HotReload: C# project build failed! Reload aborted.\n" + buildOutput, LogCategory::ScriptEngine);
-		return;
+		Console::LogWarning("[Mono] HotReload: C# project build failed (e.g. dotnet SDK not found). Trying to fallback to existing built DLL...\n" + buildOutput, LogCategory::ScriptEngine);
+	} else {
+		Console::Log("[Mono] HotReload: C# project built successfully. Reloading DLL...", LogCategory::ScriptEngine);
 	}
-	Console::Log("[Mono] HotReload: C# project built successfully. Reloading DLL...", LogCategory::ScriptEngine);
 
 	// デバッグモード時でも再生ごとのリセットを優先するため、Hot Reloadを有効化
 
