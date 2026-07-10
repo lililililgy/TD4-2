@@ -144,14 +144,14 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 			std::string logicalPath = dir + "CSharpLibrary.dll";
 
 			MonoImageOpenStatus status = MONO_IMAGE_OK;
-			// DLLデータからMonoImageをオープン (キャッシュ衝突を防ぐため、イメージ名は一意の物理パスにする)
+			// DLLデータからMonoImageをオープン (論理パスを報告)
 			MonoImage* image = mono_image_open_from_data_with_name(
 				dllBuffer.data(), 
 				(uint32_t)dllSize, 
 				true, // need_copy
 				&status, 
 				false, // refonly
-				dllPath.c_str()
+				logicalPath.c_str()
 			);
 
 			if (image && status == MONO_IMAGE_OK) {
@@ -1292,144 +1292,37 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints...", LogCategory::ScriptEngine);
 		showAttachedPopup_ = true;
 
-		// ゲーム再生中でない場合（＝エディタの編集モード時）にのみ、安全に AppDomain をリロードする
-		if (!DebugConfig::isDebugging && assembly_) {
-			Console::Log("[Mono] Triggering fast reload for debugger synchronization...", LogCategory::ScriptEngine);
-			
-			auto latestDll = FindLatestDll("./Packages/Scripts", "CSharpLibrary");
-			if (!latestDll.has_value()) {
-				Console::LogError("[Mono] Failed to find latest assembly DLL for debugger sync.", LogCategory::ScriptEngine);
-				isDebuggerSyncSuccess_ = false;
-				return;
-			}
+		// デバッガが最新の PDB をロードできるように、最新の PDB を固定名 "CSharpLibrary.pdb" として配置する。
+		// ※アタッチした瞬間はまだデバッガがファイルを読み込んでいないため、安全に上書きコピー可能です。
+		auto latestDll = FindLatestDll("./Packages/Scripts", "CSharpLibrary");
+		if (latestDll.has_value()) {
 			std::string utf8DllPath = GetUtf8Path(*latestDll);
-
-			// デバッガがロードできるように、最新の PDB を固定名 "CSharpLibrary.pdb" としてコピー配置する
-			{
-				std::string latestPdbPath = utf8DllPath;
-				size_t extPos = latestPdbPath.find_last_of('.');
-				if (extPos != std::string::npos) {
-					latestPdbPath = latestPdbPath.substr(0, extPos) + ".pdb";
-				} else {
-					latestPdbPath += ".pdb";
-				}
-
-				std::string targetPdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
-				if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
-					try {
-						std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
-						Console::Log("[Mono] DebuggerSync: Copied latest PDB to logical path: " + targetPdbPath, LogCategory::ScriptEngine);
-					} catch (const std::exception& e) {
-						Console::LogWarning("[Mono] DebuggerSync: Failed to copy PDB to logical path: " + std::string(e.what()), LogCategory::ScriptEngine);
-					}
-				}
-			}
-
-			MonoDomain* oldDomain = domain_;
-			MonoDomain* newDomain = CreateReloadDomain();
-
-			// 最新の DLL パスからロード
-			std::vector<char> tempPdbBuffer;
-			MonoAssembly* tempAssembly = LoadAssemblyWithSymbols(newDomain, utf8DllPath, tempPdbBuffer);
-			if (tempAssembly) {
-				MonoImage* tempImage = mono_assembly_get_image(tempAssembly);
-
-				// 成功したので一括代入（アトミック更新）
-				domain_ = newDomain;
-				assembly_ = tempAssembly;
-				image_ = tempImage;
-				currentDllPath_ = utf8DllPath; // ロードした最新のパスに更新
-
-				mono_domain_set(domain_, true);
-				RegisterFunctions();
-
-				// ComponentBatchManagerの再初期化
-				MonoClass* batchMgrClass = mono_class_from_name(image_, "", "ComponentBatchManager");
-				if(batchMgrClass) {
-					MonoMethod* initMethod = mono_class_get_method_from_name(batchMgrClass, "Initialize", 0);
-					if(initMethod) {
-						MonoObject* exc = nullptr;
-						MonoScriptEngineUtils::SafeInvoke(initMethod, nullptr, nullptr, &exc);
-						if(exc) MonoScriptEngineUtils::HandleException(exc);
-					}
-				}
-
-				// ※ クラッシュを防ぐため、古いドメインのアンロード(mono_domain_unload)をスキップします。
-				// これにより、エディタUI等が保持する MonoObject* がゾンビ化するのを防ぎ、
-				// かつデバッガ接続初期化処理中のスレッド競合クラッシュも完全に防ぎます。
-				// (古いPDBバッファも解放せずに維持し続けます)
-				if (!activePdbBuffer_.empty()) {
-					pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
-				}
-				activePdbBuffer_ = std::move(tempPdbBuffer);
-
-				if (oldDomain && oldDomain != rootDomain_) {
-					domainsToUnload_.push_back(oldDomain);
-				}
-
-				SetIsHotReloadRequest(true);
-				isDebuggerSyncSuccess_ = true;
-				Console::Log("[Mono] Debugger synchronization complete. Breakpoints should now bind.", LogCategory::ScriptEngine);
+			std::string latestPdbPath = utf8DllPath;
+			size_t extPos = latestPdbPath.find_last_of('.');
+			if (extPos != std::string::npos) {
+				latestPdbPath = latestPdbPath.substr(0, extPos) + ".pdb";
 			} else {
-				// 失敗時は新ドメインを破棄して終了
-				mono_domain_unload(newDomain);
-				isDebuggerSyncSuccess_ = false;
-				Console::LogError("[Mono] Failed to reload assembly for debugger sync.", LogCategory::ScriptEngine);
+				latestPdbPath += ".pdb";
 			}
-		} else {
-			// 再生中に接続された場合は、クラッシュを防ぐため高速リロードはスキップするが、
-			// デバッガが安全にブレイクポイントを同期（バインド）できるように、ゲーム実行を一時停止（ポーズ）する
-			DebugConfig::isPause = true;
-			isDebuggerSyncSuccess_ = false;
-			Console::LogWarning("[Mono] Debugger newly attached during gameplay. Fast reload skipped to prevent crash. Game execution suspended for debugger synchronization.", LogCategory::ScriptEngine);
-		}
-	}
-	if (!currentAttached && wasDebuggerAttached_) {
-		Console::Log("[Mono] Debugger detached. Triggering clean reload to purge debugger domains safely...", LogCategory::ScriptEngine);
-		
-		MonoDomain* oldDomain = domain_;
-		MonoDomain* newDomain = CreateReloadDomain();
 
-		std::vector<char> tempPdbBuffer;
-		MonoAssembly* tempAssembly = LoadAssemblyWithSymbols(newDomain, currentDllPath_, tempPdbBuffer);
-		if (tempAssembly) {
-			MonoImage* tempImage = mono_assembly_get_image(tempAssembly);
-
-			// 成功したので一括代入（アトミック更新）
-			domain_ = newDomain;
-			assembly_ = tempAssembly;
-			image_ = tempImage;
-
-			mono_domain_set(domain_, true);
-			RegisterFunctions();
-
-			// ComponentBatchManagerの再初期化
-			MonoClass* batchMgrClass = mono_class_from_name(image_, "", "ComponentBatchManager");
-			if(batchMgrClass) {
-				MonoMethod* initMethod = mono_class_get_method_from_name(batchMgrClass, "Initialize", 0);
-				if(initMethod) {
-					MonoObject* exc = nullptr;
-					MonoScriptEngineUtils::SafeInvoke(initMethod, nullptr, nullptr, &exc);
-					if(exc) MonoScriptEngineUtils::HandleException(exc);
+			std::string targetPdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
+			if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
+				try {
+					std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
+					Console::Log("[Mono] DebuggerSync: Copied latest PDB to logical path: " + targetPdbPath, LogCategory::ScriptEngine);
+				} catch (const std::exception& e) {
+					Console::LogWarning("[Mono] DebuggerSync: Failed to copy PDB to logical path: " + std::string(e.what()), LogCategory::ScriptEngine);
 				}
 			}
-
-			if (oldDomain && oldDomain != rootDomain_) {
-				domainsToUnload_.push_back(oldDomain);
-			}
-
-			if (!activePdbBuffer_.empty()) {
-				pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
-			}
-			activePdbBuffer_ = std::move(tempPdbBuffer);
-
-			SetIsHotReloadRequest(true); // C++側のオブジェクト一斉再構築要求
-		} else {
-			// 失敗時は新ドメインを破棄して終了
-			mono_domain_unload(newDomain);
 		}
 
-		ClearPendingDomains(); // ゾンビドメインの物理アンロードを実行！
+		// デバッガ同期時の AppDomain リロードはデッドロックや重複アセンブリによるブレイクポイント無効化、
+		// およびアンロード時のクラッシュを引き起こす諸悪の根源となるため、リロードは一切行いません。
+		// その代わり、デバッガが安全にブレイクポイントをバインド（同期）できるように、
+		// 再生中であるかどうかにかかわらず一時的にゲームの実行をポーズ（一時停止）状態にします。
+		DebugConfig::isPause = true;
+		isDebuggerSyncSuccess_ = false; // Sync Skip ポップアップを出し、ポーズ状態の解除を促す
+		Console::Log("[Mono] Debugger attached. Game execution suspended for debugger synchronization.", LogCategory::ScriptEngine);
 	}
 	wasDebuggerAttached_ = currentAttached;
 #endif
