@@ -31,6 +31,9 @@ private:
 	MonoScriptEngine();
 	~MonoScriptEngine();
 
+	/// C#プロジェクトのビルド
+	bool BuildCSharpProject(std::string& outMessage);
+
 	/// 代入演算子の禁止
 	MonoScriptEngine(const MonoScriptEngine&) = delete;
 	MonoScriptEngine& operator=(const MonoScriptEngine&) = delete;

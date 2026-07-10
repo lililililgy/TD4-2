@@ -94,7 +94,9 @@
     <Compile Include="Scripts\Engine\AI\BehaviorTree\WaitNode.cs" />
     <Compile Include="Scripts\Engine\AI\BehaviorTree\WaitRandomNode.cs" />
     <Compile Include="Scripts\Engine\AI\FrameEvent.cs" />
-    <Compile Include="Scripts\Engine\Animation\AnimationPlayer.cs" />
+    <Compile Include="Scripts\Engine\Animation\AnimationPlayer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Scripts\Engine\Animation\SpriteAnimation.cs" />
     <Compile Include="Scripts\Engine\Attribute\SerializeField.cs" />
     <Compile Include="Scripts\Engine\Core\ObjectPool\ObjectPool.cs" />
@@ -119,23 +121,43 @@
     <Compile Include="Scripts\Engine\ECS\Components\Component.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\ComponentBatchManager.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\ComponentCollection.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Compute\AgentIntentComponent.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\AgentIntentComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Animator.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Compute\BGMPlayer.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\BGMPlayer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Scripts\Engine\ECS\Components\Compute\BoxCollider.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Compute\BoxCollider2D.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Compute\CameraComponent.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Compute\CircleCollider.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Compute\SEPlayer.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Compute\SphereCollider.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\BoxCollider2D.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\CameraComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\CircleCollider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\SEPlayer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\SphereCollider.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Transform.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\UIElementComponent.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Compute\UIGroupComponent.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\UIGroupComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Scripts\Engine\ECS\Components\Compute\UILinkNavigationComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\DissolveMeshRenderer.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Renderer\MeshRenderer.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Renderer\MeshRenderer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SkinMeshRenderer.cs" />
-    <Compile Include="Scripts\Engine\ECS\Components\Renderer\SpriteRenderer.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Renderer\SpriteRenderer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Scripts\Engine\ECS\Entity\Entity.cs" />
     <Compile Include="Scripts\Engine\ECS\EntityComponentSystem\ECSGroup.cs" />
     <Compile Include="Scripts\Engine\ECS\EntityComponentSystem\EntityComponentSystem.cs" />
@@ -224,6 +246,8 @@
     <Compile Include="Scripts\Test\AddSceneTest.cs" />
     <Compile Include="Scripts\Test\ColliderTest1.cs" />
     <Compile Include="Scripts\Test\ColliderTest2.cs" />
+    <Compile Include="Scripts\Test\EngineLaunchTest.cs" />
+    <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
     <Compile Include="Scripts\Test\TestSceneScript.cs" />
   </ItemGroup>

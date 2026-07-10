@@ -37,6 +37,16 @@ void PostProcessWaterCausticsLightShafts::Initialize(ShaderCompiler* shaderCompi
 }
 
 void PostProcessWaterCausticsLightShafts::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem, ECSGroup* ecsGroup) {
+	ECSGroup* currentGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
+	if (!currentGroup) {
+		static bool logged = false;
+		if (!logged) {
+			ONEngine::Console::LogWarning("[WaterCaustics] Execute skipped: currentGroup is null", LogCategory::Engine);
+			logged = true;
+		}
+		return;
+	}
+
 	CameraComponent* camera = nullptr;
 	if (textureName.find("debug") != std::string::npos) {
 		ECSGroup* debugGroup = entityComponentSystem->GetECSGroup("Debug");
@@ -45,26 +55,13 @@ void PostProcessWaterCausticsLightShafts::Execute(const std::string& textureName
 		}
 	}
 	if (!camera) {
-		ECSGroup* currentGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
-		if (currentGroup) {
-			camera = currentGroup->GetMainCamera2D();
-		}
+		camera = currentGroup->GetMainCamera2D();
 	}
 
 	if (!camera) {
 		static bool logged = false;
 		if (!logged) {
 			ONEngine::Console::LogWarning("[WaterCaustics] Execute skipped: Camera2D is null. TextureName=" + textureName, LogCategory::Engine);
-			logged = true;
-		}
-		return;
-	}
-
-	ECSGroup* currentGroup = entityComponentSystem->GetCurrentGroup();
-	if (!currentGroup) {
-		static bool logged = false;
-		if (!logged) {
-			ONEngine::Console::LogWarning("[WaterCaustics] Execute skipped: currentGroup is null", LogCategory::Engine);
 			logged = true;
 		}
 		return;
