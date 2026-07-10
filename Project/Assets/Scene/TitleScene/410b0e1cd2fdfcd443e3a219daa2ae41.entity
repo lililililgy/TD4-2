@@ -1,0 +1,26 @@
+{
+    "active": true,
+    "components": [
+        {
+            "matrixCalcFlags": 1,
+            "position": {
+                "x": -52.9999885559082,
+                "y": 146.8000030517578,
+                "z": -0.10000000149011612
+            },
+            "rotate": {
+                "w": 0.9995335936546326,
+                "z": -0.030538514256477356
+            },
+            "scale": {
+                "x": -120.0,
+                "y": 300.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "410b0e1cd2fdfcd443e3a219daa2ae41",
+    "name": "seaweed",
+    "parentGuid": "89964bdd4dc41107df15fba0ecf42b40",
+    "prefabName": "seaweed"
+}

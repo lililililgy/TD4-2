@@ -3,22 +3,22 @@
     "components": [
         {
             "enable": 1,
-            "matrixCalcFlags": 7,
+            "matrixCalcFlags": 3,
             "position": {
-                "x": 0.0,
-                "y": 232.40000915527344,
-                "z": -100.0
+                "x": -45.80002975463867,
+                "y": 41.199989318847656,
+                "z": -1.0000001192092896
             },
             "rotate": {
-                "w": 0.0,
+                "w": 0.9992290139198303,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": -0.03925981745123863
             },
             "scale": {
-                "x": 1500.0,
-                "y": 562.5000610351563,
-                "z": 1054.6875
+                "x": 200.0,
+                "y": 150.0,
+                "z": 120.0
             },
             "type": "Transform"
         },
@@ -27,7 +27,7 @@
         },
         {
             "enable": 1,
-            "isPixelPerfect": true,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -35,7 +35,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "c6c1ec4d6f5b28878c969fc90e0ac3d4",
+                "baseTextureGuid": "00ecb6a6aa4e6602201781732f7295c8",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,8 +54,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "2c891b2f0db32ba4c941d9b4fd46afb2",
-    "name": "TitleSprite",
-    "parentGuid": null,
+    "guid": "0994bedafc4337c2beec3d4886d51bdc",
+    "name": "lock",
+    "parentGuid": "d167576da2502df5ba4a1b4f5f13bbcb",
     "prefabName": ""
 }

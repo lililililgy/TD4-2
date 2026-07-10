@@ -149,6 +149,7 @@
             },
             "textureSheetAnimation": {
                 "enabled": true,
+                "fps": 10.0,
                 "tilesX": 2,
                 "tilesY": 1
             },

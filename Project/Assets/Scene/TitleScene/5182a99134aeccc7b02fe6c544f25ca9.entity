@@ -3,11 +3,11 @@
     "components": [
         {
             "enable": 1,
-            "matrixCalcFlags": 7,
+            "matrixCalcFlags": 3,
             "position": {
-                "x": 0.0,
-                "y": 232.40000915527344,
-                "z": -100.0
+                "x": 278.1002502441406,
+                "y": 139.59994506835938,
+                "z": -0.10000000149011612
             },
             "rotate": {
                 "w": 0.0,
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1500.0,
-                "y": 562.5000610351563,
-                "z": 1054.6875
+                "x": 100.0,
+                "y": 200.0,
+                "z": 0.0
             },
             "type": "Transform"
         },
@@ -27,7 +27,7 @@
         },
         {
             "enable": 1,
-            "isPixelPerfect": true,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -35,7 +35,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "c6c1ec4d6f5b28878c969fc90e0ac3d4",
+                "baseTextureGuid": "f972705e35ed09b3006877e8f5e532fb",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,8 +54,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "2c891b2f0db32ba4c941d9b4fd46afb2",
-    "name": "TitleSprite",
-    "parentGuid": null,
+    "guid": "5182a99134aeccc7b02fe6c544f25ca9",
+    "name": "seaweed",
+    "parentGuid": "b82ef25627d3d464a44a651f25e717dc",
     "prefabName": ""
 }
