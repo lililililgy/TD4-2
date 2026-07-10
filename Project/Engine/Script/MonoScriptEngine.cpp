@@ -13,6 +13,9 @@ using namespace ONEngine;
 #include <thread>
 #include <chrono>
 #include <fstream>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 
 /// externals
 #include <metadata/mono-config.h>
@@ -60,6 +63,56 @@ bool IsDebuggerAttachedViaTcp() {
 		}
 	}
 	return false;
+}
+
+// ポート 55555 に対する TCP コネクション状態を詳細ログ出力する
+void LogTcpConnections() {
+	ULONG size = 0;
+	if (GetExtendedTcpTable(NULL, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) != ERROR_INSUFFICIENT_BUFFER) {
+		Console::LogWarning("[MonoDbg] Failed to query size of ExtendedTcpTable", LogCategory::ScriptEngine);
+		return;
+	}
+
+	std::vector<char> buffer(size);
+	PMIB_TCPTABLE_OWNER_PID tcpTable = reinterpret_cast<PMIB_TCPTABLE_OWNER_PID>(buffer.data());
+
+	if (GetExtendedTcpTable(tcpTable, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) == NO_ERROR) {
+		Console::Log("[MonoDbg] Dump TCP Connections on Port 55555 (Total entries: " + std::to_string(tcpTable->dwNumEntries) + "):", LogCategory::ScriptEngine);
+		bool found = false;
+		for (DWORD i = 0; i < tcpTable->dwNumEntries; ++i) {
+			USHORT localPort = ntohs((USHORT)tcpTable->table[i].dwLocalPort);
+			USHORT remotePort = ntohs((USHORT)tcpTable->table[i].dwRemotePort);
+			if (localPort == 55555 || remotePort == 55555) {
+				found = true;
+				std::string stateStr;
+				switch (tcpTable->table[i].dwState) {
+					case MIB_TCP_STATE_CLOSED: stateStr = "CLOSED"; break;
+					case MIB_TCP_STATE_LISTEN: stateStr = "LISTEN"; break;
+					case MIB_TCP_STATE_SYN_SENT: stateStr = "SYN_SENT"; break;
+					case MIB_TCP_STATE_SYN_RCVD: stateStr = "SYN_RCVD"; break;
+					case MIB_TCP_STATE_ESTAB: stateStr = "ESTABLISHED"; break;
+					case MIB_TCP_STATE_FIN_WAIT1: stateStr = "FIN_WAIT1"; break;
+					case MIB_TCP_STATE_FIN_WAIT2: stateStr = "FIN_WAIT2"; break;
+					case MIB_TCP_STATE_CLOSE_WAIT: stateStr = "CLOSE_WAIT"; break;
+					case MIB_TCP_STATE_CLOSING: stateStr = "CLOSING"; break;
+					case MIB_TCP_STATE_LAST_ACK: stateStr = "LAST_ACK"; break;
+					case MIB_TCP_STATE_TIME_WAIT: stateStr = "TIME_WAIT"; break;
+					case MIB_TCP_STATE_DELETE_TCB: stateStr = "DELETE_TCB"; break;
+					default: stateStr = "UNKNOWN (" + std::to_string(tcpTable->table[i].dwState) + ")"; break;
+				}
+				Console::Log("[MonoDbg]   Entry: LocalPort=" + std::to_string(localPort) +
+					", RemotePort=" + std::to_string(remotePort) +
+					", State=" + stateStr +
+					", PID=" + std::to_string(tcpTable->table[i].dwOwningPid),
+					LogCategory::ScriptEngine);
+			}
+		}
+		if (!found) {
+			Console::Log("[MonoDbg]   No connections found on port 55555.", LogCategory::ScriptEngine);
+		}
+	} else {
+		Console::LogWarning("[MonoDbg] Failed to retrieve ExtendedTcpTable", LogCategory::ScriptEngine);
+	}
 }
 
 // デバッグ用ポート競合検知関数
@@ -115,6 +168,19 @@ void ApplicationQuit() {
 }
 
 MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dllPath, std::vector<char>& outPdbBuffer) {
+	// アセンブリのロード開始時の診断ログを出力
+	Console::Log("[Mono] LoadAssemblyWithSymbols started for: " + dllPath, LogCategory::ScriptEngine);
+	if (std::filesystem::exists(dllPath)) {
+		auto ftime = std::filesystem::last_write_time(dllPath);
+		auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+		std::time_t ctime = std::chrono::system_clock::to_time_t(sctp);
+		char timeBuf[100];
+		std::tm timeInfo;
+		localtime_s(&timeInfo, &ctime);
+		std::strftime(timeBuf, sizeof(timeBuf), "%Y-%m-%d %H:%M:%S", &timeInfo);
+		Console::Log("[Mono]   DLL last modified: " + std::string(timeBuf), LogCategory::ScriptEngine);
+	}
+
 	// デバッガがロードできるように、このアセンブリに対応する PDB を固定名 "CSharpLibrary.pdb" として配置する。
 	// アセンブリのロード前に配置することで、デバッガ接続時に最新の PDB を確実にロードさせます。
 	{
@@ -1315,6 +1381,10 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 			", monoThread: " + std::string(monoThread ? "YES" : "NO") + 
 			", isGameplayRunning: " + std::string(DebugConfig::isDebugging ? "YES" : "NO"),
 			LogCategory::ScriptEngine);
+		
+		// TCP接続の詳細情報を出力
+		LogTcpConnections();
+
 		lastCurrentAttached = currentAttached;
 		lastWasDebuggerAttached = wasDebuggerAttached_;
 	}
@@ -1322,6 +1392,30 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 	if (currentAttached && !wasDebuggerAttached_) {
 		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints...", LogCategory::ScriptEngine);
 		showAttachedPopup_ = true;
+
+		// CSharpLibrary.dll / PDB のタイムスタンプを詳細出力
+		std::string dllPath = "./Packages/Scripts/CSharpLibrary.dll";
+		std::string pdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
+		if (std::filesystem::exists(dllPath)) {
+			auto ftime = std::filesystem::last_write_time(dllPath);
+			auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+			std::time_t ctime = std::chrono::system_clock::to_time_t(sctp);
+			char timeBuf[100];
+			std::tm timeInfo;
+			localtime_s(&timeInfo, &ctime);
+			std::strftime(timeBuf, sizeof(timeBuf), "%Y-%m-%d %H:%M:%S", &timeInfo);
+			Console::Log("[MonoDbg] CSharpLibrary.dll last modified: " + std::string(timeBuf), LogCategory::ScriptEngine);
+		}
+		if (std::filesystem::exists(pdbPath)) {
+			auto ftime = std::filesystem::last_write_time(pdbPath);
+			auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+			std::time_t ctime = std::chrono::system_clock::to_time_t(sctp);
+			char timeBuf[100];
+			std::tm timeInfo;
+			localtime_s(&timeInfo, &ctime);
+			std::strftime(timeBuf, sizeof(timeBuf), "%Y-%m-%d %H:%M:%S", &timeInfo);
+			Console::Log("[MonoDbg] CSharpLibrary.pdb last modified: " + std::string(timeBuf), LogCategory::ScriptEngine);
+		}
 
 		// デバッガが安全にブレイクポイントをバインド（同期）できるように、
 		// 再生中であるかどうかにかかわらず一時的にゲームの実行をポーズ（一時停止）状態にします。
