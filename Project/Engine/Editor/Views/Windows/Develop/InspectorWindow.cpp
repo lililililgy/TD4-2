@@ -1,4 +1,4 @@
-#include "InspectorWindow.h"
+﻿#include "InspectorWindow.h"
 
 /// std
 #include <format>
@@ -172,6 +172,11 @@ void InspectorWindow::EntityInspector() {
 	if (remainingSpace.y < 50.0f) {
 		remainingSpace.y = 50.0f; // 最低限のドラッグ領域を確保
 	}
+
+	if(remainingSpace.x == 0.0f) {
+		remainingSpace.x = 1.0f;
+	}
+
 	ImGui::InvisibleButton("##InspectorDragDropTarget", remainingSpace);
 	if (ImGui::BeginDragDropTarget()) {
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {

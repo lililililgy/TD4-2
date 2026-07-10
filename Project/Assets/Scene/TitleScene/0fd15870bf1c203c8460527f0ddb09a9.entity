@@ -1,0 +1,61 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 3,
+            "position": {
+                "x": -296.8999328613281,
+                "y": 185.79994201660156,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.9999904632568359,
+                "x": 0.0,
+                "y": 0.0,
+                "z": -0.004363309126347303
+            },
+            "scale": {
+                "x": -100.0,
+                "y": 400.0,
+                "z": 0.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "f972705e35ed09b3006877e8f5e532fb",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "0fd15870bf1c203c8460527f0ddb09a9",
+    "name": "seaweed",
+    "parentGuid": "b82ef25627d3d464a44a651f25e717dc",
+    "prefabName": ""
+}

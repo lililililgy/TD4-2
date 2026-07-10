@@ -1,0 +1,61 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 3,
+            "position": {
+                "x": -45.80002975463867,
+                "y": 41.199989318847656,
+                "z": -1.0000001192092896
+            },
+            "rotate": {
+                "w": 0.9992290139198303,
+                "x": 0.0,
+                "y": 0.0,
+                "z": -0.03925981745123863
+            },
+            "scale": {
+                "x": 200.0,
+                "y": 150.0,
+                "z": 120.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "00ecb6a6aa4e6602201781732f7295c8",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "0994bedafc4337c2beec3d4886d51bdc",
+    "name": "lock",
+    "parentGuid": "d167576da2502df5ba4a1b4f5f13bbcb",
+    "prefabName": ""
+}

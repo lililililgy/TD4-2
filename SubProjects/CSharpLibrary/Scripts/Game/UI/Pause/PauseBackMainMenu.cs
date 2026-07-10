@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
 
-public class PauseBackMainMenu : MonoScript {
-	public override void Initialize() {
-		
+public class PauseBackMainMenu : PauseCommon {
+	void OnSelect() {
+		isSelect = true;
 	}
 
-	public override void Update() {
-		
+	void OnDeselect() {
+		isSelect = false;
 	}
+
+	void OnSubmit() {
+		SceneManager.LoadScene("TitleScene");
+	}
+
 }
