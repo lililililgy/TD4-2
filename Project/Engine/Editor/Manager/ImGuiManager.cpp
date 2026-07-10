@@ -731,7 +731,7 @@ void ImGuiManager::Update() {
 	imGuiWindowCollection_->Update();
 
 	// デバッガ接続ポップアップの表示
-	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+	ONEngine::MonoScriptEngine& monoEngine = ONEngine::MonoScriptEngine::GetInstance();
 	if (monoEngine.GetShowAttachedPopup()) {
 		ImGui::OpenPopup("Debugger Status");
 	}
