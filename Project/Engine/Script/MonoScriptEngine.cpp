@@ -144,14 +144,14 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 			std::string logicalPath = dir + "CSharpLibrary.dll";
 
 			MonoImageOpenStatus status = MONO_IMAGE_OK;
-			// DLLデータからMonoImageをオープン (論理パスを報告)
+			// DLLデータからMonoImageをオープン (キャッシュ衝突を防ぐため、イメージ名は一意の物理パスにする)
 			MonoImage* image = mono_image_open_from_data_with_name(
 				dllBuffer.data(), 
 				(uint32_t)dllSize, 
 				true, // need_copy
 				&status, 
 				false, // refonly
-				logicalPath.c_str()
+				dllPath.c_str()
 			);
 
 			if (image && status == MONO_IMAGE_OK) {
