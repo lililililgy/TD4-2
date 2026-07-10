@@ -1326,15 +1326,21 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 			}
 
 			MonoDomain* oldDomain = domain_;
-			domain_ = CreateReloadDomain();
-			mono_domain_set(domain_, true);
+			MonoDomain* newDomain = CreateReloadDomain();
 
 			// 最新の DLL パスからロード
 			std::vector<char> tempPdbBuffer;
-			assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath, tempPdbBuffer);
-			if (assembly_) {
+			MonoAssembly* tempAssembly = LoadAssemblyWithSymbols(newDomain, utf8DllPath, tempPdbBuffer);
+			if (tempAssembly) {
+				MonoImage* tempImage = mono_assembly_get_image(tempAssembly);
+
+				// 成功したので一括代入（アトミック更新）
+				domain_ = newDomain;
+				assembly_ = tempAssembly;
+				image_ = tempImage;
 				currentDllPath_ = utf8DllPath; // ロードした最新のパスに更新
-				image_ = mono_assembly_get_image(assembly_);
+
+				mono_domain_set(domain_, true);
 				RegisterFunctions();
 
 				// ComponentBatchManagerの再初期化
@@ -1365,10 +1371,8 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 				isDebuggerSyncSuccess_ = true;
 				Console::Log("[Mono] Debugger synchronization complete. Breakpoints should now bind.", LogCategory::ScriptEngine);
 			} else {
-				// フォールバック
-				mono_domain_set(oldDomain, true);
-				mono_domain_unload(domain_);
-				domain_ = oldDomain;
+				// 失敗時は新ドメインを破棄して終了
+				mono_domain_unload(newDomain);
 				isDebuggerSyncSuccess_ = false;
 				Console::LogError("[Mono] Failed to reload assembly for debugger sync.", LogCategory::ScriptEngine);
 			}
@@ -1383,19 +1387,20 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 	if (!currentAttached && wasDebuggerAttached_) {
 		Console::Log("[Mono] Debugger detached. Triggering clean reload to purge debugger domains safely...", LogCategory::ScriptEngine);
 		
-		if (domain_ && domain_ != rootDomain_) {
-			domainsToUnload_.push_back(domain_);
-		}
-
-		// 最新の DLL パスからデバッガなしの通常ドメインへリロード
 		MonoDomain* oldDomain = domain_;
-		domain_ = CreateReloadDomain();
-		mono_domain_set(domain_, true);
+		MonoDomain* newDomain = CreateReloadDomain();
 
 		std::vector<char> tempPdbBuffer;
-		assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_, tempPdbBuffer);
-		if (assembly_) {
-			image_ = mono_assembly_get_image(assembly_);
+		MonoAssembly* tempAssembly = LoadAssemblyWithSymbols(newDomain, currentDllPath_, tempPdbBuffer);
+		if (tempAssembly) {
+			MonoImage* tempImage = mono_assembly_get_image(tempAssembly);
+
+			// 成功したので一括代入（アトミック更新）
+			domain_ = newDomain;
+			assembly_ = tempAssembly;
+			image_ = tempImage;
+
+			mono_domain_set(domain_, true);
 			RegisterFunctions();
 
 			// ComponentBatchManagerの再初期化
@@ -1409,6 +1414,10 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 				}
 			}
 
+			if (oldDomain && oldDomain != rootDomain_) {
+				domainsToUnload_.push_back(oldDomain);
+			}
+
 			if (!activePdbBuffer_.empty()) {
 				pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
 			}
@@ -1416,9 +1425,8 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 
 			SetIsHotReloadRequest(true); // C++側のオブジェクト一斉再構築要求
 		} else {
-			// フォールバック
-			domain_ = oldDomain;
-			mono_domain_set(domain_, true);
+			// 失敗時は新ドメインを破棄して終了
+			mono_domain_unload(newDomain);
 		}
 
 		ClearPendingDomains(); // ゾンビドメインの物理アンロードを実行！
