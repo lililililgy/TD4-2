@@ -361,21 +361,37 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
-	// 2重CRT (EXE側とMono DLL側で異なるC Runtimeが使用されている) 問題を回避し、
-	// 環境変数がDLLに反映されない不具合を防ぐため、環境変数経由での設定をすべて廃止し、
-	// mono_jit_parse_options に直接すべてのデバッグ引数を渡します。
+	// 環境変数経由でオプションを引き渡し、常に --debug と --debugger-agent の両方がパースされるようにします。
 	static std::string debugAgentOptA;
+	static std::wstring debugAgentOptW;
 	debugAgentOptA = waitDebug 
-		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+		? "--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: "--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+	debugAgentOptW = waitDebug 
+		? L"--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: L"--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+
+	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
+	static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
+	static std::wstring monoEnvOptW = L"MONO_ENV_OPTIONS=" + debugAgentOptW;
+	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
+	SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", debugAgentOptW.c_str());
+	_putenv(monoEnvOptA.c_str());
+	_wputenv(monoEnvOptW.c_str());
+
+	static std::string monoOptA = "MONO_OPTIONS=" + debugAgentOptA;
+	static std::wstring monoOptW = L"MONO_OPTIONS=" + debugAgentOptW;
+	SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
+	SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str()); // W version
+	_putenv(monoOptA.c_str());
+	_wputenv(monoOptW.c_str());
 
 	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
 
-	// mono_jit_parse_options に直接引数を配列として渡し、確実にランタイムに読み込ませる
+	// mono_jit_parse_options には、環境変数で既に渡している --debug や --debugger-agent を渡すとエラーになるため、
+	// 純粋な JIT オプションである --soft-breakpoints のみを渡します。
 	const char* debugOptions[] = {
-		"--debug",
-		"--soft-breakpoints",
-		debugAgentOptA.c_str()
+		"--soft-breakpoints"
 	};
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
