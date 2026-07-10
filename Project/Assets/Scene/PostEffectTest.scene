@@ -1,0 +1,9 @@
+{
+    "entities": [
+        {
+            "guid": "3b652048d773b38c33ed531ab1d043d4",
+            "parentGuid": null,
+            "path": "./PostEffectTest/verify_entity.entity"
+        }
+    ]
+}

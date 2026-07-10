@@ -1,5 +1,7 @@
 #include "GameFramework.h"
 #include "DebugSceneGenerator.h"
+#include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
+#include "Engine/Core/Utility/Tools/Assert.h"
 
 using namespace ONEngine;
 
@@ -181,6 +183,39 @@ void GameFramework::Update() {
 	if (EngineConfig::isTestMode) {
 		static int testFrameCount = 0;
 		testFrameCount++;
+
+		if (EngineConfig::testScene == "PostEffectTest" && testFrameCount == 60) {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("GameScene");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'GameScene' should not be null");
+			if (ecsGroup) {
+				auto* tagArray = ecsGroup->GetComponentArray<ScreenPostEffectTag>();
+				ONEngine::Assert(tagArray != nullptr, "ScreenPostEffectTag component array should exist in GameScene");
+				if (tagArray && !tagArray->GetUsedComponents().empty()) {
+					ScreenPostEffectTag* tag = nullptr;
+					for (auto* comp : tagArray->GetUsedComponents()) {
+						if (comp && comp->enable) {
+							tag = comp;
+							break;
+						}
+					}
+					ONEngine::Assert(tag != nullptr, "Active ScreenPostEffectTag should exist in GameScene");
+					if (tag) {
+						bool isFisheyeEnabled = tag->GetPostEffectEnable(PostEffectType_Fisheye);
+						bool isWaterDistortionEnabled = tag->GetPostEffectEnable(PostEffectType_WaterDistortion);
+						bool isWaterCausticsEnabled = tag->GetPostEffectEnable(PostEffectType_WaterCausticsLightShafts);
+						bool isWaterColorGradingEnabled = tag->GetPostEffectEnable(PostEffectType_WaterColorGrading);
+						bool isWaterDepthFogEnabled = tag->GetPostEffectEnable(PostEffectType_WaterDepthFogVignette);
+
+						ONEngine::Assert(isFisheyeEnabled, "Fisheye posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterDistortionEnabled, "WaterDistortion posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterCausticsEnabled, "WaterCaustics posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterColorGradingEnabled, "WaterColorGrading posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterDepthFogEnabled, "WaterDepthFog posteffect should still be enabled in GameScene");
+					}
+				}
+			}
+		}
+
 		if (testFrameCount >= EngineConfig::testDuration) {
 			nlohmann::json results;
 			results["success"] = true;
