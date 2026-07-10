@@ -1,14 +1,1 @@
-{
-    "entities": [
-        {
-            "guid": "300f0423ca6356e69d7cbd8e489afa4b",
-            "parentGuid": null,
-            "path": "./Debug/300f0423ca6356e69d7cbd8e489afa4b.entity"
-        },
-        {
-            "guid": "dfbec9b4df0591704f87c16ea7d4c0a7",
-            "parentGuid": null,
-            "path": "./Debug/dfbec9b4df0591704f87c16ea7d4c0a7.entity"
-        }
-    ]
-}
+{}

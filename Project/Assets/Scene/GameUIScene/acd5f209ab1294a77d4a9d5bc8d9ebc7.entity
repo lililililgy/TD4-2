@@ -5,7 +5,7 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -2.0,
+                "x": 2.0,
                 "y": 0.0,
                 "z": 0.0
             },
@@ -54,8 +54,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "e1466420638ccb60469ba3b9ef8533e0",
-    "name": "BlackBelt",
+    "guid": "acd5f209ab1294a77d4a9d5bc8d9ebc7",
+    "name": "BlackBelt_1",
     "parentGuid": "c65190a696bc1499bbbfcdebd297d694",
     "prefabName": ""
 }
