@@ -1,0 +1,19 @@
+{
+    "entities": [
+        {
+            "guid": "10950c1617ca9c6f84998cc1b65115fb",
+            "parentGuid": null,
+            "path": "./GameUIScene/10950c1617ca9c6f84998cc1b65115fb.entity"
+        },
+        {
+            "guid": "c65190a696bc1499bbbfcdebd297d694",
+            "parentGuid": null,
+            "path": "./GameUIScene/c65190a696bc1499bbbfcdebd297d694.entity"
+        },
+        {
+            "guid": "e1466420638ccb60469ba3b9ef8533e0",
+            "parentGuid": "c65190a696bc1499bbbfcdebd297d694",
+            "path": "./GameUIScene/e1466420638ccb60469ba3b9ef8533e0.entity"
+        }
+    ]
+}

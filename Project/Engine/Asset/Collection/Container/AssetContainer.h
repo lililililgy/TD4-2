@@ -193,7 +193,7 @@ template<IsAsset T>
 inline T* AssetContainer<T>::Get(int32_t index) {
 	std::shared_lock<std::shared_mutex> lock(mtx_);
 
-	if(index < values_.size()) {
+	if(index >= 0 && index < static_cast<int32_t>(values_.size())) {
 		return &values_[index];
 	}
 	return nullptr;
