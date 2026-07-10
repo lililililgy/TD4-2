@@ -361,41 +361,21 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
-	// JITパースエラーを防止するため、MONO_ENV_OPTIONS には "--debugger-agent=..." のみを設定し、
-	// MONO_OPTIONS には常に "--debug" のみを設定します。
+	// 2重CRT (EXE側とMono DLL側で異なるC Runtimeが使用されている) 問題を回避し、
+	// 環境変数がDLLに反映されない不具合を防ぐため、環境変数経由での設定をすべて廃止し、
+	// mono_jit_parse_options に直接すべてのデバッグ引数を渡します。
 	static std::string debugAgentOptA;
-	static std::wstring debugAgentOptW;
 	debugAgentOptA = waitDebug 
 		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
 		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
-	debugAgentOptW = waitDebug 
-		? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
-
-	// MONO_ENV_OPTIONS にデバッガエージェント設定を登録
-	static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
-	static std::wstring monoEnvOptW = L"MONO_ENV_OPTIONS=" + debugAgentOptW;
-	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
-	SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", debugAgentOptW.c_str());
-	_putenv(monoEnvOptA.c_str());
-	_wputenv(monoEnvOptW.c_str());
-
-	// MONO_OPTIONS には --debug のみを設定し、常にデバッグモードで立ち上げる
-	static std::string debugOptA = "--debug";
-	static std::wstring debugOptW = L"--debug";
-	static std::string monoOptA = "MONO_OPTIONS=" + debugOptA;
-	static std::wstring monoOptW = L"MONO_OPTIONS=" + debugOptW;
-	SetEnvironmentVariableA("MONO_OPTIONS", debugOptA.c_str());
-	SetEnvironmentVariableW(L"MONO_OPTIONS", debugOptW.c_str());
-	_putenv(monoOptA.c_str());
-	_wputenv(monoOptW.c_str());
 
 	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
 
-	// mono_jit_parse_options には、環境変数で既に渡している --debug や --debugger-agent を渡すとエラーになるため、
-	// 純粋な JIT オプションである --soft-breakpoints のみを渡します。
+	// mono_jit_parse_options に直接引数を配列として渡し、確実にランタイムに読み込ませる
 	const char* debugOptions[] = {
-		"--soft-breakpoints"
+		"--debug",
+		"--soft-breakpoints",
+		debugAgentOptA.c_str()
 	};
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
