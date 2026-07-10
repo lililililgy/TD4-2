@@ -299,6 +299,10 @@ std::string GetUtf8Path(const std::filesystem::path& path) {
 MonoScriptEngine::MonoScriptEngine() : domainReloadCounter_(0) {}
 MonoScriptEngine::~MonoScriptEngine() = default;
 
+bool MonoScriptEngine::IsReloading() const {
+	return isReloading_;
+}
+
 MonoScriptEngine& MonoScriptEngine::GetInstance() {
 	static MonoScriptEngine instance;
 	return instance;
@@ -536,6 +540,12 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
+	struct ReloadGuard {
+		std::atomic<bool>& flag;
+		ReloadGuard(std::atomic<bool>& f) : flag(f) { flag = true; }
+		~ReloadGuard() { flag = false; }
+	} guard(isReloading_);
+
 	Console::Log("[Mono] HotReload: Rebuilding C# project...", LogCategory::ScriptEngine);
 	std::string buildOutput;
 	bool buildSuccess = BuildCSharpProject(buildOutput);

@@ -204,6 +204,9 @@ void Editor::DebugSceneView::ShowDebugSceneView(const ImVec2& imagePos) {
 	std::vector<OverlaySection> rightSections;
 	{
 		auto& mono = ONEngine::MonoScriptEngine::GetInstance();
+		if (mono.IsReloading()) {
+			return; // ホットリロード実行中はクラッシュ防止のためスキップ
+		}
 		auto* image = mono.Image();
 		auto* domain = mono.Domain();
 		if (image && domain) {
