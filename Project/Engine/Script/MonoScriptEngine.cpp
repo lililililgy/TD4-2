@@ -389,7 +389,6 @@ void MonoScriptEngine::Initialize() {
 
 	// mono_jit_parse_options にもデバッガオプションを確実に渡す (ポインタが永続メモリを指すようにする)
 	const char* debugOptions[] = {
-		"--optimize=none",      // JIT最適化を無効化し、デバッグの整合性を保証
 		"--soft-breakpoints",
 		debugAgentOptA.c_str()
 	};
