@@ -1275,14 +1275,23 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		if (!DebugConfig::isDebugging && assembly_) {
 			Console::Log("[Mono] Triggering fast reload for debugger synchronization...", LogCategory::ScriptEngine);
 			
+			auto latestDll = FindLatestDll("./Packages/Scripts", "CSharpLibrary");
+			if (!latestDll.has_value()) {
+				Console::LogError("[Mono] Failed to find latest assembly DLL for debugger sync.", LogCategory::ScriptEngine);
+				isDebuggerSyncSuccess_ = false;
+				return;
+			}
+			std::string utf8DllPath = GetUtf8Path(*latestDll);
+
 			MonoDomain* oldDomain = domain_;
 			domain_ = CreateReloadDomain();
 			mono_domain_set(domain_, true);
 
-			// 現在使用している DLL パスからロード
+			// 最新の DLL パスからロード
 			std::vector<char> tempPdbBuffer;
-			assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_, tempPdbBuffer);
+			assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath, tempPdbBuffer);
 			if (assembly_) {
+				currentDllPath_ = utf8DllPath; // ロードした最新のパスに更新
 				image_ = mono_assembly_get_image(assembly_);
 				RegisterFunctions();
 
