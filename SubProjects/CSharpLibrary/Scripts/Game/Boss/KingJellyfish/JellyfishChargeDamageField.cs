@@ -1,3 +1,7 @@
+
+//============================================================
+// クラゲの突進攻撃後のダメージ判定フィールド
+//============================================================
 public class JellyfishChargeDamageField : MonoScript
 {
     [SerializeField] public float damage = 20.0f;
@@ -20,6 +24,9 @@ public class JellyfishChargeDamageField : MonoScript
         }
     }
 
+    //============================================================
+    // フィールドの範囲設定
+    //============================================================
     public void Configure(Vector2 start, Vector2 end, float fieldWidth, float fieldDamage, float fieldDuration, float depth)
     {
         Vector2 move = end - start;
