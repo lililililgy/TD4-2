@@ -1217,9 +1217,23 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 void MonoScriptEngine::UpdateDebuggerStatus() {
 #if defined(DEBUG_MODE)
 	if (!domain_) return;
-	mono_thread_attach(domain_);
+	MonoThread* monoThread = mono_thread_attach(domain_);
 
 	bool currentAttached = mono_is_debugger_attached() ? true : false;
+
+	// 接続状態に変化があった場合、詳細なステータスログを出す
+	static bool lastCurrentAttached = false;
+	static bool lastWasDebuggerAttached = false;
+	if (currentAttached != lastCurrentAttached || wasDebuggerAttached_ != lastWasDebuggerAttached) {
+		Console::Log("[MonoDbg] State Change -> currentAttached: " + std::string(currentAttached ? "TRUE" : "FALSE") + 
+			", wasDebuggerAttached_: " + std::string(wasDebuggerAttached_ ? "TRUE" : "FALSE") + 
+			", monoThread: " + std::string(monoThread ? "YES" : "NO") + 
+			", isGameplayRunning: " + std::string(DebugConfig::isDebugging ? "YES" : "NO"),
+			LogCategory::ScriptEngine);
+		lastCurrentAttached = currentAttached;
+		lastWasDebuggerAttached = wasDebuggerAttached_;
+	}
+
 	if (currentAttached && !wasDebuggerAttached_) {
 		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints...", LogCategory::ScriptEngine);
 		showAttachedPopup_ = true;
