@@ -103,12 +103,14 @@ public class EnemySpawnSystem : MonoScript {
 
         // スポーンセルの重みをクリアする
         spawnCellWeights_.Clear();
-        CalculateSpawnCellWeights();
 
         // スポーン可能な敵の総数が上限に達している場合はスポーンしない
         Entity heatMapEnt = ecsGroup.FindEntity(heatMapEntityName_);
         EnemyHeatMap heatMap = heatMapEnt?.GetScript<EnemyHeatMap>();
         if (heatMap == null) return;
+
+        CalculateSpawnCellWeights(heatMap);
+
         if (heatMap.GetEnemyCount() >= maxEnemyCount_) return;
 
         int spawnCount = 0;
@@ -195,9 +197,7 @@ public class EnemySpawnSystem : MonoScript {
         enemyT.position = new Vector3(spawnPos.x, spawnPos.y, 0.0f);
     }
 
-    private void CalculateSpawnCellWeights() {
-        EnemyHeatMap heatMap = entity.GetScript<EnemyHeatMap>();
-
+    private void CalculateSpawnCellWeights(EnemyHeatMap heatMap) {
         // cell の候補を求める。
         Vector2 originePos = new Vector2();
         Entity origineEntity = ecsGroup.FindEntity(originName_);
