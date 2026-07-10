@@ -34,7 +34,34 @@ using namespace ONEngine;
 #include "InternalCalls/AddInternalMethods.h"
 #include "InternalCalls/EventInternalCalls.h"
 
+#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#pragma comment(lib, "iphlpapi.lib")
+
 namespace {
+// ポート 55555 に対する TCP 接続 (ESTABLISHED) が存在するかどうかを判定
+bool IsDebuggerAttachedViaTcp() {
+	ULONG size = 0;
+	if (GetExtendedTcpTable(NULL, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) != ERROR_INSUFFICIENT_BUFFER) {
+		return false;
+	}
+
+	std::vector<char> buffer(size);
+	PMIB_TCPTABLE_OWNER_PID tcpTable = reinterpret_cast<PMIB_TCPTABLE_OWNER_PID>(buffer.data());
+
+	if (GetExtendedTcpTable(tcpTable, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) == NO_ERROR) {
+		for (DWORD i = 0; i < tcpTable->dwNumEntries; ++i) {
+			USHORT localPort = ntohs((USHORT)tcpTable->table[i].dwLocalPort);
+			if (localPort == 55555) {
+				if (tcpTable->table[i].dwState == MIB_TCP_STATE_ESTAB) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 // デバッグ用ポート競合検知関数
 bool IsDebugPortInUse(unsigned short port) {
 	WSADATA wsaData;
@@ -1219,7 +1246,7 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 	if (!domain_) return;
 	MonoThread* monoThread = mono_thread_attach(domain_);
 
-	bool currentAttached = mono_is_debugger_attached() ? true : false;
+	bool currentAttached = IsDebuggerAttachedViaTcp();
 
 	// 接続状態に変化があった場合、詳細なステータスログを出す
 	static bool lastCurrentAttached = false;
