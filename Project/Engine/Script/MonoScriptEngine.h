@@ -187,10 +187,16 @@ public:
 	/// デバッガ接続状態の監視と自動リロード
 	void UpdateDebuggerStatus();
 
+	bool GetShowAttachedPopup() const { return showAttachedPopup_; }
+	bool IsDebuggerSyncSuccess() const { return isDebuggerSyncSuccess_; }
+	void ClearShowAttachedPopup() { showAttachedPopup_ = false; }
+
 private:
 	std::vector<char> activePdbBuffer_;
 	std::vector<std::vector<char>> pendingPdbBuffers_;
 	bool wasDebuggerAttached_ = false;
+	bool showAttachedPopup_ = false;
+	bool isDebuggerSyncSuccess_ = false;
 
 };
 

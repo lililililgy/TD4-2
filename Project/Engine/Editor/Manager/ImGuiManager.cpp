@@ -15,6 +15,7 @@
 #include "Engine/Core/Config/EngineConfig.h"
 #include "Engine/Core/Utility/Time/Time.h"
 #include "Engine/Core/Utility/Input/Input.h"
+#include "Engine/Script/MonoScriptEngine.h"
 
 using namespace Editor;
 
@@ -728,6 +729,29 @@ void ImGuiManager::Update() {
 	io.DeltaTime = ONEngine::Time::UnscaledDeltaTime();
 
 	imGuiWindowCollection_->Update();
+
+	// デバッガ接続ポップアップの表示
+	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+	if (monoEngine.GetShowAttachedPopup()) {
+		ImGui::OpenPopup("Debugger Status");
+	}
+
+	if (ImGui::BeginPopupModal("Debugger Status", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+		if (monoEngine.IsDebuggerSyncSuccess()) {
+			ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Mono Debugger Attached successfully!");
+			ImGui::Text("Breakpoints are now synchronized and active.");
+		} else {
+			ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), "Mono Debugger Attached (Sync Skipped)");
+			ImGui::Text("The debugger attached during gameplay.");
+			ImGui::Text("Breakpoints might NOT hit. Please detach and re-attach outside of gameplay.");
+		}
+		ImGui::Separator();
+		if (ImGui::Button("OK", ImVec2(120, 0))) {
+			monoEngine.ClearShowAttachedPopup();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
 }
 
 void ImGuiManager::Draw() {

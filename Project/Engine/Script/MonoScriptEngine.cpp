@@ -1219,6 +1219,7 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 	bool currentAttached = mono_is_debugger_attached() ? true : false;
 	if (currentAttached && !wasDebuggerAttached_) {
 		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints...", LogCategory::ScriptEngine);
+		showAttachedPopup_ = true;
 
 		// ゲーム再生中でない場合（＝エディタの編集モード時）にのみ、安全に AppDomain をリロードする
 		if (!DebugConfig::isDebugging && assembly_) {
@@ -1256,15 +1257,18 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 				activePdbBuffer_ = std::move(tempPdbBuffer);
 
 				SetIsHotReloadRequest(true);
+				isDebuggerSyncSuccess_ = true;
 				Console::Log("[Mono] Debugger synchronization complete. Breakpoints should now bind.", LogCategory::ScriptEngine);
 			} else {
 				// フォールバック
 				mono_domain_set(oldDomain, true);
 				mono_domain_unload(domain_);
 				domain_ = oldDomain;
+				isDebuggerSyncSuccess_ = false;
 				Console::LogError("[Mono] Failed to reload assembly for debugger sync.", LogCategory::ScriptEngine);
 			}
 		} else {
+			isDebuggerSyncSuccess_ = false;
 			Console::LogWarning("[Mono] Debugger newly attached during gameplay. Fast reload skipped to prevent crash. Please detach and re-attach outside of gameplay to enable breakpoints.", LogCategory::ScriptEngine);
 		}
 	}
