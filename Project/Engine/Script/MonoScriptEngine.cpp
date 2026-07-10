@@ -1216,6 +1216,9 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 
 void MonoScriptEngine::UpdateDebuggerStatus() {
 #if defined(DEBUG_MODE)
+	if (!domain_) return;
+	mono_thread_attach(domain_);
+
 	bool currentAttached = mono_is_debugger_attached() ? true : false;
 	if (currentAttached && !wasDebuggerAttached_) {
 		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints...", LogCategory::ScriptEngine);
