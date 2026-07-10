@@ -24,6 +24,11 @@
             "guid": "ed0ce65e3b321cfd0f3b5f891116c113",
             "parentGuid": "0ddfefefe7891522f08877c724fc53a4",
             "path": "./Keita_ZakoTest/ed0ce65e3b321cfd0f3b5f891116c113.entity"
+        },
+        {
+            "guid": "283f24dc7a6b47e29a6b5efa56a182c8",
+            "parentGuid": null,
+            "path": "./Keita_ZakoTest/283f24dc7a6b47e29a6b5efa56a182c8.entity"
         }
     ]
 }
