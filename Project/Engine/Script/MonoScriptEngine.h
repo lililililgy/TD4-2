@@ -197,6 +197,7 @@ private:
 	bool wasDebuggerAttached_ = false;
 	bool showAttachedPopup_ = false;
 	bool isDebuggerSyncSuccess_ = false;
+	int debuggerAttachFrameCounter_ = 0;
 
 };
 

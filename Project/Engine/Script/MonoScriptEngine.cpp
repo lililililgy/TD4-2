@@ -950,11 +950,21 @@ void MonoScriptEngine::ClearPendingDomains() {
 	}
 #endif
 
+	if (domainsToUnload_.empty()) {
+		return;
+	}
+
 	for(auto* domain : domainsToUnload_) {
 		mono_domain_unload(domain);
 	}
 	domainsToUnload_.clear();
 	pendingPdbBuffers_.clear();
+
+	// 古いドメインに紐づいていたアセンブリ情報やメタデータをメモリから完全に解放するため、
+	// ガベージコレクションを強制実行します。
+	// これにより、再アタッチ時に古いアセンブリにブレイクポイントがバインドされる問題を防ぎます。
+	mono_gc_collect(mono_gc_max_generation());
+	Console::Log("[Mono] GC collected after domain unloading to clean up assembly remnants.", LogCategory::ScriptEngine);
 }
 
 MonoDomain* MonoScriptEngine::Domain() const {
@@ -1430,11 +1440,22 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		}
 
 		// デバッガが安全にブレイクポイントをバインド（同期）できるように、
-		// 再生中であるかどうかにかかわらず一時的にゲームの実行をポーズ（一時停止）状態にします。
-		DebugConfig::isPause = true;
+		// アタッチ直後に即座にポーズするのではなく、30フレームだけマネージドコードを通常実行させ、
+		// その後一時的にゲームの実行をポーズ（一時停止）状態にします。
+		debuggerAttachFrameCounter_ = 30;
 		isDebuggerSyncSuccess_ = false; // Sync Skip ポップアップを出し、ポーズ状態の解除を促す
-		Console::Log("[Mono] Debugger attached. Game execution suspended for debugger synchronization.", LogCategory::ScriptEngine);
+		Console::Log("[Mono] Debugger newly attached! Delaying game suspension for debugger synchronization (30 frames)...", LogCategory::ScriptEngine);
 	}
+
+	// アタッチ時の同期猶予フレームカウント処理
+	if (debuggerAttachFrameCounter_ > 0) {
+		debuggerAttachFrameCounter_--;
+		if (debuggerAttachFrameCounter_ == 0) {
+			DebugConfig::isPause = true;
+			Console::Log("[Mono] Debugger synchronization delay finished. Game execution suspended.", LogCategory::ScriptEngine);
+		}
+	}
+
 	wasDebuggerAttached_ = currentAttached;
 #endif
 }
