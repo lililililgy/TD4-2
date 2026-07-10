@@ -7,7 +7,7 @@
             "position": {
                 "x": 0.0,
                 "y": 232.40000915527344,
-                "z": 0.0
+                "z": -100.0
             },
             "rotate": {
                 "w": 0.0,
@@ -27,6 +27,7 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -50,7 +51,6 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],

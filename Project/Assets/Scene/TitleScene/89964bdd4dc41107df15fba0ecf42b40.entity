@@ -1,0 +1,18 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "z": 2.0
+            },
+            "scale": {
+                "y": 90.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "89964bdd4dc41107df15fba0ecf42b40",
+    "name": "sand",
+    "parentGuid": null,
+    "prefabName": "sand"
+}

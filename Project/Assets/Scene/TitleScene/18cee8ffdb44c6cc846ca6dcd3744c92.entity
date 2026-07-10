@@ -1,0 +1,21 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "z": 3.0
+            },
+            "type": "Transform"
+        },
+        {
+            "emission": {
+                "rateOverTime": 0.5
+            },
+            "type": "ParticleSystem2D"
+        }
+    ],
+    "guid": "18cee8ffdb44c6cc846ca6dcd3744c92",
+    "name": "farFishParticle",
+    "parentGuid": null,
+    "prefabName": "farFishParticle"
+}

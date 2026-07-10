@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-public class PauseStartCheckPoint : MonoScript {
-	public override void Initialize() {
-		
+public class PauseStartCheckPoint : PauseCommon {
+	void OnSelect() {
+		isSelect = true;
 	}
 
-	public override void Update() {
-		
+	void OnDeselect() {
+		isSelect = false;
 	}
 }

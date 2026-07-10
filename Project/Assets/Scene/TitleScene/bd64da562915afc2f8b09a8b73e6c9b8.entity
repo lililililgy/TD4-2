@@ -1,0 +1,61 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 3,
+            "position": {
+                "x": 111.6999740600586,
+                "y": 96.10002136230469,
+                "z": 0.20000000298023224
+            },
+            "rotate": {
+                "w": 0.8987940549850464,
+                "x": 0.0,
+                "y": 0.0,
+                "z": -0.4383711516857147
+            },
+            "scale": {
+                "x": 200.0,
+                "y": 200.0,
+                "z": 70.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "2cc334c35ea7cd5db977a12d1a6bd267",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "bd64da562915afc2f8b09a8b73e6c9b8",
+    "name": "coral",
+    "parentGuid": "89964bdd4dc41107df15fba0ecf42b40",
+    "prefabName": ""
+}

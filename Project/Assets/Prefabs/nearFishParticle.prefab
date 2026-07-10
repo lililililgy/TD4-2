@@ -48,7 +48,7 @@
                 "bursts": [],
                 "enabled": true,
                 "rateOverDistance": 0.0,
-                "rateOverTime": 0.4000000059604645
+                "rateOverTime": 2.0
             },
             "enable": 1,
             "main": {
@@ -87,7 +87,7 @@
                     "state": 0
                 },
                 "startLifetime": {
-                    "constant": 12.0,
+                    "constant": 3.0,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
@@ -113,6 +113,7 @@
             },
             "renderer": {
                 "blendMode": 0,
+                "flipMode": 0,
                 "materialGuid": "7f3899744142fce7a4c3f8690c681f5c",
                 "meshGuid": "",
                 "renderMode": 0
@@ -146,6 +147,12 @@
                     "state": 0
                 }
             },
+            "textureSheetAnimation": {
+                "enabled": true,
+                "fps": 10.0,
+                "tilesX": 2,
+                "tilesY": 1
+            },
             "type": "ParticleSystem2D",
             "velocityOverLifetime": {
                 "enabled": true,
@@ -164,27 +171,17 @@
                     "state": 0
                 },
                 "x": {
-                    "constant": 100.0,
+                    "constant": 1000.0,
                     "curve": {
                         "keys": []
                     },
                     "curveMax": {
-                        "keys": [
-                            {
-                                "time": 1.0,
-                                "value": 500.0
-                            }
-                        ]
+                        "keys": []
                     },
                     "curveMin": {
-                        "keys": [
-                            {
-                                "time": 1.0,
-                                "value": 200.0
-                            }
-                        ]
+                        "keys": []
                     },
-                    "state": 3
+                    "state": 0
                 },
                 "y": {
                     "constant": 0.0,
@@ -218,5 +215,5 @@
     "guid": "cf315c08514803c999b08d50974ed240",
     "name": "nearFishParticle",
     "parentGuid": null,
-    "prefabName": ""
+    "prefabName": "nearFishParticle"
 }
