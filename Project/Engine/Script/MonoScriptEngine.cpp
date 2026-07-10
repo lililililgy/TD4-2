@@ -415,6 +415,15 @@ void MonoScriptEngine::HotReload() {
 	MonoDomain* oldDomain = domain_;
 	std::string oldDllPath = currentDllPath_;
 
+	// 新しいアセンブリをロードする前に、古いドメインを完全にアンロード（解放）する。
+	// これにより、デバッガ（VS Code）は古いアセンブリのアンロードを検知でき、
+	// 同じ名前のアセンブリがメモリ上に重複してキャッシュの競合が発生するのを防ぎます。
+	if (oldDomain && oldDomain != rootDomain_) {
+		domainsToUnload_.push_back(oldDomain);
+		ClearPendingDomains();
+		domain_ = nullptr;
+	}
+
 	domain_ = CreateReloadDomain();
 	mono_domain_set(domain_, true);
 
@@ -427,9 +436,7 @@ void MonoScriptEngine::HotReload() {
 	auto latestDll = FindLatestDll("./Packages/Scripts", "CSharpLibrary");
 	if(!latestDll.has_value()) {
 		Console::LogError("Failed to find latest assembly DLL.", LogCategory::ScriptEngine);
-		mono_domain_set(oldDomain, true);
-		mono_domain_unload(domain_);
-		domain_ = oldDomain;
+		domain_ = nullptr;
 		return;
 	}
 
@@ -452,9 +459,7 @@ void MonoScriptEngine::HotReload() {
 		}
 		if (!fileReady) {
 			Console::LogError("Latest DLL is still locked or inaccessible: " + utf8DllPath, LogCategory::ScriptEngine);
-			mono_domain_set(oldDomain, true);
-			mono_domain_unload(domain_);
-			domain_ = oldDomain;
+			domain_ = nullptr;
 			return;
 		}
 	}
@@ -463,14 +468,13 @@ void MonoScriptEngine::HotReload() {
 	assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath, tempPdbBuffer);
 	if(!assembly_) {
 		Console::LogError("Failed to load assembly in new domain", LogCategory::ScriptEngine);
-		mono_domain_set(oldDomain, true);
-		mono_domain_unload(domain_);
-		domain_ = oldDomain;
+		domain_ = nullptr;
 		return;
 	}
 
 	if (!activePdbBuffer_.empty()) {
 		pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
+		pendingPdbBuffers_.clear();
 	}
 	activePdbBuffer_ = std::move(tempPdbBuffer);
 
@@ -489,10 +493,6 @@ void MonoScriptEngine::HotReload() {
 				if(exc) MonoScriptEngineUtils::HandleException(exc);
 			}
 		}
-	}
-
-	if(oldDomain != rootDomain_) {
-		domainsToUnload_.push_back(oldDomain);
 	}
 
 	currentDllPath_ = utf8DllPath;
