@@ -94,7 +94,7 @@ std::string GetLogicalDllPath(const std::string& dllPath) {
 	return logicalPath;
 }
 
-MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dllPath) {
+MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dllPath, std::vector<char>& outPdbBuffer) {
 #if defined(DEBUG_MODE)
 	std::string logicalDllPath = GetLogicalDllPath(dllPath);
 
@@ -116,9 +116,9 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 
 		std::streamsize pdbSize = pdbFile.tellg();
 		pdbFile.seekg(0, std::ios::beg);
-		std::vector<char> pdbBuffer(pdbSize);
+		outPdbBuffer.resize(pdbSize);
 
-		if (dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(pdbBuffer.data(), pdbSize)) {
+		if (dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(outPdbBuffer.data(), pdbSize)) {
 			MonoImageOpenStatus status = MONO_IMAGE_OK;
 			// DLLデータからMonoImageをオープン (論理パスを報告)
 			MonoImage* image = mono_image_open_from_data_with_name(
@@ -132,7 +132,7 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 
 			if (image && status == MONO_IMAGE_OK) {
 				// アセンブリロードの前にデバッグ情報を登録
-				mono_debug_open_image_from_memory(image, (const mono_byte*)pdbBuffer.data(), (int)pdbSize);
+				mono_debug_open_image_from_memory(image, (const mono_byte*)outPdbBuffer.data(), (int)pdbSize);
 				
 				// ImageからAssemblyをロード (論理パスを報告)
 				MonoAssembly* assembly = mono_assembly_load_from_full(
@@ -319,7 +319,7 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	currentDllPath_ = GetUtf8Path(*latestDll);
-	assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_);
+	assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_, activePdbBuffer_);
 	if(!assembly_) {
 		Console::LogError("Failed to load CSharpLibrary.dll", LogCategory::ScriptEngine);
 		return;
@@ -468,7 +468,8 @@ void MonoScriptEngine::HotReload() {
 		}
 	}
 
-	assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath);
+	std::vector<char> tempPdbBuffer;
+	assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath, tempPdbBuffer);
 	if(!assembly_) {
 		Console::LogError("Failed to load assembly in new domain", LogCategory::ScriptEngine);
 		mono_domain_set(oldDomain, true);
@@ -476,6 +477,11 @@ void MonoScriptEngine::HotReload() {
 		domain_ = oldDomain;
 		return;
 	}
+
+	if (!activePdbBuffer_.empty()) {
+		pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
+	}
+	activePdbBuffer_ = std::move(tempPdbBuffer);
 
 	currentDllPath_ = utf8DllPath;
 	image_ = mono_assembly_get_image(assembly_);
@@ -794,6 +800,7 @@ void MonoScriptEngine::ClearPendingDomains() {
 		mono_domain_unload(domain);
 	}
 	domainsToUnload_.clear();
+	pendingPdbBuffers_.clear();
 }
 
 MonoDomain* MonoScriptEngine::Domain() const {
@@ -1214,55 +1221,6 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 
 	outMessage = output;
 	return (exitCode == 0);
-}
-
-void MonoScriptEngine::UpdateDebuggerStatus() {
-#if defined(DEBUG_MODE)
-	bool currentAttached = mono_is_debugger_attached() ? true : false;
-	if (currentAttached && !wasDebuggerAttached_) {
-		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints by refreshing AppDomain...", LogCategory::ScriptEngine);
-		
-		if (assembly_) {
-			Console::Log("[Mono] Triggering fast reload for debugger synchronization...", LogCategory::ScriptEngine);
-			
-			MonoDomain* oldDomain = domain_;
-			domain_ = CreateReloadDomain();
-			mono_domain_set(domain_, true);
-
-			// 現在使用している DLL パスからロード
-			assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_);
-			if (assembly_) {
-				image_ = mono_assembly_get_image(assembly_);
-				RegisterFunctions();
-
-				// ComponentBatchManagerの再初期化
-				MonoClass* batchMgrClass = mono_class_from_name(image_, "", "ComponentBatchManager");
-				if(batchMgrClass) {
-					MonoMethod* initMethod = mono_class_get_method_from_name(batchMgrClass, "Initialize", 0);
-					if(initMethod) {
-						MonoObject* exc = nullptr;
-						MonoScriptEngineUtils::SafeInvoke(initMethod, nullptr, nullptr, &exc);
-						if(exc) MonoScriptEngineUtils::HandleException(exc);
-					}
-				}
-
-				if (oldDomain != rootDomain_) {
-					domainsToUnload_.push_back(oldDomain);
-				}
-
-				SetIsHotReloadRequest(true);
-				Console::Log("[Mono] Debugger synchronization complete. Breakpoints should now bind.", LogCategory::ScriptEngine);
-			} else {
-				// フォールバック
-				mono_domain_set(oldDomain, true);
-				mono_domain_unload(domain_);
-				domain_ = oldDomain;
-				Console::LogError("[Mono] Failed to reload assembly for debugger sync.", LogCategory::ScriptEngine);
-			}
-		}
-	}
-	wasDebuggerAttached_ = currentAttached;
-#endif
 }
 
 

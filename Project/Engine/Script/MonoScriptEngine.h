@@ -3,6 +3,7 @@
 /// std
 #include <string>
 #include <optional>
+#include <vector>
 
 /// externals
 #include <jit/jit.h>
@@ -183,11 +184,9 @@ public:
 	void SetIsHotReloadRequest(bool request);
 	bool GetIsHotReloadRequest() const;
 
-	/// デバッガ接続状態の監視と自動リロード
-	void UpdateDebuggerStatus();
-
 private:
-	bool wasDebuggerAttached_ = false;
+	std::vector<char> activePdbBuffer_;
+	std::vector<std::vector<char>> pendingPdbBuffers_;
 
 };
 
