@@ -1381,8 +1381,47 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		}
 	}
 	if (!currentAttached && wasDebuggerAttached_) {
-		Console::Log("[Mono] Debugger detached. Safely cleaning up accumulated zombie domains...", LogCategory::ScriptEngine);
-		ClearPendingDomains();
+		Console::Log("[Mono] Debugger detached. Triggering clean reload to purge debugger domains safely...", LogCategory::ScriptEngine);
+		
+		if (domain_ && domain_ != rootDomain_) {
+			domainsToUnload_.push_back(domain_);
+		}
+
+		// 最新の DLL パスからデバッガなしの通常ドメインへリロード
+		MonoDomain* oldDomain = domain_;
+		domain_ = CreateReloadDomain();
+		mono_domain_set(domain_, true);
+
+		std::vector<char> tempPdbBuffer;
+		assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_, tempPdbBuffer);
+		if (assembly_) {
+			image_ = mono_assembly_get_image(assembly_);
+			RegisterFunctions();
+
+			// ComponentBatchManagerの再初期化
+			MonoClass* batchMgrClass = mono_class_from_name(image_, "", "ComponentBatchManager");
+			if(batchMgrClass) {
+				MonoMethod* initMethod = mono_class_get_method_from_name(batchMgrClass, "Initialize", 0);
+				if(initMethod) {
+					MonoObject* exc = nullptr;
+					MonoScriptEngineUtils::SafeInvoke(initMethod, nullptr, nullptr, &exc);
+					if(exc) MonoScriptEngineUtils::HandleException(exc);
+				}
+			}
+
+			if (!activePdbBuffer_.empty()) {
+				pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
+			}
+			activePdbBuffer_ = std::move(tempPdbBuffer);
+
+			SetIsHotReloadRequest(true); // C++側のオブジェクト一斉再構築要求
+		} else {
+			// フォールバック
+			domain_ = oldDomain;
+			mono_domain_set(domain_, true);
+		}
+
+		ClearPendingDomains(); // ゾンビドメインの物理アンロードを実行！
 	}
 	wasDebuggerAttached_ = currentAttached;
 #endif
