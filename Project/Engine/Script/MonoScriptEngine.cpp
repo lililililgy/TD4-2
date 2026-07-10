@@ -1,4 +1,4 @@
-#include <winsock2.h>
+﻿#include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
@@ -215,7 +215,7 @@ void MonoScriptEngine::Initialize() {
 	_putenv(debugEnv1.c_str());
 
 	/// デバッグモード用のオプション設定
-	bool waitDebug = true;
+	bool waitDebug = false;
 	LPWSTR cmdLine = GetCommandLineW();
 	if (cmdLine && wcsstr(cmdLine, L"--test-mode") != nullptr) {
 		waitDebug = false;
