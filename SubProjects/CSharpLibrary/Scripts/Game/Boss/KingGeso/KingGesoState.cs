@@ -1,6 +1,3 @@
-
-using System.Collections.Generic;
-
 /// <summary>
 /// キングゲソの状態(基底クラス)
 /// </summary>
@@ -56,49 +53,17 @@ internal sealed class KingGesoIdleState : IKingGesoState
 //==========================================
 internal sealed class KingGesoAttackState : IKingGesoState
 {
-    private float elapsed;
-    private float spawnElapsed;
-    private int spawnedCount;
-    private KingGesoAttackType attackType;
-    private readonly List<Entity> pendingGesos = new List<Entity>();
+    private IKingGesoAttack currentAttack_;
 
     public void Enter(KingGeso owner)
     {
-        elapsed = 0.0f;
-        spawnElapsed = 0.0f;
-        spawnedCount = 0;
-        attackType = owner.SelectAttackType();
-        pendingGesos.Clear();
-
-        if (attackType == KingGesoAttackType.PincerThrust)
-        {
-            SpawnPincerGesos(owner);
-        }
-        else
-        {
-            // 初回のゲソをスポーン
-            SpawnPincerGesos(owner);
-        }
+        currentAttack_ = CreateAttack(owner.SelectAttackType());
+        currentAttack_.Enter(owner);
     }
 
     public void Update(KingGeso owner)
     {
-        // まだスポーンしていないゲソの攻撃を開始
-        StartPendingGesoAttacks(owner);
-
-        elapsed += Time.deltaTime;
-        spawnElapsed += Time.deltaTime;
-
-        if (attackType == KingGesoAttackType.WaveThrust)
-        {
-            // ゲソのスポーン間隔に達した場合、次のゲソをスポーン
-            if (!SpawnDueGesos(owner))
-            {
-                return;
-            }
-        }
-
-        if (elapsed >= owner.AttackDuration)
+        if (currentAttack_ == null || currentAttack_.Update(owner))
         {
             //attack終了後、クールダウン状態に遷移
             owner.ChangeState(new KingGesoCooldownState());
@@ -107,92 +72,24 @@ internal sealed class KingGesoAttackState : IKingGesoState
 
     public void Exit(KingGeso owner)
     {
+        if (currentAttack_ != null)
+        {
+            currentAttack_.Exit(owner);
+            currentAttack_ = null;
+        }
+
         // 攻撃終了時にアクティブなゲソを破棄
         owner.DestroyActiveGeso();
     }
 
-    /// <summary>
-    /// 待機中のゲソの攻撃を開始する
-    /// </summary>
-    /// <param name="owner"></param>
-    private void StartPendingGesoAttacks(KingGeso owner)
+    private IKingGesoAttack CreateAttack(KingGesoAttackType attackType)
     {
-
-        // 待機中のゲソの攻撃を開始
-        for (int i = pendingGesos.Count - 1; i >= 0; i--)
+        if (attackType == KingGesoAttackType.PincerThrust)
         {
-
-            // ゲソがnullでない場合、攻撃を開始し、成功した場合はリストから削除
-            Entity pendingGeso = pendingGesos[i];
-            if (pendingGeso == null || owner.StartGesoAttack(pendingGeso))
-            {
-                pendingGesos.RemoveAt(i);
-            }
-        }
-    }
-
-    /// <summary>
-    /// スポーン間隔に達した場合、次のゲソをスポーンする
-    /// </summary>
-    /// <param name="owner"></param>
-    /// <returns></returns>
-    private bool SpawnDueGesos(KingGeso owner)
-    {
-
-        // スポーン間隔を取得
-        float interval = owner.WaveGesoInterval;
-        while (spawnedCount < owner.WaveGesoCount && spawnElapsed >= interval)
-        {
-            spawnElapsed -= interval;
-
-            // 次のゲソをスポーン。スポーンに失敗した場合はクールダウン状態に遷移
-            if (!SpawnNextGeso(owner))
-            {
-                return false;
-            }
+            return new KingGesoPincerThrustAttack();
         }
 
-        return true;
-    }
-
-    private bool SpawnNextGeso(KingGeso owner)
-    {
-
-        // ゲソをスポーン
-        Entity geso = owner.SpawnGeso();
-        if (geso == null)
-        {
-
-            // ゲソのスポーンに失敗した場合、クールダウン状態に遷移
-            owner.ChangeState(new KingGesoCooldownState());
-            return false;
-        }
-
-        // スポーンしたゲソを待機リストに追加
-        pendingGesos.Add(geso);
-        spawnedCount++;
-        return true;
-    }
-
-    //===========================================
-    // 挟み撃ち攻撃用の触手の生成
-    //===========================================
-    private bool SpawnPincerGesos(KingGeso owner)
-    {
-        List<Entity> spawnedGesos = new List<Entity>();
-        if (!owner.SpawnPincerGesos(spawnedGesos))
-        {
-            owner.ChangeState(new KingGesoCooldownState());
-            return false;
-        }
-
-        for (int i = 0; i < spawnedGesos.Count; i++)
-        {
-            pendingGesos.Add(spawnedGesos[i]);
-        }
-
-        spawnedCount += spawnedGesos.Count;
-        return true;
+        return new KingGesoWaveThrustAttack();
     }
 }
 

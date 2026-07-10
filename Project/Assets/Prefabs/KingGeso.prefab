@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 111.30000305175781,
-                "y": 111.30001068115234,
-                "z": 111.30001068115234
+                "x": 1450.800048828125,
+                "y": 1450.7999267578125,
+                "z": 1450.7999267578125
             },
             "type": "Transform"
         },
@@ -30,6 +30,7 @@
                 "directlyDamageable_": true,
                 "disableAutoDestruction": false,
                 "disableAutoDestruction_": false,
+                "enable": true,
                 "isInvincible": false,
                 "isInvincible_": false,
                 "maxHp_": 10.0,
@@ -39,6 +40,8 @@
                 "attackDuration": 10.0,
                 "cameraEntityName": "Camera",
                 "cooldownDuration": 1.0,
+                "enable": true,
+                "fixedAttackType": 0,
                 "gesoAttackDamage": 20.0,
                 "gesoAttackRadius": 1.5,
                 "gesoMoveDuration": 10.0,
@@ -46,22 +49,38 @@
                 "gesoPrefabName": "GesoHand",
                 "gesoRotationSpeed": 8.0,
                 "gesoSpawnOffset": {
-                    "x": -509.971923828125,
+                    "x": 253.41856384277344,
                     "y": -720.5
                 },
                 "idleDuration": 2.0,
                 "maxHp": 10,
+                "pincerThrustWeight": 1.0,
+                "randomizeAttackType": true,
                 "screenEdgeMargin": 0.5,
                 "screenHalfHeight": 720.0,
                 "screenHalfWidth": 1280.0,
                 "targetEntityName": "Player",
                 "waveGesoCount": 0,
-                "waveGesoInterval": 0.0
+                "waveGesoInterval": 0.0,
+                "waveThrustWeight": 1.0
+            },
+            "SpriteAnimation": {
+                "cols": 3,
+                "enable": true,
+                "endFrame": 2,
+                "fps": 5.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 3
             },
             "type": "Variables"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -80,12 +99,11 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 1.0,
+                        "x": 0.3333333432674408,
                         "y": 1.0
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         },
         {
@@ -98,6 +116,10 @@
                 {
                     "enable": true,
                     "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
                 }
             ],
             "type": "Script"

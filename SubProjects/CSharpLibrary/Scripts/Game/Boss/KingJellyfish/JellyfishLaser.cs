@@ -22,8 +22,20 @@ public class JellyfishLaser : MonoScript
         elapsed_ += Time.deltaTime;
         if (elapsed_ >= duration)
         {
-            entity.Destroy();
+            DestroyLaserRoot();
         }
+    }
+
+    private void DestroyLaserRoot()
+    {
+        Entity parent = entity.parent;
+        if (parent != null)
+        {
+            parent.Destroy();
+            return;
+        }
+
+        entity.Destroy();
     }
 
     //==========================================
@@ -46,10 +58,26 @@ public class JellyfishLaser : MonoScript
 
         // レーザーの中心位置を計算
         Vector2 center = origin + normalized * (length * 0.5f);
-        transform.position = new Vector3(center.x, center.y, depth);
-       // レーザーの回転角度を計算して設定
         float angle = Mathf.Atan2(normalized.x, normalized.y);
-        transform.rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
+        Quaternion rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
+
+        Entity parent = entity.parent;
+        if (parent != null)
+        {
+            parent.transform.position = new Vector3(center.x, center.y, depth);
+            parent.transform.rotation = rotation;
+            parent.transform.scale = new Vector3(1.0f, 1.0f, 1.0f);
+
+            transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+            transform.rotation = Quaternion.identity;
+            transform.scale = new Vector3(width, length, 1.0f);
+        }
+        else
+        {
+            transform.position = new Vector3(center.x, center.y, depth);
+            transform.rotation = rotation;
+            transform.scale = new Vector3(width, length, 1.0f);
+        }
 
         // 攻撃判定の設定
         AttackCollision attackCollision = entity.GetScript<AttackCollision>();

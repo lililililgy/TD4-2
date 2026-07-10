@@ -215,7 +215,7 @@ void MonoScriptEngine::Initialize() {
 	_putenv(debugEnv1.c_str());
 
 	/// デバッグモード用のオプション設定
-	bool waitDebug = false;
+	bool waitDebug = true;
 	LPWSTR cmdLine = GetCommandLineW();
 	if (cmdLine && wcsstr(cmdLine, L"--test-mode") != nullptr) {
 		waitDebug = false;

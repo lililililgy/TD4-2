@@ -483,9 +483,16 @@ public class KingJellyfish : MonoScript {
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
             // レーザーエンティティを生成する
-            Entity laser = ecsGroup.CreateEntity(laserPrefabName);
+            Entity laserRoot = ecsGroup.CreateEntity(laserPrefabName);
+            if (laserRoot == null)
+            {
+                continue;
+            }
+
+            Entity laser = laserRoot.GetChild(0);
             if (laser == null)
             {
+                laserRoot.Destroy();
                 continue;
             }
 
@@ -509,12 +516,6 @@ public class KingJellyfish : MonoScript {
         {
             normalized = Vector2.up;
         }
-
-        Vector2 center = origin + normalized * (LaserLength * 0.5f);
-        laser.transform.position = new Vector3(center.x, center.y, transform.position.z);
-        laser.transform.scale = new Vector3(LaserWidth, LaserLength, 1.0f);
-        float angle = Mathf.Atan2(normalized.x, normalized.y);
-        laser.transform.rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
 
         JellyfishLaser laserScript = laser.GetScript<JellyfishLaser>();
         if (laserScript != null)

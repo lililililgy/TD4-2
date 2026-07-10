@@ -31,11 +31,6 @@
             "path": "./Debug/15025795e1df1b3a881d742c39afcc8d.entity"
         },
         {
-            "guid": "d520fbccb58c9ae8cb6c43b99b52b31f",
-            "parentGuid": "a0e65fa1739efe4cad84dd6a0268ddbb",
-            "path": "./Debug/d520fbccb58c9ae8cb6c43b99b52b31f.entity"
-        },
-        {
             "guid": "0f23626149d254101fb06e6ef52329a5",
             "parentGuid": null,
             "path": "./Debug/0f23626149d254101fb06e6ef52329a5.entity"
