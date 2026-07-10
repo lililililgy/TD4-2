@@ -116,9 +116,6 @@ public:
 	
 	void UpdateAiIntents(void* data, int count, float deltaTime, const std::string& groupName);
 
-	// デバッガ接続状態の監視と自動リロード
-	void UpdateDebuggerStatus();
-
 	/// @brief C#のBlackboardManagerにイベント完了を通知する
 	/// @param entityId 対象のエンティティID
 	/// @param eventName 完了したイベント名
@@ -173,7 +170,6 @@ private:
 	MonoClassField* sceneNameField_ = nullptr;
 
 	EntityComponentSystem* pEcs_ = nullptr;
-	bool wasDebuggerAttached_ = false;
 
 public:
 	/// ===================================================

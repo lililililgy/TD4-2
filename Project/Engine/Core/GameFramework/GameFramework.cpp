@@ -2,7 +2,6 @@
 #include "DebugSceneGenerator.h"
 #include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
 #include "Engine/Core/Utility/Tools/Assert.h"
-#include "Engine/Script/MonoScriptEngine.h"
 
 using namespace ONEngine;
 
@@ -180,10 +179,6 @@ void GameFramework::Update() {
 	/// 更新処理
 	Input::Update();
 	Time::Update();
-
-#if defined(DEBUG_MODE)
-	MonoScriptEngine::GetInstance().UpdateDebuggerStatus();
-#endif
 
 	if (EngineConfig::isTestMode) {
 		static int testFrameCount = 0;

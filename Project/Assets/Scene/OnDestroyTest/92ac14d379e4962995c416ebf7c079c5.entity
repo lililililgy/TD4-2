@@ -2,6 +2,23 @@
     "active": true,
     "components": [
         {
+            "cameraType": 1,
+            "enable": 1,
+            "farClip": 1000.0,
+            "fogColor": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fogEnd": 10000.0,
+            "fogStart": 0.0,
+            "fovY": 0.699999988079071,
+            "isDrawFrustum": false,
+            "isMainCamera": true,
+            "nearClip": 0.10000000149011612,
+            "type": "CameraComponent"
+        },
+        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
@@ -24,20 +41,10 @@
         },
         {
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "OnDestroyTestScript"
-                }
-            ],
-            "type": "Script"
         }
     ],
-    "guid": "3b652048d773b38c33ed531ab1d043d3",
-    "name": "TestEntity",
+    "guid": "92ac14d379e4962995c416ebf7c079c5",
+    "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""
 }
