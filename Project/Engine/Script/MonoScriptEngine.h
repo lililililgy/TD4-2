@@ -184,9 +184,13 @@ public:
 	void SetIsHotReloadRequest(bool request);
 	bool GetIsHotReloadRequest() const;
 
+	/// デバッガ接続状態の監視と自動リロード
+	void UpdateDebuggerStatus();
+
 private:
 	std::vector<char> activePdbBuffer_;
 	std::vector<std::vector<char>> pendingPdbBuffers_;
+	bool wasDebuggerAttached_ = false;
 
 };
 

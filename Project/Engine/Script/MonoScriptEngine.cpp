@@ -1214,4 +1214,58 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 	return (exitCode == 0);
 }
 
+void MonoScriptEngine::UpdateDebuggerStatus() {
+#if defined(DEBUG_MODE)
+	bool currentAttached = mono_is_debugger_attached() ? true : false;
+	if (currentAttached && !wasDebuggerAttached_) {
+		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints...", LogCategory::ScriptEngine);
+
+		// ゲーム再生中でない場合（＝エディタの編集モード時）にのみ、安全に AppDomain をリロードする
+		if (!DebugConfig::isDebugging && assembly_) {
+			Console::Log("[Mono] Triggering fast reload for debugger synchronization...", LogCategory::ScriptEngine);
+			
+			MonoDomain* oldDomain = domain_;
+			domain_ = CreateReloadDomain();
+			mono_domain_set(domain_, true);
+
+			// 現在使用している DLL パスからロード
+			assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_, activePdbBuffer_);
+			if (assembly_) {
+				image_ = mono_assembly_get_image(assembly_);
+				RegisterFunctions();
+
+				// ComponentBatchManagerの再初期化
+				MonoClass* batchMgrClass = mono_class_from_name(image_, "", "ComponentBatchManager");
+				if(batchMgrClass) {
+					MonoMethod* initMethod = mono_class_get_method_from_name(batchMgrClass, "Initialize", 0);
+					if(initMethod) {
+						MonoObject* exc = nullptr;
+						MonoScriptEngineUtils::SafeInvoke(initMethod, nullptr, nullptr, &exc);
+						if(exc) MonoScriptEngineUtils::HandleException(exc);
+					}
+				}
+
+				if (oldDomain && oldDomain != rootDomain_) {
+					domainsToUnload_.push_back(oldDomain);
+					ClearPendingDomains(); // 即座にアンロード
+				}
+
+				SetIsHotReloadRequest(true);
+				Console::Log("[Mono] Debugger synchronization complete. Breakpoints should now bind.", LogCategory::ScriptEngine);
+			} else {
+				// フォールバック
+				mono_domain_set(oldDomain, true);
+				mono_domain_unload(domain_);
+				domain_ = oldDomain;
+				Console::LogError("[Mono] Failed to reload assembly for debugger sync.", LogCategory::ScriptEngine);
+			}
+		} else {
+			Console::LogWarning("[Mono] Debugger newly attached during gameplay. Fast reload skipped to prevent crash. Please detach and re-attach outside of gameplay to enable breakpoints.", LogCategory::ScriptEngine);
+		}
+	}
+	wasDebuggerAttached_ = currentAttached;
+#endif
+}
+
+
 
