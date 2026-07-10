@@ -115,6 +115,28 @@ void ApplicationQuit() {
 }
 
 MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dllPath, std::vector<char>& outPdbBuffer) {
+	// デバッガがロードできるように、このアセンブリに対応する PDB を固定名 "CSharpLibrary.pdb" として配置する。
+	// アセンブリのロード前に配置することで、デバッガ接続時に最新の PDB を確実にロードさせます。
+	{
+		std::string latestPdbPath = dllPath;
+		size_t extPos = latestPdbPath.find_last_of('.');
+		if (extPos != std::string::npos) {
+			latestPdbPath = latestPdbPath.substr(0, extPos) + ".pdb";
+		} else {
+			latestPdbPath += ".pdb";
+		}
+
+		std::string targetPdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
+		if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
+			try {
+				std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
+				Console::Log("[Mono] LoadAssembly: Copied PDB to logical path: " + targetPdbPath, LogCategory::ScriptEngine);
+			} catch (const std::exception& e) {
+				Console::LogWarning("[Mono] LoadAssembly: Failed to copy PDB to logical path (it might be locked): " + std::string(e.what()), LogCategory::ScriptEngine);
+			}
+		}
+	}
+
 #if defined(DEBUG_MODE)
 	std::string pdbPath = dllPath;
 	size_t extPos = pdbPath.find_last_of('.');
@@ -841,6 +863,15 @@ MonoDomain* MonoScriptEngine::CreateReloadDomain() {
 }
 
 void MonoScriptEngine::ClearPendingDomains() {
+#if defined(DEBUG_MODE)
+	// デバッガが接続（アタッチ）されている間は、アンロードに伴うスレッド競合やデッドロッククラッシュを防ぐため、
+	// ドメインのアンロードを一切行わず、リストに保留（蓄積）したままにします。
+	// デバッガが切断された直後のフレームから安全に一括アンロードが実行されます。
+	if (IsDebuggerAttachedViaTcp()) {
+		return;
+	}
+#endif
+
 	for(auto* domain : domainsToUnload_) {
 		mono_domain_unload(domain);
 	}
@@ -1292,33 +1323,7 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints...", LogCategory::ScriptEngine);
 		showAttachedPopup_ = true;
 
-		// デバッガが最新の PDB をロードできるように、最新の PDB を固定名 "CSharpLibrary.pdb" として配置する。
-		// ※アタッチした瞬間はまだデバッガがファイルを読み込んでいないため、安全に上書きコピー可能です。
-		auto latestDll = FindLatestDll("./Packages/Scripts", "CSharpLibrary");
-		if (latestDll.has_value()) {
-			std::string utf8DllPath = GetUtf8Path(*latestDll);
-			std::string latestPdbPath = utf8DllPath;
-			size_t extPos = latestPdbPath.find_last_of('.');
-			if (extPos != std::string::npos) {
-				latestPdbPath = latestPdbPath.substr(0, extPos) + ".pdb";
-			} else {
-				latestPdbPath += ".pdb";
-			}
-
-			std::string targetPdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
-			if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
-				try {
-					std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
-					Console::Log("[Mono] DebuggerSync: Copied latest PDB to logical path: " + targetPdbPath, LogCategory::ScriptEngine);
-				} catch (const std::exception& e) {
-					Console::LogWarning("[Mono] DebuggerSync: Failed to copy PDB to logical path: " + std::string(e.what()), LogCategory::ScriptEngine);
-				}
-			}
-		}
-
-		// デバッガ同期時の AppDomain リロードはデッドロックや重複アセンブリによるブレイクポイント無効化、
-		// およびアンロード時のクラッシュを引き起こす諸悪の根源となるため、リロードは一切行いません。
-		// その代わり、デバッガが安全にブレイクポイントをバインド（同期）できるように、
+		// デバッガが安全にブレイクポイントをバインド（同期）できるように、
 		// 再生中であるかどうかにかかわらず一時的にゲームの実行をポーズ（一時停止）状態にします。
 		DebugConfig::isPause = true;
 		isDebuggerSyncSuccess_ = false; // Sync Skip ポップアップを出し、ポーズ状態の解除を促す
