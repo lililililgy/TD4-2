@@ -361,16 +361,18 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
+	// JITパースエラーを防止するため、MONO_ENV_OPTIONS には "--debugger-agent=..." のみを設定し、
+	// MONO_OPTIONS には常に "--debug" のみを設定します。
 	static std::string debugAgentOptA;
 	static std::wstring debugAgentOptW;
 	debugAgentOptA = waitDebug 
-		? "--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: "--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
 	debugAgentOptW = waitDebug 
-		? L"--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: L"--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+		? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
 
-	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
+	// MONO_ENV_OPTIONS にデバッガエージェント設定を登録
 	static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
 	static std::wstring monoEnvOptW = L"MONO_ENV_OPTIONS=" + debugAgentOptW;
 	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
@@ -378,10 +380,13 @@ void MonoScriptEngine::Initialize() {
 	_putenv(monoEnvOptA.c_str());
 	_wputenv(monoEnvOptW.c_str());
 
-	static std::string monoOptA = "MONO_OPTIONS=" + debugAgentOptA;
-	static std::wstring monoOptW = L"MONO_OPTIONS=" + debugAgentOptW;
-	SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
-	SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str());
+	// MONO_OPTIONS には --debug のみを設定し、常にデバッグモードで立ち上げる
+	static std::string debugOptA = "--debug";
+	static std::wstring debugOptW = L"--debug";
+	static std::string monoOptA = "MONO_OPTIONS=" + debugOptA;
+	static std::wstring monoOptW = L"MONO_OPTIONS=" + debugOptW;
+	SetEnvironmentVariableA("MONO_OPTIONS", debugOptA.c_str());
+	SetEnvironmentVariableW(L"MONO_OPTIONS", debugOptW.c_str());
 	_putenv(monoOptA.c_str());
 	_wputenv(monoOptW.c_str());
 
