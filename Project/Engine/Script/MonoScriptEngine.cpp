@@ -497,6 +497,27 @@ void MonoScriptEngine::HotReload() {
 		}
 	}
 
+	// デバッガがロードできるように、最新の PDB を固定名 "CSharpLibrary.pdb" としてコピー配置する
+	{
+		std::string latestPdbPath = utf8DllPath;
+		size_t extPos = latestPdbPath.find_last_of('.');
+		if (extPos != std::string::npos) {
+			latestPdbPath = latestPdbPath.substr(0, extPos) + ".pdb";
+		} else {
+			latestPdbPath += ".pdb";
+		}
+
+		std::string targetPdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
+		if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
+			try {
+				std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
+				Console::Log("[Mono] HotReload: Copied latest PDB to logical path: " + targetPdbPath, LogCategory::ScriptEngine);
+			} catch (const std::exception& e) {
+				Console::LogWarning("[Mono] HotReload: Failed to copy PDB to logical path: " + std::string(e.what()), LogCategory::ScriptEngine);
+			}
+		}
+	}
+
 	std::vector<char> tempPdbBuffer;
 	assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath, tempPdbBuffer);
 	if(!assembly_) {
@@ -1282,6 +1303,27 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 				return;
 			}
 			std::string utf8DllPath = GetUtf8Path(*latestDll);
+
+			// デバッガがロードできるように、最新の PDB を固定名 "CSharpLibrary.pdb" としてコピー配置する
+			{
+				std::string latestPdbPath = utf8DllPath;
+				size_t extPos = latestPdbPath.find_last_of('.');
+				if (extPos != std::string::npos) {
+					latestPdbPath = latestPdbPath.substr(0, extPos) + ".pdb";
+				} else {
+					latestPdbPath += ".pdb";
+				}
+
+				std::string targetPdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
+				if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
+					try {
+						std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
+						Console::Log("[Mono] DebuggerSync: Copied latest PDB to logical path: " + targetPdbPath, LogCategory::ScriptEngine);
+					} catch (const std::exception& e) {
+						Console::LogWarning("[Mono] DebuggerSync: Failed to copy PDB to logical path: " + std::string(e.what()), LogCategory::ScriptEngine);
+					}
+				}
+			}
 
 			MonoDomain* oldDomain = domain_;
 			domain_ = CreateReloadDomain();
