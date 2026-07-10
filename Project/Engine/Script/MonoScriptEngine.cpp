@@ -255,7 +255,6 @@ void MonoScriptEngine::Initialize() {
 
 	// mono_jit_parse_options にもデバッガオプションを確実に渡す (ポインタが永続メモリを指すようにする)
 	const char* debugOptions[] = {
-		"ONEngine",
 		"--soft-breakpoints",
 		debugAgentOptA.c_str()
 	};
@@ -263,9 +262,8 @@ void MonoScriptEngine::Initialize() {
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 #else
 	Console::Log("[Mono] Non-Debug Mode: Debugger Disabled (suspend=n)", LogCategory::ScriptEngine);
-	/// 高速化用オプション (argv[0]としてダミーを配置)
+	/// 高速化用オプション
 	const char* options[] = {
-		"ONEngine",
 		"--optimize=all",   // JIT最適化フル
 	};
 	mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**)options);
