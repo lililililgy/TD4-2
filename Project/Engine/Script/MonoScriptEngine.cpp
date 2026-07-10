@@ -389,13 +389,17 @@ void MonoScriptEngine::Initialize() {
 
 	// mono_jit_parse_options にもデバッガオプションを確実に渡す (ポインタが永続メモリを指すようにする)
 	const char* debugOptions[] = {
-		"--debug",              // デバッガ非接続時でも常にデバッグ情報を生成（waitDebug=falseや再アタッチ時のバインド保証）
 		"--optimize=none",      // JIT最適化を無効化し、デバッグの整合性を保証
 		"--soft-breakpoints",
 		debugAgentOptA.c_str()
 	};
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+
+	// デバッガが物理的にアタッチされる前であっても、JIT時に常にデバッグ行情報（シーケンスポイント）を
+	// 生成させるために、Monoのデバッガ接続フラグを強制的にONに設定します。
+	// これにより、waitDebug=false時の後発アタッチや、デバッガ再アタッチ時にもブレイクポイントが確実に効くようになります。
+	mono_set_is_debugger_attached(true);
 #else
 	Console::Log("[Mono] Non-Debug Mode: Debugger Disabled (suspend=n)", LogCategory::ScriptEngine);
 	/// 高速化用オプション
