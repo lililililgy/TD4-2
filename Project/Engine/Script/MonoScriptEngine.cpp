@@ -1229,7 +1229,8 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 			mono_domain_set(domain_, true);
 
 			// 現在使用している DLL パスからロード
-			assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_, activePdbBuffer_);
+			std::vector<char> tempPdbBuffer;
+			assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_, tempPdbBuffer);
 			if (assembly_) {
 				image_ = mono_assembly_get_image(assembly_);
 				RegisterFunctions();
@@ -1245,10 +1246,14 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 					}
 				}
 
-				if (oldDomain && oldDomain != rootDomain_) {
-					domainsToUnload_.push_back(oldDomain);
-					ClearPendingDomains(); // 即座にアンロード
+				// ※ クラッシュを防ぐため、古いドメインのアンロード(mono_domain_unload)をスキップします。
+				// これにより、エディタUI等が保持する MonoObject* がゾンビ化するのを防ぎ、
+				// かつデバッガ接続初期化処理中のスレッド競合クラッシュも完全に防ぎます。
+				// (古いPDBバッファも解放せずに維持し続けます)
+				if (!activePdbBuffer_.empty()) {
+					pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
 				}
+				activePdbBuffer_ = std::move(tempPdbBuffer);
 
 				SetIsHotReloadRequest(true);
 				Console::Log("[Mono] Debugger synchronization complete. Breakpoints should now bind.", LogCategory::ScriptEngine);
