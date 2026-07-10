@@ -139,13 +139,14 @@ public class FlapjackOctopus : MonoScript
         spriteAnimation_.ResetAnimation();
     }
 
-    // 溜め・突進中、または待機中でも慣性が残っている間: 指定フレームで静止
+  
     private void SetStaticFrame(int frameIndex)
     {
         isIdleAnimationActive_ = false;
 
         if (spriteAnimation_ == null) { return; }
 
+        // ループ再生を止めて、指定フレームで静止させる
         spriteAnimation_.isPlay = false;
         spriteAnimation_.startFrame = frameIndex;
         spriteAnimation_.endFrame = frameIndex;
@@ -153,7 +154,7 @@ public class FlapjackOctopus : MonoScript
     }
 
     // 待機中の慣性残量に応じたアニメーション切り替え
-    // 慣性(速度)が chasePower * inertiaStopRatio を下回るまでは、キックのフレーム(連番3 = ChaseFrame)を維持する
+   
     private void UpdateWaitAnimation()
     {
         float threshold = Mathf.Abs(chasePower) * Mathf.Clamp01(inertiaStopRatio);
@@ -177,7 +178,7 @@ public class FlapjackOctopus : MonoScript
         // 慣性が収まるまではキックのフレームを維持し、収まったらアイドルへ切り替える
         UpdateWaitAnimation();
 
-        // まだ伸びている（連番3のまま慣性が残っている）間は待機としてカウントしない
+        // まだ伸びている間は待機としてカウントしない
         if (!isIdleAnimationActive_)
         {
             stateTimer_ = 0.0f;
@@ -203,7 +204,7 @@ public class FlapjackOctopus : MonoScript
     {
         stateTimer_ += Time.deltaTime;
 
-        // 溜め中は移動せずその場に停止する（position は変更しない）
+        // 溜め中は移動せずその場に停止する
 
         // 縮こまるように体を溜めるスケールアニメーション
         float scaleT = Mathf.Clamp01(stateTimer_ / chargeScaleAnimationTime);
@@ -231,8 +232,6 @@ public class FlapjackOctopus : MonoScript
     }
 
     // 水の抵抗を受けて速度が指数関数的に減衰していく慣性移動
-    // dv/dt = -chaseDrag * v  →  v(t+dt) = v(t) * e^(-chaseDrag * dt)
-    // 状態を問わず毎フレーム適用することで、Chase を抜けた後も勢いがじわっと残る
     private void ApplyInertiaMovement()
     {
         if (velocity_.LengthSq() <= 0.0001f) { return; }
@@ -265,7 +264,7 @@ public class FlapjackOctopus : MonoScript
         float scale;
         if (pulseT < 0.5f)
         {
-            // 前半: 勢いよく蹴り出す（膨張）
+            // 前半: 勢いよく蹴り出す
             scale = Mathf.Lerp(1.0f, chaseScaleRate, Ease.Out.Back(pulseT / 0.5f));
         }
         else
