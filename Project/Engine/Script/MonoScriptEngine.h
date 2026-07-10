@@ -183,7 +183,6 @@ public:
 
 	void SetIsHotReloadRequest(bool request);
 	bool GetIsHotReloadRequest() const;
-	bool IsReloading() const;
 
 	/// デバッガ接続状態の監視と自動リロード
 	void UpdateDebuggerStatus();
@@ -199,7 +198,6 @@ private:
 	bool showAttachedPopup_ = false;
 	bool isDebuggerSyncSuccess_ = false;
 	int debuggerAttachFrameCounter_ = 0;
-	std::atomic<bool> isReloading_{ false };
 
 };
 

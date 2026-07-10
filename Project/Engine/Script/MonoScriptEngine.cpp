@@ -299,10 +299,6 @@ std::string GetUtf8Path(const std::filesystem::path& path) {
 MonoScriptEngine::MonoScriptEngine() : domainReloadCounter_(0) {}
 MonoScriptEngine::~MonoScriptEngine() = default;
 
-bool MonoScriptEngine::IsReloading() const {
-	return isReloading_;
-}
-
 MonoScriptEngine& MonoScriptEngine::GetInstance() {
 	static MonoScriptEngine instance;
 	return instance;
@@ -365,15 +361,14 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
-	// 環境変数経由でオプションを引き渡し、常に --debug と --debugger-agent の両方がパースされるようにします。
 	static std::string debugAgentOptA;
 	static std::wstring debugAgentOptW;
 	debugAgentOptA = waitDebug 
-		? "--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: "--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
 	debugAgentOptW = waitDebug 
-		? L"--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: L"--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+		? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
 
 	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
 	static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
@@ -386,16 +381,16 @@ void MonoScriptEngine::Initialize() {
 	static std::string monoOptA = "MONO_OPTIONS=" + debugAgentOptA;
 	static std::wstring monoOptW = L"MONO_OPTIONS=" + debugAgentOptW;
 	SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
-	SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str()); // W version
+	SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str());
 	_putenv(monoOptA.c_str());
 	_wputenv(monoOptW.c_str());
 
 	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
 
-	// mono_jit_parse_options には、環境変数で既に渡している --debug や --debugger-agent を渡すとエラーになるため、
-	// 純粋な JIT オプションである --soft-breakpoints のみを渡します。
+	// mono_jit_parse_options にもデバッガオプションを確実に渡す (ポインタが永続メモリを指すようにする)
 	const char* debugOptions[] = {
-		"--soft-breakpoints"
+		"--soft-breakpoints",
+		debugAgentOptA.c_str()
 	};
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
@@ -540,20 +535,14 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
-	struct ReloadGuard {
-		std::atomic<bool>& flag;
-		ReloadGuard(std::atomic<bool>& f) : flag(f) { flag = true; }
-		~ReloadGuard() { flag = false; }
-	} guard(isReloading_);
-
 	Console::Log("[Mono] HotReload: Rebuilding C# project...", LogCategory::ScriptEngine);
 	std::string buildOutput;
 	bool buildSuccess = BuildCSharpProject(buildOutput);
 	if (!buildSuccess) {
-		Console::LogWarning("[Mono] HotReload: C# project build failed (e.g. dotnet SDK not found). Trying to fallback to existing built DLL...\n" + buildOutput, LogCategory::ScriptEngine);
-	} else {
-		Console::Log("[Mono] HotReload: C# project built successfully. Reloading DLL...", LogCategory::ScriptEngine);
+		Console::LogError("[Mono] HotReload: C# project build failed! Reload aborted.\n" + buildOutput, LogCategory::ScriptEngine);
+		return;
 	}
+	Console::Log("[Mono] HotReload: C# project built successfully. Reloading DLL...", LogCategory::ScriptEngine);
 
 	// デバッグモード時でも再生ごとのリセットを優先するため、Hot Reloadを有効化
 
@@ -1454,12 +1443,9 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		// デバッガが安全にブレイクポイントをバインド（同期）できるように、
 		// アタッチ直後に即座にポーズするのではなく、30フレームだけマネージドコードを通常実行させ、
 		// その後一時的にゲームの実行をポーズ（一時停止）状態にします。
-		// さらに、アタッチ瞬間にデバッガへアセンブリロードイベント(AssemblyLoad)を通知し、
-		// すべてのブレイクポイントを強制バインドさせるため、自動ホットリロードを要求します。
 		debuggerAttachFrameCounter_ = 30;
 		isDebuggerSyncSuccess_ = false; // Sync Skip ポップアップを出し、ポーズ状態の解除を促す
-		isHotReloadRequest_ = true;     // 自動ホットリロードを強制要求
-		Console::Log("[Mono] Debugger newly attached! Triggering automatic HotReload and delaying game suspension (30 frames) for breakpoint binding...", LogCategory::ScriptEngine);
+		Console::Log("[Mono] Debugger newly attached! Delaying game suspension for debugger synchronization (30 frames)...", LogCategory::ScriptEngine);
 	}
 
 	// アタッチ時の同期猶予フレームカウント処理
