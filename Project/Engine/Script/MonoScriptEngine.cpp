@@ -1448,9 +1448,12 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		// デバッガが安全にブレイクポイントをバインド（同期）できるように、
 		// アタッチ直後に即座にポーズするのではなく、30フレームだけマネージドコードを通常実行させ、
 		// その後一時的にゲームの実行をポーズ（一時停止）状態にします。
+		// さらに、アタッチ瞬間にデバッガへアセンブリロードイベント(AssemblyLoad)を通知し、
+		// すべてのブレイクポイントを強制バインドさせるため、自動ホットリロードを要求します。
 		debuggerAttachFrameCounter_ = 30;
 		isDebuggerSyncSuccess_ = false; // Sync Skip ポップアップを出し、ポーズ状態の解除を促す
-		Console::Log("[Mono] Debugger newly attached! Delaying game suspension for debugger synchronization (30 frames)...", LogCategory::ScriptEngine);
+		isHotReloadRequest_ = true;     // 自動ホットリロードを強制要求
+		Console::Log("[Mono] Debugger newly attached! Triggering automatic HotReload and delaying game suspension (30 frames) for breakpoint binding...", LogCategory::ScriptEngine);
 	}
 
 	// アタッチ時の同期猶予フレームカウント処理
