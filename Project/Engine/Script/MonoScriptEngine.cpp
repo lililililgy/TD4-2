@@ -142,7 +142,8 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 					false
 				);
 
-				mono_image_close(image);
+				// logicalDllPath 仮想化時の二重解放バグを防ぐため、imageの明示クローズは行わない
+				// mono_image_close(image);
 
 				if (assembly) {
 					Console::Log("[Mono] Successfully loaded assembly and debug symbols from memory: " + dllPath + " (logical: " + logicalDllPath + ")", LogCategory::ScriptEngine);
