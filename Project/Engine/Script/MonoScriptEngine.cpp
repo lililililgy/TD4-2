@@ -181,9 +181,10 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 		Console::Log("[Mono]   DLL last modified: " + std::string(timeBuf), LogCategory::ScriptEngine);
 	}
 
-	// デバッガがロードできるように、このアセンブリに対応する PDB を固定名 "CSharpLibrary.pdb" として配置する。
-	// アセンブリのロード前に配置することで、デバッガ接続時に最新の PDB を確実にロードさせます。
+	// デバッガがロードできるように、このアセンブリに対応する DLL と PDB を固定名 "CSharpLibrary.dll" / "CSharpLibrary.pdb" として配置する。
+	// アセンブリのロード前に配置することで、デバッガ接続時に最新の DLL と PDB を確実にロードさせます。
 	{
+		std::string latestDllPath = dllPath;
 		std::string latestPdbPath = dllPath;
 		size_t extPos = latestPdbPath.find_last_of('.');
 		if (extPos != std::string::npos) {
@@ -192,7 +193,18 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 			latestPdbPath += ".pdb";
 		}
 
+		std::string targetDllPath = "./Packages/Scripts/CSharpLibrary.dll";
 		std::string targetPdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
+
+		if (std::filesystem::exists(latestDllPath) && latestDllPath != targetDllPath) {
+			try {
+				std::filesystem::copy_file(latestDllPath, targetDllPath, std::filesystem::copy_options::overwrite_existing);
+				Console::Log("[Mono] LoadAssembly: Copied DLL to logical path: " + targetDllPath, LogCategory::ScriptEngine);
+			} catch (const std::exception& e) {
+				Console::LogWarning("[Mono] LoadAssembly: Failed to copy DLL to logical path (it might be locked): " + std::string(e.what()), LogCategory::ScriptEngine);
+			}
+		}
+
 		if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
 			try {
 				std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
