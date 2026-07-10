@@ -1219,6 +1219,14 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 
 void MonoScriptEngine::UpdateDebuggerStatus() {
 #if defined(DEBUG_MODE)
+	// シーン再生中（デバッグ中）は、C#の状態（GCハンドルやオブジェクトインスタンス）が
+	// メモリ上で稼働しており、高速リロードを行うとそれらが全て解放されてクラッシュするため
+	// 自動リロード処理をスキップする。
+	if (ONEngine::DebugConfig::isDebugging) {
+		wasDebuggerAttached_ = mono_is_debugger_attached() ? true : false;
+		return;
+	}
+
 	bool currentAttached = mono_is_debugger_attached() ? true : false;
 	if (currentAttached && !wasDebuggerAttached_) {
 		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints by refreshing AppDomain...", LogCategory::ScriptEngine);
