@@ -364,11 +364,11 @@ void MonoScriptEngine::Initialize() {
 	static std::string debugAgentOptA;
 	static std::wstring debugAgentOptW;
 	debugAgentOptA = waitDebug 
-		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+		? "--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: "--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
 	debugAgentOptW = waitDebug 
-		? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+		? L"--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: L"--debug --debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
 
 	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
 	static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
@@ -389,6 +389,7 @@ void MonoScriptEngine::Initialize() {
 
 	// mono_jit_parse_options にもデバッガオプションを確実に渡す (ポインタが永続メモリを指すようにする)
 	const char* debugOptions[] = {
+		"--debug",
 		"--soft-breakpoints",
 		debugAgentOptA.c_str()
 	};
