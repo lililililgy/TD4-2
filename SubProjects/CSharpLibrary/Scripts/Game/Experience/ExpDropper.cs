@@ -5,7 +5,8 @@ using System.Collections.Generic;
 /// Experience point dropper
 /// Experience point を ExpOrb として ドロップするためのクラス
 /// </summary>
-public class ExpDropper : MonoScript {
+public class ExpDropper : MonoScript
+{
     private const float kSmallOrbExp = 1.0f;
     private const float kMediumOrbExp = 10.0f;
     private const float kLargeOrbExp = 100.0f;
@@ -14,12 +15,20 @@ public class ExpDropper : MonoScript {
     private const string kMediumOrbPrefabName = "ExpOrbMedium";
     private const string kLargeOrbPrefabName = "ExpOrbLarge";
 
+
+    public override void OnDestroy()
+    {
+        Drop();
+    }
+
     /// <summary>
     /// 保持している ExperiencePoint の分だけ ExpOrb をばらまく
     /// </summary>
-    public void Drop() {
+    private void Drop()
+    {
         ExperiencePoint expp = entity.GetScript<ExperiencePoint>();
-        if (expp == null) {
+        if (expp == null)
+        {
             return;
         }
 
@@ -45,16 +54,21 @@ public class ExpDropper : MonoScript {
     /// BoxCollider2D / CircleCollider のどちらも中心オフセットを持たないため、
     /// Entity の位置を中心とみなす
     /// </summary>
-    private void GetSpawnArea(out Vector2 min, out Vector2 max) {
+    private void GetSpawnArea(out Vector2 min, out Vector2 max)
+    {
         Vector2 scale = new Vector2(transform.scale.x, transform.scale.y);
         Vector2 half = Vector2.zero;
 
         BoxCollider2D boxCollider2D = entity.GetComponent<BoxCollider2D>();
-        if (boxCollider2D != null) {
+        if (boxCollider2D != null)
+        {
             half = new Vector2(boxCollider2D.size.x * scale.x, boxCollider2D.size.y * scale.y) * 0.5f;
-        } else {
+        }
+        else
+        {
             CircleCollider circleCollider = entity.GetComponent<CircleCollider>();
-            if (circleCollider != null) {
+            if (circleCollider != null)
+            {
                 half = new Vector2(circleCollider.radius * scale.x, circleCollider.radius * scale.y);
             }
         }
@@ -64,8 +78,10 @@ public class ExpDropper : MonoScript {
         max = center + half;
     }
 
-    private void SpawnOrbs(string prefabName, int count, Vector2 min, Vector2 max) {
-        for (int i = 0; i < count; i++) {
+    private void SpawnOrbs(string prefabName, int count, Vector2 min, Vector2 max)
+    {
+        for (int i = 0; i < count; i++)
+        {
             Entity created = ecsGroup.CreateEntity(prefabName);
             created.transform.position = new Vector3(
                 RandomUtil.RandomRange(min.x, max.x),
