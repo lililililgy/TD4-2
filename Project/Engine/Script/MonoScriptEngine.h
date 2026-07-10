@@ -183,6 +183,12 @@ public:
 	void SetIsHotReloadRequest(bool request);
 	bool GetIsHotReloadRequest() const;
 
+	/// デバッガ接続状態の監視と自動リロード
+	void UpdateDebuggerStatus();
+
+private:
+	bool wasDebuggerAttached_ = false;
+
 };
 
 
