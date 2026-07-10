@@ -42,18 +42,22 @@ try {
     # C++
     Write-Host "C++エンジンプロジェクトの生成中..."
     Push-Location "$PSScriptRoot/Project"
-    powershell -NoProfile -ExecutionPolicy Bypass -File .\GenerateProject.ps1 | Out-Null
+    powershell -NoProfile -ExecutionPolicy Bypass -File .\GenerateProject.ps1
     Pop-Location
 
     # C#
     Write-Host "C#ライブラリプロジェクトの生成中..."
     Push-Location "$PSScriptRoot/SubProjects/CSharpLibrary"
-    powershell -NoProfile -ExecutionPolicy Bypass -File .\GenerateProject_CS.ps1 | Out-Null
+    powershell -NoProfile -ExecutionPolicy Bypass -File .\GenerateProject_CS.ps1
     Pop-Location
 
     Write-Host "プロジェクトファイルの生成が完了しました。" -ForegroundColor Green
 } catch {
-    Write-Error "プロジェクトファイルの生成に失敗しました: $_"
+    Write-Warning "プロジェクトファイルの生成中にエラーが発生しました: $_"
+    Write-Warning "【解決のためのヒント】"
+    Write-Warning "1. すでに Visual Studio でプロジェクトを開いている場合は、一度 Visual Studio を閉じてから再実行してください（ファイルがロックされている可能性があります）。"
+    Write-Warning "2. C#ビルドに必要な '.NET Framework 4.7.2 Developer Pack' がインストールされているか確認してください。"
+    Write-Error "セットアップが中断されました。"
 }
 
 Write-Host "`nセットアップがすべて完了しました！" -ForegroundColor Cyan

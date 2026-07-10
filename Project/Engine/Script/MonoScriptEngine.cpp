@@ -1,3 +1,5 @@
+#include <winsock2.h>
+#pragma comment(lib, "ws2_32.lib")
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
 
@@ -20,6 +22,7 @@ using namespace ONEngine;
 #include <mono/metadata/blob.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/threads.h>
+#include <mono/metadata/image.h>
 
 
 /// engine
@@ -32,6 +35,36 @@ using namespace ONEngine;
 #include "InternalCalls/EventInternalCalls.h"
 
 namespace {
+// デバッグ用ポート競合検知関数
+bool IsDebugPortInUse(unsigned short port) {
+	WSADATA wsaData;
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+		return false;
+	}
+	SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (s == INVALID_SOCKET) {
+		WSACleanup();
+		return false;
+	}
+
+	sockaddr_in addr;
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	addr.sin_port = htons(port);
+
+	bool inUse = false;
+	if (bind(s, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) {
+		int err = WSAGetLastError();
+		if (err == WSAEADDRINUSE) {
+			inUse = true;
+		}
+	}
+
+	closesocket(s);
+	WSACleanup();
+	return inUse;
+}
+
 void LogCallback(const char* log_domain, const char* log_level, const char* message, mono_bool fatal, void*) {
 	const char* domain = log_domain ? log_domain : "null";
 	const char* level = log_level ? log_level : "null";
@@ -52,6 +85,75 @@ void ConsoleLog(MonoString* msg, LogCategory category) {
 
 void ApplicationQuit() {
 	PostQuitMessage(0);
+}
+
+// タイムスタンプ付きのDLL名から論理名(CSharpLibrary.dll)を取得する
+std::string GetLogicalDllPath(const std::string& dllPath) {
+	std::regex tsPattern(R"(CSharpLibrary_\d{8}_\d{6}\.dll)");
+	std::string logicalPath = std::regex_replace(dllPath, tsPattern, "CSharpLibrary.dll");
+	return logicalPath;
+}
+
+MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dllPath) {
+#if defined(DEBUG_MODE)
+	std::string logicalDllPath = GetLogicalDllPath(dllPath);
+
+	std::string pdbPath = dllPath;
+	size_t extPos = pdbPath.find_last_of('.');
+	if (extPos != std::string::npos) {
+		pdbPath = pdbPath.substr(0, extPos) + ".pdb";
+	} else {
+		pdbPath += ".pdb";
+	}
+
+	std::ifstream dllFile(dllPath, std::ios::binary | std::ios::ate);
+	std::ifstream pdbFile(pdbPath, std::ios::binary | std::ios::ate);
+
+	if (dllFile.is_open() && pdbFile.is_open()) {
+		std::streamsize dllSize = dllFile.tellg();
+		dllFile.seekg(0, std::ios::beg);
+		std::vector<char> dllBuffer(dllSize);
+
+		std::streamsize pdbSize = pdbFile.tellg();
+		pdbFile.seekg(0, std::ios::beg);
+		std::vector<char> pdbBuffer(pdbSize);
+
+		if (dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(pdbBuffer.data(), pdbSize)) {
+			MonoImageOpenStatus status = MONO_IMAGE_OK;
+			// DLLデータからMonoImageをオープン (論理パスを報告)
+			MonoImage* image = mono_image_open_from_data_with_name(
+				dllBuffer.data(), 
+				(uint32_t)dllSize, 
+				true, // need_copy
+				&status, 
+				false, // refonly
+				logicalDllPath.c_str()
+			);
+
+			if (image && status == MONO_IMAGE_OK) {
+				// アセンブリロードの前にデバッグ情報を登録
+				mono_debug_open_image_from_memory(image, (const mono_byte*)pdbBuffer.data(), (int)pdbSize);
+				
+				// ImageからAssemblyをロード (論理パスを報告)
+				MonoAssembly* assembly = mono_assembly_load_from_full(
+					image,
+					logicalDllPath.c_str(),
+					&status,
+					false
+				);
+
+				mono_image_close(image);
+
+				if (assembly) {
+					Console::Log("[Mono] Successfully loaded assembly and debug symbols from memory: " + dllPath + " (logical: " + logicalDllPath + ")", LogCategory::ScriptEngine);
+					return assembly;
+				}
+			}
+		}
+	}
+	Console::LogWarning("[Mono] Failed to load assembly from memory with symbols. Falling back to file load: " + dllPath, LogCategory::ScriptEngine);
+#endif
+	return mono_domain_assembly_open(domain, dllPath.c_str());
 }
 
 std::string GetUtf8Path(const std::filesystem::path& path) {
@@ -78,36 +180,99 @@ MonoScriptEngine& MonoScriptEngine::GetInstance() {
 }
 
 void MonoScriptEngine::Initialize() {
-
-	std::wstring monoBin = std::filesystem::absolute("Packages/mono/bin").wstring();
-	std::wstring newPathEnv = monoBin + L";C:\\Windows\\System32";
-	SetEnvironmentVariableW(L"PATH", newPathEnv.c_str());
-
-	std::wstring monoLib = std::filesystem::absolute("Packages/mono/lib/4.5").wstring();
-	SetEnvironmentVariableW(L"MONO_PATH", monoLib.c_str());
-
-#if defined(DEBUG_MODE)
-	/// デバッグモード用のオプション設定 (環境変数を使用せず、直接Soft Debuggerオプションをパースして確実に起動)
-	// デフォルトではアタッチ待ち (suspend) を行わず即時起動するが、
-	// 引数に --wait-dbg が明示的に指定された場合のみ接続待ちを行う
-	bool waitDebug = false;
-	LPWSTR cmdLine = GetCommandLineW();
-	if (cmdLine && wcsstr(cmdLine, L"--wait-dbg") != nullptr) {
-		waitDebug = true;
+	Console::Log("[Mono] Building C# project...", LogCategory::ScriptEngine);
+	std::string buildOutput;
+	bool buildSuccess = BuildCSharpProject(buildOutput);
+	if (buildSuccess) {
+		Console::Log("[Mono] C# project built successfully.", LogCategory::ScriptEngine);
+	} else {
+		Console::LogError("[Mono] C# project build failed!\n" + buildOutput, LogCategory::ScriptEngine);
 	}
 
+	// PATH 設定 (OSレベルA/W & CRTレベルA/W) - staticにしてメモリを永続化
+	static std::string monoBinA = std::filesystem::absolute("Packages/mono/bin").string();
+	static std::wstring monoBinW = std::filesystem::absolute("Packages/mono/bin").wstring();
+	static std::string pathEnvA = "PATH=" + monoBinA + ";C:\\Windows\\System32";
+	static std::wstring pathEnvW = L"PATH=" + monoBinW + L";C:\\Windows\\System32";
+	SetEnvironmentVariableA("PATH", (monoBinA + ";C:\\Windows\\System32").c_str());
+	SetEnvironmentVariableW(L"PATH", (monoBinW + L";C:\\Windows\\System32").c_str());
+	_putenv(pathEnvA.c_str());
+	_wputenv(pathEnvW.c_str());
+
+	// MONO_PATH 設定 (OSレベルA/W & CRTレベルA/W) - staticにしてメモリを永続化
+	static std::string monoLibA = std::filesystem::absolute("Packages/mono/lib/4.5").string();
+	static std::wstring monoLibW = std::filesystem::absolute("Packages/mono/lib/4.5").wstring();
+	static std::string monoPathEnvA = "MONO_PATH=" + monoLibA;
+	static std::wstring monoPathEnvW = L"MONO_PATH=" + monoLibW;
+	SetEnvironmentVariableA("MONO_PATH", monoLibA.c_str());
+	SetEnvironmentVariableW(L"MONO_PATH", monoLibW.c_str());
+	_putenv(monoPathEnvA.c_str());
+	_wputenv(monoPathEnvW.c_str());
+
+#if defined(DEBUG_MODE)
+	// Monoの診断ログ出力を詳細化 - staticにしてメモリを永続化
+	static std::string logEnv1 = "MONO_LOG_LEVEL=debug";
+	static std::string logEnv2 = "MONO_LOG_MASK=asm,dll,gc,cfg";
+	SetEnvironmentVariableA("MONO_LOG_LEVEL", "debug");
+	_putenv(logEnv1.c_str());
+	SetEnvironmentVariableA("MONO_LOG_MASK", "asm,dll,gc,cfg");
+	_putenv(logEnv2.c_str());
+
+	// デバッグシーケンスポイント生成を強化 - staticにしてメモリを永続化
+	static std::string debugEnv1 = "MONO_DEBUG=gen-compact-seq-points";
+	SetEnvironmentVariableA("MONO_DEBUG", "gen-compact-seq-points");
+	_putenv(debugEnv1.c_str());
+
+	/// デバッグモード用のオプション設定
+	bool waitDebug = true;
+	LPWSTR cmdLine = GetCommandLineW();
+	if (cmdLine && wcsstr(cmdLine, L"--test-mode") != nullptr) {
+		waitDebug = false;
+	}
+
+	// ポートが既に他のプロセスに占有されているか事前に競合検知
+	if (waitDebug && IsDebugPortInUse(55555)) {
+		Console::LogError("[Mono] WARNING: Debugger port 55555 is ALREADY IN USE by another process! Mono Debugger binding may fail.", LogCategory::ScriptEngine);
+	}
+
+	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
+	static std::string debugAgentOptA;
+	static std::wstring debugAgentOptW;
+	debugAgentOptA = waitDebug 
+		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+	debugAgentOptW = waitDebug 
+		? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+		: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+
+	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
+	static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
+	static std::wstring monoEnvOptW = L"MONO_ENV_OPTIONS=" + debugAgentOptW;
+	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
+	SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", debugAgentOptW.c_str());
+	_putenv(monoEnvOptA.c_str());
+	_wputenv(monoEnvOptW.c_str());
+
+	static std::string monoOptA = "MONO_OPTIONS=" + debugAgentOptA;
+	static std::wstring monoOptW = L"MONO_OPTIONS=" + debugAgentOptW;
+	SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
+	SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str());
+	_putenv(monoOptA.c_str());
+	_wputenv(monoOptW.c_str());
+
+	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
+
+	// mono_jit_parse_options にもデバッガオプションを確実に渡す (ポインタが永続メモリを指すようにする)
 	const char* debugOptions[] = {
 		"--soft-breakpoints",
-		waitDebug 
-			? "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=y"
-			: "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555,server=y,suspend=n"
+		debugAgentOptA.c_str()
 	};
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 #else
-	/// 高速化用オプション (argv[0]としてダミーを配置)
+	Console::Log("[Mono] Non-Debug Mode: Debugger Disabled (suspend=n)", LogCategory::ScriptEngine);
+	/// 高速化用オプション
 	const char* options[] = {
-		"ONEngine",
 		"--optimize=all",   // JIT最適化フル
 	};
 	mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**)options);
@@ -133,6 +298,11 @@ void MonoScriptEngine::Initialize() {
 		return;
 	}
 
+#if defined(DEBUG_MODE)
+	// ルートドメイン用のデバッグ情報を登録
+	mono_debug_domain_create(rootDomain_);
+#endif
+
 	// デバッグモード時でも、再生ごとのC#状態リセットを確実にするため、
 	// AppDomainを常に再作成するように変更
 	domain_ = CreateReloadDomain();
@@ -149,7 +319,7 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	currentDllPath_ = GetUtf8Path(*latestDll);
-	assembly_ = mono_domain_assembly_open(domain_, currentDllPath_.c_str());
+	assembly_ = LoadAssemblyWithSymbols(domain_, currentDllPath_);
 	if(!assembly_) {
 		Console::LogError("Failed to load CSharpLibrary.dll", LogCategory::ScriptEngine);
 		return;
@@ -240,6 +410,15 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
+	Console::Log("[Mono] HotReload: Rebuilding C# project...", LogCategory::ScriptEngine);
+	std::string buildOutput;
+	bool buildSuccess = BuildCSharpProject(buildOutput);
+	if (!buildSuccess) {
+		Console::LogError("[Mono] HotReload: C# project build failed! Reload aborted.\n" + buildOutput, LogCategory::ScriptEngine);
+		return;
+	}
+	Console::Log("[Mono] HotReload: C# project built successfully. Reloading DLL...", LogCategory::ScriptEngine);
+
 	// デバッグモード時でも再生ごとのリセットを優先するため、Hot Reloadを有効化
 
 	MonoDomain* oldDomain = domain_;
@@ -289,7 +468,7 @@ void MonoScriptEngine::HotReload() {
 		}
 	}
 
-	assembly_ = mono_domain_assembly_open(domain_, utf8DllPath.c_str());
+	assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath);
 	if(!assembly_) {
 		Console::LogError("Failed to load assembly in new domain", LogCategory::ScriptEngine);
 		mono_domain_set(oldDomain, true);
@@ -298,6 +477,7 @@ void MonoScriptEngine::HotReload() {
 		return;
 	}
 
+	currentDllPath_ = utf8DllPath;
 	image_ = mono_assembly_get_image(assembly_);
 	RegisterFunctions();
 
@@ -600,6 +780,11 @@ MonoDomain* MonoScriptEngine::CreateReloadDomain() {
 		Console::LogError("Failed to create Mono domain for hot reload: " + domainName, LogCategory::ScriptEngine);
 		return nullptr;
 	}
+
+#if defined(DEBUG_MODE)
+	// ホットリロード時の新しいドメイン用のデバッグ情報を登録
+	mono_debug_domain_create(domain);
+#endif
 
 	return domain;
 }
@@ -949,3 +1134,85 @@ MonoObject* ONEngine::MonoScriptEngineUtils::SafeInvoke(MonoMethod* method, void
 
 	return nullptr;
 }
+
+bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
+	std::wstring config = L"Debug";
+#if !defined(DEBUG_MODE)
+	config = L"Release";
+#endif
+
+	std::wstring cmd = L"dotnet build \"../SubProjects/CSharpLibrary/CSharpLibrary.csproj\" -c " + config + L" -p:Platform=x64";
+
+	HANDLE hReadPipe, hWritePipe;
+	SECURITY_ATTRIBUTES saAttr;
+	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+	saAttr.bInheritHandle = TRUE;
+	saAttr.lpSecurityDescriptor = NULL;
+
+	if (!CreatePipe(&hReadPipe, &hWritePipe, &saAttr, 0)) {
+		outMessage = "Failed to create pipe for dotnet build.";
+		return false;
+	}
+
+	if (!SetHandleInformation(hReadPipe, HANDLE_FLAG_INHERIT, 0)) {
+		outMessage = "Failed to set handle information.";
+		CloseHandle(hReadPipe);
+		CloseHandle(hWritePipe);
+		return false;
+	}
+
+	STARTUPINFOW si;
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	si.hStdError = hWritePipe;
+	si.hStdOutput = hWritePipe;
+	si.dwFlags |= STARTF_USESTDHANDLES;
+
+	ZeroMemory(&pi, sizeof(pi));
+
+	std::vector<wchar_t> cmdBuffer(cmd.begin(), cmd.end());
+	cmdBuffer.push_back(L'\0');
+
+	BOOL success = CreateProcessW(
+		NULL,
+		cmdBuffer.data(),
+		NULL,
+		NULL,
+		TRUE,
+		CREATE_NO_WINDOW,
+		NULL,
+		NULL,
+		&si,
+		&pi
+	);
+
+	CloseHandle(hWritePipe);
+
+	if (!success) {
+		outMessage = "dotnet command not found or failed to execute. Please ensure .NET SDK is installed.";
+		CloseHandle(hReadPipe);
+		return false;
+	}
+
+	std::string output;
+	char buffer[4096];
+	DWORD bytesRead;
+	while (ReadFile(hReadPipe, buffer, sizeof(buffer) - 1, &bytesRead, NULL) && bytesRead > 0) {
+		buffer[bytesRead] = '\0';
+		output += buffer;
+	}
+
+	WaitForSingleObject(pi.hProcess, INFINITE);
+
+	DWORD exitCode = 0;
+	GetExitCodeProcess(pi.hProcess, &exitCode);
+
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+	CloseHandle(hReadPipe);
+
+	outMessage = output;
+	return (exitCode == 0);
+}
+

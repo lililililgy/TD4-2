@@ -1,0 +1,141 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -2032.0811767578125,
+                "y": -819.39013671875,
+                "z": 1.4156103134155273e-06
+            },
+            "rotate": {
+                "w": 1.401298464324817e-45,
+                "x": -0.9018186926841736,
+                "y": -0.43211472034454346,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 128.14437866210938,
+                "y": 128.14437866210938,
+                "z": 128.14437866210938
+            },
+            "type": "Transform"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 7,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "FlapjackOctopus": {
+                "chargeScaleAnimationTime": 0.5,
+                "chargeScaleRate": 0.800000011920929,
+                "chargeTime": 0.30000001192092896,
+                "chaseDrag": 1.5,
+                "chaseInterval": 0.4000000059604645,
+                "chasePower": 821.0,
+                "chaseScaleAnimationCount": 5,
+                "chaseScaleAnimationTime": 0.5,
+                "chaseScaleRate": 1.100000023841858,
+                "chaseTime": 0.5,
+                "enable": true,
+                "inertiaStopRatio": 0.10000000149011612,
+                "targetEntityName": "Player"
+            },
+            "HP": {
+                "currentHp_": 11.214211463928223,
+                "directlyDamageable_": true,
+                "disableAutoDestruction_": false,
+                "enable": true,
+                "isInvincible_": false,
+                "maxHp_": 20.0
+            },
+            "SpriteAnimation": {
+                "cols": 4,
+                "enable": true,
+                "endFrame": 1,
+                "fps": 6.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 0
+            },
+            "TargetRangeDetector": {
+                "OnEnter": {
+                    "__type": "Action"
+                },
+                "OnExit": {
+                    "__type": "Action"
+                },
+                "enable": true,
+                "range": 800.0,
+                "targetEntityName": "Player"
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                },
+                {
+                    "enable": true,
+                    "name": "TargetRangeDetector"
+                },
+                {
+                    "enable": true,
+                    "name": "FlapjackOctopus"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": true,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "bc43ebeecc01bf4f11a8b9876f74a526",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.25,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 0.25,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "283f24dc7a6b47e29a6b5efa56a182c8",
+    "name": "FlapjackOctopus",
+    "parentGuid": null,
+    "prefabName": "FlapjackOctopus"
+}

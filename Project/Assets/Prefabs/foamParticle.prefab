@@ -7,7 +7,7 @@
             "position": {
                 "x": 0.0,
                 "y": -640.0,
-                "z": 0.0
+                "z": 10.0
             },
             "rotate": {
                 "w": 0.0,
@@ -29,7 +29,20 @@
             "colorOverLifetime": {
                 "color": {
                     "gradient": {
-                        "alphaKeys": [],
+                        "alphaKeys": [
+                            {
+                                "alpha": 1.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0
+                            },
+                            {
+                                "alpha": 0.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0
+                            }
+                        ],
                         "colorKeys": []
                     },
                     "gradientMax": {
@@ -42,13 +55,13 @@
                     },
                     "state": 0
                 },
-                "enabled": false
+                "enabled": true
             },
             "emission": {
                 "bursts": [],
                 "enabled": true,
                 "rateOverDistance": 0.0,
-                "rateOverTime": 5.0
+                "rateOverTime": 2.0
             },
             "enable": 1,
             "main": {
@@ -113,6 +126,7 @@
             },
             "renderer": {
                 "blendMode": 1,
+                "flipMode": 0,
                 "materialGuid": "9fff9b5634a388277ce329c2e4c373b6",
                 "meshGuid": "",
                 "renderMode": 0
@@ -140,21 +154,31 @@
                     "curveMax": {
                         "keys": [
                             {
-                                "time": 5.0,
-                                "value": 50.0
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 10.0
                             }
                         ]
                     },
                     "curveMin": {
                         "keys": [
                             {
-                                "time": 5.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
                                 "value": 20.0
                             }
                         ]
                     },
                     "state": 3
                 }
+            },
+            "textureSheetAnimation": {
+                "enabled": false,
+                "fps": 12.0,
+                "tilesX": 1,
+                "tilesY": 1
             },
             "type": "ParticleSystem2D",
             "velocityOverLifetime": {
@@ -181,6 +205,8 @@
                     "curveMax": {
                         "keys": [
                             {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 1.0,
                                 "value": 100.0
                             }
@@ -189,6 +215,8 @@
                     "curveMin": {
                         "keys": [
                             {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 1.0,
                                 "value": -50.0
                             }
@@ -204,6 +232,8 @@
                     "curveMax": {
                         "keys": [
                             {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 1.0,
                                 "value": 300.0
                             }
@@ -212,6 +242,8 @@
                     "curveMin": {
                         "keys": [
                             {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
                                 "time": 1.0,
                                 "value": 50.0
                             }
@@ -235,7 +267,7 @@
             }
         }
     ],
-    "guid": "b7981eb9fb89dc6246d236ba939af76b",
+    "guid": "1c89285e96e659c38e8e19657db74bd3",
     "name": "foamParticle",
     "parentGuid": null,
     "prefabName": ""

@@ -23,6 +23,17 @@
             "type": "Transform"
         },
         {
+            "SpriteAnimation": {
+                "cols": 2,
+                "endFrame": 3,
+                "fps": 3.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 3
+            },
             "type": "Variables"
         },
         {
@@ -52,6 +63,16 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "ebf2d940080d3eac27e57a59dbc55a42",

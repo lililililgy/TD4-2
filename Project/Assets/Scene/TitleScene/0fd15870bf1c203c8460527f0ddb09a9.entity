@@ -13,7 +13,7 @@
                 "w": 0.9999904632568359,
                 "x": 0.0,
                 "y": 0.0,
-                "z": -0.004363309126347303
+                "z": -0.004363308660686016
             },
             "scale": {
                 "x": -100.0,
@@ -23,6 +23,17 @@
             "type": "Transform"
         },
         {
+            "SpriteAnimation": {
+                "cols": 2,
+                "endFrame": 4,
+                "fps": 2.299999952316284,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 4
+            },
             "type": "Variables"
         },
         {
@@ -52,6 +63,16 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "0fd15870bf1c203c8460527f0ddb09a9",
