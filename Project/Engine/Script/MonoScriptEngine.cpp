@@ -26,6 +26,7 @@ using namespace ONEngine;
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/threads.h>
 #include <mono/metadata/image.h>
+#include <mono/metadata/mono-gc.h>
 
 
 /// engine
