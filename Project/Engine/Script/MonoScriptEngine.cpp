@@ -1327,8 +1327,11 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 				Console::LogError("[Mono] Failed to reload assembly for debugger sync.", LogCategory::ScriptEngine);
 			}
 		} else {
+			// 再生中に接続された場合は、クラッシュを防ぐため高速リロードはスキップするが、
+			// デバッガが安全にブレイクポイントを同期（バインド）できるように、ゲーム実行を一時停止（ポーズ）する
+			DebugConfig::isPause = true;
 			isDebuggerSyncSuccess_ = false;
-			Console::LogWarning("[Mono] Debugger newly attached during gameplay. Fast reload skipped to prevent crash. Please detach and re-attach outside of gameplay to enable breakpoints.", LogCategory::ScriptEngine);
+			Console::LogWarning("[Mono] Debugger newly attached during gameplay. Fast reload skipped to prevent crash. Game execution suspended for debugger synchronization.", LogCategory::ScriptEngine);
 		}
 	}
 	wasDebuggerAttached_ = currentAttached;

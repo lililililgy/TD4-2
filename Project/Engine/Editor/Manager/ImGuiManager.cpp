@@ -742,8 +742,9 @@ void ImGuiManager::Update() {
 			ImGui::Text("Breakpoints are now synchronized and active.");
 		} else {
 			ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), "Mono Debugger Attached (Sync Skipped)");
-			ImGui::Text("The debugger attached during gameplay.");
-			ImGui::Text("Breakpoints might NOT hit. Please detach and re-attach outside of gameplay.");
+			ImGui::Text("The debugger attached during gameplay. Fast reload skipped to prevent crash.");
+			ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Game execution has been PAUSED to safely sync breakpoints.");
+			ImGui::Text("Please close this popup and resume gameplay (unpause) in the editor.");
 		}
 		ImGui::Separator();
 		if (ImGui::Button("OK", ImVec2(120, 0))) {
