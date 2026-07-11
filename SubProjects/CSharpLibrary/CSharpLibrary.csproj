@@ -167,11 +167,7 @@
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Game\Background\Cloud.cs" />
     <Compile Include="Scripts\Game\Background\CloudManager.cs" />
-    <Compile Include="Scripts\Game\Boss\GesoHand.cs" />
-    <Compile Include="Scripts\Game\Boss\GesoWeakPoint.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGeso.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGesoHomingProjectile.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGesoState.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingProjectile.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHandAttackCommand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoWeakPoint.cs" />

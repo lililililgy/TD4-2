@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 /// <summary>
 /// キングゲソの状態(基底クラス)
 /// </summary>
