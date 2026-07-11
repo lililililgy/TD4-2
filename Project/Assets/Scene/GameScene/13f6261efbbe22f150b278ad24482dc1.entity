@@ -1,0 +1,86 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 24000.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1000.0,
+                "y": 250.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "BiomeArea": {
+                "halfExtents_": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "spawnTable_": [
+                    {
+                        "__type": "SpawnEntry",
+                        "enemyType": "MorayEelPot",
+                        "weight": 6.0
+                    }
+                ]
+            },
+            "MovementArea": {
+                "fixedCollisionBounds_": true,
+                "max_": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "min_": {
+                    "x": 0.0,
+                    "y": 0.0
+                }
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "BiomeArea"
+                },
+                {
+                    "enable": true,
+                    "name": "MovementArea"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 0,
+            "mass": 1.0,
+            "size": {
+                "x": 64.0,
+                "y": 64.0
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "13f6261efbbe22f150b278ad24482dc1",
+    "name": "SkyZone",
+    "parentGuid": null,
+    "prefabName": ""
+}

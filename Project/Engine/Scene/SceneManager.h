@@ -62,6 +62,14 @@ public:
 	/// @param sceneName シーンの名前
 	void LoadScene(const std::string& sceneName);
 
+	/// @brief シーンを追加で読み込む
+	/// @param sceneName シーンの名前
+	void AddScene(const std::string& sceneName);
+
+	/// @brief シーンをアンロードする
+	/// @param sceneName シーンの名前
+	void UnloadScene(const std::string& sceneName);
+
 	/// @brief 現在のシーンをリロードする
 	/// @param isTemporary 一時的なシーンかどうか
 	void ReloadScene(bool isTemporary);
@@ -104,6 +112,7 @@ private:
 
 	std::string currentScene_;
 	std::string nextScene_;
+	bool isNextSceneAdditive_ = false;
 
 	bool isDirty_ = false;
 
@@ -118,6 +127,16 @@ public:
 
 	/// @brief 現在のシーン名を取得する
 	const std::string& GetCurrentSceneName() const;
+
+	/// @brief シーンの更新を一時停止するかどうかを設定する
+	void SetUpdatePaused(const std::string& sceneName, bool paused);
+	/// @brief シーンの更新が一時停止しているかどうかを取得する
+	bool IsUpdatePaused(const std::string& sceneName);
+
+	/// @brief シーンの描画を一時停止するかどうかを設定する
+	void SetDrawPaused(const std::string& sceneName, bool paused);
+	/// @brief シーンの描画が一時停止しているかどうかを取得する
+	bool IsDrawPaused(const std::string& sceneName);
 };
 
 
@@ -125,6 +144,12 @@ public:
 namespace MonoInternalMethods {
 
 void InternalLoadScene(MonoString* sceneName);
+void InternalAddScene(MonoString* sceneName);
+void InternalUnloadScene(MonoString* sceneName);
+void InternalSetUpdatePaused(MonoString* sceneName, bool paused);
+bool InternalIsUpdatePaused(MonoString* sceneName);
+void InternalSetDrawPaused(MonoString* sceneName, bool paused);
+bool InternalIsDrawPaused(MonoString* sceneName);
 }
 
 } /// ONEngine

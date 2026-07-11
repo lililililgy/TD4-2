@@ -1,9 +1,44 @@
 {
     "entities": [
         {
-            "guid": "beeedc47829ff49d80f60500b274b265",
+            "guid": "34553175e0a4c30f36960fb684247eed",
             "parentGuid": null,
-            "path": "./Debug/beeedc47829ff49d80f60500b274b265.entity"
+            "path": "./Debug/34553175e0a4c30f36960fb684247eed.entity"
+        },
+        {
+            "guid": "619b46bd9b63819f892a38013d5d5740",
+            "parentGuid": null,
+            "path": "./Debug/619b46bd9b63819f892a38013d5d5740.entity"
+        },
+        {
+            "guid": "47f7611b5b4ac502838916dffcf70e2d",
+            "parentGuid": "619b46bd9b63819f892a38013d5d5740",
+            "path": "./Debug/47f7611b5b4ac502838916dffcf70e2d.entity"
+        },
+        {
+            "guid": "d22390f74a81c5e05310ad072ffabbca",
+            "parentGuid": "619b46bd9b63819f892a38013d5d5740",
+            "path": "./Debug/d22390f74a81c5e05310ad072ffabbca.entity"
+        },
+        {
+            "guid": "a0e65fa1739efe4cad84dd6a0268ddbb",
+            "parentGuid": null,
+            "path": "./Debug/a0e65fa1739efe4cad84dd6a0268ddbb.entity"
+        },
+        {
+            "guid": "15025795e1df1b3a881d742c39afcc8d",
+            "parentGuid": null,
+            "path": "./Debug/15025795e1df1b3a881d742c39afcc8d.entity"
+        },
+        {
+            "guid": "0f23626149d254101fb06e6ef52329a5",
+            "parentGuid": null,
+            "path": "./Debug/0f23626149d254101fb06e6ef52329a5.entity"
+        },
+        {
+            "guid": "9fc99e8a3a4bc9a189d5dc100787ae31",
+            "parentGuid": "0f23626149d254101fb06e6ef52329a5",
+            "path": "./Debug/9fc99e8a3a4bc9a189d5dc100787ae31.entity"
         }
     ]
 }

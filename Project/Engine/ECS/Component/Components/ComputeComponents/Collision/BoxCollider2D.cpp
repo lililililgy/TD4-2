@@ -102,12 +102,26 @@ void ONEngine::from_json(const nlohmann::json& j, BoxCollider2D& b) {
 	b.useOwnerScale_ = j.value("useOwnerScale", true);
 	b.freezeY_ = j.value("freezeY", false);
 	b.mass_ = j.value("mass", 1.0f);
-	b.collisionState_ = magic_enum::enum_cast<CollisionState>(j.value("state", "Dynamic")).value_or(CollisionState::Dynamic);
+
+	if (j.contains("state")) {
+		if (j["state"].is_string()) {
+			b.collisionState_ = magic_enum::enum_cast<CollisionState>(j["state"].get<std::string>()).value_or(CollisionState::Dynamic);
+		} else if (j["state"].is_number()) {
+			b.collisionState_ = static_cast<CollisionState>(j["state"].get<int>());
+		} else {
+			b.collisionState_ = CollisionState::Dynamic;
+		}
+	} else {
+		b.collisionState_ = CollisionState::Dynamic;
+	}
+
 	b.categoryBits_ = j.value("categoryBits", static_cast<uint32_t>(CollisionFilter::Default));
 	b.maskBits_ = j.value("maskBits", static_cast<uint32_t>(CollisionFilter::ALL));
 }
 
 void ONEngine::to_json(nlohmann::json& j, const BoxCollider2D& b) {
+	auto stateName = magic_enum::enum_name(b.collisionState_);
+	std::string stateStr = stateName.empty() ? "Dynamic" : std::string(stateName);
 	j = nlohmann::json{
 		{ "type", "BoxCollider2D" },
 		{ "enable", b.enable },
@@ -116,7 +130,7 @@ void ONEngine::to_json(nlohmann::json& j, const BoxCollider2D& b) {
 		{ "useOwnerScale", b.IsUseOwnerScale() },
 		{ "freezeY", b.freezeY_ },
 		{ "mass", b.mass_ },
-		{ "state", magic_enum::enum_name(b.collisionState_) },
+		{ "state", stateStr },
 		{ "categoryBits", b.categoryBits_ },
 		{ "maskBits", b.maskBits_ }
 	};
@@ -134,42 +148,4 @@ const Vector2& BoxCollider2D::GetSize() const {
 	return size_;
 }
 
-Vector2 ONEngine::InternalGetSizeBox2D(uint64_t nativeHandle) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	return c ? c->GetSize() : Vector2::Zero;
-}
 
-void ONEngine::InternalSetSizeBox2D(uint64_t nativeHandle, Vector2 size) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	if(c) c->SetSize(size);
-}
-
-bool ONEngine::InternalIsTriggerBox2D(uint64_t nativeHandle) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	return c ? c->IsTrigger() : false;
-}
-
-void ONEngine::InternalSetTriggerBox2D(uint64_t nativeHandle, bool trigger) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	if(c) c->SetTrigger(trigger);
-}
-
-float ONEngine::InternalGetMassBox2D(uint64_t nativeHandle) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	return c ? c->GetMass() : 1.0f;
-}
-
-void ONEngine::InternalSetMassBox2D(uint64_t nativeHandle, float mass) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	if(c) c->SetMass(mass);
-}
-
-bool ONEngine::InternalIsUseOwnerScaleBox2D(uint64_t nativeHandle) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	return c ? c->IsUseOwnerScale() : true;
-}
-
-void ONEngine::InternalSetUseOwnerScaleBox2D(uint64_t nativeHandle, bool use) {
-	BoxCollider2D* c = reinterpret_cast<BoxCollider2D*>(nativeHandle);
-	if(c) c->SetUseOwnerScale(use);
-}

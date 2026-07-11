@@ -20,11 +20,25 @@ public class RoeStateComponent : MonoScript {
     public override void Initialize() {
         currentState_ = RoeState.UNMATURE;
         ApplyScale(minScale_);
+
+        SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
+        if (spriteRenderer) {
+            UVTransform uVTransform = spriteRenderer.uvTransform;
+            uVTransform.position = new Vector2(0.5f, 0.5f);
+
+            spriteRenderer.uvTransform = uVTransform;
+        }
     }
 
     public override void Update() {
         // 成長するのは UNMATURE のときだけ。MATURE/LARVAE は遷移待ち。
         if (currentState_ != RoeState.UNMATURE) {
+            if (currentState_ == RoeState.LARVAE) {
+                SpriteAnimation spriteAnimation = entity.GetScript<SpriteAnimation>();
+                if (spriteAnimation) {
+                    spriteAnimation.Play(); // 幼生はアニメーションしない
+                }
+            }
             ApplyScale(maxScale_);
             return;
         }

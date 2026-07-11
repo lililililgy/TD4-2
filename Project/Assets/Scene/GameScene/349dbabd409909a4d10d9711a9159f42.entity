@@ -1,5 +1,5 @@
 {
-    "active": true,
+    "active": false,
     "components": [
         {
             "enable": 1,
@@ -27,6 +27,7 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 0.34299999475479126,

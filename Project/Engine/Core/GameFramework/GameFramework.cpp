@@ -1,10 +1,14 @@
 #include "GameFramework.h"
 #include "DebugSceneGenerator.h"
+#include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
+#include "Engine/Core/Utility/Tools/Assert.h"
 
 using namespace ONEngine;
 
 /// std
 #include <chrono>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 
 /// engine
@@ -15,25 +19,42 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
 #include "Engine/Core/Threading/ThreadPool.h"
 #include "Engine/Core/Event/FrameEventQueue.h"
+#include "Engine/ECS/System/Audio/AudioPlaybackSystem.h"
 
 GameFramework::GameFramework() {}
 GameFramework::~GameFramework() {
 	/// gpuの処理が終わるまで待つ
 	dxManager_->GetDxCommand()->WaitForGpuComplete();
 
+	/// シーン再生中なら停止処理を行う
+	if (DebugConfig::isDebugging) {
+		DebugConfig::isDebugging = false;
+		if (sceneManager_) {
+			sceneManager_->ReloadScene(true);
+			sceneManager_->ClearTemporarySavedSceneName();
+		}
+	}
+
 	/// debug用のシーンを保存
 	if (sceneManager_ && entityComponentSystem_) {
 		sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
 	}
 
+	// ライフサイクルの依存関係を解決するため、明示的に先に破棄
+	editorManager_.reset();
+	imGuiManager_->Finalize();
+	imGuiManager_.reset();
+
+	// ECSの破棄前にMonoScriptEngineをFinalizeしてC#側のラッパーをクリーンアップ
 	MonoScriptEngine::GetInstance().Finalize();
+
+	entityComponentSystem_.reset();
 
 	Time::Finalize();
 	Input::Finalize();
 	Console::Finalize();
 	ThreadPool::Instance().Shutdown();
 
-	imGuiManager_->Finalize();
 	/// engineの終了処理
 	windowManager_->Finalize();
 }
@@ -45,6 +66,9 @@ void GameFramework::Initialize(const GameFrameworkConfig& startSetting) {
 
 	/// ログ出力の初期化
 	Console::Initialize();
+
+	/// エンジン設定のロード
+	EngineConfig::LoadConfig();
 
 	CreateSubsystems();
 	InitializeCore(startSetting);
@@ -106,10 +130,19 @@ void GameFramework::InitializeECS() {
 
 	/// scene managerの初期化
 	sceneManager_->Initialize(renderingFramework_->GetAssetCollection());
-	LoadDebugScene();
+	if (EngineConfig::isTestMode && !EngineConfig::testScene.empty()) {
+		sceneManager_->GetSceneIO()->Input(EngineConfig::testScene, entityComponentSystem_->GetECSGroup("Debug"));
+	} else {
+		LoadDebugScene();
+	}
+
+	if (EngineConfig::isTestMode) {
+		DebugConfig::isDebugging = true;
+		DebugConfig::isPause = false;
+	}
 }
 
-void GameFramework::InitializeEditor(const GameFrameworkConfig& config) {
+void GameFramework::InitializeEditor(const GameFrameworkConfig& /*config*/) {
 #ifdef DEBUG_MODE
 	imGuiManager_->Initialize(renderingFramework_->GetAssetCollection());
 	imGuiManager_->SetImGuiWindow(windowManager_->GetMainWindow());
@@ -147,6 +180,57 @@ void GameFramework::Update() {
 	Input::Update();
 	Time::Update();
 
+	if (EngineConfig::isTestMode) {
+		static int testFrameCount = 0;
+		testFrameCount++;
+
+		if (EngineConfig::testScene == "PostEffectTest" && testFrameCount == 60) {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("GameScene");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'GameScene' should not be null");
+			if (ecsGroup) {
+				auto* tagArray = ecsGroup->GetComponentArray<ScreenPostEffectTag>();
+				ONEngine::Assert(tagArray != nullptr, "ScreenPostEffectTag component array should exist in GameScene");
+				if (tagArray && !tagArray->GetUsedComponents().empty()) {
+					ScreenPostEffectTag* tag = nullptr;
+					for (auto* comp : tagArray->GetUsedComponents()) {
+						if (comp && comp->enable) {
+							tag = comp;
+							break;
+						}
+					}
+					ONEngine::Assert(tag != nullptr, "Active ScreenPostEffectTag should exist in GameScene");
+					if (tag) {
+						bool isFisheyeEnabled = tag->GetPostEffectEnable(PostEffectType_Fisheye);
+						bool isWaterDistortionEnabled = tag->GetPostEffectEnable(PostEffectType_WaterDistortion);
+						bool isWaterCausticsEnabled = tag->GetPostEffectEnable(PostEffectType_WaterCausticsLightShafts);
+						bool isWaterColorGradingEnabled = tag->GetPostEffectEnable(PostEffectType_WaterColorGrading);
+						bool isWaterDepthFogEnabled = tag->GetPostEffectEnable(PostEffectType_WaterDepthFogVignette);
+
+						ONEngine::Assert(isFisheyeEnabled, "Fisheye posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterDistortionEnabled, "WaterDistortion posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterCausticsEnabled, "WaterCaustics posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterColorGradingEnabled, "WaterColorGrading posteffect should still be enabled in GameScene");
+						ONEngine::Assert(isWaterDepthFogEnabled, "WaterDepthFog posteffect should still be enabled in GameScene");
+					}
+				}
+			}
+		}
+
+		if (testFrameCount >= EngineConfig::testDuration) {
+			nlohmann::json results;
+			results["success"] = true;
+			results["message"] = "Test duration reached without assertion failures.";
+			results["frames"] = testFrameCount;
+			std::ofstream ofs(EngineConfig::testOutputPath);
+			if (ofs.is_open()) {
+				ofs << results.dump(4);
+				ofs.close();
+			}
+			PostQuitMessage(0);
+			exit(0);
+		}
+	}
+
 	renderingFramework_->HeapBindToCommandList();
 	windowManager_->Update();
 
@@ -160,8 +244,52 @@ void GameFramework::Update() {
 
 	sceneManager_->Update();
 
+	if (!DebugConfig::isDebugging) {
+		wasPause_ = false;
+	} else {
+		bool currentPause = DebugConfig::isPause;
+		if (currentPause != wasPause_) {
+			wasPause_ = currentPause;
+			if (currentPause) {
+				const auto& activeGroups = entityComponentSystem_->GetActiveGroupNames();
+				if (activeGroups.empty()) {
+					if (auto* group = entityComponentSystem_->GetCurrentGroup()) {
+						if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+							audioSys->PauseAllAudio();
+						}
+					}
+				} else {
+					for (const auto& name : activeGroups) {
+						if (auto* group = entityComponentSystem_->GetECSGroup(name)) {
+							if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+								audioSys->PauseAllAudio();
+							}
+						}
+					}
+				}
+			} else {
+				const auto& activeGroups = entityComponentSystem_->GetActiveGroupNames();
+				if (activeGroups.empty()) {
+					if (auto* group = entityComponentSystem_->GetCurrentGroup()) {
+						if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+							audioSys->ResumeAllAudio();
+						}
+					}
+				} else {
+					for (const auto& name : activeGroups) {
+						if (auto* group = entityComponentSystem_->GetECSGroup(name)) {
+							if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+								audioSys->ResumeAllAudio();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	///!< ゲームデバッグモードの場合は更新処理を行う
-	if(DebugConfig::isDebugging) {
+	if(DebugConfig::isDebugging && !DebugConfig::isPause) {
 		entityComponentSystem_->Update();
 	}
 	CPUTimeStamp::GetInstance().EndTimeStamp(CPUTimeStampID::ECSUpdate);

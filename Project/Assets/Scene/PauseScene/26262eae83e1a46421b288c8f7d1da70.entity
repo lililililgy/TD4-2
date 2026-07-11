@@ -1,0 +1,84 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "path": "./Assets/Sounds/pause-ui-select.mp3",
+            "pitch": 1.0,
+            "type": "SEPlayer",
+            "volume": 1.0
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -414.4981384277344,
+                "y": -82.89893341064453,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 64.0,
+                "y": 64.0,
+                "z": 64.0
+            },
+            "type": "Transform"
+        },
+        {
+            "PauseGroup": {
+                "defaultColor": {
+                    "w": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "height": 0.10000000149011612,
+                "selectedColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "speed": 1.0,
+                "time": 0.0
+            },
+            "type": "Variables"
+        },
+        {
+            "cancelKeys": [
+                "Escape",
+                "GamepadB"
+            ],
+            "currentSelected": "7a55b245537f869f03e93d3b4296d439",
+            "enable": 1,
+            "isFocused": true,
+            "isVisible": true,
+            "parentGroup": "",
+            "submitKeys": [
+                "Return",
+                "Space",
+                "GamepadA"
+            ],
+            "type": "UIGroupComponent"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PauseGroup"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "26262eae83e1a46421b288c8f7d1da70",
+    "name": "Group_0",
+    "parentGuid": "2db9962bd0b8acc998f426843270917a",
+    "prefabName": ""
+}

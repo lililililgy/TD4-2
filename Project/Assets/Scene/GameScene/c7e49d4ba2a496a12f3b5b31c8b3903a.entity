@@ -1,27 +1,5 @@
 {
     "active": true,
-    "components": [
-        {
-            "categoryBits": 2,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 4294967097,
-            "mass": 1.0,
-            "radius": 0.5,
-            "state": "Dynamic",
-            "type": "CircleCollider",
-            "useOwnerScale": true
-        },
-        {
-            "TrailFollower": {
-                "leadMinOffset_": 98.0,
-                "maxBendRad_": 0.699999988079071,
-                "unitMinOffset_": 229.0
-            },
-            "type": "Variables"
-        }
-    ],
     "guid": "c7e49d4ba2a496a12f3b5b31c8b3903a",
     "name": "Player_Body",
     "parentGuid": null,

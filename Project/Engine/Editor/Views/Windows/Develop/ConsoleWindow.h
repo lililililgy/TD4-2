@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <vector>
@@ -7,6 +7,7 @@
 
 /// engine
 #include "../../EditorViewCollection.h"
+#include "Engine/Core/Utility/Tools/Log.h"
 
 
 /// ///////////////////////////////////////////////////
@@ -39,6 +40,29 @@ private:
 	bool showApplication_ = true;
 
 	bool autoScroll_ = true;
+	bool collapse_ = false;
+
+	// キャッシュ制御用
+	uint64_t lastUpdateCounter_ = 0;
+	bool lastShowInfo_ = true;
+	bool lastShowWarning_ = true;
+	bool lastShowError_ = true;
+	bool lastShowEngine_ = true;
+	bool lastShowScriptEngine_ = true;
+	bool lastShowApplication_ = true;
+	bool lastCollapse_ = false;
+
+	struct CollapsedEntry {
+		ONEngine::LogLevel level;
+		ONEngine::LogCategory category;
+		std::string message;
+		int count;
+	};
+
+	std::vector<CollapsedEntry> collapsedLogs_;
+	std::vector<size_t> displayIndices_;
+
+	void RebuildLogCache();
 
 };
 

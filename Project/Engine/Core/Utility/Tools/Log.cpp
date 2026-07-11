@@ -1,4 +1,4 @@
-﻿#include "Log.h"
+#include "Log.h"
 
 #include <comdef.h>
 #include <Windows.h>
@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iomanip>
 #include <ctime>
+#include <atomic>
 
 /// external
 #include <spdlog/spdlog.h>
@@ -64,6 +65,7 @@ namespace {
 	/// メンバ変数としてstaticで宣言したくないのでここで定義
 	std::vector<LogEntry> gLogBuffer_;
 	std::mutex gMutex_;
+	std::atomic<uint64_t> gUpdateCounter_{ 0 };
 
 } /// namespace
 
@@ -116,6 +118,7 @@ void Console::Finalize() {
 void Console::AddToBuffer(const std::string& msg, LogLevel level, LogCategory category) {
 	std::lock_guard<std::mutex> lock(gMutex_);
 	gLogBuffer_.push_back({ level, category, msg });
+	gUpdateCounter_++;
 
 	/// ログの最大数を制限
 	if (gLogBuffer_.size() > MAX_LOG_BUFFER_SIZE) {
@@ -158,6 +161,10 @@ const std::vector<LogEntry>& Console::GetLogVector() {
 	return gLogBuffer_;
 }
 
+uint64_t Console::GetUpdateCounter() {
+	return gUpdateCounter_.load();
+}
+
 void Console::ClearLogBuffer(std::optional<LogCategory> category) {
 	std::lock_guard<std::mutex> lock(gMutex_);
 	if (!category.has_value()) {
@@ -171,6 +178,7 @@ void Console::ClearLogBuffer(std::optional<LogCategory> category) {
 			gLogBuffer_.end()
 		);
 	}
+	gUpdateCounter_++;
 }
 
 void Console::Shutdown() {

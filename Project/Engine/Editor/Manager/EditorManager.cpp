@@ -6,6 +6,7 @@
 #include "Engine/Core/Utility/Utility.h"
 #include "Engine/Core/Utility/Input/Input.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
+#include "Engine/Core/Config/EngineConfig.h"
 
 #include "EditCommand.h"
 #include "Engine/Editor/Commands/WorldEditorCommands/WorldEditorCommands.h"
@@ -97,8 +98,8 @@ void EditorManager::Update(ONEngine::Asset::AssetCollection* ac) {
 			Redo();
 		}
 
-		// Ctrl+S でシーンを保存
-		if (ONEngine::Input::TriggerKey(DIK_S)) {
+		// Ctrl+S でシーンを保存 (再生中は無視)
+		if (ONEngine::Input::TriggerKey(DIK_S) && !ONEngine::DebugConfig::isDebugging) {
 			pSceneManager_->SaveCurrentScene();
 		}
 	}

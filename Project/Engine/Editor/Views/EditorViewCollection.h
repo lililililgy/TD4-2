@@ -67,6 +67,7 @@ private:
 	/// ----- other class ----- ///
 	ImGuiManager* pImGuiManager_;
 	ONEngine::SceneManager* pSceneManager_;
+	ONEngine::Asset::AssetCollection* pAssetCollection_;
 
 	/// ----- collection window ----- ///
 	std::vector<std::unique_ptr<IEditorWindowContainer>> parentWindows_;
@@ -111,6 +112,7 @@ protected:
 	/// ----- member objects ----- ///
 
 	std::vector<std::unique_ptr<class IEditorWindow>> children_;
+	std::vector<std::unique_ptr<class IEditorWindow>> pendingAdditions_;
 	std::string windowName_;
 
 };
@@ -129,11 +131,26 @@ public:
 	virtual ~IEditorWindow() = default;
 	virtual void ShowImGui() = 0;
 
+	bool IsOpen() const { return isOpen_; }
+	void SetOpen(bool open) { isOpen_ = open; }
+
+	virtual const char* GetWindowType() const { return "Unknown"; }
+	bool CanClose() const { return canClose_; }
+	void SetCanClose(bool canClose) { canClose_ = canClose; }
+
+	class IEditorWindowContainer* GetParentContainer() const { return pParentContainer_; }
+	void SetParentContainer(class IEditorWindowContainer* parent) { pParentContainer_ = parent; }
+
+	void SetImGuiManager(ImGuiManager* pImGuiManager) { pImGuiManager_ = pImGuiManager; }
+
 protected:
 	/// ===================================================
 	/// protected : objects
 	/// ===================================================
 	ImGuiManager* pImGuiManager_;
+	bool isOpen_ = true;
+	bool canClose_ = true;
+	class IEditorWindowContainer* pParentContainer_ = nullptr;
 };
 
 

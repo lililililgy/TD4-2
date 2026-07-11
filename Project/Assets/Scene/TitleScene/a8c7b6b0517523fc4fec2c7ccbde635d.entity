@@ -1,0 +1,24 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "z": 0.20000000298023224
+            },
+            "scale": {
+                "y": 800.0
+            },
+            "type": "Transform"
+        },
+        {
+            "emission": {
+                "rateOverTime": 0.5
+            },
+            "type": "ParticleSystem2D"
+        }
+    ],
+    "guid": "a8c7b6b0517523fc4fec2c7ccbde635d",
+    "name": "nearFishParticle",
+    "parentGuid": null,
+    "prefabName": "nearFishParticle"
+}

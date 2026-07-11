@@ -21,10 +21,34 @@ namespace ONEngine {
             } else {
                 for (size_t i = 0; i < colorKeys.size() - 1; ++i) {
                     if (time >= colorKeys[i].time && time <= colorKeys[i + 1].time) {
-                        float t = (time - colorKeys[i].time) / (colorKeys[i + 1].time - colorKeys[i].time);
-                        result.r = colorKeys[i].color.r + (colorKeys[i + 1].color.r - colorKeys[i].color.r) * t;
-                        result.g = colorKeys[i].color.g + (colorKeys[i + 1].color.g - colorKeys[i].color.g) * t;
-                        result.b = colorKeys[i].color.b + (colorKeys[i + 1].color.b - colorKeys[i].color.b) * t;
+                        float dt = colorKeys[i + 1].time - colorKeys[i].time;
+                        if (dt < 0.0001f) {
+                            result.r = colorKeys[i].color.r;
+                            result.g = colorKeys[i].color.g;
+                            result.b = colorKeys[i].color.b;
+                        } else {
+                            float t = (time - colorKeys[i].time) / dt;
+                            float t2 = t * t;
+                            float t3 = t2 * t;
+
+                            float h00 = 2.0f * t3 - 3.0f * t2 + 1.0f;
+                            float h10 = t3 - 2.0f * t2 + t;
+                            float h01 = -2.0f * t3 + 3.0f * t2;
+                            float h11 = t3 - t2;
+
+                            // Apply Hermite spline for R, G, B channels
+                            float m0_r = colorKeys[i].outTangent * dt;
+                            float m1_r = colorKeys[i + 1].inTangent * dt;
+                            result.r = h00 * colorKeys[i].color.r + h10 * m0_r + h01 * colorKeys[i + 1].color.r + h11 * m1_r;
+
+                            float m0_g = colorKeys[i].outTangent * dt;
+                            float m1_g = colorKeys[i + 1].inTangent * dt;
+                            result.g = h00 * colorKeys[i].color.g + h10 * m0_g + h01 * colorKeys[i + 1].color.g + h11 * m1_g;
+
+                            float m0_b = colorKeys[i].outTangent * dt;
+                            float m1_b = colorKeys[i + 1].inTangent * dt;
+                            result.b = h00 * colorKeys[i].color.b + h10 * m0_b + h01 * colorKeys[i + 1].color.b + h11 * m1_b;
+                        }
                         break;
                     }
                 }
@@ -40,15 +64,28 @@ namespace ONEngine {
             } else {
                 for (size_t i = 0; i < alphaKeys.size() - 1; ++i) {
                     if (time >= alphaKeys[i].time && time <= alphaKeys[i + 1].time) {
-                        float t = (time - alphaKeys[i].time) / (alphaKeys[i + 1].time - alphaKeys[i].time);
-                        result.a = alphaKeys[i].alpha + (alphaKeys[i + 1].alpha - alphaKeys[i].alpha) * t;
+                        float dt = alphaKeys[i + 1].time - alphaKeys[i].time;
+                        if (dt < 0.0001f) {
+                            result.a = alphaKeys[i].alpha;
+                        } else {
+                            float t = (time - alphaKeys[i].time) / dt;
+                            float t2 = t * t;
+                            float t3 = t2 * t;
+
+                            float h00 = 2.0f * t3 - 3.0f * t2 + 1.0f;
+                            float h10 = t3 - 2.0f * t2 + t;
+                            float h01 = -2.0f * t3 + 3.0f * t2;
+                            float h11 = t3 - t2;
+
+                            float m0 = alphaKeys[i].outTangent * dt;
+                            float m1 = alphaKeys[i + 1].inTangent * dt;
+                            result.a = h00 * alphaKeys[i].alpha + h10 * m0 + h01 * alphaKeys[i + 1].alpha + h11 * m1;
+                        }
                         break;
                     }
                 }
             }
         } else if (!colorKeys.empty()) {
-            // If no alpha keys, maybe use alpha from color keys? 
-            // Usually Shuriken separates them. We'll default to 1.0 if no alpha keys.
             result.a = 1.0f; 
         }
 
@@ -63,8 +100,23 @@ namespace ONEngine {
 
         for (size_t i = 0; i < keys.size() - 1; ++i) {
             if (time >= keys[i].time && time <= keys[i + 1].time) {
-                float t = (time - keys[i].time) / (keys[i + 1].time - keys[i].time);
-                return keys[i].value + (keys[i + 1].value - keys[i].value) * t;
+                float dt = keys[i + 1].time - keys[i].time;
+                if (dt < 0.0001f) return keys[i].value;
+
+                float t = (time - keys[i].time) / dt;
+                float t2 = t * t;
+                float t3 = t2 * t;
+
+                // Hermite spline basis functions
+                float h00 = 2.0f * t3 - 3.0f * t2 + 1.0f;
+                float h10 = t3 - 2.0f * t2 + t;
+                float h01 = -2.0f * t3 + 3.0f * t2;
+                float h11 = t3 - t2;
+
+                float m0 = keys[i].outTangent * dt;
+                float m1 = keys[i + 1].inTangent * dt;
+
+                return h00 * keys[i].value + h10 * m0 + h01 * keys[i + 1].value + h11 * m1;
             }
         }
 

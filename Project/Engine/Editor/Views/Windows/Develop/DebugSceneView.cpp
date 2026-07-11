@@ -2,6 +2,15 @@
 
 /// std
 #include <array>
+#include <thread>
+#include <atomic>
+#include <windows.h>
+#include <filesystem>
+#include <fstream>
+
+/// engine
+#include "Engine/Editor/Manager/HotReloadManager.h"
+#include "Engine/Core/Utility/Time/Time.h"
 
 /// external
 #include <imgui.h>
@@ -33,6 +42,21 @@ std::string Format(const char* fmt, Args... args) {
 	std::snprintf(buf.data(), size, fmt, args...);
 	buf.pop_back(); // null文字削除
 	return buf;
+}
+
+std::string ConvertACPToUTF8(const std::string& acpStr) {
+	int wlen = MultiByteToWideChar(CP_ACP, 0, acpStr.c_str(), -1, NULL, 0);
+	if (wlen > 0) {
+		std::vector<wchar_t> wbuf(wlen);
+		MultiByteToWideChar(CP_ACP, 0, acpStr.c_str(), -1, wbuf.data(), wlen);
+		int ulen = WideCharToMultiByte(CP_UTF8, 0, wbuf.data(), -1, NULL, 0, NULL, NULL);
+		if (ulen > 0) {
+			std::vector<char> ubuf(ulen);
+			WideCharToMultiByte(CP_UTF8, 0, wbuf.data(), -1, ubuf.data(), ulen, NULL, NULL);
+			return std::string(ubuf.data());
+		}
+	}
+	return acpStr;
 }
 }
 
@@ -66,6 +90,7 @@ void DebugSceneView::ShowImGui() {
 
 void DebugSceneView::SetGamePlay(bool isGamePlay) {
 	ONEngine::DebugConfig::isDebugging = isGamePlay;
+	ONEngine::DebugConfig::isPause = false; // 一時停止状態をリセット
 
 	/// ゲームの開始処理
 	if(ONEngine::DebugConfig::isDebugging) {
@@ -77,19 +102,39 @@ void DebugSceneView::SetGamePlay(bool isGamePlay) {
 		ONEngine::MonoScriptEngine::GetInstance().HotReload();
 
 		pSceneManager_->ReloadScene(true);
-		ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
+		// ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
 	} else {
 
 		/// 共通の処理（ゲーム開始、停止時に行う処理）
 		pSceneManager_->ReloadScene(true);
 		pSceneManager_->ClearTemporarySavedSceneName();
-		ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
+		// ImGuiSelection::SetSelectedObject(ONEngine::Guid::kInvalid, SelectionType::None);
 	}
 
 }
 
 void Editor::DebugSceneView::ShowDebugSceneView(const ImVec2& imagePos) {
 	std::vector<OverlaySection> leftSections;
+
+	{
+		// アクティブシーン セクション
+		const auto& activeScenes = pEcs_->GetActiveGroupNames();
+		std::string currentScene = pEcs_->GetCurrentGroupName();
+
+		OverlaySection sceneSection;
+		sceneSection.name = "アクティブシーン";
+		sceneSection.opened = true;
+
+		sceneSection.items.push_back({ "Current Scene", currentScene, IM_COL32(100, 255, 100, 255) });
+		if (activeScenes.empty()) {
+			sceneSection.items.push_back({ "Active Scenes", "None (Single)", IM_COL32(255, 255, 255, 255) });
+		} else {
+			for (size_t i = 0; i < activeScenes.size(); ++i) {
+				sceneSection.items.push_back({ "Scene [" + std::to_string(i) + "]", activeScenes[i], IM_COL32(255, 255, 255, 255) });
+			}
+		}
+		leftSections.push_back(sceneSection);
+	}
 
 	{
 		// 地形描画 セクション
@@ -368,41 +413,47 @@ void DebugSceneView::HandleCameraFocus() {
 /// ツールバーの表示(再生ボタン、設定チェックボックスなど)
 ///
 void DebugSceneView::DrawToolbar() {
-	std::array<const ONEngine::Asset::Texture*, 2> buttons = {
-		pAssetCollection_->GetTexture("./Packages/Textures/ImGui/play.png"),
-		pAssetCollection_->GetTexture("./Packages/Textures/ImGui/pause.png")
-	};
-
-	// dds用フォールバック
-	std::array<std::string, 2> paths = {
-		"./Packages/Textures/ImGui/play.dds",
-		"./Packages/Textures/ImGui/pause.dds"
-	};
-	for(uint8_t i = 0; i < 2; ++i) {
-		if(!buttons[i]) {
-			buttons[i] = pAssetCollection_->GetTexture(paths[i]);
-		}
-	}
-
-	ImVec2 buttonSize = ImVec2(12.0f, 12.0f);
 	bool isGameDebug = ONEngine::DebugConfig::isDebugging;
+	bool isPause = ONEngine::DebugConfig::isPause;
 
-	if(isGameDebug) {
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.125f, 0.263f, 0.388f, 1.0f));
+	// 再生・停止ボタン
+	if (isGameDebug) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.7f, 0.15f, 0.15f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.5f, 0.08f, 0.08f, 1.0f));
+		if (ImGui::Button("Stop")) {
+			SetGamePlay(false);
+		}
+		ImGui::PopStyleColor(3);
+	} else {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.6f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.15f, 0.7f, 0.15f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.08f, 0.5f, 0.08f, 1.0f));
+		if (ImGui::Button("Start")) {
+			SetGamePlay(true);
+		}
+		ImGui::PopStyleColor(3);
 	}
 
-	if(ImGui::ImageButton("##play", ImTextureID(buttons[0]->GetSRVGPUHandle().ptr), buttonSize)) {
-		SetGamePlay(!isGameDebug);
-	}
 	ImGui::SameLine();
 
-	if(isGameDebug) {
-		ImGui::PopStyleColor(1);
-	}
-
-	// 一時停止ボタン
-	if(ImGui::ImageButton("##pause", ImTextureID(buttons[1]->GetSRVGPUHandle().ptr), buttonSize)) {
-		ONEngine::DebugConfig::isDebugging = false;
+	// 一時停止・再開ボタン
+	if (isPause) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.125f, 0.263f, 0.388f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.18f, 0.35f, 0.5f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.2f, 0.3f, 1.0f));
+		if (ImGui::Button("Resume (Unpause)")) {
+			if (isGameDebug) {
+				ONEngine::DebugConfig::isPause = false;
+			}
+		}
+		ImGui::PopStyleColor(3);
+	} else {
+		if (ImGui::Button("Pause")) {
+			if (isGameDebug) {
+				ONEngine::DebugConfig::isPause = true;
+			}
+		}
 	}
 
 	ImGui::SameLine();
@@ -416,6 +467,39 @@ void DebugSceneView::DrawToolbar() {
 
 	// スタッツの表示トグル (メンバ変数に変更)
 	ImGui::Checkbox("show scene stats", &isDrawSceneStats_);
+
+	ImGui::SameLine();
+
+	// C# Build button
+	if (isCSBuilding_) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
+		ImGui::Button("Building C#...");
+		ImGui::PopStyleColor(3);
+	} else {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.35f, 0.15f, 0.45f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.45f, 0.2f, 0.55f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.25f, 0.1f, 0.35f, 1.0f));
+		if (ImGui::Button("Build C#")) {
+			TriggerCSBuild();
+		}
+		ImGui::PopStyleColor(3);
+	}
+
+	if (showCSBuildResult_) {
+		ImGui::SameLine();
+		if (csBuildSuccess_) {
+			ImGui::TextColored(ImVec4(0.2f, 0.8f, 0.2f, 1.0f), "Build OK");
+		} else {
+			ImGui::TextColored(ImVec4(0.8f, 0.2f, 0.2f, 1.0f), "Build Failed");
+		}
+
+		csBuildResultTimer_ -= ONEngine::Time::DeltaTime();
+		if (csBuildResultTimer_ <= 0.0f) {
+			showCSBuildResult_ = false;
+		}
+	}
 
 	ImGui::SameLine();
 
@@ -463,6 +547,20 @@ void DebugSceneView::DrawToolbar() {
 		}
 	}
 
+	ImGui::SameLine();
+	ImGui::Text("|");
+	ImGui::SameLine();
+
+	// Local/World モードの切り替え
+	int pivotMode = Editor::GetPivotMode();
+	if (ImGui::RadioButton("World", pivotMode == ImGuizmo::MODE::WORLD)) {
+		Editor::SetPivotMode(ImGuizmo::MODE::WORLD);
+	}
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Local", pivotMode == ImGuizmo::MODE::LOCAL)) {
+		Editor::SetPivotMode(ImGuizmo::MODE::LOCAL);
+	}
+
 	// ImGuiInfo の右寄せ表示
 	{
 		ImGui::SameLine();
@@ -483,6 +581,9 @@ void DebugSceneView::DrawSceneTexture(ImVec2& outImagePos, ImVec2& outImageSize)
 
 	ImVec2 availRegion = ImGui::GetContentRegionAvail();
 	float aspectRatio = 16.0f / 9.0f;
+	if (ONEngine::EngineConfig::windowHeight > 0) {
+		aspectRatio = static_cast<float>(ONEngine::EngineConfig::windowWidth) / static_cast<float>(ONEngine::EngineConfig::windowHeight);
+	}
 
 	outImageSize = availRegion;
 	if(outImageSize.x / outImageSize.y > aspectRatio) {
@@ -517,6 +618,134 @@ void DebugSceneView::DrawGizmoAndOverlays(const ImVec2& imagePos, const ImVec2& 
 	if(isDrawSceneStats_) {
 		ShowDebugSceneView(imagePos);
 	}
+}
+
+void DebugSceneView::TriggerCSBuild() {
+	if (isCSBuilding_) return;
+
+	isCSBuilding_ = true;
+	showCSBuildResult_ = false;
+
+	std::thread buildThread([this]() {
+		ONEngine::Console::Log("Starting C# build...", ONEngine::LogCategory::ScriptEngine);
+
+		// Determine project root directory by traversing upwards
+		std::filesystem::path rootPath = std::filesystem::current_path();
+		std::filesystem::path checkPath = rootPath;
+		while (checkPath.has_parent_path()) {
+			if (std::filesystem::exists(checkPath / "SubProjects") && std::filesystem::exists(checkPath / "Project")) {
+				rootPath = checkPath;
+				break;
+			}
+			checkPath = checkPath.parent_path();
+		}
+
+		std::filesystem::path csprojPath = rootPath / "SubProjects" / "CSharpLibrary" / "CSharpLibrary.csproj";
+		std::filesystem::path logPath = rootPath / "temp_cs_build.log";
+
+		// Select dotnet executable path (prioritize absolute path)
+		std::wstring dotnetPath = L"dotnet";
+		if (std::filesystem::exists("C:\\Program Files\\dotnet\\dotnet.exe")) {
+			dotnetPath = L"\"C:\\Program Files\\dotnet\\dotnet.exe\"";
+		}
+
+		// Construct command line to run dotnet build directly
+		std::wstring cmdLine = dotnetPath + L" build \"" + csprojPath.wstring() + L"\"";
+
+		// Configure security attributes to make file handle inheritable
+		SECURITY_ATTRIBUTES sa;
+		sa.nLength = sizeof(sa);
+		sa.bInheritHandle = TRUE;
+		sa.lpSecurityDescriptor = NULL;
+
+		HANDLE hLogFile = CreateFileW(
+			logPath.wstring().c_str(),
+			GENERIC_WRITE,
+			FILE_SHARE_READ | FILE_SHARE_WRITE,
+			&sa,
+			CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL,
+			NULL
+		);
+
+		DWORD exitCode = 9999;
+		bool success = false;
+
+		if (hLogFile != INVALID_HANDLE_VALUE) {
+			STARTUPINFOW si;
+			PROCESS_INFORMATION pi;
+			ZeroMemory(&si, sizeof(si));
+			si.cb = sizeof(si);
+			si.hStdOutput = hLogFile;
+			si.hStdError = hLogFile;
+			si.dwFlags |= STARTF_USESTDHANDLES;
+			ZeroMemory(&pi, sizeof(pi));
+
+			// Execute build command directly (bInheritHandles must be TRUE)
+			if (CreateProcessW(
+				NULL,                   // No module name
+				cmdLine.data(),         // Command line
+				NULL,                   // Process handle not inheritable
+				NULL,                   // Thread handle not inheritable
+				TRUE,                   // Inherit handles
+				CREATE_NO_WINDOW,       // Do not create console window
+				NULL,                   // Use parent's environment block
+				NULL,                   // Use parent's starting directory 
+				&si,                    // Pointer to STARTUPINFO structure
+				&pi)                    // Pointer to PROCESS_INFORMATION structure
+			) {
+				WaitForSingleObject(pi.hProcess, INFINITE);
+				GetExitCodeProcess(pi.hProcess, &exitCode);
+				CloseHandle(pi.hProcess);
+				CloseHandle(pi.hThread);
+				success = (exitCode == 0);
+			} else {
+				DWORD err = GetLastError();
+				ONEngine::Console::LogError("Failed to launch build process (CreateProcessW failed with error: " + std::to_string(err) + ").", ONEngine::LogCategory::ScriptEngine);
+			}
+
+			// Close the log file handle so we can read it
+			CloseHandle(hLogFile);
+		} else {
+			DWORD err = GetLastError();
+			ONEngine::Console::LogError("Failed to create log file handle (CreateFileW failed with error: " + std::to_string(err) + ").", ONEngine::LogCategory::ScriptEngine);
+		}
+
+		// Read and log stdout/stderr of dotnet build
+		if (std::filesystem::exists(logPath)) {
+			std::ifstream logFile(logPath);
+			if (logFile.is_open()) {
+				std::string line;
+				while (std::getline(logFile, line)) {
+					std::string utf8Line = ConvertACPToUTF8(line);
+					if (success) {
+						ONEngine::Console::Log(utf8Line, ONEngine::LogCategory::ScriptEngine);
+					} else {
+						ONEngine::Console::LogError(utf8Line, ONEngine::LogCategory::ScriptEngine);
+					}
+				}
+				logFile.close();
+			}
+			std::error_code ec;
+			std::filesystem::remove(logPath, ec);
+		} else {
+			ONEngine::Console::LogError("Build log file not found at: " + ONEngine::ConvertString(logPath.wstring()), ONEngine::LogCategory::ScriptEngine);
+		}
+
+		csBuildSuccess_ = success;
+		isCSBuilding_ = false;
+		showCSBuildResult_ = true;
+		csBuildResultTimer_ = 3.0f; // show result for 3 seconds
+
+		if (success) {
+			ONEngine::Console::Log("C# build succeeded! Requesting script hot reload...", ONEngine::LogCategory::ScriptEngine);
+			HotReloadManager::GetInstance().RequestScriptHotReload();
+		} else {
+			ONEngine::Console::LogError("C# build failed! Exit code: " + std::to_string(exitCode) + ", Command: " + ONEngine::ConvertString(cmdLine), ONEngine::LogCategory::ScriptEngine);
+		}
+	});
+
+	buildThread.detach();
 }
 
 } /// namespace Editor

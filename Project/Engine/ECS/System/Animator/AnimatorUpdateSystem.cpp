@@ -66,7 +66,6 @@ void AnimatorUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
     ComponentArray<Animator>* animatorArray = ecs->GetComponentArray<Animator>();
     if (!animatorArray || animatorArray->GetUsedComponents().empty()) return;
 
-    ComponentArray<SkinMeshRenderer>* skinMeshArray = ecs->GetComponentArray<SkinMeshRenderer>();
     Asset::AssetCollection* assetCollection = Asset::AssetCollection::GetInstance();
 
     for (auto& animator : animatorArray->GetUsedComponents()) {

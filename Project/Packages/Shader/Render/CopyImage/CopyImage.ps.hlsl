@@ -1,4 +1,4 @@
-#include "CopyImage.hlsli"
+﻿#include "CopyImage.hlsli"
 
 struct PSOutput {
 	float4 color : SV_TARGET0;
@@ -11,5 +11,8 @@ SamplerState samplerState : register(s0);
 PSOutput main(VSOutput input) {
 	PSOutput output;
 	output.color = sceneTexture.Sample(samplerState, input.texcoord);
+	if (output.color.a < 0.001f) {
+		discard;
+	}
 	return output;
 }

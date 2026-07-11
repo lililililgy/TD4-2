@@ -1,4 +1,4 @@
-﻿#include "SkinMeshRenderer.h"
+#include "SkinMeshRenderer.h"
 
 /// external
 #include <imgui.h>
@@ -15,6 +15,8 @@
 /// editor
 #include "Engine/Editor/Math/ImGuiMath.h"
 #include "Engine/Editor/Math/AssetPayload.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
 
 using namespace ONEngine;
 
@@ -128,8 +130,6 @@ void ComponentDebug::SkinMeshRendererDebug(SkinMeshRenderer* _smr, Asset::AssetC
 	std::string texturePath = _smr->GetTexturePath();
 
 	bool isPlaying = _smr->GetIsPlaying();
-	float animationTime = _smr->GetAnimationTime();
-	float duration = _smr->GetDuration();
 	float jointSize = _smr->GetDebugJointSize();
 	float rectSize = _smr->GetDebugRectSize();
 	Vector4 color = _smr->GetColor();
@@ -260,7 +260,12 @@ void ComponentDebug::SkinMeshRendererDebug(SkinMeshRenderer* _smr, Asset::AssetC
 
 				/// メッシュのパスが有効な形式か確認
 				if (type == Asset::AssetType::Mesh) {
-					_smr->SetMeshPath(path);
+					std::string oldPath = _smr->GetMeshPath();
+					std::string newPath = path;
+					Editor::EditCommand::Execute<Editor::LambdaCommand>(
+						[_smr, newPath]() { _smr->SetMeshPath(newPath); },
+						[_smr, oldPath]() { _smr->SetMeshPath(oldPath); }
+					);
 
 					Console::Log(std::format("Mesh path set to: {}", path));
 				} else {
@@ -306,7 +311,12 @@ void ComponentDebug::SkinMeshRendererDebug(SkinMeshRenderer* _smr, Asset::AssetC
 
 				/// テクスチャのパスが有効な形式か確認
 				if (type == Asset::AssetType::Texture) {
-					_smr->SetTexturePath(path);
+					std::string oldPath = _smr->GetTexturePath();
+					std::string newPath = path;
+					Editor::EditCommand::Execute<Editor::LambdaCommand>(
+						[_smr, newPath]() { _smr->SetTexturePath(newPath); },
+						[_smr, oldPath]() { _smr->SetTexturePath(oldPath); }
+					);
 
 					Console::Log(std::format("Texture path set to: {}", path));
 				} else {

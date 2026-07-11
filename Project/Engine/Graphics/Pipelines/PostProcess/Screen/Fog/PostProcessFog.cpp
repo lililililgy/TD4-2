@@ -1,4 +1,4 @@
-#include "PostProcessFog.h"
+﻿#include "PostProcessFog.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
@@ -34,17 +34,17 @@ void PostProcessFog::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) 
 
 }
 
-void PostProcessFog::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem) {
+void PostProcessFog::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem, ECSGroup* ecsGroup) {
 
-	ECSGroup* currentGroup = entityComponentSystem->GetCurrentGroup();
+	ECSGroup* currentGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
 	if(!currentGroup) {
-		ONEngine::Console::LogError("PostProcessFog::Execute: current ECS group is null");
+		//ONEngine::Console::LogError("PostProcessFog::Execute: current ECS group is null");
 		return;
 	}
 
 	CameraComponent* mainCamera = currentGroup->GetMainCamera();
 	if(!mainCamera) {
-		ONEngine::Console::LogError("PostProcessFog::Execute: main camera is null");
+		//ONEngine::Console::LogError("PostProcessFog::Execute: main camera is null");
 		return;
 	}
 

@@ -1,4 +1,4 @@
-﻿#include "ComponentApplyFunc.h"
+#include "ComponentApplyFunc.h"
 
 /// std
 #include <unordered_map>
@@ -19,6 +19,7 @@
 #include "Engine/ECS/Component/Components/RendererComponents/Sprite/SpriteRenderer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/Script/MonoScriptEngine.h"
 
 
@@ -75,6 +76,14 @@ struct CameraBatch {
 struct AnimatorBatch {
     uint32_t compId;
     AnimationLayer layers[MAX_ANIMATION_LAYERS];
+};
+
+struct BoxCollider2DBatch {
+	uint32_t compId;
+	Vector2 size;
+	int32_t isTrigger;
+	float mass;
+	int32_t useOwnerScale;
 };
 
 } /// unnamed namespace
@@ -353,6 +362,32 @@ void ONEngine::ComponentApplyFuncs::FetchUIElement(void* element, ECSGroup* ecsG
 	}
 }
 
+void ONEngine::ComponentApplyFuncs::ApplyBoxCollider2D(void* element, ECSGroup* ecsGroup) {
+	BoxCollider2DBatch* data = static_cast<BoxCollider2DBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<BoxCollider2D>();
+	if (!array) return;
+
+	if (BoxCollider2D* comp = array->GetComponent(data->compId)) {
+		comp->SetSize(data->size);
+		comp->SetTrigger(data->isTrigger != 0);
+		comp->SetMass(data->mass);
+		comp->SetUseOwnerScale(data->useOwnerScale != 0);
+	}
+}
+
+void ONEngine::ComponentApplyFuncs::FetchBoxCollider2D(void* element, ECSGroup* ecsGroup) {
+	BoxCollider2DBatch* data = static_cast<BoxCollider2DBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<BoxCollider2D>();
+	if (!array) return;
+
+	if (BoxCollider2D* comp = array->GetComponent(data->compId)) {
+		data->size = comp->GetSize();
+		data->isTrigger = comp->IsTrigger() ? 1 : 0;
+		data->mass = comp->GetMass();
+		data->useOwnerScale = comp->IsUseOwnerScale() ? 1 : 0;
+	}
+}
+
 ComponentApplyFunc ComponentApplyFuncs::GetApplyFunc(MonoClass* monoClass) {
 	auto itr = gApplyFuncMap.find(monoClass);
 	if(itr == gApplyFuncMap.end()) {
@@ -452,6 +487,15 @@ void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
 			gApplyFuncMap[monoClass] = ApplyUIElement;
 			gFetchFuncMap[monoClass] = FetchUIElement;
 			gComponentBatchSize[monoClass] = sizeof(UIElementComponent::BatchData);
+		}
+	}
+
+	{	/// BoxCollider2D
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "BoxCollider2D");
+		if (monoClass) {
+			gApplyFuncMap[monoClass] = ApplyBoxCollider2D;
+			gFetchFuncMap[monoClass] = FetchBoxCollider2D;
+			gComponentBatchSize[monoClass] = sizeof(BoxCollider2DBatch);
 		}
 	}
 }

@@ -63,7 +63,7 @@ public class ChaseController : MonoScript
         updateAction_?.Invoke();
     }
 
-    // 攻撃中など、外部から追跡を一時停止/再開させる
+    // 追跡を一時停止/再開させる
     public void SetPaused(bool paused)
     {
         isPaused_ = paused;
@@ -130,6 +130,7 @@ public class ChaseController : MonoScript
         Vector3 toTarget = targetEntity_.transform.position - transform.position;
         if (toTarget.Length() <= chaseDistance && (isFirstWait_ || waitTimer_ >= waitTime))
         {
+            // 発見モーションへ
             isFirstWait_ = false;
             TransitionTo(State.Discovery);
         }
@@ -259,5 +260,15 @@ public class ChaseController : MonoScript
         isFirstWait_ = false;
         TransitionTo(State.Wait);
         return true;
+    }
+
+    /// ==============================================================================
+    ///  Getter
+    /// ==============================================================================
+
+    public Vector3 GetVelocity()
+    {
+      
+        return velocity_;
     }
 }

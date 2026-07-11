@@ -23,6 +23,21 @@
             "type": "Transform"
         },
         {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 7,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "DespawnTimer": {
+                "despawnTime_": 12.0
+            },
             "MorayEelMovement": {
                 "chargeSpeed": 0.0,
                 "chargeStartTime": 0.0,
@@ -57,12 +72,17 @@
                 {
                     "enable": true,
                     "name": "MorayEelPot"
+                },
+                {
+                    "enable": true,
+                    "name": "DespawnTimer"
                 }
             ],
             "type": "Script"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -89,7 +109,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "3556dc232010489a1d55f08b63b9655b",
+    "guid": "8dce3926b5eaa7e3c27a9eeaa399d6d2",
     "name": "MorayEelPot",
     "parentGuid": null,
     "prefabName": "MorayEelPot"

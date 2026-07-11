@@ -35,7 +35,17 @@ void PostProcessWaterDepthFogVignette::Initialize(ShaderCompiler* shaderCompiler
 	paramsBuffer_.Create(dxm->GetDxDevice());
 }
 
-void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem) {
+void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, EntityComponentSystem* entityComponentSystem, ECSGroup* ecsGroup) {
+	ECSGroup* currentGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
+	if (!currentGroup) {
+		static bool logged = false;
+		if (!logged) {
+			ONEngine::Console::LogWarning("[WaterDepthFog] Execute skipped: currentGroup is null", LogCategory::Engine);
+			logged = true;
+		}
+		return;
+	}
+
 	CameraComponent* camera = nullptr;
 	if (textureName.find("debug") != std::string::npos) {
 		ECSGroup* debugGroup = entityComponentSystem->GetECSGroup("Debug");
@@ -44,26 +54,13 @@ void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, D
 		}
 	}
 	if (!camera) {
-		ECSGroup* currentGroup = entityComponentSystem->GetCurrentGroup();
-		if (currentGroup) {
-			camera = currentGroup->GetMainCamera2D();
-		}
+		camera = currentGroup->GetMainCamera2D();
 	}
 
 	if (!camera) {
 		static bool logged = false;
 		if (!logged) {
 			ONEngine::Console::LogWarning("[WaterDepthFog] Execute skipped: Camera2D is null. TextureName=" + textureName, LogCategory::Engine);
-			logged = true;
-		}
-		return;
-	}
-
-	ECSGroup* currentGroup = entityComponentSystem->GetCurrentGroup();
-	if (!currentGroup) {
-		static bool logged = false;
-		if (!logged) {
-			ONEngine::Console::LogWarning("[WaterDepthFog] Execute skipped: currentGroup is null", LogCategory::Engine);
 			logged = true;
 		}
 		return;

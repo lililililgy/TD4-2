@@ -8,6 +8,9 @@
 
 /// editor
 #include "Engine/Editor/Math/ImGuiMath.h"
+#include "Engine/Editor/Math/AssetPayload.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
 
 using namespace ONEngine;
 
@@ -259,13 +262,18 @@ void ComponentDebug::EffectDebug(Effect* effect) {
 
 				/// ペイロードが存在する場合
 				if (payload->Data) {
-					const char* droppedPath = static_cast<const char*>(payload->Data);
-					std::string path = std::string(droppedPath);
+					Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+					std::string path = assetPayload->filePath;
 
 					/// メッシュのパスが有効な形式か確認
 					if (path.find(".obj") != std::string::npos
 						|| path.find(".gltf") != std::string::npos) {
-						effect->SetMeshPath(path);
+						std::string oldPath = effect->GetMeshPath();
+						std::string newPath = path;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[effect, newPath]() { effect->SetMeshPath(newPath); },
+							[effect, oldPath]() { effect->SetMeshPath(oldPath); }
+						);
 
 						Console::Log(std::format("Mesh path set to: {}", path));
 					} else {
@@ -284,14 +292,19 @@ void ComponentDebug::EffectDebug(Effect* effect) {
 
 				/// ペイロードが存在する場合
 				if (payload->Data) {
-					const char* droppedPath = static_cast<const char*>(payload->Data);
-					std::string path = std::string(droppedPath);
+					Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+					std::string path = assetPayload->filePath;
 
 					/// テクスチャのパスが有効な形式か確認
 					if (path.find(".png") != std::string::npos
 						|| path.find(".jpg") != std::string::npos
 						|| path.find(".jpeg") != std::string::npos) {
-						effect->SetTexturePath(path);
+						std::string oldPath = effect->GetTexturePath();
+						std::string newPath = path;
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[effect, newPath]() { effect->SetTexturePath(newPath); },
+							[effect, oldPath]() { effect->SetTexturePath(oldPath); }
+						);
 
 						Console::Log(std::format("Texture path set to: {}", path));
 					} else {

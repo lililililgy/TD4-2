@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// directX
 #include <d3d12.h>
@@ -50,6 +50,11 @@ public:
 
 	/// @brief FrontBufferとBackBufferの交換
 	void Present();
+
+	/// @brief SwapChainのサイズを変更する
+	/// @param width  新しい幅
+	/// @param height 新しい高さ
+	void Resize(uint32_t width, uint32_t height);
 
 private:
 

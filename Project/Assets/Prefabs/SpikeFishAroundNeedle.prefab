@@ -10,15 +10,15 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": -0.4573034644126892,
+                "w": 0.9429186582565308,
                 "x": 0.0,
                 "y": 0.0,
-                "z": -0.8893107175827026
+                "z": 0.3330231010913849
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 0.8676477074623108,
+                "y": 0.8676477074623108,
+                "z": 0.8676477074623108
             },
             "type": "Transform"
         },
@@ -30,11 +30,13 @@
             },
             "SpriteAnimation": {
                 "cols": 3,
+                "endFrame": -1,
                 "fps": 10.0,
                 "invertY": false,
                 "isLoop": false,
                 "isPlay": false,
                 "rows": 1,
+                "startFrame": 0,
                 "totalFrames": 0
             },
             "type": "Variables"
@@ -45,10 +47,6 @@
                 {
                     "enable": true,
                     "name": "SpikeFishAroundNeedle"
-                },
-                {
-                    "enable": true,
-                    "name": "SpriteAnimation"
                 }
             ],
             "type": "Script"
@@ -73,11 +71,12 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 0.3333333432674408,
+                        "x": 1.0,
                         "y": 1.0
                     }
                 }
             },
+            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],

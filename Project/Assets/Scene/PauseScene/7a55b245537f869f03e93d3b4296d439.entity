@@ -1,0 +1,103 @@
+{
+    "active": true,
+    "components": [
+        {
+            "elementId": "resume",
+            "elementIndex": 0,
+            "enable": 1,
+            "groupId": "26262eae83e1a46421b288c8f7d1da70",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 15.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "PauseResume": {
+                "defaultColor": {
+                    "w": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "selectedColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "time": 0.0
+            },
+            "UITest1": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": true,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 0.21863800287246704,
+                    "y": 0.2037486881017685,
+                    "z": 0.2037486881017685
+                },
+                "baseTextureGuid": "4cb974ddf0c7f00104e5058c35fa1c57",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "8820e517ebe0c5a3b20230d236c64665",
+                "GamepadDPadDown": "8820e517ebe0c5a3b20230d236c64665",
+                "S": "8820e517ebe0c5a3b20230d236c64665"
+            },
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PauseResume"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "7a55b245537f869f03e93d3b4296d439",
+    "name": "resume",
+    "parentGuid": "26262eae83e1a46421b288c8f7d1da70",
+    "prefabName": ""
+}

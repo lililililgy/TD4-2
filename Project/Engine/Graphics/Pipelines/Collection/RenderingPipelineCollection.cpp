@@ -1,4 +1,4 @@
-﻿#include "RenderingPipelineCollection.h"
+#include "RenderingPipelineCollection.h"
 
 using namespace ONEngine;
 
@@ -50,6 +50,7 @@ using namespace ONEngine;
 #include "../PostProcess/Screen/WaterDepthFogVignette/PostProcessWaterDepthFogVignette.h"
 #include "../PostProcess/Screen/WaterColorGrading/PostProcessWaterColorGrading.h"
 #include "../PostProcess/Screen/WaterCausticsLightShafts/PostProcessWaterCausticsLightShafts.h"
+#include "../PostProcess/Screen/Pixelate/PostProcessPixelate.h"
 
 RenderingPipelineCollection::RenderingPipelineCollection(ShaderCompiler* shaderCompiler, DxManager* dxm, EntityComponentSystem* pEntityComponentSystem, Asset::AssetCollection* assetCollection)
 	: pShaderCompiler_(shaderCompiler), pDxManager_(dxm), pEntityComponentSystem_(pEntityComponentSystem), pAssetCollection_(assetCollection) {}
@@ -117,12 +118,13 @@ void RenderingPipelineCollection::Initialize() {
 	GeneratePostProcessScreenPipeline<PostProcessWaterColorGrading>();
 	GeneratePostProcessScreenPipeline<PostProcessWaterDistortion>();
 	GeneratePostProcessScreenPipeline<PostProcessFisheye>();
+	GeneratePostProcessScreenPipeline<PostProcessPixelate>();
 }
 
-void RenderingPipelineCollection::PreDrawEntities(CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+void RenderingPipelineCollection::PreDrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+	if(!ecsGroup) return;
 
 	/// ----- すべてのPipelineのPreDrawを実行する ----- ///
-	ECSGroup* ecsGroup = pEntityComponentSystem_->GetCurrentGroup();
 
 	/// 2d,3d 両方ともカメラが有効かチェックしてから描画する
 	if(IsEnableCamera(_3dCamera)) {
@@ -145,10 +147,8 @@ void RenderingPipelineCollection::PreDrawEntities(CameraComponent* _3dCamera, Ca
 	}
 }
 
-void RenderingPipelineCollection::DrawEntities(CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
-
-	/// シーンを描画するので現在のGroupを使用する
-	ECSGroup* ecsGroup = pEntityComponentSystem_->GetCurrentGroup();
+void RenderingPipelineCollection::DrawEntities(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* /*_2dCamera*/) {
+	if(!ecsGroup) return;
 
 	/// 3dカメラが有効なら3D描画を実行
 	if(IsEnableCamera(_3dCamera)) {
@@ -158,27 +158,27 @@ void RenderingPipelineCollection::DrawEntities(CameraComponent* _3dCamera, Camer
 	}
 }
 
-void RenderingPipelineCollection::DrawParticles(CameraComponent* _3dCamera) {
+void RenderingPipelineCollection::DrawParticles(ECSGroup* ecsGroup, CameraComponent* _3dCamera) {
+	if(!ecsGroup) return;
 	if(particleRenderer_ && IsEnableCamera(_3dCamera)) {
-		particleRenderer_->Draw(pEntityComponentSystem_->GetCurrentGroup(), _3dCamera, pDxManager_->GetDxCommand());
+		particleRenderer_->Draw(ecsGroup, _3dCamera, pDxManager_->GetDxCommand());
 	}
 }
 
-void RenderingPipelineCollection::DrawGizmos(CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
+void RenderingPipelineCollection::DrawGizmos(ECSGroup* ecsGroup, [[maybe_unused]] CameraComponent* _3dCamera, [[maybe_unused]] CameraComponent* _2dCamera) {
+	if(!ecsGroup) return;
 #ifdef DEBUG_MODE
 	if(gizmo3D_) {
-		gizmo3D_->Draw(pEntityComponentSystem_->GetCurrentGroup(), _3dCamera, pDxManager_->GetDxCommand());
+		gizmo3D_->Draw(ecsGroup, _3dCamera, pDxManager_->GetDxCommand());
 	}
 	if(gizmo2D_) {
-		gizmo2D_->Draw(pEntityComponentSystem_->GetCurrentGroup(), _2dCamera, pDxManager_->GetDxCommand());
+		gizmo2D_->Draw(ecsGroup, _2dCamera, pDxManager_->GetDxCommand());
 	}
 	Gizmo::Reset();
 #endif
 }
 
-void RenderingPipelineCollection::DrawEntities2D(CameraComponent* _2dCamera, const std::string& groupName) {
-	/// 対象のGroupを取得
-	ECSGroup* ecsGroup = groupName.empty() ? pEntityComponentSystem_->GetCurrentGroup() : pEntityComponentSystem_->GetECSGroup(groupName);
+void RenderingPipelineCollection::DrawEntities2D(ECSGroup* ecsGroup, CameraComponent* _2dCamera) {
 	if(!ecsGroup) return;
 
 	/// 2dカメラが有効なら2D描画を実行
@@ -203,11 +203,8 @@ void RenderingPipelineCollection::DrawEntities2D(CameraComponent* _2dCamera, con
 	}
 }
 
-void RenderingPipelineCollection::DrawSelectedPrefab(CameraComponent* _3dCamera, CameraComponent* _2dCamera) {
-	/// ----- 選択されているPrefabの描画 ----- ///
-
-	/// デバッグ用のGroupを使用する
-	ECSGroup* ecsGroup = pEntityComponentSystem_->GetECSGroup("Debug");
+void RenderingPipelineCollection::DrawSelectedPrefab(ECSGroup* ecsGroup, CameraComponent* _3dCamera, CameraComponent* /*_2dCamera*/) {
+	if(!ecsGroup) return;
 
 	/// 3dカメラが有効なら3D描画を実行
 	if(IsEnableCamera(_3dCamera)) {
@@ -217,10 +214,7 @@ void RenderingPipelineCollection::DrawSelectedPrefab(CameraComponent* _3dCamera,
 	}
 }
 
-void RenderingPipelineCollection::DrawSelectedPrefab2D(CameraComponent* _2dCamera, const std::string& groupName) {
-	/// デバッグ用のGroupを使用する
-	std::string targetGroup = groupName.empty() ? "Debug" : groupName;
-	ECSGroup* ecsGroup = pEntityComponentSystem_->GetECSGroup(targetGroup);
+void RenderingPipelineCollection::DrawSelectedPrefab2D(ECSGroup* ecsGroup, CameraComponent* _2dCamera) {
 	if(!ecsGroup) return;
 
 	/// 2dカメラが有効なら2D描画を実行
@@ -232,7 +226,7 @@ void RenderingPipelineCollection::DrawSelectedPrefab2D(CameraComponent* _2dCamer
 }
 
 
-void RenderingPipelineCollection::ExecutePostProcess3D(const std::string& sceneTextureName) {
+void RenderingPipelineCollection::ExecutePostProcess3D(const std::string& sceneTextureName, ECSGroup* ecsGroup) {
 	// 検証用ログ
 	static int post3DLogCount = 0;
 	if(post3DLogCount < 10) {
@@ -241,11 +235,11 @@ void RenderingPipelineCollection::ExecutePostProcess3D(const std::string& sceneT
 	}
 
 	for(auto& postProcess : postProcesses3D_) {
-		postProcess->Execute(sceneTextureName, pDxManager_->GetDxCommand(), pAssetCollection_, pEntityComponentSystem_);
+		postProcess->Execute(sceneTextureName, pDxManager_->GetDxCommand(), pAssetCollection_, pEntityComponentSystem_, ecsGroup);
 	}
 }
 
-void RenderingPipelineCollection::ExecutePostProcessScreen(const std::string& sceneTextureName) {
+void RenderingPipelineCollection::ExecutePostProcessScreen(const std::string& sceneTextureName, ECSGroup* ecsGroup) {
 	// 検証用ログ
 	static int postScreenLogCount = 0;
 	if(postScreenLogCount < 10) {
@@ -254,7 +248,7 @@ void RenderingPipelineCollection::ExecutePostProcessScreen(const std::string& sc
 	}
 
 	for(auto& postProcess : postProcessesScreen_) {
-		postProcess->Execute(sceneTextureName, pDxManager_->GetDxCommand(), pAssetCollection_, pEntityComponentSystem_);
+		postProcess->Execute(sceneTextureName, pDxManager_->GetDxCommand(), pAssetCollection_, pEntityComponentSystem_, ecsGroup);
 	}
 }
 

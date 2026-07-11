@@ -1,0 +1,105 @@
+{
+    "active": true,
+    "components": [
+        {
+            "elementId": "exit-game",
+            "elementIndex": 3,
+            "enable": 1,
+            "groupId": "26262eae83e1a46421b288c8f7d1da70",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 4.0,
+                "y": -3.5999999046325684,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 15.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "PauseExitGame": {
+                "defaultColor": {
+                    "w": 0.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "height": 0.0,
+                "selectedColor": {
+                    "w": 0.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "speed": 0.0,
+                "time": 0.0
+            },
+            "UITest1": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": true,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 0.21863800287246704,
+                    "y": 0.2037486881017685,
+                    "z": 0.2037486881017685
+                },
+                "baseTextureGuid": "3c667a9c8898c994979a53fc3a2e4da8",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "GamepadDPadUp": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "UpArrow": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "W": "0abbe7a8d0ac19bd95a8fd428bec2603"
+            },
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PauseExitGame"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "064af8e8912a8913f68d5651177146d1",
+    "name": "exit-game",
+    "parentGuid": "26262eae83e1a46421b288c8f7d1da70",
+    "prefabName": ""
+}

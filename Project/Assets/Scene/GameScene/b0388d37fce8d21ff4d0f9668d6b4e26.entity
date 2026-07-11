@@ -2,25 +2,83 @@
     "active": true,
     "components": [
         {
-            "AttackCollision": {
-                "damage_": 10.201784133911133
+            "MovementAreaClamper": {
+                "existArea_": false,
+                "fixedCollisionBounds_": true,
+                "fixedPos_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "movementAreaEntityName_": "Stage",
+                "radius_": 33.0
             },
-            "HP": {
-                "currentHp_": 1.0
-            },
-            "LevelingComponent": {
-                "currentLevel_": 2
-            },
-            "PlayerMoveComponent": {
-                "paramReleaseSmoothTime_": 0.6000000238418579
-            },
-            "PlayerNormalState": {
-                "minSpeed_": 32.0,
-                "rotateMaxSmoothSpeed_": 21.299999237060547,
-                "rotateSmoothTime_": 2.799999952316284
-            },
-            "TrailLeader": {},
             "type": "Variables"
+        },
+        {
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PlayerInputComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerStateComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "LevelingComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerNormalState"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerDashState"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerMoveComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerShotComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "RoeManager"
+                },
+                {
+                    "enable": true,
+                    "name": "TrailLeader"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerLifeComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "Magazine"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerAttackComponent"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "MovementAreaClamper"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",

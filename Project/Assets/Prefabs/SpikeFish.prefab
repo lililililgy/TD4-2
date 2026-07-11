@@ -13,15 +13,15 @@
                         "z": 0.0
                     },
                     "rotate": {
-                        "w": -0.4573034644126892,
+                        "w": 0.8303884863853455,
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -0.8893107175827026
+                        "z": -0.5571848750114441
                     },
                     "scale": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": 0.8676477074623108,
+                        "y": 0.8676477074623108,
+                        "z": 0.8676477074623108
                     },
                     "type": "Transform"
                 },
@@ -33,11 +33,13 @@
                     },
                     "SpriteAnimation": {
                         "cols": 3,
+                        "endFrame": -1,
                         "fps": 10.0,
                         "invertY": false,
                         "isLoop": false,
                         "isPlay": false,
                         "rows": 1,
+                        "startFrame": 0,
                         "totalFrames": 0
                     },
                     "type": "Variables"
@@ -48,10 +50,6 @@
                         {
                             "enable": true,
                             "name": "SpikeFishAroundNeedle"
-                        },
-                        {
-                            "enable": true,
-                            "name": "SpriteAnimation"
                         }
                     ],
                     "type": "Script"
@@ -76,17 +74,18 @@
                             },
                             "rotate": 0.0,
                             "scale": {
-                                "x": 0.3333333432674408,
+                                "x": 1.0,
                                 "y": 1.0
                             }
                         }
                     },
+                    "isPixelPerfect": true,
                     "type": "SpriteRenderer"
                 }
             ],
-            "guid": "ed0ce65e3b321cfd0f3b5f891116c113",
+            "guid": "5ed32ed7307d42dc28638d9b966c3688",
             "name": "SpikeFishAroundNeedle",
-            "parentGuid": "0ddfefefe7891522f08877c724fc53a4",
+            "parentGuid": "3eb5bbb9ffa22394fd0ca6deba14bbe1",
             "prefabName": "SpikeFishAroundNeedle"
         }
     ],
@@ -101,8 +100,8 @@
             },
             "rotate": {
                 "w": 0.0,
-                "x": 0.0,
-                "y": 0.0,
+                "x": 0.9998937845230103,
+                "y": 0.014577864669263363,
                 "z": 0.0
             },
             "scale": {
@@ -113,11 +112,31 @@
             "type": "Transform"
         },
         {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 7,
+            "mass": 1.0,
+            "radius": 0.30000001192092896,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
             "ChaseController": {
-                "OnChaseStart": {},
-                "OnDiscoveryStart": {},
-                "OnRushStart": {},
-                "OnWaitStart": {},
+                "OnChaseStart": {
+                    "__type": ""
+                },
+                "OnDiscoveryStart": {
+                    "__type": ""
+                },
+                "OnRushStart": {
+                    "__type": ""
+                },
+                "OnWaitStart": {
+                    "__type": ""
+                },
                 "autoStart": true,
                 "chaseDistance": 1481.0,
                 "chaseDuration": 0.5,
@@ -131,22 +150,34 @@
                 "waitTime": 0.0
             },
             "SmallFryChaseMove": {},
+            "SpikeFish": {
+                "baseRotationOffsetDeg": 90.0,
+                "expandScaleRate": 1.5,
+                "expandanimationDuration": 0.699999988079071,
+                "returnanimationDuration": 0.20000000298023224
+            },
             "SpikeFishAttack": {
                 "attackDuration": 0.800000011920929,
-                "needleNum": 8
+                "needleNum": 16
             },
             "SpriteAnimation": {
                 "cols": 3,
+                "endFrame": -1,
                 "fps": 10.0,
                 "invertY": false,
                 "isLoop": false,
                 "isPlay": false,
                 "rows": 1,
+                "startFrame": 0,
                 "totalFrames": 0
             },
             "TargetRangeDetector": {
-                "OnEnter": {},
-                "OnExit": {},
+                "OnEnter": {
+                    "__type": ""
+                },
+                "OnExit": {
+                    "__type": ""
+                },
                 "range": 784.0,
                 "targetEntityName": "Player",
                 "wasInRange_": true
@@ -175,6 +206,10 @@
                 {
                     "enable": true,
                     "name": "SpriteAnimation"
+                },
+                {
+                    "enable": true,
+                    "name": "SpikeFish"
                 }
             ],
             "type": "Script"
@@ -194,7 +229,7 @@
                 "postEffectFlags": 0,
                 "uvTransform": {
                     "position": {
-                        "x": 0.0,
+                        "x": 0.6665999889373779,
                         "y": 0.0
                     },
                     "rotate": 0.0,
@@ -204,10 +239,11 @@
                     }
                 }
             },
+            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "0ddfefefe7891522f08877c724fc53a4",
+    "guid": "3eb5bbb9ffa22394fd0ca6deba14bbe1",
     "name": "SpikeFish",
     "parentGuid": null,
     "prefabName": "SpikeFish"

@@ -26,6 +26,17 @@
                     "type": "Transform"
                 },
                 {
+                    "KingJellyfish": {
+                        "chargeDamageFieldDuration": 2.5999999046325684,
+                        "chargeDamageFieldPrefabName": "JellyfishChargeDamageField",
+                        "laserFireDuration": 10.399999618530273,
+                        "laserLength": 3600.0,
+                        "moveArcHeight": 2110.0,
+                        "moveDistance": 4000.0,
+                        "moveInertiaDuration": 1.5,
+                        "moveInertiaRate": 0.75,
+                        "moveSpeed": 1400.0
+                    },
                     "type": "Variables"
                 },
                 {
@@ -44,9 +55,9 @@
                     "useOwnerScale": true
                 }
             ],
-            "guid": "a1eab261d5e83c80a43a26f48723add2",
+            "guid": "47f7611b5b4ac502838916dffcf70e2d",
             "name": "Collider",
-            "parentGuid": "0226e8f42587aa6fa61a6a7e47d5a50c",
+            "parentGuid": "619b46bd9b63819f892a38013d5d5740",
             "prefabName": ""
         },
         {
@@ -75,6 +86,9 @@
                 },
                 {
                     "GesoWeakPoint": {},
+                    "PlayerNormalState": {
+                        "accel_": 1024.0
+                    },
                     "type": "Variables"
                 },
                 {
@@ -88,22 +102,8 @@
                     "type": "Script"
                 },
                 {
-                    "categoryBits": 8,
                     "enable": 1,
-                    "freezeY": false,
-                    "isTrigger": true,
-                    "maskBits": 4294967295,
-                    "mass": 1.0,
-                    "size": {
-                        "x": 90.09999084472656,
-                        "y": 90.10000610351563
-                    },
-                    "state": "Dynamic",
-                    "type": "BoxCollider2D",
-                    "useOwnerScale": false
-                },
-                {
-                    "enable": 1,
+                    "isPixelPerfect": false,
                     "material": {
                         "baseColor": {
                             "w": 1.0,
@@ -128,11 +128,26 @@
                         }
                     },
                     "type": "SpriteRenderer"
+                },
+                {
+                    "categoryBits": 8,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 2,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 90.09999084472656,
+                        "y": 90.10000610351563
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": false
                 }
             ],
-            "guid": "0e50874e02128391a1a27810dfea80df",
+            "guid": "d22390f74a81c5e05310ad072ffabbca",
             "name": "weakPoint",
-            "parentGuid": "0226e8f42587aa6fa61a6a7e47d5a50c",
+            "parentGuid": "619b46bd9b63819f892a38013d5d5740",
             "prefabName": ""
         }
     ],
@@ -146,15 +161,15 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 50.0,
-                "y": 1000.0,
-                "z": 10.0
+                "x": 64.0,
+                "y": 409.4999084472656,
+                "z": 1.0
             },
             "type": "Transform"
         },
@@ -184,6 +199,7 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -210,7 +226,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "0226e8f42587aa6fa61a6a7e47d5a50c",
+    "guid": "619b46bd9b63819f892a38013d5d5740",
     "name": "GesoHand",
     "parentGuid": null,
     "prefabName": "GesoHand"

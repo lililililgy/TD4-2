@@ -121,12 +121,17 @@ public class Entity {
 
 	public void Destroy() {
 		/// 子の情報もクリア
-		for (uint i = 0; i < GetChildCount(); i++) {
+		uint childCount = GetChildCount();
+		List<Entity> children = new List<Entity>();
+		for (uint i = 0; i < childCount; i++) {
 			Entity child = GetChild(i);
 			if (child) {
-				Debug.LogInfo("Entity.Destroy - Destroying child entity ID: " + child.Id + " of parent entity ID: " + entityId_);
-				child.Destroy();
+				children.Add(child);
 			}
+		}
+		foreach (Entity child in children) {
+			Debug.LogInfo("Entity.Destroy - Destroying child entity ID: " + child.Id + " of parent entity ID: " + entityId_);
+			child.Destroy();
 		}
 
 		/// Entityを削除
@@ -256,13 +261,17 @@ public class Entity {
 	public MonoScript AddScript(MonoScript mb) {
 		string scriptName = mb.GetType().Name;
 
+		Debug.LogInfo("Entity.AddScript - Requesting script: " + scriptName + " on Entity ID: " + entityId_);
+
 		/// スクリプトを得る
 		if (scripts_.ContainsKey(scriptName)) {
+			Debug.LogInfo("Entity.AddScript - Script already exists in dictionary: " + scriptName);
 			return scripts_[scriptName];
 		}
 
 		/// なかったので新しく作る
 		scripts_[scriptName] = mb;
+		Debug.LogInfo("Entity.AddScript - Added script to dictionary successfully: " + scriptName);
 		/// c++側でもスクリプトを追加
 		InternalAddScript(entityId_, scriptName, ecsGroupName_);
 		return mb;

@@ -920,12 +920,30 @@ void UIEditorWindow::SavePrefab(const std::string& filepath) {
 
 		// 3. UI関連コンポーネントを追加
 		if (node->type == NodeType::Group) {
+			std::string currentSelectedGuidStr = "";
+			for (const auto& link : m_Links) {
+				Pin* startPin = nullptr;
+				Pin* endPin = nullptr;
+				for (const auto& n : m_Nodes) {
+					for (const auto& p : n->outputs) {
+						if (p.id == link.startPinId) startPin = const_cast<Pin*>(&p);
+					}
+					for (const auto& p : n->inputs) {
+						if (p.id == link.endPinId) endPin = const_cast<Pin*>(&p);
+					}
+				}
+				if (startPin && endPin && startPin->node == node && endPin->node->type == NodeType::Element && endPin->node->name == "Element_1") {
+					currentSelectedGuidStr = endPin->node->guid.ToString();
+					break;
+				}
+			}
+
 			json groupComp = {
 				{ "type", "UIGroupComponent" },
 				{ "enable", 1 },
 				{ "isFocused", node->isFocused },
 				{ "isVisible", node->isVisible },
-				{ "currentSelected", "" },
+				{ "currentSelected", currentSelectedGuidStr },
 				{ "parentGroup", "" },
 				{ "submitKeys", node->submitKeys.empty() ? std::vector<std::string>{"Return", "Space", "GamepadA"} : node->submitKeys },
 				{ "cancelKeys", node->cancelKeys.empty() ? std::vector<std::string>{"Escape", "GamepadB"} : node->cancelKeys }

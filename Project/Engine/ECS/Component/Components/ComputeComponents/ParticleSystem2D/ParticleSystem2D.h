@@ -54,6 +54,7 @@ namespace ONEngine {
         ParticleSystemSizeOverLifetime sizeOverLifetime;
         ParticleSystemVelocityOverLifetime velocityOverLifetime;
         ParticleSystemRenderer renderer;
+        ParticleSystemTextureSheetAnimation textureSheetAnimation;
 
         // --- CPU Simulation State ---
         std::vector<Particle2D> particles;

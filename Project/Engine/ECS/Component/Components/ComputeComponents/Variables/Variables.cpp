@@ -15,6 +15,7 @@
 #include <mono/metadata/loader.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/class.h>
+#include <mono/metadata/threads.h>
 
 /// engine
 #include "Engine/Core/Utility/Math/Math.h"
@@ -50,11 +51,26 @@ namespace {
 	bool HasSerializeField(MonoClassField* field) {
 		MonoClass* klass = mono_field_get_parent(field);
 		MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
-		if (!attrs) return false;
+		if (!attrs) {
+			Console::Log(std::format("[SerializeField] attrs=null for field: {}", mono_field_get_name(field)), ONEngine::LogCategory::ScriptEngine);
+			return false;
+		}
 
-		MonoClass* serializeFieldAttr = mono_class_from_name(MonoScriptEngine::GetInstance().Image(), "", "SerializeField");
-
+		MonoImage* klassImage = mono_class_get_image(klass);
+		MonoClass* serializeFieldAttr = mono_class_from_name(klassImage, "", "SerializeField");
 		bool has = serializeFieldAttr && mono_custom_attrs_has_attr(attrs, serializeFieldAttr);
+
+		if (!has) {
+			MonoImage* engineImage = MonoScriptEngine::GetInstance().Image();
+			if (engineImage && engineImage != klassImage) {
+				MonoClass* serializeFieldAttrEngine = mono_class_from_name(engineImage, "", "SerializeField");
+				if (serializeFieldAttrEngine && mono_custom_attrs_has_attr(attrs, serializeFieldAttrEngine)) {
+					has = true;
+				}
+			}
+		}
+
+		Console::Log(std::format("[SerializeField] field={} has={}", mono_field_get_name(field), has ? "true" : "false"), ONEngine::LogCategory::ScriptEngine);
 		mono_custom_attrs_free(attrs);
 		return has;
 	}
@@ -65,6 +81,9 @@ namespace {
 	}
 
 	bool ShouldSerialize(MonoClassField* field) {
+		// Releaseビルドでは SafeInvoke を経由しない Mono API 呼び出し前に
+		// 必ずスレッドをドメインにアタッチする必要がある
+		mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
 		return IsPublicField(field) || HasSerializeField(field);
 	}
 
@@ -134,7 +153,8 @@ namespace {
 					for (auto& [k, v] : arg->fields) j[k] = VarToJson(v);
 				}
 				return j;
-			} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
+			} else {
+				static_assert(std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>, "Unhandled type in VarToJson");
 				json j = json::array();
 				for (const auto& o : arg) {
 					json oj = json::object();
@@ -146,7 +166,6 @@ namespace {
 				}
 				return j;
 			}
-			return json();
 			}, var);
 	}
 
@@ -177,7 +196,25 @@ Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 			}
 			return gen;
 		}
-		case MONO_TYPE_CLASS: return std::shared_ptr<GenericObject>(nullptr);
+		case MONO_TYPE_CLASS:
+		{
+			MonoClass* klass = mono_class_from_mono_type((MonoType*)type);
+			if (!klass) return std::shared_ptr<GenericObject>(nullptr);
+			const char* name = mono_class_get_name(klass);
+			if (strcmp(name, "String") == 0) return std::string("");
+
+			auto gen = std::make_shared<Variables::GenericObject>();
+			gen->typeName = name;
+			MonoClass* currentClass = klass;
+			while (currentClass) {
+				void* iter = nullptr; MonoClassField* f;
+				while ((f = mono_class_get_fields(currentClass, &iter))) {
+					if (ShouldSerialize(f)) gen->fields[mono_field_get_name(f)] = MonoObjectToVar(nullptr, mono_field_get_type(f));
+				}
+				currentClass = mono_class_get_parent(currentClass);
+			}
+			return gen;
+		}
 		case MONO_TYPE_GENERICINST: return std::vector<int>();
 		default: return 0;
 		}
@@ -256,14 +293,18 @@ std::shared_ptr<Variables::GenericObject> Variables::MonoObjectToGeneric(void* o
 	MonoClass* klass = mono_object_get_class((MonoObject*)obj);
 	gen->typeName = mono_class_get_name(klass);
 
-	void* iter = nullptr;
-	MonoClassField* field = nullptr;
-	while ((field = mono_class_get_fields(klass, &iter))) {
-		if (ShouldSerialize(field)) {
-			const char* name = mono_field_get_name(field);
-			MonoType* type = mono_field_get_type(field);
-			gen->fields[name] = MonoObjectToVar(mono_field_get_value_object(mono_domain_get(), field, (MonoObject*)obj), type);
+	MonoClass* currentClass = klass;
+	while (currentClass) {
+		void* iter = nullptr;
+		MonoClassField* field = nullptr;
+		while ((field = mono_class_get_fields(currentClass, &iter))) {
+			if (ShouldSerialize(field)) {
+				const char* name = mono_field_get_name(field);
+				MonoType* type = mono_field_get_type(field);
+				gen->fields[name] = MonoObjectToVar(mono_field_get_value_object(mono_domain_get(), field, (MonoObject*)obj), type);
+			}
 		}
+		currentClass = mono_class_get_parent(currentClass);
 	}
 	return gen;
 }
@@ -274,7 +315,7 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 	if (!gen) return;
 
 	for (auto& [name, val] : gen->fields) {
-		MonoClassField* field = mono_class_get_field_from_name((MonoClass*)klass, name.c_str());
+		MonoClassField* field = ONEngine::MonoScriptEngineUtils::FindFieldRecursive((MonoClass*)klass, name.c_str());
 		if (!field) continue;
 
 		std::visit([&](auto&& arg) {
@@ -484,6 +525,9 @@ void Variables::SaveJson(const std::string& path) {
 }
 
 void Variables::RegisterScriptVariables() {
+	// Releaseビルドでのスレッドアタッチを保証する
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	Script* script = GetOwner()->GetComponent<Script>();
 	if (!script) return;
 
@@ -499,20 +543,26 @@ void Variables::RegisterScriptVariables() {
 			MonoObject* safeObj = monoEngine.GetMonoBehaviorFromCS(entity->GetECSGroup()->GetGroupName(), entity->GetId(), data.scriptName);
 			if (!safeObj) continue;
 
-			MonoClass* monoClass = mono_object_get_class(safeObj);
-			void* iter = nullptr;
-			MonoClassField* field = nullptr;
-			while ((field = mono_class_get_fields(monoClass, &iter))) {
-				if (!ShouldSerialize(field)) continue;
-				const char* fieldName = mono_field_get_name(field);
-				if (group.Has(fieldName)) continue;
-				group.Add(fieldName, MonoObjectToVar(mono_field_get_value_object(mono_domain_get(), field, safeObj), mono_field_get_type(field)));
+			MonoClass* currentClass = mono_object_get_class(safeObj);
+			while (currentClass) {
+				void* iter = nullptr;
+				MonoClassField* field = nullptr;
+				while ((field = mono_class_get_fields(currentClass, &iter))) {
+					if (!ShouldSerialize(field)) continue;
+					const char* fieldName = mono_field_get_name(field);
+					if (group.Has(fieldName)) continue;
+					group.Add(fieldName, MonoObjectToVar(mono_field_get_value_object(mono_domain_get(), field, safeObj), mono_field_get_type(field)));
+				}
+				currentClass = mono_class_get_parent(currentClass);
 			}
 		}
 	}
 }
 
 void Variables::ReloadScriptVariables() {
+	// Releaseビルドでのスレッドアタッチを保証する
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	Script* script = GetOwner()->GetComponent<Script>();
 	if (!script) return;
 
@@ -528,117 +578,141 @@ void Variables::ReloadScriptVariables() {
 			MonoObject* safeObj = monoEngine.GetMonoBehaviorFromCS(entity->GetECSGroup()->GetGroupName(), entity->GetId(), data.scriptName);
 			if (!safeObj) continue;
 
-			MonoClass* monoClass = mono_object_get_class(safeObj);
-			void* iter = nullptr;
-			MonoClassField* field = nullptr;
-			while ((field = mono_class_get_fields(monoClass, &iter))) {
-				if (!ShouldSerialize(field)) continue;
-				group.Add(mono_field_get_name(field), MonoObjectToVar(mono_field_get_value_object(mono_domain_get(), field, safeObj), mono_field_get_type(field)));
+			MonoClass* currentClass = mono_object_get_class(safeObj);
+			while (currentClass) {
+				void* iter = nullptr;
+				MonoClassField* field = nullptr;
+				while ((field = mono_class_get_fields(currentClass, &iter))) {
+					if (!ShouldSerialize(field)) continue;
+					group.Add(mono_field_get_name(field), MonoObjectToVar(mono_field_get_value_object(mono_domain_get(), field, safeObj), mono_field_get_type(field)));
+				}
+				currentClass = mono_class_get_parent(currentClass);
 			}
 		}
 	}
 }
 
 void Variables::SetScriptVariables(const std::string& scriptName) {
+	// Releaseビルドでは SafeInvoke を経由しない Mono API (mono_field_set_value 等) を
+	// 直接呼び出すため、スレッドをドメインにアタッチしておく
+	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+
 	GameEntity* owner = GetOwner();
-	if (!owner) return;
+	if (!owner) {
+		Console::Log("[SetScriptVars] owner is null for script: " + scriptName, ONEngine::LogCategory::ScriptEngine);
+		return;
+	}
 	Script* script = owner->GetComponent<Script>();
-	if (!script || !HasGroup(scriptName)) return;
+	if (!script) {
+		Console::Log("[SetScriptVars] no Script component for: " + scriptName, ONEngine::LogCategory::ScriptEngine);
+		return;
+	}
+	if (!HasGroup(scriptName)) {
+		Console::Log("[SetScriptVars] no group for scriptName: " + scriptName + "  groups: " + std::to_string(groups_.size()), ONEngine::LogCategory::ScriptEngine);
+		return;
+	}
 
 	Group& group = groups_[groupKeyMap_.at(scriptName)];
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 	MonoObject* safeObj = monoEngine.GetMonoBehaviorFromCS(owner->GetECSGroup()->GetGroupName(), owner->GetId(), scriptName);
-	if (!safeObj) return;
+	if (!safeObj) {
+		Console::Log("[SetScriptVars] GetMonoBehaviorFromCS returned null for: " + scriptName, ONEngine::LogCategory::ScriptEngine);
+		return;
+	}
+	Console::Log("[SetScriptVars] OK setting fields for: " + scriptName, ONEngine::LogCategory::ScriptEngine);
 
-	MonoClass* monoClass = mono_object_get_class(safeObj);
-	void* iter = nullptr;
-	MonoClassField* field = nullptr;
-	while ((field = mono_class_get_fields(monoClass, &iter))) {
-		if (!ShouldSerialize(field)) continue;
-		const char* name = mono_field_get_name(field);
-		if (!group.Has(name)) continue;
+	MonoClass* currentClass = mono_object_get_class(safeObj);
+	while (currentClass) {
+		void* iter = nullptr;
+		MonoClassField* field = nullptr;
+		while ((field = mono_class_get_fields(currentClass, &iter))) {
+			if (!ShouldSerialize(field)) continue;
+			const char* name = mono_field_get_name(field);
+			if (!group.Has(name)) continue;
 
-		// C#側の型情報に合わせてC++側のVariablesの型を自動補正する
-		MonoType* fieldType = mono_field_get_type(field);
-		int typeId = mono_type_get_type(fieldType);
-		auto& var = const_cast<Var&>(group.Get(name));
+			// C#側の型情報に合わせてC++側のVariablesの型を自動補正する
+			MonoType* fieldType = mono_field_get_type(field);
+			int typeId = mono_type_get_type(fieldType);
+			auto& var = const_cast<Var&>(group.Get(name));
 
-		if (typeId == MONO_TYPE_R4 && std::holds_alternative<int>(var)) {
-			group.Add(name, static_cast<float>(std::get<int>(var)));
-		} else if (typeId == MONO_TYPE_I4 && std::holds_alternative<float>(var)) {
-			group.Add(name, static_cast<int>(std::get<float>(var)));
-		} else if (typeId == MONO_TYPE_BOOLEAN && std::holds_alternative<int>(var)) {
-			group.Add(name, std::get<int>(var) != 0);
-		} else if (typeId == MONO_TYPE_BOOLEAN && std::holds_alternative<float>(var)) {
-			group.Add(name, std::get<float>(var) != 0.0f);
-		} else if (typeId == MONO_TYPE_VALUETYPE || typeId == MONO_TYPE_CLASS) {
-			MonoClass* fieldClass = mono_class_from_mono_type(fieldType);
-			if (fieldClass) {
-				const char* className = mono_class_get_name(fieldClass);
-				if (strcmp(className, "Vector2") == 0 && !std::holds_alternative<Vector2>(var)) {
-					group.Add(name, Vector2::Zero);
-				} else if (strcmp(className, "Vector3") == 0 && !std::holds_alternative<Vector3>(var)) {
-					group.Add(name, Vector3::Zero);
-				} else if (strcmp(className, "Vector4") == 0 && !std::holds_alternative<Vector4>(var)) {
-					group.Add(name, Vector4::Zero);
+			if (typeId == MONO_TYPE_R4 && std::holds_alternative<int>(var)) {
+				group.Add(name, static_cast<float>(std::get<int>(var)));
+			} else if (typeId == MONO_TYPE_I4 && std::holds_alternative<float>(var)) {
+				group.Add(name, static_cast<int>(std::get<float>(var)));
+			} else if (typeId == MONO_TYPE_BOOLEAN && std::holds_alternative<int>(var)) {
+				group.Add(name, std::get<int>(var) != 0);
+			} else if (typeId == MONO_TYPE_BOOLEAN && std::holds_alternative<float>(var)) {
+				group.Add(name, std::get<float>(var) != 0.0f);
+			} else if (typeId == MONO_TYPE_VALUETYPE || typeId == MONO_TYPE_CLASS) {
+				MonoClass* fieldClass = mono_class_from_mono_type(fieldType);
+				if (fieldClass) {
+					const char* className = mono_class_get_name(fieldClass);
+					if (strcmp(className, "Vector2") == 0 && !std::holds_alternative<Vector2>(var)) {
+						group.Add(name, Vector2::Zero);
+					} else if (strcmp(className, "Vector3") == 0 && !std::holds_alternative<Vector3>(var)) {
+						group.Add(name, Vector3::Zero);
+					} else if (strcmp(className, "Vector4") == 0 && !std::holds_alternative<Vector4>(var)) {
+						group.Add(name, Vector4::Zero);
+					}
 				}
+			} else if (typeId == MONO_TYPE_STRING && !std::holds_alternative<std::string>(var)) {
+				group.Add(name, std::string(""));
 			}
-		} else if (typeId == MONO_TYPE_STRING && !std::holds_alternative<std::string>(var)) {
-			group.Add(name, std::string(""));
-		}
 
-		auto& val = group.Get(name);
+			auto& val = group.Get(name);
 
-		std::visit([&](auto&& arg) {
-			using T = std::decay_t<decltype(arg)>;
-			if constexpr (std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, bool> || std::is_same_v<T, Vector2> || std::is_same_v<T, Vector3> || std::is_same_v<T, Vector4>) {
-				mono_field_set_value(safeObj, field, (void*)&arg);
-			} else if constexpr (std::is_same_v<T, std::string>) {
-				mono_field_set_value(safeObj, field, mono_string_new(mono_domain_get(), arg.c_str()));
-			} else if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
-				MonoObject* obj = mono_field_get_value_object(mono_domain_get(), field, safeObj);
-				if (obj) VarToMonoObject(obj, mono_object_get_class(obj), val);
-			} else if constexpr (std::is_same_v<T, std::vector<int>> || std::is_same_v<T, std::vector<float>> || std::is_same_v<T, std::vector<bool>> || std::is_same_v<T, std::vector<std::string>> || std::is_same_v<T, std::vector<Vector3>>) {
-				MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, safeObj);
-				if (list) {
-					MonoClass* lc = mono_object_get_class(list);
-					MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
-					if (clear) mono_runtime_invoke(clear, list, nullptr, nullptr);
-					MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
-					if (add) {
-						for (auto itemVal : arg) {
-							if constexpr (std::is_same_v<T, std::vector<std::string>>) {
-								MonoString* s = mono_string_new(mono_domain_get(), itemVal.c_str());
-								void* args[1] = { s };
-								mono_runtime_invoke(add, list, args, nullptr);
-							} else {
-								void* args[1] = { (void*)&itemVal };
-								mono_runtime_invoke(add, list, args, nullptr);
+			std::visit([&](auto&& arg) {
+				using T = std::decay_t<decltype(arg)>;
+				if constexpr (std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, bool> || std::is_same_v<T, Vector2> || std::is_same_v<T, Vector3> || std::is_same_v<T, Vector4>) {
+					mono_field_set_value(safeObj, field, (void*)&arg);
+				} else if constexpr (std::is_same_v<T, std::string>) {
+					mono_field_set_value(safeObj, field, mono_string_new(mono_domain_get(), arg.c_str()));
+				} else if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
+					MonoObject* obj = mono_field_get_value_object(mono_domain_get(), field, safeObj);
+					if (obj) VarToMonoObject(obj, mono_object_get_class(obj), val);
+				} else if constexpr (std::is_same_v<T, std::vector<int>> || std::is_same_v<T, std::vector<float>> || std::is_same_v<T, std::vector<bool>> || std::is_same_v<T, std::vector<std::string>> || std::is_same_v<T, std::vector<Vector3>>) {
+					MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, safeObj);
+					if (list) {
+						MonoClass* lc = mono_object_get_class(list);
+						MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
+						if (clear) mono_runtime_invoke(clear, list, nullptr, nullptr);
+						MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
+						if (add) {
+							for (auto itemVal : arg) {
+								if constexpr (std::is_same_v<T, std::vector<std::string>>) {
+									MonoString* s = mono_string_new(mono_domain_get(), itemVal.c_str());
+									void* args[1] = { s };
+									mono_runtime_invoke(add, list, args, nullptr);
+								} else {
+									void* args[1] = { (void*)&itemVal };
+									mono_runtime_invoke(add, list, args, nullptr);
+								}
 							}
 						}
 					}
-				}
-			} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
-				MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, safeObj);
-				if (list) {
-					MonoClass* lc = mono_object_get_class(list);
-					MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
-					mono_runtime_invoke(clear, list, nullptr, nullptr);
-					MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
-					MonoType* et = mono_signature_get_return_type(mono_method_signature(mono_class_get_method_from_name(lc, "get_Item", 1)));
-					MonoClass* ek = mono_class_from_mono_type(et);
-					for (auto& itemGen : arg) {
-						MonoObject* item = mono_object_new(mono_domain_get(), ek);
-						if (!mono_class_is_valuetype(ek)) {
-							mono_runtime_object_init(item);
+				} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
+					MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, safeObj);
+					if (list) {
+						MonoClass* lc = mono_object_get_class(list);
+						MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
+						mono_runtime_invoke(clear, list, nullptr, nullptr);
+						MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
+						MonoType* et = mono_signature_get_return_type(mono_method_signature(mono_class_get_method_from_name(lc, "get_Item", 1)));
+						MonoClass* ek = mono_class_from_mono_type(et);
+						for (auto& itemGen : arg) {
+							MonoObject* item = mono_object_new(mono_domain_get(), ek);
+							if (!mono_class_is_valuetype(ek)) {
+								mono_runtime_object_init(item);
+							}
+							VarToMonoObject(item, ek, itemGen);
+							void* args[1] = { item };
+							mono_runtime_invoke(add, list, args, nullptr);
 						}
-						VarToMonoObject(item, ek, itemGen);
-						void* args[1] = { item };
-						mono_runtime_invoke(add, list, args, nullptr);
 					}
 				}
-			}
-			}, val);
+				}, val);
+		}
+		currentClass = mono_class_get_parent(currentClass);
 	}
 }
 

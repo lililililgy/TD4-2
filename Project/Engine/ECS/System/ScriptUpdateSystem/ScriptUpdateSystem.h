@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <list>
@@ -46,7 +46,8 @@ private:
 	/// private : objects
 	/// ===================================================
 
-	MonoClass* monoClass_;
+	std::string ecsGroupName_;
+	MonoClass*  monoClass_;
 	uint32_t    gcHandle_;
 	MonoMethod* updateEntitiesMethod_;
 	MonoMethod* addEntityMethod_;

@@ -11,6 +11,8 @@
 /// editor
 #include "Engine/Editor/Math/AssetPayload.h"
 #include "Engine/Editor/Math/ImGuiShowField.h"
+#include "Engine/Editor/Commands/LambdaCommand.h"
+#include "Engine/Editor/Manager/EditCommand.h"
 
 using namespace ONEngine;
 using namespace Editor::CSGui;
@@ -221,33 +223,54 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 
 
 			if(monoClass) {
-				MonoClass* serializeFieldClass = mono_class_from_name(mono_class_get_image(monoClass), "", "SerializeField");
-				MonoClassField* field = nullptr;
-				void* iter = nullptr;
+				MonoImage* klassImage = mono_class_get_image(monoClass);
+				MonoClass* serializeFieldClass = mono_class_from_name(klassImage, "", "SerializeField");
+				MonoClass* serializeFieldClassEngine = nullptr;
 
-				while((field = mono_class_get_fields(monoClass, &iter))) {
-					const char* fieldName = mono_field_get_name(field);
+				MonoImage* engineImage = MonoScriptEngine::GetInstance().Image();
+				if (engineImage && engineImage != klassImage) {
+					serializeFieldClassEngine = mono_class_from_name(engineImage, "", "SerializeField");
+				}
 
-					MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(monoClass, field);
-					if(attrs && mono_custom_attrs_has_attr(attrs, serializeFieldClass)) {
-						// 値の取得
-						MonoType* fieldType = mono_field_get_type(field);
-						int type = mono_type_get_type(fieldType);
+				MonoClass* currentClass = monoClass;
+				while (currentClass) {
+					MonoClassField* field = nullptr;
+					void* iter = nullptr;
 
-						Console::Log(std::format("[UndoDebug] Found [SerializeField] field: '{}' (type: {}) in script '{}'", fieldName, type, script.scriptName));
+					while((field = mono_class_get_fields(currentClass, &iter))) {
+						const char* fieldName = mono_field_get_name(field);
 
-						if(safeObj) {
-							ShowField(script.scriptName, type, safeObj, field, fieldName);
-						} else {
-							Variables* var = entity->GetComponent<Variables>();
-							if (!var) {
-								var = entity->AddComponent<Variables>();
-								Console::Log(std::format("ScriptDebug: Added missing Variables component to entity '{}'.", entity->GetName()));
+						MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(currentClass, field);
+						bool hasAttr = false;
+						if (attrs) {
+							if (serializeFieldClass && mono_custom_attrs_has_attr(attrs, serializeFieldClass)) {
+								hasAttr = true;
+							} else if (serializeFieldClassEngine && mono_custom_attrs_has_attr(attrs, serializeFieldClassEngine)) {
+								hasAttr = true;
 							}
-							ShowFieldForVariables(var, script.scriptName, type, field, fieldName);
 						}
+
+						if(hasAttr) {
+							// 値の取得
+							MonoType* fieldType = mono_field_get_type(field);
+							int type = mono_type_get_type(fieldType);
+
+							Console::Log(std::format("[UndoDebug] Found [SerializeField] field: '{}' (type: {}) in script '{}'", fieldName, type, script.scriptName));
+
+							if(safeObj) {
+								ShowField(script.scriptName, type, safeObj, field, fieldName);
+							} else {
+								Variables* var = entity->GetComponent<Variables>();
+								if (!var) {
+									var = entity->AddComponent<Variables>();
+									Console::Log(std::format("ScriptDebug: Added missing Variables component to entity '{}'.", entity->GetName()));
+								}
+								ShowFieldForVariables(var, script.scriptName, type, field, fieldName);
+							}
+						}
+						if(attrs) mono_custom_attrs_free(attrs);
 					}
-					if(attrs) mono_custom_attrs_free(attrs);
+					currentClass = mono_class_get_parent(currentClass);
 				}
 			}
 
@@ -283,7 +306,16 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 				if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ScriptData")) {
 					int srcIndex = *(const int*)payload->Data;
 					if(srcIndex != i) {
-						std::swap(scriptList[srcIndex], scriptList[i]); // 要素の入れ替え
+						Editor::EditCommand::Execute<Editor::LambdaCommand>(
+							[_script, srcIndex, i]() {
+								auto& list = _script->GetScriptDataList();
+								std::swap(list[srcIndex], list[i]);
+							},
+							[_script, srcIndex, i]() {
+								auto& list = _script->GetScriptDataList();
+								std::swap(list[srcIndex], list[i]);
+							}
+						);
 					}
 				}
 				ImGui::EndDragDropTarget();
@@ -325,7 +357,11 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 						name = name.substr(0, name.find(".cs"));
 					}
 
-					_script->AddScript(name);
+					std::string scriptName = name;
+					Editor::EditCommand::Execute<Editor::LambdaCommand>(
+						[_script, scriptName]() { _script->AddScript(scriptName); },
+						[_script, scriptName]() { _script->RemoveScript(scriptName); }
+					);
 
 					Console::Log(std::format("Script set to: {}", name));
 				} else {

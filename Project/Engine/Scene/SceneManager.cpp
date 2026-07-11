@@ -18,6 +18,7 @@ using namespace ONEngine;
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
+#include "Engine/ECS/System/Audio/AudioPlaybackSystem.h"
 
 
 namespace {
@@ -64,7 +65,7 @@ void SceneManager::Initialize(Asset::AssetCollection* assetCollection) {
 #ifdef DEBUG_MODE
 	SetNextScene(LastOpenSceneName());
 #else
-	SetNextScene("TitleScene");
+	SetNextScene(EngineConfig::startScene);
 #endif
 
 	MoveNextToCurrentScene(false);
@@ -94,6 +95,11 @@ void SceneManager::SaveScene(const std::string& name, ECSGroup* ecsGroup) {
 }
 
 void SceneManager::SaveCurrentScene() {
+	if (DebugConfig::isDebugging) {
+		Console::LogWarning("Cannot save scene while the game is playing.");
+		return;
+	}
+
 	if (currentScene_.empty()) {
 		Console::LogError("No current scene to save.");
 		return;
@@ -114,6 +120,7 @@ void SceneManager::ClearTemporarySavedSceneName() {
 
 void SceneManager::LoadScene(const std::string& sceneName) {
 	SetNextScene(sceneName);
+	isNextSceneAdditive_ = false;
 	if (nextScene_.empty()) {
 		Console::LogError("Failed to load scene: " + sceneName);
 		return;
@@ -125,6 +132,15 @@ void SceneManager::LoadScene(const std::string& sceneName) {
 	// これにより、OnSelectやOnSubmitなどのスクリプト・システム更新処理のコールバック実行中に
 	// エンティティやECSGroupが即座に破棄されてメモリが解放され、呼び出し元のC++コードで
 	// use-after-free（ダングリングポインタアクセス）が発生しクラッシュする不具合を完全に防止します。
+}
+
+void SceneManager::AddScene(const std::string& sceneName) {
+	SetNextScene(sceneName);
+	isNextSceneAdditive_ = true;
+	if (nextScene_.empty()) {
+		Console::LogError("Failed to add scene: " + sceneName);
+		return;
+	}
 }
 
 void SceneManager::ReloadScene(bool isTemporary) {
@@ -181,14 +197,63 @@ void SceneManager::SetDirty(bool isDirty) {
 	isDirty_ = isDirty;
 }
 
+void SceneManager::UnloadScene(const std::string& sceneName) {
+	pEcs_->GetDxManager()->GetDxCommand()->WaitForGpuComplete();
+
+	ECSGroup* group = pEcs_->GetECSGroup(sceneName);
+	if (group) {
+		group->RemoveEntityAll();
+	}
+
+	pEcs_->RemoveActiveGroupName(sceneName);
+
+	// If the current active scene is the one unloaded, switch to the remaining active scene
+	if (currentScene_ == sceneName) {
+		const auto& activeGroups = pEcs_->GetActiveGroupNames();
+		if (!activeGroups.empty()) {
+			currentScene_ = activeGroups.back();
+			pEcs_->SetCurrentGroupName(currentScene_);
+		} else {
+			currentScene_.clear();
+		}
+	}
+}
+
 void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 	/// GPUの処理が終わるまで待つ（リソース破棄中のアクセスを防ぐ）
 	pEcs_->GetDxManager()->GetDxCommand()->WaitForGpuComplete();
 
 	ECSGroup* prevSceneGroup = pEcs_->GetCurrentGroup();
-	if (prevSceneGroup) {
-		prevSceneGroup->RemoveEntityAll();
+	if (!isNextSceneAdditive_) {
+		// Clear all active scenes
+		if (pEcs_->GetActiveGroupNames().empty()) {
+			if (prevSceneGroup) {
+				if (auto* audioSys = prevSceneGroup->GetSystem<AudioPlaybackSystem>()) {
+					audioSys->StopAllAudio();
+				}
+				prevSceneGroup->RemoveEntityAll();
+			}
+		} else {
+			for (const auto& activeName : pEcs_->GetActiveGroupNames()) {
+				if (auto* group = pEcs_->GetECSGroup(activeName)) {
+					if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+						audioSys->StopAllAudio();
+					}
+					group->RemoveEntityAll();
+				}
+			}
+			pEcs_->ClearActiveGroupNames();
+		}
+	} else {
+		// Make sure existing scene names are in activeGroupNames_
+		if (pEcs_->GetActiveGroupNames().empty()) {
+			if (prevSceneGroup) {
+				pEcs_->AddActiveGroupName(prevSceneGroup->GetGroupName());
+			}
+		}
 	}
+
+	isNextSceneAdditive_ = false; // Reset the flag
 
 	currentScene_ = std::move(nextScene_);
 	nextScene_.clear();
@@ -197,6 +262,7 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 	const std::string& sceneName = nextSceneGroup->GetGroupName();
 
 	pEcs_->SetCurrentGroupName(sceneName);
+	pEcs_->AddActiveGroupName(sceneName);
 
 	/// sceneに必要な情報を渡して初期化
 	if (isTemporary) {
@@ -216,6 +282,36 @@ const std::string& SceneManager::GetCurrentSceneName() const {
 	return currentScene_;
 }
 
+void SceneManager::SetUpdatePaused(const std::string& sceneName, bool paused) {
+	if (ECSGroup* group = pEcs_->GetECSGroup(sceneName)) {
+		group->SetUpdatePaused(paused);
+	} else {
+		Console::LogWarning("SetUpdatePaused: ECSGroup '" + sceneName + "' not found.");
+	}
+}
+
+bool SceneManager::IsUpdatePaused(const std::string& sceneName) {
+	if (ECSGroup* group = pEcs_->GetECSGroup(sceneName)) {
+		return group->IsUpdatePaused();
+	}
+	return false;
+}
+
+void SceneManager::SetDrawPaused(const std::string& sceneName, bool paused) {
+	if (ECSGroup* group = pEcs_->GetECSGroup(sceneName)) {
+		group->SetDrawPaused(paused);
+	} else {
+		Console::LogWarning("SetDrawPaused: ECSGroup '" + sceneName + "' not found.");
+	}
+}
+
+bool SceneManager::IsDrawPaused(const std::string& sceneName) {
+	if (ECSGroup* group = pEcs_->GetECSGroup(sceneName)) {
+		return group->IsDrawPaused();
+	}
+	return false;
+}
+
 
 
 void MonoInternalMethods::InternalLoadScene(MonoString* sceneName) {
@@ -225,4 +321,58 @@ void MonoInternalMethods::InternalLoadScene(MonoString* sceneName) {
 	}
 
 	mono_free(cstr);
+}
+
+void MonoInternalMethods::InternalAddScene(MonoString* sceneName) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	if (gSceneManager) {
+		gSceneManager->AddScene(cstr);
+	}
+
+	mono_free(cstr);
+}
+
+void MonoInternalMethods::InternalUnloadScene(MonoString* sceneName) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	if (gSceneManager) {
+		gSceneManager->UnloadScene(cstr);
+	}
+
+	mono_free(cstr);
+}
+
+void MonoInternalMethods::InternalSetUpdatePaused(MonoString* sceneName, bool paused) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	if (gSceneManager) {
+		gSceneManager->SetUpdatePaused(cstr, paused);
+	}
+	mono_free(cstr);
+}
+
+bool MonoInternalMethods::InternalIsUpdatePaused(MonoString* sceneName) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	bool result = false;
+	if (gSceneManager) {
+		result = gSceneManager->IsUpdatePaused(cstr);
+	}
+	mono_free(cstr);
+	return result;
+}
+
+void MonoInternalMethods::InternalSetDrawPaused(MonoString* sceneName, bool paused) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	if (gSceneManager) {
+		gSceneManager->SetDrawPaused(cstr, paused);
+	}
+	mono_free(cstr);
+}
+
+bool MonoInternalMethods::InternalIsDrawPaused(MonoString* sceneName) {
+	char* cstr = mono_string_to_utf8(sceneName);
+	bool result = false;
+	if (gSceneManager) {
+		result = gSceneManager->IsDrawPaused(cstr);
+	}
+	mono_free(cstr);
+	return result;
 }

@@ -15,6 +15,7 @@ workspace "ONEngine"
         cppdialect "C++latest"      -- C++23 / C++26 (プレビュー) を使用
         conformancemode "On"        -- 準拠モード (/permissive-)
         buildoptions { "/utf-8", "/MP" } -- UTF-8エンコード、マルチプロセスコンパイル
+        defines { "_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING" }
 
     -- 設定のリセット（次の定義に影響しないように）
     filter {}

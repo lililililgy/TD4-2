@@ -143,8 +143,13 @@ EDITOR_STATE RemoveComponentCommand::Execute() {
 
 
 	if (pIterator_) {
-		*pIterator_ = pEntity_->GetComponents().find(GetComponentHash(componentName_));
-		(*pIterator_)++;
+		auto it = pEntity_->GetComponents().find(GetComponentHash(componentName_));
+		if (it != pEntity_->GetComponents().end()) {
+			*pIterator_ = it;
+			(*pIterator_)++;
+		} else {
+			*pIterator_ = pEntity_->GetComponents().end();
+		}
 	}
 
 	/// 削除

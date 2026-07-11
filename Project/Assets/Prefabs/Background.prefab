@@ -53,12 +53,13 @@
                             }
                         }
                     },
+                    "isPixelPerfect": true,
                     "type": "SpriteRenderer"
                 }
             ],
-            "guid": "efda3cd83c84909f0afd9cebfa57fa63",
+            "guid": "5f0c9f63b75efdaa7acf1d617c0661c7",
             "name": "water surface",
-            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "parentGuid": "8731e7fca368f06f73ed583c3dd4900c",
             "prefabName": ""
         },
         {
@@ -113,12 +114,13 @@
                             }
                         }
                     },
+                    "isPixelPerfect": true,
                     "type": "SpriteRenderer"
                 }
             ],
-            "guid": "9e8c6017860216c6330e8a0562708f7f",
+            "guid": "f82556a643ca075a8a6ad4cc372769a9",
             "name": "sky",
-            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "parentGuid": "8731e7fca368f06f73ed583c3dd4900c",
             "prefabName": ""
         },
         {
@@ -173,12 +175,13 @@
                             }
                         }
                     },
+                    "isPixelPerfect": true,
                     "type": "SpriteRenderer"
                 }
             ],
-            "guid": "349dbabd409909a4d10d9711a9159f42",
+            "guid": "801400a32d5b71374d69b1846c08eb6e",
             "name": "underwater",
-            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "parentGuid": "8731e7fca368f06f73ed583c3dd4900c",
             "prefabName": ""
         },
         {
@@ -233,72 +236,13 @@
                             }
                         }
                     },
+                    "isPixelPerfect": true,
                     "type": "SpriteRenderer"
                 }
             ],
-            "guid": "52857c49748063e8359a78a714ddf31c",
+            "guid": "e03b4beee497b84a4fdc0f410e9361f7",
             "name": "sand",
-            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
-            "prefabName": ""
-        },
-        {
-            "active": true,
-            "components": [
-                {
-                    "enable": 1,
-                    "matrixCalcFlags": 7,
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 32.0
-                    },
-                    "rotate": {
-                        "w": 0.0,
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "type": "Transform"
-                },
-                {
-                    "type": "Variables"
-                },
-                {
-                    "enable": 1,
-                    "material": {
-                        "baseColor": {
-                            "w": 1.0,
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0
-                        },
-                        "baseTextureGuid": "960ec2345ab1ab75a1c74ef79b962c75",
-                        "guid": "00000000000000000000000000000000",
-                        "normalTextureGuid": "00000000000000000000000000000000",
-                        "postEffectFlags": 0,
-                        "uvTransform": {
-                            "position": {
-                                "x": 0.0,
-                                "y": 0.0
-                            },
-                            "rotate": 0.0,
-                            "scale": {
-                                "x": 32.0,
-                                "y": 16.0
-                            }
-                        }
-                    },
-                    "type": "SpriteRenderer"
-                }
-            ],
-            "guid": "d3fce46966a69c4d0dd9ac79637ca86a",
-            "name": "uvChecker",
-            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "parentGuid": "8731e7fca368f06f73ed583c3dd4900c",
             "prefabName": ""
         },
         {
@@ -340,9 +284,9 @@
                     "type": "Script"
                 }
             ],
-            "guid": "0904d7e09a94f47ab071fbc09f48fb02",
+            "guid": "0f1e306fbbfd8085ee51a177c95923c8",
             "name": "cloudManager",
-            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "parentGuid": "8731e7fca368f06f73ed583c3dd4900c",
             "prefabName": ""
         }
     ],
@@ -370,9 +314,78 @@
         },
         {
             "type": "Variables"
+        },
+        {
+            "absorptionCoefficients": [
+                1.0,
+                0.035999998450279236,
+                0.0
+            ],
+            "causticsIntensity": 0.22300000488758087,
+            "causticsScale": 0.22300000488758087,
+            "causticsSpeed": 0.3440000116825104,
+            "colorFilter": [
+                0.781361997127533,
+                0.9271207451820374,
+                1.0
+            ],
+            "contrast": 1.5870000123977661,
+            "distortionFrequency": 10.0,
+            "distortionSpeed": 1.0,
+            "distortionStrength": 0.00279999990016222,
+            "enable": 1,
+            "fisheyeScale": 0.8349999785423279,
+            "fisheyeStrength": 0.17599999904632568,
+            "fogColor": [
+                0.5369920134544373,
+                0.6430479884147644,
+                0.7491039037704468
+            ],
+            "fogDensity": 0.10000000149011612,
+            "fogWaterSurfaceY": 0.0,
+            "id": 0,
+            "lightDirection": [
+                1.0,
+                -1.0,
+                0.30000001192092896
+            ],
+            "lightShaftsIntensity": 0.3070000112056732,
+            "postEffects": [
+                {
+                    "enabled": false,
+                    "type": 0
+                },
+                {
+                    "enabled": false,
+                    "type": 1
+                },
+                {
+                    "enabled": true,
+                    "type": 2
+                },
+                {
+                    "enabled": true,
+                    "type": 3
+                },
+                {
+                    "enabled": true,
+                    "type": 4
+                },
+                {
+                    "enabled": true,
+                    "type": 5
+                },
+                {
+                    "enabled": true,
+                    "type": 6
+                }
+            ],
+            "saturation": 1.3849999904632568,
+            "type": "ScreenPostEffectTag",
+            "vignetteStrength": 1.034000039100647
         }
     ],
-    "guid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+    "guid": "8731e7fca368f06f73ed583c3dd4900c",
     "name": "Background",
     "parentGuid": null,
     "prefabName": "Background"

@@ -3,6 +3,8 @@
 /// std
 #include <string>
 #include <vector>
+#include <unordered_set>
+#include <unordered_map>
 
 /// external
 #include <imgui.h>
@@ -43,6 +45,15 @@ protected:
 	/// ===================================================
 	/// protected : methods
 	/// ===================================================
+
+	/// @brief 検索バーとEntity数の描画
+	void DrawSearchBarAndCount();
+
+	/// @brief Entityが検索クエリにマッチするか判定しキャッシュする
+	bool ComputeMatches(ONEngine::GameEntity* entity, const std::string& query);
+
+	/// @brief テストモード時の自動検証処理
+	void RunAutomaticTests();
 
 	/// @brief Prefabのドラッグアンドドロップ処理
 	void PrefabDragAndDrop();
@@ -105,10 +116,19 @@ protected:
 	/// ----- other class ----- ///
 	ONEngine::EntityComponentSystem* pEcs_ = nullptr;
 	ONEngine::ECSGroup* pEcsGroup_ = nullptr;
+	ONEngine::ECSGroup* lastEcsGroup_ = nullptr;
+	bool lastIsDebugging_ = false;
 	EditorManager* pEditorManager_ = nullptr;
 	ONEngine::SceneManager* pSceneManager_ = nullptr;
 
 	std::string windowName_ = "Hierarchy";
+
+	/// ----- search and count ----- ///
+	std::string searchText_ = "";
+	size_t totalEntityCount_ = 0;
+	size_t matchEntityCount_ = 0;
+	std::unordered_map<ONEngine::Guid, bool> entityMatchesCache_;
+	std::unordered_map<ONEngine::Guid, bool> descendantMatchesCache_;
 
 	/// ----- hierarchy ----- ///
 	bool isNodeOpen_;
@@ -122,10 +142,12 @@ protected:
 
 	/// ----- multi selection ----- ///
 	std::vector<ONEngine::Guid> flatHierarchyGuids_; ///< 現在表示されているエンティティのGuidリスト(順番保持)
-	ONEngine::Guid shiftStartGuid_; ///< Shift選択の開始地点
+	ONEngine::Guid shiftStartGuid_ = ONEngine::Guid::kInvalid; ///< Shift選択の開始地点
 	ONEngine::Guid clickedGuid_ = ONEngine::Guid::kInvalid;
 	bool wasShiftClicked_ = false;
 	bool wasCtrlClicked_ = false;
+	ONEngine::Guid lastSelectedGuid_ = ONEngine::Guid::kInvalid;
+	std::unordered_set<ONEngine::Guid> forceExpandGuids_;
 
 	/// ----- box selection ----- ///
 	bool isMarqueeSelecting_ = false;
@@ -139,6 +161,9 @@ protected:
 	/// ----- new scene ----- ///
 	bool showNewScenePopup_ = false;
 	std::string newSceneName_ = "NewScene";
+
+	/// ----- mode ----- ///
+	bool isMultiGroup_ = false;
 
 };
 

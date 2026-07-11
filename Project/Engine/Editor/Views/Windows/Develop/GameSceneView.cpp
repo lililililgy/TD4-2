@@ -5,6 +5,7 @@
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
+#include "Engine/Core/Config/EngineConfig.h"
 
 /// editor
 #include "Engine/Editor/Manager/ImGuiManager.h"
@@ -31,6 +32,9 @@ void GameSceneView::ShowImGui() {
 
 	ImVec2 windowSize = ImGui::GetContentRegionAvail();
 	float aspectRatio = 16.0f / 9.0f;
+	if (ONEngine::EngineConfig::windowHeight > 0) {
+		aspectRatio = static_cast<float>(ONEngine::EngineConfig::windowWidth) / static_cast<float>(ONEngine::EngineConfig::windowHeight);
+	}
 	if (windowSize.x / windowSize.y > aspectRatio) {
 		windowSize.x = windowSize.y * aspectRatio;
 	} else {

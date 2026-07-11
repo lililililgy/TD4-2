@@ -1,5 +1,8 @@
 #pragma once
 
+/// std
+#include <array>
+
 /// external
 #include <nlohmann/json.hpp>
 
@@ -17,6 +20,7 @@ enum PostEffectType {
 	PostEffectType_WaterDepthFogVignette,///< 深度フォグ & ビネット
 	PostEffectType_WaterColorGrading,   ///< カラーグレーディング & 吸収
 	PostEffectType_WaterCausticsLightShafts, ///< コースティクス & ライトシャフト
+	PostEffectType_Pixelate,   ///< ピクセレート (解像度落とし)
 	PostEffectType_Count	   ///< 要素数
 };
 
@@ -24,6 +28,40 @@ enum PostEffectType {
 /// スクリーンにかけるポストエフェクトのフラグを持つコンポーネント
 /// ///////////////////////////////////////////////////
 namespace ONEngine {
+
+struct ScreenPostEffectFlags {
+	std::array<bool, PostEffectType_Count> flags = {};
+	float fisheyeStrength = 0.15f;
+	float fisheyeScale = 0.9f;
+
+	// Water Distortion
+	float distortionStrength = 0.015f;
+	float distortionSpeed = 1.0f;
+	float distortionFrequency = 10.0f;
+
+	// Depth Fog & Vignette
+	Vector3 fogColor = Vector3(0.0f, 0.3f, 0.6f);
+	float fogDensity = 0.05f;
+	float fogWaterSurfaceY = 0.0f;
+	float vignetteStrength = 1.5f;
+
+	// Color Grading & Absorption
+	Vector3 absorptionCoefficients = Vector3(1.0f, 0.3f, 0.0f);
+	float contrast = 1.1f;
+	float saturation = 0.9f;
+	Vector3 colorFilter = Vector3(0.4f, 0.8f, 1.0f);
+
+	// Caustics & Light Shafts
+	float causticsScale = 0.5f;
+	float causticsSpeed = 1.0f;
+	float causticsIntensity = 1.5f;
+	float lightShaftsIntensity = 1.5f;
+	Vector3 lightDirection = Vector3(0.2f, -0.9f, 0.3f);
+
+	// Pixelate
+	float pixelSizeX = 8.0f;
+	float pixelSizeY = 8.0f;
+};
 
 class ScreenPostEffectTag : public IComponent {
 public:
@@ -36,8 +74,8 @@ public:
 
 	/// @brief ポストエフェクトの有効/無効を設定する
 	/// @param type 対象 of ポストエフェクトの種類
-	/// @param enable true: 有効 false: 無効
-	void SetPostEffectEnable(PostEffectType type, bool enable);
+	/// @param isEnable true: 有効 false: 無効
+	void SetPostEffectEnable(PostEffectType type, bool isEnable);
 
 	/// @brief 指定した種類のポストエフェクトが有効かどうかを返す
 	/// @param type 確認するポストエフェクトの種類
@@ -95,6 +133,14 @@ public:
 	float GetWaterLightShaftsIntensity() const;
 	void SetWaterLightDirection(const Vector3& dir);
 	Vector3 GetWaterLightDirection() const;
+
+	/// Pixelate
+	void SetPixelSizeX(float size);
+	float GetPixelSizeX() const;
+	void SetPixelSizeY(float size);
+	float GetPixelSizeY() const;
+
+	ScreenPostEffectFlags flags_;
 
 private:
 	/// ===================================================

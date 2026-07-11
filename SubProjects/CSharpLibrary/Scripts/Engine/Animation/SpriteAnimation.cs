@@ -37,7 +37,13 @@ public class SpriteAnimation : MonoScript {
 		if (spriteRenderer == null) {
 			Debug.LogError("SpriteAnimation: SpriteRenderer component not found on Entity ID: " + entity.Id);
 		}
-		ResetAnimation();
+		int maxFrames = totalFrames > 0 ? totalFrames : rows * cols;
+		int firstFrame = Math.Max(0, Math.Min(startFrame, maxFrames - 1));
+		currentFrame = firstFrame;
+
+		if (isPlay) {
+			ResetAnimation();
+		}
 	}
 
 	public override void Update() {
@@ -85,8 +91,11 @@ public class SpriteAnimation : MonoScript {
 	}
 
 	public void Play() {
-		isPlay = true;
-		isFinished = false;
+		if (!isPlay) {
+			isPlay = true;
+			isFinished = false;
+			UpdateUV();
+		}
 	}
 
 	public void Pause() {

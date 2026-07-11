@@ -345,3 +345,7 @@ Project/Assets/Scene/Debug.scene
 Project/Assets/Scene/Debug/
 
 *.slnx
+
+# Antigravity
+.agents/
+/.serena

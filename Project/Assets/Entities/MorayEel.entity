@@ -5,6 +5,7 @@
             "material": {
                 "baseTextureGuid": "b5d57f5c6d0dba2ba728ef16ef0db666"
             },
+            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],

@@ -4,9 +4,11 @@
 #include <vector>
 #include <functional>
 #include <map>
+#include <type_traits>
 
 /// externals
 #include <imgui.h>
+#include <nlohmann/json.hpp>
 
 /// engine
 #include "Engine/ECS/Entity/GameEntity/GameEntity.h"
@@ -39,6 +41,7 @@ class InspectorWindow : public IEditorWindow {
 		Collider,	/// BoxColliderを筆頭に衝突判定に用いるコンポーネント
 		Script,		/// Script
 		Light,		/// Light
+		Audio,		/// Audio関連コンポーネント
 	};
 
 	using EditFunc = std::function<void(const std::vector<ONEngine::IComponent*>&)>;
@@ -188,6 +191,21 @@ private:
 
 };
 
+namespace detail {
+	using nlohmann::to_json;
+	using nlohmann::from_json;
+
+	template<typename T, typename = void>
+	struct has_json_serialization : std::false_type {};
+
+	template<typename T>
+	struct has_json_serialization<T, std::void_t<
+		decltype(to_json(std::declval<nlohmann::json&>(), std::declval<const T&>())),
+		decltype(from_json(std::declval<const nlohmann::json&>(), std::declval<T&>()))
+	>> : std::true_type {};
+}
+
+
 template<typename T>
 inline void InspectorWindow::RegisterComponent(ComponentType type, std::function<void(T*)> func) {
 	RegisterComponentMulti<T>(type, [func](const std::vector<T*>& comps) {
@@ -206,7 +224,44 @@ inline void InspectorWindow::RegisterComponentMulti(ComponentType type, std::fun
 			std::vector<T*> typedComps;
 			typedComps.reserve(comps.size());
 			for (auto c : comps) typedComps.push_back(static_cast<T*>(c));
-			func(typedComps);
+
+			if constexpr (detail::has_json_serialization<T>::value) {
+				if (typedComps.size() > 1 && !std::is_same_v<T, ONEngine::Transform>) {
+					// 複数選択時の共通同期処理（Transform以外）
+					nlohmann::json beforeJson;
+					try {
+						using nlohmann::to_json;
+						to_json(beforeJson, *typedComps[0]);
+					} catch (...) {
+						// シリアライズ非対応などの場合は通常実行のみ
+						func(typedComps);
+						return;
+					}
+
+					func(typedComps);
+
+					nlohmann::json afterJson;
+					try {
+						using nlohmann::to_json;
+						to_json(afterJson, *typedComps[0]);
+					} catch (...) {
+						return;
+					}
+
+					if (beforeJson != afterJson) {
+						using nlohmann::from_json;
+						for (size_t i = 1; i < typedComps.size(); ++i) {
+							try {
+								from_json(afterJson, *typedComps[i]);
+							} catch (...) {}
+						}
+					}
+				} else {
+					func(typedComps);
+				}
+			} else {
+				func(typedComps);
+			}
 		}
 	};
 
