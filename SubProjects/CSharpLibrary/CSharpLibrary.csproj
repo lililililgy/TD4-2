@@ -147,6 +147,7 @@
     <Compile Include="Scripts\Game\Boss\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\GesoWeakPoint.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGesoHomingProjectile.cs" />
     <Compile Include="Scripts\Game\Boss\KingGesoState.cs" />
     <Compile Include="Scripts\Game\Bullet.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />

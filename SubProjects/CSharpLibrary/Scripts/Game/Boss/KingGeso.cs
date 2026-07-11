@@ -9,7 +9,7 @@ public class KingGeso : MonoScript
     [SerializeField] public int maxHp = 10;
     [SerializeField] public string gesoPrefabName = "GesoHand";
     [SerializeField] public string targetEntityName = "Player";
-    [SerializeField] public string cameraEntityName = "Camera";
+    [SerializeField] public string cameraEntityName = "MainCamera";
     [SerializeField] public Vector2 gesoSpawnOffset = Vector2.zero;
     [SerializeField] public float screenHalfWidth = 1280.0f;
     [SerializeField] public float screenHalfHeight = 720.0f;
@@ -32,6 +32,22 @@ public class KingGeso : MonoScript
     [SerializeField] public int waveGesoCount = DefaultWaveGesoCount;
     /// 波状攻撃で次のゲソを出す間隔（秒）
     [SerializeField] public float waveGesoInterval = DefaultWaveGesoInterval;
+    /// 追尾弾のプレハブ名
+    [SerializeField] public string homingProjectilePrefabName = "KingGesoHomingProjectile";
+    /// 追尾弾の発射数
+    [SerializeField] public int homingProjectileCount = 3;
+    /// 追尾弾の発射間隔（秒）
+    [SerializeField] public float homingProjectileInterval = 0.35f;
+    /// 追尾弾の移動速度
+    [SerializeField] public float homingProjectileSpeed = 120.0f;
+    /// 追尾弾の追尾の強さ
+    [SerializeField] public float homingProjectileTurnSpeed = 2.0f;
+    /// 追尾弾の生存時間（秒）
+    [SerializeField] public float homingProjectileLifeTime = 8.0f;
+    /// 追尾弾の攻撃力
+    [SerializeField] public float homingProjectileDamage = 1.0f;
+    /// 追尾弾の発射位置
+    [SerializeField] public Vector2 homingProjectileSpawnOffset = Vector2.zero;
 
     private HP _hp;
     private IKingGesoState _state;
@@ -39,6 +55,7 @@ public class KingGeso : MonoScript
     private Entity _cameraEntity;
     private List<Entity> _activeGesos = new List<Entity>();
     private bool _attackRequested;
+    private bool _useHomingAttackNext;
 
 
     //=============================================================
@@ -66,6 +83,7 @@ public class KingGeso : MonoScript
 
         _activeGesos.Clear();
         _attackRequested = false;
+        _useHomingAttackNext = false;
         ChangeState(new KingGesoIdleState());
     }
 
@@ -151,6 +169,16 @@ public class KingGeso : MonoScript
         get { return waveGesoInterval > 0.0f ? waveGesoInterval : DefaultWaveGesoInterval; }
     }
 
+    internal int HomingProjectileCount
+    {
+        get { return homingProjectileCount > 0 ? homingProjectileCount : 1; }
+    }
+
+    internal float HomingProjectileInterval
+    {
+        get { return homingProjectileInterval > 0.0f ? homingProjectileInterval : 0.01f; }
+    }
+
     //=============================================================
     // 内部処理
     //=============================================================
@@ -159,6 +187,15 @@ public class KingGeso : MonoScript
         bool requested = _attackRequested;
         _attackRequested = false;
         return requested;
+    }
+
+    internal IKingGesoState CreateNextAttackState()
+    {
+        IKingGesoState next = _useHomingAttackNext
+            ? (IKingGesoState)new KingGesoHomingAttackState()
+            : new KingGesoAttackState();
+        _useHomingAttackNext = !_useHomingAttackNext;
+        return next;
     }
 
     //=============================================================
@@ -225,6 +262,44 @@ public class KingGeso : MonoScript
         hand.moveDuration = gesoMoveDuration;
         hand.passThroughDistance = gesoPassThroughDistance;
         return hand.CommandAttack(_targetEntity);
+    }
+
+    internal Entity SpawnHomingProjectile()
+    {
+        if (String.IsNullOrEmpty(homingProjectilePrefabName))
+        {
+            return null;
+        }
+
+        Entity projectile = ecsGroup.CreateEntity(homingProjectilePrefabName);
+        if (projectile == null)
+        {
+            return null;
+        }
+
+        Vector3 offset = new Vector3(homingProjectileSpawnOffset.x, homingProjectileSpawnOffset.y, 0.0f);
+        projectile.transform.position = transform.worldPosition + offset;
+        return projectile;
+    }
+
+    internal bool StartHomingProjectile(Entity projectile)
+    {
+        if (projectile == null)
+        {
+            return false;
+        }
+
+        KingGesoHomingProjectile homing = projectile.GetScript<KingGesoHomingProjectile>();
+        if (homing == null)
+        {
+            return false;
+        }
+
+        homing.speed = homingProjectileSpeed;
+        homing.turnSpeed = homingProjectileTurnSpeed;
+        homing.lifeTime = homingProjectileLifeTime;
+        homing.damage = homingProjectileDamage;
+        return homing.CommandLaunch(_targetEntity);
     }
 
     //=============================================================
