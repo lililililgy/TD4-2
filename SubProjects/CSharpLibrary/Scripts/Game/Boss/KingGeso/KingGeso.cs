@@ -8,6 +8,7 @@ public enum KingGesoAttackType
 {
     WaveThrust, //波状突き攻撃
     PincerThrust, //挟み撃ち攻撃
+    InkBarrage, //螺旋墨弾幕
 }
 
 //============================================================
@@ -52,6 +53,8 @@ public class KingGeso : MonoScript
     [SerializeField] public float waveThrustWeight = 1.0f;
     /// 挟み撃ち突きの選択重み
     [SerializeField] public float pincerThrustWeight = 1.0f;
+    /// 螺旋墨弾幕の選択重み
+    [SerializeField] public float inkBarrageWeight = 1.0f;
     /// 追尾弾のプレハブ名
     [SerializeField] public string homingProjectilePrefabName = "KingGesoHomingProjectile";
     /// 追尾弾の発射数
@@ -68,6 +71,28 @@ public class KingGeso : MonoScript
     [SerializeField] public float homingProjectileDamage = 1.0f;
     /// ボス位置からの発射オフセット
     [SerializeField] public Vector2 homingProjectileSpawnOffset = Vector2.zero;
+    /// 墨弾幕のプレハブ名
+    [SerializeField] public string inkBulletPrefabName = "KingGesoInkBullet";
+    /// 1波で発射する墨弾数
+    [SerializeField] public int inkBulletCountPerWave = 10;
+    /// 墨弾幕の波数
+    [SerializeField] public int inkBulletWaveCount = 7;
+    /// 波の発射間隔（秒）
+    [SerializeField] public float inkBulletWaveInterval = 0.25f;
+    /// 波ごとにずらす角度（ラジアン）
+    [SerializeField] public float inkBulletAngleOffset = 0.14f;
+    /// 攻撃後半で螺旋の回転方向を反転するか
+    [SerializeField] public bool reverseInkBarrageHalfway = true;
+    /// 墨弾の移動速度
+    [SerializeField] public float inkBulletSpeed = 220.0f;
+    /// 墨弾の生存時間（秒）
+    [SerializeField] public float inkBulletLifeTime = 7.0f;
+    /// 墨弾の攻撃力
+    [SerializeField] public float inkBulletDamage = 8.0f;
+    /// 墨弾幕発射後の硬直時間（秒）
+    [SerializeField] public float inkBarrageRecoveryDuration = 0.6f;
+    /// ボス位置からの墨弾発射オフセット
+    [SerializeField] public Vector2 inkBulletSpawnOffset = Vector2.zero;
 
     private HP hp_;
     private IKingGesoState state_;
@@ -186,6 +211,26 @@ public class KingGeso : MonoScript
         get { return homingProjectileInterval > 0.0f ? homingProjectileInterval : 0.01f; }
     }
 
+    internal int InkBulletCountPerWave
+    {
+        get { return inkBulletCountPerWave > 0 ? inkBulletCountPerWave : 1; }
+    }
+
+    internal int InkBulletWaveCount
+    {
+        get { return inkBulletWaveCount > 0 ? inkBulletWaveCount : 1; }
+    }
+
+    internal float InkBulletWaveInterval
+    {
+        get { return inkBulletWaveInterval > 0.0f ? inkBulletWaveInterval : 0.01f; }
+    }
+
+    internal float InkBarrageRecoveryDuration
+    {
+        get { return inkBarrageRecoveryDuration > 0.0f ? inkBarrageRecoveryDuration : 0.0f; }
+    }
+
     internal IKingGesoState CreateNextAttackState()
     {
         IKingGesoState nextState = useHomingAttackNext_
@@ -208,7 +253,8 @@ public class KingGeso : MonoScript
         // 攻撃タイプの選択重みを考慮してランダムに選択
         float waveWeight = waveThrustWeight > 0.0f ? waveThrustWeight : 0.0f;
         float pincerWeight = pincerThrustWeight > 0.0f ? pincerThrustWeight : 0.0f;
-        float totalWeight = waveWeight + pincerWeight;
+        float inkWeight = inkBarrageWeight > 0.0f ? inkBarrageWeight : 0.0f;
+        float totalWeight = waveWeight + pincerWeight + inkWeight;
 
         // 重みが0以下の場合は固定攻撃タイプを返す
         if (totalWeight <= 0.0f)
@@ -223,7 +269,13 @@ public class KingGeso : MonoScript
             return KingGesoAttackType.WaveThrust;
         }
 
-        return KingGesoAttackType.PincerThrust;
+        lottery -= waveWeight;
+        if (lottery < pincerWeight)
+        {
+            return KingGesoAttackType.PincerThrust;
+        }
+
+        return KingGesoAttackType.InkBarrage;
     }
 
     //=============================================================
@@ -398,6 +450,40 @@ public class KingGeso : MonoScript
         homing.lifeTime = homingProjectileLifeTime;
         homing.damage = homingProjectileDamage;
         return homing.CommandLaunch(targetEntity_);
+    }
+
+    //=============================================================
+    // 墨弾の生成と発射
+    //=============================================================
+    internal bool FireInkBullet(Vector2 direction)
+    {
+        if (String.IsNullOrEmpty(inkBulletPrefabName))
+        {
+            return false;
+        }
+
+        Entity bullet = ecsGroup.CreateEntity(inkBulletPrefabName);
+        if (bullet == null)
+        {
+            return false;
+        }
+
+        Vector3 offset = new Vector3(inkBulletSpawnOffset.x, inkBulletSpawnOffset.y, 0.0f);
+        bullet.transform.position = transform.worldPosition + offset;
+
+        KingGesoInkBullet bulletScript = bullet.GetScript<KingGesoInkBullet>();
+        if (bulletScript == null)
+        {
+            bullet.Destroy();
+            return false;
+        }
+
+        bulletScript.Configure(
+            new Vector3(direction.x, direction.y, 0.0f),
+            inkBulletSpeed,
+            inkBulletLifeTime,
+            inkBulletDamage);
+        return true;
     }
 
     //=============================================================

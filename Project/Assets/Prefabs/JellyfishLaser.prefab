@@ -80,10 +80,6 @@
                     "scripts": [
                         {
                             "enable": true,
-                            "name": "JellyfishLaser"
-                        },
-                        {
-                            "enable": true,
                             "name": "AttackCollision"
                         }
                     ],
@@ -158,6 +154,16 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "JellyfishLaser"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "0f23626149d254101fb06e6ef52329a5",

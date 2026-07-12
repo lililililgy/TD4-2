@@ -168,6 +168,8 @@
     <Compile Include="Scripts\Game\Background\Cloud.cs" />
     <Compile Include="Scripts\Game\Background\CloudManager.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingProjectile.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageAttack.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBullet.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHandAttackCommand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoWeakPoint.cs" />
@@ -175,6 +177,7 @@
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoPincerThrustAttack.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoWaveThrustAttack.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishChargeDamageField.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishElectricField.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishLaser.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGeso.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoState.cs" />

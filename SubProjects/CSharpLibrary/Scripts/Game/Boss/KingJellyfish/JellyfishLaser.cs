@@ -11,37 +11,65 @@ public class JellyfishLaser : MonoScript
     [SerializeField] public float width = 100.0f;
 
     private float elapsed_;
+    private Vector2 origin_;
+    private Vector2 direction_ = Vector2.up;
+    private float depth_;
+    private float rotationSpeed_;
+    private bool configured_;
+    private bool geometryApplied_;
 
     public override void Initialize()
     {
-        elapsed_ = 0.0f;
+        // Configureは生成フレーム、Initializeは次フレームに呼ばれる。
+        // 発射設定を受け取り済みなら、その設定を維持する。
+        if (!configured_)
+        {
+            elapsed_ = 0.0f;
+            geometryApplied_ = false;
+        }
     }
 
     public override void Update()
     {
-        elapsed_ += Time.deltaTime;
-        if (elapsed_ >= duration)
+        if (!configured_)
         {
-            DestroyLaserRoot();
-        }
-    }
-
-    private void DestroyLaserRoot()
-    {
-        Entity parent = entity.parent;
-        if (parent != null)
-        {
-            parent.Destroy();
             return;
         }
 
-        entity.Destroy();
+        if (!geometryApplied_)
+        {
+            geometryApplied_ = ApplyGeometryToChild();
+            if (!geometryApplied_)
+            {
+                return;
+            }
+        }
+
+        elapsed_ += Time.deltaTime;
+        if (rotationSpeed_ != 0.0f)
+        {
+            Quaternion frameRotation = Quaternion.MakeFromAxis(Vector3.back, rotationSpeed_ * Time.deltaTime);
+            transform.rotation = frameRotation * transform.rotation;
+        }
+
+        if (elapsed_ >= duration)
+        {
+            entity.Destroy();
+        }
     }
 
     //==========================================
     // レーザーの設定処理
     //==========================================
-    public void Configure(Vector2 origin, Vector2 direction, float laserLength, float laserWidth, float laserDamage, float laserDuration, float depth)
+    public void Configure(
+        Vector2 origin,
+        Vector2 direction,
+        float laserLength,
+        float laserWidth,
+        float laserDamage,
+        float laserDuration,
+        float depth,
+        float rotationSpeed)
     {
         // 正規化された方向ベクトルを取得
         Vector2 normalized = direction.Normalized();
@@ -54,36 +82,40 @@ public class JellyfishLaser : MonoScript
         width = laserWidth;
         damage = laserDamage;
         duration = laserDuration > 0.0f ? laserDuration : 0.01f;
+
+        origin_ = origin;
+        direction_ = normalized;
+        depth_ = depth;
+        rotationSpeed_ = rotationSpeed;
         elapsed_ = 0.0f;
+        configured_ = true;
+        geometryApplied_ = false;
+    }
 
-        // レーザーの中心位置を計算
-        Vector2 center = origin + normalized * (length * 0.5f);
-        float angle = Mathf.Atan2(normalized.x, normalized.y);
-        Quaternion rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
-
-        Entity parent = entity.parent;
-        if (parent != null)
+    private bool ApplyGeometryToChild()
+    {
+        Entity laserBody = entity.GetChild(0);
+        if (laserBody == null || laserBody.transform == null)
         {
-            parent.transform.position = new Vector3(center.x, center.y, depth);
-            parent.transform.rotation = rotation;
-            parent.transform.scale = new Vector3(1.0f, 1.0f, 1.0f);
-
-            transform.position = new Vector3(0.0f, 0.0f, 0.0f);
-            transform.rotation = Quaternion.identity;
-            transform.scale = new Vector3(width, length, 1.0f);
-        }
-        else
-        {
-            transform.position = new Vector3(center.x, center.y, depth);
-            transform.rotation = rotation;
-            transform.scale = new Vector3(width, length, 1.0f);
+            return false;
         }
 
-        // 攻撃判定の設定
-        AttackCollision attackCollision = entity.GetScript<AttackCollision>();
+        float angle = Mathf.Atan2(direction_.x, direction_.y);
+
+        transform.position = new Vector3(origin_.x, origin_.y, depth_);
+        transform.rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
+        transform.scale = new Vector3(1.0f, 1.0f, 1.0f);
+
+        laserBody.transform.position = new Vector3(0.0f, length * 0.5f, 0.0f);
+        laserBody.transform.rotation = Quaternion.identity;
+        laserBody.transform.scale = new Vector3(width, length, 1.0f);
+
+        AttackCollision attackCollision = laserBody.GetScript<AttackCollision>();
         if (attackCollision != null)
         {
             attackCollision.Damage = damage;
         }
+
+        return true;
     }
 }

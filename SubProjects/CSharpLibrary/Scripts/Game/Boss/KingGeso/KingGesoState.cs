@@ -150,6 +150,11 @@ internal sealed class KingGesoAttackState : IKingGesoState
 
     private IKingGesoAttack CreateAttack(KingGesoAttackType attackType)
     {
+        if (attackType == KingGesoAttackType.InkBarrage)
+        {
+            return new KingGesoInkBarrageAttack();
+        }
+
         if (attackType == KingGesoAttackType.PincerThrust)
         {
             return new KingGesoPincerThrustAttack();

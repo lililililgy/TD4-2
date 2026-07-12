@@ -64,9 +64,10 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
             // 体当たり攻撃の準備
             owner.UpdateChargeTell();
         }
-        else
+        else if (attackType == KingJellyfishAttackTypeEnum.Omnidirectional_Beam ||
+                 attackType == KingJellyfishAttackTypeEnum.RotatingBeam)
         {
-            // 全方位ビーム攻撃の準備
+            // ビーム攻撃の準備
             owner.UpdateLaserTell();
         }
     }
@@ -83,6 +84,18 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         if (attackType == KingJellyfishAttackTypeEnum.Omnidirectional_Beam)
         {
             UpdateOmnidirectionalLaser(owner);
+            return;
+        }
+
+        if (attackType == KingJellyfishAttackTypeEnum.ElectricField)
+        {
+            UpdateElectricField(owner);
+            return;
+        }
+
+        if (attackType == KingJellyfishAttackTypeEnum.RotatingBeam)
+        {
+            UpdateRotatingLaser(owner);
         }
     }
 
@@ -169,6 +182,66 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
             return;
         }
 
+        if (owner.ConsumeActionLoop())
+        {
+            owner.ChangeState(new KingJellyfishMoveState());
+            return;
+        }
+
+        owner.ChangeState(new KingJellyfishIdleState());
+    }
+
+    private void UpdateElectricField(KingJellyfish owner)
+    {
+        if (!laserFired)
+        {
+            owner.DeployElectricFields();
+            laserFired = true;
+        }
+
+        float finalActivationTime = owner.ElectricFieldTellDuration
+            + owner.ElectricFieldSpawnInterval * (owner.ElectricFieldCount - 1);
+        float attackEndTime = finalActivationTime
+            + owner.ElectricFieldActiveDuration
+            + owner.ElectricFieldRecoveryDuration;
+
+        if (elapsed < attackEndTime)
+        {
+            return;
+        }
+
+        FinishAttack(owner);
+    }
+
+    private void UpdateRotatingLaser(KingJellyfish owner)
+    {
+        float tellEndTime = owner.RotatingLaserTellDuration;
+        float recoveryEndTime = tellEndTime
+            + owner.RotatingLaserDuration
+            + owner.RotatingLaserRecoveryDuration;
+
+        if (elapsed < tellEndTime)
+        {
+            owner.UpdateLaserTell();
+            return;
+        }
+
+        if (!laserFired)
+        {
+            owner.FireRotatingLasers();
+            laserFired = true;
+        }
+
+        if (elapsed < recoveryEndTime)
+        {
+            return;
+        }
+
+        FinishAttack(owner);
+    }
+
+    private void FinishAttack(KingJellyfish owner)
+    {
         if (owner.ConsumeActionLoop())
         {
             owner.ChangeState(new KingJellyfishMoveState());
