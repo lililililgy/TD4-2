@@ -90,7 +90,7 @@ namespace {
 		}
 
 		Console::Log(std::format("[SerializeField] field={} has={}", fieldName ? fieldName : "", has ? "true" : "false"), ONEngine::LogCategory::ScriptEngine);
-		mono_custom_attrs_free(attrs);
+		// mono_custom_attrs_free(attrs); // Prevent heap corruption on field attributes
 
 		serializeCache[key] = has;
 		return has;
