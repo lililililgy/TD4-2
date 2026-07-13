@@ -7,10 +7,6 @@ static public class EntityComponentSystem {
 	[System.Runtime.InteropServices.DllImport("ONEngine.exe", CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl)]
 	private static extern void Variables_RegisterSerializeField(string className, string fieldName);
 
-	static EntityComponentSystem() {
-		InitializeSerializeFieldCache();
-	}
-
 	static public void InitializeSerializeFieldCache() {
 		try {
 			var asm = System.Reflection.Assembly.GetExecutingAssembly();

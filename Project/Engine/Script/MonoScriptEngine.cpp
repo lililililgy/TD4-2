@@ -576,6 +576,21 @@ void MonoScriptEngine::RegisterFunctions() {
 		notifyEventCompletedMethod_ = GetMethodFromCS("", "BlackboardManager", "SetBool", 3);
 	}
 
+	// C#側のSerializeField登録処理を安全に一括実行する
+	{
+		MonoMethod* initCacheMethod = GetMethodFromCS("", "EntityComponentSystem", "InitializeSerializeFieldCache", 0);
+		if (initCacheMethod) {
+			MonoObject* exc = nullptr;
+			MonoScriptEngineUtils::SafeInvoke(initCacheMethod, nullptr, nullptr, &exc);
+			if (exc) {
+				Console::LogError("Failed to invoke InitializeSerializeFieldCache from C++", LogCategory::ScriptEngine);
+				MonoScriptEngineUtils::HandleException(exc);
+			}
+		} else {
+			Console::LogError("Method InitializeSerializeFieldCache not found in EntityComponentSystem", LogCategory::ScriptEngine);
+		}
+	}
+
 	ApplyCSharpLogSetting();
 }
 
