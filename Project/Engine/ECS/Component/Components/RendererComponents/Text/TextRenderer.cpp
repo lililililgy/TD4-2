@@ -91,9 +91,9 @@ void TextRenderer::UpdateTextTexture() {
 	// フォント画像を作成
 	if (FontRasterizer::GenerateTexture(text_, fontPath_, fontSize_, dynamicTexturePath_)) {
 		auto* assetCollection = Asset::AssetCollection::GetInstance();
-		if (assetCollection->HasAsset(dynamicTexturePath_)) {
-			const Guid& guid = assetCollection->GetAssetGuidFromPath(dynamicTexturePath_);
-			material_.SetBaseTextureGuid(guid);
+		auto* texture = assetCollection->GetTexture(dynamicTexturePath_);
+		if (texture) {
+			material_.SetBaseTextureGuid(texture->guid);
 		}
 	}
 	isDirty_ = false;

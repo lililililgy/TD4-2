@@ -24,8 +24,8 @@ void TextRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager
 		Shader shader;
 		shader.Initialize(shaderCompiler);
 
-		shader.CompileShader(L"Packages/Shader/Render/Sprite/Sprite.vs.hlsl", L"vs_6_0", Shader::Type::vs);
-		shader.CompileShader(L"Packages/Shader/Render/Sprite/Sprite.ps.hlsl", L"ps_6_0", Shader::Type::ps);
+		shader.CompileShader(L"Packages/Shader/Render/Text/Text.vs.hlsl", L"vs_6_0", Shader::Type::vs);
+		shader.CompileShader(L"Packages/Shader/Render/Text/Text.ps.hlsl", L"ps_6_0", Shader::Type::ps);
 
 		pipeline_ = std::make_unique<GraphicsPipeline>();
 		pipeline_->SetShader(&shader);
