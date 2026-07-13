@@ -124,4 +124,29 @@ static public class EntityComponentSystem {
 		}
 	}
 
+	static public bool HasSerializeField(string typeName, string fieldName) {
+		try {
+			System.Type targetType = null;
+			foreach (var asm in System.AppDomain.CurrentDomain.GetAssemblies()) {
+				targetType = asm.GetType(typeName);
+				if (targetType != null) break;
+			}
+			if (targetType == null) return false;
+
+			var field = targetType.GetField(fieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+			if (field == null) return false;
+
+			if (field.IsPublic) return true;
+
+			foreach (var attr in field.GetCustomAttributes(true)) {
+				if (attr.GetType().Name == "SerializeField") {
+					return true;
+				}
+			}
+			return false;
+		} catch {
+			return false;
+		}
+	}
+
 }
