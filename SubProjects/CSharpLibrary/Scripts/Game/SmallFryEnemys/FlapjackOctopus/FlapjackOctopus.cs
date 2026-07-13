@@ -98,6 +98,10 @@ public class FlapjackOctopus : MonoScript
         enterActions_[next]?.Invoke();
     }
 
+    /// -----------------------------------------------------------------------------
+    ///  状態入り処理
+    /// -----------------------------------------------------------------------------
+
     private void EnterWait()
     {
         transform.scale = initialScale_;
@@ -110,15 +114,19 @@ public class FlapjackOctopus : MonoScript
     {
         // 溜め中は慣性も含めて完全に停止する
         velocity_ = Vector3.zero;
+        //　溜めの連番画像にする
         SetStaticFrame(ChargeFrame);
+        // 溜めSteteの更新処理に切り替える
         stateUpdateAction_ = UpdateCharge;
     }
 
     private void EnterChase()
     {
-        // 今向いている方向（＝溜めで固めた進行方向）へ一気に蹴り出す
+        // 今向いている方向へ一気に蹴り出す
         velocity_ = transform.up * chasePower;
+        //　蹴伸び連番画像にする
         SetStaticFrame(ChaseFrame);
+        // 蹴伸びSteteの更新処理に切り替える
         stateUpdateAction_ = UpdateChase;
     }
 
@@ -128,10 +136,15 @@ public class FlapjackOctopus : MonoScript
     // 待機中: 1,2番目のフレームをループ再生
     private void PlayIdleAnimation()
     {
+        // 待機アクティブフラグを立てる
         isIdleAnimationActive_ = true;
 
-        if (spriteAnimation_ == null) { return; }
+        if (spriteAnimation_ == null)
+        {
+            return;
+        }
 
+        // ループ再生を有効にして、1,2番目のフレームをループ再生する
         spriteAnimation_.startFrame = IdleFrameStart;
         spriteAnimation_.endFrame = IdleFrameEnd;
         spriteAnimation_.isLoop = true;
@@ -139,9 +152,10 @@ public class FlapjackOctopus : MonoScript
         spriteAnimation_.ResetAnimation();
     }
 
-  
+
     private void SetStaticFrame(int frameIndex)
     {
+        // 待機アクティブフラグを降ろす
         isIdleAnimationActive_ = false;
 
         if (spriteAnimation_ == null) { return; }
@@ -154,12 +168,14 @@ public class FlapjackOctopus : MonoScript
     }
 
     // 待機中の慣性残量に応じたアニメーション切り替え
-   
+
     private void UpdateWaitAnimation()
     {
+        // 慣性が残っているかどうかを判定するための閾値を計算
         float threshold = Mathf.Abs(chasePower) * Mathf.Clamp01(inertiaStopRatio);
         bool hasResidualInertia = velocity_.Length() > threshold;
 
+        // スピードが残っている時は、蹴伸びを維持
         if (hasResidualInertia)
         {
             if (isIdleAnimationActive_)
@@ -167,6 +183,7 @@ public class FlapjackOctopus : MonoScript
                 SetStaticFrame(ChaseFrame);
             }
         }
+        // スピードが収まったら、アイドルへ切り替える
         else if (!isIdleAnimationActive_)
         {
             PlayIdleAnimation();
@@ -204,7 +221,7 @@ public class FlapjackOctopus : MonoScript
     {
         stateTimer_ += Time.deltaTime;
 
-        // 溜め中は移動せずその場に停止する
+      
 
         // 縮こまるように体を溜めるスケールアニメーション
         float scaleT = Mathf.Clamp01(stateTimer_ / chargeScaleAnimationTime);
@@ -221,7 +238,7 @@ public class FlapjackOctopus : MonoScript
     {
         stateTimer_ += Time.deltaTime;
 
-        // 蹴伸びの「勢いある蹴り」を繰り返すパルスアニメーション
+        // 蹴伸びを繰り返すパルスアニメーション
         UpdateChaseScalePulse();
 
         if (stateTimer_ >= chaseTime)
@@ -236,18 +253,20 @@ public class FlapjackOctopus : MonoScript
     {
         if (velocity_.LengthSq() <= 0.0001f) { return; }
 
-        float drag = chaseDrag > 0.0001f ? chaseDrag : 0.0001f;
+        // 水の抵抗による速度減衰
+        float drag = chaseDrag;
+        if (drag <= 0.0001f)
+        {
+            drag = 0.0001f;
+        }
+
+        // 減衰計算: v = v0 * exp(-drag * dt)
         velocity_ *= (float)Math.Exp(-drag * Time.deltaTime);
         transform.position += velocity_ * Time.deltaTime;
     }
 
     private void UpdateChaseScalePulse()
     {
-        if (chaseScaleAnimationCount <= 0 || chaseScaleAnimationTime <= 0.0f)
-        {
-            transform.scale = initialScale_;
-            return;
-        }
 
         // 指定回数分の蹴りを終えたら、元のスケールで突進を続ける
         float totalPulseTime = chaseScaleAnimationTime * chaseScaleAnimationCount;

@@ -1,0 +1,18 @@
+{
+    "active": true,
+    "components": [
+        {
+            "SeaCow": {
+                "blinkIntervalEnd": 0.019999999552965164,
+                "blinkPulseDuration": 0.20000000298023224,
+                "blinkPulseScale": 1.5,
+                "explotionTime": 8.0
+            },
+            "type": "Variables"
+        }
+    ],
+    "guid": "a90c95a9be33cee0c1f0fa7d835a7a73",
+    "name": "SeaCow",
+    "parentGuid": null,
+    "prefabName": "SeaCow"
+}

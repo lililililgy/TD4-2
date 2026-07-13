@@ -2,14 +2,13 @@
     "active": true,
     "components": [
         {
-            "material": {
-                "baseTextureGuid": "b5d57f5c6d0dba2ba728ef16ef0db666"
+            "SpriteAnimation": {
+                "fps": 6.0
             },
-            "isPixelPerfect": true,
-            "type": "SpriteRenderer"
+            "type": "Variables"
         }
     ],
-    "guid": "64f0238e6ee5433f9d62c9b6e20ddd85",
+    "guid": "4e0b8e4f1f437c26508da2185bec44b8",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

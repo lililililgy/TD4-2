@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": -5.599999904632568,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 243.5471954345703,
-                "y": 243.5471954345703,
-                "z": 243.5471954345703
+                "x": 215.9000244140625,
+                "y": 252.10003662109375,
+                "z": 215.89999389648438
             },
             "type": "Transform"
         },
@@ -27,54 +27,47 @@
             "enable": 1,
             "freezeY": false,
             "isTrigger": false,
-            "maskBits": 39,
+            "maskBits": 7,
             "mass": 1.0,
-            "radius": 0.4000000059604645,
+            "radius": 0.5,
             "state": "Dynamic",
             "type": "CircleCollider",
             "useOwnerScale": true
         },
         {
-            "ChaseAnimation": {
-                "chasePulseDuration": 0.5,
-                "chasePulseScale": 1.100000023841858,
-                "discoveryDuration": 0.6000000238418579,
-                "discoveryScale": 2.0,
-                "waitPulseDuration": 1.2999999523162842,
-                "waitPulseScale": 1.2000000476837158
-            },
-            "ChaseController": {
-                "autoStart": false,
-                "chaseDistance": 752.0,
-                "chaseDuration": 2.5,
-                "chaseSpeed": 171.0,
-                "enableFacing": false,
-                "leachDistance": 0.0,
-                "rushDistance": 0.0,
-                "stopAtRushDistance": false,
-                "targetEntityName": "Player",
-                "waitTime": 0.800000011920929
-            },
-            "DespawnTimer": {
-                "despawnTime_": 1270.0
-            },
             "HP": {
-                "currentHp_": 30.0,
+                "currentHp_": 25.0,
+                "directlyDamageable_": true,
                 "disableAutoDestruction_": false,
+                "enable": true,
                 "isInvincible_": false,
-                "maxHp_": 30.0
+                "maxHp_": 25.0
             },
-            "MorayEel": {},
-            "MorayEelSpawnMove": {
-                "chargeSpeed": 0.0,
-                "chargeStartTime": 0.0,
-                "deraySpeed": 749.5999755859375,
-                "launchTime": 0.8999999761581421,
-                "playerEntityName": "Player",
-                "spawnSpinCount": 3.0,
-                "startChaseDistance": 0.0
+            "SeaCow": {
+                "acceleration": 902.0,
+                "blinkColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "blinkIntervalEnd": 0.019999999552965164,
+                "blinkIntervalStart": 0.6000000238418579,
+                "blinkPulseDuration": 0.20000000298023224,
+                "blinkPulseScale": 1.5,
+                "drag": 3.200000047683716,
+                "enable": true,
+                "explotionTime": 8.0,
+                "lockOnRange": 198.0,
+                "maxSpeed": 1007.0,
+                "normalColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "resumeAimSpeed": 60.0
             },
-            "SmallFryChaseMove": {},
             "SpriteAnimation": {
                 "cols": 2,
                 "enable": true,
@@ -90,8 +83,18 @@
             "TargetFacingFlip": {
                 "enable": true,
                 "maxTiltAngleDeg": 150.0,
-                "targetEntityName": "Player",
                 "turnLerp": 0.30000001192092896
+            },
+            "TargetRangeDetector": {
+                "OnEnter": {
+                    "__type": "Action"
+                },
+                "OnExit": {
+                    "__type": "Action"
+                },
+                "enable": true,
+                "range": 800.0,
+                "targetEntityName": "Player"
             },
             "type": "Variables"
         },
@@ -104,19 +107,7 @@
                 },
                 {
                     "enable": true,
-                    "name": "MorayEelSpawnMove"
-                },
-                {
-                    "enable": true,
-                    "name": "ChaseController"
-                },
-                {
-                    "enable": true,
-                    "name": "ChaseAnimation"
-                },
-                {
-                    "enable": true,
-                    "name": "SmallFryChaseMove"
+                    "name": "TargetRangeDetector"
                 },
                 {
                     "enable": true,
@@ -124,15 +115,11 @@
                 },
                 {
                     "enable": true,
-                    "name": "MorayEel"
+                    "name": "SeaCow"
                 },
                 {
                     "enable": true,
                     "name": "HP"
-                },
-                {
-                    "enable": true,
-                    "name": "DespawnTimer"
                 }
             ],
             "type": "Script"
@@ -147,7 +134,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "b5d57f5c6d0dba2ba728ef16ef0db666",
+                "baseTextureGuid": "8f0f0bf2be6b7f563929573114e6f177",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -166,8 +153,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "4e0b8e4f1f437c26508da2185bec44b8",
-    "name": "MorayEel",
+    "guid": "a90c95a9be33cee0c1f0fa7d835a7a73",
+    "name": "SeaCow",
     "parentGuid": null,
-    "prefabName": "MorayEel"
+    "prefabName": "SeaCow"
 }

@@ -2,8 +2,6 @@ using System;
 
 public class SpikeFish : MonoScript
 {
-    // 左右の絵のUV幅
-    private const float uvPosInterval = 0.3333f;
     [SerializeField] private float expandanimationDuration = 1.0f;
     [SerializeField] private float expandScaleRate = 1.0f;
     [SerializeField] private float returnanimationDuration = 1.0f;
@@ -11,19 +9,31 @@ public class SpikeFish : MonoScript
     /* ----- 実行時状態 ----- */
     private SpriteRenderer spriteRenderer_;
     private Transform targetTransform_;
+    private SpriteAnimation spriteAnimation_;
     private Action animationAction_;
     private float animationTimer_;
     private Vector3 initialScale_;
     private bool isExpandEnded_ = false;
 
-   
+
     public override void Initialize()
     {
         spriteRenderer_ = entity.GetComponent<SpriteRenderer>();
+        spriteAnimation_ = entity.GetScript<SpriteAnimation>();
         Entity playerEntity = ecsGroup.FindEntity("Player");
         targetTransform_ = playerEntity.GetComponent<Transform>();
         initialScale_ = transform.scale;
         animationAction_ = Wait;
+
+        // 0→1の連番を向きに関係なく常時ループ再生する(左向きの時はUV反転で表現するので、
+        // 向きが変わっても再生を止めたりリセットしたりしない)
+        if (spriteAnimation_ != null)
+        {
+            spriteAnimation_.startFrame = 0;
+            spriteAnimation_.endFrame = 1;
+            spriteAnimation_.isLoop = true;
+            spriteAnimation_.Play();
+        }
     }
 
     public override void Update()
@@ -39,8 +49,8 @@ public class SpikeFish : MonoScript
         // ふぐからプレイヤーへのベクトルと右方向ベクトルの内積を計算
         bool isRight = Vector3.Dot(Vector3.right, toTarget.Normalized()) >= 0.0f;
 
-        // 左右専用の絵にUVを切り替える
-        ChangeUVPosition(isRight);
+        // 向きに合わせて連番フレームのUVを反転/復元する
+        ApplyFlip(isRight);
         // 表示中の絵に合わせて上下方向の回転を乗せる
         FaceTargetDirection(toTarget, isRight);
 
@@ -48,18 +58,22 @@ public class SpikeFish : MonoScript
         animationAction_?.Invoke();
     }
 
-    private void ChangeUVPosition(bool isRight)
+    // SpriteAnimationはフレームが切り替わった時しかUVを書き直さないため、
+    // 「今のUVをそのまま反転」だと反転していない/している状態を判定できず、
+    // 毎フレーム反転→復元→反転…を繰り返してチラつく。
+    // なので必ず一旦「反転前(正のscale)」の基準値へ戻してから、向きに応じて反転をかけ直す(冪等にする)。
+    private void ApplyFlip(bool isRight)
     {
+        if (spriteRenderer_ == null) { return; }
+
         UVTransform uv = spriteRenderer_.uvTransform;
 
-        // 右向き絵 / 左向き絵
-        uv.position.x = uvPosInterval;
-        if (!isRight)
-        {
-            uv.position.x = uvPosInterval * 2.0f;
-        }
+        float baseScaleX = Mathf.Abs(uv.scale.x);
+        float basePositionX = uv.scale.x >= 0.0f ? uv.position.x : uv.position.x - baseScaleX;
 
-        // UV適応
+        uv.scale.x = isRight ? baseScaleX : -baseScaleX;
+        uv.position.x = isRight ? basePositionX : basePositionX + baseScaleX;
+
         spriteRenderer_.uvTransform = uv;
     }
 

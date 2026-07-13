@@ -9,6 +9,56 @@
             "guid": "dfbec9b4df0591704f87c16ea7d4c0a7",
             "parentGuid": null,
             "path": "./Debug/dfbec9b4df0591704f87c16ea7d4c0a7.entity"
+        },
+        {
+            "guid": "99629389dce0296da7ed3beab3d6ff23",
+            "parentGuid": null,
+            "path": "./Debug/99629389dce0296da7ed3beab3d6ff23.entity"
+        },
+        {
+            "guid": "36b0d9d955ddc584be177081c79c7c2a",
+            "parentGuid": null,
+            "path": "./Debug/36b0d9d955ddc584be177081c79c7c2a.entity"
+        },
+        {
+            "guid": "ad5b9cf782def7db823a15d31d2f509a",
+            "parentGuid": null,
+            "path": "./Debug/ad5b9cf782def7db823a15d31d2f509a.entity"
+        },
+        {
+            "guid": "26af0827988abef3c2e1c42ec28ccc51",
+            "parentGuid": null,
+            "path": "./Debug/26af0827988abef3c2e1c42ec28ccc51.entity"
+        },
+        {
+            "guid": "069eba1fdea4da545e14d63aad2683ea",
+            "parentGuid": null,
+            "path": "./Debug/069eba1fdea4da545e14d63aad2683ea.entity"
+        },
+        {
+            "guid": "ccc445d7a101096ef4a3f32e8da073ef",
+            "parentGuid": null,
+            "path": "./Debug/ccc445d7a101096ef4a3f32e8da073ef.entity"
+        },
+        {
+            "guid": "f445d752b1c75ea283bc8bfd9ebf936d",
+            "parentGuid": null,
+            "path": "./Debug/f445d752b1c75ea283bc8bfd9ebf936d.entity"
+        },
+        {
+            "guid": "709c8f019e0692a23b348516df8d0d8d",
+            "parentGuid": null,
+            "path": "./Debug/709c8f019e0692a23b348516df8d0d8d.entity"
+        },
+        {
+            "guid": "89a2701032132b744ce5e7ee3dffcb91",
+            "parentGuid": null,
+            "path": "./Debug/89a2701032132b744ce5e7ee3dffcb91.entity"
+        },
+        {
+            "guid": "4e0b8e4f1f437c26508da2185bec44b8",
+            "parentGuid": null,
+            "path": "./Debug/4e0b8e4f1f437c26508da2185bec44b8.entity"
         }
     ]
 }
