@@ -1422,6 +1422,12 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		// Mono ランタイムにデバッガの物理接続を同期
 		mono_set_is_debugger_attached(true);
 
+		// デバッガが安全にアセンブリをバインド（同期）できるように、
+		// アタッチされたこのフレームで AppDomain を強制的にリロード（ホットリロード）します。
+		// これにより、デバッガ接続状態でアセンブリのロードイベントが発火し、
+		// 新旧のバインド不整合や waitDebug=false 時のバインド失敗が完璧に解消されます。
+		HotReload();
+
 		// CSharpLibrary.dll / PDB のタイムスタンプを詳細出力
 		std::string dllPath = "./Packages/Scripts/CSharpLibrary.dll";
 		std::string pdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
