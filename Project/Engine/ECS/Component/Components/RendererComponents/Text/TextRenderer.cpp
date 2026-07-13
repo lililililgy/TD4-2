@@ -24,10 +24,10 @@ void ComponentDebug::TextDebug(TextRenderer* tr, Asset::AssetCollection* assetCo
 	float indentValue = 1.8f;
 	ImGui::Indent(indentValue);
 
-	// 簡単なデバッグUI
-	char textBuf[256];
-	strncpy(textBuf, tr->text_.c_str(), sizeof(textBuf));
-	if (ImGui::InputText("Text", textBuf, sizeof(textBuf))) {
+	// 簡単なデバッグUI (複数行テキスト入力)
+	char textBuf[1024];
+	strncpy(textBuf, tr->GetText().c_str(), sizeof(textBuf));
+	if (ImGui::InputTextMultiline("Text", textBuf, sizeof(textBuf), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4.0f))) {
 		tr->SetText(textBuf);
 	}
 
