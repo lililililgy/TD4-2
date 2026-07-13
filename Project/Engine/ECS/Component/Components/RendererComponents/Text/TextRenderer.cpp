@@ -12,6 +12,7 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/appdomain.h>
+#include "Engine/Script/MonoScriptEngine.h"
 
 using namespace ONEngine;
 
@@ -183,9 +184,9 @@ void MonoInternalMethods::InternalSetTextColor(uint64_t nativeHandle, Vector4 co
 MonoString* MonoInternalMethods::InternalGetTextText(uint64_t nativeHandle) {
 	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
 	if (tr) {
-		return mono_string_new(mono_domain_get(), tr->GetText().c_str());
+		return mono_string_new(MonoScriptEngine::GetInstance().Domain(), tr->GetText().c_str());
 	}
-	return mono_string_new(mono_domain_get(), "");
+	return mono_string_new(MonoScriptEngine::GetInstance().Domain(), "");
 }
 
 void MonoInternalMethods::InternalSetTextText(uint64_t nativeHandle, MonoString* text) {
@@ -200,9 +201,9 @@ void MonoInternalMethods::InternalSetTextText(uint64_t nativeHandle, MonoString*
 MonoString* MonoInternalMethods::InternalGetTextFontPath(uint64_t nativeHandle) {
 	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
 	if (tr) {
-		return mono_string_new(mono_domain_get(), tr->GetFontPath().c_str());
+		return mono_string_new(MonoScriptEngine::GetInstance().Domain(), tr->GetFontPath().c_str());
 	}
-	return mono_string_new(mono_domain_get(), "");
+	return mono_string_new(MonoScriptEngine::GetInstance().Domain(), "");
 }
 
 void MonoInternalMethods::InternalSetTextFontPath(uint64_t nativeHandle, MonoString* fontPath) {
