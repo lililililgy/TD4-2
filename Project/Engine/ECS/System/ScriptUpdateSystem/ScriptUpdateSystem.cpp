@@ -150,10 +150,14 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 	//	return false;
 	//}
 
+	ECSGroup* group = entity->GetECSGroup();
+	if (!group) return false;
+	std::string groupName = group->GetGroupName();
+
 	/// スクリプトが有効でない場合はスキップ
-	MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
+	MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(groupName);
 	if(!ecsGroupObj) {
-		Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
+		Console::LogError("Failed to get ecsGroupObj for group: " + groupName);
 		return false;
 	}
 
@@ -161,7 +165,7 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 	/// Entityの追加関数を呼び出す
 	/// --------------------------------------------------------------------------------
 	if (!addEntityMethod_) {
-		Console::LogError("addEntityMethod_ is null for group: " + ecsGroupName_);
+		Console::LogError("addEntityMethod_ is null for group: " + groupName);
 		return false;
 	}
 
