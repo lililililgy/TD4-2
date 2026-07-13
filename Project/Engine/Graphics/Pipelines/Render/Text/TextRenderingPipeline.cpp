@@ -97,6 +97,13 @@ void TextRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager
 }
 
 void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, DxCommand* dxCommand) {
+	if (!pDxManager_) {
+		pDxManager_ = DxManager::GetInstance();
+	}
+	if (!pDxManager_) {
+		return;
+	}
+
 	ComponentArray<TextRenderer>* textRendererArray = ecsGroup->GetComponentArray<TextRenderer>();
 	if (!textRendererArray || textRendererArray->GetUsedComponents().empty()) {
 		return;
@@ -147,6 +154,10 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 	auto* materialsBuffer = GetOrCreateMaterialsBuffer(groupName);
 	auto* transformsBuffer = GetOrCreateTransformsBuffer(groupName);
 
+	if (!materialsBuffer || !transformsBuffer) {
+		return;
+	}
+
 	size_t transformIndex = 0;
 	for (const auto& data : renderingDataList) {
 		materialsBuffer->SetMappedData(transformIndex, data.renderer->GetGpuMaterial());
@@ -181,6 +192,10 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 }
 
 StructuredBuffer<GPUMaterial>* TextRenderingPipeline::GetOrCreateMaterialsBuffer(const std::string& groupName) {
+	if (!pDxManager_ || !pDxManager_->GetDxDevice() || !pDxManager_->GetDxSRVHeap()) {
+		return nullptr;
+	}
+
 	auto it = materialsBuffers_.find(groupName);
 	if (it != materialsBuffers_.end()) {
 		return it->second.get();
@@ -192,6 +207,10 @@ StructuredBuffer<GPUMaterial>* TextRenderingPipeline::GetOrCreateMaterialsBuffer
 }
 
 StructuredBuffer<Matrix4x4>* TextRenderingPipeline::GetOrCreateTransformsBuffer(const std::string& groupName) {
+	if (!pDxManager_ || !pDxManager_->GetDxDevice() || !pDxManager_->GetDxSRVHeap()) {
+		return nullptr;
+	}
+
 	auto it = transformsBuffers_.find(groupName);
 	if (it != transformsBuffers_.end()) {
 		return it->second.get();
