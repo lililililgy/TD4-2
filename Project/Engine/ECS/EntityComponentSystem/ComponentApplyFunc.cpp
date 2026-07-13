@@ -479,6 +479,15 @@ size_t ONEngine::ComponentApplyFuncs::GetBatchElementSize(MonoClass* monoClass) 
 }
 
 void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
+	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(TransformBatch) = {}", sizeof(TransformBatch)));
+	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(MeshRendererBatch) = {}", sizeof(MeshRendererBatch)));
+	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(DissolveBatch) = {}", sizeof(DissolveBatch)));
+	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(SpriteBatch) = {}", sizeof(SpriteBatch)));
+	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(TextBatch) = {}", sizeof(TextBatch)));
+	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(CameraBatch) = {}", sizeof(CameraBatch)));
+	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(AnimatorBatch) = {}", sizeof(AnimatorBatch)));
+	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(BoxCollider2DBatch) = {}", sizeof(BoxCollider2DBatch)));
+
 	gApplyFuncMap.clear();
 	gFetchFuncMap.clear();
 	gComponentBatchSize.clear();
