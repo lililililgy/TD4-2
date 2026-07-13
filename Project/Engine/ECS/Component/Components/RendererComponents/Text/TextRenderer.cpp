@@ -100,9 +100,6 @@ void TextRenderer::UpdateTextTexture() {
 }
 
 void TextRenderer::RenderingSetup(Asset::AssetCollection* assetCollection) {
-	// 描画前にテクスチャの更新を行う
-	UpdateTextTexture();
-
 	gpuMaterial_.baseColor = material_.baseColor;
 	gpuMaterial_.postEffectFlags = material_.postEffectFlags;
 

@@ -209,15 +209,15 @@ void ONEngine::AddComponentInternalCalls() {
 	mono_add_internal_call("SpriteRenderer::InternalGetPixelPerfect", (void*)InternalGetPixelPerfect);
 	mono_add_internal_call("SpriteRenderer::InternalSetPixelPerfect", (void*)InternalSetPixelPerfect);
 
-	/// text renderer (Temporarily commented out)
-	// mono_add_internal_call("TextRenderer::InternalGetColor", (void*)InternalGetTextColor);
-	// mono_add_internal_call("TextRenderer::InternalSetColor", (void*)InternalSetTextColor);
-	// mono_add_internal_call("TextRenderer::InternalGetText", (void*)InternalGetTextText);
-	// mono_add_internal_call("TextRenderer::InternalSetText", (void*)InternalSetTextText);
-	// mono_add_internal_call("TextRenderer::InternalGetFontPath", (void*)InternalGetTextFontPath);
-	// mono_add_internal_call("TextRenderer::InternalSetFontPath", (void*)InternalSetTextFontPath);
-	// mono_add_internal_call("TextRenderer::InternalGetFontSize", (void*)InternalGetTextFontSize);
-	// mono_add_internal_call("TextRenderer::InternalSetFontSize", (void*)InternalSetTextFontSize);
+	/// text renderer
+	mono_add_internal_call("TextRenderer::InternalGetColor", (void*)InternalGetTextColor);
+	mono_add_internal_call("TextRenderer::InternalSetColor", (void*)InternalSetTextColor);
+	mono_add_internal_call("TextRenderer::InternalGetText", (void*)InternalGetTextText);
+	mono_add_internal_call("TextRenderer::InternalSetText", (void*)InternalSetTextText);
+	mono_add_internal_call("TextRenderer::InternalGetFontPath", (void*)InternalGetTextFontPath);
+	mono_add_internal_call("TextRenderer::InternalSetFontPath", (void*)InternalSetTextFontPath);
+	mono_add_internal_call("TextRenderer::InternalGetFontSize", (void*)InternalGetTextFontSize);
+	mono_add_internal_call("TextRenderer::InternalSetFontSize", (void*)InternalSetTextFontSize);
 
 	/// font rasterizer
 	mono_add_internal_call("FontRasterizer::Internal_GenerateTexture", (void*)InternalGenerateFontTexture);

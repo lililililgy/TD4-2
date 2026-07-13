@@ -14,6 +14,8 @@ using namespace ONEngine;
 /// editor
 #include "Engine/Editor/Manager/ImGuiManager.h"
 
+#include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
+
 RenderingFramework::RenderingFramework() {}
 RenderingFramework::~RenderingFramework() {}
 
@@ -68,6 +70,17 @@ void RenderingFramework::Initialize(DxManager* dxm, WindowManager* windowManager
 }
 
 void RenderingFramework::Draw() {
+	/// ----- TextRenderer のテクスチャ事前更新 ----- ///
+	if (auto* currentGroup = pEntityComponentSystem_->GetCurrentGroup()) {
+		if (auto* textRendererArray = currentGroup->GetComponentArray<TextRenderer>()) {
+			for (auto* tr : textRendererArray->GetUsedComponents()) {
+				if (tr && tr->enable) {
+					tr->UpdateTextTexture();
+				}
+			}
+		}
+	}
+
 	/// ----- 描画全体の処理 ----- ///
 	HeapBindToCommandList();
 	PreDraw(pEntityComponentSystem_->GetCurrentGroup());

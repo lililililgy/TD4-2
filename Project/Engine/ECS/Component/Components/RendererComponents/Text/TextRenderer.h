@@ -56,7 +56,6 @@ public:
 	/// @brief テクスチャ更新要求フラグを立てる
 	void MarkDirty() { isDirty_ = true; }
 
-private:
 	/// @brief 内部テクスチャの更新処理
 	void UpdateTextTexture();
 
