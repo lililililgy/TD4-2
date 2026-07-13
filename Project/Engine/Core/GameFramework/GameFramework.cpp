@@ -36,9 +36,9 @@ GameFramework::~GameFramework() {
 	}
 
 	/// debug用のシーンを保存
-	if (sceneManager_ && entityComponentSystem_) {
-		sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
-	}
+	// if (sceneManager_ && entityComponentSystem_) {
+	// 	sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
+	// }
 
 	// ライフサイクルの依存関係を解決するため、明示的に先に破棄
 	editorManager_.reset();
