@@ -624,19 +624,17 @@ void MonoScriptEngine::HotReload() {
 		}
 	}
 
-	std::vector<char> tempPdbBuffer;
-	assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath, tempPdbBuffer);
+	// 古い PDB バッファを保留リストに退避（クリアはせず、ClearPendingDomains() が実際にアンロードするタイミングまで寿命を維持する）
+	if (!activePdbBuffer_.empty()) {
+		pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
+	}
+
+	assembly_ = LoadAssemblyWithSymbols(domain_, utf8DllPath, activePdbBuffer_);
 	if(!assembly_) {
 		Console::LogError("Failed to load assembly in new domain", LogCategory::ScriptEngine);
 		domain_ = nullptr;
 		return;
 	}
-
-	if (!activePdbBuffer_.empty()) {
-		pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
-		pendingPdbBuffers_.clear();
-	}
-	activePdbBuffer_ = std::move(tempPdbBuffer);
 
 	currentDllPath_ = utf8DllPath;
 	image_ = mono_assembly_get_image(assembly_);
