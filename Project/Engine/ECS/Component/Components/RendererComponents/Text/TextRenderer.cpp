@@ -104,7 +104,7 @@ void TextRenderer::RenderingSetup(Asset::AssetCollection* assetCollection) {
 	gpuMaterial_.baseColor = material_.baseColor;
 	gpuMaterial_.postEffectFlags = material_.postEffectFlags;
 
-	if (material_.HasBaseTexture()) {
+	if (material_.HasBaseTexture() && material_.GetBaseTextureGuid().CheckValid()) {
 		int32_t textureIndex = assetCollection->GetTextureIndexFromGuid(material_.GetBaseTextureGuid());
 		if (textureIndex != -1) {
 			gpuMaterial_.baseTextureId = textureIndex;

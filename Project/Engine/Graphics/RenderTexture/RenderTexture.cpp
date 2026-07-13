@@ -6,6 +6,7 @@ using namespace ONEngine;
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
 #include "Engine/Core/Config/EngineConfig.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
+#include "Engine/Asset/Guid/Guid.h"
 
 RenderTexture::RenderTexture() = default;
 RenderTexture::~RenderTexture() = default;
@@ -17,6 +18,7 @@ void RenderTexture::Initialize(DXGI_FORMAT format, const Vector4& clearColor, co
 
 	{	/// textureの作成
 		Asset::Texture rtvTexture(textureSize);
+		rtvTexture.guid = GenerateGuid();
 		assetCollection->AddAsset<Asset::Texture>(name, std::move(rtvTexture)); /// textureの管理を AssetCollection に任せる
 		texture_ = assetCollection->GetTexture(name);
 	}
@@ -132,6 +134,7 @@ UAVTexture::~UAVTexture() = default;
 
 void UAVTexture::Initialize(const std::string& textureName, DxManager* dxm, Asset::AssetCollection* assetCollection) {
 	Asset::Texture uavTexture;
+	uavTexture.guid = GenerateGuid();
 	assetCollection->AddAsset<Asset::Texture>(textureName, std::move(uavTexture));
 	texture_ = assetCollection->GetTexture(textureName);
 

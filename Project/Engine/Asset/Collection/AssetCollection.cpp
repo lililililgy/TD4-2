@@ -300,10 +300,15 @@ const std::vector<Texture>& AssetCollection::GetTextures() const {
 }
 
 int32_t AssetCollection::GetTextureIndexFromGuid(const Guid& guid) const {
+	if (!guid.CheckValid()) return -1;
 	return GetBundle<Texture>(AssetType::Texture)->container->GetIndex(guid);
 }
 
 const std::string& AssetCollection::GetTexturePath(const Guid& guid) const {
+	if (!guid.CheckValid()) {
+		static const std::string empty;
+		return empty;
+	}
 	auto* container = GetBundle<Texture>(AssetType::Texture)->container.get();
 	return container->GetKey(container->GetIndex(guid));
 }
