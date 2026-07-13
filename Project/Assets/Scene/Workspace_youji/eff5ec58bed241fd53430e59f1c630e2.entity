@@ -48,8 +48,27 @@
             "enable": 1,
             "fontPath": "./Assets/Fonts/MPLUSRounded1c-Black.ttf",
             "fontSize": 256,
+            "horizontalAlignment": 1,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "outlineWidth": 0,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
             "text": "text rendering pipeline test",
-            "type": "TextRenderer"
+            "type": "TextRenderer",
+            "verticalAlignment": 0
         }
     ],
     "guid": "eff5ec58bed241fd53430e59f1c630e2",

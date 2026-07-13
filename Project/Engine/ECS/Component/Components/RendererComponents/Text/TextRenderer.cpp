@@ -7,6 +7,7 @@
 #include "Engine/ECS/Entity/GameEntity/GameEntity.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/Core/Utility/Font/FontRasterizer.h"
+#include "Engine/Asset/Guid/Guid.h"
 
 // Monoのヘッダ
 #include <mono/jit/jit.h>
@@ -121,11 +122,50 @@ TextRenderer::TextRenderer() {
 	material_.postEffectFlags = 0;
 
 	// インスタンス専用のユニークなアセット名を設定
-	dynamicTexturePath_ = std::format("dynamic://TextRenderer_{}", reinterpret_cast<uintptr_t>(this));
+	dynamicTexturePath_ = std::format("dynamic://TextRenderer_{}", GenerateGuid().ToString());
 }
 
 TextRenderer::~TextRenderer() {
 	// アセットのクリーンアップ
+}
+
+TextRenderer::TextRenderer(const TextRenderer& other)
+	: IComponent(other),
+	  gpuMaterial_(other.gpuMaterial_),
+	  material_(other.material_),
+	  text_(other.text_),
+	  fontPath_(other.fontPath_),
+	  fontSize_(other.fontSize_),
+	  horizontalAlignment_(other.horizontalAlignment_),
+	  verticalAlignment_(other.verticalAlignment_),
+	  outlineColor_(other.outlineColor_),
+	  outlineWidth_(other.outlineWidth_),
+	  shadowColor_(other.shadowColor_),
+	  shadowOffset_(other.shadowOffset_),
+	  isDirty_(true)
+{
+	// コピー先でユニークなテクスチャパスを新しく生成する
+	dynamicTexturePath_ = std::format("dynamic://TextRenderer_{}", GenerateGuid().ToString());
+}
+
+TextRenderer& TextRenderer::operator=(const TextRenderer& other) {
+	if (this != &other) {
+		IComponent::operator=(other);
+		gpuMaterial_ = other.gpuMaterial_;
+		material_ = other.material_;
+		text_ = other.text_;
+		fontPath_ = other.fontPath_;
+		fontSize_ = other.fontSize_;
+		horizontalAlignment_ = other.horizontalAlignment_;
+		verticalAlignment_ = other.verticalAlignment_;
+		outlineColor_ = other.outlineColor_;
+		outlineWidth_ = other.outlineWidth_;
+		shadowColor_ = other.shadowColor_;
+		shadowOffset_ = other.shadowOffset_;
+		isDirty_ = true;
+		// パスは自分自身のユニークなものを維持する
+	}
+	return *this;
 }
 
 void TextRenderer::UpdateTextTexture() {

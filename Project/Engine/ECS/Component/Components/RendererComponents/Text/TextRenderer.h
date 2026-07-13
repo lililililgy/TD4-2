@@ -63,6 +63,9 @@ public:
 	TextRenderer();
 	~TextRenderer();
 
+	TextRenderer(const TextRenderer& other);
+	TextRenderer& operator=(const TextRenderer& other);
+
 	/// @brief 描画用データのセットアップ
 	void RenderingSetup(Asset::AssetCollection* assetCollection);
 
