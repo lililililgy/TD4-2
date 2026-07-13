@@ -52,10 +52,12 @@ bool FontRasterizer::GenerateTexture(const std::string& text, const std::string&
 		if (!dxm) return false;
 
 		uint8_t transparentPixel[4] = { 0, 0, 0, 0 };
-		Asset::Texture* tex = assetCollection->GetTexture(texturePath);
-		if (tex) {
-			tex->RecreateFromPixels(transparentPixel, 1, 1, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), dxm->GetDxCommand());
-			return true;
+		if (assetCollection->HasAsset(texturePath)) {
+			Asset::Texture* tex = assetCollection->GetTexture(texturePath);
+			if (tex) {
+				tex->RecreateFromPixels(transparentPixel, 1, 1, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), dxm->GetDxCommand());
+				return true;
+			}
 		} else {
 			Asset::Texture newTex;
 			newTex.RecreateFromPixels(transparentPixel, 1, 1, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), dxm->GetDxCommand());
@@ -188,10 +190,12 @@ bool FontRasterizer::GenerateTexture(const std::string& text, const std::string&
 		return false;
 	}
 
-	Asset::Texture* existingTexture = assetCollection->GetTexture(texturePath);
-	if (existingTexture) {
-		existingTexture->RecreateFromPixels(rgba.data(), totalWidth, totalHeight, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), dxm->GetDxCommand());
-		return true;
+	if (assetCollection->HasAsset(texturePath)) {
+		Asset::Texture* existingTexture = assetCollection->GetTexture(texturePath);
+		if (existingTexture) {
+			existingTexture->RecreateFromPixels(rgba.data(), totalWidth, totalHeight, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), dxm->GetDxCommand());
+			return true;
+		}
 	} else {
 		Asset::Texture newTexture;
 		newTexture.guid = GenerateGuid();

@@ -152,6 +152,12 @@ const Vector4& TextRenderer::GetColor() const {
 }
 
 Vector2 TextRenderer::GetTextureSize(Asset::AssetCollection* assetCollection) const {
+	if (material_.HasBaseTexture()) {
+		Asset::Texture* texture = assetCollection->GetTextureFromGuid(material_.GetBaseTextureGuid());
+		if (texture) {
+			return texture->GetTextureSize();
+		}
+	}
 	return Vector2(0.0f, 0.0f);
 }
 
