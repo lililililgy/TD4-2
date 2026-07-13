@@ -66,6 +66,7 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 
 		ReleaseGCHandle();
 		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+		monoEngine.SyncInitialComponentsToCS(ecs);
 
 		lastReloadCounter_ = currentReloadCounter;
 	}
@@ -110,6 +111,7 @@ void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 		ReleaseGCHandle();
 		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+		monoEngine.SyncInitialComponentsToCS(ecs);
 
 		lastReloadCounter_ = currentReloadCounter;
 	}
