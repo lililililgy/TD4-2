@@ -72,6 +72,39 @@ void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 	CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::CSharpScriptUpdate);
 #endif // DEBUG_MODE
 
+	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+
+	if (monoEngine.GetIsHotReloadRequest()) {
+		// 古いドメインのハンドルを解放
+		ReleaseGCHandle();
+
+		// 新しいドメインで再初期化
+		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+
+		/// C#側のECSGroupを取得、更新関数を呼ぶ
+		ComponentArray<Script>* scriptArray = ecs->GetComponentArray<Script>();
+		if (scriptArray) {
+			for (auto& script : scriptArray->GetUsedComponents()) {
+				script->SetIsAdded(false);
+				for (auto& data : script->GetScriptDataList()) {
+					data.isAdded = false;
+					data.collisionEventMethods.fill(nullptr);
+					data.collisionEventMethods2D.fill(nullptr);
+				}
+			}
+		}
+
+		ComponentArray<AnimationPlayer>* animPlayerArray = ecs->GetComponentArray<AnimationPlayer>();
+		if (animPlayerArray) {
+			for (auto& animPlayer : animPlayerArray->GetUsedComponents()) {
+				animPlayer->ClearBindings();
+			}
+		}
+
+		ReleaseGCHandle();
+		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+	}
+
 	/// C#側に未追加にエンティティとコンポーネントを追加する
 	AddAllEntitiesAndComponents(ecs);
 
