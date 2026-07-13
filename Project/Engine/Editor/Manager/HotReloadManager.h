@@ -57,8 +57,10 @@ public:
                 std::string relPath = GetRelativePath(ev.path);
                 ONEngine::Console::Log("[MonoDbg]   File type: " + relPath, ONEngine::LogCategory::ScriptEngine);
 
-                // CSharpLibrary.dll および .pdb 自体の変更イベントは、ホットリロードの上書きコピーによる二次的イベントであるため完全に無視する
-                if (relPath.find("CSharpLibrary") != std::string::npos && (relPath.ends_with(".dll") || relPath.ends_with(".pdb"))) {
+                // CSharpLibrary.dll および CSharpLibrary.pdb (上書きコピーされる固定名) の変更イベントを無視する。
+                // これにより、HotReload() 内のコピー処理による無限ループを防ぎつつ、
+                // 外部ビルドで生成されるタイムスタンプ付き最新DLL（CSharpLibrary_タイムスタンプ.dll）の更新検知を可能にします。
+                if (relPath.ends_with("CSharpLibrary.dll") || relPath.ends_with("CSharpLibrary.pdb")) {
                     continue;
                 }
 
@@ -66,8 +68,13 @@ public:
                     // アセットの再ロード要求
                     pendingAssetReloads_.push_back(relPath);
 
-                    // C#スクリプトが更新された場合はホットリロード要求
-                    if (relPath.ends_with(".cs")) {
+                    // C#スクリプト(.cs) が更新された場合、またはタイムスタンプ付きの最新DLLが生成された場合はホットリロード要求
+                    bool isCsFile = relPath.ends_with(".cs");
+                    bool isNewTimestampDll = relPath.ends_with(".dll") && 
+                                             relPath.find("CSharpLibrary") != std::string::npos && 
+                                             relPath.find("CSharpLibrary.dll") == std::string::npos;
+
+                    if (isCsFile || isNewTimestampDll) {
                         ONEngine::Console::Log("[MonoDbg] Triggering ScriptHotReload for: " + relPath, ONEngine::LogCategory::ScriptEngine);
                         pendingScriptHotReload_ = true;
                     }
