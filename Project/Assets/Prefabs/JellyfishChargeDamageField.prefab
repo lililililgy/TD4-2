@@ -1,0 +1,162 @@
+{
+    "active": false,
+    "children": [
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 3,
+                    "position": {
+                        "x": 0.0,
+                        "y": -606.2999267578125,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 0.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 500.0,
+                        "y": 500.0,
+                        "z": 0.625
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "isPixelPerfect": false,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "4f883331d0262d09420a9cc5a09df410",
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": 0.3400000035762787,
+                                "y": 1.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                }
+            ],
+            "guid": "d520fbccb58c9ae8cb6c43b99b52b31f",
+            "name": "NewEntity",
+            "parentGuid": "a0e65fa1739efe4cad84dd6a0268ddbb",
+            "prefabName": ""
+        }
+    ],
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 400.0,
+                "y": 764.8001098632813,
+                "z": 1.2899999618530273
+            },
+            "type": "Transform"
+        },
+        {
+            "AttackCollision": {
+                "damage_": 20.0,
+                "destroyOnHit_": false
+            },
+            "JellyfishChargeDamageField": {
+                "damage": 20.0,
+                "duration": 0.6000000238418579,
+                "width": 180.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "JellyfishChargeDamageField"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 0.8784313797950745,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "2b1b8b572356f6c42b296f1a5cd80124",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 4294967042,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "a0e65fa1739efe4cad84dd6a0268ddbb",
+    "name": "JellyfishChargeDamageField",
+    "parentGuid": null,
+    "prefabName": "JellyfishChargeDamageField"
+}

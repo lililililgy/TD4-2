@@ -1,33 +1,33 @@
 using System;
 
 ///=============================================
-/// ƒ{ƒX‚Ìã“_‚ğ•\‚·ƒNƒ‰ƒX
+/// ã‚²ã‚½ã®å¼±ç‚¹ã‚¯ãƒ©ã‚¹
 ///=============================================
 public class GesoWeakPoint : MonoScript {
 
-    // ƒ{ƒX‚ÌƒGƒ“ƒeƒBƒeƒB–¼
+    // ã‚²ã‚½ã®HP
     [SerializeField]
     private string kingGesoEntityName = "KingGeso";
 
-    // ƒ{ƒX‚ÌQÆ
-    private KingGeso _kingGeso;
+    // ãƒœã‚¹ã‚²ã‚½ã®å‚ç…§
+    private KingGeso kingGeso;
 
     //=============================
-    // ‰Šú‰»
+    // åˆæœŸåŒ–
     //=============================
     public override void Initialize() {
         ResolveKingGeso();
 	}
 
     //=============================
-    // XV
+    // æ›´æ–°
     //=============================
     public override void Update() {
 		
 	}
 
     //=============================
-    // ƒ_ƒ[ƒW‚ğ—^‚¦‚é
+    // ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹
     //=============================
     public void Damage(int damage)
     {
@@ -37,38 +37,38 @@ public class GesoWeakPoint : MonoScript {
 
     public void Damage(float damage)
     {
-        if (_kingGeso == null)
+        if (kingGeso == null)
         {
-            // ƒ{ƒX‚ÌQÆ‚ª‚È‚¢ê‡‚ÍÄæ“¾
+            // ãƒœã‚¹ã®å‚ç…§ãŒãªã„å ´åˆã¯å†å–å¾—
             ResolveKingGeso();
         }
 
-        if (_kingGeso != null)
+        if (kingGeso != null)
         {
-            // ƒ{ƒX‚Éƒ_ƒ[ƒW‚ğ—^‚¦‚é
-            _kingGeso.TakeDamage(damage);
+            // ãƒœã‚¹ã«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹
+            kingGeso.TakeDamage(damage);
         }
     }
 
     //=============================
-    // ƒ{ƒX‚ÌQÆ‚ğ‰ğŒˆ‚·‚é
+    // ãƒœã‚¹ã®å‚ç…§ã‚’è§£æ±ºã™ã‚‹
     //=============================
     private void ResolveKingGeso()
     {
-        _kingGeso = null;
+        kingGeso = null;
 
-        // ECSƒOƒ‹[ƒv‚ğæ“¾
+        // ECSGroupã‹ã‚‰ãƒœã‚¹ã®Entityã‚’å–å¾—
         if (!String.IsNullOrEmpty(kingGesoEntityName))
         {
             Entity kingGesoEntity = ecsGroup.FindEntity(kingGesoEntityName);
-            //æ“¾‚Å‚«‚È‚©‚Á‚½ê‡‚Ínull‚ğ•Ô‚·
-            _kingGeso = kingGesoEntity != null ? kingGesoEntity.GetScript<KingGeso>() : null;
+            // ãƒœã‚¹ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å–å¾—
+            kingGeso = kingGesoEntity != null ? kingGesoEntity.GetScript<KingGeso>() : null;
         }
 
-        if (_kingGeso == null)
+        if (kingGeso == null)
         {
-            // æ“¾‚Å‚«‚È‚©‚Á‚½ê‡‚ÍAe‚ÌƒGƒ“ƒeƒBƒeƒB‚©‚çæ“¾‚ğ‚İ‚é
-            _kingGeso = entity.GetScript<KingGeso>();
+            // ãƒœã‚¹ã®EntityãŒè¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã¯ã€è¦ªEntityã‹ã‚‰ãƒœã‚¹ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å–å¾—
+            kingGeso = entity.GetScript<KingGeso>();
         }
     }
 }

@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -16.400001525878906,
-                "y": 0.0,
+                "x": 0.0,
+                "y": 201.9000244140625,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 2048.0,
+                "y": 128.0,
+                "z": 200.0
             },
             "type": "Transform"
         },
@@ -27,6 +27,7 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -34,7 +35,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "b22e4a303b38f824aee3d12940c374d1",
+                "baseTextureGuid": "43b9444c09467c88a9b3d982923f2d16",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -50,12 +51,11 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "c13ec1b095d9df2802ccfeef119225e0",
-    "name": "Player",
+    "guid": "3cccfb914d79e99132176423cefc9a17",
+    "name": "ClearText",
     "parentGuid": null,
     "prefabName": ""
 }

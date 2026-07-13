@@ -12,6 +12,7 @@ public interface IComponentArray
 		get;
 	}
 	void Clear();
+	bool Remove(Component component);
 }
 
 public class ComponentArray<T> : IComponentArray where T : Component
@@ -28,6 +29,15 @@ public class ComponentArray<T> : IComponentArray where T : Component
 	public void Clear()
 	{
 		components.Clear();
+	}
+
+	public bool Remove(Component component)
+	{
+		if (component is T typedComponent)
+		{
+			return components.Remove(typedComponent);
+		}
+		return false;
 	}
 }
 
@@ -56,6 +66,18 @@ public class ComponentCollection
 
 		ComponentArray<T> array = (ComponentArray<T>)arrays_[typeof(T)];
 		array.components.Remove(_component);
+	}
+
+	public void RemoveComponent(Component _component)
+	{
+		if (_component == null) return;
+		Type type = _component.GetType();
+		if (!arrays_.ContainsKey(type))
+		{
+			return;
+		}
+
+		arrays_[type].Remove(_component);
 	}
 
 	public void Clear()

@@ -34,8 +34,12 @@ public struct Vector2 {
 	static public Vector2 Normalized(Vector2 v) {
 		return v.Normalized();
 	}
-	
-	static public float Length(Vector2 v) {
+
+    static public Vector2 Lerp(Vector2 a, Vector2 b, float t) {
+        return a + (b - a) * t;
+    }
+
+    static public float Length(Vector2 v) {
 		return v.Length();
 	}
 
@@ -47,13 +51,14 @@ public struct Vector2 {
 		return a.x * b.x + a.y * b.y;
 	}
 
+	
 
 
-	/// ------------------------------------------------
-	/// 定数
-	/// ------------------------------------------------
+    /// ------------------------------------------------
+    /// 定数
+    /// ------------------------------------------------
 
-	static public Vector2 zero {
+    static public Vector2 zero {
 		get { return new Vector2(0.0f, 0.0f); }
 	}
 

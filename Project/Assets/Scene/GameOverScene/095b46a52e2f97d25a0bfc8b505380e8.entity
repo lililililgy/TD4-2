@@ -1,0 +1,88 @@
+{
+    "active": true,
+    "components": [
+        {
+            "elementId": "main-menu",
+            "elementIndex": 0,
+            "enable": 1,
+            "groupId": "fe7717145a0734ae5c8d141d1587f32e",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 2.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "ClearBackMainMenu": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "62e71246f61e9c4d0f3a0d28b7ece979",
+                "GamepadDPadDown": "62e71246f61e9c4d0f3a0d28b7ece979",
+                "S": "62e71246f61e9c4d0f3a0d28b7ece979"
+            },
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "b5c31d0e7e1f27c822e4250c516d66b8",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ClearBackMainMenu"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "095b46a52e2f97d25a0bfc8b505380e8",
+    "name": "main-menu",
+    "parentGuid": "fe7717145a0734ae5c8d141d1587f32e",
+    "prefabName": ""
+}

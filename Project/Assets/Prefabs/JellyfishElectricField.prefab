@@ -1,0 +1,97 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 280.0,
+                "y": 280.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 2,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Static",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "AttackCollision": {
+                "damage_": 12.0,
+                "destroyOnHit_": false
+            },
+            "JellyfishElectricField": {
+                "activationDelay": 1.0,
+                "activeDuration": 1.2,
+                "damage": 12.0,
+                "radius": 140.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "JellyfishElectricField"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 0.35,
+                    "x": 1.0,
+                    "y": 0.85,
+                    "z": 0.2
+                },
+                "baseTextureGuid": "2b1b8b572356f6c42b296f1a5cd80124",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "19b8227a2148479ba3476f323b978432",
+    "name": "JellyfishElectricField",
+    "parentGuid": null,
+    "prefabName": "JellyfishElectricField"
+}

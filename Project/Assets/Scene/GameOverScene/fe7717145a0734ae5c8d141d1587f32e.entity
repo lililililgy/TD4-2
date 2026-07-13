@@ -1,0 +1,50 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 512.0,
+                "y": 64.0,
+                "z": 0.5
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "cancelKeys": [
+                "Escape",
+                "GamepadB"
+            ],
+            "currentSelected": "095b46a52e2f97d25a0bfc8b505380e8",
+            "enable": 1,
+            "isFocused": true,
+            "isVisible": true,
+            "parentGroup": "",
+            "submitKeys": [
+                "Return",
+                "Space",
+                "GamepadA"
+            ],
+            "type": "UIGroupComponent"
+        }
+    ],
+    "guid": "fe7717145a0734ae5c8d141d1587f32e",
+    "name": "Group_0",
+    "parentGuid": "37056e09c6868f9a014d766c7ea2d95a",
+    "prefabName": ""
+}
