@@ -952,7 +952,8 @@ void MonoScriptEngine::ClearPendingDomains() {
 	// デバッガが接続（アタッチ）されている間は、アンロードに伴うスレッド競合やデッドロッククラッシュを防ぐため、
 	// ドメインのアンロードを一切行わず、リストに保留（蓄積）したままにします。
 	// デバッガが切断された直後のフレームから安全に一括アンロードが実行されます。
-	if (IsDebuggerAttachedViaTcp()) {
+	// （※毎フレームの GetExtendedTcpTable 呼び出しを避けるため、キャッシュされた変数 wasDebuggerAttached_ を使用します）
+	if (wasDebuggerAttached_) {
 		return;
 	}
 #endif
