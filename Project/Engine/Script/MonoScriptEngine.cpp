@@ -229,6 +229,13 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 	std::ifstream dllFile(dllPath, std::ios::binary | std::ios::ate);
 	std::ifstream pdbFile(pdbPath, std::ios::binary | std::ios::ate);
 
+	if (!dllFile.is_open()) {
+		Console::LogWarning("[Mono] LoadAssembly: Failed to open DLL file: " + dllPath, LogCategory::ScriptEngine);
+	}
+	if (!pdbFile.is_open()) {
+		Console::LogWarning("[Mono] LoadAssembly: Failed to open PDB file: " + pdbPath, LogCategory::ScriptEngine);
+	}
+
 	if (dllFile.is_open() && pdbFile.is_open()) {
 		std::streamsize dllSize = dllFile.tellg();
 		dllFile.seekg(0, std::ios::beg);
@@ -237,6 +244,8 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 		std::streamsize pdbSize = pdbFile.tellg();
 		pdbFile.seekg(0, std::ios::beg);
 		outPdbBuffer.resize(pdbSize);
+
+		Console::Log("[Mono] LoadAssembly: DLL size = " + std::to_string(dllSize) + " bytes, PDB size = " + std::to_string(pdbSize) + " bytes", LogCategory::ScriptEngine);
 
 		if (dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(outPdbBuffer.data(), pdbSize)) {
 			// 論理アセンブリ名（CSharpLibrary.dll）に置き換えて Mono に報告し、デバッガがソースコードとマッピングできるようにする
@@ -273,8 +282,14 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 				if (assembly) {
 					Console::Log("[Mono] Successfully loaded assembly and debug symbols from memory: " + dllPath + " (logical: " + logicalPath + ")", LogCategory::ScriptEngine);
 					return assembly;
+				} else {
+					Console::LogError("[Mono] Failed to load assembly from full image. Status: " + std::to_string(status), LogCategory::ScriptEngine);
 				}
+			} else {
+				Console::LogError("[Mono] Failed to open image from memory. Status: " + std::to_string(status), LogCategory::ScriptEngine);
 			}
+		} else {
+			Console::LogError("[Mono] Failed to read DLL or PDB buffers from file.", LogCategory::ScriptEngine);
 		}
 	}
 	Console::LogWarning("[Mono] Failed to load assembly from memory with symbols. Falling back to file load: " + dllPath, LogCategory::ScriptEngine);
@@ -737,7 +752,14 @@ std::optional<std::string> MonoScriptEngine::FindLatestDll(const std::string& di
 	}
 
 	if(latestFile) {
-		Console::Log("Latest DLL found: " + *latestFile, LogCategory::ScriptEngine);
+		auto writeTime = std::filesystem::last_write_time(*latestFile);
+		auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(writeTime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+		std::time_t ctime = std::chrono::system_clock::to_time_t(sctp);
+		char timeBuf[100];
+		std::tm timeInfo;
+		localtime_s(&timeInfo, &ctime);
+		std::strftime(timeBuf, sizeof(timeBuf), "%Y-%m-%d %H:%M:%S", &timeInfo);
+		Console::Log("Latest DLL found: " + *latestFile + " (Last Modified: " + std::string(timeBuf) + ")", LogCategory::ScriptEngine);
 	}
 
 	return latestFile;

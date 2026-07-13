@@ -188,7 +188,7 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 			MonoClass* behaviorClass = mono_class_from_name(monoEngine.Image(), "", data.scriptName.c_str());
 			if(!behaviorClass) {
-				Console::LogError("Failed to find MonoBehavior class");
+				Console::LogError("[MonoDbg] Failed to find MonoBehavior class: " + data.scriptName);
 				continue;
 			}
 
@@ -199,6 +199,8 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 				continue;
 			}
 
+			Console::Log("[MonoDbg] AddEntityToScript - Instantiating and adding script: " + data.scriptName + " to Entity ID: " + std::to_string(entityId), LogCategory::ScriptEngine);
+
 			void* addScriptArgs[3];
 			addScriptArgs[0] = &entityId;
 			addScriptArgs[1] = scriptInstance;
@@ -208,11 +210,13 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			MonoScriptEngineUtils::SafeInvoke(addScriptMethod_, ecsGroupObj, addScriptArgs, &exc);
 
 			if(exc) {
+				Console::LogError("[MonoDbg] Exception thrown while adding script: " + data.scriptName, LogCategory::ScriptEngine);
 				MonoScriptEngineUtils::HandleException(exc);
 			}
 
 			/// variablesの設定
 			if(vars) {
+				Console::Log("[MonoDbg] AddEntityToScript - Syncing serialized fields for script: " + data.scriptName, LogCategory::ScriptEngine);
 				vars->SetScriptVariables(data.scriptName);
 			}
 

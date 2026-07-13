@@ -37,7 +37,12 @@ public:
         // ホットリロードの処理中（コピー処理中など）であれば、
         // その間の FileWatcher イベントは無限ループ防止のためすべてスルーして破棄する
         if (ONEngine::MonoScriptEngine::GetInstance().IsReloading()) {
-            auto dummy = fileWatcher_.ConsumeEvents();
+            auto events = fileWatcher_.ConsumeEvents();
+            for (const auto& ev : events) {
+                std::wstring pathW = ev.path;
+                std::string pathA(pathW.begin(), pathW.end());
+                ONEngine::Console::Log("[MonoDbg] (Ignored during reload) FileWatcher detected change: " + pathA, ONEngine::LogCategory::ScriptEngine);
+            }
             return;
         }
 
@@ -115,6 +120,9 @@ public:
 
     Requests ConsumeRequests() {
         std::lock_guard<std::mutex> lock(mutex_);
+        if (pendingScriptHotReload_) {
+            ONEngine::Console::Log("[MonoDbg] ConsumeRequests - Consuming script hot reload request.", ONEngine::LogCategory::ScriptEngine);
+        }
         Requests reqs = { std::move(pendingAssetReloads_), pendingScriptHotReload_ };
         pendingAssetReloads_.clear();
         pendingScriptHotReload_ = false;
