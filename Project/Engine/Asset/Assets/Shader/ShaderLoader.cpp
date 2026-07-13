@@ -6,6 +6,9 @@
 /// externals
 #include <magic_enum/magic_enum.hpp>
 
+/// engine
+#include "Engine/Core/Utility/Tools/Log.h"
+
 namespace ONEngine::Asset {
 
 AssetLoader<Shader>::AssetLoader() {}
