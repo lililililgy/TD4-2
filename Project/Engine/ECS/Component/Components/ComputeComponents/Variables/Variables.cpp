@@ -32,6 +32,27 @@
 using namespace ONEngine;
 using json = nlohmann::json;
 
+std::unordered_set<std::string> Variables::serializeFieldCache_;
+
+void Variables::RegisterSerializeField(const std::string& className, const std::string& fieldName) {
+	std::string key = className + "." + fieldName;
+	serializeFieldCache_.insert(key);
+}
+
+bool Variables::IsSerializeFieldRegistered(const std::string& className, const std::string& fieldName) {
+	std::string key = className + "." + fieldName;
+	return serializeFieldCache_.contains(key);
+}
+
+extern "C" {
+	__declspec(dllexport) void Variables_RegisterSerializeField(const char* className, const char* fieldName) {
+		if (className && fieldName) {
+			Variables::RegisterSerializeField(className, fieldName);
+		}
+	}
+}
+
+
 namespace {
 
 	bool IsVectorN(const json& j, int n) {
@@ -48,7 +69,7 @@ namespace {
 		return true;
 	}
 
-	bool HasSerializeField(MonoClassField* field) {
+	bool ShouldSerialize(MonoClassField* field) {
 		const char* fieldName = mono_field_get_name(field);
 		if (fieldName && (fieldName[0] == '<' || strstr(fieldName, "k__BackingField"))) {
 			return false;
@@ -60,53 +81,8 @@ namespace {
 		}
 
 		std::string className = mono_class_get_name(klass);
-		std::string key = className + "." + (fieldName ? fieldName : "");
-
-		static std::unordered_map<std::string, bool> serializeCache;
-		auto it = serializeCache.find(key);
-		if (it != serializeCache.end()) {
-			return it->second;
-		}
-
-		MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
-		if (!attrs) {
-			Console::Log(std::format("[SerializeField] attrs=null for field: {}", fieldName ? fieldName : ""), ONEngine::LogCategory::ScriptEngine);
-			serializeCache[key] = false;
-			return false;
-		}
-
-		MonoImage* klassImage = mono_class_get_image(klass);
-		MonoClass* serializeFieldAttr = mono_class_from_name(klassImage, "", "SerializeField");
-		bool has = serializeFieldAttr && mono_custom_attrs_has_attr(attrs, serializeFieldAttr);
-
-		if (!has) {
-			MonoImage* engineImage = MonoScriptEngine::GetInstance().Image();
-			if (engineImage && engineImage != klassImage) {
-				MonoClass* serializeFieldAttrEngine = mono_class_from_name(engineImage, "", "SerializeField");
-				if (serializeFieldAttrEngine && mono_custom_attrs_has_attr(attrs, serializeFieldAttrEngine)) {
-					has = true;
-				}
-			}
-		}
-
-		Console::Log(std::format("[SerializeField] field={} has={}", fieldName ? fieldName : "", has ? "true" : "false"), ONEngine::LogCategory::ScriptEngine);
-		// mono_custom_attrs_free(attrs); // Prevent heap corruption on field attributes
-
-		serializeCache[key] = has;
+		bool has = Variables::IsSerializeFieldRegistered(className, fieldName ? fieldName : "");
 		return has;
-	}
-
-	bool IsPublicField(MonoClassField* field) {
-		uint32_t flags = mono_field_get_flags(field);
-		return (flags & 0x0006) == 0x0006; // FIELD_ATTRIBUTE_PUBLIC
-	}
-
-	bool ShouldSerialize(MonoClassField* field) {
-		// Releaseビルドでは SafeInvoke を経由しない Mono API 呼び出し前に
-		// 必ずスレッドをドメインにアタッチする必要がある
-		MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
-		mono_thread_attach(domain);
-		return IsPublicField(field) || HasSerializeField(field);
 	}
 
 	Variables::Var JsonToVar(const json& varValue);

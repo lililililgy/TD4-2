@@ -3,6 +3,46 @@
 using System.Collections.Generic;
 
 static public class EntityComponentSystem {
+
+	[System.Runtime.InteropServices.DllImport("ONEngine.exe", CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl)]
+	private static extern void Variables_RegisterSerializeField(string className, string fieldName);
+
+	static EntityComponentSystem() {
+		InitializeSerializeFieldCache();
+	}
+
+	static public void InitializeSerializeFieldCache() {
+		try {
+			foreach (var asm in System.AppDomain.CurrentDomain.GetAssemblies()) {
+				string asmName = asm.GetName().Name;
+				if (asmName.StartsWith("System") || asmName.StartsWith("mscorlib") || asmName.StartsWith("Mono")) {
+					continue;
+				}
+
+				foreach (var type in asm.GetTypes()) {
+					foreach (var field in type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)) {
+						bool shouldSerialize = false;
+						if (field.IsPublic) {
+							shouldSerialize = true;
+						} else {
+							foreach (var attr in field.GetCustomAttributes(true)) {
+								if (attr.GetType().Name == "SerializeField") {
+									shouldSerialize = true;
+									break;
+								}
+							}
+						}
+
+						if (shouldSerialize) {
+							Variables_RegisterSerializeField(type.Name, field.Name);
+						}
+					}
+				}
+			}
+		} catch (System.Exception e) {
+			Debug.LogError("Failed to initialize SerializeField cache: " + e.Message);
+		}
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// objects
@@ -121,31 +161,6 @@ static public class EntityComponentSystem {
 			Debug.LogError("EntityComponentSystem.GetMonoBehavior - ECSGroup not found: " + groupName);
 #endif
 			return null;
-		}
-	}
-
-	static public bool HasSerializeField(string typeName, string fieldName) {
-		try {
-			System.Type targetType = null;
-			foreach (var asm in System.AppDomain.CurrentDomain.GetAssemblies()) {
-				targetType = asm.GetType(typeName);
-				if (targetType != null) break;
-			}
-			if (targetType == null) return false;
-
-			var field = targetType.GetField(fieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-			if (field == null) return false;
-
-			if (field.IsPublic) return true;
-
-			foreach (var attr in field.GetCustomAttributes(true)) {
-				if (attr.GetType().Name == "SerializeField") {
-					return true;
-				}
-			}
-			return false;
-		} catch {
-			return false;
 		}
 	}
 
