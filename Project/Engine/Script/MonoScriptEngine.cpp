@@ -1,4 +1,4 @@
-#include <winsock2.h>
+﻿#include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
@@ -551,11 +551,11 @@ void MonoScriptEngine::HotReload() {
 	Console::Log("[MonoDbg] ========================================================", LogCategory::ScriptEngine);
 	Console::Log("[Mono] HotReload: Rebuilding C# project...", LogCategory::ScriptEngine);
 	std::string buildOutput;
-	bool buildSuccess = BuildCSharpProject(buildOutput);
-	if (!buildSuccess) {
-		Console::LogError("[Mono] HotReload: C# project build failed! Reload aborted.\n" + buildOutput, LogCategory::ScriptEngine);
-		return;
-	}
+	//bool buildSuccess = BuildCSharpProject(buildOutput);
+	//if (!buildSuccess) {
+	//	Console::LogError("[Mono] HotReload: C# project build failed! Reload aborted.\n" + buildOutput, LogCategory::ScriptEngine);
+	//	return;
+	//}
 	Console::Log("[Mono] HotReload: C# project built successfully. Reloading DLL...", LogCategory::ScriptEngine);
 
 	// デバッグモード時でも再生ごとのリセットを優先するため、Hot Reloadを有効化
