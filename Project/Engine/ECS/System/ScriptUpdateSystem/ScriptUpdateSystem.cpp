@@ -130,8 +130,13 @@ void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 void ScriptUpdateSystem::AddAllEntitiesAndComponents(ECSGroup* ecsGroup) {
 	/// スクリプトを持たないエンティティも追加することでC#で扱いやすくする
-	for(auto& entity : ecsGroup->GetEntities()) {
-		AddEntityToScript(entity.get());
+	for(size_t i = 0; i < ecsGroup->GetEntities().size(); ++i) {
+		if (i < ecsGroup->GetEntities().size()) {
+			auto* entity = ecsGroup->GetEntities()[i].get();
+			if (entity) {
+				AddEntityToScript(entity);
+			}
+		}
 	}
 }
 
