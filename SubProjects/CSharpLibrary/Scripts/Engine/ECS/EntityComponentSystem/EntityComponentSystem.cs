@@ -57,54 +57,26 @@ static public class EntityComponentSystem {
 		}
 		ECSGroup group = new ECSGroup(name);
 		groups.Add(name, group);
-		Debug.LogInfo("EntityComponentSystem.AddECSGroup - added: " + group.groupName + "  GroupCount " + groups.Count);
 		return group;
 	}
 
-	/// <summary>
-	/// 指定したグループをクリアする
-	/// </summary>
 	static public void ClearECSGroup(string name) {
 		if (groups.TryGetValue(name, out ECSGroup group)) {
 			group.DeleteEntityAll();
 			groups.Remove(name);
-			Debug.LogInfo("EntityComponentSystem.ClearECSGroup - cleared: " + name);
 		}
 	}
 
-	/// <summary>
-	/// ECSGroupの取得
-	/// </summary>
 	static public ECSGroup GetECSGroup(string name) {
-#if DEBUG
-		Debug.LogInfo("EntityComponentSystem.GetECSGroup - Getting ECSGroup: " + name + "  GroupCount " + groups.Count);
-#endif
-
 		if (groups.TryGetValue(name, out ECSGroup group)) {
 			return group;
 		} else {
-#if DEBUG
-			Debug.LogError("EntityComponentSystem.GetECSGroup - ECSGroup not found: " + name + "  GroupCount " + groups.Count);
-			foreach (var ecsGroup in groups) {
-				Debug.LogError("Available ECSGroups: " + ecsGroup.Key);
-			}
-#endif
 			return null;
 		}
 	}
 
 	
-	/// <summary>
-	/// すべてのGroupのエンティティを削除する
-	/// </summary>
 	static public void DeleteEntityAll() {
-#if DEBUG
-		Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////");
-		Debug.Log("EntityComponentSystem.DeleteEntityAll - Deleting all entities from all ECSGroups. GroupCount: " + groups.Count);
-		Debug.Log("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////");
-		Debug.LogInfo("All entities deleted from all ECSGroups.");
-#endif
-
 		foreach (var group in groups.Values) {
 			group.DeleteEntityAll();
 		}
