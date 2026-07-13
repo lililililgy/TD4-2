@@ -230,30 +230,30 @@ static class ComponentBatchManager {
 			return batch;
 		});
 
-		// --- TextRenderer の登録 (Temporarily commented out) ---
-		// RegisterConverter<TextRenderer, TextRenderer.BatchData>((ComponentArray<TextRenderer> array) => {
-		// 	int count = array.Count;
-		// 	TextRenderer.BatchData[] batch = new TextRenderer.BatchData[count];
-		// 	for (int i = 0; i < count; i++) {
-		// 		var comp = array.Get(i);
-		// 		var batchData = comp.GetBatchData();
-		// 		batch[i].compId = comp.compId;
-		// 		batch[i].color = batchData.color;
-		// 		batch[i].textureSize = batchData.textureSize;
-		// 		batch[i].uvTransform = batchData.uvTransform;
-		// 	}
-		// 	return batch;
-		// });
+		// --- TextRenderer の登録 ---
+		RegisterConverter<TextRenderer, TextRenderer.BatchData>((ComponentArray<TextRenderer> array) => {
+			int count = array.Count;
+			TextRenderer.BatchData[] batch = new TextRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				var batchData = comp.GetBatchData();
+				batch[i].compId = comp.compId;
+				batch[i].color = batchData.color;
+				batch[i].textureSize = batchData.textureSize;
+				batch[i].uvTransform = batchData.uvTransform;
+			}
+			return batch;
+		});
 
-		// RegisterAllocator<TextRenderer, TextRenderer.BatchData>((ComponentArray<TextRenderer> array) => {
-		// 	int count = array.Count;
-		// 	TextRenderer.BatchData[] batch = new TextRenderer.BatchData[count];
-		// 	for (int i = 0; i < count; i++) {
-		// 		var comp = array.Get(i);
-		// 		batch[i].compId = comp.compId;
-		// 	}
-		// 	return batch;
-		// });
+		RegisterAllocator<TextRenderer, TextRenderer.BatchData>((ComponentArray<TextRenderer> array) => {
+			int count = array.Count;
+			TextRenderer.BatchData[] batch = new TextRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
 
 		RegisterAllocator<UIElementComponent, UIElementComponent.BatchData>((ComponentArray<UIElementComponent> array) => {
 			int count = array.Count;
@@ -400,15 +400,15 @@ static class ComponentBatchManager {
 				comp.groupIdId = uiElementBatch[i].groupIdId;
 				comp.elementIndex = uiElementBatch[i].elementIndex;
 			}
-		// } else if (componentType == typeof(TextRenderer)) {
-		// 	var textArray = (ComponentArray<TextRenderer>)array;
-		// 	var textBatch = (TextRenderer.BatchData[])batch;
+		} else if (componentType == typeof(TextRenderer)) {
+			var textArray = (ComponentArray<TextRenderer>)array;
+			var textBatch = (TextRenderer.BatchData[])batch;
 
-		// 	for (int i = 0; i < textBatch.Length; i++) {
-		// 		var comp = textArray.Get(i);
-		// 		comp.color = textBatch[i].color;
-		// 		comp.uvTransform = textBatch[i].uvTransform;
-		// 	}
+			for (int i = 0; i < textBatch.Length; i++) {
+				var comp = textArray.Get(i);
+				comp.color = textBatch[i].color;
+				comp.uvTransform = textBatch[i].uvTransform;
+			}
 		}
 	}
 

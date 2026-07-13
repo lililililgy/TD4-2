@@ -55,9 +55,23 @@ namespace {
 		}
 
 		MonoClass* klass = mono_field_get_parent(field);
+		if (!klass) {
+			return false;
+		}
+
+		std::string className = mono_class_get_name(klass);
+		std::string key = className + "." + (fieldName ? fieldName : "");
+
+		static std::unordered_map<std::string, bool> serializeCache;
+		auto it = serializeCache.find(key);
+		if (it != serializeCache.end()) {
+			return it->second;
+		}
+
 		MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
 		if (!attrs) {
-			Console::Log(std::format("[SerializeField] attrs=null for field: {}", mono_field_get_name(field)), ONEngine::LogCategory::ScriptEngine);
+			Console::Log(std::format("[SerializeField] attrs=null for field: {}", fieldName ? fieldName : ""), ONEngine::LogCategory::ScriptEngine);
+			serializeCache[key] = false;
 			return false;
 		}
 
@@ -75,8 +89,10 @@ namespace {
 			}
 		}
 
-		Console::Log(std::format("[SerializeField] field={} has={}", mono_field_get_name(field), has ? "true" : "false"), ONEngine::LogCategory::ScriptEngine);
+		Console::Log(std::format("[SerializeField] field={} has={}", fieldName ? fieldName : "", has ? "true" : "false"), ONEngine::LogCategory::ScriptEngine);
 		mono_custom_attrs_free(attrs);
+
+		serializeCache[key] = has;
 		return has;
 	}
 
