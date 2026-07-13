@@ -321,7 +321,9 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 
 void ScriptUpdateSystem::ReleaseGCHandle() {
 	if(gcHandle_ != 0) {
-		mono_gchandle_free(gcHandle_);
+		if (!MonoScriptEngine::GetInstance().IsShuttingDown()) {
+			mono_gchandle_free(gcHandle_);
+		}
 		gcHandle_ = 0;
 	}
 }
