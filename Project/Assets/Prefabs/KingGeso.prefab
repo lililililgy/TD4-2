@@ -37,7 +37,7 @@
                 "regenPerSecond": 0.0
             },
             "KingGeso": {
-                "cameraEntityName": "Camera",
+                "cameraEntityName": "MainCamera",
                 "cooldownDuration": 1.0,
                 "enable": true,
                 "fixedAttackType": 0,

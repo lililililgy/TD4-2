@@ -280,32 +280,69 @@ public class KingGeso : MonoScript
         Vector2 center = GetScreenCenter();
         Vector2 target = GetTargetPosition();
         Vector2 targetOffset = target - center;
-        float halfWidth = screenHalfWidth > 0.0f ? screenHalfWidth : 0.01f;
-        float halfHeight = screenHalfHeight > 0.0f ? screenHalfHeight : 0.01f;
+        float halfWidth = (screenHalfWidth > 0.0f ? screenHalfWidth : 0.01f) + NonNegative(screenEdgeMargin);
+        float halfHeight = (screenHalfHeight > 0.0f ? screenHalfHeight : 0.01f) + NonNegative(screenEdgeMargin);
 
-        Entity first;
-        Entity second;
-        if (RandomUtil.NextFloat() < 0.5f)
-        {
-            float y = Mathf.Clamp(targetOffset.y, -halfHeight, halfHeight);
-            first = SpawnGesoAtPosition(center + new Vector2(-halfWidth - screenEdgeMargin, y));
-            second = SpawnGesoAtPosition(center + new Vector2(halfWidth + screenEdgeMargin, y));
-        }
-        else
-        {
-            float x = Mathf.Clamp(targetOffset.x, -halfWidth, halfWidth);
-            first = SpawnGesoAtPosition(center + new Vector2(x, -halfHeight - screenEdgeMargin));
-            second = SpawnGesoAtPosition(center + new Vector2(x, halfHeight + screenEdgeMargin));
-        }
+        // プレイヤーを通る2種類の対角線から選び、その両端と画面境界の交点へ配置する。
+        float diagonalY = RandomUtil.NextFloat() < 0.5f ? halfHeight : -halfHeight;
+        Vector2 direction = new Vector2(halfWidth, diagonalY).Normalized();
+        Vector2 oppositeDirection = new Vector2(-direction.x, -direction.y);
+        Vector2 firstOffset = FindScreenEdgeIntersection(targetOffset, direction, halfWidth, halfHeight);
+        Vector2 secondOffset = FindScreenEdgeIntersection(targetOffset, oppositeDirection, halfWidth, halfHeight);
+
+        Entity first = SpawnGesoAtPosition(center + firstOffset);
+        Entity second = SpawnGesoAtPosition(center + secondOffset);
 
         if (first == null || second == null)
         {
+            DestroyActiveGeso(first);
+            DestroyActiveGeso(second);
             return false;
         }
 
         spawnedGesos.Add(first);
         spawnedGesos.Add(second);
         return true;
+    }
+
+    //=============================================================
+    // 指定方向の直線と画面境界の交点を取得
+    //=============================================================
+    private static Vector2 FindScreenEdgeIntersection(
+        Vector2 origin,
+        Vector2 direction,
+        float halfWidth,
+        float halfHeight)
+    {
+        float distanceToVerticalEdge = float.MaxValue;
+        if (direction.x > 0.0001f)
+        {
+            distanceToVerticalEdge = (halfWidth - origin.x) / direction.x;
+        }
+        else if (direction.x < -0.0001f)
+        {
+            distanceToVerticalEdge = (-halfWidth - origin.x) / direction.x;
+        }
+
+        float distanceToHorizontalEdge = float.MaxValue;
+        if (direction.y > 0.0001f)
+        {
+            distanceToHorizontalEdge = (halfHeight - origin.y) / direction.y;
+        }
+        else if (direction.y < -0.0001f)
+        {
+            distanceToHorizontalEdge = (-halfHeight - origin.y) / direction.y;
+        }
+
+        float distance = distanceToVerticalEdge < distanceToHorizontalEdge
+            ? distanceToVerticalEdge
+            : distanceToHorizontalEdge;
+        if (distance < 0.0f || distance == float.MaxValue)
+        {
+            return origin;
+        }
+
+        return origin + direction * distance;
     }
 
     //=============================================================

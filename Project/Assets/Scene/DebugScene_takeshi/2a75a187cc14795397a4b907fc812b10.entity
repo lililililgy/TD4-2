@@ -31,41 +31,70 @@
                 "maxHp_": 10.0
             },
             "KingJellyfish": {
-                "actionLoopCount": 3,
-                "attackDuration": 1.0,
                 "cameraEntityName": "Camera",
-                "chargeAttackWeight": 1.0,
-                "chargeDamage": 20.0,
-                "chargeDamageFieldDuration": 0.6000000238418579,
-                "chargeDamageFieldPrefabName": "JellyfishChargeDamageField",
-                "chargeDamageFieldWidth": 180.0,
-                "chargeInertiaRate": 0.9990000128746033,
-                "chargeMoveDuration": 2.5999999046325684,
-                "chargePassThroughDistance": 300.0,
-                "chargeRecoveryDuration": 0.800000011920929,
-                "chargeSpeed": 3000.0,
-                "chargeTellDuration": 0.800000011920929,
                 "fixedAttackType": 0,
                 "idleDuration": 2.0,
-                "laserCount": 8,
-                "laserDamage": 15.0,
-                "laserFireDuration": 0.4000000059604645,
-                "laserLength": 3600.0,
-                "laserPrefabName": "JellyfishLaser",
-                "laserRecoveryDuration": 0.6000000238418579,
-                "laserTellDuration": 0.800000011920929,
-                "laserWidth": 160.0,
                 "maxHp": 10,
+                "randomizeAttackType": true,
+                "targetEntityName": "Player"
+            },
+            "KingJellyfishChargeAttackSettings": {
+                "damage": 20.0,
+                "damageFieldDuration": 0.6000000238418579,
+                "damageFieldPrefabName": "JellyfishChargeDamageField",
+                "damageFieldWidth": 180.0,
+                "inertiaRate": 0.9990000128746033,
+                "moveDuration": 2.5999999046325684,
+                "passThroughDistance": 300.0,
+                "recoveryDuration": 0.800000011920929,
+                "selectionWeight": 1.0,
+                "speed": 3000.0,
+                "tellDuration": 0.800000011920929
+            },
+            "KingJellyfishElectricFieldSettings": {
+                "activeDuration": 0.0,
+                "damage": 0.0,
+                "fieldCount": 0,
+                "fieldPrefabName": "",
+                "radius": 0.0,
+                "recoveryDuration": 0.0,
+                "selectionWeight": 0.0,
+                "spawnInterval": 0.0,
+                "spreadRadius": 134.0,
+                "tellDuration": 0.0
+            },
+            "KingJellyfishMoveSettings": {
+                "actionLoopCount": 3,
                 "moveArcHeight": 120.0,
                 "moveDistance": 300.0,
                 "moveDuration": 1.2000000476837158,
                 "moveInertiaDuration": 0.5,
                 "moveInertiaRate": 0.3499999940395355,
                 "moveSpeed": 250.0,
-                "moveTowardTarget": true,
-                "omnidirectionalBeamWeight": 1.0,
-                "randomizeAttackType": true,
-                "targetEntityName": "Player"
+                "moveTowardTarget": true
+            },
+            "KingJellyfishOmnidirectionalBeamSettings": {
+                "damage": 15.0,
+                "fireDuration": 0.4000000059604645,
+                "laserCount": 8,
+                "laserPrefabName": "JellyfishLaser",
+                "length": 3600.0,
+                "recoveryDuration": 0.6000000238418579,
+                "selectionWeight": 1.0,
+                "tellDuration": 0.800000011920929,
+                "width": 160.0
+            },
+            "KingJellyfishRotatingBeamSettings": {
+                "damage": 0.0,
+                "duration": 0.0,
+                "laserCount": 4,
+                "laserPrefabName": "JellyfishLaser",
+                "length": 0.0,
+                "recoveryDuration": 0.0,
+                "rotationSpeed": 0.0,
+                "selectionWeight": 0.0,
+                "tellDuration": 0.0,
+                "width": 0.0
             },
             "type": "Variables"
         },
@@ -75,6 +104,26 @@
                 {
                     "enable": true,
                     "name": "KingJellyfish"
+                },
+                {
+                    "enable": true,
+                    "name": "KingJellyfishMoveSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingJellyfishChargeAttackSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingJellyfishOmnidirectionalBeamSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingJellyfishElectricFieldSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingJellyfishRotatingBeamSettings"
                 },
                 {
                     "enable": true,

@@ -17,72 +17,13 @@ public enum KingJellyfishAttackTypeEnum
 //================================================================
 public class KingJellyfish : MonoScript {
 
-    private const int DefaultlaserCount = 5;
-
     [SerializeField] public int maxHp = 10;
     [SerializeField] public string targetEntityName = "Player";
     [SerializeField] public string cameraEntityName = "Camera";
 
-    //移動状態のパラメータ
-    [SerializeField] public int actionLoopCount = 3;
-    [SerializeField] public float moveDuration = 1.2f;
-    [SerializeField] public float moveDistance = 300.0f;
-    [SerializeField] public float moveSpeed = 250.0f;
-    [SerializeField] public float moveArcHeight = 120.0f;
-    [SerializeField] public float moveInertiaDuration = 0.5f;
-    [SerializeField] public float moveInertiaRate = 0.35f;
-    [SerializeField] public bool moveTowardTarget = true;
-
-    //体当たり攻撃のパラメータ
     [SerializeField] public float idleDuration = 2.0f;
-    [SerializeField] public float attackDuration = 1.0f;
-    [SerializeField] public float chargeTellDuration = 0.8f;
-    [SerializeField] public float chargeMoveDuration = 0.6f;
-    [SerializeField] public float chargeSpeed = 500.0f;
-    [SerializeField] public float chargeRecoveryDuration = 0.8f;
-    [SerializeField] public float chargeInertiaRate = 0.5f;
-    [SerializeField] public float chargePassThroughDistance = 300.0f;
-    [SerializeField] public float chargeDamage = 20.0f;
-    [SerializeField] public string chargeDamageFieldPrefabName = "JellyfishChargeDamageField";
-    [SerializeField] public float chargeDamageFieldWidth = 180.0f;
-    [SerializeField] public float chargeDamageFieldDuration = 0.6f;
     [SerializeField] public bool randomizeAttackType = true;
     [SerializeField] public KingJellyfishAttackTypeEnum fixedAttackType = KingJellyfishAttackTypeEnum.ChargeAttack;
-    [SerializeField] public float chargeAttackWeight = 1.0f;
-    [SerializeField] public float omnidirectionalBeamWeight = 1.0f;
-    [SerializeField] public float electricFieldWeight = 1.0f;
-    [SerializeField] public float rotatingBeamWeight = 1.0f;
-
-    //8方向レーザー攻撃のパラメータ
-    [SerializeField] public string laserPrefabName = "JellyfishLaser";
-    [SerializeField] public float laserTellDuration = 0.8f;
-    [SerializeField] public float laserFireDuration = 0.4f; // レーザーの発射時間
-    [SerializeField] public float laserRecoveryDuration = 0.6f;
-    [SerializeField] public float laserLength = 1200.0f;
-    [SerializeField] public float laserWidth = 80.0f;
-    [SerializeField] public float laserDamage = 15.0f;
-    [SerializeField] public int laserCount = 8;
-
-    //帯電フィールド攻撃のパラメータ
-    [SerializeField] public string electricFieldPrefabName = "JellyfishElectricField";
-    [SerializeField] public int electricFieldCount = 4;
-    [SerializeField] public float electricFieldTellDuration = 1.0f;
-    [SerializeField] public float electricFieldSpawnInterval = 0.2f;
-    [SerializeField] public float electricFieldActiveDuration = 1.2f;
-    [SerializeField] public float electricFieldRecoveryDuration = 0.5f;
-    [SerializeField] public float electricFieldRadius = 140.0f;
-    [SerializeField] public float electricFieldSpreadRadius = 300.0f;
-    [SerializeField] public float electricFieldDamage = 12.0f;
-
-    //回転ビーム攻撃のパラメータ
-    [SerializeField] public int rotatingLaserCount = 4;
-    [SerializeField] public float rotatingLaserTellDuration = 1.0f;
-    [SerializeField] public float rotatingLaserDuration = 4.0f;
-    [SerializeField] public float rotatingLaserRecoveryDuration = 0.5f;
-    [SerializeField] public float rotatingLaserSpeed = 0.7f;
-    [SerializeField] public float rotatingLaserLength = 1200.0f;
-    [SerializeField] public float rotatingLaserWidth = 60.0f;
-    [SerializeField] public float rotatingLaserDamage = 10.0f;
 
     private HP hp_;
     private IKingJellyfishState state_;
@@ -90,6 +31,11 @@ public class KingJellyfish : MonoScript {
     private Entity cameraEntity_;
     private bool attackRequested_;
     private int currentActionLoopCount_;
+    private KingJellyfishMoveSettings moveSettings_;
+    private KingJellyfishChargeAttackSettings chargeSettings_;
+    private KingJellyfishOmnidirectionalBeamSettings beamSettings_;
+    private KingJellyfishElectricFieldSettings electricFieldSettings_;
+    private KingJellyfishRotatingBeamSettings rotatingBeamSettings_;
 
     private Vector2 chargeStartPosition_;
     private Vector2 chargeTargetPosition_;
@@ -116,6 +62,12 @@ public class KingJellyfish : MonoScript {
         }
         hp_.MaxHp = maxHp > 0 ? maxHp : 1;
         hp_.Initialize();
+
+        moveSettings_ = GetOrAddSettings<KingJellyfishMoveSettings>();
+        chargeSettings_ = GetOrAddSettings<KingJellyfishChargeAttackSettings>();
+        beamSettings_ = GetOrAddSettings<KingJellyfishOmnidirectionalBeamSettings>();
+        electricFieldSettings_ = GetOrAddSettings<KingJellyfishElectricFieldSettings>();
+        rotatingBeamSettings_ = GetOrAddSettings<KingJellyfishRotatingBeamSettings>();
 
         // 初期状態を待機状態に設定
         if (!String.IsNullOrEmpty(targetEntityName))
@@ -184,10 +136,10 @@ public class KingJellyfish : MonoScript {
             return fixedAttackType;
         }
 
-        float chargeWeight = chargeAttackWeight > 0.0f ? chargeAttackWeight : 0.0f;
-        float beamWeight = omnidirectionalBeamWeight > 0.0f ? omnidirectionalBeamWeight : 0.0f;
-        float fieldWeight = electricFieldWeight > 0.0f ? electricFieldWeight : 0.0f;
-        float rotatingWeight = rotatingBeamWeight > 0.0f ? rotatingBeamWeight : 0.0f;
+        float chargeWeight = NonNegative(chargeSettings_.selectionWeight);
+        float beamWeight = NonNegative(beamSettings_.selectionWeight);
+        float fieldWeight = NonNegative(electricFieldSettings_.selectionWeight);
+        float rotatingWeight = NonNegative(rotatingBeamSettings_.selectionWeight);
         float totalWeight = chargeWeight + beamWeight + fieldWeight + rotatingWeight;
         if (totalWeight <= 0.0f)
         {
@@ -276,7 +228,7 @@ public class KingJellyfish : MonoScript {
         }
 
         chargeStartPosition_ = start;
-        chargeTargetPosition_ = target + direction * chargePassThroughDistance;
+        chargeTargetPosition_ = target + direction * chargeSettings_.passThroughDistance;
         chargeMoveDirection_ = direction;
         chargeRecoveryVelocity_ = direction * (ChargeSpeed * ChargeInertiaRate);
         chargeDamageFieldDeployed_ = false;
@@ -382,17 +334,19 @@ public class KingJellyfish : MonoScript {
 
     private void CreateChargeDamageField(Vector2 start, Vector2 end)
     {
-        if (String.IsNullOrEmpty(chargeDamageFieldPrefabName))
+        if (String.IsNullOrEmpty(chargeSettings_.damageFieldPrefabName))
         {
             return;
         }
 
-        Entity damageField = ecsGroup.CreateEntity(chargeDamageFieldPrefabName);
+        Entity damageField = ecsGroup.CreateEntity(chargeSettings_.damageFieldPrefabName);
         if (damageField == null)
         {
             return;
         }
 
+        // 寿命を管理するルートEntityのUpdateが必ず実行されるようにする。
+        damageField.enable = true;
         ConfigureChargeDamageField(damageField, start, end);
     }
 
@@ -416,13 +370,13 @@ public class KingJellyfish : MonoScript {
         JellyfishChargeDamageField damageFieldScript = damageField.GetScript<JellyfishChargeDamageField>();
         if (damageFieldScript != null)
         {
-            damageFieldScript.Configure(start, end, ChargeDamageFieldWidth, chargeDamage, ChargeDamageFieldDuration, transform.position.z);
+            damageFieldScript.Configure(start, end, ChargeDamageFieldWidth, chargeSettings_.damage, ChargeDamageFieldDuration, transform.position.z);
         }
 
         AttackCollision attackCollision = damageField.GetScript<AttackCollision>();
         if (attackCollision != null)
         {
-            attackCollision.Damage = chargeDamage;
+            attackCollision.Damage = chargeSettings_.damage;
         }
     }
 
@@ -507,7 +461,7 @@ public class KingJellyfish : MonoScript {
         SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
 
-        if (String.IsNullOrEmpty(laserPrefabName))
+        if (String.IsNullOrEmpty(beamSettings_.laserPrefabName))
         {
             return;
         }
@@ -522,13 +476,13 @@ public class KingJellyfish : MonoScript {
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
             // レーザーエンティティを生成する
-            Entity laser = ecsGroup.CreateEntity(laserPrefabName);
+            Entity laser = ecsGroup.CreateEntity(beamSettings_.laserPrefabName);
             if (laser == null)
             {
                 continue;
             }
 
-            ConfigureLaserEntity(laser, origin, direction, LaserLength, LaserWidth, laserDamage, LaserFireDuration, 0.0f);
+            ConfigureLaserEntity(laser, origin, direction, LaserLength, LaserWidth, beamSettings_.damage, LaserFireDuration, 0.0f);
         }
     }
 
@@ -537,7 +491,7 @@ public class KingJellyfish : MonoScript {
     //=============================
     internal void FireRotatingLasers()
     {
-        if (String.IsNullOrEmpty(laserPrefabName))
+        if (String.IsNullOrEmpty(rotatingBeamSettings_.laserPrefabName))
         {
             return;
         }
@@ -548,7 +502,7 @@ public class KingJellyfish : MonoScript {
         {
             float angle = Mathf.PI * 2.0f * i / count;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-            Entity laser = ecsGroup.CreateEntity(laserPrefabName);
+            Entity laser = ecsGroup.CreateEntity(rotatingBeamSettings_.laserPrefabName);
             if (laser == null)
             {
                 continue;
@@ -560,9 +514,9 @@ public class KingJellyfish : MonoScript {
                 direction,
                 RotatingLaserLength,
                 RotatingLaserWidth,
-                rotatingLaserDamage,
+                rotatingBeamSettings_.damage,
                 RotatingLaserDuration,
-                rotatingLaserSpeed);
+                rotatingBeamSettings_.rotationSpeed);
         }
     }
 
@@ -571,7 +525,7 @@ public class KingJellyfish : MonoScript {
     //=============================
     internal void DeployElectricFields()
     {
-        if (String.IsNullOrEmpty(electricFieldPrefabName))
+        if (String.IsNullOrEmpty(electricFieldSettings_.fieldPrefabName))
         {
             return;
         }
@@ -587,11 +541,11 @@ public class KingJellyfish : MonoScript {
             if (i > 0)
             {
                 float angle = RandomUtil.NextFloat() * Mathf.PI * 2.0f;
-                float distance = RandomUtil.NextFloat() * electricFieldSpreadRadius;
+                float distance = RandomUtil.NextFloat() * electricFieldSettings_.spreadRadius;
                 position += new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance;
             }
 
-            Entity field = ecsGroup.CreateEntity(electricFieldPrefabName);
+            Entity field = ecsGroup.CreateEntity(electricFieldSettings_.fieldPrefabName);
             if (field == null)
             {
                 continue;
@@ -608,7 +562,7 @@ public class KingJellyfish : MonoScript {
             fieldScript.Configure(
                 position,
                 ElectricFieldRadius,
-                electricFieldDamage,
+                electricFieldSettings_.damage,
                 activationDelay,
                 ElectricFieldActiveDuration,
                 transform.position.z);
@@ -678,37 +632,37 @@ public class KingJellyfish : MonoScript {
 
     internal float ChargeTellDuration
     {
-        get { return chargeTellDuration > 0 ? chargeTellDuration : 0.01f; }
+        get { return Positive(chargeSettings_.tellDuration); }
     }   
 
     internal float ChargeMoveDuration
     {
-        get { return chargeMoveDuration > 0 ? chargeMoveDuration : 0.01f; }
+        get { return Positive(chargeSettings_.moveDuration); }
     }
 
     internal float ChargeSpeed
     {
-        get { return chargeSpeed > 0 ? chargeSpeed : 1.0f; }
+        get { return chargeSettings_.speed > 0.0f ? chargeSettings_.speed : 1.0f; }
     }
 
     internal float ChargeInertiaRate
     {
-        get { return chargeInertiaRate > 0.0f ? chargeInertiaRate : 0.0f; }
+        get { return NonNegative(chargeSettings_.inertiaRate); }
     }
 
     internal float ChargeRecoveryDuration
     {
-        get { return chargeRecoveryDuration > 0 ? chargeRecoveryDuration : 0.01f; }
+        get { return Positive(chargeSettings_.recoveryDuration); }
     }
 
     internal float ChargeDamageFieldWidth
     {
-        get { return chargeDamageFieldWidth > 0.0f ? chargeDamageFieldWidth : 1.0f; }
+        get { return chargeSettings_.damageFieldWidth > 0.0f ? chargeSettings_.damageFieldWidth : 1.0f; }
     }
 
     internal float ChargeDamageFieldDuration
     {
-        get { return chargeDamageFieldDuration > 0.0f ? chargeDamageFieldDuration : ChargeMoveDuration; }
+        get { return chargeSettings_.damageFieldDuration > 0.0f ? chargeSettings_.damageFieldDuration : ChargeMoveDuration; }
     }
 
     internal float IdleDuration
@@ -718,132 +672,132 @@ public class KingJellyfish : MonoScript {
 
     internal int ActionLoopCount
     {
-        get { return actionLoopCount > 0 ? actionLoopCount : 1; }
+        get { return moveSettings_.actionLoopCount > 0 ? moveSettings_.actionLoopCount : 1; }
     }
 
     internal float MoveDuration
     {
-        get { return moveDuration > 0.0f ? moveDuration : 0.01f; }
+        get { return Positive(moveSettings_.moveDuration); }
     }
 
     internal float MoveDistance
     {
-        get { return moveDistance > 0.0f ? moveDistance : 1.0f; }
+        get { return moveSettings_.moveDistance > 0.0f ? moveSettings_.moveDistance : 1.0f; }
     }
 
     internal float MoveSpeed
     {
-        get { return moveSpeed > 0.0f ? moveSpeed : 1.0f; }
+        get { return moveSettings_.moveSpeed > 0.0f ? moveSettings_.moveSpeed : 1.0f; }
     }
 
     internal float MoveArcHeight
     {
-        get { return moveArcHeight; }
+        get { return moveSettings_.moveArcHeight; }
     }
 
     internal float MoveInertiaDuration
     {
-        get { return moveInertiaDuration > 0.0f ? moveInertiaDuration : 0.01f; }
+        get { return Positive(moveSettings_.moveInertiaDuration); }
     }
 
     internal float MoveInertiaRate
     {
-        get { return moveInertiaRate > 0.0f ? moveInertiaRate : 0.0f; }
+        get { return NonNegative(moveSettings_.moveInertiaRate); }
     }
 
     internal float LaserTellDuration
     {
-        get { return laserTellDuration > 0.0f ? laserTellDuration : 0.01f; }
+        get { return Positive(beamSettings_.tellDuration); }
     }
 
     internal float LaserFireDuration
     {
-        get { return laserFireDuration > 0.0f ? laserFireDuration : 0.01f; }
+        get { return Positive(beamSettings_.fireDuration); }
     }
 
     internal float LaserRecoveryDuration
     {
-        get { return laserRecoveryDuration > 0.0f ? laserRecoveryDuration : 0.01f; }
+        get { return Positive(beamSettings_.recoveryDuration); }
     }
 
     internal float LaserLength
     {
-        get { return laserLength > 0.0f ? laserLength : 1.0f; }
+        get { return beamSettings_.length > 0.0f ? beamSettings_.length : 1.0f; }
     }
 
     internal float LaserWidth
     {
-        get { return laserWidth > 0.0f ? laserWidth : 1.0f; }
+        get { return beamSettings_.width > 0.0f ? beamSettings_.width : 1.0f; }
     }
 
     internal int LaserCount
     {
-        get { return laserCount > 0 ? laserCount : 8; }
+        get { return beamSettings_.laserCount > 0 ? beamSettings_.laserCount : 8; }
     }
 
     internal int ElectricFieldCount
     {
-        get { return electricFieldCount > 0 ? electricFieldCount : 1; }
+        get { return electricFieldSettings_.fieldCount > 0 ? electricFieldSettings_.fieldCount : 1; }
     }
 
     internal float ElectricFieldTellDuration
     {
-        get { return electricFieldTellDuration > 0.0f ? electricFieldTellDuration : 0.01f; }
+        get { return Positive(electricFieldSettings_.tellDuration); }
     }
 
     internal float ElectricFieldSpawnInterval
     {
-        get { return electricFieldSpawnInterval > 0.0f ? electricFieldSpawnInterval : 0.0f; }
+        get { return NonNegative(electricFieldSettings_.spawnInterval); }
     }
 
     internal float ElectricFieldActiveDuration
     {
-        get { return electricFieldActiveDuration > 0.0f ? electricFieldActiveDuration : 0.01f; }
+        get { return Positive(electricFieldSettings_.activeDuration); }
     }
 
     internal float ElectricFieldRecoveryDuration
     {
-        get { return electricFieldRecoveryDuration > 0.0f ? electricFieldRecoveryDuration : 0.01f; }
+        get { return Positive(electricFieldSettings_.recoveryDuration); }
     }
 
     internal float ElectricFieldRadius
     {
-        get { return electricFieldRadius > 0.0f ? electricFieldRadius : 1.0f; }
+        get { return electricFieldSettings_.radius > 0.0f ? electricFieldSettings_.radius : 1.0f; }
     }
 
     internal int RotatingLaserCount
     {
-        get { return rotatingLaserCount > 0 ? rotatingLaserCount : 1; }
+        get { return rotatingBeamSettings_.laserCount > 0 ? rotatingBeamSettings_.laserCount : 1; }
     }
 
     internal float RotatingLaserTellDuration
     {
-        get { return rotatingLaserTellDuration > 0.0f ? rotatingLaserTellDuration : 0.01f; }
+        get { return Positive(rotatingBeamSettings_.tellDuration); }
     }
 
     internal float RotatingLaserDuration
     {
-        get { return rotatingLaserDuration > 0.0f ? rotatingLaserDuration : 0.01f; }
+        get { return Positive(rotatingBeamSettings_.duration); }
     }
 
     internal float RotatingLaserRecoveryDuration
     {
-        get { return rotatingLaserRecoveryDuration > 0.0f ? rotatingLaserRecoveryDuration : 0.01f; }
+        get { return Positive(rotatingBeamSettings_.recoveryDuration); }
     }
 
     internal float RotatingLaserLength
     {
-        get { return rotatingLaserLength > 0.0f ? rotatingLaserLength : LaserLength; }
+        get { return rotatingBeamSettings_.length > 0.0f ? rotatingBeamSettings_.length : 1.0f; }
     }
 
     internal float RotatingLaserWidth
     {
-        get { return rotatingLaserWidth > 0.0f ? rotatingLaserWidth : LaserWidth; }
+        get { return rotatingBeamSettings_.width > 0.0f ? rotatingBeamSettings_.width : 1.0f; }
     }
 
     private Vector2 SelectArcMoveDirection()
     {
-        if (moveTowardTarget)
+        if (moveSettings_.moveTowardTarget)
         {
             ResolveTarget();
             if (targetEntity_ != null && targetEntity_.transform != null)
@@ -870,5 +824,21 @@ public class KingJellyfish : MonoScript {
         {
             targetEntity_ = ecsGroup.FindEntity(targetEntityName);
         }
+    }
+
+    private T GetOrAddSettings<T>() where T : MonoScript
+    {
+        T settings = entity.GetScript<T>();
+        return settings != null ? settings : entity.AddScript<T>();
+    }
+
+    private static float Positive(float value)
+    {
+        return value > 0.0f ? value : 0.01f;
+    }
+
+    private static float NonNegative(float value)
+    {
+        return value > 0.0f ? value : 0.0f;
     }
 }

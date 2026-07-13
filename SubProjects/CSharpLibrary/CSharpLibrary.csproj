@@ -165,6 +165,11 @@
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGeso.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoState.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishWeakPoint.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishChargeAttackSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishElectricFieldSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishMoveSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishOmnidirectionalBeamSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishRotatingBeamSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfish.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishState.cs" />
     <Compile Include="Scripts\Game\Bullet.cs" />
