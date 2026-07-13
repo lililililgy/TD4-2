@@ -60,6 +60,7 @@ bool FontRasterizer::GenerateTexture(const std::string& text, const std::string&
 			}
 		} else {
 			Asset::Texture newTex;
+			newTex.guid = GenerateGuid();
 			newTex.RecreateFromPixels(transparentPixel, 1, 1, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), dxm->GetDxCommand());
 			assetCollection->AddAsset<Asset::Texture>(texturePath, std::move(newTex));
 			return true;
