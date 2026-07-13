@@ -248,11 +248,18 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 		Console::Log("[Mono] LoadAssembly: DLL size = " + std::to_string(dllSize) + " bytes, PDB size = " + std::to_string(pdbSize) + " bytes", LogCategory::ScriptEngine);
 
 		if (dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(outPdbBuffer.data(), pdbSize)) {
-			// 論理アセンブリ名（CSharpLibrary.dll）に置き換えて Mono に報告し、デバッガがソースコードとマッピングできるようにする
-			std::string logicalDllPath = dllPath;
-			size_t lastSlash = logicalDllPath.find_last_of("/\\");
-			std::string dir = (lastSlash != std::string::npos) ? logicalDllPath.substr(0, lastSlash + 1) : "";
-			std::string logicalPath = dir + "CSharpLibrary.dll";
+			// デバッガが接続されている場合（IsDebuggerAttachedViaTcp() == true）は、古いドメインのアンロードが
+			// 保留されるため、同じ論理名（CSharpLibrary.dll）でロードしようとするとMonoがロード済みの古いキャッシュを
+			// 返してしまい、最新コードが反映されません。
+			// そのため、デバッガ接続時は論理パスの固定化を行わず、ユニークなタイムスタンプ付きファイル名（dllPath）
+			// のままでアセンブリをロードさせることで、確実に最新コードを適用します。
+			std::string logicalPath = dllPath;
+			if (!IsDebuggerAttachedViaTcp()) {
+				std::string logicalDllPath = dllPath;
+				size_t lastSlash = logicalDllPath.find_last_of("/\\");
+				std::string dir = (lastSlash != std::string::npos) ? logicalDllPath.substr(0, lastSlash + 1) : "";
+				logicalPath = dir + "CSharpLibrary.dll";
+			}
 
 			MonoImageOpenStatus status = MONO_IMAGE_OK;
 			// DLLデータからMonoImageをオープン (論理パスを報告)
@@ -982,10 +989,12 @@ MonoDomain* MonoScriptEngine::CreateReloadDomain() {
 
 void MonoScriptEngine::ClearPendingDomains() {
 #if defined(DEBUG_MODE)
-	// テスト実行中のみアンロードを保留にします。
-	// デバッガ接続時であっても古いドメインを物理アンロードしなければホットリロードが正しく反映されないため、
-	// wasDebuggerAttached_ のガードは解除してアンロードを実行します。
-	if (EngineConfig::isTestMode) {
+	// テスト実行中、またはデバッガが接続（アタッチ）されている間は、
+	// アンロードに伴うスレッド競合やデッドロッククラッシュ（table が 0xFFFFFFFFFFFFFFF7 になる等）を防ぐため、
+	// ドメインのアンロードを一切行わず、リストに保留（蓄積）したままにします。
+	// デバッガが切断された直後のフレームから安全に一括アンロードが実行されます。
+	// （※毎フレームの GetExtendedTcpTable 呼び出しを避けるため、キャッシュされた変数 wasDebuggerAttached_ を使用します）
+	if (EngineConfig::isTestMode || wasDebuggerAttached_) {
 		return;
 	}
 #endif
