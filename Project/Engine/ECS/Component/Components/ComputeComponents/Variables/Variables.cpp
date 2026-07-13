@@ -48,50 +48,65 @@ namespace {
 		return true;
 	}
 
-	bool ShouldSerialize(MonoClassField* field) {
-		MonoClass* klass = mono_field_get_parent(field);
-		if (!klass) return false;
-
-		const char* klassName = mono_class_get_name(klass);
+	bool HasSerializeField(MonoClassField* field) {
 		const char* fieldName = mono_field_get_name(field);
-		if (!klassName || !fieldName) return false;
-		if (fieldName[0] == '<' || strstr(fieldName, "k__BackingField")) return false;
+		if (fieldName && (fieldName[0] == '<' || strstr(fieldName, "k__BackingField"))) {
+			return false;
+		}
 
-		std::string key = std::string(klassName) + "." + fieldName;
+		MonoClass* klass = mono_field_get_parent(field);
+		if (!klass) {
+			return false;
+		}
+
+		std::string className = mono_class_get_name(klass);
+		std::string key = className + "." + (fieldName ? fieldName : "");
+
 		static std::unordered_map<std::string, bool> serializeCache;
 		auto it = serializeCache.find(key);
-		if (it != serializeCache.end()) return it->second;
+		if (it != serializeCache.end()) {
+			return it->second;
+		}
 
-		MonoClass* ecsClass = mono_class_from_name(MonoScriptEngine::GetInstance().Image(), "", "EntityComponentSystem");
-		if (!ecsClass) return false;
-
-		MonoMethod* hasSerializeMethod = mono_class_get_method_from_name(ecsClass, "HasSerializeField", 2);
-		if (!hasSerializeMethod) return false;
-
-		MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
-		mono_thread_attach(domain);
-
-		void* args[2];
-		args[0] = mono_string_new(domain, klassName);
-		args[1] = mono_string_new(domain, fieldName);
-
-		MonoObject* exc = nullptr;
-		MonoObject* result = MonoScriptEngineUtils::SafeInvoke(hasSerializeMethod, nullptr, args, &exc);
-		if (exc) {
-			MonoScriptEngineUtils::HandleException(exc);
+		MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
+		if (!attrs) {
+			Console::Log(std::format("[SerializeField] attrs=null for field: {}", fieldName ? fieldName : ""), ONEngine::LogCategory::ScriptEngine);
 			serializeCache[key] = false;
 			return false;
 		}
 
-		bool has = false;
-		if (result) {
-			has = *(bool*)mono_object_unbox(result);
+		MonoImage* klassImage = mono_class_get_image(klass);
+		MonoClass* serializeFieldAttr = mono_class_from_name(klassImage, "", "SerializeField");
+		bool has = serializeFieldAttr && mono_custom_attrs_has_attr(attrs, serializeFieldAttr);
+
+		if (!has) {
+			MonoImage* engineImage = MonoScriptEngine::GetInstance().Image();
+			if (engineImage && engineImage != klassImage) {
+				MonoClass* serializeFieldAttrEngine = mono_class_from_name(engineImage, "", "SerializeField");
+				if (serializeFieldAttrEngine && mono_custom_attrs_has_attr(attrs, serializeFieldAttrEngine)) {
+					has = true;
+				}
+			}
 		}
 
-		Console::Log(std::format("[SerializeField] field={} has={}", fieldName, has ? "true" : "false"), ONEngine::LogCategory::ScriptEngine);
+		Console::Log(std::format("[SerializeField] field={} has={}", fieldName ? fieldName : "", has ? "true" : "false"), ONEngine::LogCategory::ScriptEngine);
+		// mono_custom_attrs_free(attrs); // Prevent heap corruption on field attributes
 
 		serializeCache[key] = has;
 		return has;
+	}
+
+	bool IsPublicField(MonoClassField* field) {
+		uint32_t flags = mono_field_get_flags(field);
+		return (flags & 0x0006) == 0x0006; // FIELD_ATTRIBUTE_PUBLIC
+	}
+
+	bool ShouldSerialize(MonoClassField* field) {
+		// Releaseビルドでは SafeInvoke を経由しない Mono API 呼び出し前に
+		// 必ずスレッドをドメインにアタッチする必要がある
+		MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
+		mono_thread_attach(domain);
+		return IsPublicField(field) || HasSerializeField(field);
 	}
 
 	Variables::Var JsonToVar(const json& varValue);
