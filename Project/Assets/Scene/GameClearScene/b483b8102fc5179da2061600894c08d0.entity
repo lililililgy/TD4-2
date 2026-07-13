@@ -30,6 +30,7 @@
             "type": "Transform"
         },
         {
+            "ClearExitGame": {},
             "type": "Variables"
         },
         {
@@ -68,6 +69,16 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ClearExitGame"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "b483b8102fc5179da2061600894c08d0",

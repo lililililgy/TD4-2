@@ -30,6 +30,7 @@
             "type": "Transform"
         },
         {
+            "ClearBackMainMenu": {},
             "type": "Variables"
         },
         {
@@ -68,6 +69,16 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ClearBackMainMenu"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "144348269ff7d13c44777c5384d92cde",

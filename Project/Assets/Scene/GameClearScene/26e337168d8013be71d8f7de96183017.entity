@@ -30,6 +30,7 @@
             "type": "Transform"
         },
         {
+            "ClearRestart": {},
             "type": "Variables"
         },
         {
@@ -71,6 +72,16 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ClearRestart"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "26e337168d8013be71d8f7de96183017",
