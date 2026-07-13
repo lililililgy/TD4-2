@@ -1,0 +1,26 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": 379.65692138671875,
+                "y": -248.30690002441406
+            },
+            "rotate": {
+                "w": 0.8063400387763977,
+                "z": -0.5914522409439087
+            },
+            "type": "Transform"
+        },
+        {
+            "TrailFollower": {
+                "maxBendRad_": 3.1415927410125732
+            },
+            "type": "Variables"
+        }
+    ],
+    "guid": "82818925073f084ce1b68a1262fa2891",
+    "name": "Player_Body",
+    "parentGuid": null,
+    "prefabName": "Player_Body"
+}

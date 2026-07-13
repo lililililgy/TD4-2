@@ -1,1 +1,19 @@
-{}
+{
+    "entities": [
+        {
+            "guid": "34553175e0a4c30f36960fb684247eed",
+            "parentGuid": null,
+            "path": "./Debug/34553175e0a4c30f36960fb684247eed.entity"
+        },
+        {
+            "guid": "641ddc0076565e4699d6fc5fff3b6477",
+            "parentGuid": null,
+            "path": "./Debug/641ddc0076565e4699d6fc5fff3b6477.entity"
+        },
+        {
+            "guid": "9d4f2e63d33ee04f4c42db08eec99447",
+            "parentGuid": null,
+            "path": "./Debug/9d4f2e63d33ee04f4c42db08eec99447.entity"
+        }
+    ]
+}

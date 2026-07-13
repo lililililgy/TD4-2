@@ -10,34 +10,39 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.9429186582565308,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.3330231010913849
+                "z": 0.0
             },
             "scale": {
-                "x": 0.8676477074623108,
-                "y": 0.8676477074623108,
-                "z": 0.8676477074623108
+                "x": 142.0,
+                "y": 142.0,
+                "z": 142.0
             },
             "type": "Transform"
         },
         {
-            "SpikeFishAroundNeedle": {
-                "coolTime": 5.0,
-                "maxAngularSpeed": 1241.0,
-                "popInDuration": 0.30000001192092896
+            "categoryBits": 16,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 2,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "AttackCollision": {
+                "damage_": 8.0,
+                "destroyOnHit_": false
             },
-            "SpriteAnimation": {
-                "cols": 3,
-                "endFrame": -1,
-                "fps": 10.0,
-                "invertY": false,
-                "isLoop": false,
-                "isPlay": false,
-                "rows": 1,
-                "startFrame": 0,
-                "totalFrames": 0
+            "KingGesoInkBullet": {
+                "damage": 8.0,
+                "lifeTime": 7.0,
+                "speed": 220.0
             },
             "type": "Variables"
         },
@@ -46,22 +51,26 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "SpikeFishAroundNeedle"
+                    "name": "KingGesoInkBullet"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
                 }
             ],
             "type": "Script"
         },
         {
             "enable": 1,
-            "isPixelPerfect": true,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 0.07999999821186066,
+                    "y": 0.11999999731779099,
+                    "z": 0.20000000298023224
                 },
-                "baseTextureGuid": "5697b7219ab5220641dc1f97f180b3f3",
+                "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -80,8 +89,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "2940e589916c96befea6e967606c3b0d",
-    "name": "SpikeFishAroundNeedle",
+    "guid": "9d9f8bb4d87d60f44c60e5a563040c63",
+    "name": "KingGesoInkBullet",
     "parentGuid": null,
-    "prefabName": "SpikeFishAroundNeedle"
+    "prefabName": "KingGesoInkBullet"
 }

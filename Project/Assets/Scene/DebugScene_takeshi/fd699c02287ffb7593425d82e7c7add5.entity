@@ -1,0 +1,13 @@
+{
+    "active": true,
+    "components": [
+        {
+            "categoryBits": 8,
+            "type": "BoxCollider2D"
+        }
+    ],
+    "guid": "fd699c02287ffb7593425d82e7c7add5",
+    "name": "JellyfishWeakPoint",
+    "parentGuid": "2a75a187cc14795397a4b907fc812b10",
+    "prefabName": "JellyfishWeakPoint"
+}

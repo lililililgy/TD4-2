@@ -1,5 +1,15 @@
 {
     "active": true,
+    "components": [
+        {
+            "KingGesoWaveThrustSettings": {
+                "attackDuration": 13.0,
+                "gesoLifeTime": 5.0,
+                "moveDuration": 10.0
+            },
+            "type": "Variables"
+        }
+    ],
     "guid": "ef9cb081b1c1cd85474b7280c162abf3",
     "name": "KingGeso",
     "parentGuid": null,
