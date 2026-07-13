@@ -1,0 +1,14 @@
+{
+    "entities": [
+        {
+            "guid": "10b2b5ff760c237ed0e697e75de598ca",
+            "parentGuid": null,
+            "path": "./GameClearScene/10b2b5ff760c237ed0e697e75de598ca.entity"
+        },
+        {
+            "guid": "8e22c1085e8d69ce74161175d45abe77",
+            "parentGuid": null,
+            "path": "./GameClearScene/8e22c1085e8d69ce74161175d45abe77.entity"
+        }
+    ]
+}
