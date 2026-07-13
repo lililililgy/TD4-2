@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <algorithm>
 #include "Engine/Editor/Math/FileWatcher/FileWatcher.h"
-#include "Engine/Core/Console/Console.h"
+#include "Engine/Core/Utility/Tools/Log.h"
 
 namespace Editor {
 

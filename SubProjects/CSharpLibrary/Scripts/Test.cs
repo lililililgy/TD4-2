@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 
 
-public class Test : MonoScript {
+public class Test : MonoScript
+{
 
 
 	//[SerializeField] float testFloats = 1f;
@@ -16,14 +17,17 @@ public class Test : MonoScript {
 	[SerializeField] Vector4 color = Vector4.red;
 	[SerializeField] private Vector2 min = Vector2.zero;
 
-	public override void Initialize() {
+	public override void Initialize()
+	{
 
 	}
 
-	public override void Update() {
+	public override void Update()
+	{
 		color = new Vector4(1, 0, 0, 1);
 		SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
-		if (renderer) {
+		if (renderer)
+		{
 			renderer.color = color;
 		}
 	}
