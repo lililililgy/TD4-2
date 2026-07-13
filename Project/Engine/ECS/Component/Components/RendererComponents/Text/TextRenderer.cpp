@@ -89,6 +89,11 @@ TextRenderer::~TextRenderer() {
 void TextRenderer::UpdateTextTexture() {
 	if (!isDirty_) return;
 
+	if (text_.empty()) {
+		isDirty_ = false;
+		return;
+	}
+
 	// フォント画像を作成
 	if (FontRasterizer::GenerateTexture(text_, fontPath_, fontSize_, dynamicTexturePath_)) {
 		auto* assetCollection = Asset::AssetCollection::GetInstance();

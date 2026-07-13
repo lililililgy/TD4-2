@@ -134,7 +134,7 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 	renderingDataList.reserve(textRendererArray->GetUsedComponents().size());
 
 	for (auto& tr : textRendererArray->GetUsedComponents()) {
-		if (!CheckComponentEnable(tr)) {
+		if (!CheckComponentEnable(tr) || tr->GetText().empty()) {
 			continue;
 		}
 
