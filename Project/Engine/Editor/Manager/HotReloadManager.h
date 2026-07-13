@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <algorithm>
 #include "Engine/Editor/Math/FileWatcher/FileWatcher.h"
+#include "Engine/Core/Console/Console.h"
 
 namespace Editor {
 
@@ -40,14 +41,28 @@ public:
         for (const auto& ev : events) {
             latestEvents_.push_back(ev);
 
+            // デバッグ用のログを出力
+            std::string actionStr = "Unknown";
+            if (ev.action == FileEvent::Action::Added) actionStr = "Added";
+            else if (ev.action == FileEvent::Action::Removed) actionStr = "Removed";
+            else if (ev.action == FileEvent::Action::Modified) actionStr = "Modified";
+            else if (ev.action == FileEvent::Action::RenamedOld) actionStr = "RenamedOld";
+            else if (ev.action == FileEvent::Action::RenamedNew) actionStr = "RenamedNew";
+
+            std::wstring pathW = ev.path;
+            std::string pathA(pathW.begin(), pathW.end());
+            ONEngine::Console::Log("[MonoDbg] FileWatcher detected change: " + pathA + " (Action: " + actionStr + ")", ONEngine::LogCategory::ScriptEngine);
+
             if (ev.type == FileEvent::Type::File) {
                 std::string relPath = GetRelativePath(ev.path);
+                ONEngine::Console::Log("[MonoDbg]   File type: " + relPath, ONEngine::LogCategory::ScriptEngine);
                 if (ev.action == FileEvent::Action::Added || ev.action == FileEvent::Action::Modified || ev.action == FileEvent::Action::RenamedNew) {
                     // アセットの再ロード要求
                     pendingAssetReloads_.push_back(relPath);
 
                     // C#スクリプトまたはDLLが更新された場合はホットリロード要求
                     if (relPath.ends_with(".cs") || (relPath.ends_with(".dll") && relPath.find("CSharpLibrary") != std::string::npos)) {
+                        ONEngine::Console::Log("[MonoDbg] Triggering ScriptHotReload for: " + relPath, ONEngine::LogCategory::ScriptEngine);
                         pendingScriptHotReload_ = true;
                     }
                 }
