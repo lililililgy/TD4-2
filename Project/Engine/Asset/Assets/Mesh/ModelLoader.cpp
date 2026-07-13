@@ -169,7 +169,15 @@ Meta<Model::MetaData> AssetLoader<Model>::GetMetaData(const std::string& filepat
 		return {};
 	}
 
-	ifs >> j;
+	try {
+		ifs >> j;
+		ifs.close();
+	} catch (const nlohmann::json::parse_error& e) {
+		Console::LogError("[Model Meta Error] JSON parse error in " + metaPath + ": " + e.what());
+		ifs.close();
+		return res;
+	}
+
 	Model::MetaData data;
 	data.scale = j.value("scale", 1.0f);
 

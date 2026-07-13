@@ -8,6 +8,7 @@
 #include "Engine/Editor/Math/FileWatcher/FileWatcher.h"
 #include "Engine/Core/Utility/Tools/Log.h"
 #include "Engine/Script/MonoScriptEngine.h"
+#include "Engine/Asset/AssetType.h"
 
 namespace Editor {
 
@@ -71,8 +72,13 @@ public:
                 ONEngine::Console::Log("[MonoDbg]   File type: " + relPath, ONEngine::LogCategory::ScriptEngine);
 
                 if (ev.action == FileEvent::Action::Added || ev.action == FileEvent::Action::Modified || ev.action == FileEvent::Action::RenamedNew) {
-                    // アセットの再ロード要求
-                    pendingAssetReloads_.push_back(relPath);
+                    // アセットの拡張子である場合のみアセット再ロードを要求する
+                    std::string extension = std::filesystem::path(relPath).extension().string();
+                    ONEngine::Asset::AssetType assetType = ONEngine::Asset::GetAssetTypeFromExtension(extension);
+                    if (assetType != ONEngine::Asset::AssetType::None) {
+                        // アセットの再ロード要求
+                        pendingAssetReloads_.push_back(relPath);
+                    }
 
                     // C#スクリプト(.cs)、または DLL/PDB が更新された場合はホットリロード要求
                     bool isCsFile = relPath.ends_with(".cs");

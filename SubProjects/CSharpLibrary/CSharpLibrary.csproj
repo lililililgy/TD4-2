@@ -231,6 +231,7 @@
     <Compile Include="Scripts\Test\ProfileTest.cs" />
     <Compile Include="Scripts\Test\SpriteRendererCrashTest.cs" />
     <Compile Include="Scripts\Test\TestSceneScript.cs" />
+    <Compile Include="Scripts\Test\HotReloadAssetAddTestScript.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

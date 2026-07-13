@@ -39,7 +39,15 @@ Meta<Shader::MetaData> AssetLoader<Shader>::GetMetaData(const std::string& filep
 		return {};
 	}
 
-	ifs >> j;
+	try {
+		ifs >> j;
+		ifs.close();
+	} catch (const nlohmann::json::parse_error& e) {
+		Console::LogError("[Shader Meta Error] JSON parse error in " + metaPath + ": " + e.what());
+		ifs.close();
+		return res;
+	}
+
 	Shader::MetaData data{};
 	data.entryPoint = j.value("entryPoint", "");
 	data.profile = j.value("profile", "");

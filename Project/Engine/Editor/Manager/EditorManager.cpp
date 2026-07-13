@@ -23,8 +23,34 @@
 
 #include "HotReloadManager.h"
 #include "Engine/Script/MonoScriptEngine.h"
+#include <thread>
+#include <chrono>
+#include <filesystem>
+#include <fstream>
 
 using namespace Editor;
+
+namespace {
+
+bool WaitForFileReady(const std::string& filepath, int maxRetries = 10, int delayMs = 50) {
+	for (int i = 0; i < maxRetries; ++i) {
+		std::ifstream ifs(filepath);
+		if (ifs.is_open()) {
+			ifs.close();
+			try {
+				if (std::filesystem::exists(filepath) && std::filesystem::file_size(filepath) > 0) {
+					return true;
+				}
+			} catch (...) {
+				// file_size等で例外が飛んだ場合は準備できていない
+			}
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+	}
+	return false;
+}
+
+}
 
 EditorManager::EditorManager(ONEngine::EntityComponentSystem* ecs) : pEcs_(ecs) {}
 EditorManager::~EditorManager() = default;
@@ -57,9 +83,13 @@ void EditorManager::Update(ONEngine::Asset::AssetCollection* ac) {
 	auto hrRequests = Editor::HotReloadManager::GetInstance().ConsumeRequests();
 	bool isReloaded = false;
 	for (const auto& path : hrRequests.assetPaths) {
-		ONEngine::Console::Log("[HotReload] Reloading asset: " + path, ONEngine::LogCategory::Engine);
-		ac->ReloadAsset(path);
-		isReloaded = true;
+		if (WaitForFileReady(path)) {
+			ONEngine::Console::Log("[HotReload] Reloading asset: " + path, ONEngine::LogCategory::Engine);
+			ac->ReloadAsset(path);
+			isReloaded = true;
+		} else {
+			ONEngine::Console::LogWarning("[HotReload] Skip reloading asset because file is not ready: " + path, ONEngine::LogCategory::Engine);
+		}
 	}
 	if (hrRequests.scriptHotReload) {
 		ONEngine::Console::Log("[HotReload] Script hot-reload requested.", ONEngine::LogCategory::ScriptEngine);
