@@ -72,6 +72,10 @@ public class TextRendererTestScript : MonoScript {
 			textRenderer1.outlineColor = new Vector4(1f, 0f, 0f, 1f); // 赤フチ
 			textRenderer1.outlineWidth = 3;
 			System.Console.WriteLine("[TextRendererTest] Set outline for text1 (Red, width: 3)");
+
+			// 改行コード（\n）のデコードテスト
+			textRenderer2.text = "改行\\nテスト";
+			System.Console.WriteLine("[TextRendererTest] Set text2 with escaped newline");
 		}
 
 		if (frameCount == 40) {
@@ -139,9 +143,9 @@ public class TextRendererTestScript : MonoScript {
 				throw new Exception("textRenderer1 lineSpacing mismatch. Expected 1.5, got: " + textRenderer1.lineSpacing);
 			}
 
-			// 値の整合性チェック (TextRenderer2 が textRenderer1 の設定値で汚染・上書きされていないこと)
-			if (textRenderer2.text != "Hello ONEngine Text 2!") {
-				throw new Exception("textRenderer2 text mismatch (might have been overwritten by textRenderer1). Got: " + textRenderer2.text);
+			// 値の整合性チェック (TextRenderer2 が textRenderer1 の設定値で汚染・上書きされていないこと、かつ改行コードがデコードされていること)
+			if (textRenderer2.text != "改行\nテスト") {
+				throw new Exception("textRenderer2 escaped newline resolving failed. Expected '改行\\nテスト' to be resolved as '改行\\nテスト', got: " + textRenderer2.text);
 			}
 
 			if (textRenderer2.fontSize != 36) {

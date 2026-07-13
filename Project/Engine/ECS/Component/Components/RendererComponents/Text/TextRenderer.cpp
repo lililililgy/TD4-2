@@ -410,8 +410,22 @@ void TextRenderer::RenderingSetup(Asset::AssetCollection* assetCollection) {
 }
 
 void TextRenderer::SetText(const std::string& text) {
-	if (text_ != text) {
-		text_ = text;
+	std::string resolvedText = text;
+	// "\\n" を "\n" に置換
+	size_t pos = 0;
+	while ((pos = resolvedText.find("\\n", pos)) != std::string::npos) {
+		resolvedText.replace(pos, 2, "\n");
+		pos += 1;
+	}
+	// "\\r" を "\r" に置換
+	pos = 0;
+	while ((pos = resolvedText.find("\\r", pos)) != std::string::npos) {
+		resolvedText.replace(pos, 2, "\r");
+		pos += 1;
+	}
+
+	if (text_ != resolvedText) {
+		text_ = resolvedText;
 		MarkDirty();
 	}
 }

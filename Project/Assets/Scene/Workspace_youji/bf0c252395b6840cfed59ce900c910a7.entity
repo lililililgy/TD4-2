@@ -39,6 +39,7 @@
             "type": "Script"
         },
         {
+            "characterSpacing": 0,
             "color": {
                 "w": 1.0,
                 "x": 1.0,
@@ -49,6 +50,7 @@
             "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
             "fontSize": 256,
             "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
             "outlineColor": {
                 "w": 1.0,
                 "x": 0.0,

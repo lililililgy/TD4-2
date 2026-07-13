@@ -125,12 +125,10 @@ class TextRenderer : Component {
 
 	public HorizontalAlignment horizontalAlignment {
 		get {
-			if (nativeHandle != 0) {
-				return (HorizontalAlignment)InternalGetHorizontalAlignment(nativeHandle);
-			}
-			return HorizontalAlignment.Left;
+			return (HorizontalAlignment)batchData.horizontalAlignment;
 		}
 		set {
+			batchData.horizontalAlignment = (int)value;
 			if (nativeHandle != 0) {
 				InternalSetHorizontalAlignment(nativeHandle, (int)value);
 			}
@@ -139,12 +137,10 @@ class TextRenderer : Component {
 
 	public VerticalAlignment verticalAlignment {
 		get {
-			if (nativeHandle != 0) {
-				return (VerticalAlignment)InternalGetVerticalAlignment(nativeHandle);
-			}
-			return VerticalAlignment.Top;
+			return (VerticalAlignment)batchData.verticalAlignment;
 		}
 		set {
+			batchData.verticalAlignment = (int)value;
 			if (nativeHandle != 0) {
 				InternalSetVerticalAlignment(nativeHandle, (int)value);
 			}
@@ -153,12 +149,10 @@ class TextRenderer : Component {
 
 	public Vector4 outlineColor {
 		get {
-			if (nativeHandle != 0) {
-				return InternalGetOutlineColor(nativeHandle);
-			}
-			return new Vector4(0f, 0f, 0f, 1f);
+			return batchData.outlineColor;
 		}
 		set {
+			batchData.outlineColor = value;
 			if (nativeHandle != 0) {
 				InternalSetOutlineColor(nativeHandle, value);
 			}
@@ -167,12 +161,10 @@ class TextRenderer : Component {
 
 	public int outlineWidth {
 		get {
-			if (nativeHandle != 0) {
-				return InternalGetOutlineWidth(nativeHandle);
-			}
-			return 0;
+			return batchData.outlineWidth;
 		}
 		set {
+			batchData.outlineWidth = value;
 			if (nativeHandle != 0) {
 				InternalSetOutlineWidth(nativeHandle, value);
 			}
@@ -181,12 +173,10 @@ class TextRenderer : Component {
 
 	public Vector4 shadowColor {
 		get {
-			if (nativeHandle != 0) {
-				return InternalGetShadowColor(nativeHandle);
-			}
-			return new Vector4(0f, 0f, 0f, 0f);
+			return batchData.shadowColor;
 		}
 		set {
+			batchData.shadowColor = value;
 			if (nativeHandle != 0) {
 				InternalSetShadowColor(nativeHandle, value);
 			}
@@ -195,12 +185,10 @@ class TextRenderer : Component {
 
 	public Vector2 shadowOffset {
 		get {
-			if (nativeHandle != 0) {
-				return InternalGetShadowOffset(nativeHandle);
-			}
-			return new Vector2(2f, -2f);
+			return batchData.shadowOffset;
 		}
 		set {
+			batchData.shadowOffset = value;
 			if (nativeHandle != 0) {
 				InternalSetShadowOffset(nativeHandle, value);
 			}
@@ -209,12 +197,10 @@ class TextRenderer : Component {
 
 	public int characterSpacing {
 		get {
-			if (nativeHandle != 0) {
-				return InternalGetCharacterSpacing(nativeHandle);
-			}
-			return 0;
+			return batchData.characterSpacing;
 		}
 		set {
+			batchData.characterSpacing = value;
 			if (nativeHandle != 0) {
 				InternalSetCharacterSpacing(nativeHandle, value);
 			}
@@ -223,12 +209,10 @@ class TextRenderer : Component {
 
 	public float lineSpacing {
 		get {
-			if (nativeHandle != 0) {
-				return InternalGetLineSpacing(nativeHandle);
-			}
-			return 1.0f;
+			return batchData.lineSpacing;
 		}
 		set {
+			batchData.lineSpacing = value;
 			if (nativeHandle != 0) {
 				InternalSetLineSpacing(nativeHandle, value);
 			}

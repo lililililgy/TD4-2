@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 100.0,
-                "y": 100.0,
-                "z": 50.799560546875
+                "x": 259.7999572753906,
+                "y": 259.7999572753906,
+                "z": 131.97723388671875
             },
             "type": "Transform"
         },
@@ -39,6 +39,7 @@
             "type": "Script"
         },
         {
+            "characterSpacing": 0,
             "color": {
                 "w": 1.0,
                 "x": 0.9354838728904724,
@@ -49,6 +50,7 @@
             "fontPath": "./Assets/Fonts/MPLUSRounded1c-Black.ttf",
             "fontSize": 256,
             "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
             "outlineColor": {
                 "w": 1.0,
                 "x": 0.7992831468582153,
