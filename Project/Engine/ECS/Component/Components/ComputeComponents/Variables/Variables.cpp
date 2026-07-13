@@ -523,6 +523,7 @@ void Variables::SaveJson(const std::string& path) {
 }
 
 void Variables::RegisterScriptVariables() {
+	if (MonoScriptEngine::GetInstance().IsShuttingDown()) return;
 	// Releaseビルドでのスレッドアタッチを保証する
 	MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
 	mono_thread_attach(domain);
@@ -559,6 +560,7 @@ void Variables::RegisterScriptVariables() {
 }
 
 void Variables::ReloadScriptVariables() {
+	if (MonoScriptEngine::GetInstance().IsShuttingDown()) return;
 	// Releaseビルドでのスレッドアタッチを保証する
 	MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
 	mono_thread_attach(domain);
@@ -593,6 +595,7 @@ void Variables::ReloadScriptVariables() {
 }
 
 void Variables::SetScriptVariables(const std::string& scriptName) {
+	if (MonoScriptEngine::GetInstance().IsShuttingDown()) return;
 	// Releaseビルドでは SafeInvoke を経由しない Mono API (mono_field_set_value 等) を
 	// 直接呼び出すため、スレッドをドメインにアタッチしておく
 	MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();

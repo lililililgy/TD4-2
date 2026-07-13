@@ -328,6 +328,7 @@ MonoScriptEngine& MonoScriptEngine::GetInstance() {
 }
 
 void MonoScriptEngine::Initialize() {
+	isShuttingDown_ = false;
 	Console::Log("[Mono] Building C# project...", LogCategory::ScriptEngine);
 	std::string buildOutput;
 	bool buildSuccess = BuildCSharpProject(buildOutput);
@@ -503,6 +504,7 @@ void MonoScriptEngine::Initialize() {
 }
 
 void MonoScriptEngine::Finalize() {
+	isShuttingDown_ = true;
 	if(rootDomain_) {
 		ResetCS();
 		mono_jit_cleanup(rootDomain_);
