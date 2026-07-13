@@ -487,6 +487,8 @@ void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
 			gApplyFuncMap[monoClass] = ApplyText;
 			gFetchFuncMap[monoClass] = FetchText;
 			gComponentBatchSize[monoClass] = sizeof(TextBatch);
+			Console::Log(std::format("[JIT_DEBUG] sizeof(TextBatch) = {}", sizeof(TextBatch)));
+			Console::Log(std::format("[JIT_DEBUG] sizeof(SpriteBatch) = {}", sizeof(SpriteBatch)));
 			Console::Log("[JIT_DEBUG] Registered TextRenderer in maps successfully.");
 		} else {
 			Console::LogError("[JIT_DEBUG] Failed to find TextRenderer MonoClass!");

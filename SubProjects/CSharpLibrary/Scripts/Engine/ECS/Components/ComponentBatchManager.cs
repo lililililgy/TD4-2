@@ -297,6 +297,9 @@ static class ComponentBatchManager {
 
 			// Debug.LogInfo($"ComponentBatchManager.SendAllBatches: Sending batch for {kv.Key}.");
 			Array batch = kv.Value(array);
+			if (kv.Key == typeof(TextRenderer)) {
+				System.Console.WriteLine($"[C# DEBUG] SendAllBatches: TextRenderer count = {batch.Length}, Marshal.SizeOf = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(TextRenderer.BatchData))}");
+			}
 			InternalSetBatch(kv.Key, batch, batch.Length, ecsGroupName);
 		}
 	}
@@ -317,6 +320,9 @@ static class ComponentBatchManager {
 
 			// 変更点: 配列そのもの(array)を渡して、ID設定済みのBatch配列を受け取る
 			Array batch = kv.Value(array);
+			if (kv.Key == typeof(TextRenderer)) {
+				System.Console.WriteLine($"[C# DEBUG] ReceiveAllBatches: TextRenderer count = {count}, Marshal.SizeOf = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(TextRenderer.BatchData))}");
+			}
 
 			// Debug.LogInfo($"ComponentBatchManager.ReceiveAllBatches: Receiving batch for {kv.Key} with count {count}.");
 
