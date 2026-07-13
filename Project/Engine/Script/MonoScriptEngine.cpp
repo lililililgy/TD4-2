@@ -1419,6 +1419,9 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints...", LogCategory::ScriptEngine);
 		showAttachedPopup_ = true;
 
+		// Mono ランタイムにデバッガの物理接続を同期
+		mono_set_is_debugger_attached(true);
+
 		// CSharpLibrary.dll / PDB のタイムスタンプを詳細出力
 		std::string dllPath = "./Packages/Scripts/CSharpLibrary.dll";
 		std::string pdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
@@ -1458,6 +1461,12 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 			DebugConfig::isPause = true;
 			Console::Log("[Mono] Debugger synchronization delay finished. Game execution suspended.", LogCategory::ScriptEngine);
 		}
+	}
+
+	// デバッガ切断時の状態同期処理
+	if (!currentAttached && wasDebuggerAttached_) {
+		Console::Log("[Mono] Debugger disconnected. Clearing attached state in Mono.", LogCategory::ScriptEngine);
+		mono_set_is_debugger_attached(false);
 	}
 
 	wasDebuggerAttached_ = currentAttached;
