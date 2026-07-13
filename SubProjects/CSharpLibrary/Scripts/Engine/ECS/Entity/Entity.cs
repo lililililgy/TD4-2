@@ -134,6 +134,17 @@ public class Entity {
 			child.Destroy();
 		}
 
+		// アタッチされているすべてのスクリプトのOnDestroyを呼び出し
+		foreach (var script in scripts_.Values) {
+			try {
+				if (script != null) {
+					script.OnDestroy();
+				}
+			} catch (Exception e) {
+				Debug.LogError("Error in MonoScript.OnDestroy: " + e.Message);
+			}
+		}
+
 		/// Entityを削除
 		ecsGroup_.DestroyEntity(entityId_);
 		entityId_ = 0; // IDを無効化

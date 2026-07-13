@@ -3,10 +3,10 @@
     "components": [
         {
             "enable": 1,
-            "matrixCalcFlags": 3,
+            "matrixCalcFlags": 7,
             "position": {
-                "x": -249.39996337890625,
-                "y": 200.0,
+                "x": 0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,24 +16,13 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 75.0,
-                "y": 250.0,
-                "z": 0.0
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
-            "SpriteAnimation": {
-                "cols": 2,
-                "endFrame": 2,
-                "fps": 1.0,
-                "invertY": false,
-                "isLoop": true,
-                "isPlay": true,
-                "rows": 1,
-                "startFrame": 0,
-                "totalFrames": 2
-            },
             "type": "Variables"
         },
         {
@@ -46,7 +35,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "f972705e35ed09b3006877e8f5e532fb",
+                "baseTextureGuid": "ffffffffffffffffffffffffffffffff",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -69,14 +58,14 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "SpriteAnimation"
+                    "name": "SpriteRendererCrashTest"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "ad30a378f5272556a5ec498953ca910b",
-    "name": "seaweed",
-    "parentGuid": "b82ef25627d3d464a44a651f25e717dc",
+    "guid": "c0000000000000000000000000000002",
+    "name": "TestEntity",
+    "parentGuid": null,
     "prefabName": ""
 }

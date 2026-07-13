@@ -1,4 +1,4 @@
-﻿#include <winsock2.h>
+#include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
@@ -87,8 +87,17 @@ void ApplicationQuit() {
 	PostQuitMessage(0);
 }
 
+// タイムスタンプ付きのDLL名から論理名(CSharpLibrary.dll)を取得する
+std::string GetLogicalDllPath(const std::string& dllPath) {
+	std::regex tsPattern(R"(CSharpLibrary_\d{8}_\d{6}\.dll)");
+	std::string logicalPath = std::regex_replace(dllPath, tsPattern, "CSharpLibrary.dll");
+	return logicalPath;
+}
+
 MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dllPath) {
 #if defined(DEBUG_MODE)
+	std::string logicalDllPath = GetLogicalDllPath(dllPath);
+
 	std::string pdbPath = dllPath;
 	size_t extPos = pdbPath.find_last_of('.');
 	if (extPos != std::string::npos) {
@@ -111,24 +120,24 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 
 		if (dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(pdbBuffer.data(), pdbSize)) {
 			MonoImageOpenStatus status = MONO_IMAGE_OK;
-			// DLLデータからMonoImageをオープン
+			// DLLデータからMonoImageをオープン (論理パスを報告)
 			MonoImage* image = mono_image_open_from_data_with_name(
 				dllBuffer.data(), 
 				(uint32_t)dllSize, 
 				true, // need_copy
 				&status, 
 				false, // refonly
-				dllPath.c_str() // DLLのパス（依存解決用）
+				logicalDllPath.c_str()
 			);
 
 			if (image && status == MONO_IMAGE_OK) {
 				// アセンブリロードの前にデバッグ情報を登録
 				mono_debug_open_image_from_memory(image, (const mono_byte*)pdbBuffer.data(), (int)pdbSize);
 				
-				// ImageからAssemblyをロード
+				// ImageからAssemblyをロード (論理パスを報告)
 				MonoAssembly* assembly = mono_assembly_load_from_full(
 					image,
-					dllPath.c_str(),
+					logicalDllPath.c_str(),
 					&status,
 					false
 				);
@@ -136,7 +145,7 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 				mono_image_close(image);
 
 				if (assembly) {
-					Console::Log("[Mono] Successfully loaded assembly and debug symbols from memory: " + dllPath, LogCategory::ScriptEngine);
+					Console::Log("[Mono] Successfully loaded assembly and debug symbols from memory: " + dllPath + " (logical: " + logicalDllPath + ")", LogCategory::ScriptEngine);
 					return assembly;
 				}
 			}

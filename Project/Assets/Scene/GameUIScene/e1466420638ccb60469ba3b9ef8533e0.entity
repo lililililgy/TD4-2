@@ -3,50 +3,39 @@
     "components": [
         {
             "enable": 1,
-            "matrixCalcFlags": 3,
+            "matrixCalcFlags": 7,
             "position": {
-                "x": -249.39996337890625,
-                "y": 200.0,
+                "x": -2.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 75.0,
-                "y": 250.0,
-                "z": 0.0
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
-            "SpriteAnimation": {
-                "cols": 2,
-                "endFrame": 2,
-                "fps": 1.0,
-                "invertY": false,
-                "isLoop": true,
-                "isPlay": true,
-                "rows": 1,
-                "startFrame": 0,
-                "totalFrames": 2
-            },
             "type": "Variables"
         },
         {
             "enable": 1,
-            "isPixelPerfect": false,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 0.0788530707359314,
+                    "y": 0.0788530707359314,
+                    "z": 0.0788530707359314
                 },
-                "baseTextureGuid": "f972705e35ed09b3006877e8f5e532fb",
+                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -63,20 +52,10 @@
                 }
             },
             "type": "SpriteRenderer"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "SpriteAnimation"
-                }
-            ],
-            "type": "Script"
         }
     ],
-    "guid": "ad30a378f5272556a5ec498953ca910b",
-    "name": "seaweed",
-    "parentGuid": "b82ef25627d3d464a44a651f25e717dc",
+    "guid": "e1466420638ccb60469ba3b9ef8533e0",
+    "name": "BlackBelt",
+    "parentGuid": "c65190a696bc1499bbbfcdebd297d694",
     "prefabName": ""
 }

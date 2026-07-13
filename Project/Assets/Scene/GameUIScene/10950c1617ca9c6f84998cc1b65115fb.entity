@@ -43,8 +43,8 @@
             "type": "Variables"
         }
     ],
-    "guid": "92ac14d379e4962995c416ebf7c079c6",
-    "name": "MainCamera",
+    "guid": "10950c1617ca9c6f84998cc1b65115fb",
+    "name": "Camera",
     "parentGuid": null,
     "prefabName": ""
 }

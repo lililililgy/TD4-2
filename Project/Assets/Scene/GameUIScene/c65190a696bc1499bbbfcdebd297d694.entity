@@ -16,31 +16,18 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 400.0,
+                "y": 1200.0,
+                "z": 100.0
             },
             "type": "Transform"
         },
         {
-            "ChildTestScript": {
-                "parentValue": 25.0
-            },
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "ChildTestScript"
-                }
-            ],
-            "type": "Script"
         }
     ],
-    "guid": "3b652048d773b38c33ed531ab1d043d2",
-    "name": "TestEntity",
+    "guid": "c65190a696bc1499bbbfcdebd297d694",
+    "name": "SideBB",
     "parentGuid": null,
     "prefabName": ""
 }

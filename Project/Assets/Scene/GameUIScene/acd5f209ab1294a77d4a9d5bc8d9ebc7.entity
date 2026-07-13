@@ -2,34 +2,40 @@
     "active": true,
     "components": [
         {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 2.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
             "scale": {
-                "x": 256.0,
-                "y": 256.0
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
-            "PlayerMoveComponent": {
-                "moveSpeed_": 20.0
-            },
-            "PlayerShotComponent": {
-                "bulletSpawnOffset_": {
-                    "y": 1.0
-                },
-                "shootCooldownTime_": 0.0010000000474974513
-            },
             "type": "Variables"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 0.0788530707359314,
+                    "y": 0.0788530707359314,
+                    "z": 0.0788530707359314
                 },
-                "baseTextureGuid": "98833aef331aafb2bfce860b634d7f4a",
+                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -45,12 +51,11 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "02c6a58007198b6c2043c9fb7e6cd183",
-    "name": "Player",
-    "parentGuid": null,
-    "prefabName": "Player"
+    "guid": "acd5f209ab1294a77d4a9d5bc8d9ebc7",
+    "name": "BlackBelt_1",
+    "parentGuid": "c65190a696bc1499bbbfcdebd297d694",
+    "prefabName": ""
 }

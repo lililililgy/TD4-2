@@ -11,6 +11,7 @@ public class TargetRangeDetector : MonoScript
     public bool   IsInRange  { get; private set; } = false;
     public Entity Target     => targetEntity_;
 
+    // ターゲットEntity
     private Entity targetEntity_ = null;
     private bool   wasInRange_   = false;
 
