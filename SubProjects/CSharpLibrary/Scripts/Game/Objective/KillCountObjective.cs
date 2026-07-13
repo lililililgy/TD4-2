@@ -1,6 +1,4 @@
 using System;
 
-public class KillCountObjective<TEvent> : CountObjective<EnemyKilledEvent> {
-
-    [SerializeField] int test = 0;
+public class KillCountObjective : CountObjective<EnemyKilledEvent> {
 }
