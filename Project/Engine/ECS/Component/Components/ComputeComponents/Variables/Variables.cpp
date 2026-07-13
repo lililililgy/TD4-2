@@ -616,7 +616,12 @@ void Variables::ReloadScriptVariables() {
 void Variables::SetScriptVariables(const std::string& scriptName) {
 	// Releaseビルドでは SafeInvoke を経由しない Mono API (mono_field_set_value 等) を
 	// 直接呼び出すため、スレッドをドメインにアタッチしておく
-	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+	MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
+	if (mono_thread_current() == nullptr) {
+		mono_thread_attach(domain);
+	} else {
+		mono_domain_set(domain, false);
+	}
 
 	GameEntity* owner = GetOwner();
 	if (!owner) {
