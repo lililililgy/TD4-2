@@ -47,9 +47,10 @@ class SpriteRenderer : Component {
 		}
 		set {
 			batchData.color = value;
-			if (nativeHandle != 0) {
-				InternalSetColor(nativeHandle, value);
-			}
+			// バッチ同期システムが自動でC++側に色を反映するため、値型Vector4のレジスタアライメント崩れを誘発する個別のInternalCallは不要
+			//if (nativeHandle != 0) {
+			//	InternalSetColor(nativeHandle, value);
+			//}
 		}
 	}
 
