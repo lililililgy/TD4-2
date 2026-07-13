@@ -455,10 +455,23 @@ size_t ONEngine::ComponentApplyFuncs::GetBatchElementSize(MonoClass* monoClass) 
 	if (!monoClass) return 0;
 	std::string className = mono_class_get_name(monoClass);
 	auto itr = gComponentBatchSize.find(className);
-	if(itr == gComponentBatchSize.end()) {
-		return 0;
+	if(itr != gComponentBatchSize.end()) {
+		return itr->second;
 	}
-	return itr->second;
+
+	// 安全のためのハードコードフォールバック（アセンブリリロード時などのキー紛失・アライメントズレ防止）
+	if (className == "Transform") return sizeof(TransformBatch);
+	if (className == "MeshRenderer") return sizeof(MeshRendererBatch);
+	if (className == "DissolveMeshRenderer") return sizeof(DissolveBatch);
+	if (className == "SpriteRenderer") return sizeof(SpriteBatch);
+	if (className == "TextRenderer") return sizeof(TextBatch);
+	if (className == "AgentIntentComponent") return sizeof(AgentIntentComponent::BatchData);
+	if (className == "CameraComponent") return sizeof(CameraBatch);
+	if (className == "Animator") return sizeof(AnimatorBatch);
+	if (className == "UIGroupComponent") return sizeof(UIGroupComponent::BatchData);
+
+	Console::LogError("[JIT_DEBUG] GetBatchElementSize - Unknown component class name requested: " + className);
+	return 64; // アボート防止用のデフォルトの安全アライメントサイズ
 }
 
 void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
