@@ -228,6 +228,10 @@ void ONEngine::AddComponentInternalCalls() {
 	mono_add_internal_call("TextRenderer::InternalSetShadowColor", (void*)InternalSetShadowColor);
 	mono_add_internal_call("TextRenderer::InternalGetShadowOffset", (void*)InternalGetShadowOffset);
 	mono_add_internal_call("TextRenderer::InternalSetShadowOffset", (void*)InternalSetShadowOffset);
+	mono_add_internal_call("TextRenderer::InternalGetCharacterSpacing", (void*)InternalGetCharacterSpacing);
+	mono_add_internal_call("TextRenderer::InternalSetCharacterSpacing", (void*)InternalSetCharacterSpacing);
+	mono_add_internal_call("TextRenderer::InternalGetLineSpacing", (void*)InternalGetLineSpacing);
+	mono_add_internal_call("TextRenderer::InternalSetLineSpacing", (void*)InternalSetLineSpacing);
 
 	/// font rasterizer
 	mono_add_internal_call("FontRasterizer::Internal_GenerateTexture", (void*)InternalGenerateFontTexture);

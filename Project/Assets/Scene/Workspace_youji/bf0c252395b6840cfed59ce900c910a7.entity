@@ -68,7 +68,7 @@
             },
             "text": "シンカイ ノ ダイオウ ニ ナッタ",
             "type": "TextRenderer",
-            "verticalAlignment": 0
+            "verticalAlignment": 1
         }
     ],
     "guid": "bf0c252395b6840cfed59ce900c910a7",

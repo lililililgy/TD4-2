@@ -89,6 +89,8 @@ private:
 	int outlineWidth_ = 0;
 	Vector4 shadowColor_ = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 	Vector2 shadowOffset_ = Vector2(2.0f, -2.0f);
+	int characterSpacing_ = 0;
+	float lineSpacing_ = 1.0f;
 
 	std::string dynamicTexturePath_ = "";
 	bool isDirty_ = true;
@@ -106,6 +108,8 @@ public:
 	void SetOutlineWidth(int width);
 	void SetShadowColor(const Vector4& color);
 	void SetShadowOffset(const Vector2& offset);
+	void SetCharacterSpacing(int spacing);
+	void SetLineSpacing(float spacing);
 
 	/// ----- getters ----- ///
 	const std::string& GetText() const { return text_; }
@@ -122,6 +126,8 @@ public:
 	int GetOutlineWidth() const { return outlineWidth_; }
 	const Vector4& GetShadowColor() const { return shadowColor_; }
 	const Vector2& GetShadowOffset() const { return shadowOffset_; }
+	int GetCharacterSpacing() const { return characterSpacing_; }
+	float GetLineSpacing() const { return lineSpacing_; }
 };
 
 /// C#用
@@ -155,6 +161,12 @@ namespace MonoInternalMethods {
 
 	Vector2 InternalGetShadowOffset(uint64_t nativeHandle);
 	void InternalSetShadowOffset(uint64_t nativeHandle, Vector2 offset);
+
+	int InternalGetCharacterSpacing(uint64_t nativeHandle);
+	void InternalSetCharacterSpacing(uint64_t nativeHandle, int spacing);
+
+	float InternalGetLineSpacing(uint64_t nativeHandle);
+	void InternalSetLineSpacing(uint64_t nativeHandle, float spacing);
 }
 
 } // namespace ONEngine

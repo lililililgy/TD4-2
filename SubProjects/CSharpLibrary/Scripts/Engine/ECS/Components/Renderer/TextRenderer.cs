@@ -27,6 +27,8 @@ class TextRenderer : Component {
 		public int outlineWidth;
 		public Vector4 shadowColor;
 		public Vector2 shadowOffset;
+		public int characterSpacing;
+		public float lineSpacing;
 	}
 
 	BatchData batchData;
@@ -51,6 +53,8 @@ class TextRenderer : Component {
 		batchData.outlineWidth = batch[0].outlineWidth;
 		batchData.shadowColor = batch[0].shadowColor;
 		batchData.shadowOffset = batch[0].shadowOffset;
+		batchData.characterSpacing = batch[0].characterSpacing;
+		batchData.lineSpacing = batch[0].lineSpacing;
 	}
 
 	public string text {
@@ -203,6 +207,34 @@ class TextRenderer : Component {
 		}
 	}
 
+	public int characterSpacing {
+		get {
+			if (nativeHandle != 0) {
+				return InternalGetCharacterSpacing(nativeHandle);
+			}
+			return 0;
+		}
+		set {
+			if (nativeHandle != 0) {
+				InternalSetCharacterSpacing(nativeHandle, value);
+			}
+		}
+	}
+
+	public float lineSpacing {
+		get {
+			if (nativeHandle != 0) {
+				return InternalGetLineSpacing(nativeHandle);
+			}
+			return 1.0f;
+		}
+		set {
+			if (nativeHandle != 0) {
+				InternalSetLineSpacing(nativeHandle, value);
+			}
+		}
+	}
+
 	/// -------------------------------------------
 	/// internal methods
 	/// -------------------------------------------
@@ -260,4 +292,16 @@ class TextRenderer : Component {
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalSetShadowOffset(ulong nativeHandle, Vector2 offset);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern int InternalGetCharacterSpacing(ulong nativeHandle);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetCharacterSpacing(ulong nativeHandle, int spacing);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern float InternalGetLineSpacing(ulong nativeHandle);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetLineSpacing(ulong nativeHandle, float spacing);
 }

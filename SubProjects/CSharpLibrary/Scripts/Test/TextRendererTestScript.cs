@@ -79,6 +79,11 @@ public class TextRendererTestScript : MonoScript {
 			textRenderer1.shadowColor = new Vector4(0f, 0f, 0f, 0.5f); // 半透明黒影
 			textRenderer1.shadowOffset = new Vector2(4f, -4f);
 			System.Console.WriteLine("[TextRendererTest] Set shadow for text1 (Semi-transparent black, offset: 4, -4)");
+
+			// 文字間隔・行間隔の設定テスト
+			textRenderer1.characterSpacing = 8;
+			textRenderer1.lineSpacing = 1.5f;
+			System.Console.WriteLine("[TextRendererTest] Set spacing for text1 (charSpacing: 8, lineSpacing: 1.5)");
 		}
 
 		if (frameCount == 50) {
@@ -109,6 +114,14 @@ public class TextRendererTestScript : MonoScript {
 
 			if (Math.Abs(textRenderer1.shadowOffset.x - 4f) > 0.001f || Math.Abs(textRenderer1.shadowOffset.y - (-4f)) > 0.001f) {
 				throw new Exception("textRenderer1 ShadowOffset mismatch. Expected (4, -4), got: " + textRenderer1.shadowOffset);
+			}
+
+			if (textRenderer1.characterSpacing != 8) {
+				throw new Exception("textRenderer1 characterSpacing mismatch. Expected 8, got: " + textRenderer1.characterSpacing);
+			}
+
+			if (Math.Abs(textRenderer1.lineSpacing - 1.5f) > 0.001f) {
+				throw new Exception("textRenderer1 lineSpacing mismatch. Expected 1.5, got: " + textRenderer1.lineSpacing);
 			}
 
 			// 値の整合性チェック (TextRenderer2 が textRenderer1 の設定値で汚染・上書きされていないこと)

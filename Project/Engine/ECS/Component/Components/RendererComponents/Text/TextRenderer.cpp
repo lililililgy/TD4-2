@@ -76,6 +76,16 @@ void ComponentDebug::TextDebug(TextRenderer* tr, Asset::AssetCollection* assetCo
 		tr->SetShadowOffset(sOffset);
 	}
 
+	int charSpacing = tr->GetCharacterSpacing();
+	if (ImGui::InputInt("Character Spacing", &charSpacing)) {
+		tr->SetCharacterSpacing(charSpacing);
+	}
+
+	float lineSpacing = tr->GetLineSpacing();
+	if (ImGui::DragFloat("Line Spacing", &lineSpacing, 0.05f, 0.1f, 10.0f)) {
+		tr->SetLineSpacing(lineSpacing);
+	}
+
 	ImGui::Unindent(indentValue);
 }
 
@@ -92,7 +102,9 @@ void ONEngine::to_json(nlohmann::json& j, const TextRenderer& tr) {
 		{ "outlineColor", tr.outlineColor_ },
 		{ "outlineWidth", tr.outlineWidth_ },
 		{ "shadowColor", tr.shadowColor_ },
-		{ "shadowOffset", tr.shadowOffset_ }
+		{ "shadowOffset", tr.shadowOffset_ },
+		{ "characterSpacing", tr.characterSpacing_ },
+		{ "lineSpacing", tr.lineSpacing_ }
 	};
 }
 
@@ -108,6 +120,8 @@ void ONEngine::from_json(const nlohmann::json& j, TextRenderer& tr) {
 	tr.outlineWidth_ = j.value("outlineWidth", 0);
 	tr.shadowColor_ = j.value("shadowColor", Vector4(0.0f, 0.0f, 0.0f, 0.0f));
 	tr.shadowOffset_ = j.value("shadowOffset", Vector2(2.0f, -2.0f));
+	tr.characterSpacing_ = j.value("characterSpacing", 0);
+	tr.lineSpacing_ = j.value("lineSpacing", 1.0f);
 	tr.MarkDirty();
 }
 
@@ -142,6 +156,8 @@ TextRenderer::TextRenderer(const TextRenderer& other)
 	  outlineWidth_(other.outlineWidth_),
 	  shadowColor_(other.shadowColor_),
 	  shadowOffset_(other.shadowOffset_),
+	  characterSpacing_(other.characterSpacing_),
+	  lineSpacing_(other.lineSpacing_),
 	  isDirty_(true)
 {
 	// コピー先でユニークなテクスチャパスを新しく生成する
@@ -162,6 +178,8 @@ TextRenderer& TextRenderer::operator=(const TextRenderer& other) {
 		outlineWidth_ = other.outlineWidth_;
 		shadowColor_ = other.shadowColor_;
 		shadowOffset_ = other.shadowOffset_;
+		characterSpacing_ = other.characterSpacing_;
+		lineSpacing_ = other.lineSpacing_;
 		isDirty_ = true;
 		// パスは自分自身のユニークなものを維持する
 	}
@@ -177,7 +195,7 @@ void TextRenderer::UpdateTextTexture() {
 	}
 
 	// フォント画像を作成
-	if (FontRasterizer::GenerateTexture(text_, fontPath_, fontSize_, dynamicTexturePath_, horizontalAlignment_, material_.baseColor, outlineColor_, outlineWidth_)) {
+	if (FontRasterizer::GenerateTexture(text_, fontPath_, fontSize_, dynamicTexturePath_, horizontalAlignment_, material_.baseColor, outlineColor_, outlineWidth_, characterSpacing_, lineSpacing_)) {
 		auto* assetCollection = Asset::AssetCollection::GetInstance();
 		auto* texture = assetCollection->GetTexture(dynamicTexturePath_);
 		if (texture) {
@@ -270,6 +288,20 @@ void TextRenderer::SetShadowColor(const Vector4& color) {
 
 void TextRenderer::SetShadowOffset(const Vector2& offset) {
 	shadowOffset_ = offset;
+}
+
+void TextRenderer::SetCharacterSpacing(int spacing) {
+	if (characterSpacing_ != spacing) {
+		characterSpacing_ = spacing;
+		MarkDirty();
+	}
+}
+
+void TextRenderer::SetLineSpacing(float spacing) {
+	if (lineSpacing_ != spacing) {
+		lineSpacing_ = spacing;
+		MarkDirty();
+	}
 }
 
 const Vector4& TextRenderer::GetColor() const {
@@ -441,5 +473,29 @@ void MonoInternalMethods::InternalSetShadowOffset(uint64_t nativeHandle, Vector2
 	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
 	if (tr) {
 		tr->SetShadowOffset(offset);
+	}
+}
+
+int MonoInternalMethods::InternalGetCharacterSpacing(uint64_t nativeHandle) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	return tr ? tr->GetCharacterSpacing() : 0;
+}
+
+void MonoInternalMethods::InternalSetCharacterSpacing(uint64_t nativeHandle, int spacing) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		tr->SetCharacterSpacing(spacing);
+	}
+}
+
+float MonoInternalMethods::InternalGetLineSpacing(uint64_t nativeHandle) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	return tr ? tr->GetLineSpacing() : 1.0f;
+}
+
+void MonoInternalMethods::InternalSetLineSpacing(uint64_t nativeHandle, float spacing) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		tr->SetLineSpacing(spacing);
 	}
 }

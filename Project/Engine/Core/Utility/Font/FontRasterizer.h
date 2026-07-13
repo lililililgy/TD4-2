@@ -17,7 +17,9 @@ public:
 		HorizontalAlignment alignment = static_cast<HorizontalAlignment>(0),
 		const Vector4& textColor = { 1.0f, 1.0f, 1.0f, 1.0f },
 		const Vector4& outlineColor = { 0.0f, 0.0f, 0.0f, 1.0f },
-		int outlineWidth = 0
+		int outlineWidth = 0,
+		int characterSpacing = 0,
+		float lineSpacing = 1.0f
 	);
 };
 

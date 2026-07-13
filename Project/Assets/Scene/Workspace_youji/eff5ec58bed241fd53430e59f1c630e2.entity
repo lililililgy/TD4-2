@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 140.69998168945313,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
@@ -41,9 +41,9 @@
         {
             "color": {
                 "w": 1.0,
-                "x": 1.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0.9354838728904724,
+                "y": 0.9354838728904724,
+                "z": 0.9354838728904724
             },
             "enable": 1,
             "fontPath": "./Assets/Fonts/MPLUSRounded1c-Black.ttf",
@@ -51,11 +51,11 @@
             "horizontalAlignment": 1,
             "outlineColor": {
                 "w": 1.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0.7992831468582153,
+                "y": 0.0372425802052021,
+                "z": 0.0372425802052021
             },
-            "outlineWidth": 0,
+            "outlineWidth": 12,
             "shadowColor": {
                 "w": 0.0,
                 "x": 0.0,
@@ -63,8 +63,8 @@
                 "z": 0.0
             },
             "shadowOffset": {
-                "x": 2.0,
-                "y": -2.0
+                "x": -11.100000381469727,
+                "y": 208.89999389648438
             },
             "text": "text rendering pipeline test",
             "type": "TextRenderer",

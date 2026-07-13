@@ -83,6 +83,8 @@ struct TextBatch {
 	int32_t outlineWidth;
 	Vector4 shadowColor;
 	Vector2 shadowOffset;
+	int32_t characterSpacing;
+	float lineSpacing;
 };
 
 struct CameraBatch {
@@ -184,6 +186,8 @@ void ONEngine::ComponentApplyFuncs::ApplyText(void* element, ECSGroup* ecsGroup)
 		tr->SetOutlineWidth(data->outlineWidth);
 		tr->SetShadowColor(data->shadowColor);
 		tr->SetShadowOffset(data->shadowOffset);
+		tr->SetCharacterSpacing(data->characterSpacing);
+		tr->SetLineSpacing(data->lineSpacing);
 	}
 }
 
@@ -339,6 +343,8 @@ void ONEngine::ComponentApplyFuncs::FetchText(void* element, ECSGroup* ecsGroup)
 		data->outlineWidth = tr->GetOutlineWidth();
 		data->shadowColor = tr->GetShadowColor();
 		data->shadowOffset = tr->GetShadowOffset();
+		data->characterSpacing = tr->GetCharacterSpacing();
+		data->lineSpacing = tr->GetLineSpacing();
 	}
 }
 

@@ -53,7 +53,9 @@ bool FontRasterizer::GenerateTexture(
 	HorizontalAlignment alignment,
 	const Vector4& textColor,
 	const Vector4& outlineColor,
-	int outlineWidth
+	int outlineWidth,
+	int characterSpacing,
+	float lineSpacing
 ) {
 	if (text.empty()) {
 		// 空文字列の場合は、最低限の1x1の透明テクスチャを割り当てる（クラッシュ防止）
@@ -101,7 +103,7 @@ bool FontRasterizer::GenerateTexture(
 	int ascent, descent, lineGap;
 	stbtt_GetFontVMetrics(&font, &ascent, &descent, &lineGap);
 	int baseline = static_cast<int>(ascent * scale);
-	int rowHeight = static_cast<int>((ascent - descent + lineGap) * scale);
+	int rowHeight = static_cast<int>((ascent - descent + lineGap) * scale * lineSpacing);
 
 	std::vector<uint32_t> utf32Text = Utf8ToUtf32(text);
 
@@ -123,7 +125,8 @@ bool FontRasterizer::GenerateTexture(
 	// フチ取りのための余白を定義
 	int drawOutlineWidth = (outlineWidth > 0) ? outlineWidth : 0;
 
-	for (uint32_t cp : utf32Text) {
+	for (size_t i = 0; i < utf32Text.size(); ++i) {
+		uint32_t cp = utf32Text[i];
 		if (cp == '\n') {
 			lineWidths.push_back(currentX);
 			maxLineWidth = (std::max)(maxLineWidth, currentX);
@@ -147,6 +150,11 @@ bool FontRasterizer::GenerateTexture(
 		glyphs.push_back(info);
 
 		currentX += info.advanceWidth;
+
+		// 次の文字があり、それが改行でなければ文字間隔を加算
+		if (i + 1 < utf32Text.size() && utf32Text[i + 1] != '\n') {
+			currentX += characterSpacing;
+		}
 	}
 	lineWidths.push_back(currentX);
 	maxLineWidth = (std::max)(maxLineWidth, currentX);
