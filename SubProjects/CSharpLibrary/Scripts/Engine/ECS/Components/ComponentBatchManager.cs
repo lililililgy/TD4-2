@@ -361,16 +361,18 @@ static class ComponentBatchManager {
 		} else if (componentType == typeof(BoxCollider2D)) {
 			var colliderArray = (ComponentArray<BoxCollider2D>)array;
 			var colliderBatch = (BoxCollider2D.BatchData[])batch;
+			int limit = Math.Min(colliderArray.Count, colliderBatch.Length);
 
-			for (int i = 0; i < colliderBatch.Length; i++) {
+			for (int i = 0; i < limit; i++) {
 				var comp = colliderArray.Get(i);
 				comp.ApplyBatchData(colliderBatch[i]);
 			}
 		} else if (componentType == typeof(AgentIntentComponent)) {
 			var agentArray = (ComponentArray<AgentIntentComponent>)array;
 			var agentBatch = (AgentIntentComponent.BatchData[])batch;
+			int limit = Math.Min(agentArray.Count, agentBatch.Length);
 
-			for (int i = 0; i < agentBatch.Length; i++) {
+			for (int i = 0; i < limit; i++) {
 				var comp = agentArray.Get(i);
 				comp.desiredMoveDirection = agentBatch[i].desiredMoveDirection;
 				comp.desiredRotation = agentBatch[i].desiredRotation;
@@ -383,8 +385,9 @@ static class ComponentBatchManager {
 		} else if (componentType == typeof(UIGroupComponent)) {
 			var uiGroupArray = (ComponentArray<UIGroupComponent>)array;
 			var uiGroupBatch = (UIGroupComponent.BatchData[])batch;
+			int limit = Math.Min(uiGroupArray.Count, uiGroupBatch.Length);
 
-			for (int i = 0; i < uiGroupBatch.Length; i++) {
+			for (int i = 0; i < limit; i++) {
 				var comp = uiGroupArray.Get(i);
 				comp.currentSelectedId = uiGroupBatch[i].currentSelectedId;
 				comp.isFocused = uiGroupBatch[i].isFocused != 0;
@@ -394,8 +397,9 @@ static class ComponentBatchManager {
 		} else if (componentType == typeof(UIElementComponent)) {
 			var uiElementArray = (ComponentArray<UIElementComponent>)array;
 			var uiElementBatch = (UIElementComponent.BatchData[])batch;
+			int limit = Math.Min(uiElementArray.Count, uiElementBatch.Length);
 
-			for (int i = 0; i < uiElementBatch.Length; i++) {
+			for (int i = 0; i < limit; i++) {
 				var comp = uiElementArray.Get(i);
 				comp.groupIdId = uiElementBatch[i].groupIdId;
 				comp.elementIndex = uiElementBatch[i].elementIndex;
@@ -403,8 +407,9 @@ static class ComponentBatchManager {
 		} else if (componentType == typeof(TextRenderer)) {
 			var textArray = (ComponentArray<TextRenderer>)array;
 			var textBatch = (TextRenderer.BatchData[])batch;
+			int limit = Math.Min(textArray.Count, textBatch.Length);
 
-			for (int i = 0; i < textBatch.Length; i++) {
+			for (int i = 0; i < limit; i++) {
 				var comp = textArray.Get(i);
 				comp.color = textBatch[i].color;
 				comp.uvTransform = textBatch[i].uvTransform;
