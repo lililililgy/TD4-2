@@ -540,6 +540,9 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
+	Console::Log("[MonoDbg] ========================================================", LogCategory::ScriptEngine);
+	Console::Log("[MonoDbg] MonoScriptEngine::HotReload() CALLED! Starting C# reload.", LogCategory::ScriptEngine);
+	Console::Log("[MonoDbg] ========================================================", LogCategory::ScriptEngine);
 	Console::Log("[Mono] HotReload: Rebuilding C# project...", LogCategory::ScriptEngine);
 	std::string buildOutput;
 	bool buildSuccess = BuildCSharpProject(buildOutput);

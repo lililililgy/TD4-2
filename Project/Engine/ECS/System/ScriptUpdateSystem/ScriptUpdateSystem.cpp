@@ -36,6 +36,8 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	int32_t currentReloadCounter = monoEngine.GetDomainReloadCounter();
 
 	if (currentReloadCounter != lastReloadCounter_) {
+		Console::Log("[MonoDbg] ScriptUpdateSystem::OutsideOfRuntimeUpdate - Reload detected! Syncing C# bindings. (Counter: " +
+			std::to_string(lastReloadCounter_) + " -> " + std::to_string(currentReloadCounter) + ")", LogCategory::ScriptEngine);
 		// 古いドメインのハンドルを解放
 		ReleaseGCHandle();
 
@@ -78,6 +80,8 @@ void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 	int32_t currentReloadCounter = monoEngine.GetDomainReloadCounter();
 
 	if (currentReloadCounter != lastReloadCounter_) {
+		Console::Log("[MonoDbg] ScriptUpdateSystem::RuntimeUpdate - Reload detected! Syncing C# bindings. (Counter: " +
+			std::to_string(lastReloadCounter_) + " -> " + std::to_string(currentReloadCounter) + ")", LogCategory::ScriptEngine);
 		// 古いドメインのハンドルを解放
 		ReleaseGCHandle();
 
