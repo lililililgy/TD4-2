@@ -112,48 +112,22 @@ static public class EntityComponentSystem {
 	
 
 	static public Entity GetEntity(string groupName, int id) {
-#if DEBUG
-		Debug.LogInfo("EntityComponentSystem.GetEntity - Getting Entity from group: " + groupName + ", ID: " + id);
-		Debug.LogInfo("EntityComponentSystem.GetEntity - GroupCount: " + groups.Count);
-		foreach (var g in groups) {
-			Debug.LogInfo("EntityComponentSystem.GetEntity - Available ECSGroup: " + g.Key);
-		}
-#endif
-
-
 		if (groups.TryGetValue(groupName, out ECSGroup group)) {
-#if DEBUG
-			Debug.LogInfo("EntityComponentSystem.GetEntity - ECSGroup found: " + group.groupName);
-#endif
 			return group.GetEntity(id);
 		} else {
-#if DEBUG
-			Debug.LogError("EntityComponentSystem.GetEntity - ECSGroup not found: " + groupName);
-#endif
 			return null;
 		}
 	}
 
 	static public MonoScript GetMonoBehavior(string groupName, int entityId, string scriptName) {
-#if DEBUG
-		Debug.LogInfo("EntityComponentSystem.GetMonoBehavior - Getting MonoBehavior from group: " + groupName + ", Entity ID: " + entityId + ", Script Name: " + scriptName);
-		Debug.LogInfo("EntityComponentSystem.GetEntity - GroupCount: " + groups.Count);
-#endif
-		
 		if (groups.TryGetValue(groupName, out ECSGroup group)) {
 			Entity entity = group.GetEntity(entityId);
 			if (entity != null) {
 				return entity.GetScript(scriptName);
 			} else {
-#if DEBUG
-				Debug.LogError("EntityComponentSystem.GetMonoBehavior - Entity not found with ID: " + entityId);
-#endif
 				return null;
 			}
 		} else {
-#if DEBUG
-			Debug.LogError("EntityComponentSystem.GetMonoBehavior - ECSGroup not found: " + groupName);
-#endif
 			return null;
 		}
 	}
