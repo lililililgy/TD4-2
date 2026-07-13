@@ -13,29 +13,23 @@ static public class EntityComponentSystem {
 
 	static public void InitializeSerializeFieldCache() {
 		try {
-			foreach (var asm in System.AppDomain.CurrentDomain.GetAssemblies()) {
-				string asmName = asm.GetName().Name;
-				if (asmName.StartsWith("System") || asmName.StartsWith("mscorlib") || asmName.StartsWith("Mono")) {
-					continue;
-				}
-
-				foreach (var type in asm.GetTypes()) {
-					foreach (var field in type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)) {
-						bool shouldSerialize = false;
-						if (field.IsPublic) {
-							shouldSerialize = true;
-						} else {
-							foreach (var attr in field.GetCustomAttributes(true)) {
-								if (attr.GetType().Name == "SerializeField") {
-									shouldSerialize = true;
-									break;
-								}
+			var asm = System.Reflection.Assembly.GetExecutingAssembly();
+			foreach (var type in asm.GetTypes()) {
+				foreach (var field in type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)) {
+					bool shouldSerialize = false;
+					if (field.IsPublic) {
+						shouldSerialize = true;
+					} else {
+						foreach (var attr in field.GetCustomAttributes(true)) {
+							if (attr.GetType().Name == "SerializeField") {
+								shouldSerialize = true;
+								break;
 							}
 						}
+					}
 
-						if (shouldSerialize) {
-							Variables_RegisterSerializeField(type.Name, field.Name);
-						}
+					if (shouldSerialize) {
+						Variables_RegisterSerializeField(type.Name, field.Name);
 					}
 				}
 			}
