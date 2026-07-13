@@ -130,9 +130,7 @@ void GameFramework::InitializeECS() {
 
 	/// scene managerの初期化
 	sceneManager_->Initialize(renderingFramework_->GetAssetCollection());
-	if (EngineConfig::isTestMode && !EngineConfig::testScene.empty()) {
-		sceneManager_->GetSceneIO()->Input(EngineConfig::testScene, entityComponentSystem_->GetECSGroup("Debug"));
-	} else {
+	if (!EngineConfig::isTestMode) {
 		LoadDebugScene();
 	}
 
