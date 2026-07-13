@@ -1465,12 +1465,8 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 
 	// デバッガ切断時の状態同期処理
 	if (!currentAttached && wasDebuggerAttached_) {
-		Console::Log("[Mono] Debugger disconnected. Clearing attached state in Mono and resetting domain...", LogCategory::ScriptEngine);
+		Console::Log("[Mono] Debugger disconnected. Clearing attached state in Mono.", LogCategory::ScriptEngine);
 		mono_set_is_debugger_attached(false);
-
-		// デバッガが切断されたため、安全に AppDomain をリセット（ホットリロード）して待機状態にします。
-		// これにより、次回アタッチした際にはゾンビ状態を引きずらず、「1回目のアタッチ」として正常にバインドできます。
-		HotReload();
 	}
 
 	wasDebuggerAttached_ = currentAttached;
