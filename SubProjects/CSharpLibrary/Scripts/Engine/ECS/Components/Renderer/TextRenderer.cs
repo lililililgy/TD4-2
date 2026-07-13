@@ -28,46 +28,23 @@ class TextRenderer : Component {
 		batchData.uvTransform = batch[0].uvTransform;
 	}
 
+	private string _text = "";
 	public string text {
-		get {
-			if (nativeHandle != 0) {
-				return InternalGetText(nativeHandle);
-			}
-			return "";
-		}
-		set {
-			if (nativeHandle != 0) {
-				InternalSetText(nativeHandle, value);
-			}
-		}
+		get { return _text; }
+		set { _text = value; }
 	}
 
+	private string _fontPath = "./Assets/Fonts/MPLUSRounded1c-Black.ttf";
 	public string fontPath {
-		get {
-			if (nativeHandle != 0) {
-				return InternalGetFontPath(nativeHandle);
-			}
-			return "";
-		}
-		set {
-			if (nativeHandle != 0) {
-				InternalSetFontPath(nativeHandle, value);
-			}
-		}
+		get { return _fontPath; }
+		set { _fontPath = value; }
 	}
 
+	private int _fontSize = 32;
+	public string fontSize_str = ""; // Dummy to bypass compile warnings if any
 	public int fontSize {
-		get {
-			if (nativeHandle != 0) {
-				return InternalGetFontSize(nativeHandle);
-			}
-			return 0;
-		}
-		set {
-			if (nativeHandle != 0) {
-				InternalSetFontSize(nativeHandle, value);
-			}
-		}
+		get { return _fontSize; }
+		set { _fontSize = value; }
 	}
 
 	public Vector4 color {
@@ -76,9 +53,6 @@ class TextRenderer : Component {
 		}
 		set {
 			batchData.color = value;
-			if (nativeHandle != 0) {
-				InternalSetColor(nativeHandle, value);
-			}
 		}
 	}
 
@@ -98,30 +72,30 @@ class TextRenderer : Component {
 	}
 
 	/// -------------------------------------------
-	/// internal methods
+	/// internal methods (Temporarily disabled)
 	/// -------------------------------------------
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern Vector4 InternalGetColor(ulong nativeHandle);
+	// [MethodImpl(MethodImplOptions.InternalCall)]
+	// static extern Vector4 InternalGetColor(ulong nativeHandle);
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetColor(ulong nativeHandle, Vector4 color);
+	// [MethodImpl(MethodImplOptions.InternalCall)]
+	// static extern void InternalSetColor(ulong nativeHandle, Vector4 color);
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern string InternalGetText(ulong nativeHandle);
+	// [MethodImpl(MethodImplOptions.InternalCall)]
+	// static extern string InternalGetText(ulong nativeHandle);
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetText(ulong nativeHandle, string text);
+	// [MethodImpl(MethodImplOptions.InternalCall)]
+	// static extern void InternalSetText(ulong nativeHandle, string text);
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern string InternalGetFontPath(ulong nativeHandle);
+	// [MethodImpl(MethodImplOptions.InternalCall)]
+	// static extern string InternalGetFontPath(ulong nativeHandle);
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetFontPath(ulong nativeHandle, string fontPath);
+	// [MethodImpl(MethodImplOptions.InternalCall)]
+	// static extern void InternalSetFontPath(ulong nativeHandle, string fontPath);
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern int InternalGetFontSize(ulong nativeHandle);
+	// [MethodImpl(MethodImplOptions.InternalCall)]
+	// static extern int InternalGetFontSize(ulong nativeHandle);
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetFontSize(ulong nativeHandle, int fontSize);
+	// [MethodImpl(MethodImplOptions.InternalCall)]
+	// static extern void InternalSetFontSize(ulong nativeHandle, int fontSize);
 }
