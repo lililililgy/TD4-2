@@ -199,19 +199,31 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 
 		if (std::filesystem::exists(latestDllPath) && latestDllPath != targetDllPath) {
 			try {
+				if (std::filesystem::exists(targetDllPath)) {
+					std::string tempPath = targetDllPath + ".old";
+					std::error_code ec;
+					std::filesystem::remove(tempPath, ec);
+					std::filesystem::rename(targetDllPath, tempPath, ec);
+				}
 				std::filesystem::copy_file(latestDllPath, targetDllPath, std::filesystem::copy_options::overwrite_existing);
-				Console::Log("[Mono] LoadAssembly: Copied DLL to logical path: " + targetDllPath, LogCategory::ScriptEngine);
+				Console::Log("[Mono] LoadAssembly: Copied DLL to logical path (lock avoided): " + targetDllPath, LogCategory::ScriptEngine);
 			} catch (const std::exception& e) {
-				Console::LogWarning("[Mono] LoadAssembly: Failed to copy DLL to logical path (it might be locked): " + std::string(e.what()), LogCategory::ScriptEngine);
+				Console::LogWarning("[Mono] LoadAssembly: Failed to copy DLL: " + std::string(e.what()), LogCategory::ScriptEngine);
 			}
 		}
 
 		if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
 			try {
+				if (std::filesystem::exists(targetPdbPath)) {
+					std::string tempPath = targetPdbPath + ".old";
+					std::error_code ec;
+					std::filesystem::remove(tempPath, ec);
+					std::filesystem::rename(targetPdbPath, tempPath, ec);
+				}
 				std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
-				Console::Log("[Mono] LoadAssembly: Copied PDB to logical path: " + targetPdbPath, LogCategory::ScriptEngine);
+				Console::Log("[Mono] LoadAssembly: Copied PDB to logical path (lock avoided): " + targetPdbPath, LogCategory::ScriptEngine);
 			} catch (const std::exception& e) {
-				Console::LogWarning("[Mono] LoadAssembly: Failed to copy PDB to logical path (it might be locked): " + std::string(e.what()), LogCategory::ScriptEngine);
+				Console::LogWarning("[Mono] LoadAssembly: Failed to copy PDB: " + std::string(e.what()), LogCategory::ScriptEngine);
 			}
 		}
 	}
