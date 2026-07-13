@@ -86,6 +86,21 @@ public class TextRendererTestScript : MonoScript {
 			System.Console.WriteLine("[TextRendererTest] Set spacing for text1 (charSpacing: 8, lineSpacing: 1.5)");
 		}
 
+		// 41〜47フレームの間、毎フレーム動的にカラー、文字間隔、行間隔を変更してアトラス方式の動作検証
+		if (frameCount > 40 && frameCount < 48) {
+			float greenVal = (frameCount - 40) / 10.0f;
+			textRenderer1.color = new Vector4(1.0f - greenVal, greenVal, 0.0f, 1.0f);
+			textRenderer1.characterSpacing = 8 + (frameCount - 40);
+			textRenderer1.lineSpacing = 1.5f + (frameCount - 40) * 0.05f;
+		}
+
+		if (frameCount == 48) {
+			// アサーションを通すために48フレーム目に一度元の固定値に戻す
+			textRenderer1.characterSpacing = 8;
+			textRenderer1.lineSpacing = 1.5f;
+			textRenderer1.color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		}
+
 		if (frameCount == 50) {
 			// 値の整合性チェック (TextRenderer1)
 			if (textRenderer1.text != "フチ取りテキスト！") {

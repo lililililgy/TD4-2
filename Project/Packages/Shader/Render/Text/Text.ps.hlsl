@@ -15,12 +15,22 @@ PSOutput main(VSOutput input) {
 	float2 uv = mul(float3(input.uv, 1), matUV).xy;
 	float4 baseTexColor = textures[material.baseTextureId].Sample(textureSampler, uv);
 
-	// フォントテクスチャのアルファを使用して色を乗算する
+	// フォントアトラスのR/Gチャンネルから本体アルファとフチアルファを取り出す
 	float4 outputColor;
 	if (IsPostEffectEnabled((int)material.postEffectFlags, PostEffectFlags_Shadow)) {
-		outputColor = float4(material.baseColor.rgb, baseTexColor.a * material.baseColor.a);
+		// 影パスの場合：文字全体（本体＋フチ）のアルファを抽出
+		float glyphAlpha = max(baseTexColor.r, baseTexColor.g);
+		outputColor = float4(material.baseColor.rgb, glyphAlpha * material.baseColor.a);
 	} else {
-		outputColor = baseTexColor;
+		// 通常パスの場合：本体色とフチ色を動的合成
+		float bodyAlpha = baseTexColor.r;
+		float outlineAlpha = baseTexColor.g;
+
+		float4 outline = material.outlineColor * outlineAlpha;
+		float4 body = material.baseColor * bodyAlpha;
+
+		// フチの上に本体を重ねるブレンド
+		outputColor = outline * (1.0 - bodyAlpha) + body;
 	}
 
 	if (outputColor.a < 0.01) {

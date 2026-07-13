@@ -1,19 +1,15 @@
 #include "Text.hlsli"
 
 #include "../../ConstantBufferData/ViewProjection.hlsli"
-#include "../../ConstantBufferData/Transform.hlsli"
 
 ConstantBuffer<ViewProjection> viewProjection : register(b0);
-StructuredBuffer<Transform>    transforms     : register(t0);
 
-VSOutput main(VSInput input, uint instanceId : SV_InstanceID) {
+VSOutput main(VSInput input) {
 	VSOutput output;
 
-	float4x4 matWVP = mul(transforms[instanceId].matWorld, viewProjection.matVP);
-	
-	output.position   = mul(input.position, matWVP);
+	output.position   = mul(float4(input.position, 1.0), viewProjection.matVP);
 	output.uv         = input.uv;
-	output.instanceId = instanceId;
+	output.instanceId = input.materialId;
 
 	return output;
 }

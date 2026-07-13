@@ -7,6 +7,7 @@
 #include "Engine/ECS/Entity/GameEntity/GameEntity.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/Core/Utility/Font/FontRasterizer.h"
+#include "Engine/Core/Utility/Font/FontAtlasManager.h"
 #include "Engine/Asset/Guid/Guid.h"
 
 // Monoのヘッダ
@@ -186,27 +187,211 @@ TextRenderer& TextRenderer::operator=(const TextRenderer& other) {
 	return *this;
 }
 
+namespace {
+	// UTF-8 を UTF-32 にデコードするヘルパー
+	std::vector<uint32_t> Utf8ToUtf32(const std::string& str) {
+		std::vector<uint32_t> utf32;
+		for (size_t i = 0; i < str.size();) {
+			uint32_t cp = 0;
+			unsigned char c = str[i];
+			if (c < 0x80) { cp = c; i += 1; }
+			else if ((c & 0xE0) == 0xC0) {
+				if (i + 1 >= str.size()) break;
+				cp = ((c & 0x1F) << 6) | (str[i+1] & 0x3F); i += 2;
+			}
+			else if ((c & 0xF0) == 0xE0) {
+				if (i + 2 >= str.size()) break;
+				cp = ((c & 0x0F) << 12) | ((str[i+1] & 0x3F) << 6) | (str[i+2] & 0x3F); i += 3;
+			}
+			else if ((c & 0xF8) == 0xF0) {
+				if (i + 3 >= str.size()) break;
+				cp = ((c & 0x07) << 18) | ((str[i+1] & 0x3F) << 12) | ((str[i+2] & 0x3F) << 6) | (str[i+3] & 0x3F); i += 4;
+			}
+			else { i += 1; continue; }
+			utf32.push_back(cp);
+		}
+		return utf32;
+	}
+}
+
 void TextRenderer::UpdateTextTexture() {
 	if (!isDirty_) return;
 
 	if (text_.empty()) {
+		vertices_.clear();
+		textBounds_ = Vector2(0.0f, 0.0f);
 		isDirty_ = false;
 		return;
 	}
 
-	// フォント画像を作成
-	if (FontRasterizer::GenerateTexture(text_, fontPath_, fontSize_, dynamicTexturePath_, horizontalAlignment_, material_.baseColor, outlineColor_, outlineWidth_, characterSpacing_, lineSpacing_)) {
+	FontAtlas* atlas = FontAtlasManager::GetInstance().GetOrCreateAtlas(fontPath_, fontSize_, outlineWidth_);
+	if (atlas) {
+		atlas->UpdateGpuTexture();
 		auto* assetCollection = Asset::AssetCollection::GetInstance();
-		auto* texture = assetCollection->GetTexture(dynamicTexturePath_);
+		auto* texture = assetCollection->GetTexture(atlas->GetTexturePath());
 		if (texture) {
 			material_.SetBaseTextureGuid(texture->guid);
 		}
 	}
+
+	AssembleVertices();
 	isDirty_ = false;
+}
+
+void TextRenderer::AssembleVertices() {
+	vertices_.clear();
+
+	FontAtlas* atlas = FontAtlasManager::GetInstance().GetOrCreateAtlas(fontPath_, fontSize_, outlineWidth_);
+	if (!atlas) {
+		textBounds_ = Vector2(0.0f, 0.0f);
+		return;
+	}
+
+	std::vector<uint32_t> utf32Text = Utf8ToUtf32(text_);
+	if (utf32Text.empty()) {
+		textBounds_ = Vector2(0.0f, 0.0f);
+		return;
+	}
+
+	// 1. 各行の幅とグリフのレイアウトを事前計算
+	int ascent, descent, lineGap;
+	atlas->GetFontVMetrics(&ascent, &descent, &lineGap);
+	float scale = atlas->GetScale();
+	float rowHeight = (ascent - descent + lineGap) * scale * lineSpacing_;
+
+	struct LineInfo {
+		int startGlyphIdx;
+		int glyphCount;
+		float width;
+	};
+	std::vector<LineInfo> lines;
+	
+	std::vector<const GlyphData*> glyphs;
+	glyphs.reserve(utf32Text.size());
+
+	float currentX = 0.0f;
+	int lineStartIdx = 0;
+
+	for (size_t i = 0; i < utf32Text.size(); ++i) {
+		uint32_t cp = utf32Text[i];
+		if (cp == '\n') {
+			LineInfo li;
+			li.startGlyphIdx = lineStartIdx;
+			li.glyphCount = static_cast<int>(glyphs.size()) - lineStartIdx;
+			li.width = currentX;
+			lines.push_back(li);
+
+			currentX = 0.0f;
+			lineStartIdx = static_cast<int>(glyphs.size());
+			continue;
+		}
+
+		const GlyphData* glyph = atlas->GetGlyph(cp);
+		if (glyph) {
+			glyphs.push_back(glyph);
+			currentX += glyph->advance;
+			
+			// 次の文字があり、それが改行でなければ文字間隔を加える
+			if (i + 1 < utf32Text.size() && utf32Text[i + 1] != '\n') {
+				currentX += characterSpacing_;
+			}
+		}
+	}
+	// 最終行の追加
+	LineInfo li;
+	li.startGlyphIdx = lineStartIdx;
+	li.glyphCount = static_cast<int>(glyphs.size()) - lineStartIdx;
+	li.width = currentX;
+	lines.push_back(li);
+
+	// 全体の幅と高さ（ピクセル単位）を計算してキャッシュ
+	float maxLineWidth = 0.0f;
+	for (const auto& line : lines) {
+		maxLineWidth = (std::max)(maxLineWidth, line.width);
+	}
+	float totalHeight = lines.size() * rowHeight;
+	textBounds_ = Vector2(maxLineWidth, totalHeight);
+
+	// 2. 頂点データのアセンブル (1ピクセル = 0.002 ワールド単位)
+	float unitScale = 0.002f;
+
+	for (size_t lineIdx = 0; lineIdx < lines.size(); ++lineIdx) {
+		const auto& line = lines[lineIdx];
+		if (line.glyphCount == 0) continue;
+
+		// アライメントに応じたXの開始オフセット
+		float startX = 0.0f;
+		if (horizontalAlignment_ == HorizontalAlignment::Center) {
+			startX = -line.width * 0.5f;
+		} else if (horizontalAlignment_ == HorizontalAlignment::Right) {
+			startX = -line.width;
+		}
+
+		// アライメントに応じたYの開始オフセット
+		float startY = 0.0f;
+		if (verticalAlignment_ == VerticalAlignment::Top) {
+			startY = 0.0f;
+		} else if (verticalAlignment_ == VerticalAlignment::Middle) {
+			startY = totalHeight * 0.5f;
+		} else if (verticalAlignment_ == VerticalAlignment::Bottom) {
+			startY = totalHeight;
+		}
+
+		// 行のY座標 (上方向がプラスなので、行を下に進むほどマイナス)
+		float currentLineY = startY - (lineIdx * rowHeight);
+
+		float cursorX = startX;
+
+		for (int gIdx = 0; gIdx < line.glyphCount; ++gIdx) {
+			const GlyphData* glyph = glyphs[line.startGlyphIdx + gIdx];
+
+			// 文字の Quad 座標 (ワールド空間へのスケーリング適用前)
+			float x0 = cursorX + glyph->bearing.x;
+			float x1 = x0 + glyph->size.x;
+			float y0 = currentLineY - glyph->bearing.y;
+			float y1 = y0 - glyph->size.y; // 下方向へ延びる
+
+			// 1ピクセル＝0.002f としてワールド空間にスケール変換
+			x0 *= unitScale;
+			x1 *= unitScale;
+			y0 *= unitScale;
+			y1 *= unitScale;
+
+			// UV 座標
+			Vector2 uvLT = glyph->uvMin;
+			Vector2 uvRB = glyph->uvMax;
+			Vector2 uvRT = Vector2(uvRB.x, uvLT.y);
+			Vector2 uvLB = Vector2(uvLT.x, uvRB.y);
+
+			// 6つの頂点を時計回り(CullMode: Back)でトライアングルリストとして格納
+			// Tri 1: LT (0), RT (1), LB (2)
+			TextVertex v0{ Vector3(x0, y0, 0.0f), uvLT };
+			TextVertex v1{ Vector3(x1, y0, 0.0f), uvRT };
+			TextVertex v2{ Vector3(x0, y1, 0.0f), uvLB };
+
+			// Tri 2: RT (1), RB (3), LB (2)
+			TextVertex v3{ Vector3(x1, y1, 0.0f), uvRB };
+
+			vertices_.push_back(v0);
+			vertices_.push_back(v1);
+			vertices_.push_back(v2);
+
+			vertices_.push_back(v1);
+			vertices_.push_back(v3);
+			vertices_.push_back(v2);
+
+			// カーソルを次の文字へ
+			cursorX += glyph->advance;
+			if (gIdx + 1 < line.glyphCount) {
+				cursorX += characterSpacing_;
+			}
+		}
+	}
 }
 
 void TextRenderer::RenderingSetup(Asset::AssetCollection* assetCollection) {
 	gpuMaterial_.baseColor = material_.baseColor;
+	gpuMaterial_.outlineColor = outlineColor_;
 	gpuMaterial_.postEffectFlags = material_.postEffectFlags;
 
 	if (material_.HasBaseTexture() && material_.GetBaseTextureGuid().CheckValid()) {
@@ -308,14 +493,8 @@ const Vector4& TextRenderer::GetColor() const {
 	return material_.baseColor;
 }
 
-Vector2 TextRenderer::GetTextureSize(Asset::AssetCollection* assetCollection) const {
-	if (material_.HasBaseTexture()) {
-		Asset::Texture* texture = assetCollection->GetTextureFromGuid(material_.GetBaseTextureGuid());
-		if (texture) {
-			return texture->GetTextureSize();
-		}
-	}
-	return Vector2(0.0f, 0.0f);
+Vector2 TextRenderer::GetTextureSize(Asset::AssetCollection* /*assetCollection*/) const {
+	return textBounds_;
 }
 
 /// ===================================================

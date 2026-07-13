@@ -75,6 +75,12 @@ public:
 	/// @brief 内部テクスチャの更新処理
 	void UpdateTextTexture();
 
+struct TextVertex {
+	Vector3 position;
+	Vector2 uv;
+	uint32_t materialId = 0;
+};
+
 private:
 	GPUMaterial gpuMaterial_;
 	Asset::Material material_;
@@ -94,6 +100,8 @@ private:
 
 	std::string dynamicTexturePath_ = "";
 	bool isDirty_ = true;
+	std::vector<TextVertex> vertices_;
+	Vector2 textBounds_ = Vector2(0.0f, 0.0f);
 
 public:
 	/// ----- setters ----- ///
@@ -110,6 +118,8 @@ public:
 	void SetShadowOffset(const Vector2& offset);
 	void SetCharacterSpacing(int spacing);
 	void SetLineSpacing(float spacing);
+
+	void AssembleVertices();
 
 	/// ----- getters ----- ///
 	const std::string& GetText() const { return text_; }
@@ -128,6 +138,7 @@ public:
 	const Vector2& GetShadowOffset() const { return shadowOffset_; }
 	int GetCharacterSpacing() const { return characterSpacing_; }
 	float GetLineSpacing() const { return lineSpacing_; }
+	const std::vector<TextVertex>& GetVertices() const { return vertices_; }
 };
 
 /// C#用

@@ -23,15 +23,15 @@ namespace ONEngine {
 class TextRenderingPipeline final : public IRenderingPipeline {
 public:
 	struct VertexData {
-		Vector4 position;
+		Vector3 position;
 		Vector2 uv;
+		uint32_t materialId;
 	};
 
 	enum ROOT_PARAM {
 		ROOT_PARAM_VIEW_PROJECTION,
 		ROOT_PARAM_MATERIAL,
 		ROOT_PARAM_TEXTURES,
-		ROOT_PARAM_TRANSFORM,
 	};
 
 public:
@@ -48,18 +48,13 @@ private:
 
 	const size_t kMaxRenderingTextCount_ = 1024;
 	std::unordered_map<std::string, std::unique_ptr<StructuredBuffer<GPUMaterial>>> materialsBuffers_;
-	std::unordered_map<std::string, std::unique_ptr<StructuredBuffer<Matrix4x4>>>   transformsBuffers_;
 
 	StructuredBuffer<GPUMaterial>* GetOrCreateMaterialsBuffer(const std::string& groupName);
-	StructuredBuffer<Matrix4x4>* GetOrCreateTransformsBuffer(const std::string& groupName);
 
-	std::vector<VertexData>           vertices_;
 	DxResource                        vertexBuffer_;
 	D3D12_VERTEX_BUFFER_VIEW          vbv_;
-
-	std::vector<uint32_t>             indices_;
-	DxResource                        indexBuffer_;
-	D3D12_INDEX_BUFFER_VIEW           ibv_;
+	VertexData*                       mappingData_ = nullptr;
+	size_t                            maxVertexNum_ = 0;
 };
 
 } // namespace ONEngine

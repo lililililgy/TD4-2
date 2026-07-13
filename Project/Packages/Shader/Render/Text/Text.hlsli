@@ -1,6 +1,7 @@
 struct VSInput {
-	float4 position   : POSITION0;
+	float3 position   : POSITION0;
 	float2 uv         : TEXCOORD0;
+	uint   materialId : MATERIAL_ID0;
 };
 
 struct VSOutput {
