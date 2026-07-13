@@ -249,6 +249,8 @@
     <Compile Include="Scripts\Test\ColliderTest1.cs" />
     <Compile Include="Scripts\Test\ColliderTest2.cs" />
     <Compile Include="Scripts\Test\EngineLaunchTest.cs" />
+    <Compile Include="Scripts\Test\HotReloadAssetAddTestScript.cs" />
+    <Compile Include="Scripts\Test\HotReloadTestScript.cs" />
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
     <Compile Include="Scripts\Test\SpriteRendererCrashTest.cs" />

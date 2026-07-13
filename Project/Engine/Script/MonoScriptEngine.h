@@ -3,6 +3,7 @@
 /// std
 #include <string>
 #include <optional>
+#include <vector>
 
 /// externals
 #include <jit/jit.h>
@@ -59,6 +60,13 @@ public:
 
 	/// CSのHotReloadを行う
 	void HotReload();
+
+	/// ドメインの再ロードバージョンカウンタを取得
+	int32_t GetDomainReloadCounter() const { return domainReloadCounter_; }
+
+	/// ホットリロード実行中（コピー中など）フラグを取得
+	bool IsReloading() const { return isReloading_; }
+	void SetIsReloading(bool reloading) { isReloading_ = reloading; }
 
 	/// C#のログ無視設定を同期・適用
 	void ApplyCSharpLogSetting();
@@ -182,6 +190,22 @@ public:
 
 	void SetIsHotReloadRequest(bool request);
 	bool GetIsHotReloadRequest() const;
+
+	/// デバッガ接続状態の監視と自動リロード
+	void UpdateDebuggerStatus();
+
+	bool GetShowAttachedPopup() const { return showAttachedPopup_; }
+	bool IsDebuggerSyncSuccess() const { return isDebuggerSyncSuccess_; }
+	void ClearShowAttachedPopup() { showAttachedPopup_ = false; }
+
+private:
+	std::vector<char> activePdbBuffer_;
+	std::vector<std::vector<char>> pendingPdbBuffers_;
+	bool wasDebuggerAttached_ = false;
+	bool showAttachedPopup_ = false;
+	bool isDebuggerSyncSuccess_ = false;
+	int debuggerAttachFrameCounter_ = 0;
+	bool isReloading_ = false;
 
 };
 

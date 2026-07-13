@@ -22,6 +22,7 @@ ScriptUpdateSystem::ScriptUpdateSystem(ECSGroup* ecs) {
 	ecsGroupName_ = ecs->GetGroupName();
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 	MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+	lastReloadCounter_ = monoEngine.GetDomainReloadCounter();
 }
 
 ScriptUpdateSystem::~ScriptUpdateSystem() {
@@ -32,8 +33,11 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	/// ----- HotReloadをしたときにC#側がリセットされるのでスクリプトを追加し直す----- ///
 
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+	int32_t currentReloadCounter = monoEngine.GetDomainReloadCounter();
 
-	if(monoEngine.GetIsHotReloadRequest()) {
+	if (currentReloadCounter != lastReloadCounter_) {
+		Console::Log("[MonoDbg] ScriptUpdateSystem::OutsideOfRuntimeUpdate - Reload detected! Syncing C# bindings. (Counter: " +
+			std::to_string(lastReloadCounter_) + " -> " + std::to_string(currentReloadCounter) + ")", LogCategory::ScriptEngine);
 		// 古いドメインのハンドルを解放
 		ReleaseGCHandle();
 
@@ -42,28 +46,29 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 
 		/// C#側のECSGroupを取得、更新関数を呼ぶ
 		ComponentArray<Script>* scriptArray = ecs->GetComponentArray<Script>();
-		if(!scriptArray || scriptArray->GetUsedComponents().empty()) {
-			return;
-		}
-
-		for(auto& script : scriptArray->GetUsedComponents()) {
-			script->SetIsAdded(false);
-			for(auto& data : script->GetScriptDataList()) {
-				data.isAdded = false;
-				data.collisionEventMethods.fill(nullptr);
-				data.collisionEventMethods2D.fill(nullptr);
+		if (scriptArray && !scriptArray->GetUsedComponents().empty()) {
+			for (auto& script : scriptArray->GetUsedComponents()) {
+				script->SetIsAdded(false);
+				for (auto& data : script->GetScriptDataList()) {
+					data.isAdded = false;
+					data.collisionEventMethods.fill(nullptr);
+					data.collisionEventMethods2D.fill(nullptr);
+				}
 			}
 		}
 
 		ComponentArray<AnimationPlayer>* animPlayerArray = ecs->GetComponentArray<AnimationPlayer>();
-		if(animPlayerArray) {
-			for(auto& animPlayer : animPlayerArray->GetUsedComponents()) {
+		if (animPlayerArray) {
+			for (auto& animPlayer : animPlayerArray->GetUsedComponents()) {
 				animPlayer->ClearBindings();
 			}
 		}
 
 		ReleaseGCHandle();
 		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+		monoEngine.SyncInitialComponentsToCS(ecs);
+
+		lastReloadCounter_ = currentReloadCounter;
 	}
 }
 
@@ -71,6 +76,45 @@ void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 #ifdef DEBUG_MODE
 	CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::CSharpScriptUpdate);
 #endif // DEBUG_MODE
+
+	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+	int32_t currentReloadCounter = monoEngine.GetDomainReloadCounter();
+
+	if (currentReloadCounter != lastReloadCounter_) {
+		Console::Log("[MonoDbg] ScriptUpdateSystem::RuntimeUpdate - Reload detected! Syncing C# bindings. (Counter: " +
+			std::to_string(lastReloadCounter_) + " -> " + std::to_string(currentReloadCounter) + ")", LogCategory::ScriptEngine);
+		// 古いドメインのハンドルを解放
+		ReleaseGCHandle();
+
+		// 新しいドメインで再初期化
+		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+
+		/// C#側のECSGroupを取得、更新関数を呼ぶ
+		ComponentArray<Script>* scriptArray = ecs->GetComponentArray<Script>();
+		if (scriptArray && !scriptArray->GetUsedComponents().empty()) {
+			for (auto& script : scriptArray->GetUsedComponents()) {
+				script->SetIsAdded(false);
+				for (auto& data : script->GetScriptDataList()) {
+					data.isAdded = false;
+					data.collisionEventMethods.fill(nullptr);
+					data.collisionEventMethods2D.fill(nullptr);
+				}
+			}
+		}
+
+		ComponentArray<AnimationPlayer>* animPlayerArray = ecs->GetComponentArray<AnimationPlayer>();
+		if (animPlayerArray) {
+			for (auto& animPlayer : animPlayerArray->GetUsedComponents()) {
+				animPlayer->ClearBindings();
+			}
+		}
+
+		ReleaseGCHandle();
+		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+		monoEngine.SyncInitialComponentsToCS(ecs);
+
+		lastReloadCounter_ = currentReloadCounter;
+	}
 
 	/// C#側に未追加にエンティティとコンポーネントを追加する
 	AddAllEntitiesAndComponents(ecs);
@@ -144,7 +188,7 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 			MonoClass* behaviorClass = mono_class_from_name(monoEngine.Image(), "", data.scriptName.c_str());
 			if(!behaviorClass) {
-				Console::LogError("Failed to find MonoBehavior class");
+				Console::LogError("[MonoDbg] Failed to find MonoBehavior class: " + data.scriptName);
 				continue;
 			}
 
@@ -155,6 +199,8 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 				continue;
 			}
 
+			Console::Log("[MonoDbg] AddEntityToScript - Instantiating and adding script: " + data.scriptName + " to Entity ID: " + std::to_string(entityId), LogCategory::ScriptEngine);
+
 			void* addScriptArgs[3];
 			addScriptArgs[0] = &entityId;
 			addScriptArgs[1] = scriptInstance;
@@ -164,11 +210,13 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			MonoScriptEngineUtils::SafeInvoke(addScriptMethod_, ecsGroupObj, addScriptArgs, &exc);
 
 			if(exc) {
+				Console::LogError("[MonoDbg] Exception thrown while adding script: " + data.scriptName, LogCategory::ScriptEngine);
 				MonoScriptEngineUtils::HandleException(exc);
 			}
 
 			/// variablesの設定
 			if(vars) {
+				Console::Log("[MonoDbg] AddEntityToScript - Syncing serialized fields for script: " + data.scriptName, LogCategory::ScriptEngine);
 				vars->SetScriptVariables(data.scriptName);
 			}
 

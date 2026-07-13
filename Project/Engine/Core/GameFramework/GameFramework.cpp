@@ -180,6 +180,11 @@ void GameFramework::Update() {
 	Input::Update();
 	Time::Update();
 
+#ifdef DEBUG_MODE
+	// デバッガ再接続時の自動同期をトリガー
+	MonoScriptEngine::GetInstance().UpdateDebuggerStatus();
+#endif
+
 	if (EngineConfig::isTestMode) {
 		static int testFrameCount = 0;
 		testFrameCount++;
