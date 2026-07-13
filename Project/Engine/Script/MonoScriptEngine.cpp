@@ -447,8 +447,8 @@ void MonoScriptEngine::Initialize() {
 #endif
 
 	/// ログ出力(任意、デバッグ時だけでもOK)
-	mono_trace_set_level_string("info");
-	mono_trace_set_log_handler(LogCallback, nullptr);
+	// mono_trace_set_level_string("info");
+	// mono_trace_set_log_handler(LogCallback, nullptr);
 
 	/// versionの出力
 	Console::Log("Mono version: " + std::string(mono_get_runtime_build_info()), LogCategory::ScriptEngine);
