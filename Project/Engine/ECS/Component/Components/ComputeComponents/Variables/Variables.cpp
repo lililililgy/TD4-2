@@ -49,6 +49,11 @@ namespace {
 	}
 
 	bool HasSerializeField(MonoClassField* field) {
+		const char* fieldName = mono_field_get_name(field);
+		if (fieldName && (fieldName[0] == '<' || strstr(fieldName, "k__BackingField"))) {
+			return false;
+		}
+
 		MonoClass* klass = mono_field_get_parent(field);
 		MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
 		if (!attrs) {

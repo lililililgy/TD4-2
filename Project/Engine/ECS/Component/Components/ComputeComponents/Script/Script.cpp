@@ -236,9 +236,11 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 				while (currentClass) {
 					MonoClassField* field = nullptr;
 					void* iter = nullptr;
-
 					while((field = mono_class_get_fields(currentClass, &iter))) {
 						const char* fieldName = mono_field_get_name(field);
+						if (fieldName && (fieldName[0] == '<' || strstr(fieldName, "k__BackingField"))) {
+							continue;
+						}
 
 						MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(currentClass, field);
 						bool hasAttr = false;
@@ -248,6 +250,7 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 							} else if (serializeFieldClassEngine && mono_custom_attrs_has_attr(attrs, serializeFieldClassEngine)) {
 								hasAttr = true;
 							}
+							mono_custom_attrs_free(attrs);
 						}
 
 						if(hasAttr) {
