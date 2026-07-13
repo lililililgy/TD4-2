@@ -96,6 +96,20 @@ void TextRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager
 	}
 }
 
+void TextRenderingPipeline::PreDraw(ECSGroup* ecsGroup, CameraComponent* camera, DxCommand* dxCommand) {
+	ComponentArray<TextRenderer>* textRendererArray = ecsGroup->GetComponentArray<TextRenderer>();
+	if (!textRendererArray || textRendererArray->GetUsedComponents().empty()) {
+		return;
+	}
+
+	for (auto& tr : textRendererArray->GetUsedComponents()) {
+		if (!CheckComponentEnable(tr)) {
+			continue;
+		}
+		tr->RenderingSetup(pAssetCollection_);
+	}
+}
+
 void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, DxCommand* dxCommand) {
 	if (!pDxManager_) {
 		pDxManager_ = DxManager::GetInstance();
@@ -125,8 +139,6 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 		}
 
 		if (GameEntity* owner = tr->GetOwner()) {
-			tr->RenderingSetup(pAssetCollection_);
-
 			Matrix4x4 matWorld = owner->GetTransform()->GetMatWorld();
 
 			// アスペクト比の設定
@@ -168,9 +180,6 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 	if (transformIndex == 0) {
 		return;
 	}
-
-	// テクスチャの動的生成によりコマンドリストがリセットされた可能性があるためヒープを再バインドする
-	pDxManager_->HeapBindToCommandList();
 
 	auto cmdList = dxCommand->GetCommandList();
 	pipeline_->SetPipelineStateForCommandList(dxCommand);

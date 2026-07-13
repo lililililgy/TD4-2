@@ -39,6 +39,7 @@ public:
 	~TextRenderingPipeline() override;
 
 	void Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) override;
+	void PreDraw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
 	void Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) override;
 
 private:
