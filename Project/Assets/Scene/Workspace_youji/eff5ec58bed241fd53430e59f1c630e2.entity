@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 140.69998168945313,
                 "z": 0.0
             },
             "rotate": {
@@ -46,14 +46,14 @@
                 "z": 0.0
             },
             "enable": 1,
-            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontPath": "./Assets/Fonts/MPLUSRounded1c-Black.ttf",
             "fontSize": 256,
-            "text": "シンカイ ノ ダイオウ ニ ナッタ",
+            "text": "text rendering pipeline test",
             "type": "TextRenderer"
         }
     ],
-    "guid": "bf0c252395b6840cfed59ce900c910a7",
-    "name": "NewEntity",
+    "guid": "eff5ec58bed241fd53430e59f1c630e2",
+    "name": "NewEntity_1",
     "parentGuid": null,
     "prefabName": ""
 }

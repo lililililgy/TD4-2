@@ -216,6 +216,18 @@ void ONEngine::AddComponentInternalCalls() {
 	mono_add_internal_call("TextRenderer::InternalSetFontPath", (void*)InternalSetTextFontPath);
 	mono_add_internal_call("TextRenderer::InternalGetFontSize", (void*)InternalGetTextFontSize);
 	mono_add_internal_call("TextRenderer::InternalSetFontSize", (void*)InternalSetTextFontSize);
+	mono_add_internal_call("TextRenderer::InternalGetHorizontalAlignment", (void*)InternalGetHorizontalAlignment);
+	mono_add_internal_call("TextRenderer::InternalSetHorizontalAlignment", (void*)InternalSetHorizontalAlignment);
+	mono_add_internal_call("TextRenderer::InternalGetVerticalAlignment", (void*)InternalGetVerticalAlignment);
+	mono_add_internal_call("TextRenderer::InternalSetVerticalAlignment", (void*)InternalSetVerticalAlignment);
+	mono_add_internal_call("TextRenderer::InternalGetOutlineColor", (void*)InternalGetOutlineColor);
+	mono_add_internal_call("TextRenderer::InternalSetOutlineColor", (void*)InternalSetOutlineColor);
+	mono_add_internal_call("TextRenderer::InternalGetOutlineWidth", (void*)InternalGetOutlineWidth);
+	mono_add_internal_call("TextRenderer::InternalSetOutlineWidth", (void*)InternalSetOutlineWidth);
+	mono_add_internal_call("TextRenderer::InternalGetShadowColor", (void*)InternalGetShadowColor);
+	mono_add_internal_call("TextRenderer::InternalSetShadowColor", (void*)InternalSetShadowColor);
+	mono_add_internal_call("TextRenderer::InternalGetShadowOffset", (void*)InternalGetShadowOffset);
+	mono_add_internal_call("TextRenderer::InternalSetShadowOffset", (void*)InternalSetShadowOffset);
 
 	/// font rasterizer
 	mono_add_internal_call("FontRasterizer::Internal_GenerateTexture", (void*)InternalGenerateFontTexture);

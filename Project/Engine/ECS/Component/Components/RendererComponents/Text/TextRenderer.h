@@ -20,6 +20,19 @@ typedef struct _MonoString MonoString;
 }
 
 namespace ONEngine {
+
+enum class HorizontalAlignment {
+	Left = 0,
+	Center = 1,
+	Right = 2
+};
+
+enum class VerticalAlignment {
+	Top = 0,
+	Middle = 1,
+	Bottom = 2
+};
+
 class TextRenderer;
 }
 
@@ -67,6 +80,13 @@ private:
 	std::string fontPath_ = "./Assets/Fonts/MPLUSRounded1c-Black.ttf";
 	int fontSize_ = 32;
 
+	HorizontalAlignment horizontalAlignment_ = HorizontalAlignment::Left;
+	VerticalAlignment verticalAlignment_ = VerticalAlignment::Top;
+	Vector4 outlineColor_ = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+	int outlineWidth_ = 0;
+	Vector4 shadowColor_ = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+	Vector2 shadowOffset_ = Vector2(2.0f, -2.0f);
+
 	std::string dynamicTexturePath_ = "";
 	bool isDirty_ = true;
 
@@ -77,6 +97,12 @@ public:
 	void SetFontSize(int size);
 	void SetColor(const Vector4& color);
 	void SetUVTransform(const UVTransform& uvTransform);
+	void SetHorizontalAlignment(HorizontalAlignment alignment);
+	void SetVerticalAlignment(VerticalAlignment alignment);
+	void SetOutlineColor(const Vector4& color);
+	void SetOutlineWidth(int width);
+	void SetShadowColor(const Vector4& color);
+	void SetShadowOffset(const Vector2& offset);
 
 	/// ----- getters ----- ///
 	const std::string& GetText() const { return text_; }
@@ -87,6 +113,12 @@ public:
 	const UVTransform& GetUVTransform() const { return material_.uvTransform; }
 	Vector2 GetTextureSize(Asset::AssetCollection* assetCollection) const;
 	Asset::Material& GetMaterialForAnimation() { return material_; }
+	HorizontalAlignment GetHorizontalAlignment() const { return horizontalAlignment_; }
+	VerticalAlignment GetVerticalAlignment() const { return verticalAlignment_; }
+	const Vector4& GetOutlineColor() const { return outlineColor_; }
+	int GetOutlineWidth() const { return outlineWidth_; }
+	const Vector4& GetShadowColor() const { return shadowColor_; }
+	const Vector2& GetShadowOffset() const { return shadowOffset_; }
 };
 
 /// C#用
@@ -102,6 +134,24 @@ namespace MonoInternalMethods {
 
 	int InternalGetTextFontSize(uint64_t nativeHandle);
 	void InternalSetTextFontSize(uint64_t nativeHandle, int fontSize);
+
+	int InternalGetHorizontalAlignment(uint64_t nativeHandle);
+	void InternalSetHorizontalAlignment(uint64_t nativeHandle, int alignment);
+
+	int InternalGetVerticalAlignment(uint64_t nativeHandle);
+	void InternalSetVerticalAlignment(uint64_t nativeHandle, int alignment);
+
+	Vector4 InternalGetOutlineColor(uint64_t nativeHandle);
+	void InternalSetOutlineColor(uint64_t nativeHandle, Vector4 color);
+
+	int InternalGetOutlineWidth(uint64_t nativeHandle);
+	void InternalSetOutlineWidth(uint64_t nativeHandle, int width);
+
+	Vector4 InternalGetShadowColor(uint64_t nativeHandle);
+	void InternalSetShadowColor(uint64_t nativeHandle, Vector4 color);
+
+	Vector2 InternalGetShadowOffset(uint64_t nativeHandle);
+	void InternalSetShadowOffset(uint64_t nativeHandle, Vector2 offset);
 }
 
 } // namespace ONEngine

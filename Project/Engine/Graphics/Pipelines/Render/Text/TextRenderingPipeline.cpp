@@ -11,6 +11,7 @@ using namespace ONEngine;
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
 #include "Engine/Core/DirectX12/GPUTimeStamp/GPUTimeStamp.h"
+#include "Engine/Core/Utility/Tools/Gizmo.h"
 
 TextRenderingPipeline::TextRenderingPipeline(Asset::AssetCollection* assetCollection)
 	: pAssetCollection_(assetCollection) {
@@ -129,9 +130,10 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 		TextRenderer* renderer;
 		float z;
 		Matrix4x4 matWorld;
+		GPUMaterial gpuMaterial;
 	};
 	std::vector<RenderingData> renderingDataList;
-	renderingDataList.reserve(textRendererArray->GetUsedComponents().size());
+	renderingDataList.reserve(textRendererArray->GetUsedComponents().size() * 2); // 影があるため最大2倍
 
 	for (auto& tr : textRendererArray->GetUsedComponents()) {
 		if (!CheckComponentEnable(tr) || tr->GetText().empty()) {
@@ -141,23 +143,58 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 		if (GameEntity* owner = tr->GetOwner()) {
 			Matrix4x4 matWorld = owner->GetTransform()->GetMatWorld();
 
-			// アスペクト比の設定
+			// アスペクト比とアライメントPivotオフセットの適用
 			Vector2 texSize = tr->GetTextureSize(pAssetCollection_);
 			if (texSize.x > 0.0f && texSize.y > 0.0f) {
 				float aspect = texSize.x / texSize.y;
-				matWorld.m[0][0] *= aspect;
-				matWorld.m[0][1] *= aspect;
-				matWorld.m[0][2] *= aspect;
+
+				// 1. Pivotのオフセット計算
+				float pivotX = 0.0f;
+				if (tr->GetHorizontalAlignment() == HorizontalAlignment::Left) pivotX = 0.5f;
+				else if (tr->GetHorizontalAlignment() == HorizontalAlignment::Right) pivotX = -0.5f;
+
+				float pivotY = 0.0f;
+				if (tr->GetVerticalAlignment() == VerticalAlignment::Top) pivotY = -0.5f;
+				else if (tr->GetVerticalAlignment() == VerticalAlignment::Bottom) pivotY = 0.5f;
+
+				// 2. ローカルスケールとPivot平行移動を行列の左側から合成
+				Matrix4x4 matLocalScale = Matrix4x4::MakeScale(Vector3(aspect, 1.0f, 1.0f));
+				Matrix4x4 matLocalPivot = Matrix4x4::MakeTranslate(Vector3(pivotX * aspect, pivotY, 0.0f));
+
+				matWorld = (matLocalPivot * matLocalScale) * matWorld;
 			}
 
+			// ドロップシャドウが有効な場合、影用の描画データ（1パス目）を先に追加
+			if (tr->GetShadowColor().w > 0.0f) {
+				GPUMaterial shadowMat = tr->GetGpuMaterial();
+				shadowMat.baseColor = tr->GetShadowColor();
+
+				// 1ピクセル = ワールド座標 0.002 単位として換算
+				float shadowScale = 0.002f;
+				Vector2 shadowOffset = tr->GetShadowOffset() * shadowScale;
+
+				Matrix4x4 matShadowTranslate = Matrix4x4::MakeTranslate(Vector3(shadowOffset.x, shadowOffset.y, 0.0f));
+				Matrix4x4 matWorldShadow = matShadowTranslate * matWorld;
+
+				renderingDataList.push_back({
+					tr,
+					owner->GetPosition().z + 0.001f, // Zファイティング防止のためわずかに奥に配置
+					matWorldShadow,
+					shadowMat
+				});
+			}
+
+			// 本体（2パス目）の描画データを追加
 			renderingDataList.push_back({
 				tr,
 				owner->GetPosition().z,
-				matWorld
+				matWorld,
+				tr->GetGpuMaterial()
 			});
 		}
 	}
 
+	// Z順でソート（奥から順に手前に描画）
 	std::sort(renderingDataList.begin(), renderingDataList.end(), [](const RenderingData& a, const RenderingData& b) {
 		return a.z > b.z;
 	});
@@ -172,9 +209,55 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 
 	size_t transformIndex = 0;
 	for (const auto& data : renderingDataList) {
-		materialsBuffer->SetMappedData(transformIndex, data.renderer->GetGpuMaterial());
+		materialsBuffer->SetMappedData(transformIndex, data.gpuMaterial);
 		transformsBuffer->SetMappedData(transformIndex, data.matWorld);
 		++transformIndex;
+	}
+
+	// ギズモの描画 (境界ボックスとアンカー表示)
+	for (auto& tr : textRendererArray->GetUsedComponents()) {
+		if (!CheckComponentEnable(tr) || tr->GetText().empty()) {
+			continue;
+		}
+
+		if (GameEntity* owner = tr->GetOwner()) {
+			Vector2 texSize = tr->GetTextureSize(pAssetCollection_);
+			if (texSize.x <= 0.0f || texSize.y <= 0.0f) continue;
+
+			float aspect = texSize.x / texSize.y;
+
+			float pivotX = 0.0f;
+			if (tr->GetHorizontalAlignment() == HorizontalAlignment::Left) pivotX = 0.5f;
+			else if (tr->GetHorizontalAlignment() == HorizontalAlignment::Right) pivotX = -0.5f;
+
+			float pivotY = 0.0f;
+			if (tr->GetVerticalAlignment() == VerticalAlignment::Top) pivotY = -0.5f;
+			else if (tr->GetVerticalAlignment() == VerticalAlignment::Bottom) pivotY = 0.5f;
+
+			Vector3 p0 = { -0.5f * aspect + pivotX * aspect, -0.5f + pivotY, 0.0f };
+			Vector3 p1 = {  0.5f * aspect + pivotX * aspect, -0.5f + pivotY, 0.0f };
+			Vector3 p2 = {  0.5f * aspect + pivotX * aspect,  0.5f + pivotY, 0.0f };
+			Vector3 p3 = { -0.5f * aspect + pivotX * aspect,  0.5f + pivotY, 0.0f };
+
+			Matrix4x4 matWorld = owner->GetTransform()->GetMatWorld();
+			Vector3 wp0 = Matrix4x4::Transform(p0, matWorld);
+			Vector3 wp1 = Matrix4x4::Transform(p1, matWorld);
+			Vector3 wp2 = Matrix4x4::Transform(p2, matWorld);
+			Vector3 wp3 = Matrix4x4::Transform(p3, matWorld);
+
+			// 黄緑色のワイヤーフレーム境界ボックスを描画
+			Vector4 boxColor = { 0.5f, 1.0f, 0.0f, 1.0f };
+			Gizmo::DrawLine(wp0, wp1, boxColor);
+			Gizmo::DrawLine(wp1, wp2, boxColor);
+			Gizmo::DrawLine(wp2, wp3, boxColor);
+			Gizmo::DrawLine(wp3, wp0, boxColor);
+
+			// 赤い基準点アンカー十字を描画
+			Vector3 origin = owner->GetTransform()->GetPosition();
+			float markSize = 0.1f;
+			Gizmo::DrawLine(origin - Vector3(markSize, 0.0f, 0.0f), origin + Vector3(markSize, 0.0f, 0.0f), { 1.0f, 0.0f, 0.0f, 1.0f });
+			Gizmo::DrawLine(origin - Vector3(0.0f, markSize, 0.0f), origin + Vector3(0.0f, markSize, 0.0f), { 1.0f, 0.0f, 0.0f, 1.0f });
+		}
 	}
 
 	if (transformIndex == 0) {

@@ -45,6 +45,36 @@ void ComponentDebug::TextDebug(TextRenderer* tr, Asset::AssetCollection* assetCo
 		tr->SetColor(col);
 	}
 
+	const char* hAlignments[] = { "Left", "Center", "Right" };
+	int hAlign = static_cast<int>(tr->GetHorizontalAlignment());
+	if (ImGui::Combo("Horizontal Align", &hAlign, hAlignments, IM_ARRAYSIZE(hAlignments))) {
+		tr->SetHorizontalAlignment(static_cast<HorizontalAlignment>(hAlign));
+	}
+
+	const char* vAlignments[] = { "Top", "Middle", "Bottom" };
+	int vAlign = static_cast<int>(tr->GetVerticalAlignment());
+	if (ImGui::Combo("Vertical Align", &vAlign, vAlignments, IM_ARRAYSIZE(vAlignments))) {
+		tr->SetVerticalAlignment(static_cast<VerticalAlignment>(vAlign));
+	}
+
+	Vector4 oCol = tr->GetOutlineColor();
+	if (ImGui::ColorEdit4("Outline Color", &oCol.x)) {
+		tr->SetOutlineColor(oCol);
+	}
+	int oWidth = tr->GetOutlineWidth();
+	if (ImGui::InputInt("Outline Width", &oWidth)) {
+		tr->SetOutlineWidth(oWidth);
+	}
+
+	Vector4 sCol = tr->GetShadowColor();
+	if (ImGui::ColorEdit4("Shadow Color", &sCol.x)) {
+		tr->SetShadowColor(sCol);
+	}
+	Vector2 sOffset = tr->GetShadowOffset();
+	if (ImGui::DragFloat2("Shadow Offset", &sOffset.x, 0.1f)) {
+		tr->SetShadowOffset(sOffset);
+	}
+
 	ImGui::Unindent(indentValue);
 }
 
@@ -55,7 +85,13 @@ void ONEngine::to_json(nlohmann::json& j, const TextRenderer& tr) {
 		{ "text", tr.text_ },
 		{ "fontPath", tr.fontPath_ },
 		{ "fontSize", tr.fontSize_ },
-		{ "color", tr.material_.baseColor }
+		{ "color", tr.material_.baseColor },
+		{ "horizontalAlignment", static_cast<int>(tr.horizontalAlignment_) },
+		{ "verticalAlignment", static_cast<int>(tr.verticalAlignment_) },
+		{ "outlineColor", tr.outlineColor_ },
+		{ "outlineWidth", tr.outlineWidth_ },
+		{ "shadowColor", tr.shadowColor_ },
+		{ "shadowOffset", tr.shadowOffset_ }
 	};
 }
 
@@ -65,6 +101,12 @@ void ONEngine::from_json(const nlohmann::json& j, TextRenderer& tr) {
 	tr.fontPath_ = j.value("fontPath", "./Assets/Fonts/MPLUSRounded1c-Black.ttf");
 	tr.fontSize_ = j.value("fontSize", 32);
 	tr.material_.baseColor = j.value("color", Vector4::White);
+	tr.horizontalAlignment_ = static_cast<HorizontalAlignment>(j.value("horizontalAlignment", 0));
+	tr.verticalAlignment_ = static_cast<VerticalAlignment>(j.value("verticalAlignment", 0));
+	tr.outlineColor_ = j.value("outlineColor", Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	tr.outlineWidth_ = j.value("outlineWidth", 0);
+	tr.shadowColor_ = j.value("shadowColor", Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+	tr.shadowOffset_ = j.value("shadowOffset", Vector2(2.0f, -2.0f));
 	tr.MarkDirty();
 }
 
@@ -95,7 +137,7 @@ void TextRenderer::UpdateTextTexture() {
 	}
 
 	// フォント画像を作成
-	if (FontRasterizer::GenerateTexture(text_, fontPath_, fontSize_, dynamicTexturePath_)) {
+	if (FontRasterizer::GenerateTexture(text_, fontPath_, fontSize_, dynamicTexturePath_, horizontalAlignment_, material_.baseColor, outlineColor_, outlineWidth_)) {
 		auto* assetCollection = Asset::AssetCollection::GetInstance();
 		auto* texture = assetCollection->GetTexture(dynamicTexturePath_);
 		if (texture) {
@@ -151,6 +193,39 @@ void TextRenderer::SetColor(const Vector4& color) {
 
 void TextRenderer::SetUVTransform(const UVTransform& uvTransform) {
 	material_.uvTransform = uvTransform;
+}
+
+void TextRenderer::SetHorizontalAlignment(HorizontalAlignment alignment) {
+	if (horizontalAlignment_ != alignment) {
+		horizontalAlignment_ = alignment;
+		MarkDirty();
+	}
+}
+
+void TextRenderer::SetVerticalAlignment(VerticalAlignment alignment) {
+	if (verticalAlignment_ != alignment) {
+		verticalAlignment_ = alignment;
+	}
+}
+
+void TextRenderer::SetOutlineColor(const Vector4& color) {
+	outlineColor_ = color;
+	MarkDirty();
+}
+
+void TextRenderer::SetOutlineWidth(int width) {
+	if (outlineWidth_ != width) {
+		outlineWidth_ = width;
+		MarkDirty();
+	}
+}
+
+void TextRenderer::SetShadowColor(const Vector4& color) {
+	shadowColor_ = color;
+}
+
+void TextRenderer::SetShadowOffset(const Vector2& offset) {
+	shadowOffset_ = offset;
 }
 
 const Vector4& TextRenderer::GetColor() const {
@@ -232,5 +307,95 @@ void MonoInternalMethods::InternalSetTextFontSize(uint64_t nativeHandle, int fon
 	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
 	if (tr) {
 		tr->SetFontSize(fontSize);
+	}
+}
+
+int MonoInternalMethods::InternalGetHorizontalAlignment(uint64_t nativeHandle) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		return static_cast<int>(tr->GetHorizontalAlignment());
+	}
+	return 0;
+}
+
+void MonoInternalMethods::InternalSetHorizontalAlignment(uint64_t nativeHandle, int alignment) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		tr->SetHorizontalAlignment(static_cast<HorizontalAlignment>(alignment));
+	}
+}
+
+int MonoInternalMethods::InternalGetVerticalAlignment(uint64_t nativeHandle) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		return static_cast<int>(tr->GetVerticalAlignment());
+	}
+	return 0;
+}
+
+void MonoInternalMethods::InternalSetVerticalAlignment(uint64_t nativeHandle, int alignment) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		tr->SetVerticalAlignment(static_cast<VerticalAlignment>(alignment));
+	}
+}
+
+Vector4 MonoInternalMethods::InternalGetOutlineColor(uint64_t nativeHandle) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		return tr->GetOutlineColor();
+	}
+	return Vector4();
+}
+
+void MonoInternalMethods::InternalSetOutlineColor(uint64_t nativeHandle, Vector4 color) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		tr->SetOutlineColor(color);
+	}
+}
+
+int MonoInternalMethods::InternalGetOutlineWidth(uint64_t nativeHandle) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		return tr->GetOutlineWidth();
+	}
+	return 0;
+}
+
+void MonoInternalMethods::InternalSetOutlineWidth(uint64_t nativeHandle, int width) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		tr->SetOutlineWidth(width);
+	}
+}
+
+Vector4 MonoInternalMethods::InternalGetShadowColor(uint64_t nativeHandle) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		return tr->GetShadowColor();
+	}
+	return Vector4();
+}
+
+void MonoInternalMethods::InternalSetShadowColor(uint64_t nativeHandle, Vector4 color) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		tr->SetShadowColor(color);
+	}
+}
+
+Vector2 MonoInternalMethods::InternalGetShadowOffset(uint64_t nativeHandle) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		return tr->GetShadowOffset();
+	}
+	return Vector2();
+}
+
+void MonoInternalMethods::InternalSetShadowOffset(uint64_t nativeHandle, Vector2 offset) {
+	TextRenderer* tr = reinterpret_cast<TextRenderer*>(nativeHandle);
+	if (tr) {
+		tr->SetShadowOffset(offset);
 	}
 }

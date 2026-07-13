@@ -77,6 +77,12 @@ struct TextBatch {
 	Vector4 color;
 	Vector2 textureSize;
 	UVTransform uvTransform;
+	int32_t horizontalAlignment;
+	int32_t verticalAlignment;
+	Vector4 outlineColor;
+	int32_t outlineWidth;
+	Vector4 shadowColor;
+	Vector2 shadowOffset;
 };
 
 struct CameraBatch {
@@ -172,6 +178,12 @@ void ONEngine::ComponentApplyFuncs::ApplyText(void* element, ECSGroup* ecsGroup)
 	if(TextRenderer* tr = array->GetComponent(data->compId)) {
 		tr->SetColor(data->color);
 		tr->SetUVTransform(data->uvTransform);
+		tr->SetHorizontalAlignment(static_cast<HorizontalAlignment>(data->horizontalAlignment));
+		tr->SetVerticalAlignment(static_cast<VerticalAlignment>(data->verticalAlignment));
+		tr->SetOutlineColor(data->outlineColor);
+		tr->SetOutlineWidth(data->outlineWidth);
+		tr->SetShadowColor(data->shadowColor);
+		tr->SetShadowOffset(data->shadowOffset);
 	}
 }
 
@@ -321,6 +333,12 @@ void ONEngine::ComponentApplyFuncs::FetchText(void* element, ECSGroup* ecsGroup)
 		data->color = tr->GetColor();
 		data->textureSize = tr->GetTextureSize(Asset::AssetCollection::GetInstance());
 		data->uvTransform = tr->GetUVTransform();
+		data->horizontalAlignment = static_cast<int32_t>(tr->GetHorizontalAlignment());
+		data->verticalAlignment = static_cast<int32_t>(tr->GetVerticalAlignment());
+		data->outlineColor = tr->GetOutlineColor();
+		data->outlineWidth = tr->GetOutlineWidth();
+		data->shadowColor = tr->GetShadowColor();
+		data->shadowOffset = tr->GetShadowOffset();
 	}
 }
 

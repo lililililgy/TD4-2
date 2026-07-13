@@ -2,6 +2,18 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
+public enum HorizontalAlignment {
+	Left = 0,
+	Center = 1,
+	Right = 2
+}
+
+public enum VerticalAlignment {
+	Top = 0,
+	Middle = 1,
+	Bottom = 2
+}
+
 class TextRenderer : Component {
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
@@ -9,6 +21,12 @@ class TextRenderer : Component {
 		public Vector4 color;
 		public Vector2 textureSize;
 		public UVTransform uvTransform;
+		public int horizontalAlignment;
+		public int verticalAlignment;
+		public Vector4 outlineColor;
+		public int outlineWidth;
+		public Vector4 shadowColor;
+		public Vector2 shadowOffset;
 	}
 
 	BatchData batchData;
@@ -27,6 +45,12 @@ class TextRenderer : Component {
 		batchData.color = batch[0].color;
 		batchData.textureSize = batch[0].textureSize;
 		batchData.uvTransform = batch[0].uvTransform;
+		batchData.horizontalAlignment = batch[0].horizontalAlignment;
+		batchData.verticalAlignment = batch[0].verticalAlignment;
+		batchData.outlineColor = batch[0].outlineColor;
+		batchData.outlineWidth = batch[0].outlineWidth;
+		batchData.shadowColor = batch[0].shadowColor;
+		batchData.shadowOffset = batch[0].shadowOffset;
 	}
 
 	public string text {
@@ -77,9 +101,6 @@ class TextRenderer : Component {
 		}
 		set {
 			batchData.color = value;
-			// if (nativeHandle != 0) {
-			// 	InternalSetColor(nativeHandle, value);
-			// }
 		}
 	}
 
@@ -98,14 +119,93 @@ class TextRenderer : Component {
 		}
 	}
 
+	public HorizontalAlignment horizontalAlignment {
+		get {
+			if (nativeHandle != 0) {
+				return (HorizontalAlignment)InternalGetHorizontalAlignment(nativeHandle);
+			}
+			return HorizontalAlignment.Left;
+		}
+		set {
+			if (nativeHandle != 0) {
+				InternalSetHorizontalAlignment(nativeHandle, (int)value);
+			}
+		}
+	}
+
+	public VerticalAlignment verticalAlignment {
+		get {
+			if (nativeHandle != 0) {
+				return (VerticalAlignment)InternalGetVerticalAlignment(nativeHandle);
+			}
+			return VerticalAlignment.Top;
+		}
+		set {
+			if (nativeHandle != 0) {
+				InternalSetVerticalAlignment(nativeHandle, (int)value);
+			}
+		}
+	}
+
+	public Vector4 outlineColor {
+		get {
+			if (nativeHandle != 0) {
+				return InternalGetOutlineColor(nativeHandle);
+			}
+			return new Vector4(0f, 0f, 0f, 1f);
+		}
+		set {
+			if (nativeHandle != 0) {
+				InternalSetOutlineColor(nativeHandle, value);
+			}
+		}
+	}
+
+	public int outlineWidth {
+		get {
+			if (nativeHandle != 0) {
+				return InternalGetOutlineWidth(nativeHandle);
+			}
+			return 0;
+		}
+		set {
+			if (nativeHandle != 0) {
+				InternalSetOutlineWidth(nativeHandle, value);
+			}
+		}
+	}
+
+	public Vector4 shadowColor {
+		get {
+			if (nativeHandle != 0) {
+				return InternalGetShadowColor(nativeHandle);
+			}
+			return new Vector4(0f, 0f, 0f, 0f);
+		}
+		set {
+			if (nativeHandle != 0) {
+				InternalSetShadowColor(nativeHandle, value);
+			}
+		}
+	}
+
+	public Vector2 shadowOffset {
+		get {
+			if (nativeHandle != 0) {
+				return InternalGetShadowOffset(nativeHandle);
+			}
+			return new Vector2(2f, -2f);
+		}
+		set {
+			if (nativeHandle != 0) {
+				InternalSetShadowOffset(nativeHandle, value);
+			}
+		}
+	}
+
 	/// -------------------------------------------
 	/// internal methods
 	/// -------------------------------------------
-
-
-
-	// [MethodImpl(MethodImplOptions.InternalCall)]
-	// static extern void InternalSetColor(ulong nativeHandle, Vector4 color);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern string InternalGetText(ulong nativeHandle);
@@ -124,4 +224,40 @@ class TextRenderer : Component {
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalSetFontSize(ulong nativeHandle, int fontSize);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern int InternalGetHorizontalAlignment(ulong nativeHandle);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetHorizontalAlignment(ulong nativeHandle, int alignment);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern int InternalGetVerticalAlignment(ulong nativeHandle);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetVerticalAlignment(ulong nativeHandle, int alignment);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern Vector4 InternalGetOutlineColor(ulong nativeHandle);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetOutlineColor(ulong nativeHandle, Vector4 color);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern int InternalGetOutlineWidth(ulong nativeHandle);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetOutlineWidth(ulong nativeHandle, int width);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern Vector4 InternalGetShadowColor(ulong nativeHandle);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetShadowColor(ulong nativeHandle, Vector4 color);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern Vector2 InternalGetShadowOffset(ulong nativeHandle);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetShadowOffset(ulong nativeHandle, Vector2 offset);
 }
