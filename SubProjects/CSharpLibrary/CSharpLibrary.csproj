@@ -115,6 +115,7 @@
     <Compile Include="Scripts\Engine\Core\Utility\Math\Vector2Int.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Math\Vector3.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Math\Vector4.cs" />
+    <Compile Include="Scripts\Engine\Core\Utility\MessageBus.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Time\Time.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Component.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\ComponentBatchManager.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Scripts\Game\Common\Critical.cs" />
     <Compile Include="Scripts\Game\Common\DamagePoint.cs" />
     <Compile Include="Scripts\Game\Common\DamageRelay.cs" />
+    <Compile Include="Scripts\Game\Common\GameEvents.cs" />
     <Compile Include="Scripts\Game\Common\HP.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
     <Compile Include="Scripts\Game\Enemy\BiomeArea.cs" />
     <Compile Include="Scripts\Game\Enemy\DespawnTimer.cs" />
+    <Compile Include="Scripts\Game\Enemy\EmitKillEventOnDestroy.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemySpawnSystem.cs" />
     <Compile Include="Scripts\Game\Enemy\SpawnEntry.cs" />
@@ -177,6 +180,12 @@
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
     <Compile Include="Scripts\Game\Movement\TrailFollower.cs" />
     <Compile Include="Scripts\Game\Movement\TrailLeader.cs" />
+    <Compile Include="Scripts\Game\Objective\BossDefeatObjective.cs" />
+    <Compile Include="Scripts\Game\Objective\CountObjective.cs" />
+    <Compile Include="Scripts\Game\Objective\KillCountObjective.cs" />
+    <Compile Include="Scripts\Game\Objective\Objective.cs" />
+    <Compile Include="Scripts\Game\Objective\ObjectiveSystem.cs" />
+    <Compile Include="Scripts\Game\Objective\TutorialObjective.cs" />
     <Compile Include="Scripts\Game\Player\Magazine.cs" />
     <Compile Include="Scripts\Game\Player\PlayerAttackComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerDashState.cs" />

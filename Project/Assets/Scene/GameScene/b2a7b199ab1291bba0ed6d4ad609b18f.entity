@@ -1,5 +1,29 @@
 {
     "active": true,
+    "components": [
+        {
+            "ObjectiveSystem": {
+                "loopStartIndex_": 0,
+                "phaseSequence_": [
+                    "EnemyHuntPhase_1"
+                ]
+            },
+            "type": "Variables"
+        },
+        {
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "GameSceneController"
+                },
+                {
+                    "enable": true,
+                    "name": "ObjectiveSystem"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
     "guid": "b2a7b199ab1291bba0ed6d4ad609b18f",
     "name": "GameController",
     "parentGuid": null,

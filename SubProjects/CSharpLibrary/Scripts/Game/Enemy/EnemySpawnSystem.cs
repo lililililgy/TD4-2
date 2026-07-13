@@ -120,7 +120,7 @@ public class EnemySpawnSystem : MonoScript {
             spawnCount++;
 
             // 敵の発生処理
-            Vector2 spawnPos = CalculateSpawnPos();
+            Vector2 spawnPos = CalculateSpawnPos(heatMap);
             Biome biome = ResolveBiome(spawnPos);
             if (biome == null) continue;
 
@@ -150,9 +150,7 @@ public class EnemySpawnSystem : MonoScript {
     }
 
     // 敵のスポーン位置を計算する。セルを重みに応じて抽選し、そのセル範囲内のランダムな座標を返す。
-    private Vector2 CalculateSpawnPos() {
-        EnemyHeatMap heatMap = entity.GetScript<EnemyHeatMap>();
-
+    private Vector2 CalculateSpawnPos(EnemyHeatMap heatMap) {
         float total = 0.0f;
         foreach (var c in spawnCellWeights_) {
             if (c.weight > 0.0f) total += c.weight;
