@@ -64,6 +64,10 @@ public:
 	/// ドメインの再ロードバージョンカウンタを取得
 	int32_t GetDomainReloadCounter() const { return domainReloadCounter_; }
 
+	/// ホットリロード実行中（コピー中など）フラグを取得
+	bool IsReloading() const { return isReloading_; }
+	void SetIsReloading(bool reloading) { isReloading_ = reloading; }
+
 	/// C#のログ無視設定を同期・適用
 	void ApplyCSharpLogSetting();
 
@@ -201,6 +205,7 @@ private:
 	bool showAttachedPopup_ = false;
 	bool isDebuggerSyncSuccess_ = false;
 	int debuggerAttachFrameCounter_ = 0;
+	bool isReloading_ = false;
 
 };
 

@@ -540,6 +540,12 @@ void MonoScriptEngine::RegisterFunctions() {
 }
 
 void MonoScriptEngine::HotReload() {
+	struct ReloadGuard {
+		MonoScriptEngine& engine;
+		ReloadGuard(MonoScriptEngine& eng) : engine(eng) { engine.SetIsReloading(true); }
+		~ReloadGuard() { engine.SetIsReloading(false); }
+	} guard(*this);
+
 	Console::Log("[MonoDbg] ========================================================", LogCategory::ScriptEngine);
 	Console::Log("[MonoDbg] MonoScriptEngine::HotReload() CALLED! Starting C# reload.", LogCategory::ScriptEngine);
 	Console::Log("[MonoDbg] ========================================================", LogCategory::ScriptEngine);
