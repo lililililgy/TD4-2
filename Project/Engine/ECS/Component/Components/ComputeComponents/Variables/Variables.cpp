@@ -104,7 +104,12 @@ namespace {
 	bool ShouldSerialize(MonoClassField* field) {
 		// Releaseビルドでは SafeInvoke を経由しない Mono API 呼び出し前に
 		// 必ずスレッドをドメインにアタッチする必要がある
-		mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+		MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
+		if (mono_thread_current() == nullptr) {
+			mono_thread_attach(domain);
+		} else {
+			mono_domain_set(domain, false);
+		}
 		return IsPublicField(field) || HasSerializeField(field);
 	}
 
@@ -547,7 +552,12 @@ void Variables::SaveJson(const std::string& path) {
 
 void Variables::RegisterScriptVariables() {
 	// Releaseビルドでのスレッドアタッチを保証する
-	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+	MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
+	if (mono_thread_current() == nullptr) {
+		mono_thread_attach(domain);
+	} else {
+		mono_domain_set(domain, false);
+	}
 
 	Script* script = GetOwner()->GetComponent<Script>();
 	if (!script) return;
@@ -582,7 +592,12 @@ void Variables::RegisterScriptVariables() {
 
 void Variables::ReloadScriptVariables() {
 	// Releaseビルドでのスレッドアタッチを保証する
-	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+	MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
+	if (mono_thread_current() == nullptr) {
+		mono_thread_attach(domain);
+	} else {
+		mono_domain_set(domain, false);
+	}
 
 	Script* script = GetOwner()->GetComponent<Script>();
 	if (!script) return;
