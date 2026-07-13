@@ -1319,7 +1319,16 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 	config = L"Release";
 #endif
 
-	std::wstring cmd = L"cmd.exe /c dotnet build \"../SubProjects/CSharpLibrary/CSharpLibrary.csproj\" -c " + config + L" -p:Platform=x64";
+	// dotnet.exeの絶対パスを探索
+	std::wstring dotnetPath = L"dotnet";
+	if (std::filesystem::exists(L"C:\\Program Files\\dotnet\\dotnet.exe")) {
+		dotnetPath = L"\"C:\\Program Files\\dotnet\\dotnet.exe\"";
+	} else if (std::filesystem::exists(L"C:\\Program Files (x86)\\dotnet\\dotnet.exe")) {
+		dotnetPath = L"\"C:\\Program Files (x86)\\dotnet\\dotnet.exe\"";
+	}
+
+	std::wstring cmd = dotnetPath + L" build \"../SubProjects/CSharpLibrary/CSharpLibrary.csproj\" -c " + config + L" -p:Platform=x64";
+	std::wstring currentPathW = std::filesystem::current_path().wstring();
 
 	HANDLE hReadPipe, hWritePipe;
 	SECURITY_ATTRIBUTES saAttr;
@@ -1360,7 +1369,7 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 		TRUE,
 		CREATE_NO_WINDOW,
 		NULL,
-		NULL,
+		currentPathW.c_str(), // 作業ディレクトリを明示的に指定
 		&si,
 		&pi
 	);
