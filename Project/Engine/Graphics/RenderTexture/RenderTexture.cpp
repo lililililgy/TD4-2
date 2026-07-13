@@ -149,7 +149,7 @@ void UAVTexture::Initialize(const std::string& textureName, DxManager* dxm, Asse
 	);
 
 	texture_->CreateEmptyUAVHandle();
-	texture_->SetUAVDescriptorIndex(dxSRVHeap->AllocateTexture());
+	texture_->SetUAVDescriptorIndex(dxSRVHeap->AllocateUAVTexture());
 	texture_->SetUAVCPUHandle(dxSRVHeap->GetCPUDescriptorHandel(texture_->GetUAVDescriptorIndex()));
 	texture_->SetUAVGPUHandle(dxSRVHeap->GetGPUDescriptorHandel(texture_->GetUAVDescriptorIndex()));
 
