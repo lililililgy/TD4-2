@@ -22,6 +22,7 @@ ScriptUpdateSystem::ScriptUpdateSystem(ECSGroup* ecs) {
 	ecsGroupName_ = ecs->GetGroupName();
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 	MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+	lastReloadCounter_ = monoEngine.GetDomainReloadCounter();
 }
 
 ScriptUpdateSystem::~ScriptUpdateSystem() {
@@ -32,8 +33,9 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 	/// ----- HotReloadをしたときにC#側がリセットされるのでスクリプトを追加し直す----- ///
 
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+	int32_t currentReloadCounter = monoEngine.GetDomainReloadCounter();
 
-	if(monoEngine.GetIsHotReloadRequest()) {
+	if (currentReloadCounter != lastReloadCounter_) {
 		// 古いドメインのハンドルを解放
 		ReleaseGCHandle();
 
@@ -42,48 +44,7 @@ void ScriptUpdateSystem::OutsideOfRuntimeUpdate(ECSGroup* ecs) {
 
 		/// C#側のECSGroupを取得、更新関数を呼ぶ
 		ComponentArray<Script>* scriptArray = ecs->GetComponentArray<Script>();
-		if(!scriptArray || scriptArray->GetUsedComponents().empty()) {
-			return;
-		}
-
-		for(auto& script : scriptArray->GetUsedComponents()) {
-			script->SetIsAdded(false);
-			for(auto& data : script->GetScriptDataList()) {
-				data.isAdded = false;
-				data.collisionEventMethods.fill(nullptr);
-				data.collisionEventMethods2D.fill(nullptr);
-			}
-		}
-
-		ComponentArray<AnimationPlayer>* animPlayerArray = ecs->GetComponentArray<AnimationPlayer>();
-		if(animPlayerArray) {
-			for(auto& animPlayer : animPlayerArray->GetUsedComponents()) {
-				animPlayer->ClearBindings();
-			}
-		}
-
-		ReleaseGCHandle();
-		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
-	}
-}
-
-void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
-#ifdef DEBUG_MODE
-	CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::CSharpScriptUpdate);
-#endif // DEBUG_MODE
-
-	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
-
-	if (monoEngine.GetIsHotReloadRequest()) {
-		// 古いドメインのハンドルを解放
-		ReleaseGCHandle();
-
-		// 新しいドメインで再初期化
-		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
-
-		/// C#側のECSGroupを取得、更新関数を呼ぶ
-		ComponentArray<Script>* scriptArray = ecs->GetComponentArray<Script>();
-		if (scriptArray) {
+		if (scriptArray && !scriptArray->GetUsedComponents().empty()) {
 			for (auto& script : scriptArray->GetUsedComponents()) {
 				script->SetIsAdded(false);
 				for (auto& data : script->GetScriptDataList()) {
@@ -103,6 +64,50 @@ void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 		ReleaseGCHandle();
 		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+
+		lastReloadCounter_ = currentReloadCounter;
+	}
+}
+
+void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
+#ifdef DEBUG_MODE
+	CPUTimeStamp::GetInstance().BeginTimeStamp(CPUTimeStampID::CSharpScriptUpdate);
+#endif // DEBUG_MODE
+
+	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+	int32_t currentReloadCounter = monoEngine.GetDomainReloadCounter();
+
+	if (currentReloadCounter != lastReloadCounter_) {
+		// 古いドメインのハンドルを解放
+		ReleaseGCHandle();
+
+		// 新しいドメインで再初期化
+		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+
+		/// C#側のECSGroupを取得、更新関数を呼ぶ
+		ComponentArray<Script>* scriptArray = ecs->GetComponentArray<Script>();
+		if (scriptArray && !scriptArray->GetUsedComponents().empty()) {
+			for (auto& script : scriptArray->GetUsedComponents()) {
+				script->SetIsAdded(false);
+				for (auto& data : script->GetScriptDataList()) {
+					data.isAdded = false;
+					data.collisionEventMethods.fill(nullptr);
+					data.collisionEventMethods2D.fill(nullptr);
+				}
+			}
+		}
+
+		ComponentArray<AnimationPlayer>* animPlayerArray = ecs->GetComponentArray<AnimationPlayer>();
+		if (animPlayerArray) {
+			for (auto& animPlayer : animPlayerArray->GetUsedComponents()) {
+				animPlayer->ClearBindings();
+			}
+		}
+
+		ReleaseGCHandle();
+		MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+
+		lastReloadCounter_ = currentReloadCounter;
 	}
 
 	/// C#側に未追加にエンティティとコンポーネントを追加する

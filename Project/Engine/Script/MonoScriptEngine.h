@@ -61,6 +61,9 @@ public:
 	/// CSのHotReloadを行う
 	void HotReload();
 
+	/// ドメインの再ロードバージョンカウンタを取得
+	int32_t GetDomainReloadCounter() const { return domainReloadCounter_; }
+
 	/// C#のログ無視設定を同期・適用
 	void ApplyCSharpLogSetting();
 
