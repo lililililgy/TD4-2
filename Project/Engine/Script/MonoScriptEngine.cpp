@@ -1,4 +1,4 @@
-﻿#include <winsock2.h>
+#include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
@@ -37,6 +37,7 @@ using namespace ONEngine;
 #include "Engine/ECS/EntityComponentSystem/ComponentApplyFunc.h"
 #include "InternalCalls/AddInternalMethods.h"
 #include "InternalCalls/EventInternalCalls.h"
+#include "Engine/Editor/Manager/HotReloadManager.h"
 
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
@@ -543,7 +544,11 @@ void MonoScriptEngine::HotReload() {
 	struct ReloadGuard {
 		MonoScriptEngine& engine;
 		ReloadGuard(MonoScriptEngine& eng) : engine(eng) { engine.SetIsReloading(true); }
-		~ReloadGuard() { engine.SetIsReloading(false); }
+		~ReloadGuard() { 
+			// コピー処理中に FileWatcher に蓄積された自己変更イベントを根こそぎクリアして破棄する
+			Editor::HotReloadManager::GetInstance().ClearQueuedEvents();
+			engine.SetIsReloading(false); 
+		}
 	} guard(*this);
 
 	Console::Log("[MonoDbg] ========================================================", LogCategory::ScriptEngine);

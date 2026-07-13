@@ -88,6 +88,16 @@ public:
         return std::move(latestEvents_);
     }
 
+    void ClearQueuedEvents() {
+        std::lock_guard<std::mutex> lock(mutex_);
+        // ファイル監視キューに溜まっている未処理イベントをすべて破棄する
+        fileWatcher_.ConsumeEvents();
+        pendingAssetReloads_.clear();
+        pendingScriptHotReload_ = false;
+        latestEvents_.clear();
+        ONEngine::Console::Log("[MonoDbg] Cleared queued FileWatcher events during HotReload completion to prevent self-loop.", ONEngine::LogCategory::ScriptEngine);
+    }
+
     void RequestAssetReload(const std::string& path) {
         std::lock_guard<std::mutex> lock(mutex_);
         pendingAssetReloads_.push_back(path);
