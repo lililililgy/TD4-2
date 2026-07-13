@@ -42,7 +42,12 @@ public class KingGesoHomingBullet : MonoScript
 
         // ターゲットの方向を向く
         this.target = target;
-        Vector3 toTarget = this.target.transform.worldPosition - transform.worldPosition;
+        Vector3 targetPosition = this.target.transform.position;
+        Vector3 currentPosition = transform.position;
+        Vector3 toTarget = new Vector3(
+            targetPosition.x - currentPosition.x,
+            targetPosition.y - currentPosition.y,
+            0.0f);
         if (toTarget.LengthSq() > 0.0001f)
         {
             this.direction = toTarget.Normalized();
@@ -85,7 +90,12 @@ public class KingGesoHomingBullet : MonoScript
         if (this.target != null && this.target.transform != null)
         {
             // ターゲットの方向に向かって回転する
-            Vector3 toTarget = this.target.transform.worldPosition - transform.worldPosition;
+            Vector3 targetPosition = this.target.transform.position;
+            Vector3 currentPosition = transform.position;
+            Vector3 toTarget = new Vector3(
+                targetPosition.x - currentPosition.x,
+                targetPosition.y - currentPosition.y,
+                0.0f);
             if (toTarget.LengthSq() > 0.0001f)
             {
                 Quaternion current = Quaternion.LookRotation(-Vector3.forward, this.direction);

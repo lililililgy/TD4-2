@@ -10,6 +10,7 @@ public class KingGesoInkBullet : MonoScript
     private float elapsed_;
     private bool configured_;
     private bool destroyRequested_;
+    private KingGeso poolOwner_;
 
     public override void Initialize()
     {
@@ -26,7 +27,7 @@ public class KingGesoInkBullet : MonoScript
     {
         if (destroyRequested_)
         {
-            entity.Destroy();
+            Release();
             return;
         }
 
@@ -38,7 +39,7 @@ public class KingGesoInkBullet : MonoScript
         elapsed_ += Time.deltaTime;
         if (elapsed_ >= lifeTime)
         {
-            entity.Destroy();
+            Release();
             return;
         }
 
@@ -65,11 +66,37 @@ public class KingGesoInkBullet : MonoScript
         }
     }
 
+    public void BindPool(KingGeso owner)
+    {
+        poolOwner_ = owner;
+        Deactivate();
+    }
+
+    public void Deactivate()
+    {
+        configured_ = false;
+        destroyRequested_ = false;
+        elapsed_ = 0.0f;
+        direction_ = Vector3.up;
+        entity.enable = false;
+    }
+
     public override void OnCollisionEnter(Entity collision)
     {
         if (configured_ && collision != null)
         {
             destroyRequested_ = true;
         }
+    }
+
+    private void Release()
+    {
+        if (poolOwner_ != null)
+        {
+            poolOwner_.ReturnInkBullet(entity);
+            return;
+        }
+
+        entity.Destroy();
     }
 }

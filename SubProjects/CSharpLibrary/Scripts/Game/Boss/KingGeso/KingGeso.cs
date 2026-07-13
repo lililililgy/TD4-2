@@ -9,6 +9,7 @@ public enum KingGesoAttackType
     WaveThrust, //波状突き攻撃
     PincerThrust, //挟み撃ち攻撃
     InkBarrage, //螺旋墨弾幕
+    HomingBullet, //追尾弾発射
 }
 
 //============================================================
@@ -40,11 +41,13 @@ public class KingGeso : MonoScript
     private List<Entity> activeGesos_ = new List<Entity>();
     private bool attackRequested_;
     private bool damageStateRequested_;
-    private bool useHomingAttackNext_;
     private KingGesoWaveThrustSettings waveSettings_;
     private KingGesoPincerThrustSettings pincerSettings_;
     private KingGesoInkBarrageSettings inkSettings_;
     private KingGesoHomingAttackSettings homingSettings_;
+    private readonly List<Entity> inkBulletPool_ = new List<Entity>();
+    private readonly List<Entity> availableInkBullets_ = new List<Entity>();
+    private readonly HashSet<Entity> activeInkBullets_ = new HashSet<Entity>();
 
 
     //=============================================================
@@ -71,6 +74,8 @@ public class KingGeso : MonoScript
         homingSettings_ = entity.GetScript<KingGesoHomingAttackSettings>();
         if (homingSettings_ == null) homingSettings_ = entity.AddScript<KingGesoHomingAttackSettings>();
 
+        InitializeInkBulletPool();
+
         // ターゲットとカメラのエンティティを取得
         targetEntity_ = ecsGroup.FindEntity(targetEntityName);
         cameraEntity_ = ecsGroup.FindEntity(cameraEntityName);
@@ -78,7 +83,6 @@ public class KingGeso : MonoScript
         activeGesos_.Clear();
         attackRequested_ = false;
         damageStateRequested_ = false;
-        useHomingAttackNext_ = false;
         ChangeState(new KingGesoIdleState());
     }
 
@@ -176,15 +180,6 @@ public class KingGeso : MonoScript
     internal bool ReverseInkBarrageHalfway => inkSettings_.reverseHalfway;
     internal float InkBulletAngleOffset => inkSettings_.angleOffset;
 
-    internal IKingGesoState CreateNextAttackState()
-    {
-        IKingGesoState nextState = useHomingAttackNext_
-            ? (IKingGesoState)new KingGesoHomingAttackState()
-            : new KingGesoAttackState();
-        useHomingAttackNext_ = !useHomingAttackNext_;
-        return nextState;
-    }
-
     //=============================================================
     // 攻撃タイプの選択
     //=============================================================
@@ -199,7 +194,8 @@ public class KingGeso : MonoScript
         float waveWeight = NonNegative(waveSettings_.selectionWeight);
         float pincerWeight = NonNegative(pincerSettings_.selectionWeight);
         float inkWeight = NonNegative(inkSettings_.selectionWeight);
-        float totalWeight = waveWeight + pincerWeight + inkWeight;
+        float homingWeight = NonNegative(homingSettings_.selectionWeight);
+        float totalWeight = waveWeight + pincerWeight + inkWeight + homingWeight;
 
         // 重みが0以下の場合は固定攻撃タイプを返す
         if (totalWeight <= 0.0f)
@@ -220,7 +216,19 @@ public class KingGeso : MonoScript
             return KingGesoAttackType.PincerThrust;
         }
 
-        return KingGesoAttackType.InkBarrage;
+        lottery -= pincerWeight;
+        if (lottery < inkWeight)
+        {
+            return KingGesoAttackType.InkBarrage;
+        }
+
+        lottery -= inkWeight;
+        if (lottery < homingWeight)
+        {
+            return KingGesoAttackType.HomingBullet;
+        }
+
+        return KingGesoAttackType.WaveThrust;
     }
 
     //=============================================================
@@ -424,24 +432,26 @@ public class KingGeso : MonoScript
     //=============================================================
     internal bool FireInkBullet(Vector2 direction)
     {
-        if (String.IsNullOrEmpty(inkSettings_.bulletPrefabName))
+        if (availableInkBullets_.Count == 0)
         {
             return false;
         }
 
-        Entity bullet = ecsGroup.CreateEntity(inkSettings_.bulletPrefabName);
-        if (bullet == null)
-        {
-            return false;
-        }
+        int lastIndex = availableInkBullets_.Count - 1;
+        Entity bullet = availableInkBullets_[lastIndex];
+        availableInkBullets_.RemoveAt(lastIndex);
+        activeInkBullets_.Add(bullet);
+        bullet.enable = true;
 
         Vector3 offset = new Vector3(inkSettings_.spawnOffset.x, inkSettings_.spawnOffset.y, 0.0f);
-        bullet.transform.position = transform.worldPosition + offset;
+        bullet.transform.position = transform.position + offset;
 
         KingGesoInkBullet bulletScript = bullet.GetScript<KingGesoInkBullet>();
         if (bulletScript == null)
         {
-            bullet.Destroy();
+            activeInkBullets_.Remove(bullet);
+            bullet.enable = false;
+            availableInkBullets_.Add(bullet);
             return false;
         }
 
@@ -451,6 +461,66 @@ public class KingGeso : MonoScript
             inkSettings_.bulletLifeTime,
             inkSettings_.bulletDamage);
         return true;
+    }
+
+    internal void ReturnInkBullet(Entity bullet)
+    {
+        if (bullet == null || !activeInkBullets_.Remove(bullet))
+        {
+            return;
+        }
+
+        KingGesoInkBullet bulletScript = bullet.GetScript<KingGesoInkBullet>();
+        if (bulletScript != null)
+        {
+            bulletScript.Deactivate();
+        }
+        else
+        {
+            bullet.enable = false;
+        }
+
+        availableInkBullets_.Add(bullet);
+    }
+
+    internal void DeactivateAllInkBullets()
+    {
+        List<Entity> activeBullets = new List<Entity>(activeInkBullets_);
+        for (int i = 0; i < activeBullets.Count; i++)
+        {
+            ReturnInkBullet(activeBullets[i]);
+        }
+    }
+
+    private void InitializeInkBulletPool()
+    {
+        DeactivateAllInkBullets();
+        if (inkBulletPool_.Count > 0 || String.IsNullOrEmpty(inkSettings_.bulletPrefabName))
+        {
+            return;
+        }
+
+        int automaticSize = InkBulletCountPerWave * InkBulletWaveCount;
+        int poolSize = inkSettings_.poolSize > 0 ? inkSettings_.poolSize : automaticSize;
+        for (int i = 0; i < poolSize; i++)
+        {
+            Entity bullet = ecsGroup.CreateEntity(inkSettings_.bulletPrefabName);
+            if (bullet == null)
+            {
+                break;
+            }
+
+            KingGesoInkBullet bulletScript = bullet.GetScript<KingGesoInkBullet>();
+            if (bulletScript == null)
+            {
+                bullet.Destroy();
+                continue;
+            }
+
+            bulletScript.BindPool(this);
+            inkBulletPool_.Add(bullet);
+            availableInkBullets_.Add(bullet);
+        }
     }
 
     //=============================================================

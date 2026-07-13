@@ -145,6 +145,7 @@
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Game\Background\Cloud.cs" />
     <Compile Include="Scripts\Game\Background\CloudManager.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingAttack.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingBullet.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingAttackSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageAttack.cs" />
