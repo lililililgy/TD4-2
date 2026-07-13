@@ -26,7 +26,7 @@
             "HP": {
                 "MAX_HP": 10,
                 "currentHp": 10,
-                "currentHp_": 1000.0,
+                "currentHp_": 960.9000244140625,
                 "directlyDamageable_": true,
                 "disableAutoDestruction": false,
                 "disableAutoDestruction_": false,
@@ -37,32 +37,71 @@
                 "regenPerSecond": 0.0
             },
             "KingGeso": {
-                "attackDuration": 10.0,
                 "cameraEntityName": "Camera",
                 "cooldownDuration": 1.0,
                 "enable": true,
                 "fixedAttackType": 0,
-                "gesoAttackDamage": 20.0,
-                "gesoAttackRadius": 1.5,
-                "gesoMoveDuration": 10.0,
-                "gesoPassThroughDistance": 1000.0,
                 "gesoPrefabName": "GesoHand",
-                "gesoRotationSpeed": 8.0,
                 "gesoSpawnOffset": {
-                    "x": 253.41856384277344,
-                    "y": -720.5
+                    "x": -1280.5,
+                    "y": 183.40072631835938
                 },
                 "idleDuration": 2.0,
                 "maxHp": 1000,
-                "pincerThrustWeight": 1.0,
                 "randomizeAttackType": true,
                 "screenEdgeMargin": 0.5,
                 "screenHalfHeight": 720.0,
                 "screenHalfWidth": 1280.0,
-                "targetEntityName": "Player",
-                "waveGesoCount": 0,
-                "waveGesoInterval": 0.0,
-                "waveThrustWeight": 1.0
+                "targetEntityName": "Player"
+            },
+            "KingGesoWaveThrustSettings": {
+                "attackDuration": 10.0,
+                "damage": 20.0,
+                "gesoCount": 6,
+                "gesoLifeTime": 1.0,
+                "moveDuration": 7.0,
+                "passThroughDistance": 1000.0,
+                "rotationSpeed": 8.0,
+                "selectionWeight": 1.0,
+                "spawnInterval": 2.0
+            },
+            "KingGesoPincerThrustSettings": {
+                "attackDuration": 10.0,
+                "damage": 20.0,
+                "moveDuration": 7.0,
+                "passThroughDistance": 1000.0,
+                "rotationSpeed": 8.0,
+                "selectionWeight": 0.0
+            },
+            "KingGesoInkBarrageSettings": {
+                "angleOffset": 0.14000000059604645,
+                "bulletCountPerWave": 10,
+                "bulletDamage": 8.0,
+                "bulletLifeTime": 7.0,
+                "bulletPrefabName": "KingGesoInkBullet",
+                "bulletSpeed": 220.0,
+                "recoveryDuration": 0.6000000238418579,
+                "reverseHalfway": true,
+                "selectionWeight": 240.0,
+                "spawnOffset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "waveCount": 7,
+                "waveInterval": 0.25
+            },
+            "KingGesoHomingAttackSettings": {
+                "launchInterval": 0.3499999940395355,
+                "projectileCount": 3,
+                "projectileDamage": 1.0,
+                "projectileLifeTime": 8.0,
+                "projectilePrefabName": "KingGesoHomingProjectile",
+                "projectileSpeed": 120.0,
+                "spawnOffset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "turnSpeed": 2.0
             },
             "SpriteAnimation": {
                 "cols": 3,
@@ -112,6 +151,22 @@
                 {
                     "enable": true,
                     "name": "KingGeso"
+                },
+                {
+                    "enable": true,
+                    "name": "KingGesoWaveThrustSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingGesoPincerThrustSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingGesoInkBarrageSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingGesoHomingAttackSettings"
                 },
                 {
                     "enable": true,

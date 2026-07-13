@@ -1,5 +1,9 @@
 using System.Collections.Generic;
 
+/// <summary>
+/// キングゲソの「はさみ突き」攻撃の状態。
+/// StartPendingGesoAttacks() で pendingGesos_ に溜まったゲソを順次攻撃開始する。
+/// </summary>
 internal sealed class KingGesoPincerThrustAttack : IKingGesoAttack
 {
     private float elapsed_;
@@ -11,6 +15,7 @@ internal sealed class KingGesoPincerThrustAttack : IKingGesoAttack
         pendingGesos_.Clear();
 
         List<Entity> spawnedGesos = new List<Entity>();
+        //挟み撃ち攻撃用のゲソを生成する
         if (!owner.SpawnPincerGesos(spawnedGesos))
         {
             return;
@@ -18,6 +23,7 @@ internal sealed class KingGesoPincerThrustAttack : IKingGesoAttack
 
         for (int i = 0; i < spawnedGesos.Count; i++)
         {
+            // 生成したゲソを pendingGesos_ に追加する
             pendingGesos_.Add(spawnedGesos[i]);
         }
     }
@@ -27,7 +33,7 @@ internal sealed class KingGesoPincerThrustAttack : IKingGesoAttack
         StartPendingGesoAttacks(owner);
 
         elapsed_ += Time.deltaTime;
-        return elapsed_ >= owner.AttackDuration;
+        return elapsed_ >= owner.PincerAttackDuration;
     }
 
     public void Exit(KingGeso owner)
@@ -39,6 +45,7 @@ internal sealed class KingGesoPincerThrustAttack : IKingGesoAttack
     {
         for (int i = pendingGesos_.Count - 1; i >= 0; i--)
         {
+            // 
             Entity pendingGeso = pendingGesos_[i];
             if (pendingGeso == null || owner.StartGesoAttack(pendingGeso, KingGesoAttackType.PincerThrust))
             {

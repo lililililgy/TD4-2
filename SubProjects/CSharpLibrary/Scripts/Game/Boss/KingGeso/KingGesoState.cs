@@ -108,7 +108,7 @@ internal sealed class KingGesoHomingAttackState : IKingGesoState
         for (int i = _pendingProjectiles.Count - 1; i >= 0; i--)
         {
             Entity projectile = _pendingProjectiles[i];
-            if (projectile == null || owner.StartHomingProjectile(projectile))
+            if (projectile == null || owner.ShootHomingBullet(projectile))
             {
                 _pendingProjectiles.RemoveAt(i);
             }

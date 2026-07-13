@@ -16,14 +16,14 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 42.0,
-                "y": 42.0,
-                "z": 42.0
+                "x": 142.0,
+                "y": 142.0,
+                "z": 142.0
             },
             "type": "Transform"
         },
         {
-            "categoryBits": 8,
+            "categoryBits": 16,
             "enable": 1,
             "freezeY": false,
             "isTrigger": true,
@@ -37,7 +37,7 @@
         {
             "AttackCollision": {
                 "damage_": 8.0,
-                "destroyOnHit_": true
+                "destroyOnHit_": false
             },
             "KingGesoInkBullet": {
                 "damage": 8.0,
@@ -62,12 +62,13 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
-                    "x": 0.08,
-                    "y": 0.12,
-                    "z": 0.2
+                    "x": 0.07999999821186066,
+                    "y": 0.11999999731779099,
+                    "z": 0.20000000298023224
                 },
                 "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
                 "guid": "00000000000000000000000000000000",
@@ -88,7 +89,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "374ad0f10201487fbed331a40c27dd29",
+    "guid": "9d9f8bb4d87d60f44c60e5a563040c63",
     "name": "KingGesoInkBullet",
     "parentGuid": null,
     "prefabName": "KingGesoInkBullet"

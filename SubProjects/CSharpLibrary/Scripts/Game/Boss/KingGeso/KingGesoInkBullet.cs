@@ -1,3 +1,5 @@
+
+// KingGesoの攻撃行動「墨弾」の弾丸の挙動を制御
 public class KingGesoInkBullet : MonoScript
 {
     [SerializeField] public float speed = 220.0f;
@@ -7,6 +9,7 @@ public class KingGesoInkBullet : MonoScript
     private Vector3 direction_ = Vector3.up;
     private float elapsed_;
     private bool configured_;
+    private bool destroyRequested_;
 
     public override void Initialize()
     {
@@ -15,11 +18,18 @@ public class KingGesoInkBullet : MonoScript
         {
             direction_ = Vector3.up;
             elapsed_ = 0.0f;
+            destroyRequested_ = false;
         }
     }
 
     public override void Update()
     {
+        if (destroyRequested_)
+        {
+            entity.Destroy();
+            return;
+        }
+
         if (!configured_)
         {
             return;
@@ -43,6 +53,7 @@ public class KingGesoInkBullet : MonoScript
         damage = bulletDamage;
         elapsed_ = 0.0f;
         configured_ = true;
+        destroyRequested_ = false;
 
         float roll = Mathf.Atan2(direction_.x, direction_.y);
         transform.rotation = Quaternion.MakeFromAxis(Vector3.back, roll);
@@ -56,9 +67,9 @@ public class KingGesoInkBullet : MonoScript
 
     public override void OnCollisionEnter(Entity collision)
     {
-        if (configured_ && collision != null && collision.Id != entity.Id)
+        if (configured_ && collision != null)
         {
-            entity.Destroy();
+            destroyRequested_ = true;
         }
     }
 }

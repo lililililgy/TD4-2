@@ -52,12 +52,12 @@ internal sealed class KingGesoInkBarrageAttack : IKingGesoAttack
         }
 
         firedWaveCount_++;
-        if (owner.reverseInkBarrageHalfway &&
+        if (owner.ReverseInkBarrageHalfway &&
             firedWaveCount_ >= (owner.InkBulletWaveCount + 1) / 2)
         {
             rotationDirection_ = -1;
         }
 
-        currentAngle_ += owner.inkBulletAngleOffset * rotationDirection_;
+        currentAngle_ += owner.InkBulletAngleOffset * rotationDirection_;
     }
 }

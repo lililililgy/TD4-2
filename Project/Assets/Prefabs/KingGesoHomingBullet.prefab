@@ -16,18 +16,18 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 48.0,
-                "y": 48.0,
-                "z": 48.0
+                "x": 148.0,
+                "y": 148.0,
+                "z": 148.0
             },
             "type": "Transform"
         },
         {
-            "categoryBits": 8,
+            "categoryBits": 16,
             "enable": 1,
             "freezeY": false,
             "isTrigger": true,
-            "maskBits": 2,
+            "maskBits": 3,
             "mass": 1.0,
             "radius": 0.5,
             "state": "Dynamic",
@@ -37,9 +37,9 @@
         {
             "AttackCollision": {
                 "damage_": 1.0,
-                "destroyOnHit_": true
+                "destroyOnHit_": false
             },
-            "KingGesoHomingProjectile": {
+            "KingGesoHomingBullet": {
                 "damage": 1.0,
                 "lifeTime": 8.0,
                 "speed": 120.0,
@@ -52,7 +52,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "KingGesoHomingProjectile"
+                    "name": "KingGesoHomingBullet"
                 },
                 {
                     "enable": true,
@@ -63,12 +63,13 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
                     "x": 1.0,
-                    "y": 0.35,
-                    "z": 0.35
+                    "y": 0.3499999940395355,
+                    "z": 0.3499999940395355
                 },
                 "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
                 "guid": "00000000000000000000000000000000",
@@ -89,8 +90,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "715459bd7b4e4f498a6a1c9f6ef81ad2",
-    "name": "KingGesoHomingProjectile",
+    "guid": "641ddc0076565e4699d6fc5fff3b6477",
+    "name": "KingGesoHomingBullet",
     "parentGuid": null,
-    "prefabName": "KingGesoHomingProjectile"
+    "prefabName": "KingGesoHomingBullet"
 }
