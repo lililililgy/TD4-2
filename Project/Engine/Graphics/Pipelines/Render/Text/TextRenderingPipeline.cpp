@@ -168,6 +168,7 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 			if (tr->GetShadowColor().w > 0.0f) {
 				GPUMaterial shadowMat = tr->GetGpuMaterial();
 				shadowMat.baseColor = tr->GetShadowColor();
+				shadowMat.postEffectFlags |= PostEffectFlags_Shadow;
 
 				// 1ピクセル = ワールド座標 0.002 単位として換算
 				float shadowScale = 0.002f;

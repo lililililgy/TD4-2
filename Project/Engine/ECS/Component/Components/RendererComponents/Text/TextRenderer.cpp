@@ -228,7 +228,11 @@ void TextRenderer::SetFontSize(int size) {
 }
 
 void TextRenderer::SetColor(const Vector4& color) {
-	material_.baseColor = color;
+	if (material_.baseColor.x != color.x || material_.baseColor.y != color.y ||
+		material_.baseColor.z != color.z || material_.baseColor.w != color.w) {
+		material_.baseColor = color;
+		MarkDirty();
+	}
 }
 
 void TextRenderer::SetUVTransform(const UVTransform& uvTransform) {

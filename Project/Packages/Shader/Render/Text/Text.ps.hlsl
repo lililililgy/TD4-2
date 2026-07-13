@@ -16,7 +16,12 @@ PSOutput main(VSOutput input) {
 	float4 baseTexColor = textures[material.baseTextureId].Sample(textureSampler, uv);
 
 	// フォントテクスチャのアルファを使用して色を乗算する
-	float4 outputColor = baseTexColor * material.baseColor;
+	float4 outputColor;
+	if (IsPostEffectEnabled((int)material.postEffectFlags, PostEffectFlags_Shadow)) {
+		outputColor = float4(material.baseColor.rgb, baseTexColor.a * material.baseColor.a);
+	} else {
+		outputColor = baseTexColor;
+	}
 
 	if (outputColor.a < 0.01) {
 		discard;
