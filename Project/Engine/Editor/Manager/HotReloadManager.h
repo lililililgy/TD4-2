@@ -56,12 +56,18 @@ public:
             if (ev.type == FileEvent::Type::File) {
                 std::string relPath = GetRelativePath(ev.path);
                 ONEngine::Console::Log("[MonoDbg]   File type: " + relPath, ONEngine::LogCategory::ScriptEngine);
+
+                // CSharpLibrary.dll および .pdb 自体の変更イベントは、ホットリロードの上書きコピーによる二次的イベントであるため完全に無視する
+                if (relPath.find("CSharpLibrary") != std::string::npos && (relPath.ends_with(".dll") || relPath.ends_with(".pdb"))) {
+                    continue;
+                }
+
                 if (ev.action == FileEvent::Action::Added || ev.action == FileEvent::Action::Modified || ev.action == FileEvent::Action::RenamedNew) {
                     // アセットの再ロード要求
                     pendingAssetReloads_.push_back(relPath);
 
-                    // C#スクリプトまたはDLLが更新された場合はホットリロード要求
-                    if (relPath.ends_with(".cs") || (relPath.ends_with(".dll") && relPath.find("CSharpLibrary") != std::string::npos)) {
+                    // C#スクリプトが更新された場合はホットリロード要求
+                    if (relPath.ends_with(".cs")) {
                         ONEngine::Console::Log("[MonoDbg] Triggering ScriptHotReload for: " + relPath, ONEngine::LogCategory::ScriptEngine);
                         pendingScriptHotReload_ = true;
                     }
