@@ -792,6 +792,8 @@ void MonoScriptEngine::ResetCS() {
 		return;
 	}
 
+	mono_thread_attach(domain_);
+
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if(!monoClass) {
 		Console::LogError("Failed to find class: EntityComponentSystem", LogCategory::ScriptEngine);
