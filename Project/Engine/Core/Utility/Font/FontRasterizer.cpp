@@ -52,12 +52,10 @@ bool FontRasterizer::GenerateTexture(const std::string& text, const std::string&
 		if (!dxm) return false;
 
 		uint8_t transparentPixel[4] = { 0, 0, 0, 0 };
-		if (assetCollection->HasAsset(texturePath)) {
-			Asset::Texture* tex = assetCollection->GetTexture(texturePath);
-			if (tex) {
-				tex->RecreateFromPixels(transparentPixel, 1, 1, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), dxm->GetDxCommand());
-				return true;
-			}
+		Asset::Texture* tex = assetCollection->GetTexture(texturePath);
+		if (tex) {
+			tex->RecreateFromPixels(transparentPixel, 1, 1, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), dxm->GetDxCommand());
+			return true;
 		} else {
 			Asset::Texture newTex;
 			newTex.RecreateFromPixels(transparentPixel, 1, 1, dxm->GetDxDevice(), dxm->GetDxSRVHeap(), dxm->GetDxCommand());

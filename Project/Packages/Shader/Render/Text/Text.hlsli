@@ -6,7 +6,7 @@ struct VSInput {
 struct VSOutput {
 	float4 position   : SV_POSITION;
 	float2 uv         : TEXCOORD0;
-	uint   instanceId : SV_InstanceID;
+	nointerpolation uint   instanceId : TEXCOORD1;
 };
 
 struct PSOutput {
