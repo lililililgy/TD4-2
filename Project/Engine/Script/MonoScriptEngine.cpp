@@ -1319,7 +1319,7 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 	config = L"Release";
 #endif
 
-	std::wstring cmd = L"dotnet build \"../SubProjects/CSharpLibrary/CSharpLibrary.csproj\" -c " + config + L" -p:Platform=x64";
+	std::wstring cmd = L"cmd.exe /c dotnet build \"../SubProjects/CSharpLibrary/CSharpLibrary.csproj\" -c " + config + L" -p:Platform=x64";
 
 	HANDLE hReadPipe, hWritePipe;
 	SECURITY_ATTRIBUTES saAttr;
@@ -1368,7 +1368,8 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 	CloseHandle(hWritePipe);
 
 	if (!success) {
-		outMessage = "dotnet command not found or failed to execute. Please ensure .NET SDK is installed.";
+		DWORD err = GetLastError();
+		outMessage = "dotnet command not found or failed to execute. Error Code: " + std::to_string(err) + ". Please ensure .NET SDK is installed.";
 		CloseHandle(hReadPipe);
 		return false;
 	}
