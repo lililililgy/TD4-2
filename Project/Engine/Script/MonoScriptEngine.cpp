@@ -982,12 +982,10 @@ MonoDomain* MonoScriptEngine::CreateReloadDomain() {
 
 void MonoScriptEngine::ClearPendingDomains() {
 #if defined(DEBUG_MODE)
-	// テスト実行中、またはデバッガが接続（アタッチ）されている間は、
-	// アンロードに伴うスレッド競合やデッドロッククラッシュを防ぐため、
-	// ドメインのアンロードを一切行わず、リストに保留（蓄積）したままにします。
-	// デバッガが切断された直後のフレームから安全に一括アンロードが実行されます。
-	// （※毎フレームの GetExtendedTcpTable 呼び出しを避けるため、キャッシュされた変数 wasDebuggerAttached_ を使用します）
-	if (EngineConfig::isTestMode || wasDebuggerAttached_) {
+	// テスト実行中のみアンロードを保留にします。
+	// デバッガ接続時であっても古いドメインを物理アンロードしなければホットリロードが正しく反映されないため、
+	// wasDebuggerAttached_ のガードは解除してアンロードを実行します。
+	if (EngineConfig::isTestMode) {
 		return;
 	}
 #endif
