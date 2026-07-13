@@ -457,7 +457,7 @@ size_t ONEngine::ComponentApplyFuncs::GetBatchElementSize(MonoClass* monoClass) 
 	if (!monoClass) return 0;
 	std::string className = mono_class_get_name(monoClass);
 	auto itr = gComponentBatchSize.find(className);
-	if(itr != gComponentBatchSize.end()) {
+	if(itr != gComponentBatchSize.end() && itr->second > 0) {
 		return itr->second;
 	}
 
@@ -471,6 +471,8 @@ size_t ONEngine::ComponentApplyFuncs::GetBatchElementSize(MonoClass* monoClass) 
 	if (className == "CameraComponent") return sizeof(CameraBatch);
 	if (className == "Animator") return sizeof(AnimatorBatch);
 	if (className == "UIGroupComponent") return sizeof(UIGroupComponent::BatchData);
+	if (className == "UIElementComponent") return sizeof(UIElementComponent::BatchData);
+	if (className == "BoxCollider2D") return sizeof(BoxCollider2DBatch);
 
 	Console::LogError("[JIT_DEBUG] GetBatchElementSize - Unknown component class name requested: " + className);
 	return 64; // アボート防止用のデフォルトの安全アライメントサイズ
