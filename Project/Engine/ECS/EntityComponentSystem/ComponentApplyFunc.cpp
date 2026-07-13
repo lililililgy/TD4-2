@@ -43,6 +43,7 @@ static void Register(MonoClass* monoClass, ComponentApplyFunc applyFunc, Compone
 }
 
 
+#pragma pack(push, 4)
 struct TransformBatch {
 	uint32_t compId;
 	Vector3 position;
@@ -101,6 +102,7 @@ struct BoxCollider2DBatch {
 	float mass;
 	int32_t useOwnerScale;
 };
+#pragma pack(pop)
 
 } /// unnamed namespace
 
