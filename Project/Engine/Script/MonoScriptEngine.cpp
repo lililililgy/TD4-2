@@ -1422,12 +1422,6 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		// Mono ランタイムにデバッガの物理接続を同期
 		mono_set_is_debugger_attached(true);
 
-		// デバッガが安全にアセンブリをバインド（同期）できるように、
-		// アタッチされたこのフレームで AppDomain を強制的にリロード（ホットリロード）します。
-		// これにより、デバッガ接続状態でアセンブリのロードイベントが発火し、
-		// 新旧のバインド不整合や waitDebug=false 時のバインド失敗が完璧に解消されます。
-		HotReload();
-
 		// CSharpLibrary.dll / PDB のタイムスタンプを詳細出力
 		std::string dllPath = "./Packages/Scripts/CSharpLibrary.dll";
 		std::string pdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
@@ -1471,8 +1465,12 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 
 	// デバッガ切断時の状態同期処理
 	if (!currentAttached && wasDebuggerAttached_) {
-		Console::Log("[Mono] Debugger disconnected. Clearing attached state in Mono.", LogCategory::ScriptEngine);
+		Console::Log("[Mono] Debugger disconnected. Clearing attached state in Mono and resetting domain...", LogCategory::ScriptEngine);
 		mono_set_is_debugger_attached(false);
+
+		// デバッガが切断されたため、安全に AppDomain をリセット（ホットリロード）して待機状態にします。
+		// これにより、次回アタッチした際にはゾンビ状態を引きずらず、「1回目のアタッチ」として正常にバインドできます。
+		HotReload();
 	}
 
 	wasDebuggerAttached_ = currentAttached;
