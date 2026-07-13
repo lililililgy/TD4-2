@@ -507,7 +507,7 @@ void MonoScriptEngine::Finalize() {
 	isShuttingDown_ = true;
 	if(rootDomain_) {
 		ResetCS();
-		mono_jit_cleanup(rootDomain_);
+		// mono_jit_cleanup(rootDomain_); // Prevent GC race aborts on shutdown
 		rootDomain_ = nullptr;
 		domain_ = nullptr;
 	}
