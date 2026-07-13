@@ -30,9 +30,17 @@ using namespace ONEngine;
 
 namespace {
 
-std::unordered_map<MonoClass*, ComponentApplyFunc> gApplyFuncMap;
-std::unordered_map<MonoClass*, ComponentFetchFunc> gFetchFuncMap;
-std::unordered_map<MonoClass*, size_t> gComponentBatchSize;
+std::unordered_map<std::string, ComponentApplyFunc> gApplyFuncMap;
+std::unordered_map<std::string, ComponentFetchFunc> gFetchFuncMap;
+std::unordered_map<std::string, size_t> gComponentBatchSize;
+
+static void Register(MonoClass* monoClass, ComponentApplyFunc applyFunc, ComponentFetchFunc fetchFunc, size_t batchSize) {
+	if (!monoClass) return;
+	std::string className = mono_class_get_name(monoClass);
+	gApplyFuncMap[className] = applyFunc;
+	gFetchFuncMap[className] = fetchFunc;
+	gComponentBatchSize[className] = batchSize;
+}
 
 
 struct TransformBatch {
@@ -424,7 +432,9 @@ void ONEngine::ComponentApplyFuncs::FetchBoxCollider2D(void* element, ECSGroup* 
 }
 
 ComponentApplyFunc ComponentApplyFuncs::GetApplyFunc(MonoClass* monoClass) {
-	auto itr = gApplyFuncMap.find(monoClass);
+	if (!monoClass) return nullptr;
+	std::string className = mono_class_get_name(monoClass);
+	auto itr = gApplyFuncMap.find(className);
 	if(itr == gApplyFuncMap.end()) {
 		return nullptr;
 	}
@@ -432,7 +442,9 @@ ComponentApplyFunc ComponentApplyFuncs::GetApplyFunc(MonoClass* monoClass) {
 }
 
 ComponentFetchFunc ONEngine::ComponentApplyFuncs::GetFetchFunc(MonoClass* monoClass) {
-	auto itr = gFetchFuncMap.find(monoClass);
+	if (!monoClass) return nullptr;
+	std::string className = mono_class_get_name(monoClass);
+	auto itr = gFetchFuncMap.find(className);
 	if(itr == gFetchFuncMap.end()) {
 		return nullptr;
 	}
@@ -440,7 +452,9 @@ ComponentFetchFunc ONEngine::ComponentApplyFuncs::GetFetchFunc(MonoClass* monoCl
 }
 
 size_t ONEngine::ComponentApplyFuncs::GetBatchElementSize(MonoClass* monoClass) {
-	auto itr = gComponentBatchSize.find(monoClass);
+	if (!monoClass) return 0;
+	std::string className = mono_class_get_name(monoClass);
+	auto itr = gComponentBatchSize.find(className);
 	if(itr == gComponentBatchSize.end()) {
 		return 0;
 	}
@@ -452,41 +466,16 @@ void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
 	gFetchFuncMap.clear();
 	gComponentBatchSize.clear();
 
-	{	/// Transform
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "Transform");
-		gApplyFuncMap[monoClass] = ApplyTransform;
-		gFetchFuncMap[monoClass] = FetchTransform;
-		gComponentBatchSize[monoClass] = sizeof(TransformBatch);
-	}
-
-	{	/// MeshRenderer
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "MeshRenderer");
-		gApplyFuncMap[monoClass] = ApplyMeshRenderer;
-		gFetchFuncMap[monoClass] = FetchMeshRenderer;
-		gComponentBatchSize[monoClass] = sizeof(MeshRendererBatch);
-	}
-
-	{	/// DissolveMeshRenderer
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "DissolveMeshRenderer");
-		gApplyFuncMap[monoClass] = ApplyDissolve;
-		gFetchFuncMap[monoClass] = FetchDissolve;
-		gComponentBatchSize[monoClass] = sizeof(DissolveBatch);
-	}
-
-	{	/// SpriteRenderer
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "SpriteRenderer");
-		gApplyFuncMap[monoClass] = ApplySprite;
-		gFetchFuncMap[monoClass] = FetchSprite;
-		gComponentBatchSize[monoClass] = sizeof(SpriteBatch);
-	}
+	Register(mono_class_from_name(monoImage, "", "Transform"), ApplyTransform, FetchTransform, sizeof(TransformBatch));
+	Register(mono_class_from_name(monoImage, "", "MeshRenderer"), ApplyMeshRenderer, FetchMeshRenderer, sizeof(MeshRendererBatch));
+	Register(mono_class_from_name(monoImage, "", "DissolveMeshRenderer"), ApplyDissolve, FetchDissolve, sizeof(DissolveBatch));
+	Register(mono_class_from_name(monoImage, "", "SpriteRenderer"), ApplySprite, FetchSprite, sizeof(SpriteBatch));
 
 	{	/// TextRenderer
 		MonoClass* monoClass = mono_class_from_name(monoImage, "", "TextRenderer");
 		Console::Log(std::format("[JIT_DEBUG] TextRenderer MonoClass pointer: {}", (void*)monoClass));
 		if (monoClass) {
-			gApplyFuncMap[monoClass] = ApplyText;
-			gFetchFuncMap[monoClass] = FetchText;
-			gComponentBatchSize[monoClass] = sizeof(TextBatch);
+			Register(monoClass, ApplyText, FetchText, sizeof(TextBatch));
 			Console::Log(std::format("[JIT_DEBUG] sizeof(TextBatch) = {}", sizeof(TextBatch)));
 			Console::Log(std::format("[JIT_DEBUG] sizeof(SpriteBatch) = {}", sizeof(SpriteBatch)));
 			Console::Log("[JIT_DEBUG] Registered TextRenderer in maps successfully.");
@@ -495,57 +484,10 @@ void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
 		}
 	}
 
-	{	/// AgentIntentComponent
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "AgentIntentComponent");
-		if (monoClass) {
-			gApplyFuncMap[monoClass] = ApplyAgentIntent;
-			gFetchFuncMap[monoClass] = FetchAgentIntent;
-			gComponentBatchSize[monoClass] = sizeof(AgentIntentComponent::BatchData);
-		}
-	}
-
-	{	/// CameraComponent
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "CameraComponent");
-		if (monoClass) {
-			gApplyFuncMap[monoClass] = ApplyCamera;
-			gFetchFuncMap[monoClass] = FetchCamera;
-			gComponentBatchSize[monoClass] = sizeof(CameraBatch);
-		}
-	}
-
-	{	/// Animator
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "Animator");
-		if (monoClass) {
-			gApplyFuncMap[monoClass] = ApplyAnimator;
-			gFetchFuncMap[monoClass] = FetchAnimator;
-			gComponentBatchSize[monoClass] = sizeof(AnimatorBatch);
-		}
-	}
-
-	{	/// UIGroupComponent
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "UIGroupComponent");
-		if (monoClass) {
-			gApplyFuncMap[monoClass] = ApplyUIGroup;
-			gFetchFuncMap[monoClass] = FetchUIGroup;
-			gComponentBatchSize[monoClass] = sizeof(UIGroupComponent::BatchData);
-		}
-	}
-
-	{	/// UIElementComponent
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "UIElementComponent");
-		if (monoClass) {
-			gApplyFuncMap[monoClass] = ApplyUIElement;
-			gFetchFuncMap[monoClass] = FetchUIElement;
-			gComponentBatchSize[monoClass] = sizeof(UIElementComponent::BatchData);
-		}
-	}
-
-	{	/// BoxCollider2D
-		MonoClass* monoClass = mono_class_from_name(monoImage, "", "BoxCollider2D");
-		if (monoClass) {
-			gApplyFuncMap[monoClass] = ApplyBoxCollider2D;
-			gFetchFuncMap[monoClass] = FetchBoxCollider2D;
-			gComponentBatchSize[monoClass] = sizeof(BoxCollider2DBatch);
-		}
-	}
+	Register(mono_class_from_name(monoImage, "", "AgentIntentComponent"), ApplyAgentIntent, FetchAgentIntent, sizeof(AgentIntentComponent::BatchData));
+	Register(mono_class_from_name(monoImage, "", "CameraComponent"), ApplyCamera, FetchCamera, sizeof(CameraBatch));
+	Register(mono_class_from_name(monoImage, "", "Animator"), ApplyAnimator, FetchAnimator, sizeof(AnimatorBatch));
+	Register(mono_class_from_name(monoImage, "", "UIGroupComponent"), ApplyUIGroup, FetchUIGroup, sizeof(UIGroupComponent::BatchData));
+	Register(mono_class_from_name(monoImage, "", "UIElementComponent"), ApplyUIElement, FetchUIElement, sizeof(UIElementComponent::BatchData));
+	Register(mono_class_from_name(monoImage, "", "BoxCollider2D"), ApplyBoxCollider2D, FetchBoxCollider2D, sizeof(BoxCollider2DBatch));
 }
