@@ -141,7 +141,9 @@ void ScriptUpdateSystem::AddAllEntitiesAndComponents(ECSGroup* ecsGroup) {
 }
 
 bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
-	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+	if (mono_thread_current() == nullptr) {
+		mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+	}
 
 	/// runtime中に生成したオブジェクトは無視
 	//if (entity->GetId() < 0) {
