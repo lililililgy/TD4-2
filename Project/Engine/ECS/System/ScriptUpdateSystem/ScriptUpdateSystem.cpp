@@ -176,13 +176,20 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 		/// --------------------------------------------------------------------------------
 		/// スクリプトの追加
 		/// --------------------------------------------------------------------------------
-		for(auto& data : script->GetScriptDataList()) {
+		auto scriptDataListCopy = script->GetScriptDataList();
+		for(size_t i = 0; i < scriptDataListCopy.size(); ++i) {
+			auto& data = scriptDataListCopy[i];
 
 			/// すでに追加済みなら処理しない
 			if(data.isAdded) {
 				continue;
 			}
-			data.isAdded = true;
+
+			// 元のコンポーネント側も追加済みにマークする
+			Script* currentScript = entity->GetComponent<Script>();
+			if (currentScript && i < currentScript->GetScriptDataList().size()) {
+				currentScript->GetScriptDataList()[i].isAdded = true;
+			}
 
 			/// スクリプト名からMonoObjectを生成する
 			MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
@@ -195,9 +202,6 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			/// インスタンスを生成
 			MonoObject* scriptInstance = mono_object_new(MonoScriptEngine::GetInstance().Domain(), behaviorClass);
 			mono_runtime_object_init(scriptInstance); /// クラスの初期化、コンストラクタをイメージ
-			if(!script) {
-				continue;
-			}
 
 			Console::Log("[MonoDbg] AddEntityToScript - Instantiating and adding script: " + data.scriptName + " to Entity ID: " + std::to_string(entityId), LogCategory::ScriptEngine);
 
@@ -215,12 +219,11 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			}
 
 			/// variablesの設定
-			if(vars) {
+			Variables* currentVars = entity->GetComponent<Variables>();
+			if(currentVars) {
 				Console::Log("[MonoDbg] AddEntityToScript - Syncing serialized fields for script: " + data.scriptName, LogCategory::ScriptEngine);
-				vars->SetScriptVariables(data.scriptName);
+				currentVars->SetScriptVariables(data.scriptName);
 			}
-
-
 		}
 	}
 
