@@ -30,7 +30,7 @@ GameFramework::~GameFramework() {
 	if (DebugConfig::isDebugging) {
 		DebugConfig::isDebugging = false;
 		if (sceneManager_) {
-			sceneManager_->ReloadScene(true);
+			// sceneManager_->ReloadScene(true); // Prevent C# ECS cleanups during engine shutdown
 			sceneManager_->ClearTemporarySavedSceneName();
 		}
 	}
