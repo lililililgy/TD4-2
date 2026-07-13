@@ -203,14 +203,12 @@ void ONEngine::AddComponentInternalCalls() {
 	AddAudioInternalCalls();
 
 	/// sprite renderer
-	mono_add_internal_call("SpriteRenderer::InternalGetColor", (void*)InternalGetColor);
 	mono_add_internal_call("SpriteRenderer::InternalSetColor", (void*)InternalSetColor);
 	mono_add_internal_call("SpriteRenderer::InternalGetTextureSize", (void*)InternalGetTextureSize);
 	mono_add_internal_call("SpriteRenderer::InternalGetPixelPerfect", (void*)InternalGetPixelPerfect);
 	mono_add_internal_call("SpriteRenderer::InternalSetPixelPerfect", (void*)InternalSetPixelPerfect);
 
 	/// text renderer
-	mono_add_internal_call("TextRenderer::InternalGetColor", (void*)InternalGetTextColor);
 	mono_add_internal_call("TextRenderer::InternalSetColor", (void*)InternalSetTextColor);
 	mono_add_internal_call("TextRenderer::InternalGetText", (void*)InternalGetTextText);
 	mono_add_internal_call("TextRenderer::InternalSetText", (void*)InternalSetTextText);

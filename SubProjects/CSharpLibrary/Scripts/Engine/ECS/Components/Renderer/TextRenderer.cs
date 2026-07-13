@@ -102,8 +102,7 @@ class TextRenderer : Component {
 	/// internal methods
 	/// -------------------------------------------
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern Vector4 InternalGetColor(ulong nativeHandle);
+
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalSetColor(ulong nativeHandle, Vector4 color);
