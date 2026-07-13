@@ -232,7 +232,7 @@ void GameFramework::Update() {
 				ofs.close();
 			}
 			PostQuitMessage(0);
-			// exit(0); // Bypassing exit(0) to allow natural destructor ordering
+			ExitProcess(0);
 		}
 	}
 
