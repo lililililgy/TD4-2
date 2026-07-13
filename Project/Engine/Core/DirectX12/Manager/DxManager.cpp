@@ -7,8 +7,23 @@ using namespace ONEngine;
 #include "Engine/Core/DirectX12/DescriptorHeap/DescriptorHeapSize.h"
 #include "../GPUTimeStamp/GPUTimeStamp.h"
 
-DxManager::DxManager() = default;
-DxManager::~DxManager() = default;
+namespace {
+	DxManager* sInstance = nullptr;
+}
+
+DxManager* DxManager::GetInstance() {
+	return sInstance;
+}
+
+DxManager::DxManager() {
+	sInstance = this;
+}
+
+DxManager::~DxManager() {
+	if (sInstance == this) {
+		sInstance = nullptr;
+	}
+}
 
 void DxManager::Initialize() {
 

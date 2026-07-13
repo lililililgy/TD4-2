@@ -17,6 +17,7 @@ std::unordered_map<std::string, ONEngine::Asset::AssetType> gAssetTypeCheckMap =
 	{ ".mate", ONEngine::Asset::AssetType::Material },
 	{ ".hlsl", ONEngine::Asset::AssetType::Shader },
 	{ ".anim", ONEngine::Asset::AssetType::AnimationClip },
+	{ ".ttf", ONEngine::Asset::AssetType::Font },
 };
 
 }	/// namespace

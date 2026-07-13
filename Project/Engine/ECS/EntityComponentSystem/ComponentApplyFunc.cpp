@@ -17,6 +17,7 @@
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/DissolveMeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Sprite/SpriteRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
@@ -56,6 +57,13 @@ struct DissolveBatch {
 };
 
 struct SpriteBatch {
+	uint32_t compId;
+	Vector4 color;
+	Vector2 textureSize;
+	UVTransform uvTransform;
+};
+
+struct TextBatch {
 	uint32_t compId;
 	Vector4 color;
 	Vector2 textureSize;
@@ -141,6 +149,19 @@ void ONEngine::ComponentApplyFuncs::ApplySprite(void* element, ECSGroup* ecsGrou
 	if(SpriteRenderer* sr = array->GetComponent(data->compId)) {
 		sr->SetColor(data->color);
 		sr->SetUVTransform(data->uvTransform);
+	}
+}
+
+void ONEngine::ComponentApplyFuncs::ApplyText(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<TextBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<TextRenderer>();
+	if(!CheckComponentArrayEnable(array)) {
+		return;
+	}
+
+	if(TextRenderer* tr = array->GetComponent(data->compId)) {
+		tr->SetColor(data->color);
+		tr->SetUVTransform(data->uvTransform);
 	}
 }
 
@@ -276,6 +297,20 @@ void ONEngine::ComponentApplyFuncs::FetchSprite(void* element, ECSGroup* ecsGrou
 		data->color = sr->GetColor();
 		data->textureSize = sr->GetTextureSize(Asset::AssetCollection::GetInstance());
 		data->uvTransform = sr->GetUVTransform();
+	}
+}
+
+void ONEngine::ComponentApplyFuncs::FetchText(void* element, ECSGroup* ecsGroup) {
+	auto* data = static_cast<TextBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<TextRenderer>();
+	if(!CheckComponentArrayEnable(array)) {
+		return;
+	}
+
+	if(TextRenderer* tr = array->GetComponent(data->compId)) {
+		data->color = tr->GetColor();
+		data->textureSize = tr->GetTextureSize(Asset::AssetCollection::GetInstance());
+		data->uvTransform = tr->GetUVTransform();
 	}
 }
 
@@ -443,6 +478,15 @@ void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
 		gApplyFuncMap[monoClass] = ApplySprite;
 		gFetchFuncMap[monoClass] = FetchSprite;
 		gComponentBatchSize[monoClass] = sizeof(SpriteBatch);
+	}
+
+	{	/// TextRenderer
+		MonoClass* monoClass = mono_class_from_name(monoImage, "", "TextRenderer");
+		if (monoClass) {
+			gApplyFuncMap[monoClass] = ApplyText;
+			gFetchFuncMap[monoClass] = FetchText;
+			gComponentBatchSize[monoClass] = sizeof(TextBatch);
+		}
 	}
 
 	{	/// AgentIntentComponent

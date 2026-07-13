@@ -1,4 +1,4 @@
-﻿#include "AssetCollection.h"
+#include "AssetCollection.h"
 
 /// std
 #include <filesystem>
@@ -36,6 +36,7 @@ void AssetCollection::Initialize(DxManager* dxm) {
 	assetBundles_[static_cast<size_t>(AssetType::Material)] = std::make_unique<AssetBundle<Material>>();
 	assetBundles_[static_cast<size_t>(AssetType::Shader)] = std::make_unique<AssetBundle<Shader>>();
 	assetBundles_[static_cast<size_t>(AssetType::AnimationClip)] = std::make_unique<AssetBundle<AnimationClip>>();
+	assetBundles_[static_cast<size_t>(AssetType::Font)] = std::make_unique<AssetBundle<FontAsset>>();
 
 	// ヘルパーを使ってセットアップ（キャスト記述が減りスマートになります）
 	auto* meshBundle = GetBundle<Model>(AssetType::Mesh);
@@ -61,6 +62,10 @@ void AssetCollection::Initialize(DxManager* dxm) {
 	auto* animBundle = GetBundle<AnimationClip>(AssetType::AnimationClip);
 	animBundle->loader = std::make_unique<AssetLoader<AnimationClip>>();
 	animBundle->container = std::make_unique<AssetContainer<AnimationClip>>(128);
+
+	auto* fontBundle = GetBundle<FontAsset>(AssetType::Font);
+	fontBundle->loader = std::make_unique<AssetLoader<FontAsset>>(dxm, this);
+	fontBundle->container = std::make_unique<AssetContainer<FontAsset>>(64);
 
 	// デフォルトテクスチャを確実に最初にロードする
 	Load("./Packages/Textures/white.png", AssetType::Texture);
@@ -160,6 +165,11 @@ void AssetCollection::AddAsset<Material>(const std::string& filepath, Material&&
 template<>
 void AssetCollection::AddAsset<AnimationClip>(const std::string& filepath, AnimationClip&& asset) {
 	GetBundle<AnimationClip>(AssetType::AnimationClip)->container->Add(filepath, std::move(asset));
+}
+
+template<>
+void AssetCollection::AddAsset<FontAsset>(const std::string& filepath, FontAsset&& asset) {
+	GetBundle<FontAsset>(AssetType::Font)->container->Add(filepath, std::move(asset));
 }
 
 bool AssetCollection::IsAsset(const Guid& guid) const {
@@ -318,6 +328,14 @@ const AnimationClip* AssetCollection::GetAnimationClip(const std::string& filepa
 
 AnimationClip* AssetCollection::GetAnimationClip(const std::string& filepath) {
 	return GetBundle<AnimationClip>(AssetType::AnimationClip)->container->Get(filepath);
+}
+
+const FontAsset* AssetCollection::GetFont(const std::string& filepath) const {
+	return GetBundle<FontAsset>(AssetType::Font)->container->Get(filepath);
+}
+
+FontAsset* AssetCollection::GetFont(const std::string& filepath) {
+	return GetBundle<FontAsset>(AssetType::Font)->container->Get(filepath);
 }
 
 
