@@ -814,11 +814,7 @@ void MonoScriptEngine::ResetCS() {
 }
 
 MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& ecsGroupName, int32_t entityId) {
-	if (mono_thread_current() == nullptr) {
-		mono_thread_attach(domain_);
-	} else {
-		mono_domain_set(domain_, false);
-	}
+	mono_thread_attach(domain_);
 
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if(!monoClass) {
@@ -847,11 +843,7 @@ MonoObject* MonoScriptEngine::GetEntityFromCS(const std::string& ecsGroupName, i
 }
 
 MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupName, int32_t entityId, const std::string& behaviorName) {
-	if (mono_thread_current() == nullptr) {
-		mono_thread_attach(domain_);
-	} else {
-		mono_domain_set(domain_, false);
-	}
+	mono_thread_attach(domain_);
 
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if(!monoClass) {
@@ -881,11 +873,7 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupN
 }
 
 MonoObject* MonoScriptEngine::GetEcsGroupObject(const std::string& groupName) {
-	if (mono_thread_current() == nullptr) {
-		mono_thread_attach(domain_);
-	} else {
-		mono_domain_set(domain_, false);
-	}
+	mono_thread_attach(domain_);
 
 	if(!getEcsGroupMethod_) {
 		Console::LogError("getEcsGroupMethod_ is null", LogCategory::ScriptEngine);

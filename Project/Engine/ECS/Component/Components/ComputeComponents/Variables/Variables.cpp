@@ -69,11 +69,7 @@ namespace {
 		if (!hasSerializeMethod) return false;
 
 		MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
-		if (mono_thread_current() == nullptr) {
-			mono_thread_attach(domain);
-		} else {
-			mono_domain_set(domain, false);
-		}
+		mono_thread_attach(domain);
 
 		void* args[2];
 		args[0] = mono_string_new(domain, klassName);
@@ -538,11 +534,7 @@ void Variables::SaveJson(const std::string& path) {
 void Variables::RegisterScriptVariables() {
 	// Releaseビルドでのスレッドアタッチを保証する
 	MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
-	if (mono_thread_current() == nullptr) {
-		mono_thread_attach(domain);
-	} else {
-		mono_domain_set(domain, false);
-	}
+	mono_thread_attach(domain);
 
 	Script* script = GetOwner()->GetComponent<Script>();
 	if (!script) return;
@@ -578,11 +570,7 @@ void Variables::RegisterScriptVariables() {
 void Variables::ReloadScriptVariables() {
 	// Releaseビルドでのスレッドアタッチを保証する
 	MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
-	if (mono_thread_current() == nullptr) {
-		mono_thread_attach(domain);
-	} else {
-		mono_domain_set(domain, false);
-	}
+	mono_thread_attach(domain);
 
 	Script* script = GetOwner()->GetComponent<Script>();
 	if (!script) return;
@@ -617,11 +605,7 @@ void Variables::SetScriptVariables(const std::string& scriptName) {
 	// Releaseビルドでは SafeInvoke を経由しない Mono API (mono_field_set_value 等) を
 	// 直接呼び出すため、スレッドをドメインにアタッチしておく
 	MonoDomain* domain = MonoScriptEngine::GetInstance().Domain();
-	if (mono_thread_current() == nullptr) {
-		mono_thread_attach(domain);
-	} else {
-		mono_domain_set(domain, false);
-	}
+	mono_thread_attach(domain);
 
 	GameEntity* owner = GetOwner();
 	if (!owner) {
