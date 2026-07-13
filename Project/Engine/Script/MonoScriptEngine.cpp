@@ -454,7 +454,7 @@ void MonoScriptEngine::Initialize() {
 	Console::Log("Mono version: " + std::string(mono_get_runtime_build_info()), LogCategory::ScriptEngine);
 
 	/// Monoの検索パス設定
-	std::string scriptsLib = GetUtf8Path("Packages/Scripts/lib");
+	std::string scriptsLib = GetUtf8Path("Packages/mono/lib");
 	std::string monoEtc = GetUtf8Path("Externals/mono/etc");
 	mono_set_dirs(scriptsLib.c_str(), monoEtc.c_str());
 	mono_config_parse(nullptr);
