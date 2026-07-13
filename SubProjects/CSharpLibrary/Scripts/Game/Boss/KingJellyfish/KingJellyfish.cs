@@ -8,6 +8,8 @@ public enum KingJellyfishAttackTypeEnum
 {
     ChargeAttack, //体当たり
     Omnidirectional_Beam, //全方向ビーム攻撃
+    ElectricField, //帯電フィールド攻撃
+    RotatingBeam, //回転ビーム攻撃
 }
 
 //================================================================
@@ -48,6 +50,8 @@ public class KingJellyfish : MonoScript {
     [SerializeField] public KingJellyfishAttackTypeEnum fixedAttackType = KingJellyfishAttackTypeEnum.ChargeAttack;
     [SerializeField] public float chargeAttackWeight = 1.0f;
     [SerializeField] public float omnidirectionalBeamWeight = 1.0f;
+    [SerializeField] public float electricFieldWeight = 1.0f;
+    [SerializeField] public float rotatingBeamWeight = 1.0f;
 
     //8方向レーザー攻撃のパラメータ
     [SerializeField] public string laserPrefabName = "JellyfishLaser";
@@ -58,6 +62,27 @@ public class KingJellyfish : MonoScript {
     [SerializeField] public float laserWidth = 80.0f;
     [SerializeField] public float laserDamage = 15.0f;
     [SerializeField] public int laserCount = 8;
+
+    //帯電フィールド攻撃のパラメータ
+    [SerializeField] public string electricFieldPrefabName = "JellyfishElectricField";
+    [SerializeField] public int electricFieldCount = 4;
+    [SerializeField] public float electricFieldTellDuration = 1.0f;
+    [SerializeField] public float electricFieldSpawnInterval = 0.2f;
+    [SerializeField] public float electricFieldActiveDuration = 1.2f;
+    [SerializeField] public float electricFieldRecoveryDuration = 0.5f;
+    [SerializeField] public float electricFieldRadius = 140.0f;
+    [SerializeField] public float electricFieldSpreadRadius = 300.0f;
+    [SerializeField] public float electricFieldDamage = 12.0f;
+
+    //回転ビーム攻撃のパラメータ
+    [SerializeField] public int rotatingLaserCount = 4;
+    [SerializeField] public float rotatingLaserTellDuration = 1.0f;
+    [SerializeField] public float rotatingLaserDuration = 4.0f;
+    [SerializeField] public float rotatingLaserRecoveryDuration = 0.5f;
+    [SerializeField] public float rotatingLaserSpeed = 0.7f;
+    [SerializeField] public float rotatingLaserLength = 1200.0f;
+    [SerializeField] public float rotatingLaserWidth = 60.0f;
+    [SerializeField] public float rotatingLaserDamage = 10.0f;
 
     private HP hp_;
     private IKingJellyfishState state_;
@@ -161,7 +186,9 @@ public class KingJellyfish : MonoScript {
 
         float chargeWeight = chargeAttackWeight > 0.0f ? chargeAttackWeight : 0.0f;
         float beamWeight = omnidirectionalBeamWeight > 0.0f ? omnidirectionalBeamWeight : 0.0f;
-        float totalWeight = chargeWeight + beamWeight;
+        float fieldWeight = electricFieldWeight > 0.0f ? electricFieldWeight : 0.0f;
+        float rotatingWeight = rotatingBeamWeight > 0.0f ? rotatingBeamWeight : 0.0f;
+        float totalWeight = chargeWeight + beamWeight + fieldWeight + rotatingWeight;
         if (totalWeight <= 0.0f)
         {
             return fixedAttackType;
@@ -173,7 +200,19 @@ public class KingJellyfish : MonoScript {
             return KingJellyfishAttackTypeEnum.ChargeAttack;
         }
 
-        return KingJellyfishAttackTypeEnum.Omnidirectional_Beam;
+        lottery -= chargeWeight;
+        if (lottery < beamWeight)
+        {
+            return KingJellyfishAttackTypeEnum.Omnidirectional_Beam;
+        }
+
+        lottery -= beamWeight;
+        if (lottery < fieldWeight)
+        {
+            return KingJellyfishAttackTypeEnum.ElectricField;
+        }
+
+        return KingJellyfishAttackTypeEnum.RotatingBeam;
     }
 
     //=============================================================
@@ -483,20 +522,96 @@ public class KingJellyfish : MonoScript {
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
             // レーザーエンティティを生成する
-            Entity laserRoot = ecsGroup.CreateEntity(laserPrefabName);
-            if (laserRoot == null)
-            {
-                continue;
-            }
-
-            Entity laser = laserRoot.GetChild(0);
+            Entity laser = ecsGroup.CreateEntity(laserPrefabName);
             if (laser == null)
             {
-                laserRoot.Destroy();
                 continue;
             }
 
-            ConfigureLaserEntity(laser, origin, direction);
+            ConfigureLaserEntity(laser, origin, direction, LaserLength, LaserWidth, laserDamage, LaserFireDuration, 0.0f);
+        }
+    }
+
+    //=============================
+    // 回転ビーム攻撃
+    //=============================
+    internal void FireRotatingLasers()
+    {
+        if (String.IsNullOrEmpty(laserPrefabName))
+        {
+            return;
+        }
+
+        Vector2 origin = ToPlane(transform.position);
+        int count = RotatingLaserCount;
+        for (int i = 0; i < count; i++)
+        {
+            float angle = Mathf.PI * 2.0f * i / count;
+            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            Entity laser = ecsGroup.CreateEntity(laserPrefabName);
+            if (laser == null)
+            {
+                continue;
+            }
+
+            ConfigureLaserEntity(
+                laser,
+                origin,
+                direction,
+                RotatingLaserLength,
+                RotatingLaserWidth,
+                rotatingLaserDamage,
+                RotatingLaserDuration,
+                rotatingLaserSpeed);
+        }
+    }
+
+    //=============================
+    // 帯電フィールド攻撃
+    //=============================
+    internal void DeployElectricFields()
+    {
+        if (String.IsNullOrEmpty(electricFieldPrefabName))
+        {
+            return;
+        }
+
+        ResolveTarget();
+        Vector2 center = targetEntity_ != null && targetEntity_.transform != null
+            ? ToPlane(targetEntity_.transform.position)
+            : ToPlane(transform.position);
+
+        for (int i = 0; i < ElectricFieldCount; i++)
+        {
+            Vector2 position = center;
+            if (i > 0)
+            {
+                float angle = RandomUtil.NextFloat() * Mathf.PI * 2.0f;
+                float distance = RandomUtil.NextFloat() * electricFieldSpreadRadius;
+                position += new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance;
+            }
+
+            Entity field = ecsGroup.CreateEntity(electricFieldPrefabName);
+            if (field == null)
+            {
+                continue;
+            }
+
+            JellyfishElectricField fieldScript = field.GetScript<JellyfishElectricField>();
+            if (fieldScript == null)
+            {
+                field.Destroy();
+                continue;
+            }
+
+            float activationDelay = ElectricFieldTellDuration + ElectricFieldSpawnInterval * i;
+            fieldScript.Configure(
+                position,
+                ElectricFieldRadius,
+                electricFieldDamage,
+                activationDelay,
+                ElectricFieldActiveDuration,
+                transform.position.z);
         }
     }
 
@@ -509,7 +624,15 @@ public class KingJellyfish : MonoScript {
         }
     }
 
-    private void ConfigureLaserEntity(Entity laser, Vector2 origin, Vector2 direction)
+    private void ConfigureLaserEntity(
+        Entity laser,
+        Vector2 origin,
+        Vector2 direction,
+        float length,
+        float width,
+        float damage,
+        float duration,
+        float rotationSpeed)
     {
         Vector2 normalized = direction.Normalized();
         if (normalized.LengthSq() <= 0.001f)
@@ -518,16 +641,13 @@ public class KingJellyfish : MonoScript {
         }
 
         JellyfishLaser laserScript = laser.GetScript<JellyfishLaser>();
-        if (laserScript != null)
+        if (laserScript == null)
         {
-            laserScript.Configure(origin, normalized, LaserLength, LaserWidth, laserDamage, LaserFireDuration, transform.position.z);
+            laser.Destroy();
+            return;
         }
 
-        AttackCollision attackCollision = laser.GetScript<AttackCollision>();
-        if (attackCollision != null)
-        {
-            attackCollision.Damage = laserDamage;
-        }
+        laserScript.Configure(origin, normalized, length, width, damage, duration, transform.position.z, rotationSpeed);
     }
 
 
@@ -659,6 +779,66 @@ public class KingJellyfish : MonoScript {
     internal int LaserCount
     {
         get { return laserCount > 0 ? laserCount : 8; }
+    }
+
+    internal int ElectricFieldCount
+    {
+        get { return electricFieldCount > 0 ? electricFieldCount : 1; }
+    }
+
+    internal float ElectricFieldTellDuration
+    {
+        get { return electricFieldTellDuration > 0.0f ? electricFieldTellDuration : 0.01f; }
+    }
+
+    internal float ElectricFieldSpawnInterval
+    {
+        get { return electricFieldSpawnInterval > 0.0f ? electricFieldSpawnInterval : 0.0f; }
+    }
+
+    internal float ElectricFieldActiveDuration
+    {
+        get { return electricFieldActiveDuration > 0.0f ? electricFieldActiveDuration : 0.01f; }
+    }
+
+    internal float ElectricFieldRecoveryDuration
+    {
+        get { return electricFieldRecoveryDuration > 0.0f ? electricFieldRecoveryDuration : 0.01f; }
+    }
+
+    internal float ElectricFieldRadius
+    {
+        get { return electricFieldRadius > 0.0f ? electricFieldRadius : 1.0f; }
+    }
+
+    internal int RotatingLaserCount
+    {
+        get { return rotatingLaserCount > 0 ? rotatingLaserCount : 1; }
+    }
+
+    internal float RotatingLaserTellDuration
+    {
+        get { return rotatingLaserTellDuration > 0.0f ? rotatingLaserTellDuration : 0.01f; }
+    }
+
+    internal float RotatingLaserDuration
+    {
+        get { return rotatingLaserDuration > 0.0f ? rotatingLaserDuration : 0.01f; }
+    }
+
+    internal float RotatingLaserRecoveryDuration
+    {
+        get { return rotatingLaserRecoveryDuration > 0.0f ? rotatingLaserRecoveryDuration : 0.01f; }
+    }
+
+    internal float RotatingLaserLength
+    {
+        get { return rotatingLaserLength > 0.0f ? rotatingLaserLength : LaserLength; }
+    }
+
+    internal float RotatingLaserWidth
+    {
+        get { return rotatingLaserWidth > 0.0f ? rotatingLaserWidth : LaserWidth; }
     }
 
     private Vector2 SelectArcMoveDirection()

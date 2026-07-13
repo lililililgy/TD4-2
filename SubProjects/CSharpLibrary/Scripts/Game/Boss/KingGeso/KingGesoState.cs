@@ -1,5 +1,7 @@
 using System.Threading;
 
+using System.Collections.Generic;
+
 /// <summary>
 /// キングゲソの状態(基底クラス)
 /// </summary>
@@ -37,7 +39,7 @@ internal sealed class KingGesoIdleState : IKingGesoState
         if (owner.ConsumeAttackRequest() || elapsed >= owner.IdleDuration)
         {
             // 待機時間が経過したか、攻撃要求があった場合、攻撃状態に遷移
-            owner.ChangeState(new KingGesoAttackState());
+            owner.ChangeState(owner.CreateNextAttackState());
         }
     }
 
@@ -47,6 +49,70 @@ internal sealed class KingGesoIdleState : IKingGesoState
     /// <param name="owner"></param>
     public void Exit(KingGeso owner)
     {
+    }
+}
+
+//==========================================-
+// キングゲソの追尾弾攻撃状態
+//==========================================
+internal sealed class KingGesoHomingAttackState : IKingGesoState
+{
+    private float _elapsed;
+    private int _spawnedCount;
+    private readonly List<Entity> _pendingProjectiles = new List<Entity>();
+
+    public void Enter(KingGeso owner)
+    {
+        _elapsed = owner.HomingProjectileInterval;
+        _spawnedCount = 0;
+        _pendingProjectiles.Clear();
+        SpawnDueProjectiles(owner);
+    }
+
+    public void Update(KingGeso owner)
+    {
+        StartPendingProjectiles(owner);
+        _elapsed += Time.deltaTime;
+        SpawnDueProjectiles(owner);
+
+        if (_spawnedCount >= owner.HomingProjectileCount && _pendingProjectiles.Count == 0)
+        {
+            owner.ChangeState(new KingGesoCooldownState());
+        }
+    }
+
+    public void Exit(KingGeso owner)
+    {
+    }
+
+    private void SpawnDueProjectiles(KingGeso owner)
+    {
+        float interval = owner.HomingProjectileInterval;
+        while (_spawnedCount < owner.HomingProjectileCount && _elapsed >= interval)
+        {
+            _elapsed -= interval;
+            Entity projectile = owner.SpawnHomingProjectile();
+            if (projectile == null)
+            {
+                owner.ChangeState(new KingGesoCooldownState());
+                return;
+            }
+
+            _pendingProjectiles.Add(projectile);
+            _spawnedCount++;
+        }
+    }
+
+    private void StartPendingProjectiles(KingGeso owner)
+    {
+        for (int i = _pendingProjectiles.Count - 1; i >= 0; i--)
+        {
+            Entity projectile = _pendingProjectiles[i];
+            if (projectile == null || owner.StartHomingProjectile(projectile))
+            {
+                _pendingProjectiles.RemoveAt(i);
+            }
+        }
     }
 }
 
@@ -86,6 +152,11 @@ internal sealed class KingGesoAttackState : IKingGesoState
 
     private IKingGesoAttack CreateAttack(KingGesoAttackType attackType)
     {
+        if (attackType == KingGesoAttackType.InkBarrage)
+        {
+            return new KingGesoInkBarrageAttack();
+        }
+
         if (attackType == KingGesoAttackType.PincerThrust)
         {
             return new KingGesoPincerThrustAttack();

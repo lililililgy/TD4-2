@@ -1,0 +1,96 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 48.0,
+                "y": 48.0,
+                "z": 48.0
+            },
+            "type": "Transform"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 2,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": true
+            },
+            "KingGesoHomingProjectile": {
+                "damage": 1.0,
+                "lifeTime": 8.0,
+                "speed": 120.0,
+                "turnSpeed": 2.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KingGesoHomingProjectile"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.35,
+                    "z": 0.35
+                },
+                "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "715459bd7b4e4f498a6a1c9f6ef81ad2",
+    "name": "KingGesoHomingProjectile",
+    "parentGuid": null,
+    "prefabName": "KingGesoHomingProjectile"
+}
