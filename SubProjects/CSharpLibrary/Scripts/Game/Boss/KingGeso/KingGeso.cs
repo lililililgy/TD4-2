@@ -18,7 +18,7 @@ public class KingGeso : MonoScript
     private const int DefaultWaveGesoCount = 6;
     private const float DefaultWaveGesoInterval = 2.0f;
 
-    [SerializeField] public int maxHp = 10;
+    [SerializeField] public int maxHp = 1000;
     [SerializeField] public string gesoPrefabName = "GesoHand";
     [SerializeField] public string targetEntityName = "Player";
     [SerializeField] public string cameraEntityName = "Camera";
@@ -49,9 +49,9 @@ public class KingGeso : MonoScript
     /// ランダム選択しない場合に使う攻撃タイプ
     [SerializeField] public KingGesoAttackType fixedAttackType = KingGesoAttackType.WaveThrust;
     /// 波状突きの選択重み
-    [SerializeField] public float waveThrustWeight = 1.0f;
+    [SerializeField] public float waveThrustWeight = 0.5f;
     /// 挟み撃ち突きの選択重み
-    [SerializeField] public float pincerThrustWeight = 1.0f;
+    [SerializeField] public float pincerThrustWeight = 0.5f;
 
     private HP hp_;
     private IKingGesoState state_;
@@ -59,6 +59,7 @@ public class KingGeso : MonoScript
     private Entity cameraEntity_;
     private List<Entity> activeGesos_ = new List<Entity>();
     private bool attackRequested_;
+    private bool damageStateRequested_;
 
 
     //=============================================================
@@ -73,7 +74,7 @@ public class KingGeso : MonoScript
             hp_ = entity.AddScript<HP>();
         }
 
-        hp_.MaxHp = maxHp > 0 ? maxHp : 1;
+        hp_.MaxHp = maxHp;
         hp_.Initialize();
 
         // ターゲットとカメラのエンティティを取得
@@ -82,6 +83,7 @@ public class KingGeso : MonoScript
 
         activeGesos_.Clear();
         attackRequested_ = false;
+        damageStateRequested_ = false;
         ChangeState(new KingGesoIdleState());
     }
 
@@ -92,10 +94,23 @@ public class KingGeso : MonoScript
     {
 
         //死亡判定
-        if(hp_.CurrentHp <= 0)
+        if(hp_ != null && hp_.CurrentHp <= 0)
         {
             // 死亡ステートに遷移
-            ChangeState(new KingGesoDeadState());
+            if (!(state_ is KingGesoDeadState))
+            {
+                ChangeState(new KingGesoDeadState());
+            }
+            return;
+        }
+
+        if (damageStateRequested_)
+        {
+            damageStateRequested_ = false;
+            if (!(state_ is KingGesoDamageState))
+            {
+                ChangeState(new KingGesoDamageState());
+            }
         }
 
         if (state_ != null)
@@ -131,6 +146,12 @@ public class KingGeso : MonoScript
         }
 
         hp_.TakeDamage(damage);
+
+        if(hp_.IsDead == false)
+        {
+            // 衝突コールバック中に触手をDestroyしないよう、状態遷移はUpdateまで遅延する。
+            damageStateRequested_ = true;
+        }
     }
 
     internal float IdleDuration

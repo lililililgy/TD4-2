@@ -447,7 +447,7 @@ public class KingJellyfish : MonoScript {
         {
             RotateTowardPosition(ToPlane(targetEntity_.transform.position));
 
-            //デバッグ::カラーを点滅させる
+            //カラーを点滅させる
             SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
             if (spriteRenderer != null)
             {

@@ -44,7 +44,7 @@
                     "enable": 1,
                     "freezeY": false,
                     "isTrigger": true,
-                    "maskBits": 4294967295,
+                    "maskBits": 4294967042,
                     "mass": 1.0,
                     "size": {
                         "x": 1.0,
@@ -78,9 +78,9 @@
                         "z": 0.0
                     },
                     "scale": {
-                        "x": 67.80001831054688,
-                        "y": 67.8000717163086,
-                        "z": 67.8000717163086
+                        "x": 256.0,
+                        "y": 256.0,
+                        "z": 256.0
                     },
                     "type": "Transform"
                 },
@@ -100,6 +100,21 @@
                         }
                     ],
                     "type": "Script"
+                },
+                {
+                    "categoryBits": 8,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 2,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 300.0,
+                        "y": 300.00006103515625
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": false
                 },
                 {
                     "enable": 1,
@@ -128,21 +143,6 @@
                         }
                     },
                     "type": "SpriteRenderer"
-                },
-                {
-                    "categoryBits": 8,
-                    "enable": 1,
-                    "freezeY": false,
-                    "isTrigger": true,
-                    "maskBits": 2,
-                    "mass": 1.0,
-                    "size": {
-                        "x": 90.09999084472656,
-                        "y": 90.10000610351563
-                    },
-                    "state": "Dynamic",
-                    "type": "BoxCollider2D",
-                    "useOwnerScale": false
                 }
             ],
             "guid": "d22390f74a81c5e05310ad072ffabbca",
@@ -167,9 +167,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 64.0,
-                "y": 409.4999084472656,
-                "z": 1.0
+                "x": 218.9000244140625,
+                "y": 1638.0,
+                "z": 4.0
             },
             "type": "Transform"
         },
@@ -184,6 +184,12 @@
                 "passThroughDistance": 300.0,
                 "returnDuration": 0.0,
                 "rotationSpeed": 0.0
+            },
+            "KingGeso": {
+                "waveThrustWeight": 0.0
+            },
+            "SpriteAnimation": {
+                "fps": 5.0
             },
             "type": "Variables"
         },

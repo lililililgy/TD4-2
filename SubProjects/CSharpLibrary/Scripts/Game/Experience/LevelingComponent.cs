@@ -69,7 +69,7 @@ public class LevelingComponent : MonoScript {
     }
 
     public override void OnCollisionEnter(Entity collision) {
-        ExperiencePoint exp = collision.GetScript<ExperiencePoint>();
+sdsds        ExperiencePoint exp = collision.GetScript<ExperiencePoint>();
         if (exp == null) {
             return;
         }

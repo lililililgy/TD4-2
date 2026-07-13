@@ -84,21 +84,6 @@
             "type": "Script"
         },
         {
-            "categoryBits": 1,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 0,
-            "mass": 1.0,
-            "size": {
-                "x": 0.699999988079071,
-                "y": 0.7999999523162842
-            },
-            "state": "Dynamic",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
-        },
-        {
             "enable": 1,
             "isPixelPerfect": false,
             "material": {
@@ -125,6 +110,21 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 0,
+            "mass": 1.0,
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.7999999523162842
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
         }
     ],
     "guid": "2a75a187cc14795397a4b907fc812b10",

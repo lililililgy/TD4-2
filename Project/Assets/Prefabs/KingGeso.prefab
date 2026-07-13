@@ -26,14 +26,14 @@
             "HP": {
                 "MAX_HP": 10,
                 "currentHp": 10,
-                "currentHp_": 10.0,
+                "currentHp_": 1000.0,
                 "directlyDamageable_": true,
                 "disableAutoDestruction": false,
                 "disableAutoDestruction_": false,
                 "enable": true,
                 "isInvincible": false,
                 "isInvincible_": false,
-                "maxHp_": 10.0,
+                "maxHp_": 1000.0,
                 "regenPerSecond": 0.0
             },
             "KingGeso": {
@@ -53,7 +53,7 @@
                     "y": -720.5
                 },
                 "idleDuration": 2.0,
-                "maxHp": 10,
+                "maxHp": 1000,
                 "pincerThrustWeight": 1.0,
                 "randomizeAttackType": true,
                 "screenEdgeMargin": 0.5,

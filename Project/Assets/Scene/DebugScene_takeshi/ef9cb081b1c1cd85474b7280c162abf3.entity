@@ -1,5 +1,14 @@
 {
     "active": true,
+    "components": [
+        {
+            "KingGeso": {
+                "gesoMoveDuration": 7.0,
+                "pincerThrustWeight": 0.0
+            },
+            "type": "Variables"
+        }
+    ],
     "guid": "ef9cb081b1c1cd85474b7280c162abf3",
     "name": "KingGeso",
     "parentGuid": null,

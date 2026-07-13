@@ -1,3 +1,5 @@
+using System.Threading;
+
 /// <summary>
 /// キングゲソの状態(基底クラス)
 /// </summary>
@@ -118,6 +120,54 @@ internal sealed class KingGesoCooldownState : IKingGesoState
 
     public void Exit(KingGeso owner)
     {
+    }
+}
+
+//==========================================-
+// キングゲソのダメージ状態
+//==========================================
+internal sealed class  KingGesoDamageState : IKingGesoState {
+
+    private float duration = 1.0f; // ダメージ状態の持続時間（秒）
+    private float elapsed = 0.0f; // 経過時間
+
+    public void Enter(KingGeso owner) {
+        // ダメージ状態に入った時の処理
+        // ダメージ状態のタイマーを開始
+        elapsed = 0.0f;
+        duration = owner.CooldownDuration;
+    }
+
+    public void Update(KingGeso owner) {
+        // ダメージ状態の更新処理（必要に応じて追加）
+        elapsed += Time.deltaTime;
+
+        //スプライトの点滅処理
+        //カラーを点滅させる
+        SpriteRenderer spriteRenderer = owner.entity.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null) {
+            float blinkFrequency = 5.0f; // 点滅の周波数（Hz）
+            float blinkPhase = Mathf.Sin(Time.time * blinkFrequency * Mathf.PI * 2.0f);
+            float alpha = Mathf.Clamp01((blinkPhase + 1.0f) * 0.5f); // 0から1の範囲に変換
+            Vector4 originalColor = spriteRenderer.color;
+            spriteRenderer.color = new Vector4(1.0f, 0.0f, 0.0f, alpha);
+        }
+
+        if(elapsed >= duration) {
+            // ダメージ状態が終了した場合、待機状態に遷移
+            owner.ChangeState(new KingGesoIdleState());
+        }
+    }
+
+    public void Exit(KingGeso owner) {
+        // ダメージ状態からの遷移時の処理
+
+        // スプライトの色を元に戻す
+        SpriteRenderer spriteRenderer = owner.entity.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null) {
+            spriteRenderer.color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f); // 元の色に戻す
+        }
+
     }
 }
 
