@@ -209,7 +209,7 @@ void ONEngine::AddComponentInternalCalls() {
 	mono_add_internal_call("SpriteRenderer::InternalSetPixelPerfect", (void*)InternalSetPixelPerfect);
 
 	/// text renderer
-	mono_add_internal_call("TextRenderer::InternalSetColor", (void*)InternalSetTextColor);
+	// mono_add_internal_call("TextRenderer::InternalSetColor", (void*)InternalSetTextColor);
 	mono_add_internal_call("TextRenderer::InternalGetText", (void*)InternalGetTextText);
 	mono_add_internal_call("TextRenderer::InternalSetText", (void*)InternalSetTextText);
 	mono_add_internal_call("TextRenderer::InternalGetFontPath", (void*)InternalGetTextFontPath);

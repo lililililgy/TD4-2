@@ -77,9 +77,9 @@ class TextRenderer : Component {
 		}
 		set {
 			batchData.color = value;
-			if (nativeHandle != 0) {
-				InternalSetColor(nativeHandle, value);
-			}
+			// if (nativeHandle != 0) {
+			// 	InternalSetColor(nativeHandle, value);
+			// }
 		}
 	}
 
@@ -104,8 +104,8 @@ class TextRenderer : Component {
 
 
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetColor(ulong nativeHandle, Vector4 color);
+	// [MethodImpl(MethodImplOptions.InternalCall)]
+	// static extern void InternalSetColor(ulong nativeHandle, Vector4 color);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern string InternalGetText(ulong nativeHandle);
