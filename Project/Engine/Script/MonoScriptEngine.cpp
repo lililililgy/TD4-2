@@ -340,10 +340,25 @@ void MonoScriptEngine::Initialize() {
 	// PATH 設定 (OSレベルA/W & CRTレベルA/W) - staticにしてメモリを永続化
 	static std::string monoBinA = std::filesystem::absolute("Packages/mono/bin").string();
 	static std::wstring monoBinW = std::filesystem::absolute("Packages/mono/bin").wstring();
-	static std::string pathEnvA = "PATH=" + monoBinA + ";C:\\Windows\\System32";
-	static std::wstring pathEnvW = L"PATH=" + monoBinW + L";C:\\Windows\\System32";
-	SetEnvironmentVariableA("PATH", (monoBinA + ";C:\\Windows\\System32").c_str());
-	SetEnvironmentVariableW(L"PATH", (monoBinW + L";C:\\Windows\\System32").c_str());
+
+	// 既存の PATH を取得し、なければ C:\Windows\System32 をデフォルトにする
+	char pathBuf[32767];
+	DWORD pathLen = GetEnvironmentVariableA("PATH", pathBuf, sizeof(pathBuf));
+	std::string originalPath = (pathLen > 0 && pathLen < sizeof(pathBuf)) ? std::string(pathBuf) : "C:\\Windows\\System32";
+
+	wchar_t pathBufW[32767];
+	DWORD pathLenW = GetEnvironmentVariableW(L"PATH", pathBufW, sizeof(pathBufW) / sizeof(wchar_t));
+	std::wstring originalPathW = (pathLenW > 0 && pathLenW < sizeof(pathBufW) / sizeof(wchar_t)) ? std::wstring(pathBufW) : L"C:\\Windows\\System32";
+
+	// 新しい PATH を構築
+	static std::string newPathA = monoBinA + ";" + originalPath;
+	static std::wstring newPathW = monoBinW + L";" + originalPathW;
+
+	static std::string pathEnvA = "PATH=" + newPathA;
+	static std::wstring pathEnvW = L"PATH=" + newPathW;
+
+	SetEnvironmentVariableA("PATH", newPathA.c_str());
+	SetEnvironmentVariableW(L"PATH", newPathW.c_str());
 	_putenv(pathEnvA.c_str());
 	_wputenv(pathEnvW.c_str());
 
