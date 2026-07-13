@@ -169,6 +169,9 @@ void TextRenderingPipeline::Draw(ECSGroup* ecsGroup, CameraComponent* camera, Dx
 		return;
 	}
 
+	// テクスチャの動的生成によりコマンドリストがリセットされた可能性があるためヒープを再バインドする
+	pDxManager_->HeapBindToCommandList();
+
 	auto cmdList = dxCommand->GetCommandList();
 	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
