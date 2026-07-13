@@ -1,0 +1,228 @@
+{
+    "active": true,
+    "children": [
+        {
+            "active": true,
+            "children": [
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "main-menu",
+                            "elementIndex": 0,
+                            "enable": 1,
+                            "groupId": "3292f0a4c0708e554f3a2305cd159c53",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {
+                                "DownArrow": "00372aaaa96ebb606a66219cd9808c75",
+                                "GamepadDPadDown": "00372aaaa96ebb606a66219cd9808c75",
+                                "S": "00372aaaa96ebb606a66219cd9808c75"
+                            },
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 586.0,
+                        "y": 490.0
+                    },
+                    "guid": "6dbc17682f903c5a0124fad4c8bbb4c2",
+                    "name": "Element_1",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "restart",
+                            "elementIndex": 1,
+                            "enable": 1,
+                            "groupId": "3292f0a4c0708e554f3a2305cd159c53",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {
+                                "DownArrow": "5db3f39c8289d2b72adfa4df0b27a6cd",
+                                "GamepadDPadDown": "5db3f39c8289d2b72adfa4df0b27a6cd",
+                                "GamepadDPadUp": "6dbc17682f903c5a0124fad4c8bbb4c2",
+                                "S": "5db3f39c8289d2b72adfa4df0b27a6cd",
+                                "UpArrow": "6dbc17682f903c5a0124fad4c8bbb4c2",
+                                "W": "6dbc17682f903c5a0124fad4c8bbb4c2"
+                            },
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 922.0,
+                        "y": 506.0
+                    },
+                    "guid": "00372aaaa96ebb606a66219cd9808c75",
+                    "name": "Element_2",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "exit-game",
+                            "elementIndex": 2,
+                            "enable": 1,
+                            "groupId": "3292f0a4c0708e554f3a2305cd159c53",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {
+                                "GamepadDPadUp": "00372aaaa96ebb606a66219cd9808c75",
+                                "UpArrow": "00372aaaa96ebb606a66219cd9808c75",
+                                "W": "00372aaaa96ebb606a66219cd9808c75"
+                            },
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 1210.0,
+                        "y": 490.0
+                    },
+                    "guid": "5db3f39c8289d2b72adfa4df0b27a6cd",
+                    "name": "Element_3",
+                    "prefabName": ""
+                }
+            ],
+            "components": [
+                {
+                    "enable": 1,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "cancelKeys": [
+                        "Escape",
+                        "GamepadB"
+                    ],
+                    "currentSelected": "6dbc17682f903c5a0124fad4c8bbb4c2",
+                    "enable": 1,
+                    "isFocused": true,
+                    "isVisible": true,
+                    "parentGroup": "",
+                    "submitKeys": [
+                        "Return",
+                        "Space",
+                        "GamepadA"
+                    ],
+                    "type": "UIGroupComponent"
+                }
+            ],
+            "editorPosition": {
+                "x": 610.0,
+                "y": 156.0
+            },
+            "guid": "3292f0a4c0708e554f3a2305cd159c53",
+            "name": "Group_0",
+            "prefabName": ""
+        }
+    ],
+    "components": [
+        {
+            "enable": 1,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "a7693d17254bca465bd1d51d167863a8",
+    "name": "GameClearUI",
+    "prefabName": ""
+}

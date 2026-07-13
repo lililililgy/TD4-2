@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 201.9000244140625,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 300.0,
-                "y": 300.0,
-                "z": 300.0
+                "x": 2048.0,
+                "y": 128.0,
+                "z": 200.0
             },
             "type": "Transform"
         },
@@ -35,7 +35,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "960ec2345ab1ab75a1c74ef79b962c75",
+                "baseTextureGuid": "43b9444c09467c88a9b3d982923f2d16",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,8 +54,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "8e22c1085e8d69ce74161175d45abe77",
-    "name": "NewEntity",
+    "guid": "3cccfb914d79e99132176423cefc9a17",
+    "name": "ClearText",
     "parentGuid": null,
     "prefabName": ""
 }

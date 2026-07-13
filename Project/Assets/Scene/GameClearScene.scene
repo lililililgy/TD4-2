@@ -6,9 +6,34 @@
             "path": "./GameClearScene/10b2b5ff760c237ed0e697e75de598ca.entity"
         },
         {
-            "guid": "8e22c1085e8d69ce74161175d45abe77",
+            "guid": "3cccfb914d79e99132176423cefc9a17",
             "parentGuid": null,
-            "path": "./GameClearScene/8e22c1085e8d69ce74161175d45abe77.entity"
+            "path": "./GameClearScene/3cccfb914d79e99132176423cefc9a17.entity"
+        },
+        {
+            "guid": "14aaee80344ce88189660c6de1597ac0",
+            "parentGuid": null,
+            "path": "./GameClearScene/14aaee80344ce88189660c6de1597ac0.entity"
+        },
+        {
+            "guid": "f02b20a697856bb4da0100284f7b8abc",
+            "parentGuid": "14aaee80344ce88189660c6de1597ac0",
+            "path": "./GameClearScene/f02b20a697856bb4da0100284f7b8abc.entity"
+        },
+        {
+            "guid": "144348269ff7d13c44777c5384d92cde",
+            "parentGuid": "f02b20a697856bb4da0100284f7b8abc",
+            "path": "./GameClearScene/144348269ff7d13c44777c5384d92cde.entity"
+        },
+        {
+            "guid": "26e337168d8013be71d8f7de96183017",
+            "parentGuid": "f02b20a697856bb4da0100284f7b8abc",
+            "path": "./GameClearScene/26e337168d8013be71d8f7de96183017.entity"
+        },
+        {
+            "guid": "b483b8102fc5179da2061600894c08d0",
+            "parentGuid": "f02b20a697856bb4da0100284f7b8abc",
+            "path": "./GameClearScene/b483b8102fc5179da2061600894c08d0.entity"
         }
     ]
 }
