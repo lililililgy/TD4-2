@@ -50,6 +50,9 @@ void EditorManager::Initialize(ONEngine::DxManager* dxm, ONEngine::ShaderCompile
 
 void EditorManager::Update(ONEngine::Asset::AssetCollection* ac) {
 
+	/// ファイルの変更監視を実行
+	Editor::HotReloadManager::GetInstance().Update();
+
 	/// ホットリロードリクエストの処理（フレームの開始時に行うことでD3D12の状態整合性を保つ）
 	auto hrRequests = Editor::HotReloadManager::GetInstance().ConsumeRequests();
 	bool isReloaded = false;
