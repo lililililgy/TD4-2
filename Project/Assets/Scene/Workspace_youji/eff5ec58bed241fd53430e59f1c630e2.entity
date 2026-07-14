@@ -26,6 +26,9 @@
             "AddSceneTest": {},
             "Test": {},
             "TestPauseStart": {},
+            "TextRendererTestScript": {
+                "text": "Text Test"
+            },
             "type": "Variables"
         },
         {
@@ -33,7 +36,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "Test"
+                    "name": "TextRendererTestScript"
                 }
             ],
             "type": "Script"
