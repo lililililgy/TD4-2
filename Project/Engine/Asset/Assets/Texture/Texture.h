@@ -92,6 +92,9 @@ public:
 	/// @param dxgiFormat DXGI_FORMAT
 	void CreateUAVTexture(UINT width, UINT height, DxDevice* dxDevice, DxSRVHeap* dxSRVHeap, DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT);
 
+	/// @brief メモリ上のピクセルデータからテクスチャを再構築する（動的変更用）
+	void RecreateFromPixels(const uint8_t* pixels, int width, int height, DxDevice* dxDevice, DxSRVHeap* dxSRVHeap, DxCommand* dxCommand);
+
 	/// @brief UAVTexture3Dとして作成する
 	/// @param width テクスチャの幅
 	/// @param height テクスチャの高さ

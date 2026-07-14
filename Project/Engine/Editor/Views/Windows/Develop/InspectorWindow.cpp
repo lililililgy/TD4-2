@@ -1,4 +1,4 @@
-﻿#include "InspectorWindow.h"
+#include "InspectorWindow.h"
 
 /// std
 #include <format>
@@ -57,6 +57,7 @@
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/DissolveMeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/SkinMesh/SkinMeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Sprite/SpriteRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line2DRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line3DRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
@@ -105,6 +106,7 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 	RegisterComponent<CustomMeshRenderer>(ComponentType::Renderer, [&](CustomMeshRenderer* comp) { CustomMeshRendererDebug(comp); });
 	RegisterComponent<DissolveMeshRenderer>(ComponentType::Renderer, [&](DissolveMeshRenderer* comp) { ShowGUI(comp, pAssetCollection_); });
 	RegisterComponent<SpriteRenderer>(ComponentType::Renderer, [&](SpriteRenderer* comp) { ComponentDebug::SpriteDebug(comp, pAssetCollection_); });
+	RegisterComponent<TextRenderer>(ComponentType::Renderer, [&](TextRenderer* comp) { ComponentDebug::TextDebug(comp, pAssetCollection_); });
 	RegisterComponent<Line2DRenderer>(ComponentType::Renderer, [](Line2DRenderer* /*comp*/) {});
 	RegisterComponent<Line3DRenderer>(ComponentType::Renderer, [](Line3DRenderer* /*comp*/) {});
 	RegisterComponent<SkinMeshRenderer>(ComponentType::Renderer, [&](SkinMeshRenderer* comp) { ComponentDebug::SkinMeshRendererDebug(comp, pAssetCollection_); });

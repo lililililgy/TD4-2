@@ -17,6 +17,7 @@ void ONEngine::to_json(nlohmann::json& j, const GPUMaterial& material) {
 	j = nlohmann::json{
 		{ "uvTransform", material.uvTransform },
 		{ "baseColor", material.baseColor },
+		{ "outlineColor", material.outlineColor },
 		{ "postEffectFlags", material.postEffectFlags },
 		{ "entityId", material.entityId },
 		{ "baseTextureId", material.baseTextureId },
@@ -27,6 +28,7 @@ void ONEngine::to_json(nlohmann::json& j, const GPUMaterial& material) {
 void ONEngine::from_json(const nlohmann::json& j, GPUMaterial& material) {
 	material.uvTransform     = j.value("uvTransform", UVTransform{});
 	material.baseColor       = j.value("baseColor", Vector4::White);
+	material.outlineColor   = j.value("outlineColor", Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	material.postEffectFlags = j.value("postEffectFlags", PostEffectFlags_None);
 	material.entityId        = j.value("entityId", 0);
 	material.baseTextureId   = j.value("baseTextureId", -1);

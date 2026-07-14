@@ -4,6 +4,7 @@
 #include <variant>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 /// external
@@ -174,6 +175,13 @@ public:
 	/// @param varName 変数名
 	/// @param value 値
 	void SetVariable(const std::string& groupName, const std::string& varName, const Var& value);
+
+public:
+	static void RegisterSerializeField(const std::string& className, const std::string& fieldName);
+	static bool IsSerializeFieldRegistered(const std::string& className, const std::string& fieldName);
+
+private:
+	static std::unordered_set<std::string> serializeFieldCache_;
 
 private:
 	/// ================================================

@@ -750,4 +750,77 @@ void SaveTextureToDDS(const std::wstring& filename, size_t width, size_t height,
 
 }
 
+void Texture::RecreateFromPixels(const uint8_t* pixels, int width, int height, DxDevice* dxDevice, DxSRVHeap* dxSRVHeap, DxCommand* dxCommand) {
+	// (1) 新しいテクスチャリソースの構築
+	D3D12_RESOURCE_DESC desc = {};
+	desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	desc.Alignment = 0;
+	desc.Width = static_cast<UINT>(width);
+	desc.Height = static_cast<UINT>(height);
+	desc.DepthOrArraySize = 1;
+	desc.MipLevels = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	desc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+	D3D12_HEAP_PROPERTIES heapProperties = {};
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+	// 古いリソースを破棄
+	dxResource_ = DxResource();
+
+	// 新しいリソースを生成
+	dxResource_.CreateCommittedResource(dxDevice, &heapProperties, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr);
+
+	// (2) データをアップロード
+	uint64_t uploadBufferSize = GetRequiredIntermediateSize(dxResource_.Get(), 0, 1);
+	DxResource uploadResource;
+	uploadResource.CreateResource(dxDevice, uploadBufferSize);
+
+	D3D12_SUBRESOURCE_DATA textureData = {};
+	textureData.pData = pixels;
+	textureData.RowPitch = static_cast<LONG_PTR>(width * 4);
+	textureData.SlicePitch = textureData.RowPitch * height;
+
+	ID3D12GraphicsCommandList* cmdList = dxCommand->GetCommandList();
+	UpdateSubresources(cmdList, dxResource_.Get(), uploadResource.Get(), 0, 0, 1, &textureData);
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = dxResource_.Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	cmdList->ResourceBarrier(1, &barrier);
+
+	dxCommand->CommandExecuteAndWait();
+	dxCommand->CommandReset();
+
+	// (3) SRVハンドルの更新
+	if (!srvHandle_.has_value()) {
+		CreateEmptySRVHandle();
+		srvHandle_->descriptorIndex = dxSRVHeap->AllocateTexture();
+		srvHandle_->cpuHandle = dxSRVHeap->GetCPUDescriptorHandel(srvHandle_->descriptorIndex);
+		srvHandle_->gpuHandle = dxSRVHeap->GetGPUDescriptorHandel(srvHandle_->descriptorIndex);
+	}
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	dxDevice->GetDevice()->CreateShaderResourceView(dxResource_.Get(), &srvDesc, srvHandle_->cpuHandle);
+
+	// (4) メンバ変数の更新
+	textureSize_ = Vector2(static_cast<float>(width), static_cast<float>(height));
+	srvFormat_ = DXGI_FORMAT_R8G8B8A8_UNORM;
+	depth_ = 0;
+	arraySize_ = 1;
+	isCubeMap_ = false;
+}
+
 } /// namespace ONEngine::Asset

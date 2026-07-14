@@ -62,11 +62,15 @@ void SceneManager::Initialize(Asset::AssetCollection* assetCollection) {
 
 	sceneIO_ = std::make_unique<SceneIO>(pEcs_);
 
+	if (EngineConfig::isTestMode && !EngineConfig::testScene.empty()) {
+		SetNextScene(EngineConfig::testScene);
+	} else {
 #ifdef DEBUG_MODE
-	SetNextScene(LastOpenSceneName());
+		SetNextScene(LastOpenSceneName());
 #else
-	SetNextScene(EngineConfig::startScene);
+		SetNextScene(EngineConfig::startScene);
 #endif
+	}
 
 	MoveNextToCurrentScene(false);
 

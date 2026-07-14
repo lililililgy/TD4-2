@@ -328,6 +328,7 @@ MonoScriptEngine& MonoScriptEngine::GetInstance() {
 }
 
 void MonoScriptEngine::Initialize() {
+	isShuttingDown_ = false;
 	Console::Log("[Mono] Building C# project...", LogCategory::ScriptEngine);
 	std::string buildOutput;
 	bool buildSuccess = BuildCSharpProject(buildOutput);
@@ -447,14 +448,14 @@ void MonoScriptEngine::Initialize() {
 #endif
 
 	/// ログ出力(任意、デバッグ時だけでもOK)
-	mono_trace_set_level_string("info");
-	mono_trace_set_log_handler(LogCallback, nullptr);
+	// mono_trace_set_level_string("info");
+	// mono_trace_set_log_handler(LogCallback, nullptr);
 
 	/// versionの出力
 	Console::Log("Mono version: " + std::string(mono_get_runtime_build_info()), LogCategory::ScriptEngine);
 
 	/// Monoの検索パス設定
-	std::string scriptsLib = GetUtf8Path("Packages/Scripts/lib");
+	std::string scriptsLib = GetUtf8Path("Packages/mono/lib");
 	std::string monoEtc = GetUtf8Path("Externals/mono/etc");
 	mono_set_dirs(scriptsLib.c_str(), monoEtc.c_str());
 	mono_config_parse(nullptr);
@@ -503,9 +504,10 @@ void MonoScriptEngine::Initialize() {
 }
 
 void MonoScriptEngine::Finalize() {
+	isShuttingDown_ = true;
 	if(rootDomain_) {
-		ResetCS();
-		mono_jit_cleanup(rootDomain_);
+		// ResetCS(); // Prevent OnDestroy P/Invoke reentrancy aborts on shutdown
+		// mono_jit_cleanup(rootDomain_); // Prevent GC race aborts on shutdown
 		rootDomain_ = nullptr;
 		domain_ = nullptr;
 	}
@@ -572,6 +574,21 @@ void MonoScriptEngine::RegisterFunctions() {
 		// AI
 		updateAiIntentsMethod_ = GetMethodFromCS("", "AIUpdater", "UpdateIntents", 4);
 		notifyEventCompletedMethod_ = GetMethodFromCS("", "BlackboardManager", "SetBool", 3);
+	}
+
+	// C#側のSerializeField登録処理を安全に一括実行する
+	{
+		MonoMethod* initCacheMethod = GetMethodFromCS("", "EntityComponentSystem", "InitializeSerializeFieldCache", 0);
+		if (initCacheMethod) {
+			MonoObject* exc = nullptr;
+			MonoScriptEngineUtils::SafeInvoke(initCacheMethod, nullptr, nullptr, &exc);
+			if (exc) {
+				Console::LogError("Failed to invoke InitializeSerializeFieldCache from C++", LogCategory::ScriptEngine);
+				MonoScriptEngineUtils::HandleException(exc);
+			}
+		} else {
+			Console::LogError("Method InitializeSerializeFieldCache not found in EntityComponentSystem", LogCategory::ScriptEngine);
+		}
 	}
 
 	ApplyCSharpLogSetting();
@@ -791,6 +808,8 @@ void MonoScriptEngine::ResetCS() {
 	if (!image_ || !domain_) {
 		return;
 	}
+
+	mono_thread_attach(domain_);
 
 	MonoClass* monoClass = mono_class_from_name(image_, "", "EntityComponentSystem");
 	if(!monoClass) {

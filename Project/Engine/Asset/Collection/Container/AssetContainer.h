@@ -101,6 +101,12 @@ inline T* AssetContainer<T>::Add(const std::string& key, T t) {
 
 	if(indexMap_.contains(key)) {
 		uint32_t index = indexMap_[key];
+		if (indexToGuidMap_.contains(index)) {
+			guidToIndexMap_.erase(indexToGuidMap_[index]);
+		}
+		guidToIndexMap_[t.guid] = index;
+		indexToGuidMap_[index] = t.guid;
+
 		values_[index] = std::move(t);
 		return &values_[index];
 	}

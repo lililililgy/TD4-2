@@ -1,4 +1,4 @@
-﻿#include "FileSystem.h"
+#include "FileSystem.h"
 
 using namespace ONEngine;
 
@@ -12,6 +12,7 @@ using namespace ONEngine;
 
 /// engine
 #include "Engine/Core/Utility/Tools/Log.h"
+#include "Engine/Script/MonoScriptEngine.h"
 
 namespace fs = std::filesystem;
 
@@ -215,7 +216,7 @@ MonoString* MonoInternalMethods::LoadFile(MonoString* path) {
 	mono_free(cstr);
 
 	std::string fileText = FileSystem::LoadFile(pathStr);
-	MonoString* monoStr = mono_string_new(mono_domain_get(), fileText.c_str());
+	MonoString* monoStr = mono_string_new(MonoScriptEngine::GetInstance().Domain(), fileText.c_str());
 
 	return monoStr;
 }

@@ -27,6 +27,9 @@ public:
 	DxManager();
 	~DxManager();
 	
+	/// @brief インスタンスの取得
+	static DxManager* GetInstance();
+	
 	/// @brief 初期化
 	void Initialize();
 

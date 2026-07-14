@@ -18,7 +18,7 @@
             "scale": {
                 "x": 100.0,
                 "y": 100.0,
-                "z": 100.0
+                "z": 50.799560546875
             },
             "type": "Transform"
         },
@@ -39,32 +39,38 @@
             "type": "Script"
         },
         {
-            "enable": 1,
-            "isPixelPerfect": false,
-            "material": {
-                "baseColor": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
-                "guid": "00000000000000000000000000000000",
-                "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 0,
-                "uvTransform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "rotate": 0.0,
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                }
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
             },
-            "type": "SpriteRenderer"
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 256,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "outlineWidth": 0,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "シンカイ ノ ダイオウ ニ ナッタ",
+            "type": "TextRenderer",
+            "verticalAlignment": 1
         }
     ],
     "guid": "bf0c252395b6840cfed59ce900c910a7",

@@ -9,6 +9,7 @@ public class TransformData {
 }
 
 public class Transform : Component {
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
 		public Vector3 position;

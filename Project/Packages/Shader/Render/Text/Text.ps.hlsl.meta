@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "686742545d3f18fcede04f4ffa71ddf1",
+    "name": "Text.ps",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}

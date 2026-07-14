@@ -130,23 +130,34 @@ void ScriptUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 void ScriptUpdateSystem::AddAllEntitiesAndComponents(ECSGroup* ecsGroup) {
 	/// スクリプトを持たないエンティティも追加することでC#で扱いやすくする
-	for(auto& entity : ecsGroup->GetEntities()) {
-		AddEntityToScript(entity.get());
+	for(size_t i = 0; i < ecsGroup->GetEntities().size(); ++i) {
+		if (i < ecsGroup->GetEntities().size()) {
+			auto* entity = ecsGroup->GetEntities()[i].get();
+			if (entity) {
+				AddEntityToScript(entity);
+			}
+		}
 	}
 }
 
 bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
-	mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+	if (mono_thread_current() == nullptr) {
+		mono_thread_attach(MonoScriptEngine::GetInstance().Domain());
+	}
 
 	/// runtime中に生成したオブジェクトは無視
 	//if (entity->GetId() < 0) {
 	//	return false;
 	//}
 
+	ECSGroup* group = entity->GetECSGroup();
+	if (!group) return false;
+	std::string groupName = group->GetGroupName();
+
 	/// スクリプトが有効でない場合はスキップ
-	MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
+	MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(groupName);
 	if(!ecsGroupObj) {
-		Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
+		Console::LogError("Failed to get ecsGroupObj for group: " + groupName);
 		return false;
 	}
 
@@ -154,7 +165,7 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 	/// Entityの追加関数を呼び出す
 	/// --------------------------------------------------------------------------------
 	if (!addEntityMethod_) {
-		Console::LogError("addEntityMethod_ is null for group: " + ecsGroupName_);
+		Console::LogError("addEntityMethod_ is null for group: " + groupName);
 		return false;
 	}
 
@@ -176,13 +187,20 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 		/// --------------------------------------------------------------------------------
 		/// スクリプトの追加
 		/// --------------------------------------------------------------------------------
-		for(auto& data : script->GetScriptDataList()) {
+		auto scriptDataListCopy = script->GetScriptDataList();
+		for(size_t i = 0; i < scriptDataListCopy.size(); ++i) {
+			auto& data = scriptDataListCopy[i];
 
 			/// すでに追加済みなら処理しない
 			if(data.isAdded) {
 				continue;
 			}
-			data.isAdded = true;
+
+			// 元のコンポーネント側も追加済みにマークする
+			Script* currentScript = entity->GetComponent<Script>();
+			if (currentScript && i < currentScript->GetScriptDataList().size()) {
+				currentScript->GetScriptDataList()[i].isAdded = true;
+			}
 
 			/// スクリプト名からMonoObjectを生成する
 			MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
@@ -195,9 +213,6 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			/// インスタンスを生成
 			MonoObject* scriptInstance = mono_object_new(MonoScriptEngine::GetInstance().Domain(), behaviorClass);
 			mono_runtime_object_init(scriptInstance); /// クラスの初期化、コンストラクタをイメージ
-			if(!script) {
-				continue;
-			}
 
 			Console::Log("[MonoDbg] AddEntityToScript - Instantiating and adding script: " + data.scriptName + " to Entity ID: " + std::to_string(entityId), LogCategory::ScriptEngine);
 
@@ -215,12 +230,11 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 			}
 
 			/// variablesの設定
-			if(vars) {
+			Variables* currentVars = entity->GetComponent<Variables>();
+			if(currentVars) {
 				Console::Log("[MonoDbg] AddEntityToScript - Syncing serialized fields for script: " + data.scriptName, LogCategory::ScriptEngine);
-				vars->SetScriptVariables(data.scriptName);
+				currentVars->SetScriptVariables(data.scriptName);
 			}
-
-
 		}
 	}
 
@@ -307,7 +321,9 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 
 void ScriptUpdateSystem::ReleaseGCHandle() {
 	if(gcHandle_ != 0) {
-		mono_gchandle_free(gcHandle_);
+		if (!MonoScriptEngine::GetInstance().IsShuttingDown()) {
+			mono_gchandle_free(gcHandle_);
+		}
 		gcHandle_ = 0;
 	}
 }

@@ -71,6 +71,8 @@ public:
 	/// C#のログ無視設定を同期・適用
 	void ApplyCSharpLogSetting();
 
+	bool IsShuttingDown() const { return isShuttingDown_; }
+
 	void SetEcsPtr(class EntityComponentSystem* ecs);
 
 	/// DLLのパスを探す
@@ -206,6 +208,7 @@ private:
 	bool isDebuggerSyncSuccess_ = false;
 	int debuggerAttachFrameCounter_ = 0;
 	bool isReloading_ = false;
+	bool isShuttingDown_ = false;
 
 };
 

@@ -30,15 +30,15 @@ GameFramework::~GameFramework() {
 	if (DebugConfig::isDebugging) {
 		DebugConfig::isDebugging = false;
 		if (sceneManager_) {
-			sceneManager_->ReloadScene(true);
+			// sceneManager_->ReloadScene(true); // Prevent C# ECS cleanups during engine shutdown
 			sceneManager_->ClearTemporarySavedSceneName();
 		}
 	}
 
 	/// debug用のシーンを保存
-	if (sceneManager_ && entityComponentSystem_) {
-		sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
-	}
+	// if (sceneManager_ && entityComponentSystem_) {
+	// 	sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
+	// }
 
 	// ライフサイクルの依存関係を解決するため、明示的に先に破棄
 	editorManager_.reset();
@@ -130,9 +130,7 @@ void GameFramework::InitializeECS() {
 
 	/// scene managerの初期化
 	sceneManager_->Initialize(renderingFramework_->GetAssetCollection());
-	if (EngineConfig::isTestMode && !EngineConfig::testScene.empty()) {
-		sceneManager_->GetSceneIO()->Input(EngineConfig::testScene, entityComponentSystem_->GetECSGroup("Debug"));
-	} else {
+	if (!EngineConfig::isTestMode) {
 		LoadDebugScene();
 	}
 
@@ -232,7 +230,7 @@ void GameFramework::Update() {
 				ofs.close();
 			}
 			PostQuitMessage(0);
-			exit(0);
+			ExitProcess(0);
 		}
 	}
 
