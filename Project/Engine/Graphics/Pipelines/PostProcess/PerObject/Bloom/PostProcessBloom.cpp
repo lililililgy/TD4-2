@@ -8,6 +8,7 @@ using namespace ONEngine;
 #include "Engine/Asset/Collection/AssetCollection.h"
 
 void PostProcessBloom::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
+	Console::Log("[Bloom] Initializing PostProcessBloom...", LogCategory::Engine);
 	// 1. 高輝度抽出パイプラインの初期化
 	{
 		Shader shader;
@@ -79,6 +80,13 @@ void PostProcessBloom::Execute(
 	textureIndices_[2] = assetCollection->GetTextureIndex("bloomBright");
 	textureIndices_[3] = assetCollection->GetTextureIndex("bloomBlur");
 	textureIndices_[4] = assetCollection->GetTextureIndex("postProcessResult");
+
+	for (int i = 0; i < 5; ++i) {
+		if (textureIndices_[i] == -1) {
+			Console::LogError("[Bloom] Failed to get texture index for slot " + std::to_string(i) + " (textureName: " + textureName + ")");
+			return;
+		}
+	}
 
 	uint32_t dispatchX = Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16);
 	uint32_t dispatchY = Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16);

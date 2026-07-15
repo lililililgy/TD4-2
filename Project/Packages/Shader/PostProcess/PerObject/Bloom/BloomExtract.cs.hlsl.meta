@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "b2b7e9a65f0c8217ea25cde6af056b94",
+    "name": "BloomExtract.cs",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}
