@@ -5,7 +5,7 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 665.599853515625,
+                "x": 183.3000030517578,
                 "y": 0.0,
                 "z": 0.0
             },
@@ -16,18 +16,31 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 213.39999389648438,
-                "y": 213.4000701904297,
-                "z": 213.4000701904297
+                "x": 100.0,
+                "y": 100.0,
+                "z": 100.0
             },
             "type": "Transform"
         },
         {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 4294967295,
+            "mass": 1.0,
+            "radius": 1.0,
+            "state": "Static",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "ColliderTest2": {},
             "type": "Variables"
         },
         {
             "enable": 1,
-            "isPixelPerfect": true,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -52,10 +65,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ColliderTest2"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "6c0e9d0613956965d81cea741f5f558a",
-    "name": "Sprite_2_1",
+    "guid": "2d868796a8e879443dac85344c361a60",
+    "name": "Sprite_1",
     "parentGuid": null,
     "prefabName": ""
 }

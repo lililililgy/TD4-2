@@ -2,23 +2,6 @@
     "active": true,
     "components": [
         {
-            "cameraType": 1,
-            "enable": 1,
-            "farClip": 1000.0,
-            "fogColor": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "fogEnd": 100000.0,
-            "fogStart": 0.0,
-            "fovY": 0.699999988079071,
-            "isDrawFrustum": false,
-            "isMainCamera": true,
-            "nearClip": 0.10000000149011612,
-            "type": "CameraComponent"
-        },
-        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
@@ -29,7 +12,7 @@
             "rotate": {
                 "w": 1.0,
                 "x": 0.0,
-                "y": -0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "scale": {
@@ -41,10 +24,20 @@
         },
         {
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "CollisionCrashTestMonitor"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "28da50099110d89e1afd8c166267aac2",
-    "name": "MainCamera",
+    "guid": "c0000000000000000000000000000004",
+    "name": "Monitor",
     "parentGuid": null,
     "prefabName": ""
 }

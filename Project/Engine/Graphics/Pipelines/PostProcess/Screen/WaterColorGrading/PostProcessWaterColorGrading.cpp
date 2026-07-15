@@ -113,12 +113,18 @@ void PostProcessWaterColorGrading::Execute(const std::string& textureName, DxCom
 		return;
 	}
 
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	// 定数バッファの更新
 	ColorGradingParams params;
 	params.absorption = tag->GetWaterAbsorptionCoefficients();
 	params.contrast = tag->GetWaterContrast();
 	params.saturation = tag->GetWaterSaturation();
 	params.colorFilter = tag->GetWaterColorFilter();
+	params.offsetX = static_cast<int32_t>(offset.x);
+	params.offsetY = static_cast<int32_t>(offset.y);
+	params.virtualWidth = static_cast<int32_t>(dispatchSize.x);
+	params.virtualHeight = static_cast<int32_t>(dispatchSize.y);
 	paramsBuffer_.SetMappedData(params);
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);
@@ -149,8 +155,8 @@ void PostProcessWaterColorGrading::Execute(const std::string& textureName, DxCom
 	command->SetComputeRootDescriptorTable(UAV_OUTPUT_COLOR, textures[textureIndices_[2]].GetUAVGPUHandle());
 
 	command->Dispatch(
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16),
 		1
 	);
 

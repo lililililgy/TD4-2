@@ -57,6 +57,10 @@ public:
 		Vector3 color;   // フォグの色
 		float fogStart; // フォグの開始距離
 		float fogEnd;   // フォグの終了距離
+		int32_t offsetX;
+		int32_t offsetY;
+		int32_t virtualWidth;
+		int32_t virtualHeight;
 	};
 
 public:
@@ -136,6 +140,7 @@ public:
 
 	ConstantBuffer<Vector4>& GetCameraPosBuffer();
 	ConstantBuffer<FogParams>& GetFogParamsBuffer();
+	const FogParams& GetFogParams() const { return fogParams_; }
 
 	const Matrix4x4& GetViewMatrix() const;
 	const Matrix4x4& GetProjectionMatrix() const;

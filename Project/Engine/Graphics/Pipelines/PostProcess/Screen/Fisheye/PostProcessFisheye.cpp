@@ -59,10 +59,16 @@ void PostProcessFisheye::Execute(const std::string& textureName, DxCommand* dxCo
 		return; // 魚眼レンズエフェクトが無効な場合は何もしない
 	}
 
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	// 定数バッファの更新
 	constantBuffer_.SetMappedData(FisheyeParams{
 		.strength = tag->GetFisheyeStrength(),
-		.scale = tag->GetFisheyeScale()
+		.scale = tag->GetFisheyeScale(),
+		.offsetX = static_cast<int32_t>(offset.x),
+		.offsetY = static_cast<int32_t>(offset.y),
+		.virtualWidth = static_cast<int32_t>(dispatchSize.x),
+		.virtualHeight = static_cast<int32_t>(dispatchSize.y)
 	});
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);
@@ -78,8 +84,8 @@ void PostProcessFisheye::Execute(const std::string& textureName, DxCommand* dxCo
 	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetUAVGPUHandle());
 
 	command->Dispatch(
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16),
 		1
 	);
 

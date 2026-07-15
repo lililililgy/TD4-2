@@ -5,6 +5,8 @@ struct DistortionParams {
     float speed;
     float frequency;
     float time;
+    int2 offset;
+    int2 virtualSize;
 };
 
 ConstantBuffer<DistortionParams> gParams : register(b0);
@@ -18,17 +20,21 @@ static const float2 screenSize = float2(1920.0f, 1080.0f);
 [shader("compute")]
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchId : SV_DispatchThreadID) {
-    if (dispatchId.x >= (uint)screenSize.x || dispatchId.y >= (uint)screenSize.y) return;
-    float2 uv = dispatchId.xy / screenSize;
+    uint2 localPos = dispatchId.xy;
+    uint2 pixelPos = localPos + gParams.offset;
+    if (pixelPos.x >= (uint)screenSize.x || pixelPos.y >= (uint)screenSize.y) return;
+    
+    float2 uv = float2(localPos) / float2(gParams.virtualSize);
     
     // サイン波で歪ませる
     float2 offset;
     offset.x = sin(uv.y * gParams.frequency + gParams.time * gParams.speed) * gParams.strength;
     offset.y = cos(uv.x * gParams.frequency + gParams.time * gParams.speed) * gParams.strength;
     
-    float2 distortedUV = uv + offset;
-    distortedUV = saturate(distortedUV); // 画面外に出ないようにクランプ
+    float2 distortedLocalUV = uv + offset;
+    distortedLocalUV = saturate(distortedLocalUV); // 画面外に出ないようにクランプ
     
-    float4 color = colorTex.Sample(textureSampler, distortedUV);
-    outputTex[dispatchId.xy] = color;
+    float2 sampleUV = (distortedLocalUV * float2(gParams.virtualSize) + float2(gParams.offset)) / screenSize;
+    float4 color = colorTex.Sample(textureSampler, sampleUV);
+    outputTex[pixelPos] = color;
 }

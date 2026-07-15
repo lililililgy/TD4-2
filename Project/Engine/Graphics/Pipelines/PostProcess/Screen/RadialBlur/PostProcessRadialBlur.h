@@ -5,6 +5,7 @@
 
 /// engine
 #include "Engine/Graphics/Pipelines/Interface/IPostProcessPipeline.h"
+#include "Engine/Graphics/Buffer/ConstantBuffer.h"
 
 /// ///////////////////////////////////////////////////
 /// ラジアルブラー処理
@@ -36,6 +37,14 @@ private:
 	/// private : objects
 	/// ===================================================
 
+	struct RadialBlurParams {
+		int32_t offsetX;
+		int32_t offsetY;
+		int32_t virtualWidth;
+		int32_t virtualHeight;
+	};
+
+	ConstantBuffer<RadialBlurParams> constantBuffer_;
 	std::array<size_t, 3> textureIndices_; ///< テクスチャのインデックス
 };
 
