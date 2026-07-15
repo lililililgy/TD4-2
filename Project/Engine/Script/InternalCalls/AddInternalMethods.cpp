@@ -29,6 +29,10 @@
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line2DRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line3DRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
+#include "Engine/Core/Utility/Font/FontRasterizer.h"
+#include <mono/metadata/object.h>
+#include <mono/metadata/appdomain.h>
 #include "Engine/Core/Window/WindowManager.h"
 #include "Engine/Core/Utility/Tools/Log.h"
 
@@ -69,6 +73,22 @@ namespace {
 			// 注意: Gizmo::DrawLineは内部でgGizmoSystemを使用するため、初期化済みである必要がある
 			ONEngine::Gizmo::DrawLine(data->startPosition, data->endPosition, data->color, data->thickness);
 		}
+	}
+
+	bool InternalGenerateFontTexture(MonoString* text, MonoString* fontAssetPath, int fontSize, MonoString* texturePath) {
+		if (!text || !fontAssetPath || !texturePath) return false;
+
+		char* textStr = mono_string_to_utf8(text);
+		char* fontPathStr = mono_string_to_utf8(fontAssetPath);
+		char* texPathStr = mono_string_to_utf8(texturePath);
+
+		bool result = ONEngine::FontRasterizer::GenerateTexture(textStr, fontPathStr, fontSize, texPathStr);
+
+		mono_free(textStr);
+		mono_free(fontPathStr);
+		mono_free(texPathStr);
+
+		return result;
 	}
 }
 
@@ -183,11 +203,38 @@ void ONEngine::AddComponentInternalCalls() {
 	AddAudioInternalCalls();
 
 	/// sprite renderer
-	mono_add_internal_call("SpriteRenderer::InternalGetColor", (void*)InternalGetColor);
 	mono_add_internal_call("SpriteRenderer::InternalSetColor", (void*)InternalSetColor);
 	mono_add_internal_call("SpriteRenderer::InternalGetTextureSize", (void*)InternalGetTextureSize);
 	mono_add_internal_call("SpriteRenderer::InternalGetPixelPerfect", (void*)InternalGetPixelPerfect);
 	mono_add_internal_call("SpriteRenderer::InternalSetPixelPerfect", (void*)InternalSetPixelPerfect);
+
+	/// text renderer
+	// mono_add_internal_call("TextRenderer::InternalSetColor", (void*)InternalSetTextColor);
+	mono_add_internal_call("TextRenderer::InternalGetText", (void*)InternalGetTextText);
+	mono_add_internal_call("TextRenderer::InternalSetText", (void*)InternalSetTextText);
+	mono_add_internal_call("TextRenderer::InternalGetFontPath", (void*)InternalGetTextFontPath);
+	mono_add_internal_call("TextRenderer::InternalSetFontPath", (void*)InternalSetTextFontPath);
+	mono_add_internal_call("TextRenderer::InternalGetFontSize", (void*)InternalGetTextFontSize);
+	mono_add_internal_call("TextRenderer::InternalSetFontSize", (void*)InternalSetTextFontSize);
+	mono_add_internal_call("TextRenderer::InternalGetHorizontalAlignment", (void*)InternalGetHorizontalAlignment);
+	mono_add_internal_call("TextRenderer::InternalSetHorizontalAlignment", (void*)InternalSetHorizontalAlignment);
+	mono_add_internal_call("TextRenderer::InternalGetVerticalAlignment", (void*)InternalGetVerticalAlignment);
+	mono_add_internal_call("TextRenderer::InternalSetVerticalAlignment", (void*)InternalSetVerticalAlignment);
+	mono_add_internal_call("TextRenderer::InternalGetOutlineColor", (void*)InternalGetOutlineColor);
+	mono_add_internal_call("TextRenderer::InternalSetOutlineColor", (void*)InternalSetOutlineColor);
+	mono_add_internal_call("TextRenderer::InternalGetOutlineWidth", (void*)InternalGetOutlineWidth);
+	mono_add_internal_call("TextRenderer::InternalSetOutlineWidth", (void*)InternalSetOutlineWidth);
+	mono_add_internal_call("TextRenderer::InternalGetShadowColor", (void*)InternalGetShadowColor);
+	mono_add_internal_call("TextRenderer::InternalSetShadowColor", (void*)InternalSetShadowColor);
+	mono_add_internal_call("TextRenderer::InternalGetShadowOffset", (void*)InternalGetShadowOffset);
+	mono_add_internal_call("TextRenderer::InternalSetShadowOffset", (void*)InternalSetShadowOffset);
+	mono_add_internal_call("TextRenderer::InternalGetCharacterSpacing", (void*)InternalGetCharacterSpacing);
+	mono_add_internal_call("TextRenderer::InternalSetCharacterSpacing", (void*)InternalSetCharacterSpacing);
+	mono_add_internal_call("TextRenderer::InternalGetLineSpacing", (void*)InternalGetLineSpacing);
+	mono_add_internal_call("TextRenderer::InternalSetLineSpacing", (void*)InternalSetLineSpacing);
+
+	/// font rasterizer
+	mono_add_internal_call("FontRasterizer::Internal_GenerateTexture", (void*)InternalGenerateFontTexture);
 
 }
 

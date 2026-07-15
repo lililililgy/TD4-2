@@ -2,11 +2,9 @@
     "active": true,
     "components": [
         {
-            "ObjectiveSystem": {
-                "loopStartIndex_": 0,
-                "phaseSequence_": [
-                    "EnemyHuntPhase_1"
-                ]
+            "AddSceneScript": {
+                "isAddRequested": true,
+                "sceneName": "GameUIScene"
             },
             "type": "Variables"
         },
@@ -18,7 +16,7 @@
                 },
                 {
                     "enable": true,
-                    "name": "ObjectiveSystem"
+                    "name": "AddSceneScript"
                 }
             ],
             "type": "Script"

@@ -19,6 +19,11 @@
             "guid": "bf0c252395b6840cfed59ce900c910a7",
             "parentGuid": null,
             "path": "./Workspace_youji/bf0c252395b6840cfed59ce900c910a7.entity"
+        },
+        {
+            "guid": "eff5ec58bed241fd53430e59f1c630e2",
+            "parentGuid": null,
+            "path": "./Workspace_youji/eff5ec58bed241fd53430e59f1c630e2.entity"
         }
     ]
 }

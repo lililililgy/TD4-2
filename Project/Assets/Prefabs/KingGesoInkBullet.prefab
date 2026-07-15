@@ -1,0 +1,96 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 142.0,
+                "y": 142.0,
+                "z": 142.0
+            },
+            "type": "Transform"
+        },
+        {
+            "categoryBits": 16,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 2,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "AttackCollision": {
+                "damage_": 8.0,
+                "destroyOnHit_": false
+            },
+            "KingGesoInkBullet": {
+                "damage": 8.0,
+                "lifeTime": 7.0,
+                "speed": 220.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KingGesoInkBullet"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 0.07999999821186066,
+                    "y": 0.11999999731779099,
+                    "z": 0.20000000298023224
+                },
+                "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "9d9f8bb4d87d60f44c60e5a563040c63",
+    "name": "KingGesoInkBullet",
+    "parentGuid": null,
+    "prefabName": "KingGesoInkBullet"
+}

@@ -1,5 +1,5 @@
 {
-    "active": false,
+    "active": true,
     "components": [
         {
             "cameraType": 1,
@@ -20,7 +20,7 @@
         },
         {
             "enable": 1,
-            "matrixCalcFlags": 7,
+            "matrixCalcFlags": 6,
             "position": {
                 "x": 0.0,
                 "y": 0.0,
@@ -33,9 +33,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 0.44999998807907104,
-                "y": 0.45000001788139343,
-                "z": 0.45000001788139343
+                "x": 0.8999972939491272,
+                "y": 0.8999972939491272,
+                "z": 0.899997353553772
             },
             "type": "Transform"
         },
@@ -43,9 +43,25 @@
             "DebugCamera2D": {},
             "PlayerFollowCamera": {
                 "maxSmoothSpeed_": 26.0,
-                "smoothTime_": 0.8999999761581421
+                "offset_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "smoothTime_": 0.8999999761581421,
+                "targetName_": ""
             },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PlayerFollowCamera"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "4f6e72f15f5c2f71a13cb6e0b55a9248",

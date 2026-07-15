@@ -1,0 +1,134 @@
+{
+    "active": false,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 512.7865600585938,
+                "y": -151.79234313964844,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.09438684582710266,
+                "x": -0.0,
+                "y": -0.0,
+                "z": 0.9955356121063232
+            },
+            "scale": {
+                "x": 720.0,
+                "y": 1000.5,
+                "z": 720.0
+            },
+            "type": "Transform"
+        },
+        {
+            "HP": {
+                "currentHp_": 10.0,
+                "directlyDamageable_": true,
+                "disableAutoDestruction_": false,
+                "isInvincible_": false,
+                "maxHp_": 10.0
+            },
+            "KingJellyfish": {
+                "actionLoopCount": 3,
+                "attackDuration": 1.0,
+                "cameraEntityName": "Camera",
+                "chargeAttackWeight": 1.0,
+                "chargeDamage": 20.0,
+                "chargeDamageFieldDuration": 0.6000000238418579,
+                "chargeDamageFieldPrefabName": "JellyfishChargeDamageField",
+                "chargeDamageFieldWidth": 180.0,
+                "chargeInertiaRate": 0.9990000128746033,
+                "chargeMoveDuration": 2.5999999046325684,
+                "chargePassThroughDistance": 300.0,
+                "chargeRecoveryDuration": 0.800000011920929,
+                "chargeSpeed": 3000.0,
+                "chargeTellDuration": 0.800000011920929,
+                "fixedAttackType": 0,
+                "idleDuration": 2.0,
+                "laserCount": 8,
+                "laserDamage": 15.0,
+                "laserFireDuration": 0.4000000059604645,
+                "laserLength": 3600.0,
+                "laserPrefabName": "JellyfishLaser",
+                "laserRecoveryDuration": 0.6000000238418579,
+                "laserTellDuration": 0.800000011920929,
+                "laserWidth": 160.0,
+                "maxHp": 10,
+                "moveArcHeight": 120.0,
+                "moveDistance": 300.0,
+                "moveDuration": 1.2000000476837158,
+                "moveInertiaDuration": 0.5,
+                "moveInertiaRate": 0.3499999940395355,
+                "moveSpeed": 250.0,
+                "moveTowardTarget": true,
+                "omnidirectionalBeamWeight": 1.0,
+                "randomizeAttackType": true,
+                "targetEntityName": "Player"
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KingJellyfish"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 0,
+            "mass": 1.0,
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.7999999523162842
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "d095a3a77108851a4aff8faa8d91d124",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": -0.019999999552965164,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 0.36000001430511475,
+                        "y": 0.6399999856948853
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "2a75a187cc14795397a4b907fc812b10",
+    "name": "KingJellyfish",
+    "parentGuid": null,
+    "prefabName": ""
+}

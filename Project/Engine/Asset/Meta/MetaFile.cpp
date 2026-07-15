@@ -178,8 +178,42 @@ MetaBase LoadOrGenerateMetaBase(const std::string& filepath, const std::string& 
 		return metaBase;
 	}
 
-	ifs >> j;
-	ifs.close();
+	try {
+		ifs >> j;
+		ifs.close();
+	} catch (const nlohmann::json::parse_error& e) {
+		Console::LogError("[Meta Error] JSON parse error in " + filepath + ": " + e.what());
+		ifs.close();
+
+		MetaBase metaBase;
+		metaBase.guid = GenerateGuid();
+		std::filesystem::path p(assetPath);
+		metaBase.type = GetAssetTypeFromExtension(p.extension().string());
+		metaBase.name = p.stem().string();
+
+		nlohmann::json jData;
+		if(metaBase.type == AssetType::Shader) {
+			jData["shaderStage"] = "Vertex";
+			jData["entryPoint"] = "main";
+			jData["profile"] = "vs_6_0";
+		} else if(metaBase.type == AssetType::Texture) {
+			jData["format"] = "RGBA8_UNORM";
+			jData["colorSpace"] = "Linear";
+		} else if(metaBase.type == AssetType::Mesh) {
+			jData["scale"] = 1.0f;
+		} else if(metaBase.type == AssetType::Audio) {
+			jData["duration"] = 0.0f;
+		} else if(metaBase.type == AssetType::Material) {
+			jData["useShader"] = "";
+			jData["albedoColor"] = {1.0f, 1.0f, 1.0f, 1.0f};
+			jData["albedoTextureGuid"] = Guid::kInvalid.ToString();
+			jData["normalTextureGuid"] = Guid::kInvalid.ToString();
+		}
+
+		SaveMetaToFile(filepath, metaBase, jData);
+		return metaBase;
+	}
+
 	MetaBase metaBase;
 	metaBase.guid = j.value("guid", Guid{});
 	metaBase.type = j.value("type", AssetType{});

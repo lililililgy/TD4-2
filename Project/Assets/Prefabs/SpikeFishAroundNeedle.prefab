@@ -53,6 +53,7 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -76,12 +77,11 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "ed0ce65e3b321cfd0f3b5f891116c113",
+    "guid": "2940e589916c96befea6e967606c3b0d",
     "name": "SpikeFishAroundNeedle",
-    "parentGuid": "0ddfefefe7891522f08877c724fc53a4",
+    "parentGuid": null,
     "prefabName": "SpikeFishAroundNeedle"
 }

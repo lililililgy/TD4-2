@@ -18,6 +18,7 @@
 #include "Engine/Asset/Assets/Material/MaterialLoader.h"
 #include "Engine/Asset/Assets/Shader/ShaderLoader.h"
 #include "Engine/Asset/Assets/Animation/AnimationClipLoader.h"
+#include "Engine/Asset/Assets/Font/FontAssetLoader.h"
 #include "Engine/Asset/Guid/Guid.h"
 
 namespace ONEngine {
@@ -188,6 +189,10 @@ public:
 	/// ゲッタ アニメーションクリップ
 	const AnimationClip* GetAnimationClip(const std::string& filepath) const;
 	AnimationClip* GetAnimationClip(const std::string& filepath);
+
+	/// ゲッタ フォント
+	const FontAsset* GetFont(const std::string& filepath) const;
+	FontAsset* GetFont(const std::string& filepath);
 
 };
 

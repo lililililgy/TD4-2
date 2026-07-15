@@ -108,8 +108,6 @@ private:
 	bool showCreateScriptPopup_ = false;
 	std::string errorMessage_;
 
-	FileWatcher fileWatcher_;
-
 	int selectedFileIndex_ = -1;
 
 };

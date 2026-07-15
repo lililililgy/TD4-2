@@ -161,7 +161,9 @@ void AnimationPlayer::Reset() {
 void AnimationPlayer::ClearBindings() {
     for (auto& b : bindings) {
         if (b.monoGcHandle != 0) {
-            mono_gchandle_free(b.monoGcHandle);
+            if (!MonoScriptEngine::GetInstance().IsShuttingDown()) {
+                mono_gchandle_free(b.monoGcHandle);
+            }
         }
     }
     bindings.clear();

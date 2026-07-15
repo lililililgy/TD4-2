@@ -11,6 +11,15 @@ static class ComponentBatchManager {
 	private static Dictionary<Type, ComponentBatchAllocator> allocators = new Dictionary<Type, ComponentBatchAllocator>();
 
 	public static void Initialize() {
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(Transform.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Transform.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(MeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(MeshRenderer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(DissolveMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(DissolveMeshRenderer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(SpriteRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SpriteRenderer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(TextRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(TextRenderer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(CameraComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CameraComponent.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(UIGroupComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIGroupComponent.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(UIElementComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIElementComponent.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(BoxCollider2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider2D.BatchData))}");
 
 		// --- Transform の登録 ---
 
@@ -230,6 +239,31 @@ static class ComponentBatchManager {
 			return batch;
 		});
 
+		// --- TextRenderer の登録 ---
+		RegisterConverter<TextRenderer, TextRenderer.BatchData>((ComponentArray<TextRenderer> array) => {
+			int count = array.Count;
+			TextRenderer.BatchData[] batch = new TextRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				var batchData = comp.GetBatchData();
+				batch[i].compId = comp.compId;
+				batch[i].color = batchData.color;
+				batch[i].textureSize = batchData.textureSize;
+				batch[i].uvTransform = batchData.uvTransform;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<TextRenderer, TextRenderer.BatchData>((ComponentArray<TextRenderer> array) => {
+			int count = array.Count;
+			TextRenderer.BatchData[] batch = new TextRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+			}
+			return batch;
+		});
+
 		RegisterAllocator<UIElementComponent, UIElementComponent.BatchData>((ComponentArray<UIElementComponent> array) => {
 			int count = array.Count;
 			UIElementComponent.BatchData[] batch = new UIElementComponent.BatchData[count];
@@ -336,16 +370,18 @@ static class ComponentBatchManager {
 		} else if (componentType == typeof(BoxCollider2D)) {
 			var colliderArray = (ComponentArray<BoxCollider2D>)array;
 			var colliderBatch = (BoxCollider2D.BatchData[])batch;
+			int limit = Math.Min(colliderArray.Count, colliderBatch.Length);
 
-			for (int i = 0; i < colliderBatch.Length; i++) {
+			for (int i = 0; i < limit; i++) {
 				var comp = colliderArray.Get(i);
 				comp.ApplyBatchData(colliderBatch[i]);
 			}
 		} else if (componentType == typeof(AgentIntentComponent)) {
 			var agentArray = (ComponentArray<AgentIntentComponent>)array;
 			var agentBatch = (AgentIntentComponent.BatchData[])batch;
+			int limit = Math.Min(agentArray.Count, agentBatch.Length);
 
-			for (int i = 0; i < agentBatch.Length; i++) {
+			for (int i = 0; i < limit; i++) {
 				var comp = agentArray.Get(i);
 				comp.desiredMoveDirection = agentBatch[i].desiredMoveDirection;
 				comp.desiredRotation = agentBatch[i].desiredRotation;
@@ -358,8 +394,9 @@ static class ComponentBatchManager {
 		} else if (componentType == typeof(UIGroupComponent)) {
 			var uiGroupArray = (ComponentArray<UIGroupComponent>)array;
 			var uiGroupBatch = (UIGroupComponent.BatchData[])batch;
+			int limit = Math.Min(uiGroupArray.Count, uiGroupBatch.Length);
 
-			for (int i = 0; i < uiGroupBatch.Length; i++) {
+			for (int i = 0; i < limit; i++) {
 				var comp = uiGroupArray.Get(i);
 				comp.currentSelectedId = uiGroupBatch[i].currentSelectedId;
 				comp.isFocused = uiGroupBatch[i].isFocused != 0;
@@ -369,11 +406,22 @@ static class ComponentBatchManager {
 		} else if (componentType == typeof(UIElementComponent)) {
 			var uiElementArray = (ComponentArray<UIElementComponent>)array;
 			var uiElementBatch = (UIElementComponent.BatchData[])batch;
+			int limit = Math.Min(uiElementArray.Count, uiElementBatch.Length);
 
-			for (int i = 0; i < uiElementBatch.Length; i++) {
+			for (int i = 0; i < limit; i++) {
 				var comp = uiElementArray.Get(i);
 				comp.groupIdId = uiElementBatch[i].groupIdId;
 				comp.elementIndex = uiElementBatch[i].elementIndex;
+			}
+		} else if (componentType == typeof(TextRenderer)) {
+			var textArray = (ComponentArray<TextRenderer>)array;
+			var textBatch = (TextRenderer.BatchData[])batch;
+			int limit = Math.Min(textArray.Count, textBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = textArray.Get(i);
+				comp.color = textBatch[i].color;
+				comp.uvTransform = textBatch[i].uvTransform;
 			}
 		}
 	}
