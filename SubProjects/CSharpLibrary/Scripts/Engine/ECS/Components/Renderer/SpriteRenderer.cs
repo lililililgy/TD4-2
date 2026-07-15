@@ -16,6 +16,8 @@ class SpriteRenderer : Component {
 		[FieldOffset(32)] public UVTransform uvTransform;
 		[FieldOffset(64)] public float bloomIntensity;
 		[FieldOffset(68)] public float bloomThreshold;
+		[FieldOffset(72)] public float dummyPad1;
+		[FieldOffset(76)] public float dummyPad2;
 	}
 
 	BatchData batchData;
