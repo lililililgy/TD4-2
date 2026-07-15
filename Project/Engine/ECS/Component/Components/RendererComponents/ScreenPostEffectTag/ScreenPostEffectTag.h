@@ -9,6 +9,7 @@
 /// engine
 #include "../../Interface/IComponent.h"
 
+#include "Engine/Core/Utility/Math/Vector2.h"
 #include "Engine/Core/Utility/Math/Vector3.h"
 
 /// @brief ポストエフェクトの種類
@@ -28,6 +29,9 @@ enum PostEffectType {
 /// スクリーンにかけるポストエフェクトのフラグを持つコンポーネント
 /// ///////////////////////////////////////////////////
 namespace ONEngine {
+
+class ECSGroup;
+class EntityComponentSystem;
 
 struct ScreenPostEffectFlags {
 	std::array<bool, PostEffectType_Count> flags = {};
@@ -61,6 +65,10 @@ struct ScreenPostEffectFlags {
 	// Pixelate
 	float pixelSizeX = 8.0f;
 	float pixelSizeY = 8.0f;
+
+	// Size limitation (<=0 means full screen)
+	int32_t postEffectWidth = -1;
+	int32_t postEffectHeight = -1;
 };
 
 class ScreenPostEffectTag : public IComponent {
@@ -139,6 +147,14 @@ public:
 	float GetPixelSizeX() const;
 	void SetPixelSizeY(float size);
 	float GetPixelSizeY() const;
+
+	/// Size limitation
+	void SetPostEffectWidth(int32_t width);
+	int32_t GetPostEffectWidth() const;
+	void SetPostEffectHeight(int32_t height);
+	int32_t GetPostEffectHeight() const;
+
+	static Vector2 GetDispatchSize(ECSGroup* ecsGroup, EntityComponentSystem* entityComponentSystem);
 
 	ScreenPostEffectFlags flags_;
 

@@ -7,6 +7,7 @@ using namespace ONEngine;
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ShadowCaster/ShadowCaster.h"
+#include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
 
 
 void PostProcessShadowApply::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
@@ -165,9 +166,10 @@ void PostProcessShadowApply::Execute(const std::string& textureName, DxCommand* 
 	);
 
 	/// --------------- ディスパッチ --------------- ///
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, ecs);
 	cmdList->Dispatch(
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16), 
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16), 
 		1
 	);
 

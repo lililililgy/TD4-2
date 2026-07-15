@@ -8,6 +8,12 @@
 /// editor
 #include "Engine/Editor/Commands/ImGuiCommand/ImGuiCommand.h"
 
+/// engine
+#include "Engine/Core/Config/EngineConfig.h"
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
+#include "Engine/ECS/Component/Array/ComponentArray.h"
+
+
 /// external
 #include <imgui.h>
 
@@ -99,6 +105,30 @@ float ScreenPostEffectTag::GetPixelSizeX() const { return flags_.pixelSizeX; }
 void ScreenPostEffectTag::SetPixelSizeY(float size) { flags_.pixelSizeY = size; }
 float ScreenPostEffectTag::GetPixelSizeY() const { return flags_.pixelSizeY; }
 
+// Size limitation
+void ScreenPostEffectTag::SetPostEffectWidth(int32_t width) { flags_.postEffectWidth = width; }
+int32_t ScreenPostEffectTag::GetPostEffectWidth() const { return flags_.postEffectWidth; }
+void ScreenPostEffectTag::SetPostEffectHeight(int32_t height) { flags_.postEffectHeight = height; }
+int32_t ScreenPostEffectTag::GetPostEffectHeight() const { return flags_.postEffectHeight; }
+
+Vector2 ScreenPostEffectTag::GetDispatchSize(ECSGroup* ecsGroup, EntityComponentSystem* entityComponentSystem) {
+	ECSGroup* activeGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
+	if (activeGroup) {
+		ComponentArray<ScreenPostEffectTag>* screenPostEffectTagArray = activeGroup->GetComponentArray<ScreenPostEffectTag>();
+		if (screenPostEffectTagArray && !screenPostEffectTagArray->GetUsedComponents().empty()) {
+			for (auto& comp : screenPostEffectTagArray->GetUsedComponents()) {
+				if (comp && comp->enable) {
+					float w = comp->GetPostEffectWidth() > 0 ? static_cast<float>(comp->GetPostEffectWidth()) : EngineConfig::kWindowSize.x;
+					float h = comp->GetPostEffectHeight() > 0 ? static_cast<float>(comp->GetPostEffectHeight()) : EngineConfig::kWindowSize.y;
+					return Vector2(w, h);
+				}
+			}
+		}
+	}
+	return EngineConfig::kWindowSize;
+}
+
+
 
 
 void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* component) {
@@ -165,6 +195,19 @@ void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* component) {
 		Editor::ImMathf::SliderFloat("Pixel Size X##Pixelate", &component->flags_.pixelSizeX, 1.0f, 64.0f, "%.1f");
 		Editor::ImMathf::SliderFloat("Pixel Size Y##Pixelate", &component->flags_.pixelSizeY, 1.0f, 64.0f, "%.1f");
 	}
+
+	ImGui::Separator();
+	ImGui::Text("Global PostEffect Resolution Settings");
+	ImGui::Text("Set <= 0 for full screen resolution");
+	
+	int width = component->GetPostEffectWidth();
+	int height = component->GetPostEffectHeight();
+	if (ImGui::InputInt("Width Limit", &width)) {
+		component->SetPostEffectWidth(width);
+	}
+	if (ImGui::InputInt("Height Limit", &height)) {
+		component->SetPostEffectHeight(height);
+	}
 }
 
 void ONEngine::from_json(const nlohmann::json& j, ScreenPostEffectTag& c) {
@@ -228,6 +271,10 @@ void ONEngine::from_json(const nlohmann::json& j, ScreenPostEffectTag& c) {
 	// Pixelate
 	if (j.contains("pixelSizeX")) c.SetPixelSizeX(j["pixelSizeX"].get<float>());
 	if (j.contains("pixelSizeY")) c.SetPixelSizeY(j["pixelSizeY"].get<float>());
+
+	// Size limitation
+	if (j.contains("postEffectWidth")) c.SetPostEffectWidth(j["postEffectWidth"].get<int32_t>());
+	if (j.contains("postEffectHeight")) c.SetPostEffectHeight(j["postEffectHeight"].get<int32_t>());
 }
 
 void ONEngine::to_json(nlohmann::json& j, const ScreenPostEffectTag& c) {
@@ -276,4 +323,8 @@ void ONEngine::to_json(nlohmann::json& j, const ScreenPostEffectTag& c) {
 	// Pixelate
 	j["pixelSizeX"] = c.GetPixelSizeX();
 	j["pixelSizeY"] = c.GetPixelSizeY();
+
+	// Size limitation
+	j["postEffectWidth"] = c.GetPostEffectWidth();
+	j["postEffectHeight"] = c.GetPostEffectHeight();
 }

@@ -214,6 +214,18 @@ void GameFramework::Update() {
 						ONEngine::Assert(isWaterCausticsEnabled, "WaterCaustics posteffect should still be enabled in GameScene");
 						ONEngine::Assert(isWaterColorGradingEnabled, "WaterColorGrading posteffect should still be enabled in GameScene");
 						ONEngine::Assert(isWaterDepthFogEnabled, "WaterDepthFog posteffect should still be enabled in GameScene");
+
+						ONEngine::Assert(tag->GetPostEffectWidth() == -1, "Default postEffectWidth should be -1");
+						ONEngine::Assert(tag->GetPostEffectHeight() == -1, "Default postEffectHeight should be -1");
+
+						tag->SetPostEffectWidth(800);
+						tag->SetPostEffectHeight(600);
+						ONEngine::Assert(tag->GetPostEffectWidth() == 800, "postEffectWidth should be 800 after setting");
+						ONEngine::Assert(tag->GetPostEffectHeight() == 600, "postEffectHeight should be 600 after setting");
+						
+						Vector2 size = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem_.get());
+						ONEngine::Assert(size.x == 800.0f, "GetDispatchSize.x should be 800");
+						ONEngine::Assert(size.y == 600.0f, "GetDispatchSize.y should be 600");
 					}
 				}
 			}
