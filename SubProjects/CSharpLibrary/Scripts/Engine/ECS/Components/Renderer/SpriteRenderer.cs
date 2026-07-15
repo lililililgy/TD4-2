@@ -7,13 +7,13 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 class SpriteRenderer : Component {
-	[StructLayout(LayoutKind.Sequential, Pack = 4)]
+	[StructLayout(LayoutKind.Explicit, Size = 64)]
 	public struct BatchData {
-		public uint compId;
-		public Vector4 color;
-		public Vector2 textureSize;
-		public uint postEffectFlags;
-		public UVTransform uvTransform;
+		[FieldOffset(0)] public uint compId;
+		[FieldOffset(4)] public Vector4 color;
+		[FieldOffset(20)] public Vector2 textureSize;
+		[FieldOffset(28)] public uint postEffectFlags;
+		[FieldOffset(32)] public UVTransform uvTransform;
 	}
 
 	BatchData batchData;

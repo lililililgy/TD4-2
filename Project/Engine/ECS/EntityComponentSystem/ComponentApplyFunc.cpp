@@ -72,6 +72,7 @@ struct SpriteBatch {
 	uint32_t postEffectFlags;
 	UVTransform uvTransform;
 };
+static_assert(sizeof(SpriteBatch) == 64, "SpriteBatch size must be 64 bytes");
 
 struct TextBatch {
 	uint32_t compId;
