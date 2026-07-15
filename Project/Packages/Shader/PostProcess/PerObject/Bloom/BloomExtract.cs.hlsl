@@ -1,4 +1,4 @@
-#include "../../../ConstantBufferData/Material.hlsli"
+#include "../../../../ConstantBufferData/Material.hlsli"
 
 Texture2D<float4> colorTex : register(t0);
 Texture2D<float4> flagsTex : register(t1);
