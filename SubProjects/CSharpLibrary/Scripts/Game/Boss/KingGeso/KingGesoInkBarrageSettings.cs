@@ -2,6 +2,7 @@ public class KingGesoInkBarrageSettings : MonoScript
 {
     [SerializeField] public string bulletPrefabName = "KingGesoInkBullet"; //プレハブの名前
     [SerializeField] public float selectionWeight = 1.0f;         //攻撃選択時の重み
+    [SerializeField] public float tellDuration = 1.2f;            //攻撃前の予備動作時間
     [SerializeField] public int bulletCountPerWave = 10;          //1回の波で発射する弾の数
     [SerializeField] public int waveCount = 7;                    //発射する波の数
     [SerializeField] public int poolSize = 120;                   //0なら1攻撃分の弾数を自動確保

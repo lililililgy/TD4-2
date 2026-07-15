@@ -158,6 +158,7 @@
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageAttack.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBullet.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoMove.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoPincerThrustAttack.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoPincerThrustSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoState.cs" />

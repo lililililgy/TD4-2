@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": -9.900003433227539,
-                "y": 0.0,
+                "y": -551.8015747070313,
                 "z": 0.0
             },
             "rotate": {
@@ -49,7 +49,7 @@
                 "idleDuration": 2.0,
                 "maxHp": 1000,
                 "randomizeAttackType": true,
-                "screenEdgeMargin": 0.5,
+                "screenEdgeMargin": 0.699999988079071,
                 "screenHalfHeight": 720.0,
                 "screenHalfWidth": 1280.0,
                 "targetEntityName": "Player"
@@ -60,13 +60,14 @@
                 "projectileDamage": 1.0,
                 "projectileLifeTime": 8.0,
                 "projectilePrefabName": "KingGesoHomingBullet",
-                "projectileSpeed": 200.0,
+                "projectileSpeed": 1000.0,
                 "selectionWeight": 1.0,
                 "spawnOffset": {
-                    "x": 0.0,
-                    "y": 0.0
+                    "x": 50.0,
+                    "y": 50.0
                 },
-                "turnSpeed": 2.0
+                "tellDuration": 0.8,
+                "turnSpeed": 0.5
             },
             "KingGesoInkBarrageSettings": {
                 "angleOffset": 0.1599999964237213,
@@ -74,7 +75,7 @@
                 "bulletDamage": 1.0,
                 "bulletLifeTime": 7.0,
                 "bulletPrefabName": "KingGesoInkBullet",
-                "bulletSpeed": 220.0,
+                "bulletSpeed": 250.0,
                 "poolSize": 0,
                 "recoveryDuration": 0.6000000238418579,
                 "reverseHalfway": true,
@@ -83,8 +84,20 @@
                     "x": 0.0,
                     "y": 0.0
                 },
+                "tellDuration": 1.2,
                 "waveCount": 7,
-                "waveInterval": 1.0
+                "waveInterval": 1.600000023841858
+            },
+            "KingGesoMove": {
+                "followOffset": {
+                    "x": 10.0,
+                    "y": 10.0
+                },
+                "maxSpeed": 240.0,
+                "response": 3.0,
+                "slowDownDistance": 600.0,
+                "stopDistance": 400.0,
+                "targetEntityName": "Player"
             },
             "KingGesoPincerThrustSettings": {
                 "attackDuration": 10.0,
@@ -92,18 +105,20 @@
                 "moveDuration": 7.0,
                 "passThroughDistance": 1000.0,
                 "rotationSpeed": 8.0,
-                "selectionWeight": 1.0
+                "selectionWeight": 1.0,
+                "tellDuration": 1.0
             },
             "KingGesoWaveThrustSettings": {
-                "attackDuration": 10.0,
+                "attackDuration": 13.0,
                 "damage": 20.0,
                 "gesoCount": 6,
-                "gesoLifeTime": 1.0,
-                "moveDuration": 5.0,
+                "gesoLifeTime": 5.0,
+                "moveDuration": 10.0,
                 "passThroughDistance": 1000.0,
                 "rotationSpeed": 8.0,
                 "selectionWeight": 1.0,
-                "spawnInterval": 2.0
+                "spawnInterval": 2.0,
+                "tellDuration": 0.8
             },
             "SpriteAnimation": {
                 "cols": 3,
@@ -140,7 +155,7 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 0.3333333432674408,
+                        "x": 1.0,
                         "y": 1.0
                     }
                 }
@@ -150,6 +165,10 @@
         {
             "enable": 1,
             "scripts": [
+                {
+                    "enable": true,
+                    "name": "KingGesoMove"
+                },
                 {
                     "enable": true,
                     "name": "KingGeso"

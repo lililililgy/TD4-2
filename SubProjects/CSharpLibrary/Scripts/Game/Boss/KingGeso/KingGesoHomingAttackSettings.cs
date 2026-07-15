@@ -2,6 +2,7 @@ public class KingGesoHomingAttackSettings : MonoScript
 {
     [SerializeField] public string projectilePrefabName = "KingGesoHomingBullet"; //プレハブの名前
     [SerializeField] public float selectionWeight = 1.0f;         //攻撃選択時の重み
+    [SerializeField] public float tellDuration = 0.8f;            //攻撃前の予備動作時間
     [SerializeField] public int projectileCount = 3;              //発射する弾の数
     [SerializeField] public float launchInterval = 1.0f;         //弾を発射する間隔
     [SerializeField] public float projectileSpeed = 200.0f;       //弾の速度

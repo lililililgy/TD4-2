@@ -60,15 +60,39 @@ internal sealed class KingGesoIdleState : IKingGesoState
 internal sealed class KingGesoAttackState : IKingGesoState
 {
     private IKingGesoAttack currentAttack_;
+    private KingGesoAttackType attackType_;
+    private float tellElapsed_;
+    private bool attackStarted_;
 
     public void Enter(KingGeso owner)
     {
-        currentAttack_ = CreateAttack(owner.SelectAttackType());
-        currentAttack_.Enter(owner);
+        attackType_ = owner.SelectAttackType();
+        currentAttack_ = CreateAttack(attackType_);
+        tellElapsed_ = 0.0f;
+        attackStarted_ = false;
+        owner.BeginAttackTell();
     }
 
     public void Update(KingGeso owner)
     {
+        if (!attackStarted_)
+        {
+            owner.UpdateAttackTell(attackType_);
+            tellElapsed_ += Time.deltaTime;
+            if (tellElapsed_ < owner.GetAttackTellDuration(attackType_))
+            {
+                return;
+            }
+
+            owner.EndAttackTell();
+            attackStarted_ = true;
+            currentAttack_.Enter(owner);
+
+            // Enterで生成したEntityは次フレーム先頭でInitializeされる。
+            // 同じフレームに攻撃命令を送ると、Initializeが状態をIdleへ戻してしまう。
+            return;
+        }
+
         if (currentAttack_ == null || currentAttack_.Update(owner))
         {
             //attack終了後、クールダウン状態に遷移
@@ -78,11 +102,12 @@ internal sealed class KingGesoAttackState : IKingGesoState
 
     public void Exit(KingGeso owner)
     {
-        if (currentAttack_ != null)
+        owner.EndAttackTell();
+        if (attackStarted_ && currentAttack_ != null)
         {
             currentAttack_.Exit(owner);
-            currentAttack_ = null;
         }
+        currentAttack_ = null;
 
         // 攻撃終了時にアクティブなゲソを破棄
         owner.DestroyActiveGeso();

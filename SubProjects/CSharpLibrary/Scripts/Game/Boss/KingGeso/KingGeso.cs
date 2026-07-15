@@ -48,6 +48,8 @@ public class KingGeso : MonoScript
     private readonly List<Entity> inkBulletPool_ = new List<Entity>();
     private readonly List<Entity> availableInkBullets_ = new List<Entity>();
     private readonly HashSet<Entity> activeInkBullets_ = new HashSet<Entity>();
+    private Vector4 attackTellOriginalColor_;
+    private bool attackTellActive_;
 
 
     //=============================================================
@@ -169,6 +171,90 @@ public class KingGeso : MonoScript
     internal float WaveGesoLifeTime => Positive(waveSettings_.gesoLifeTime);
 
     internal float PincerAttackDuration => Positive(pincerSettings_.attackDuration);
+
+    internal float GetAttackTellDuration(KingGesoAttackType attackType)
+    {
+        if (attackType == KingGesoAttackType.PincerThrust)
+        {
+            return NonNegative(pincerSettings_.tellDuration);
+        }
+        if (attackType == KingGesoAttackType.InkBarrage)
+        {
+            return NonNegative(inkSettings_.tellDuration);
+        }
+        if (attackType == KingGesoAttackType.HomingBullet)
+        {
+            return NonNegative(homingSettings_.tellDuration);
+        }
+        return NonNegative(waveSettings_.tellDuration);
+    }
+
+    internal void BeginAttackTell()
+    {
+        SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+        if (renderer == null)
+        {
+            return;
+        }
+
+        attackTellOriginalColor_ = renderer.color;
+        attackTellActive_ = true;
+    }
+
+    internal void UpdateAttackTell(KingGesoAttackType attackType)
+    {
+        if (!attackTellActive_)
+        {
+            return;
+        }
+
+        SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+        if (renderer == null)
+        {
+            return;
+        }
+
+        Vector4 tellColor = GetAttackTellColor(attackType);
+        float pulse = (Mathf.Sin(Time.time * Mathf.PI * 6.0f) + 1.0f) * 0.5f;
+        float blend = 0.25f + pulse * 0.55f;
+        renderer.color = new Vector4(
+            attackTellOriginalColor_.x + (tellColor.x - attackTellOriginalColor_.x) * blend,
+            attackTellOriginalColor_.y + (tellColor.y - attackTellOriginalColor_.y) * blend,
+            attackTellOriginalColor_.z + (tellColor.z - attackTellOriginalColor_.z) * blend,
+            attackTellOriginalColor_.w);
+    }
+
+    internal void EndAttackTell()
+    {
+        if (!attackTellActive_)
+        {
+            return;
+        }
+
+        SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            renderer.color = attackTellOriginalColor_;
+        }
+        attackTellActive_ = false;
+    }
+
+    private static Vector4 GetAttackTellColor(KingGesoAttackType attackType)
+    {
+        if (attackType == KingGesoAttackType.PincerThrust)
+        {
+            return new Vector4(1.0f, 0.25f, 0.25f, 1.0f);
+        }
+        if (attackType == KingGesoAttackType.InkBarrage)
+        {
+            return new Vector4(0.55f, 0.2f, 1.0f, 1.0f);
+        }
+        if (attackType == KingGesoAttackType.HomingBullet)
+        {
+            return new Vector4(0.2f, 0.85f, 1.0f, 1.0f);
+        }
+        return new Vector4(1.0f, 0.75f, 0.15f, 1.0f);
+    }
 
     internal int HomingProjectileCount => homingSettings_.projectileCount > 0 ? homingSettings_.projectileCount : 1;
     internal float HomingProjectileInterval => Positive(homingSettings_.launchInterval);
@@ -440,7 +526,7 @@ public class KingGeso : MonoScript
             homingSettings_.spawnOffset.x,
             homingSettings_.spawnOffset.y,
             0.0f);
-        projectile.transform.position = transform.worldPosition + offset;
+        projectile.transform.position = transform.position + offset;
         return projectile;
     }
 
@@ -619,10 +705,10 @@ public class KingGeso : MonoScript
     //=============================================================
     private Vector2 GetScreenCenter()
     {
-        Vector3 center = transform.worldPosition;
+        Vector3 center = transform.position;
         if (cameraEntity_ != null && cameraEntity_.transform != null)
         {
-            center = cameraEntity_.transform.worldPosition;
+            center = cameraEntity_.transform.position;
         }
         return new Vector2(center.x, center.y);
     }
@@ -634,7 +720,7 @@ public class KingGeso : MonoScript
     {
         if (targetEntity_ != null && targetEntity_.transform != null)
         {
-            Vector3 targetPosition = targetEntity_.transform.worldPosition;
+            Vector3 targetPosition = targetEntity_.transform.position;
             return new Vector2(targetPosition.x, targetPosition.y);
         }
 

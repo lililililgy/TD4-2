@@ -49,7 +49,7 @@
                     "z": 0.0
                 },
                 "smoothTime_": 0.8999999761581421,
-                "targetName_": ""
+                "targetName_": "Player"
             },
             "type": "Variables"
         },
