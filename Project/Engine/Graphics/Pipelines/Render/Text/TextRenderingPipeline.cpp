@@ -78,7 +78,7 @@ void TextRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler, DxManager
 	}
 }
 
-void TextRenderingPipeline::PreDraw(ECSGroup* ecsGroup, CameraComponent* camera, DxCommand* dxCommand) {
+void TextRenderingPipeline::PreDraw(ECSGroup* ecsGroup, [[maybe_unused]] CameraComponent* camera, [[maybe_unused]] DxCommand* dxCommand) {
 	ComponentArray<TextRenderer>* textRendererArray = ecsGroup->GetComponentArray<TextRenderer>();
 	if (!textRendererArray || textRendererArray->GetUsedComponents().empty()) {
 		return;

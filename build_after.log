@@ -4454,3 +4454,347 @@ C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\
   CustomMeshRenderer.cpp
   DissolveMeshRenderer.cpp
   MeshRenderer.cpp
+  Line2DRenderer.cpp
+  Line3DRenderer.cpp
+  ScreenPostEffectTag.cpp
+  SkinMeshRenderer.cpp
+  Skybox.cpp
+  SpriteRenderer.cpp
+  TextRenderer.cpp
+  EntityCollection.cpp
+  EntityJsonConverter.cpp
+  GameEntity.cpp
+  EntityPrefab.cpp
+  EntityPrefabCollection.cpp
+  AddECSSystemFunction.cpp
+  ComponentApplyFunc.cpp
+  ECSGroup.cpp
+  EntityComponentSystem.cpp
+  AISystem.cpp
+  AnimationSystem.cpp
+  AnimatorUpdateSystem.cpp
+  AudioPlaybackSystem.cpp
+  CameraUpdateSystem.cpp
+  ColliderRenderQueueSystem.cpp
+  Collision2DSystem.cpp
+  CollisionSystem.cpp
+  EffectUpdateSystem.cpp
+  GrassBufferCreateSystem.cpp
+  MeshBufferRecreate.cpp
+  MovementSystem.cpp
+  ParticleSystem2DUpdateSystem.cpp
+  ParticleSystemUpdateSystem.cpp
+  ScriptUpdateSystem.cpp
+  ShadowCasterUpdateSystem.cpp
+  SkinMeshUpdateSystem.cpp
+  SystemCollection.cpp
+  TerrainColliderVertexGenerator.cpp
+  TerrainCollision.cpp
+  TransformUpdateSystem.cpp
+  UIHierarchySystem.cpp
+  UIInputNavigationSystem.cpp
+  ComponentEditCommands.cpp
+  ComponentJsonConverter.cpp
+  ModifyScriptVariableCommand.cpp
+  FocusEntityCommand.cpp
+  ImGuiCommand.cpp
+  WorldEditorCommands.cpp
+  GameEntityPickingPipeline.cpp
+  GrassArrangementPipeline.cpp
+  RiverMeshGeneratePipeline.cpp
+  RiverTerrainAdjustPipeline.cpp
+  TerrainDataOutput.cpp
+  TerrainVertexCreator.cpp
+  TerrainVertexEditorCompute.cpp
+  VoxelTerrainEditorComputePipeline.cpp
+  EditCommand.cpp
+  EditorManager.cpp
+  ImGuiManager.cpp
+  AssetDebugger.cpp
+  DragDrop.cpp
+  FileWatcher.cpp
+  ImGuiMath.cpp
+  ImGuiSelection.cpp
+  ImGuiShowField.cpp
+  Pivot.cpp
+  Texture2DPreview.cpp
+  BasicTypeWidget.cpp
+  VectorWidget.cpp
+  EditorViewCollection.cpp
+  AITab.cpp
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18): warning C4244: '=': 'wchar_t' から 'char' への変換です。データが失われる可能性があります。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  (ソース ファイル 'Engine/Editor/Manager/EditorManager.cpp' をコンパイルしています)
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18):
+      テンプレートインスタンス化コンテキスト (最初に最も古いもの) は
+          C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Editor\Manager\HotReloadManager.h(44,34):
+          コンパイル対象の関数 テンプレート インスタンス化 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' のリファレンスを確認してください
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+              C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Editor\Manager\HotReloadManager.h(44,34):
+              'Editor::HotReloadManager::Update' の 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' への最初の参照を参照してください
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xstring(862,17):
+          コンパイル対象の関数 テンプレート インスタンス化 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' のリファレンスを確認してください
+          with
+          [
+              _Size_type=unsigned __int64,
+              _Iter=wchar_t *,
+              _Sent=wchar_t *,
+              _Size=unsigned __int64
+          ]
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xstring(1018,18):
+          コンパイル対象の関数 テンプレート インスタンス化 '_OutIt *std::_Copy_n_unchecked4<wchar_t*,_Size,char*>(_InIt,_SizeTy,_OutIt)' のリファレンスを確認してください
+          with
+          [
+              _OutIt=char *,
+              _Size=unsigned __int64,
+              _InIt=wchar_t *,
+              _SizeTy=unsigned __int64
+          ]
+  
+  AnimationTab.cpp
+  DevelopTab.cpp
+  EditorTab.cpp
+  EventTab.cpp
+  GameTab.cpp
+  PrefabTab.cpp
+  SettingsTab.cpp
+  UITab.cpp
+  AnimationEditorWindow.cpp
+  BehaviorTreeEditorWindow.cpp
+  ConsoleWindow.cpp
+  DebugSceneView.cpp
+  GameEventEditorWindow.cpp
+  GameSceneView.cpp
+  HierarchyWindow.cpp
+  InspectorWindow.cpp
+  ProjectSettingsWindow.cpp
+  ProjectWindow.cpp
+  TexturePreviewWindow.cpp
+  UIEditorWindow.cpp
+  TestWindow.cpp
+  PrefabFileWindow.cpp
+  PrefabViewWindow.cpp
+  ByteAddressBuffer.cpp
+  GPUMaterial.cpp
+  UVTransform.cpp
+  IndexBuffer.cpp
+  RenderingFramework.cpp
+  RenderingPipelineCollection.cpp
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18): warning C4244: '=': 'wchar_t' から 'char' への変換です。データが失われる可能性があります。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  (ソース ファイル 'Engine/Editor/Views/Windows/Develop/DebugSceneView.cpp' をコンパイルしています)
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18):
+      テンプレートインスタンス化コンテキスト (最初に最も古いもの) は
+          C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Editor\Manager\HotReloadManager.h(44,34):
+          コンパイル対象の関数 テンプレート インスタンス化 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' のリファレンスを確認してください
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+              C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Editor\Manager\HotReloadManager.h(44,34):
+              'Editor::HotReloadManager::Update' の 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' への最初の参照を参照してください
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xstring(862,17):
+          コンパイル対象の関数 テンプレート インスタンス化 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' のリファレンスを確認してください
+          with
+          [
+              _Size_type=unsigned __int64,
+              _Iter=wchar_t *,
+              _Sent=wchar_t *,
+              _Size=unsigned __int64
+          ]
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xstring(1018,18):
+          コンパイル対象の関数 テンプレート インスタンス化 '_OutIt *std::_Copy_n_unchecked4<wchar_t*,_Size,char*>(_InIt,_SizeTy,_OutIt)' のリファレンスを確認してください
+          with
+          [
+              _OutIt=char *,
+              _Size=unsigned __int64,
+              _InIt=wchar_t *,
+              _SizeTy=unsigned __int64
+          ]
+  
+  IPostProcessPipeline.cpp
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18): warning C4244: '=': 'wchar_t' から 'char' への変換です。データが失われる可能性があります。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  (ソース ファイル 'Engine/Editor/Views/Windows/Develop/ProjectWindow.cpp' をコンパイルしています)
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18):
+      テンプレートインスタンス化コンテキスト (最初に最も古いもの) は
+          C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Editor\Manager\HotReloadManager.h(44,34):
+          コンパイル対象の関数 テンプレート インスタンス化 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' のリファレンスを確認してください
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+              C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Editor\Manager\HotReloadManager.h(44,34):
+              'Editor::HotReloadManager::Update' の 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' への最初の参照を参照してください
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xstring(862,17):
+          コンパイル対象の関数 テンプレート インスタンス化 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' のリファレンスを確認してください
+          with
+          [
+              _Size_type=unsigned __int64,
+              _Iter=wchar_t *,
+              _Sent=wchar_t *,
+              _Size=unsigned __int64
+          ]
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xstring(1018,18):
+          コンパイル対象の関数 テンプレート インスタンス化 '_OutIt *std::_Copy_n_unchecked4<wchar_t*,_Size,char*>(_InIt,_SizeTy,_OutIt)' のリファレンスを確認してください
+          with
+          [
+              _OutIt=char *,
+              _Size=unsigned __int64,
+              _InIt=wchar_t *,
+              _SizeTy=unsigned __int64
+          ]
+  
+  PostProcessBloom.cpp
+  PostProcessGaussianBlurPerObject.cpp
+  PostProcessGrayscalePerObject.cpp
+  PostProcessLighting.cpp
+  PostProcessRadialBlurPerObject.cpp
+  PostProcessTerrainBrush.cpp
+  PostProcessVoxelTerrainBrush.cpp
+  PostProcessFisheye.cpp
+  PostProcessFog.cpp
+  PostProcessGrayscale.cpp
+  PostProcessPixelate.cpp
+  PostProcessRadialBlur.cpp
+  PostProcessShadowApply.cpp
+  PostProcessWaterCausticsLightShafts.cpp
+  PostProcessWaterColorGrading.cpp
+  PostProcessWaterDepthFogVignette.cpp
+  PostProcessWaterDistortion.cpp
+  CopyImageRenderingPipeline.cpp
+  EffectRenderingPipeline.cpp
+  Gizmo2DRenderingPipeline.cpp
+  Gizmo3DRenderingPipeline.cpp
+  GizmoPrimitiveVertices.cpp
+  GrassRenderingPipeline.cpp
+  GridRenderingPipeline.cpp
+  DissolveMeshRenderingPipeline.cpp
+  MeshRenderingPipeline.cpp
+  SkinMeshRenderingPipeline.cpp
+  SkinMeshSkeletonRenderingPipeline.cpp
+  ParticleSystemRenderingPipeline.cpp
+  ParticleSystem2DRenderingPipeline.cpp
+  Line2DRenderingPipeline.cpp
+  Line3DRenderingPipeline.cpp
+  RiverRenderingPipeline.cpp
+  SkyboxRenderingPipeline.cpp
+  SpriteRenderingPipeline.cpp
+  TerrainProceduralRenderingPipeline.cpp
+  TerrainRenderingPipeline.cpp
+  TextRenderingPipeline.cpp
+  VoxelTerrainBrushPreviewRenderingPipeline.cpp
+  VoxelTerrainRenderingPipeline.cpp
+  VoxelTerrainTransvoxelRenderingPipeline.cpp
+  VoxelTerrainVertexCreatePipeline.cpp
+  VoxelTerrainVertexShaderRenderingPipeline.cpp
+  RenderTexture.cpp
+  SceneRenderTexture.cpp
+  ComputePipeline.cpp
+  GraphicsPipeline.cpp
+C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp(81,93): warning C4100: 'dxCommand': 参照されないパラメーター [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp(81,74): warning C4100: 'camera': 参照されないパラメーター [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  ShaderCompiler.cpp
+  SceneIO.cpp
+  SceneManager.cpp
+  AddInternalMethods.cpp
+  AnimationInternalCalls.cpp
+  EventInternalCalls.cpp
+  MonoScriptEngine.cpp
+  main.cpp
+C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Script\MonoScriptEngine.cpp(134,25): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18): warning C4244: '=': 'wchar_t' から 'char' への変換です。データが失われる可能性があります。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  (ソース ファイル 'Engine/Script/MonoScriptEngine.cpp' をコンパイルしています)
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18):
+      テンプレートインスタンス化コンテキスト (最初に最も古いもの) は
+          C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Editor\Manager\HotReloadManager.h(44,34):
+          コンパイル対象の関数 テンプレート インスタンス化 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' のリファレンスを確認してください
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+              C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Editor\Manager\HotReloadManager.h(44,34):
+              'Editor::HotReloadManager::Update' の 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' への最初の参照を参照してください
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xstring(862,17):
+          コンパイル対象の関数 テンプレート インスタンス化 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' のリファレンスを確認してください
+          with
+          [
+              _Size_type=std::+::_Size_type,
+              _Iter=wchar_t *,
+              _Sent=wchar_t *,
+              _Size=std::+::_Size_type
+          ]
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xstring(1018,18):
+          コンパイル対象の関数 テンプレート インスタンス化 '_OutIt *std::_Copy_n_unchecked4<wchar_t*,_Size,char*>(_InIt,_SizeTy,_OutIt)' のリファレンスを確認してください
+          with
+          [
+              _OutIt=char *,
+              _Size=std::+::_Size_type,
+              _InIt=wchar_t *,
+              _SizeTy=std::+::_Size_type
+          ]
+  
+タスク "CL" の実行が終了しました。
+タスク "CL"
+  読み取り追跡ログ:
+  	C:\Users\k023g\source\repos\TD4-2-Clone2\Project\..\Generated\Obj\ONEngine\Debug\ONEngine.tlog\CL.read.1.tlog
+  C:\USERS\K023G\SOURCE\REPOS\TD4-2-CLONE2\PROJECT\ENGINE\GRAPHICS\SHADER\SHADER.CPP に対する出力:
+  	C:\USERS\K023G\SOURCE\REPOS\TD4-2-CLONE2\GENERATED\OBJ\ONENGINE\DEBUG\SHADER1.OBJ
+  Engine\Graphics\Shader\Shader.cpp は追跡ログに見つからないためコンパイルされます。
+  C:\USERS\K023G\SOURCE\REPOS\TD4-2-CLONE2\PROJECT\ENGINE\GRAPHICS\SHADER\SHADER.CPP に対する出力:
+  	C:\USERS\K023G\SOURCE\REPOS\TD4-2-CLONE2\GENERATED\OBJ\ONENGINE\DEBUG\SHADER1.OBJ
+  書き込み追跡ログ:
+  	C:\Users\k023g\source\repos\TD4-2-Clone2\Project\..\Generated\Obj\ONEngine\Debug\ONEngine.tlog\CL.11516.write.1.tlog
+  ツールに渡された環境変数:
+    VS_UNICODE_OUTPUT=2116
+    SARIF_OUTPUT_PIPE=2164
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\\" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\assimp\include" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\imgui" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\glib" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\DirectXTex" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals" /ZI /JMC /nologo /W4 /WX- /diagnostics:column /Od /D _SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING /D _DEBUG /D _WINDOWS /D DEBUG_MODE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++latest /permissive- /Fo"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\..\Generated\Obj\ONEngine\Debug\\Shader1.obj" /Fd"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\..\Generated\Obj\ONEngine\Debug\vc145.pdb" /external:W3 /Gd /TP /FC /errorReport:queue /utf-8 /MP /bigobj Engine\Graphics\Shader\Shader.cpp
+  トラッキング コマンド:
+  C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\15.0\FileTracker\FileTracker32.dll" /i C:\Users\k023g\source\repos\TD4-2-Clone2\Generated\Obj\ONEngine\Debug\ONEngine.tlog /r C:\USERS\K023G\SOURCE\REPOS\TD4-2-CLONE2\PROJECT\ENGINE\GRAPHICS\SHADER\SHADER.CPP /b MSBuildConsole_CancelEvent2ebe965d2d154e53b82522ad63972c0e  /c "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe"  /c /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\\" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\assimp\include" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\imgui" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\glib" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\mono" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals\DirectXTex" /I"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Externals" /ZI /JMC /nologo /W4 /WX- /diagnostics:column /Od /D _SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING /D _DEBUG /D _WINDOWS /D DEBUG_MODE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++latest /permissive- /Fo"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\..\Generated\Obj\ONEngine\Debug\\Shader1.obj" /Fd"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\..\Generated\Obj\ONEngine\Debug\vc145.pdb" /external:W3 /Gd /TP /FC /errorReport:queue /utf-8 /MP /bigobj Engine\Graphics\Shader\Shader.cpp
+  Shader.cpp
+C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Graphics\Shader\Shader.cpp(1,1): error C1041: プログラム データベース 'C:\Users\k023g\source\repos\TD4-2-Clone2\Generated\Obj\ONEngine\Debug\vc145.pdb' を開けません。複数の CL.EXE が同じ .PDB ファイルに書き込む場合、/FS を使用してください。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  コマンドはコード 2 で終了しました。
+タスク "CL" の実行が終了しました -- 失敗。
+プロジェクト "ONEngine.vcxproj" 内のターゲット "ClCompile" のビルドが終了しました -- 失敗。
+プロジェクト "C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj" (Rebuild ターゲット) のビルドが終了しました -- 失敗。
+タスク "MSBuild" の実行が終了しました -- 失敗。
+プロジェクト "ONEngine.vcxproj.metaproj" 内のターゲット "Rebuild" のビルドが終了しました -- 失敗。
+プロジェクト "C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj.metaproj" (Rebuild ターゲット) のビルドが終了しました -- 失敗。
+タスク "MSBuild" の実行が終了しました -- 失敗。
+プロジェクト "ONEngine.sln" 内のターゲット "Rebuild" のビルドが終了しました -- 失敗。
+プロジェクト "C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.sln" (Rebuild ターゲット) のビルドが終了しました -- 失敗。
+
+ビルドに失敗しました。
+
+"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.sln" (Rebuild ターゲット) (1) ->
+"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj.metaproj" (Rebuild ターゲット) (2) ->
+"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj" (Rebuild ターゲット) (5) ->
+(ClCompile ターゲット) -> 
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18): warning C4244: '=': 'wchar_t' から 'char' への変換です。データが失われる可能性があります。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18): warning C4244: '=': 'wchar_t' から 'char' への変換です。データが失われる可能性があります。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18): warning C4244: '=': 'wchar_t' から 'char' への変換です。データが失われる可能性があります。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18): warning C4244: '=': 'wchar_t' から 'char' への変換です。データが失われる可能性があります。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp(81,93): warning C4100: 'dxCommand': 参照されないパラメーター [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp(81,74): warning C4100: 'camera': 参照されないパラメーター [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Script\MonoScriptEngine.cpp(134,25): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(5094,18): warning C4244: '=': 'wchar_t' から 'char' への変換です。データが失われる可能性があります。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+
+
+"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.sln" (Rebuild ターゲット) (1) ->
+"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj.metaproj" (Rebuild ターゲット) (2) ->
+"C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj" (Rebuild ターゲット) (5) ->
+(ClCompile ターゲット) -> 
+  C:\Users\k023g\source\repos\TD4-2-Clone2\Project\Engine\Graphics\Shader\Shader.cpp(1,1): error C1041: プログラム データベース 'C:\Users\k023g\source\repos\TD4-2-Clone2\Generated\Obj\ONEngine\Debug\vc145.pdb' を開けません。複数の CL.EXE が同じ .PDB ファイルに書き込む場合、/FS を使用してください。 [C:\Users\k023g\source\repos\TD4-2-Clone2\Project\ONEngine.vcxproj]
+
+    8 個の警告
+    1 エラー
+
+経過時間 00:05:02.02
