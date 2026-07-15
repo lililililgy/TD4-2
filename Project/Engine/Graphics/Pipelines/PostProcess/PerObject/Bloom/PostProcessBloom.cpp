@@ -98,18 +98,44 @@ void PostProcessBloom::Execute(
 	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[2]].GetUAVGPUHandle());
 	command->Dispatch(dispatchX, dispatchY, 1);
 
+	// bloomBright を UAV から SRV に遷移
+	const_cast<Asset::Texture&>(textures[textureIndices_[2]]).GetDxResource().CreateBarrier(
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+		dxCommand
+	);
+
 	// 2. ブラーをかける
 	blurPipeline_->SetPipelineStateForCommandList(dxCommand);
 	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[2]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[3]].GetUAVGPUHandle());
 	command->Dispatch(dispatchX, dispatchY, 1);
 
-	// 3. 元のカラーとブレンドして合成
+	// bloomBlur を UAV から SRV に遷移、bloomBright は UAV に戻す
+	const_cast<Asset::Texture&>(textures[textureIndices_[3]]).GetDxResource().CreateBarrier(
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+		dxCommand
+	);
+	const_cast<Asset::Texture&>(textures[textureIndices_[2]]).GetDxResource().CreateBarrier(
+		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		dxCommand
+	);
+
+	// 3. 元의 カラーとブレンドして合成
 	compositePipeline_->SetPipelineStateForCommandList(dxCommand);
 	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[3]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[4]].GetUAVGPUHandle());
 	command->Dispatch(dispatchX, dispatchY, 1);
+
+	// bloomBlur を UAV に戻す
+	const_cast<Asset::Texture&>(textures[textureIndices_[3]]).GetDxResource().CreateBarrier(
+		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		dxCommand
+	);
 
 	// 最終結果を元のSceneにコピーして戻す
 	CopyResource(
