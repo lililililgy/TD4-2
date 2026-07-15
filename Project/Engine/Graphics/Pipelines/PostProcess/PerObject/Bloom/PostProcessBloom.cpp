@@ -56,8 +56,8 @@ void PostProcessBloom::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm
 
 		compositePipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // original scene (t0)
 		compositePipeline_->AddDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // bloomBlur (t1)
-		compositePipeline_->AddDescriptorRange(2, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // flagsTex (t2)
 		compositePipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); // postProcessResult (u0)
+		compositePipeline_->AddDescriptorRange(2, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // flagsTex (t2)
 		compositePipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
 		compositePipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
 		compositePipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2);
