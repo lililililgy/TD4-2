@@ -514,14 +514,15 @@ size_t ONEngine::ComponentApplyFuncs::GetBatchElementSize(MonoClass* monoClass) 
 }
 
 void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
-	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(TransformBatch) = {}", sizeof(TransformBatch)));
-	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(MeshRendererBatch) = {}", sizeof(MeshRendererBatch)));
-	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(DissolveBatch) = {}", sizeof(DissolveBatch)));
-	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(SpriteBatch) = {}", sizeof(SpriteBatch)));
-	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(TextBatch) = {}", sizeof(TextBatch)));
-	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(CameraBatch) = {}", sizeof(CameraBatch)));
-	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(AnimatorBatch) = {}", sizeof(AnimatorBatch)));
-	Console::Log(std::format("[JIT_DEBUG] C++ sizeof(BoxCollider2DBatch) = {}", sizeof(BoxCollider2DBatch)));
+	std::printf("[JIT_DEBUG] C++ sizeof(TransformBatch) = %zu\n", sizeof(TransformBatch));
+	std::printf("[JIT_DEBUG] C++ sizeof(MeshRendererBatch) = %zu\n", sizeof(MeshRendererBatch));
+	std::printf("[JIT_DEBUG] C++ sizeof(DissolveBatch) = %zu\n", sizeof(DissolveBatch));
+	std::printf("[JIT_DEBUG] C++ sizeof(SpriteBatch) = %zu\n", sizeof(SpriteBatch));
+	std::printf("[JIT_DEBUG] C++ sizeof(TextBatch) = %zu\n", sizeof(TextBatch));
+	std::printf("[JIT_DEBUG] C++ sizeof(CameraBatch) = %zu\n", sizeof(CameraBatch));
+	std::printf("[JIT_DEBUG] C++ sizeof(AnimatorBatch) = %zu\n", sizeof(AnimatorBatch));
+	std::printf("[JIT_DEBUG] C++ sizeof(BoxCollider2DBatch) = %zu\n", sizeof(BoxCollider2DBatch));
+	std::fflush(stdout);
 
 	gApplyFuncMap.clear();
 	gFetchFuncMap.clear();

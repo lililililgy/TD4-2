@@ -11,15 +11,15 @@ static class ComponentBatchManager {
 	private static Dictionary<Type, ComponentBatchAllocator> allocators = new Dictionary<Type, ComponentBatchAllocator>();
 
 	public static void Initialize() {
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(Transform.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Transform.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(MeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(MeshRenderer.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(DissolveMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(DissolveMeshRenderer.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(SpriteRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SpriteRenderer.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(TextRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(TextRenderer.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(CameraComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CameraComponent.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(UIGroupComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIGroupComponent.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(UIElementComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIElementComponent.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(BoxCollider2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider2D.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(Transform.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Transform.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(MeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(MeshRenderer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(DissolveMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(DissolveMeshRenderer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SpriteRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SpriteRenderer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(TextRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(TextRenderer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(CameraComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CameraComponent.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(UIGroupComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIGroupComponent.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(UIElementComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIElementComponent.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BoxCollider2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider2D.BatchData))}");
 
 		// --- Transform の登録 ---
 
