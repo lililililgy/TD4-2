@@ -16,8 +16,9 @@ public class TargetFacingFlip : MonoScript
 
     private SpriteRenderer spriteRenderer_;
 
-    // 反転後の絵の正面方向(World +X または -X)。移動方向の計算などに使う。
+    // 反転後の絵の正面方向移動方向の計算などに使う。
     private Vector3 baseDir_ = Vector3.right;
+    private bool isRight_ = true;
     public Vector3 FacingDirection => Matrix4x4.Transform(baseDir_, Matrix4x4.Rotate(transform.rotate));
 
     public override void Initialize()
@@ -25,14 +26,21 @@ public class TargetFacingFlip : MonoScript
         spriteRenderer_ = entity.GetComponent<SpriteRenderer>();
     }
 
-    // 指定した方向へ向きを合わせる(UV反転 + ±maxTiltAngleDegまでの傾き)
-    public void FaceDirection(Vector3 dir)
+    // 指定した方向へ向きを合わせる
+ 
+    public void FaceDirection(Vector3 dir, bool immediate = false)
     {
         if (dir.LengthSq() <= 0.0001f) { return; }
         dir = dir.Normalized();
 
         // 向く方向が右か左かで、UVを反転するかを決める
         bool isRight = Vector3.Dot(Vector3.right, dir) >= 0.0f;
+        if (isRight != isRight_)
+        {
+        
+            transform.rotate = transform.rotate * Quaternion.MakeFromAxis(Vector3.forward, Mathf.PI);
+        }
+        isRight_ = isRight;
         baseDir_ = isRight ? Vector3.right : -Vector3.right;
 
         // 元絵は左向きなので、右を向かせる時だけUVを反転する
@@ -47,10 +55,10 @@ public class TargetFacingFlip : MonoScript
         float clampedAngle = Mathf.Clamp(angle, -maxTiltRad, maxTiltRad);
 
         Quaternion targetRotate = Quaternion.MakeFromAxis(Vector3.forward, clampedAngle);
-        transform.rotate = Quaternion.Slerp(transform.rotate, targetRotate, turnLerp);
+        transform.rotate = immediate ? targetRotate : Quaternion.Slerp(transform.rotate, targetRotate, turnLerp);
     }
 
-    // 左右専用の絵にUVを切り替える(元絵は左向きに描かれている前提)
+    // 左右専用の絵にUVを切り替える
     private void UpdateFlip(bool isRight)
     {
         if (spriteRenderer_ == null) { return; }

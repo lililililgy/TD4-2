@@ -2,8 +2,15 @@
     "active": true,
     "components": [
         {
-            "enable": 0,
-            "type": "Script"
+            "ChaseController": {
+                "chaseSpeed": 256.0
+            },
+            "SeaCow": {
+                "maxAnimationFps": 18.0,
+                "maxChaseSpeed": 339.0,
+                "rampUpEaseTime": 7.0
+            },
+            "type": "Variables"
         }
     ],
     "guid": "a90c95a9be33cee0c1f0fa7d835a7a73",

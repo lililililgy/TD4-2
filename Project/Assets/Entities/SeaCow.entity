@@ -2,11 +2,13 @@
     "active": true,
     "components": [
         {
+            "ChaseController": {
+                "chaseSpeed": 256.0
+            },
             "SeaCow": {
-                "blinkIntervalEnd": 0.019999999552965164,
-                "blinkPulseDuration": 0.20000000298023224,
-                "blinkPulseScale": 1.5,
-                "explotionTime": 8.0
+                "maxAnimationFps": 18.0,
+                "maxChaseSpeed": 339.0,
+                "rampUpEaseTime": 7.0
             },
             "type": "Variables"
         }

@@ -1,19 +1,14 @@
 using System;
-using System.Collections.Generic;
 
 public class SeaCow : MonoScript
 {
-    /* ----- 突進系のパラメータ ----- */
-    // 照準中に進行方向へ乗せる加速度
-    [SerializeField] private float acceleration = 700.0f;
-    // 速度の上限
-    [SerializeField] private float maxSpeed = 500.0f;
-    // 照準を止めている間、慣性のみで進む際の減衰係数
-    [SerializeField] private float drag = 1.5f;
-    // これより近づいたら照準の更新を止める
-    [SerializeField] private float lockOnRange = 180.0f;
-    // 速度がこれを下回ったら照準を再開する
-    [SerializeField] private float resumeAimSpeed = 60.0f;
+    // 追跡中の加速系パラメータ
+    // 追跡速度の上限
+    [SerializeField] private float maxChaseSpeed = 900.0f;
+    // アニメーションfpsの上限
+    [SerializeField] private float maxAnimationFps = 24.0f;
+    // 初期値からmaxまでイージングし終えるまでの時間
+    [SerializeField] private float rampUpEaseTime = 3.0f;
 
     /* ----- 自爆系のパラメータ ----- */
     // 自爆までの時間
@@ -27,21 +22,19 @@ public class SeaCow : MonoScript
     [SerializeField] private float blinkPulseScale = 1.3f;
     [SerializeField] private float blinkPulseDuration = 0.15f;
 
-    private enum ChargeState { Aiming, Locked, Decelerating }
-
     /* ----- 実行時状態 ----- */
-    private TargetRangeDetector targetRangeDetector_;
+    private HP hp_;
+    private ChaseController chaseController_;
     private SpriteRenderer spriteRenderer_;
     private SpriteAnimation spriteAnimation_;
     private TargetFacingFlip facingFlip_;
 
-    private Vector3 velocity_ = Vector3.zero;
-    private ChargeState chargeState_ = ChargeState.Aiming;
-    // 状態ごとの更新処理
-    private Dictionary<ChargeState, Action<Entity>> chargeUpdateActions_;
-    private Action<Entity> chargeUpdateAction_;
+    private float initialChaseSpeed_ = 0.0f;
+    private float initialAnimationFps_ = 0.0f;
+    // 追跡開始からの経過時間
+    private float rampUpTimer_ = 0.0f;
 
-    // 攻撃開始か
+    // 追跡開始か
     private bool isStarted_ = false;
 
     private float explosionTimer_ = 0.0f;
@@ -56,68 +49,72 @@ public class SeaCow : MonoScript
     public override void Initialize()
     {
         // スクリプト・コンポーネント取得
-        targetRangeDetector_ = entity.GetScript<TargetRangeDetector>();
+        hp_ = entity.GetScript<HP>();
+        chaseController_ = entity.GetScript<ChaseController>();
         spriteRenderer_ = entity.GetComponent<SpriteRenderer>();
         spriteAnimation_ = entity.GetScript<SpriteAnimation>();
         facingFlip_ = entity.GetScript<TargetFacingFlip>();
-        // 初期スケールを保持しておく
+
+        // 初期スケール・初期速度・初期fpsを保持しておく
         initialScale_ = transform.scale;
+        initialChaseSpeed_ = chaseController_ != null ? chaseController_.ChaseSpeed : 0.0f;
+        initialAnimationFps_ = spriteAnimation_ != null ? spriteAnimation_.fps : 0.0f;
 
-        // 状態ごとの更新処理を登録
-        chargeUpdateActions_ = new Dictionary<ChargeState, Action<Entity>>
+        // 追跡が始まるたびに加速をリセットする
+        if (chaseController_ != null)
         {
-            { ChargeState.Aiming,       UpdateAiming },
-            { ChargeState.Locked,       UpdateLocked },
-            { ChargeState.Decelerating, UpdateDecelerating },
-        };
-        chargeUpdateAction_ = chargeUpdateActions_[chargeState_];
-
-        // 範囲内に入った瞬間に時限爆弾と突進を開始する
-        if (targetRangeDetector_ != null)
-        {
-            targetRangeDetector_.OnEnter += StartEncounter;
+            chaseController_.OnChaseStart += OnChaseStart;
         }
     }
 
     public override void Update()
     {
-
         if (transform == null) { return; }
 
-        // 範囲内に一度も入っていなければ、点滅も突進も始めない
-        if (!isStarted_) {
-            AnimationStop();
-            return; 
-        }
+        // 死んだら更新スキップ
+        if (hp_ != null && hp_.CurrentHp <= 0) { return; }
 
-        // ターゲットの取得
-        Entity target = targetRangeDetector_?.Target;
-        if (target == null || target.transform == null) { return; }
+        // 実際の進行方向(速度)を向く。
+        Vector3 velocity = chaseController_ != null ? chaseController_.Velocity : Vector3.zero;
+        if (velocity.LengthSq() > 0.0001f)
+        {
+            facingFlip_?.FaceDirection(velocity.Normalized());
+        }
 
         // 追いかけている間だけ連番アニメーションを再生する
-        AnimationPlay();
-
-        // 現在の突進状態の更新処理を実行
-        chargeUpdateAction_?.Invoke(target);
-
-        transform.position += velocity_ * Time.deltaTime;
-
-        // 赤点滅と自爆タイマーの更新
-        UpdateBlink();
-    }
-
-    // targetRangeDetector_ の範囲内に入った瞬間の開始処理
-    private void StartEncounter()
-    {
-        if (isStarted_) { 
-            return;
+        if (IsChasing())
+        {
+            AnimationPlay();
+        }
+        else
+        {
+            AnimationStop();
         }
 
-        // 時限爆弾と突進を開始する
+        // 一度追跡が始まったら、以降は赤点滅・自爆タイマー・速度とfpsの加速を回し続ける
+        if (isStarted_)
+        {
+            UpdateBlink();
+            UpdateChaseRampUp();
+        }
+    }
+
+    private bool IsChasing()
+    {
+        if (chaseController_ == null) { return false; }
+        return chaseController_.CurrentState == ChaseController.State.Chase
+            || chaseController_.CurrentState == ChaseController.State.Rush;
+    }
+
+    // ChaseControllerが追跡状態に入るたびに呼ばれる
+    private void OnChaseStart()
+    {
+        // 自爆タイマーと点滅は初回の追跡開始時にだけ起動する
+        if (isStarted_) { return; }
+
         isStarted_ = true;
-        TransitionCharge(ChargeState.Aiming);
-        velocity_ = Vector3.zero;
         explosionTimer_ = 0.0f;
+        rampUpTimer_ = 0.0f;
         blinkTimer_ = 0.0f;
         isBlinkOn_ = false;
         isPulsing_ = false;
@@ -131,99 +128,22 @@ public class SeaCow : MonoScript
         }
     }
 
-    private void TransitionCharge(ChargeState next)
+  
+    private void UpdateChaseRampUp()
     {
-        chargeState_ = next;
-        chargeUpdateAction_ = chargeUpdateActions_[next];
-    }
+        rampUpTimer_ += Time.deltaTime;
 
-    ///-----------------------------------------------------------------------------
-    /// 突進状態ごとの更新処理
-    ///-----------------------------------------------------------------------------
+        float t = rampUpEaseTime > 0.0f ? Mathf.Clamp01(rampUpTimer_ / rampUpEaseTime) : 1.0f;
+        float easedT = Ease.InOut.Back(t);
 
-    private void UpdateAiming(Entity target)
-    {
-        // プレイヤー座標そのものへ向けて加速する
-        AccelerateTowardTarget(target);
-
-        // 見た目(向き・UV反転)はプレイヤー座標ではなく、実際の進行方向(速度)に合わせる。
-        // プレイヤー座標を直接見て向きを決めると、プレイヤーが反対側に回り込んだ瞬間に
-        // UV反転が急に切り替わって不自然に見えるため。
-        if (velocity_.LengthSq() > 0.0001f)
+        if (chaseController_ != null)
         {
-            facingFlip_?.FaceDirection(velocity_.Normalized());
+            chaseController_.ChaseSpeed = Mathf.Lerp(initialChaseSpeed_, maxChaseSpeed, easedT);
         }
 
-        // lockOnRange内に入ったら、向きを固定して突っ切る
-        if (IsWithinLockOnRange(target))
+        if (spriteAnimation_ != null)
         {
-            TransitionCharge(ChargeState.Locked);
-        }
-    }
-
-    private void UpdateLocked(Entity target)
-    {
-        // 向きは固定したまま、そのまま加速し続けて突っ切る
-        Accelerate();
-
-        // lockOnRangeの外に出たら減速を始める
-        if (!IsWithinLockOnRange(target))
-        {
-            TransitionCharge(ChargeState.Decelerating);
-        }
-    }
-
-    private void UpdateDecelerating(Entity target)
-    {
-        // lockOnRangeの外に出た後は、慣性のみで減速していく
-        velocity_ *= (float)Math.Exp(-drag * Time.deltaTime);
-
-        // 再びlockOnRange内に戻ったら向きは固定のまま突っ切りへ
-        if (IsWithinLockOnRange(target))
-        {
-            TransitionCharge(ChargeState.Locked);
-        }
-        // 十分減速したら、再びプレイヤーへ向き直して突進を再開する
-        else if (velocity_.Length() <= resumeAimSpeed)
-        {
-            TransitionCharge(ChargeState.Aiming);
-        }
-    }
-
-    private bool IsWithinLockOnRange(Entity target)
-    {
-        if (target == null || target.transform == null) { return false; }
-        Vector3 toTarget = target.transform.position - transform.position;
-        return toTarget.Length() <= lockOnRange;
-    }
-
-    // プレイヤー座標へ向けて加速する(Aiming中の狙い直し用)
-    private void AccelerateTowardTarget(Entity target)
-    {
-        if (target == null || target.transform == null) { return; }
-
-        Vector3 toTarget = target.transform.position - transform.position;
-        if (toTarget.LengthSq() > 0.0001f)
-        {
-            velocity_ += toTarget.Normalized() * acceleration * Time.deltaTime;
-        }
-        ClampSpeed();
-    }
-
-    // 現在向いている方向(見た目)へそのまま加速する。Locked/Decelerating中、向きを変えずに突っ切る用。
-    private void Accelerate()
-    {
-        Vector3 facingDir = facingFlip_ != null ? facingFlip_.FacingDirection : transform.up;
-        velocity_ += facingDir * acceleration * Time.deltaTime;
-        ClampSpeed();
-    }
-
-    private void ClampSpeed()
-    {
-        if (velocity_.Length() > maxSpeed)
-        {
-            // max速度で進む
-            velocity_ = velocity_.Normalized() * maxSpeed;
+            spriteAnimation_.fps = Mathf.Lerp(initialAnimationFps_, maxAnimationFps, easedT);
         }
     }
 
@@ -309,20 +229,19 @@ public class SeaCow : MonoScript
         }
     }
 
-    // isPlayが既にfalseならここで何もしない。SetFrame()はUVTransformを常に正のscaleで
-    // 丸ごと上書きするため、毎フレーム呼ぶとTargetFacingFlipのUV反転を潰してしまう。
-    void AnimationStop() {
+    private void AnimationStop()
+    {
         if (spriteAnimation_ == null || !spriteAnimation_.isPlay) { return; }
         spriteAnimation_.isPlay = false;
     }
 
-    // 追いかけ(isStarted_)中だけ2フレームの連番アニメーションをループ再生する
-    void AnimationPlay() {
+    // 追いかけ中だけ2フレームの連番アニメーションをループ再生する
+    private void AnimationPlay()
+    {
         if (spriteAnimation_ == null || spriteAnimation_.isPlay) { return; }
         spriteAnimation_.startFrame = 0;
         spriteAnimation_.endFrame = 1;
         spriteAnimation_.isLoop = true;
         spriteAnimation_.isPlay = true;
     }
-
 }
