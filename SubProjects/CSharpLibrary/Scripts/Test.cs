@@ -24,6 +24,11 @@ public class Test : MonoScript
 
 	public override void Update()
 	{
-		color = new Vector4(1, 0, 0, 1);
+		color = new Vector4(1, 1, 0, 1);
+		SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+		if (renderer)
+		{
+			renderer.color = color;
+		}
 	}
 }

@@ -19,6 +19,11 @@
             "guid": "cf315c08514803c999b08d50974ed240",
             "parentGuid": null,
             "path": "./particle/cf315c08514803c999b08d50974ed240.entity"
+        },
+        {
+            "guid": "d48a0c4c58921326665dbdbc53c7d6c4",
+            "parentGuid": null,
+            "path": "./particle/d48a0c4c58921326665dbdbc53c7d6c4.entity"
         }
     ]
 }

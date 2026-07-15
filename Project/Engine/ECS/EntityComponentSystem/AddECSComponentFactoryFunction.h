@@ -37,6 +37,7 @@
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/CustomMeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/SkinMesh/SkinMeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Sprite/SpriteRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line2DRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Primitive/Line3DRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
@@ -76,6 +77,7 @@ inline void AddComponentFactoryFunction(ComponentCollection* compCollection) {
 	compCollection->RegisterComponentFactory<CustomMeshRenderer>();
 	compCollection->RegisterComponentFactory<SkinMeshRenderer>();
 	compCollection->RegisterComponentFactory<SpriteRenderer>();
+	compCollection->RegisterComponentFactory<TextRenderer>();
 	compCollection->RegisterComponentFactory<Line2DRenderer>();
 	compCollection->RegisterComponentFactory<Line3DRenderer>();
 	compCollection->RegisterComponentFactory<ScreenPostEffectTag>();

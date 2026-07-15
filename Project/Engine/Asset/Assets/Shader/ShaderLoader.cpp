@@ -6,6 +6,9 @@
 /// externals
 #include <magic_enum/magic_enum.hpp>
 
+/// engine
+#include "Engine/Core/Utility/Tools/Log.h"
+
 namespace ONEngine::Asset {
 
 AssetLoader<Shader>::AssetLoader() {}
@@ -39,7 +42,15 @@ Meta<Shader::MetaData> AssetLoader<Shader>::GetMetaData(const std::string& filep
 		return {};
 	}
 
-	ifs >> j;
+	try {
+		ifs >> j;
+		ifs.close();
+	} catch (const nlohmann::json::parse_error& e) {
+		Console::LogError("[Shader Meta Error] JSON parse error in " + metaPath + ": " + e.what());
+		ifs.close();
+		return res;
+	}
+
 	Shader::MetaData data{};
 	data.entryPoint = j.value("entryPoint", "");
 	data.profile = j.value("profile", "");

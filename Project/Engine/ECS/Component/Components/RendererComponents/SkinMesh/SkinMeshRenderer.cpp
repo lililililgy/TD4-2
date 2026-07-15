@@ -11,6 +11,7 @@
 #include "Engine/ECS/EntityComponentSystem/ECSGroup.h"
 #include "Engine/ECS/Component/Array/ComponentArray.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
+#include "Engine/Script/MonoScriptEngine.h"
 
 /// editor
 #include "Engine/Editor/Math/ImGuiMath.h"
@@ -388,7 +389,7 @@ MonoString* ONEngine::InternalGetMeshPath(uint64_t _nativeHandle) {
 	SkinMeshRenderer* smr = GetSkinMeshRenderer(_nativeHandle);
 
 	const std::string& meshPath = smr->GetMeshPath();
-	MonoString* monoMeshPath = mono_string_new(mono_domain_get(), meshPath.c_str());
+	MonoString* monoMeshPath = mono_string_new(MonoScriptEngine::GetInstance().Domain(), meshPath.c_str());
 	return monoMeshPath;
 }
 
@@ -405,7 +406,7 @@ MonoString* ONEngine::InternalGetTexturePath(uint64_t _nativeHandle) {
 	SkinMeshRenderer* smr = GetSkinMeshRenderer(_nativeHandle);
 
 	const std::string& texturePath = smr->GetTexturePath();
-	MonoString* monoTexturePath = mono_string_new(mono_domain_get(), texturePath.c_str());
+	MonoString* monoTexturePath = mono_string_new(MonoScriptEngine::GetInstance().Domain(), texturePath.c_str());
 	return monoTexturePath;
 }
 

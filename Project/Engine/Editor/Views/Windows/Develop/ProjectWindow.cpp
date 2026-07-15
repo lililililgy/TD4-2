@@ -152,13 +152,6 @@ ProjectWindow::ProjectWindow(ONEngine::Asset::AssetCollection* assetCollection)
 	rootPaths_ = { "./Assets", "./Packages", "../SubProjects/CSharpLibrary/Scripts" };
 	currentPath_ = rootPaths_[0];
 
-	// ファイル監視を開始
-	std::vector<std::wstring> watchDirs;
-	for(const auto& path : rootPaths_) {
-		watchDirs.push_back(path.wstring());
-	}
-	fileWatcher_.Start(watchDirs);
-
 	for(const auto& path : rootPaths_) {
 		if(std::filesystem::exists(path)) {
 			UpdateDirectoryCache(path);
@@ -179,20 +172,7 @@ ProjectWindow::~ProjectWindow() {}
 ///
 void ProjectWindow::ShowImGui() {
 	// ファイル監視イベントの処理
-	for(const auto& ev : fileWatcher_.ConsumeEvents()) {
-		if(ev.type == FileEvent::Type::File) {
-			std::string relPath = GetRelativePath(ev.path);
-			if(ev.action == FileEvent::Action::Added || ev.action == FileEvent::Action::Modified || ev.action == FileEvent::Action::RenamedNew) {
-				// リロードリクエストをキューイング（即時実行するとD3D12のコマンドリスト競合でクラッシュするため）
-				HotReloadManager::GetInstance().RequestAssetReload(relPath);
-
-				// C#スクリプトまたはDLLが更新された場合はホットリロードをリクエスト
-				if(relPath.ends_with(".cs") || (relPath.ends_with(".dll") && relPath.find("CSharpLibrary") != std::string::npos)) {
-					HotReloadManager::GetInstance().RequestScriptHotReload();
-				}
-			}
-		}
-
+	for(const auto& ev : HotReloadManager::GetInstance().ConsumeLatestEvents()) {
 		// キャッシュの更新
 		std::filesystem::path parentPath = std::filesystem::path(ev.path).parent_path();
 		UpdateDirectoryCache(parentPath);

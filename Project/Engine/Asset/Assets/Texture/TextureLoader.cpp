@@ -93,7 +93,15 @@ Meta<Texture::MetaData> AssetLoader<Texture>::GetMetaData(const std::string& fil
 		return {};
 	}
 
-	ifs >> j;
+	try {
+		ifs >> j;
+		ifs.close();
+	} catch (const nlohmann::json::parse_error& e) {
+		Console::LogError("[Texture Meta Error] JSON parse error in " + metaPath + ": " + e.what());
+		ifs.close();
+		return res; // LoadOrGenerateMetaBaseで構築されたベースデータを持った空メタデータを返す
+	}
+
 	Texture::MetaData data;
 	data.format = j.value("format", TextureFormat::RGBA16_FLOAT);
 	data.colorSpace = j.value("colorSpace", ColorSpace::Linear);

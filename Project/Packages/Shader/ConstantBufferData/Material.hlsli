@@ -8,6 +8,7 @@ struct UVTransform {
 struct Material {
     UVTransform uvTransform;  // 32 bytes
     float4     baseColor;     // 16 bytes
+    float4     outlineColor;  // 16 bytes (フチ色)
     uint       postEffectFlags;
     int        entityId;
     int        baseTextureId;
@@ -23,6 +24,7 @@ struct ConstantUVTransform {
 struct ConstantBufferMaterial {
     ConstantUVTransform uvTransform;  // 32 bytes
     float4     baseColor;         // 16 bytes
+    float4     outlineColor;      // 16 bytes
     int4       intValues;     // 16 bytes
     /// intValues.x : postEffectFlags
     /// intValues.y : entityId

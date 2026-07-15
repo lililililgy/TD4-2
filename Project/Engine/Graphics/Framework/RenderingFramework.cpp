@@ -14,6 +14,8 @@ using namespace ONEngine;
 /// editor
 #include "Engine/Editor/Manager/ImGuiManager.h"
 
+#include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
+
 RenderingFramework::RenderingFramework() {}
 RenderingFramework::~RenderingFramework() {}
 
@@ -68,9 +70,21 @@ void RenderingFramework::Initialize(DxManager* dxm, WindowManager* windowManager
 }
 
 void RenderingFramework::Draw() {
+	/// ----- TextRenderer のテクスチャ事前更新 ----- ///
+	if (auto* currentGroup = pEntityComponentSystem_->GetCurrentGroup()) {
+		if (auto* textRendererArray = currentGroup->GetComponentArray<TextRenderer>()) {
+			for (auto* tr : textRendererArray->GetUsedComponents()) {
+				if (tr && tr->enable) {
+					tr->UpdateTextTexture();
+				}
+			}
+		}
+	}
+
 	/// ----- 描画全体の処理 ----- ///
 	HeapBindToCommandList();
 	PreDraw(pEntityComponentSystem_->GetCurrentGroup());
+	HeapBindToCommandList();
 
 	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::RenderingTotal);
 
@@ -202,6 +216,7 @@ void RenderingFramework::DrawScene() {
 		// PreDraw for this group
 		CameraComponent* camera2d = ecsGroup->GetMainCamera2D();
 		renderingPipelineCollection_->PreDrawEntities(ecsGroup, camera, camera2d);
+		HeapBindToCommandList();
 
 		// Set render target to the group's RTV and clear it
 		groupRenderTex->CreateBarrierRenderTarget(pDxManager_->GetDxCommand());
@@ -273,6 +288,7 @@ void RenderingFramework::DrawDebug() {
 
 	CameraComponent* camera2D = debugGroup->GetMainCamera2D();
 	renderingPipelineCollection_->PreDrawEntities(debugGroup, camera, camera2D);
+	HeapBindToCommandList();
 
 	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::DebugDraw);
 
@@ -369,6 +385,7 @@ void RenderingFramework::DrawPrefab() {
 
 	CameraComponent* camera2D = debugGroup->GetMainCamera2D();
 	renderingPipelineCollection_->PreDrawEntities(debugGroup, camera, camera2D);
+	HeapBindToCommandList();
 
 	GPUTimeStamp::GetInstance().BeginTimeStamp(GPUTimeStampID::PrefabDraw);
 
