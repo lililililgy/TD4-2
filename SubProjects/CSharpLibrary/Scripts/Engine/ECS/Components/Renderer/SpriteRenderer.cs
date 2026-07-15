@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 class SpriteRenderer : Component {
-	[StructLayout(LayoutKind.Explicit, Size = 72)]
+	[StructLayout(LayoutKind.Explicit, Size = 80)]
 	public struct BatchData {
 		[FieldOffset(0)] public uint compId;
 		[FieldOffset(4)] public Vector4 color;

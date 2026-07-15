@@ -73,8 +73,9 @@ struct SpriteBatch {
 	UVTransform uvTransform;
 	float bloomIntensity;
 	float bloomThreshold;
+	float pad[2];
 };
-static_assert(sizeof(SpriteBatch) == 72, "SpriteBatch size must be 72 bytes");
+static_assert(sizeof(SpriteBatch) == 80, "SpriteBatch size must be 80 bytes");
 
 struct TextBatch {
 	uint32_t compId;
