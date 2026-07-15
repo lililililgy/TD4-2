@@ -19,11 +19,9 @@ void PostProcessGaussianBlurPerObject::Initialize(ShaderCompiler* shaderCompiler
 
 		pipeline_->Add32BitConstant(D3D12_SHADER_VISIBILITY_ALL, 0, 1); // horizontal (b0)
 		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); /// scene tex (t0)
-		pipeline_->AddDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); /// flagsTex (t1)
 		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); /// output tex (u0)
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
-		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2);
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 
 		pipeline_->CreatePipeline(dxm->GetDxDevice());
@@ -46,8 +44,7 @@ void PostProcessGaussianBlurPerObject::Execute(const std::string& textureName, D
 	int horizontal = 1;
 	command->SetComputeRoot32BitConstants(0, 1, &horizontal, 0);
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[0]].GetSRVGPUHandle()); // t0: Scene
-	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetSRVGPUHandle()); // t1: Flags
-	command->SetComputeRootDescriptorTable(3, textures[textureIndices_[3]].GetUAVGPUHandle()); // u0: bloomBlur
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[3]].GetUAVGPUHandle()); // u0: bloomBlur
 	command->Dispatch(
 		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
 		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
@@ -66,8 +63,7 @@ void PostProcessGaussianBlurPerObject::Execute(const std::string& textureName, D
 	int vertical = 0;
 	command->SetComputeRoot32BitConstants(0, 1, &vertical, 0);
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[3]].GetSRVGPUHandle()); // t0: bloomBlur
-	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetSRVGPUHandle()); // t1: Flags
-	command->SetComputeRootDescriptorTable(3, textures[textureIndices_[2]].GetUAVGPUHandle()); // u0: postProcessResult (最終出力先)
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[2]].GetUAVGPUHandle()); // u0: postProcessResult (最終出力先)
 	command->Dispatch(
 		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
 		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),

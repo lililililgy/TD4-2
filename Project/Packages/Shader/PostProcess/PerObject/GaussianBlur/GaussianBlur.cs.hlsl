@@ -9,7 +9,6 @@ struct TextureParams {
 };
 
 Texture2D<float4> sceneTexture : register(t0);
-Texture2D<float4> flagsTex : register(t1);
 RWTexture2D<float4> outputTexture : register(u0);
 SamplerState textureSampler : register(s0);
 
@@ -35,30 +34,31 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		int2 offset = horizontal != 0 ? int2(i, 0) : int2(0, i);
 		float2 offsetUV = uv + texParams.texelSize * offset;
 
-		// サンプリング対象ピクセルの flagsTex 情報を取得
-		float4 sampleFlags = flagsTex.SampleLevel(textureSampler, offsetUV, 0.0);
-		uint samplePacked = asuint(sampleFlags.z);
-		int sampleRadius = (int)f16tof32(samplePacked >> 16);
+		// サンプリング対象ピクセルの高輝度抽出カラーと半径情報を取得
+		float4 sampleColor = sceneTexture.SampleLevel(textureSampler, offsetUV, 0.0);
+		float sampleRadius = sampleColor.a * 30.0f;
 
 		// サンプリング対象がブルーム対象でない場合は寄与させない
-		if (sampleRadius <= 0) {
+		if (sampleRadius <= 0.01f) {
 			continue;
 		}
 
 		// 距離がそのサンプリング対象のブラー半径内にある場合のみ、その光を届かせる
 		if (abs(i) <= sampleRadius) {
-			float sampleSigma = max(1.0f, (float)sampleRadius / 3.0f);
+			float sampleSigma = max(1.0f, sampleRadius / 3.0f);
 			float weight = Gaussian(i, sampleSigma);
-			sum += sceneTexture.SampleLevel(textureSampler, offsetUV, 0.0) * weight;
+			
+			// 色と半径（アルファ）の両方をウェイト付きで加算
+			sum += sampleColor * weight;
 			totalWeight += weight;
 		}
 	}
 
-	// 周囲からのブルームの寄与がある場合はそのブラー色を出力、
-	// そうでなければ（黒の領域など）、元の入力ピクセルの色を出力
+	// 周囲からのブルームの寄与がある場合はそのブラー色とぼけた半径を出力、
+	// そうでなければ（黒の領域など）、黒を出力
 	if (totalWeight > 0.0) {
 		outputTexture[dispatchThreadId.xy] = sum / totalWeight;
 	} else {
-		outputTexture[dispatchThreadId.xy] = sceneTexture.SampleLevel(textureSampler, uv, 0.0);
+		outputTexture[dispatchThreadId.xy] = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 }

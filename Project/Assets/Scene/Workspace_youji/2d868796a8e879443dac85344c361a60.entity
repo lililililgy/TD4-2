@@ -49,9 +49,12 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "00000000000000000000000000000000",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 30.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 0,
+                "postEffectFlags": 16,
                 "uvTransform": {
                     "position": {
                         "x": 0.0,

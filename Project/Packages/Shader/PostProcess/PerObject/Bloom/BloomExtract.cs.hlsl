@@ -22,7 +22,9 @@ void main(uint3 dispatchId : SV_DispatchThreadID) {
 	float threshold = flags.w;
 
 	if (luminance > threshold) {
-		outputTex[dispatchId.xy] = float4(color.rgb, color.a);
+		uint packed = asuint(flags.z);
+		float bloomRadius = f16tof32(packed >> 16);
+		outputTex[dispatchId.xy] = float4(color.rgb, bloomRadius / 30.0f);
 	} else {
 		outputTex[dispatchId.xy] = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}

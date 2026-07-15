@@ -39,11 +39,9 @@ void PostProcessBloom::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm
 
 		blurPipeline_->Add32BitConstant(D3D12_SHADER_VISIBILITY_ALL, 0, 1); // horizontal (b0)
 		blurPipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // bloomBright (t0)
-		blurPipeline_->AddDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // flagsTex (t1)
 		blurPipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); // bloomBlur (u0)
 		blurPipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0); // table 1 (t0)
-		blurPipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1); // table 2 (t1)
-		blurPipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2); // table 3 (u0)
+		blurPipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1); // table 2 (u0)
 		blurPipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 		blurPipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
@@ -117,8 +115,7 @@ void PostProcessBloom::Execute(
 	int horizontal = 1;
 	command->SetComputeRoot32BitConstants(0, 1, &horizontal, 0);
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[2]].GetSRVGPUHandle()); // t0: bloomBright
-	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetSRVGPUHandle()); // t1: flagsTex
-	command->SetComputeRootDescriptorTable(3, textures[textureIndices_[3]].GetUAVGPUHandle()); // u0: bloomBlur
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[3]].GetUAVGPUHandle()); // u0: bloomBlur
 	command->Dispatch(dispatchX, dispatchY, 1);
 
 	// bloomBlur を UAV から SRV に遷移、bloomBright は SRV から UAV に遷移
@@ -137,8 +134,7 @@ void PostProcessBloom::Execute(
 	int vertical = 0;
 	command->SetComputeRoot32BitConstants(0, 1, &vertical, 0);
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[3]].GetSRVGPUHandle()); // t0: bloomBlur
-	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetSRVGPUHandle()); // t1: flagsTex
-	command->SetComputeRootDescriptorTable(3, textures[textureIndices_[2]].GetUAVGPUHandle()); // u0: bloomBright
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[2]].GetUAVGPUHandle()); // u0: bloomBright
 	command->Dispatch(dispatchX, dispatchY, 1);
 
 	// bloomBright を UAV から SRV に遷移
