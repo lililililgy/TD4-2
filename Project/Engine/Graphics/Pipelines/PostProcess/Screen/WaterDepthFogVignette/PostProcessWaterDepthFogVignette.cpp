@@ -115,6 +115,7 @@ void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, D
 	}
 
 	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	// 定数バッファの更新
 	DepthFogVignetteParams params;
 	params.fogColor = tag->GetWaterFogColor();
@@ -123,6 +124,10 @@ void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, D
 	params.vignetteStrength = tag->GetWaterVignetteStrength();
 	params.offsetX = static_cast<int32_t>(offset.x);
 	params.offsetY = static_cast<int32_t>(offset.y);
+	params.virtualWidth = static_cast<int32_t>(dispatchSize.x);
+	params.virtualHeight = static_cast<int32_t>(dispatchSize.y);
+	params.padding[0] = 0;
+	params.padding[1] = 0;
 	paramsBuffer_.SetMappedData(params);
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);

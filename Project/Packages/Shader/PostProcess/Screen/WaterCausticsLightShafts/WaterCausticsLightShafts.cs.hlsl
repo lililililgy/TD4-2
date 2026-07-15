@@ -9,6 +9,7 @@ struct CausticsParams {
     float3 lightDir;
     float time;
     int2 offset;
+    int2 virtualSize;
     int2 padding;
 };
 
@@ -53,19 +54,22 @@ float voronoi(float2 x) {
 [shader("compute")]
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchId : SV_DispatchThreadID) {
-    uint2 pixelPos = dispatchId.xy + gParams.offset;
+    uint2 localPos = dispatchId.xy;
+    uint2 pixelPos = localPos + gParams.offset;
     if (pixelPos.x >= (uint)screenSize.x || pixelPos.y >= (uint)screenSize.y) return;
-    float2 uv = pixelPos / screenSize;
     
-    float4 color = colorTex.Sample(textureSampler, uv);
+    float2 localUV = float2(localPos) / float2(gParams.virtualSize);
+    float2 sampleUV = (localUV * float2(gParams.virtualSize) + float2(gParams.offset)) / screenSize;
+    
+    float4 color = colorTex.Sample(textureSampler, sampleUV);
     
     // 2Dスクリーン空間コースティクス
     // UVを少しサイン波でゆがめて、水中の揺らめき感を出す
-    float2 distortedUV = uv;
-    distortedUV.x += sin(uv.y * 10.0f + gParams.time * 2.0f) * 0.01f;
-    distortedUV.y += cos(uv.x * 10.0f + gParams.time * 2.0f) * 0.01f;
+    float2 distortedLocalUV = localUV;
+    distortedLocalUV.x += sin(localUV.y * 10.0f + gParams.time * 2.0f) * 0.01f;
+    distortedLocalUV.y += cos(localUV.x * 10.0f + gParams.time * 2.0f) * 0.01f;
     
-    float2 cUV = distortedUV * gParams.scale * 15.0f;
+    float2 cUV = distortedLocalUV * gParams.scale * 15.0f;
     
     // 2レイヤーのVoronoiを重ねてディテールを出す
     float v1 = voronoi(cUV);
@@ -75,14 +79,14 @@ void main(uint3 dispatchId : SV_DispatchThreadID) {
     
     // 簡易ライトシャフトエミュレーション (斜めから降り注ぐ光の筋)
     // 光源の進行方向（lightDir）に沿ったスクロールノイズを重ねる
-    float2 shaftUV = uv;
+    float2 shaftUV = localUV;
     // lightDirのXY成分を使って光の差し込む向きにスクロールさせる
     float2 scrollDir = normalize(gParams.lightDir.xy + float2(1e-5f, 1e-5f));
-    float shaftNoise = sin((uv.x * 5.0f - uv.y * 3.0f * scrollDir.x) + gParams.time * gParams.speed * 0.5f) * 0.5f + 0.5f;
-    shaftNoise += sin((uv.x * 12.0f + uv.y * 8.0f * scrollDir.y) - gParams.time * gParams.speed * 1.1f) * 0.25f;
+    float shaftNoise = sin((localUV.x * 5.0f - localUV.y * 3.0f * scrollDir.x) + gParams.time * gParams.speed * 0.5f) * 0.5f + 0.5f;
+    shaftNoise += sin((localUV.x * 12.0f + localUV.y * 8.0f * scrollDir.y) - gParams.time * gParams.speed * 1.1f) * 0.25f;
     
     // 画面上部ほど光の筋が強く、下部ほど減衰する
-    float shaftDepthAttenuation = saturate(1.0f - uv.y);
+    float shaftDepthAttenuation = saturate(1.0f - localUV.y);
     float shaft = pow(saturate(shaftNoise), 2.0f) * gParams.lightShaftsIntensity * shaftDepthAttenuation;
     
     // 合成 (加算合成)

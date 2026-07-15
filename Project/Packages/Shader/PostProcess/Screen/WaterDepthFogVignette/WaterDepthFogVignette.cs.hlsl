@@ -7,6 +7,8 @@ struct DepthFogVignetteParams {
     float fogWaterSurfaceY;
     float vignetteStrength;
     int2 offset;
+    int2 virtualSize;
+    float2 padding;
 };
 
 ConstantBuffer<DepthFogVignetteParams> gParams : register(b0);
@@ -22,20 +24,23 @@ static const float2 screenSize = float2(1920.0f, 1080.0f);
 [shader("compute")]
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchId : SV_DispatchThreadID) {
-    uint2 pixelPos = dispatchId.xy + gParams.offset;
+    uint2 localPos = dispatchId.xy;
+    uint2 pixelPos = localPos + gParams.offset;
     if (pixelPos.x >= (uint)screenSize.x || pixelPos.y >= (uint)screenSize.y) return;
-    float2 uv = pixelPos / screenSize;
     
-    float4 color = colorTex.Sample(textureSampler, uv);
+    float2 localUV = float2(localPos) / float2(gParams.virtualSize);
+    float2 sampleUV = (localUV * float2(gParams.virtualSize) + float2(gParams.offset)) / screenSize;
+    
+    float4 color = colorTex.Sample(textureSampler, sampleUV);
     
     // 2D用の深度（水深）フォグエミュレーション
     // 画面の下部（uv.yが1に近い）ほど水深が深くフォグが濃くなるようにする
-    float depthFactor = saturate(uv.y * gParams.fogDensity * 10.0f);
+    float depthFactor = saturate(localUV.y * gParams.fogDensity * 10.0f);
     
     float3 finalColor = lerp(color.rgb, gParams.fogColor, depthFactor);
     
     // ビネット効果 (画面端を暗くする)
-    float2 d = abs(uv - 0.5f) * gParams.vignetteStrength;
+    float2 d = abs(localUV - 0.5f) * gParams.vignetteStrength;
     float vignette = saturate(1.0f - dot(d, d));
     finalColor *= vignette;
     

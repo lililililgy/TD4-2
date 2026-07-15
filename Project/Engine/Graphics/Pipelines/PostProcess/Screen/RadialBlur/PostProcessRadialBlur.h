@@ -40,7 +40,8 @@ private:
 	struct RadialBlurParams {
 		int32_t offsetX;
 		int32_t offsetY;
-		int32_t padding[2]; // 16byte alignment
+		int32_t virtualWidth;
+		int32_t virtualHeight;
 	};
 
 	ConstantBuffer<RadialBlurParams> constantBuffer_;

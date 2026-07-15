@@ -115,6 +115,7 @@ void PostProcessWaterCausticsLightShafts::Execute(const std::string& textureName
 	}
 
 	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	// 定数バッファの更新
 	CausticsParams params;
 	params.scale = tag->GetWaterCausticsScale();
@@ -125,8 +126,8 @@ void PostProcessWaterCausticsLightShafts::Execute(const std::string& textureName
 	params.time = Time::GetTime();
 	params.offsetX = static_cast<int32_t>(offset.x);
 	params.offsetY = static_cast<int32_t>(offset.y);
-	params.padding[0] = 0;
-	params.padding[1] = 0;
+	params.virtualWidth = static_cast<int32_t>(dispatchSize.x);
+	params.virtualHeight = static_cast<int32_t>(dispatchSize.y);
 	paramsBuffer_.SetMappedData(params);
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);

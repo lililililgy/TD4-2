@@ -11,6 +11,7 @@ struct ShadowApplyParameters {
     float shadowDarkness;     // 影の濃さ (0〜1)
     int   pcfRadius;          // PCFサンプリング半径
     int2  offset;             // オフセット
+    int2  virtualSize;        // 仮想サイズ
 };
 
 /// ===================================================
@@ -38,7 +39,8 @@ RWTexture2D<float4> outputTexture : register(u0);
 [numthreads(16, 16, 1)]
 void main(uint3 DTid : SV_DispatchThreadID)
 {
-    uint2 px = DTid.xy + shadowParams.offset;
+    uint2 localPos = DTid.xy;
+    uint2 px = localPos + shadowParams.offset;
 
     // 画面外チェック
     if (px.x >= (uint)shadowParams.screenSize.x || px.y >= (uint)shadowParams.screenSize.y) {

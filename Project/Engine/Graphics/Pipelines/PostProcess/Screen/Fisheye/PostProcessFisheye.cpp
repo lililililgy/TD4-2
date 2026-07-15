@@ -60,12 +60,15 @@ void PostProcessFisheye::Execute(const std::string& textureName, DxCommand* dxCo
 	}
 
 	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	// 定数バッファの更新
 	constantBuffer_.SetMappedData(FisheyeParams{
 		.strength = tag->GetFisheyeStrength(),
 		.scale = tag->GetFisheyeScale(),
 		.offsetX = static_cast<int32_t>(offset.x),
-		.offsetY = static_cast<int32_t>(offset.y)
+		.offsetY = static_cast<int32_t>(offset.y),
+		.virtualWidth = static_cast<int32_t>(dispatchSize.x),
+		.virtualHeight = static_cast<int32_t>(dispatchSize.y)
 	});
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);

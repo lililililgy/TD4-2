@@ -4,6 +4,7 @@ struct FisheyeParams {
 	float strength;
 	float scale;
 	int2 offset;
+	int2 virtualSize;
 };
 ConstantBuffer<FisheyeParams> gFisheyeParams : register(b0);
 
@@ -14,16 +15,17 @@ SamplerState textureSampler : register(s0);
 
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchThreadID : SV_DispatchThreadID) {
-	uint2 pixelPos = dispatchThreadID.xy + gFisheyeParams.offset;
+	uint2 localPos = dispatchThreadID.xy;
+	uint2 pixelPos = localPos + gFisheyeParams.offset;
 	
-	// スレッド座標を[0, 1]のUV座標に変換
-	float2 uv = float2(pixelPos) / float2(TextureSize.xy);
+	// ローカルUV座標 [0, 1]
+	float2 uv = float2(localPos) / float2(gFisheyeParams.virtualSize);
 	
 	// 中心座標
 	float2 center = float2(0.5f, 0.5f);
 	
-	// アスペクト比補正 (横長画面での歪みを真円にするため)
-	float aspect = (float)TextureSize.x / (float)TextureSize.y;
+	// アスペクト比補正 (仮想画面のアスペクト比)
+	float aspect = (float)gFisheyeParams.virtualSize.x / (float)gFisheyeParams.virtualSize.y;
 	
 	// 中心からのオフセット
 	float2 offset = uv - center;
@@ -38,14 +40,16 @@ void main(uint3 dispatchThreadID : SV_DispatchThreadID) {
 	// 魚眼歪みの適用
 	float scale = gFisheyeParams.scale;
 	float2 distortedOffset = offset * (1.0f + k * r2) * scale;
-	float2 distortedUV = center + distortedOffset;
+	float2 distortedLocalUV = center + distortedOffset;
 	
 	float4 outputColor = float4(0.0f, 0.0f, 0.0f, 1.0f); // 範囲外は黒
 	
 	// 歪み後のUVが[0, 1]の範囲内ならサンプリングする
-	if (distortedUV.x >= 0.0f && distortedUV.x <= 1.0f &&
-		distortedUV.y >= 0.0f && distortedUV.y <= 1.0f) {
-		outputColor = colorTexture.Sample(textureSampler, distortedUV);
+	if (distortedLocalUV.x >= 0.0f && distortedLocalUV.x <= 1.0f &&
+		distortedLocalUV.y >= 0.0f && distortedLocalUV.y <= 1.0f) {
+		// 全画面UVに変換してサンプリング
+		float2 sampleUV = (distortedLocalUV * float2(gFisheyeParams.virtualSize) + float2(gFisheyeParams.offset)) / float2(TextureSize.xy);
+		outputColor = colorTexture.Sample(textureSampler, sampleUV);
 	}
 	
 	outputTexture[pixelPos] = outputColor;

@@ -59,6 +59,8 @@ public:
 		float fogEnd;   // フォグの終了距離
 		int32_t offsetX;
 		int32_t offsetY;
+		int32_t virtualWidth;
+		int32_t virtualHeight;
 	};
 
 public:

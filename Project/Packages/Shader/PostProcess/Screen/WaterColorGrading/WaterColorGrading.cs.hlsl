@@ -7,6 +7,7 @@ struct ColorGradingParams {
     float saturation;
     float3 colorFilter;
     int2 offset;
+    int2 virtualSize;
     int2 padding;
 };
 
@@ -23,15 +24,18 @@ static const float2 screenSize = float2(1920.0f, 1080.0f);
 [shader("compute")]
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchId : SV_DispatchThreadID) {
-    uint2 pixelPos = dispatchId.xy + gParams.offset;
+    uint2 localPos = dispatchId.xy;
+    uint2 pixelPos = localPos + gParams.offset;
     if (pixelPos.x >= (uint)screenSize.x || pixelPos.y >= (uint)screenSize.y) return;
-    float2 uv = pixelPos / screenSize;
     
-    float4 color = colorTex.Sample(textureSampler, uv);
+    float2 localUV = float2(localPos) / float2(gParams.virtualSize);
+    float2 sampleUV = (localUV * float2(gParams.virtualSize) + float2(gParams.offset)) / screenSize;
+    
+    float4 color = colorTex.Sample(textureSampler, sampleUV);
     
     // 2D水深に応じた赤色光の吸収をシミュレート
     // 下部へ行くほど（uv.yが1に近いほど）R（赤）成分がより強く吸収される
-    float3 attenuation = exp(-gParams.absorption * uv.y * 5.0f);
+    float3 attenuation = exp(-gParams.absorption * localUV.y * 5.0f);
     float3 gradedColor = color.rgb * attenuation;
     
     // カラーフィルター

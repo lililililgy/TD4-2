@@ -19,6 +19,9 @@ public:
 		float vignetteStrength;
 		int32_t offsetX;
 		int32_t offsetY;
+		int32_t virtualWidth;
+		int32_t virtualHeight;
+		float padding[2]; // 16byte alignment
 	};
 
 	enum ROOT_PARAM {

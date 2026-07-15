@@ -6,6 +6,7 @@ struct FogParams {
     float fogStart;       // フォグ開始距離（オフセットとして使用）
     float fogEnd;         // フォグ到達距離（濃さ）
     int2 offset;
+    int2 virtualSize;
 };
 
 /// Buffers
@@ -29,10 +30,12 @@ float HashNoise(float2 p)
 [numthreads(16, 16, 1)]
 void main(uint3 DTid : SV_DispatchThreadID)
 {
-    uint2 pixelPos = DTid.xy + gFogParams.offset;
+    uint2 localPos = DTid.xy;
+    uint2 pixelPos = localPos + gFogParams.offset;
     if (pixelPos.x >= (uint)screenSize.x || pixelPos.y >= (uint)screenSize.y) return;
 
-    float2 uv = pixelPos / screenSize;
+    float2 localUV = float2(localPos) / float2(gFogParams.virtualSize);
+    float2 uv = (localUV * float2(gFogParams.virtualSize) + float2(gFogParams.offset)) / screenSize;
 
     float4 color    = gColorTexture.Sample(gTextureSampler, uv);
     float3 worldPos = gWorldPositionTexture.Sample(gTextureSampler, uv).xyz;

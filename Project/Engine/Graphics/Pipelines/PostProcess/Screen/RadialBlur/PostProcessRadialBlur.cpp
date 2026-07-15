@@ -60,9 +60,12 @@ void PostProcessRadialBlur::Execute(const std::string& textureName, DxCommand* d
 	}
 
 	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	constantBuffer_.SetMappedData(RadialBlurParams{
 		.offsetX = static_cast<int32_t>(offset.x),
-		.offsetY = static_cast<int32_t>(offset.y)
+		.offsetY = static_cast<int32_t>(offset.y),
+		.virtualWidth = static_cast<int32_t>(dispatchSize.x),
+		.virtualHeight = static_cast<int32_t>(dispatchSize.y)
 	});
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);
