@@ -40,13 +40,14 @@ void PostProcessGaussianBlurPerObject::Execute(const std::string& textureName, D
 	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
 	textureIndices_[1] = assetCollection->GetTextureIndex(textureName + "Flags");
 	textureIndices_[2] = assetCollection->GetTextureIndex("postProcessResult");
+	textureIndices_[3] = assetCollection->GetTextureIndex("bloomBlur"); // 中間バッファとして借りる
 
-	// 1パス目：横ブラー (Scene -> postProcessResult)
+	// 1パス目：横ブラー (Scene -> bloomBlur)
 	int horizontal = 1;
 	command->SetComputeRoot32BitConstants(0, 1, &horizontal, 0);
-	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[0]].GetSRVGPUHandle());
-	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetSRVGPUHandle());
-	command->SetComputeRootDescriptorTable(3, textures[textureIndices_[2]].GetUAVGPUHandle());
+	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[0]].GetSRVGPUHandle()); // t0: Scene
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetSRVGPUHandle()); // t1: Flags
+	command->SetComputeRootDescriptorTable(3, textures[textureIndices_[3]].GetUAVGPUHandle()); // u0: bloomBlur
 	command->Dispatch(
 		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
 		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
@@ -54,25 +55,19 @@ void PostProcessGaussianBlurPerObject::Execute(const std::string& textureName, D
 	);
 
 	// バリア遷移：
-	// postProcessResult: UAV -> SRV
-	// Scene: SRV -> UAV
-	const_cast<Asset::Texture&>(textures[textureIndices_[2]]).GetDxResource().CreateBarrier(
+	// bloomBlur: UAV -> SRV (次のパスで入力としてサンプリングするため)
+	const_cast<Asset::Texture&>(textures[textureIndices_[3]]).GetDxResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		dxCommand
-	);
-	const_cast<Asset::Texture&>(textures[textureIndices_[0]]).GetDxResource().CreateBarrier(
-		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		dxCommand
 	);
 
-	// 2パス目：縦ブラー (postProcessResult -> Scene)
+	// 2パス目：縦ブラー (bloomBlur -> postProcessResult)
 	int vertical = 0;
 	command->SetComputeRoot32BitConstants(0, 1, &vertical, 0);
-	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[2]].GetSRVGPUHandle()); // postProcessResult
-	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetSRVGPUHandle()); // Flags
-	command->SetComputeRootDescriptorTable(3, textures[textureIndices_[0]].GetUAVGPUHandle()); // Scene
+	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[3]].GetSRVGPUHandle()); // t0: bloomBlur
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetSRVGPUHandle()); // t1: Flags
+	command->SetComputeRootDescriptorTable(3, textures[textureIndices_[2]].GetUAVGPUHandle()); // u0: postProcessResult (最終出力先)
 	command->Dispatch(
 		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
 		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
@@ -80,23 +75,10 @@ void PostProcessGaussianBlurPerObject::Execute(const std::string& textureName, D
 	);
 
 	// バリア遷移：
-	// Scene: UAV -> SRV
-	// postProcessResult: SRV -> UAV
-	const_cast<Asset::Texture&>(textures[textureIndices_[0]]).GetDxResource().CreateBarrier(
-		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-		dxCommand
-	);
-	const_cast<Asset::Texture&>(textures[textureIndices_[2]]).GetDxResource().CreateBarrier(
+	// bloomBlur: SRV -> UAV (次のフレームのために UAV に戻す)
+	const_cast<Asset::Texture&>(textures[textureIndices_[3]]).GetDxResource().CreateBarrier(
 		D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		dxCommand
-	);
-
-	// 大本のsceneテクスチャに結果をコピー
-	CopyResource(
-		textures[textureIndices_[2]].GetDxResource().Get(),
-		textures[textureIndices_[0]].GetDxResource().Get(),
-		command
 	);
 }
