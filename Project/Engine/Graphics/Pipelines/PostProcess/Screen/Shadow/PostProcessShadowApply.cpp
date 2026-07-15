@@ -173,7 +173,6 @@ void PostProcessShadowApply::Execute(const std::string& textureName, DxCommand* 
 	);
 
 	/// --------------- ディスパッチ --------------- ///
-	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, ecs);
 	cmdList->Dispatch(
 		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
 		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16), 

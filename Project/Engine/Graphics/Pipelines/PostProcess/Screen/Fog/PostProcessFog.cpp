@@ -102,7 +102,6 @@ void PostProcessFog::Execute(const std::string& textureName, DxCommand* dxComman
 	cmdList->SetComputeRootDescriptorTable(SRV_SCENE_WORLD_POSITION, textures[textureIndices_[1]].GetSRVGPUHandle());
 	cmdList->SetComputeRootDescriptorTable(UAV_OUTPUT_COLOR, textures[textureIndices_[2]].GetUAVGPUHandle());
 
-	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	cmdList->Dispatch(
 		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
 		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16),

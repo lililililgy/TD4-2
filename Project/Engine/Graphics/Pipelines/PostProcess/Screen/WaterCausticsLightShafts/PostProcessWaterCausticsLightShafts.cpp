@@ -157,7 +157,6 @@ void PostProcessWaterCausticsLightShafts::Execute(const std::string& textureName
 	command->SetComputeRootDescriptorTable(SRV_SCENE_WORLD_POSITION, textures[textureIndices_[1]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(UAV_OUTPUT_COLOR, textures[textureIndices_[2]].GetUAVGPUHandle());
 
-	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	command->Dispatch(
 		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
 		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16),
