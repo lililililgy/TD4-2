@@ -17,7 +17,7 @@ void main(uint3 dispatchId : SV_DispatchThreadID) {
 	}
 
 	float2 texCoord = float2(dispatchId.x / 1920.0f, dispatchId.y / 1080.0f);
-	float4 color = colorTex.Sample(textureSampler, texCoord);
+	float4 color = colorTex.SampleLevel(textureSampler, texCoord, 0.0f);
 
 	float luminance = dot(color.rgb, float3(0.2125f, 0.7154f, 0.0721f));
 
