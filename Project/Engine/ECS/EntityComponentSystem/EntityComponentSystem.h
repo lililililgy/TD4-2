@@ -31,6 +31,9 @@ class AssetCollection;
 
 namespace ONEngine {
 
+class EntityComponentSystem;
+extern EntityComponentSystem* gECS;
+
 void SetEntityComponentSystemPtr(ECSGroup* gameGroup, ECSGroup* debugGroup);
 ECSGroup* GetEntityComponentSystemPtr();
 
