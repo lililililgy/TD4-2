@@ -94,6 +94,11 @@
             "guid": "ea3fbbacef4c82cb9807e72766edb052",
             "parentGuid": null,
             "path": "./GameScene/ea3fbbacef4c82cb9807e72766edb052.entity"
+        },
+        {
+            "guid": "e8901a3ae500327676c848bdc365be2e",
+            "parentGuid": null,
+            "path": "./GameScene/e8901a3ae500327676c848bdc365be2e.entity"
         }
     ]
 }

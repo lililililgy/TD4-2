@@ -1,0 +1,44 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "KillCountObjective": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KillCountObjective"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "e8901a3ae500327676c848bdc365be2e",
+    "name": "EnemyHuntPhase_1",
+    "parentGuid": null,
+    "prefabName": ""
+}

@@ -53,6 +53,10 @@ public class LevelingComponent : MonoScript {
         isLevelUp_ = true;
         currentLevel_++;
 
+        // レベル上昇の確定を通知する（「レベルnに到達」目標用に新レベル値を運ぶ）。
+        // LevelUp() は1回の呼び出しで1レベルだけ上げるので、上がったレベルごとに1回発行される。
+        MessageBus.Publish(new LevelUpEvent(entity.name, currentLevel_));
+
         float excessExp = currentExp_ - requiredExp_; // 残りの経験値を計算
         currentExp_ = excessExp;
 
