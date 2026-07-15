@@ -8,7 +8,8 @@ using System;
 // 注意: 閉じた generic を直接 entity.AddScript<T>() してはいけない
 // （typeof(T).Name が「CountObjective`1」になり型名衝突するため）。
 // generic はこの抽象基底に留め、具象リーフは必ず非 generic の薄いクラスにすること。
-public abstract class CountObjective<TEvent> : Objective where TEvent : class {
+public abstract class CountObjective<TEvent> : Objective where TEvent : class
+{
 
     // 達成に必要なカウント数
     [SerializeField] protected int targetCount_ = 1;
@@ -18,59 +19,72 @@ public abstract class CountObjective<TEvent> : Objective where TEvent : class {
 
     // フェーズ開始時に ObjectiveSystem が呼ぶ。カウントをリセットする。
     // 購読は EndObjective() で解除されるため、ループでフェーズを再訪した際はここで張り直す。
-    public override void BeginObjective() {
+    public override void BeginObjective()
+    {
         count_ = 0;
 
-        if (!subscribed_) {
+        if (!subscribed_)
+        {
             MessageBus.Subscribe<TEvent>(OnEvent);
             subscribed_ = true;
         }
     }
 
     // フェーズ離脱時の後始末。購読を解除する。
-    public override void EndObjective() {
+    public override void EndObjective()
+    {
         UnsubscribeIfNeeded();
     }
 
-    public override void OnDestroy() {
+    public override void OnDestroy()
+    {
         UnsubscribeIfNeeded();
     }
 
-    private void UnsubscribeIfNeeded() {
-        if (subscribed_) {
+    private void UnsubscribeIfNeeded()
+    {
+        if (subscribed_)
+        {
             MessageBus.Unsubscribe<TEvent>(OnEvent);
             subscribed_ = false;
         }
     }
 
-    private void OnEvent(TEvent e) {
-        if (Accept(e)) {
+    protected virtual void OnEvent(TEvent e)
+    {
+        if (Accept(e))
+        {
             count_++;
         }
     }
 
     // リーフのフィルタ注入点。true を返したイベントだけカウントする。既定は全件カウント。
-    protected virtual bool Accept(TEvent e) {
+    protected virtual bool Accept(TEvent e)
+    {
         return true;
     }
 
-    public override bool IsCompleted() {
+    public override bool IsCompleted()
+    {
         // targetCount_ が 0 以下でも「1 回で達成」として防御する
         int target = targetCount_ > 0 ? targetCount_ : 1;
         return count_ >= target;
     }
 
-    public override float Progress() {
+    public override float Progress()
+    {
         if (targetCount_ <= 0) return 1.0f;
         return Mathf.Clamp01((float)count_ / targetCount_);
     }
 
     // このフェーズ開始からのカウント数（UI 表示用）
-    public int CurrentCount {
+    public int CurrentCount
+    {
         get { return count_; }
     }
 
-    public int TargetCount {
+    public int TargetCount
+    {
         get { return targetCount_; }
     }
 }

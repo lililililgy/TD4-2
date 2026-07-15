@@ -33,6 +33,12 @@ public class PlayerDashState : PlayerState {
         get { return moveParam_; }
     }
 
+    // ダッシュ状態への遷移が確定した瞬間に通知する（チュートリアルの「ダッシュした」検知用）。
+    // 基底の OnEnter() は空実装なので base 呼び出しは不要。
+    public override void OnEnter() {
+        MessageBus.Publish(new PlayerDashedEvent());
+    }
+
     // 通常 → ダッシュ の遷移条件
     public bool WantsToStart() {
         PlayerInputComponent input = entity.GetScript<PlayerInputComponent>();

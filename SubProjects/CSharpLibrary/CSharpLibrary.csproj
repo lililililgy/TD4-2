@@ -183,6 +183,7 @@
     <Compile Include="Scripts\Game\Objective\BossDefeatObjective.cs" />
     <Compile Include="Scripts\Game\Objective\CountObjective.cs" />
     <Compile Include="Scripts\Game\Objective\KillCountObjective.cs" />
+    <Compile Include="Scripts\Game\Objective\LevelReachObjective.cs" />
     <Compile Include="Scripts\Game\Objective\Objective.cs" />
     <Compile Include="Scripts\Game\Objective\ObjectiveSystem.cs" />
     <Compile Include="Scripts\Game\Objective\TutorialObjective.cs" />
