@@ -28,7 +28,10 @@ public class Magazine : MonoScript {
 
         // リロード（押した瞬間のみ）：成熟卵を1つ幼生卵に変える
         if (input.IsReloadButtonPressed && CanReload) {
-            roeManager_.TryReload();
+            // 実際に変換が成立した場合のみ通知する（チュートリアルの「リロードした」検知用）
+            if (roeManager_.TryReload()) {
+                MessageBus.Publish(new PlayerReloadedEvent());
+            }
             reloadTimer_ = reloadCooldown_;
         }
     }
