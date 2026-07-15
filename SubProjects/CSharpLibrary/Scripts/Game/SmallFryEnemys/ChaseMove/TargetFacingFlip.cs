@@ -1,17 +1,11 @@
 using System;
 
-// 指定した方向(進行方向など)へ向きを合わせる共通コンポーネント。
-// SpikeFish の ChangeUVPosition/FaceTargetDirection と同じ考え方(元絵は左向きに描かれている前提で、
-// 向く方向が右向きの時だけUVを反転して右向きに見せ、反転後の絵の正面方向(baseDir)を基準に
-// 向く方向まで±maxTiltAngleDeg[度]の範囲で傾ける)を、専用フレームの切り替えではなくUVスケール反転で行う版。
-//
-// あえてターゲットの座標を直接見ない設計にしている。ターゲット座標を直接見て向きを決めると、
-// ターゲットが反対側に回り込んだ瞬間にUV反転が離散的に切り替わり、急に反転して見えるバグが起きるため、
-// 呼び出し側は実際の移動方向(速度ベクトルなど)を渡すこと。
+// 指定した方向へ向きを合わせる共通コンポーネント。
+
 public class TargetFacingFlip : MonoScript
 {
     [SerializeField] private float turnLerp = 0.3f;
-    // baseDir(反転後の絵の正面方向)からどこまで傾けて良いか。90°だとSpikeFishと同じ挙動。
+    // baseDirからどこまで傾けて良いか。90°だとSpikeFishと同じ挙動。
     [SerializeField] private float maxTiltAngleDeg = 90.0f;
 
     private SpriteRenderer spriteRenderer_;
