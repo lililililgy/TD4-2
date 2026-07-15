@@ -8,6 +8,7 @@
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/Editor/Math/ImGuiMath.h"
 #include "Engine/Editor/Commands/ImGuiCommand/ImGuiCommand.h"
+#include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
 
 namespace Editor {
 
@@ -143,6 +144,10 @@ bool MaterialEdit(const std::string& label, ONEngine::Asset::Material* material,
 		}
 
 		if(ImGui::CheckboxFlags("Shadow", &material->postEffectFlags, PostEffectFlags_Shadow)) {
+			edit = true;
+		}
+
+		if(ImGui::CheckboxFlags("Bloom", &material->postEffectFlags, PostEffectFlags_Bloom)) {
 			edit = true;
 		}
 	}
