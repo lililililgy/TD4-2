@@ -4452,3 +4452,5 @@ C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\
   VoxelTerrainChunk.cpp
   IComponent.cpp
   CustomMeshRenderer.cpp
+  DissolveMeshRenderer.cpp
+  MeshRenderer.cpp
