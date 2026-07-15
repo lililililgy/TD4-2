@@ -372,6 +372,7 @@ static class ComponentBatchManager {
 				comp.uvTransform = spriteBatch[i].uvTransform;
 				comp.bloomIntensity = spriteBatch[i].bloomIntensity;
 				comp.bloomThreshold = spriteBatch[i].bloomThreshold;
+				comp.bloomRadius = spriteBatch[i].bloomRadius;
 			}
 		} else if (componentType == typeof(BoxCollider2D)) {
 			var colliderArray = (ComponentArray<BoxCollider2D>)array;
