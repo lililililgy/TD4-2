@@ -8,6 +8,7 @@ public class CameraComponent : Component {
 		Type2D,
 	}
 
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
 		public Matrix4x4 matVP;

@@ -19,9 +19,12 @@ void PostProcessRadialBlur::Initialize(ShaderCompiler* shaderCompiler, DxManager
 		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/PostProcess/Screen/RadialBlur/RadialBlur.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
+		constantBuffer_.Create(dxm->GetDxDevice());
+
 		pipeline_ = std::make_unique<ComputePipeline>();
 		pipeline_->SetShader(&shader);
 
+		pipeline_->AddCBV(D3D12_SHADER_VISIBILITY_ALL, 0); // b0: RadialBlurParams
 		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); /// scene tex
 		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); /// output tex
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
@@ -56,6 +59,15 @@ void PostProcessRadialBlur::Execute(const std::string& textureName, DxCommand* d
 		return; // ラジアルブラーエフェクトが無効な場合は何もしない
 	}
 
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
+	constantBuffer_.SetMappedData(RadialBlurParams{
+		.offsetX = static_cast<int32_t>(offset.x),
+		.offsetY = static_cast<int32_t>(offset.y),
+		.virtualWidth = static_cast<int32_t>(dispatchSize.x),
+		.virtualHeight = static_cast<int32_t>(dispatchSize.y)
+	});
+
 	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
 	auto command = dxCommand->GetCommandList();
@@ -63,12 +75,13 @@ void PostProcessRadialBlur::Execute(const std::string& textureName, DxCommand* d
 	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
 	textureIndices_[1] = assetCollection->GetTextureIndex("postProcessResult");
 
-	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
-	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetUAVGPUHandle());
+	constantBuffer_.BindForComputeCommandList(command, 0);
+	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[0]].GetSRVGPUHandle());
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetUAVGPUHandle());
 
 	command->Dispatch(
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16),
 		1
 	);
 

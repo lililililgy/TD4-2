@@ -10,13 +10,37 @@
             },
             "rotate": {
                 "w": 0.9995335936546326,
-                "z": -0.030538514256477356
+                "z": -0.030538512393832207
             },
             "scale": {
                 "x": -120.0,
                 "y": 300.0
             },
             "type": "Transform"
+        },
+        {
+            "SpriteAnimation": {
+                "cols": 2,
+                "endFrame": 2,
+                "fps": 1.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 2
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "410b0e1cd2fdfcd443e3a219daa2ae41",

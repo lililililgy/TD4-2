@@ -1,0 +1,42 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -10.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "farClip": 1000.0,
+            "fov": 45.0,
+            "isOrthographic": true,
+            "nearClip": 0.1,
+            "orthographicSize": 5.0,
+            "type": "CameraComponent"
+        }
+    ],
+    "guid": "d0000000000000000000000000000001",
+    "name": "MainCamera",
+    "parentGuid": null,
+    "prefabName": ""
+}

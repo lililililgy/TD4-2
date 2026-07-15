@@ -103,12 +103,14 @@ public class EnemySpawnSystem : MonoScript {
 
         // スポーンセルの重みをクリアする
         spawnCellWeights_.Clear();
-        CalculateSpawnCellWeights();
 
         // スポーン可能な敵の総数が上限に達している場合はスポーンしない
         Entity heatMapEnt = ecsGroup.FindEntity(heatMapEntityName_);
         EnemyHeatMap heatMap = heatMapEnt?.GetScript<EnemyHeatMap>();
         if (heatMap == null) return;
+
+        CalculateSpawnCellWeights(heatMap);
+
         if (heatMap.GetEnemyCount() >= maxEnemyCount_) return;
 
         int spawnCount = 0;
@@ -118,7 +120,7 @@ public class EnemySpawnSystem : MonoScript {
             spawnCount++;
 
             // 敵の発生処理
-            Vector2 spawnPos = CalculateSpawnPos();
+            Vector2 spawnPos = CalculateSpawnPos(heatMap);
             Biome biome = ResolveBiome(spawnPos);
             if (biome == null) continue;
 
@@ -148,9 +150,7 @@ public class EnemySpawnSystem : MonoScript {
     }
 
     // 敵のスポーン位置を計算する。セルを重みに応じて抽選し、そのセル範囲内のランダムな座標を返す。
-    private Vector2 CalculateSpawnPos() {
-        EnemyHeatMap heatMap = entity.GetScript<EnemyHeatMap>();
-
+    private Vector2 CalculateSpawnPos(EnemyHeatMap heatMap) {
         float total = 0.0f;
         foreach (var c in spawnCellWeights_) {
             if (c.weight > 0.0f) total += c.weight;
@@ -195,9 +195,7 @@ public class EnemySpawnSystem : MonoScript {
         enemyT.position = new Vector3(spawnPos.x, spawnPos.y, 0.0f);
     }
 
-    private void CalculateSpawnCellWeights() {
-        EnemyHeatMap heatMap = entity.GetScript<EnemyHeatMap>();
-
+    private void CalculateSpawnCellWeights(EnemyHeatMap heatMap) {
         // cell の候補を求める。
         Vector2 originePos = new Vector2();
         Entity origineEntity = ecsGroup.FindEntity(originName_);

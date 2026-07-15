@@ -114,14 +114,20 @@ void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, D
 		return;
 	}
 
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	// 定数バッファの更新
 	DepthFogVignetteParams params;
 	params.fogColor = tag->GetWaterFogColor();
 	params.fogDensity = tag->GetWaterFogDensity();
 	params.fogWaterSurfaceY = tag->GetWaterFogWaterSurfaceY();
 	params.vignetteStrength = tag->GetWaterVignetteStrength();
-	params.padding[0] = 0.0f;
-	params.padding[1] = 0.0f;
+	params.offsetX = static_cast<int32_t>(offset.x);
+	params.offsetY = static_cast<int32_t>(offset.y);
+	params.virtualWidth = static_cast<int32_t>(dispatchSize.x);
+	params.virtualHeight = static_cast<int32_t>(dispatchSize.y);
+	params.padding[0] = 0;
+	params.padding[1] = 0;
 	paramsBuffer_.SetMappedData(params);
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);
@@ -152,8 +158,8 @@ void PostProcessWaterDepthFogVignette::Execute(const std::string& textureName, D
 	command->SetComputeRootDescriptorTable(UAV_OUTPUT_COLOR, textures[textureIndices_[2]].GetUAVGPUHandle());
 
 	command->Dispatch(
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16),
 		1
 	);
 

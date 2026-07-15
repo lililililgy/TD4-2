@@ -145,7 +145,15 @@ Meta<AudioClip::MetaData> AssetLoader<AudioClip>::GetMetaData(const std::string&
 		return {};
 	}
 
-	ifs >> j;
+	try {
+		ifs >> j;
+		ifs.close();
+	} catch (const nlohmann::json::parse_error& e) {
+		Console::LogError("[Audio Meta Error] JSON parse error in " + metaPath + ": " + e.what());
+		ifs.close();
+		return res;
+	}
+
 	AudioClip::MetaData data;
 	data.duration = j.value("duration", 0.0f);
 

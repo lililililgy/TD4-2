@@ -1,0 +1,97 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 148.0,
+                "y": 148.0,
+                "z": 148.0
+            },
+            "type": "Transform"
+        },
+        {
+            "categoryBits": 16,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 3,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
+            "KingGesoHomingBullet": {
+                "damage": 1.0,
+                "lifeTime": 8.0,
+                "speed": 120.0,
+                "turnSpeed": 2.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KingGesoHomingBullet"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.3499999940395355,
+                    "z": 0.3499999940395355
+                },
+                "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "641ddc0076565e4699d6fc5fff3b6477",
+    "name": "KingGesoHomingBullet",
+    "parentGuid": null,
+    "prefabName": "KingGesoHomingBullet"
+}

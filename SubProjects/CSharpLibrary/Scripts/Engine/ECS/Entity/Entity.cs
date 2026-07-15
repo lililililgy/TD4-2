@@ -121,11 +121,27 @@ public class Entity {
 
 	public void Destroy() {
 		/// 子の情報もクリア
-		for (uint i = 0; i < GetChildCount(); i++) {
+		uint childCount = GetChildCount();
+		List<Entity> children = new List<Entity>();
+		for (uint i = 0; i < childCount; i++) {
 			Entity child = GetChild(i);
 			if (child) {
-				Debug.LogInfo("Entity.Destroy - Destroying child entity ID: " + child.Id + " of parent entity ID: " + entityId_);
-				child.Destroy();
+				children.Add(child);
+			}
+		}
+		foreach (Entity child in children) {
+			Debug.LogInfo("Entity.Destroy - Destroying child entity ID: " + child.Id + " of parent entity ID: " + entityId_);
+			child.Destroy();
+		}
+
+		// アタッチされているすべてのスクリプトのOnDestroyを呼び出し
+		foreach (var script in scripts_.Values) {
+			try {
+				if (script != null) {
+					script.OnDestroy();
+				}
+			} catch (Exception e) {
+				Debug.LogError("Error in MonoScript.OnDestroy: " + e.Message);
 			}
 		}
 

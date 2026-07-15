@@ -30,6 +30,7 @@ namespace ONEngine {
 struct GPUMaterial {
 	UVTransform uvTransform;     /// UV変形
 	Vector4     baseColor;       /// 色
+	Vector4     outlineColor;    /// フチ色
 	uint32_t    postEffectFlags; /// ポストエフェクトのフラグ
 	int32_t     entityId;        /// エンティティID
 	int32_t     baseTextureId;   /// ベーステクスチャID

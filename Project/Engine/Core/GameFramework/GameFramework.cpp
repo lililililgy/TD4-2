@@ -30,15 +30,15 @@ GameFramework::~GameFramework() {
 	if (DebugConfig::isDebugging) {
 		DebugConfig::isDebugging = false;
 		if (sceneManager_) {
-			sceneManager_->ReloadScene(true);
+			// sceneManager_->ReloadScene(true); // Prevent C# ECS cleanups during engine shutdown
 			sceneManager_->ClearTemporarySavedSceneName();
 		}
 	}
 
 	/// debug用のシーンを保存
-	if (sceneManager_ && entityComponentSystem_) {
-		sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
-	}
+	// if (sceneManager_ && entityComponentSystem_) {
+	// 	sceneManager_->SaveScene("Debug", entityComponentSystem_->GetECSGroup("Debug"));
+	// }
 
 	// ライフサイクルの依存関係を解決するため、明示的に先に破棄
 	editorManager_.reset();
@@ -130,9 +130,7 @@ void GameFramework::InitializeECS() {
 
 	/// scene managerの初期化
 	sceneManager_->Initialize(renderingFramework_->GetAssetCollection());
-	if (EngineConfig::isTestMode && !EngineConfig::testScene.empty()) {
-		sceneManager_->GetSceneIO()->Input(EngineConfig::testScene, entityComponentSystem_->GetECSGroup("Debug"));
-	} else {
+	if (!EngineConfig::isTestMode) {
 		LoadDebugScene();
 	}
 
@@ -180,6 +178,11 @@ void GameFramework::Update() {
 	Input::Update();
 	Time::Update();
 
+#ifdef DEBUG_MODE
+	// デバッガ再接続時の自動同期をトリガー
+	MonoScriptEngine::GetInstance().UpdateDebuggerStatus();
+#endif
+
 	if (EngineConfig::isTestMode) {
 		static int testFrameCount = 0;
 		testFrameCount++;
@@ -211,6 +214,46 @@ void GameFramework::Update() {
 						ONEngine::Assert(isWaterCausticsEnabled, "WaterCaustics posteffect should still be enabled in GameScene");
 						ONEngine::Assert(isWaterColorGradingEnabled, "WaterColorGrading posteffect should still be enabled in GameScene");
 						ONEngine::Assert(isWaterDepthFogEnabled, "WaterDepthFog posteffect should still be enabled in GameScene");
+
+						ONEngine::Assert(tag->GetPostEffectWidth() == -1, "Default postEffectWidth should be -1");
+						ONEngine::Assert(tag->GetPostEffectHeight() == -1, "Default postEffectHeight should be -1");
+
+						tag->SetPostEffectWidth(800);
+						tag->SetPostEffectHeight(600);
+						ONEngine::Assert(tag->GetPostEffectWidth() == 800, "postEffectWidth should be 800 after setting");
+						ONEngine::Assert(tag->GetPostEffectHeight() == 600, "postEffectHeight should be 600 after setting");
+						
+						Vector2 size = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem_.get());
+						ONEngine::Assert(size.x == 800.0f, "GetDispatchSize.x should be 800");
+						ONEngine::Assert(size.y == 600.0f, "GetDispatchSize.y should be 600");
+
+						ONEngine::Assert(tag->GetPostEffectStartX() == 0, "Default postEffectStartX should be 0");
+						ONEngine::Assert(tag->GetPostEffectStartY() == 0, "Default postEffectStartY should be 0");
+						ONEngine::Assert(tag->GetPostEffectPivot() == 0, "Default postEffectPivot should be 0");
+
+						Vector2 offsetDefault = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem_.get());
+						ONEngine::Assert(offsetDefault.x == 0.0f, "GetDispatchStartOffset.x should be 0 by default");
+						ONEngine::Assert(offsetDefault.y == 0.0f, "GetDispatchStartOffset.y should be 0 by default");
+
+						tag->SetPostEffectStartX(500);
+						tag->SetPostEffectStartY(400);
+						ONEngine::Assert(tag->GetPostEffectStartX() == 500, "postEffectStartX should be 500 after setting");
+						ONEngine::Assert(tag->GetPostEffectStartY() == 400, "postEffectStartY should be 400 after setting");
+
+						// Top-Left pivot mode (0)
+						Vector2 offsetTopLeft = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem_.get());
+						ONEngine::Assert(offsetTopLeft.x == 500.0f, "GetDispatchStartOffset.x should be 500 in Top-Left mode");
+						ONEngine::Assert(offsetTopLeft.y == 400.0f, "GetDispatchStartOffset.y should be 400 in Top-Left mode");
+
+						// Center pivot mode (1)
+						tag->SetPostEffectPivot(1);
+						ONEngine::Assert(tag->GetPostEffectPivot() == 1, "postEffectPivot should be 1 after setting");
+
+						Vector2 offsetCenter = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem_.get());
+						// 500 - 800/2 = 100
+						// 400 - 600/2 = 100
+						ONEngine::Assert(offsetCenter.x == 100.0f, "GetDispatchStartOffset.x should be 100 in Center mode");
+						ONEngine::Assert(offsetCenter.y == 100.0f, "GetDispatchStartOffset.y should be 100 in Center mode");
 					}
 				}
 			}
@@ -227,7 +270,7 @@ void GameFramework::Update() {
 				ofs.close();
 			}
 			PostQuitMessage(0);
-			exit(0);
+			ExitProcess(0);
 		}
 	}
 

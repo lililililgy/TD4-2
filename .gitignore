@@ -349,3 +349,4 @@ Project/Assets/Scene/Debug/
 # Antigravity
 .agents/
 /.serena
+*.csproj

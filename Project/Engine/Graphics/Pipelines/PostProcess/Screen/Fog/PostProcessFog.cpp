@@ -1,10 +1,11 @@
-﻿#include "PostProcessFog.h"
+#include "PostProcessFog.h"
 
 /// engine
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
+#include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
 
 namespace ONEngine {
 
@@ -59,6 +60,15 @@ void PostProcessFog::Execute(const std::string& textureName, DxCommand* dxComman
 		return;
 	}
 
+	CameraComponent::FogParams fogParams = mainCamera->GetFogParams();
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
+	fogParams.offsetX = static_cast<int32_t>(offset.x);
+	fogParams.offsetY = static_cast<int32_t>(offset.y);
+	fogParams.virtualWidth = static_cast<int32_t>(dispatchSize.x);
+	fogParams.virtualHeight = static_cast<int32_t>(dispatchSize.y);
+	mainCamera->GetFogParamsBuffer().SetMappedData(fogParams);
+
 	mainCamera->GetCameraPosBuffer().BindForComputeCommandList(cmdList, CBV_CAMERA_POS);
 	mainCamera->GetFogParamsBuffer().BindForComputeCommandList(cmdList, CBV_FOG_PARAMS);
 
@@ -93,8 +103,8 @@ void PostProcessFog::Execute(const std::string& textureName, DxCommand* dxComman
 	cmdList->SetComputeRootDescriptorTable(UAV_OUTPUT_COLOR, textures[textureIndices_[2]].GetUAVGPUHandle());
 
 	cmdList->Dispatch(
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16),
 		1
 	);
 

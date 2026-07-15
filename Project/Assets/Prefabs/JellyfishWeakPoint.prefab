@@ -1,0 +1,59 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 130.79998779296875,
+                "y": 130.7998046875,
+                "z": 130.7998046875
+            },
+            "type": "Transform"
+        },
+        {
+            "JellyfishWeakPoint": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "JellyfishWeakPoint"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 2,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "fd699c02287ffb7593425d82e7c7add5",
+    "name": "JellyfishWeakPoint",
+    "parentGuid": "2a75a187cc14795397a4b907fc812b10",
+    "prefabName": "JellyfishWeakPoint"
+}

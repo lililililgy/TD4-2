@@ -31,6 +31,7 @@
 /// engine/renderer
 #include "Engine/ECS/Component/Components/RendererComponents/Skybox/Skybox.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Sprite/SpriteRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/DissolveMeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/SkinMesh/SkinMeshRenderer.h"
@@ -74,6 +75,7 @@ namespace {
 
 			/// renderer
 			Register<SpriteRenderer>();
+			Register<TextRenderer>();
 			Register<CustomMeshRenderer>();
 			Register<MeshRenderer>();
 			Register<DissolveMeshRenderer>();

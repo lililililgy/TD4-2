@@ -52,6 +52,7 @@ private:
 	MonoMethod* updateEntitiesMethod_;
 	MonoMethod* addEntityMethod_;
 	MonoMethod* addScriptMethod_;
+	int32_t     lastReloadCounter_ = 0;
 
 };
 

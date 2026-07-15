@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 class SpriteRenderer : Component {
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
 		public Vector4 color;
@@ -47,9 +47,10 @@ class SpriteRenderer : Component {
 		}
 		set {
 			batchData.color = value;
-			if (nativeHandle != 0) {
-				InternalSetColor(nativeHandle, value);
-			}
+			// バッチ同期システムが自動でC++側に色を反映するため、値型Vector4のレジスタアライメント崩れを誘発する個別のInternalCallは不要
+			//if (nativeHandle != 0) {
+			//	InternalSetColor(nativeHandle, value);
+			//}
 		}
 	}
 
@@ -93,8 +94,7 @@ class SpriteRenderer : Component {
 	//[MethodImpl(MethodImplOptions.InternalCall)]
 	//static extern void InternalSetMeshName(ulong nativeHandle, string meshName);
 
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern Vector4 InternalGetColor(ulong nativeHandle);
+
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalSetColor(ulong nativeHandle, Vector4 color);

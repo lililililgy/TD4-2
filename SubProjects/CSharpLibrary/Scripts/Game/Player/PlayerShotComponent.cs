@@ -53,6 +53,10 @@ public class PlayerShotComponent : MonoScript {
             // 消費した卵を破棄
             larva.Destroy();
 
+            // 弾が実際に発射された（early return を全て抜けた）ことを通知する。
+            // チュートリアルの「射撃した」検知用。
+            MessageBus.Publish(new PlayerShotEvent());
+
             shootCooldown_ = shootCooldownTime_;
         }
     }

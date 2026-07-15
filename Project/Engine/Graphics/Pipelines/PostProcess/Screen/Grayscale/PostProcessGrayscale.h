@@ -5,6 +5,7 @@
 
 /// engine
 #include "Engine/Graphics/Pipelines/Interface/IPostProcessPipeline.h"
+#include "Engine/Graphics/Buffer/ConstantBuffer.h"
 
 /// ///////////////////////////////////////////////////
 /// グレースケール処理
@@ -32,6 +33,14 @@ private:
 	/// private : objects
 	/// ===================================================
 
+	struct GrayscaleParams {
+		int32_t offsetX;
+		int32_t offsetY;
+		int32_t virtualWidth;
+		int32_t virtualHeight;
+	};
+
+	ConstantBuffer<GrayscaleParams> constantBuffer_;
 	std::array<size_t, 2> textureIndices_;
 };
 

@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 111.30000305175781,
-                "y": 111.30001068115234,
-                "z": 111.30001068115234
+                "x": 1450.800048828125,
+                "y": 1450.7999267578125,
+                "z": 1450.7999267578125
             },
             "type": "Transform"
         },
@@ -26,39 +26,102 @@
             "HP": {
                 "MAX_HP": 10,
                 "currentHp": 10,
-                "currentHp_": 0.0,
+                "currentHp_": 960.9000244140625,
+                "directlyDamageable_": true,
                 "disableAutoDestruction": false,
                 "disableAutoDestruction_": false,
+                "enable": true,
                 "isInvincible": false,
                 "isInvincible_": false,
-                "maxHp_": 0.0,
+                "maxHp_": 1000.0,
                 "regenPerSecond": 0.0
             },
             "KingGeso": {
-                "attackDuration": 10.0,
                 "cameraEntityName": "Camera",
                 "cooldownDuration": 1.0,
-                "gesoAttackDamage": 20.0,
-                "gesoAttackRadius": 1.5,
-                "gesoMoveDuration": 10.0,
-                "gesoPassThroughDistance": 1000.0,
-                "gesoPrefabName": "Geso",
-                "gesoRotationSpeed": 8.0,
+                "enable": true,
+                "fixedAttackType": 0,
+                "gesoPrefabName": "GesoHand",
                 "gesoSpawnOffset": {
-                    "x": 1280.5,
-                    "y": 71.77147674560547
+                    "x": -1280.5,
+                    "y": 183.40072631835938
                 },
                 "idleDuration": 2.0,
-                "maxHp": 10,
+                "maxHp": 1000,
+                "randomizeAttackType": true,
                 "screenEdgeMargin": 0.5,
                 "screenHalfHeight": 720.0,
                 "screenHalfWidth": 1280.0,
                 "targetEntityName": "Player"
             },
+            "KingGesoHomingAttackSettings": {
+                "launchInterval": 1.0,
+                "projectileCount": 3,
+                "projectileDamage": 1.0,
+                "projectileLifeTime": 8.0,
+                "projectilePrefabName": "KingGesoHomingBullet",
+                "projectileSpeed": 200.0,
+                "selectionWeight": 1.0,
+                "spawnOffset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "turnSpeed": 2.0
+            },
+            "KingGesoInkBarrageSettings": {
+                "angleOffset": 0.1599999964237213,
+                "bulletCountPerWave": 14,
+                "bulletDamage": 1.0,
+                "bulletLifeTime": 7.0,
+                "bulletPrefabName": "KingGesoInkBullet",
+                "bulletSpeed": 220.0,
+                "poolSize": 0,
+                "recoveryDuration": 0.6000000238418579,
+                "reverseHalfway": true,
+                "selectionWeight": 0.699999988079071,
+                "spawnOffset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "waveCount": 7,
+                "waveInterval": 1.0
+            },
+            "KingGesoPincerThrustSettings": {
+                "attackDuration": 10.0,
+                "damage": 20.0,
+                "moveDuration": 7.0,
+                "passThroughDistance": 1000.0,
+                "rotationSpeed": 8.0,
+                "selectionWeight": 1.0
+            },
+            "KingGesoWaveThrustSettings": {
+                "attackDuration": 10.0,
+                "damage": 20.0,
+                "gesoCount": 6,
+                "gesoLifeTime": 1.0,
+                "moveDuration": 5.0,
+                "passThroughDistance": 1000.0,
+                "rotationSpeed": 8.0,
+                "selectionWeight": 1.0,
+                "spawnInterval": 2.0
+            },
+            "SpriteAnimation": {
+                "cols": 3,
+                "enable": true,
+                "endFrame": 2,
+                "fps": 5.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 3
+            },
             "type": "Variables"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -77,12 +140,11 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 1.0,
+                        "x": 0.3333333432674408,
                         "y": 1.0
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         },
         {
@@ -94,7 +156,27 @@
                 },
                 {
                     "enable": true,
+                    "name": "KingGesoWaveThrustSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingGesoPincerThrustSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingGesoInkBarrageSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingGesoHomingAttackSettings"
+                },
+                {
+                    "enable": true,
                     "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
                 }
             ],
             "type": "Script"

@@ -21,8 +21,9 @@ using namespace ONEngine;
 namespace {
 ECSGroup* gGameGroup = nullptr;
 ECSGroup* gDebugGroup = nullptr;
-EntityComponentSystem* gECS = nullptr;
 }
+
+EntityComponentSystem* ONEngine::gECS = nullptr;
 
 void ONEngine::SetEntityComponentSystemPtr(ECSGroup* _gameGroup, ECSGroup* _debugGroup) {
 	gGameGroup = _gameGroup;

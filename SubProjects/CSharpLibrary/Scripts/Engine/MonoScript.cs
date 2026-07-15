@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -60,6 +59,7 @@ public class MonoScript {
 	public virtual void Awake() { }
 	public virtual void Initialize() { }
 	public virtual void Update() { }
+	public virtual void OnDestroy() { }
 
 	public virtual void OnCollisionEnter(Entity collision) { }
 	public virtual void OnCollisionExit(Entity collision) { }

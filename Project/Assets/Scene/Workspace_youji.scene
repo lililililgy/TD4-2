@@ -1,24 +1,19 @@
 {
     "entities": [
         {
-            "guid": "28da50099110d89e1afd8c166267aac2",
+            "guid": "560ef1e7945de7ab63bc7c73b1d8f9bf",
             "parentGuid": null,
-            "path": "./Workspace_youji/28da50099110d89e1afd8c166267aac2.entity"
+            "path": "./Workspace_youji/560ef1e7945de7ab63bc7c73b1d8f9bf.entity"
         },
         {
-            "guid": "0cf65f32fe12ef44917778c1d250199d",
+            "guid": "2d868796a8e879443dac85344c361a60",
             "parentGuid": null,
-            "path": "./Workspace_youji/0cf65f32fe12ef44917778c1d250199d.entity"
+            "path": "./Workspace_youji/2d868796a8e879443dac85344c361a60.entity"
         },
         {
-            "guid": "6c0e9d0613956965d81cea741f5f558a",
+            "guid": "fd581a153a7de50c8be48309482102ac",
             "parentGuid": null,
-            "path": "./Workspace_youji/6c0e9d0613956965d81cea741f5f558a.entity"
-        },
-        {
-            "guid": "bf0c252395b6840cfed59ce900c910a7",
-            "parentGuid": null,
-            "path": "./Workspace_youji/bf0c252395b6840cfed59ce900c910a7.entity"
+            "path": "./Workspace_youji/fd581a153a7de50c8be48309482102ac.entity"
         }
     ]
 }

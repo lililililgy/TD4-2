@@ -21,7 +21,6 @@ void TransformUpdateSystem::Update(ECSGroup* ecs) {
 
 	ComponentArray<Transform>* transformArray = ecs->GetComponentArray<Transform>();
 	if (!transformArray || transformArray->GetUsedComponents().empty()) {
-		Console::LogError("TransformUpdateSystem::OutsideOfRuntimeUpdate: Transform component array is null");
 		return;
 	}
 
