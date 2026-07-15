@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 2.0,
-                "y": 0.0,
+                "x": 12.0,
+                "y": -6.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 3.0,
+                "y": 3.0,
+                "z": 3.0
             },
             "type": "Transform"
         },
@@ -27,15 +27,15 @@
         },
         {
             "enable": 1,
-            "isPixelPerfect": true,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
-                    "x": 0.09803921729326248,
-                    "y": 0.09803921729326248,
-                    "z": 0.09803921729326248
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
                 },
-                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
+                "baseTextureGuid": "00000000000000000000000000000000",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,8 +54,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "acd5f209ab1294a77d4a9d5bc8d9ebc7",
-    "name": "BlackBelt_1",
-    "parentGuid": "c65190a696bc1499bbbfcdebd297d694",
+    "guid": "9a20f07aee3e36fd64e88c873a5090b7",
+    "name": "InputTypeSprite",
+    "parentGuid": "6243b2904542ef7aefdaf831b544c314",
     "prefabName": ""
 }
