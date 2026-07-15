@@ -11,7 +11,8 @@ void main(uint3 dispatchId : SV_DispatchThreadID) {
 	float4 blurredColor = blurTex.SampleLevel(textureSampler, texCoord, 0.0f);
 	float4 flags = flagsTex[dispatchId.xy];
 
-	float intensity = flags.z;
+	uint packed = asuint(flags.z);
+	float intensity = f16tof32(packed & 0xFFFF);
 
 	float3 finalColor = originalColor.rgb + (blurredColor.rgb * intensity);
 

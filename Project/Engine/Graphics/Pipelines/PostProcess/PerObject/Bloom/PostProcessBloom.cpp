@@ -37,10 +37,12 @@ void PostProcessBloom::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm
 		blurPipeline_ = std::make_unique<ComputePipeline>();
 		blurPipeline_->SetShader(&shader);
 
-		blurPipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // bloomBright
-		blurPipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); // bloomBlur
+		blurPipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // bloomBright (t0)
+		blurPipeline_->AddDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // flagsTex (t1)
+		blurPipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); // bloomBlur (u0)
 		blurPipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
 		blurPipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
+		blurPipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2);
 		blurPipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 		blurPipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
@@ -110,7 +112,8 @@ void PostProcessBloom::Execute(
 	// 2. ブラーをかける
 	blurPipeline_->SetPipelineStateForCommandList(dxCommand);
 	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[2]].GetSRVGPUHandle());
-	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[3]].GetUAVGPUHandle());
+	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetSRVGPUHandle());
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[3]].GetUAVGPUHandle());
 	command->Dispatch(dispatchX, dispatchY, 1);
 
 	// bloomBlur を UAV から SRV に遷移、bloomBright は UAV に戻す

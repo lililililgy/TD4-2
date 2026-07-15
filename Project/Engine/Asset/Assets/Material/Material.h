@@ -100,6 +100,7 @@ public:
 	UVTransform         uvTransform;
 	float               bloomIntensity;
 	float               bloomThreshold;
+	float               bloomRadius;
 };
 
 

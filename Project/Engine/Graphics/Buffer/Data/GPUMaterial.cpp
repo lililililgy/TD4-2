@@ -23,7 +23,8 @@ void ONEngine::to_json(nlohmann::json& j, const GPUMaterial& material) {
 		{ "baseTextureId", material.baseTextureId },
 		{ "normalTextureId", material.normalTextureId },
 		{ "bloomIntensity", material.bloomIntensity },
-		{ "bloomThreshold", material.bloomThreshold }
+		{ "bloomThreshold", material.bloomThreshold },
+		{ "bloomRadius", material.bloomRadius }
 	};
 }
 
@@ -37,4 +38,5 @@ void ONEngine::from_json(const nlohmann::json& j, GPUMaterial& material) {
 	material.normalTextureId = j.value("normalTextureId", -1);
 	material.bloomIntensity  = j.value("bloomIntensity", 1.0f);
 	material.bloomThreshold  = j.value("bloomThreshold", 0.8f);
+	material.bloomRadius     = j.value("bloomRadius", 12.0f);
 }

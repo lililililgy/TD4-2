@@ -16,8 +16,8 @@ class SpriteRenderer : Component {
 		[FieldOffset(32)] public UVTransform uvTransform;
 		[FieldOffset(64)] public float bloomIntensity;
 		[FieldOffset(68)] public float bloomThreshold;
-		[FieldOffset(72)] public float dummyPad1;
-		[FieldOffset(76)] public float dummyPad2;
+		[FieldOffset(72)] public float bloomRadius;
+		[FieldOffset(76)] public float dummyPad1;
 	}
 
 	BatchData batchData;
@@ -38,6 +38,7 @@ class SpriteRenderer : Component {
 		batchData.uvTransform = batch[0].uvTransform;
 		batchData.bloomIntensity = batch[0].bloomIntensity;
 		batchData.bloomThreshold = batch[0].bloomThreshold;
+		batchData.bloomRadius = batch[0].bloomRadius;
 	}
 
 	//public string meshPath {
@@ -101,6 +102,15 @@ class SpriteRenderer : Component {
 		}
 		set {
 			batchData.bloomThreshold = value;
+		}
+	}
+
+	public float bloomRadius {
+		get {
+			return batchData.bloomRadius;
+		}
+		set {
+			batchData.bloomRadius = value;
 		}
 	}
 

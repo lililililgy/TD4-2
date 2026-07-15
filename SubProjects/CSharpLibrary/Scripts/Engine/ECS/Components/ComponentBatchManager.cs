@@ -91,6 +91,7 @@ static class ComponentBatchManager {
 				batch[i].uvTransform = batchData.uvTransform;
 				batch[i].bloomIntensity = comp.bloomIntensity;
 				batch[i].bloomThreshold = comp.bloomThreshold;
+				batch[i].bloomRadius = comp.bloomRadius;
 			}
 			return batch;
 		});

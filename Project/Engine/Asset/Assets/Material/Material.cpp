@@ -21,6 +21,7 @@ Material GenerateMaterial() {
 	material.postEffectFlags = 1;
 	material.bloomIntensity = 1.0f;
 	material.bloomThreshold = 0.8f;
+	material.bloomRadius = 12.0f;
 
 	return material;
 }
@@ -79,6 +80,7 @@ void from_json(const nlohmann::json& j, Material& material) {
 	material.uvTransform = j.value("uvTransform", UVTransform{});
 	material.bloomIntensity = j.value("bloomIntensity", 1.0f);
 	material.bloomThreshold = j.value("bloomThreshold", 0.8f);
+	material.bloomRadius = j.value("bloomRadius", 12.0f);
 
 	Guid baseTextureGuid = j.value("baseTextureGuid", Guid::kInvalid);
 	if(baseTextureGuid.CheckValid()) {
@@ -105,7 +107,8 @@ void to_json(nlohmann::json& j, const Material& material) {
 		{ "baseTextureGuid", material.baseTextureGuid_.has_value() ? material.baseTextureGuid_.value() : Guid::kInvalid },
 		{ "normalTextureGuid", material.normalTextureGuid_.has_value() ? material.normalTextureGuid_.value() : Guid::kInvalid },
 		{ "bloomIntensity", material.bloomIntensity },
-		{ "bloomThreshold", material.bloomThreshold }
+		{ "bloomThreshold", material.bloomThreshold },
+		{ "bloomRadius", material.bloomRadius }
 	};
 }
 
@@ -120,6 +123,7 @@ Material::Material() {
 	uvTransform = UVTransform();
 	bloomIntensity = 1.0f;
 	bloomThreshold = 0.8f;
+	bloomRadius = 12.0f;
 };
 Material::~Material() = default;
 

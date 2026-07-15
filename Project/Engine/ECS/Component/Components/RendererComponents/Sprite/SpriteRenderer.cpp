@@ -79,6 +79,7 @@ void SpriteRenderer::RenderingSetup(Asset::AssetCollection* assetCollection) {
 	gpuMaterial_.postEffectFlags = material_.postEffectFlags;
 	gpuMaterial_.bloomIntensity = material_.bloomIntensity;
 	gpuMaterial_.bloomThreshold = material_.bloomThreshold;
+	gpuMaterial_.bloomRadius = material_.bloomRadius;
 	/// base texture
 	if (material_.HasBaseTexture()) {
 		int32_t textureIndex = assetCollection->GetTextureIndexFromGuid(material_.GetBaseTextureGuid());
@@ -121,6 +122,10 @@ void SpriteRenderer::SetBloomThreshold(float threshold) {
 	material_.bloomThreshold = threshold;
 }
 
+void SpriteRenderer::SetBloomRadius(float radius) {
+	material_.bloomRadius = radius;
+}
+
 const Vector4& SpriteRenderer::GetColor() const {
 	return gpuMaterial_.baseColor;
 }
@@ -147,6 +152,10 @@ float SpriteRenderer::GetBloomIntensity() const {
 
 float SpriteRenderer::GetBloomThreshold() const {
 	return material_.bloomThreshold;
+}
+
+float SpriteRenderer::GetBloomRadius() const {
+	return material_.bloomRadius;
 }
 
 Vector2 SpriteRenderer::GetTextureSize(Asset::AssetCollection* assetCollection) const {

@@ -39,6 +39,7 @@ struct GPUMaterial {
 	int32_t     normalTextureId; /// 法線テクスチャID
 	float       bloomIntensity;  /// ブルームの強度
 	float       bloomThreshold;  /// ブルームのしきい値
+	float       bloomRadius;     /// ブルームのぼかし半径
 };
 
 

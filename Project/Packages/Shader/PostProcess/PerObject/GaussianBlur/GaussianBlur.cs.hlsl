@@ -8,13 +8,14 @@ struct BlurParams {
 };
 
 Texture2D<float4> sceneTexture : register(t0);
+Texture2D<float4> flagsTex : register(t1);
 RWTexture2D<float4> outputTexture : register(u0);
 SamplerState textureSampler : register(s0);
 
 static const BlurParams params = {
 	float2(1.0f / 1920.0f, 1.0f / 1080.0f), // テクセルサイズ
-	12, // ブラー半径
-	1.0f, // σ
+	12, // ブラー半径（フォールバック用）
+	1.0f, // σ（フォールバック用）
 	1 // 横方向ブラー
 };
 
@@ -25,16 +26,28 @@ float Gaussian(int x, float sigma) {
 
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
+	float4 flags = flagsTex[dispatchThreadId.xy];
+	uint packed = asuint(flags.z);
+	int bloomRadius = (int)f16tof32(packed >> 16);
+
 	float2 uv = (float2) dispatchThreadId.xy * params.texelSize;
+
+	// ブルームが無効（半径0以下）の場合は、ぼかさずに元のシーンテクスチャを出力
+	if (bloomRadius <= 0) {
+		outputTexture[dispatchThreadId.xy] = sceneTexture.SampleLevel(textureSampler, uv, 0.0);
+		return;
+	}
+
+	float sigma = max(1.0f, (float)bloomRadius / 3.0f);
 
 	float4 sum = float4(0, 0, 0, 0);
 	float totalWeight = 0.0;
 
-	for (int i = -params.blurRadius; i <= params.blurRadius; ++i) {
+	for (int i = -bloomRadius; i <= bloomRadius; ++i) {
 		int2 offset = params.horizontal != 0 ? int2(i, 0) : int2(0, i);
 		float2 offsetUV = uv + params.texelSize * offset;
 
-		float weight = Gaussian(i, params.sigma);
+		float weight = Gaussian(i, sigma);
 		sum += sceneTexture.SampleLevel(textureSampler, offsetUV, 0.0) * weight;
 		totalWeight += weight;
 	}

@@ -24,7 +24,8 @@ PSOutput main(VSOutput input) {
 	output.color = outputColor;
 	output.worldPosition = input.position;
 	output.normal = float4(0, 0, 1, 1);
-	output.flags = float4(material.postEffectFlags, material.entityId, material.bloomIntensity, material.bloomThreshold);
+	uint packedIntensityRadius = f32tof16(material.bloomIntensity) | (f32tof16(material.bloomRadius) << 16);
+	output.flags = float4(material.postEffectFlags, material.entityId, asfloat(packedIntensityRadius), material.bloomThreshold);
 	
 	return output;
 }

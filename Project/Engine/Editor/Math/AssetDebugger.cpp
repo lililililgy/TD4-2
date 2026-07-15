@@ -159,6 +159,9 @@ bool MaterialEdit(const std::string& label, ONEngine::Asset::Material* material,
 			if (ImGui::DragFloat("Bloom Threshold", &material->bloomThreshold, 0.01f, 0.0f, 1.0f)) {
 				edit = true;
 			}
+			if (ImGui::DragFloat("Bloom Radius", &material->bloomRadius, 0.1f, 0.0f, 30.0f, "%.1f")) {
+				edit = true;
+			}
 			ImGui::Unindent();
 		}
 	}

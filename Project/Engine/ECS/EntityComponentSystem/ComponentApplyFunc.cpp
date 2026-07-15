@@ -73,7 +73,8 @@ struct SpriteBatch {
 	UVTransform uvTransform;
 	float bloomIntensity;
 	float bloomThreshold;
-	float pad[2];
+	float bloomRadius;
+	float pad[1];
 };
 static_assert(sizeof(SpriteBatch) == 80, "SpriteBatch size must be 80 bytes");
 
@@ -175,6 +176,7 @@ void ONEngine::ComponentApplyFuncs::ApplySprite(void* element, ECSGroup* ecsGrou
 		sr->SetUVTransform(data->uvTransform);
 		sr->SetBloomIntensity(data->bloomIntensity);
 		sr->SetBloomThreshold(data->bloomThreshold);
+		sr->SetBloomRadius(data->bloomRadius);
 	}
 }
 
@@ -334,6 +336,7 @@ void ONEngine::ComponentApplyFuncs::FetchSprite(void* element, ECSGroup* ecsGrou
 		data->uvTransform = sr->GetUVTransform();
 		data->bloomIntensity = sr->GetBloomIntensity();
 		data->bloomThreshold = sr->GetBloomThreshold();
+		data->bloomRadius = sr->GetBloomRadius();
 	}
 }
 
