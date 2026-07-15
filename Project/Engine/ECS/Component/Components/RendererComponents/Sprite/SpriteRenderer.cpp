@@ -106,8 +106,8 @@ void SpriteRenderer::SetUVTransform(const UVTransform& uvTransform) {
 	material_.uvTransform = uvTransform;
 }
 
-void SpriteRenderer::SetPixelPerfect(bool enable) {
-	isPixelPerfect_ = enable;
+void SpriteRenderer::SetPixelPerfect(bool enablePixelPerfect) {
+	isPixelPerfect_ = enablePixelPerfect;
 }
 
 void SpriteRenderer::SetPostEffectFlags(uint32_t flags) {

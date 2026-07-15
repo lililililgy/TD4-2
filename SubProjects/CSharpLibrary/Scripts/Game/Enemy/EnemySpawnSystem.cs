@@ -40,11 +40,11 @@ public class EnemySpawnSystem : MonoScript {
     [SerializeField] private string originName_ = "EnemySpawnOrigin";
     [SerializeField] private string heatMapEntityName_ = "EnemyHeatMap";
     // スポーン範囲
-    [SerializeField] private Vector2 spawnAreaMin_;
-    [SerializeField] private Vector2 spawnAreaMax_;
+    [SerializeField] private Vector2 spawnAreaMin_ = default;
+    [SerializeField] private Vector2 spawnAreaMax_ = default;
     // 除外範囲（スポーンしない範囲）
-    [SerializeField] private Vector2 exclusionAreaMin_;
-    [SerializeField] private Vector2 exclusionAreaMax_;
+    [SerializeField] private Vector2 exclusionAreaMin_ = default;
+    [SerializeField] private Vector2 exclusionAreaMax_ = default;
     // スポーン間隔
     [SerializeField] private float spawnInterval_ = 5.0f;
     private float spawnTimer_ = 0.0f;

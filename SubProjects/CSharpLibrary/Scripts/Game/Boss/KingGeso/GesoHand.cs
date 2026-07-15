@@ -43,8 +43,7 @@ public class GesoHand : MonoScript
     private bool attackEventSent_;
     private GesoHandRotationMode rotationMode_;
 
-    //弱点インスタンス
-    private GesoWeakPoint weakPoint_;
+
 
     //=============================
     // 初期化

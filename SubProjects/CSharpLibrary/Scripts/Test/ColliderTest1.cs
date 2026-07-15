@@ -3,18 +3,8 @@ using System.Collections.Generic;
 
 
 
-struct TestStruct
-{
-	[SerializeField] float test;
-};
-
-
-
 public class ColliderTest1 : MonoScript
 {
-
-	[SerializeField] float test = 0.0f;
-	[SerializeField] TestStruct testStruct;
 
 	public override void Initialize()
 	{

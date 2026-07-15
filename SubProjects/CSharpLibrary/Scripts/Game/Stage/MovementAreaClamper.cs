@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -30,6 +30,7 @@ public class MovementAreaClamper : MonoScript {
 
         existArea_ = true;
         Clamp(areaEnt);
+        _ = existArea_;
     }
 
     private void FixRadius() {

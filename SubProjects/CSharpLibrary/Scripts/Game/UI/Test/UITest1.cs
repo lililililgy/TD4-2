@@ -5,7 +5,6 @@ public class UITest1 : MonoScript {
 
 	bool isSelect = false;
 	Vector3 savePos;
-	float time = 0f;
 
 	public override void Initialize() {
 		savePos = transform.position;

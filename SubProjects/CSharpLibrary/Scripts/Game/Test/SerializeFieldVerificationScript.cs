@@ -35,7 +35,7 @@ public class SerializeFieldVerificationScript : MonoScript {
 	[SerializeField] List<Vector3> valListVec3 = null;
 	[SerializeField] List<TestEnum> valListEnum = null;
 
-	[SerializeField] SerializeFieldTestStruct valStruct;
+	[SerializeField] SerializeFieldTestStruct valStruct = default;
 	[SerializeField] List<SerializeFieldTestStruct> valListStruct = null;
 
 	[SerializeField] SerializeFieldTestClass valClass = null;

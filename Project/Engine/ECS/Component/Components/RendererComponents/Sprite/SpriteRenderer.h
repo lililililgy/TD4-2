@@ -72,7 +72,7 @@ public:
 	/// ----- setter ----- ///
 	void SetColor(const Vector4& color);
 	void SetUVTransform(const UVTransform& uvTransform);
-	void SetPixelPerfect(bool enable);
+	void SetPixelPerfect(bool enablePixelPerfect);
 	void SetPostEffectFlags(uint32_t flags);
 	void SetBloomIntensity(float intensity);
 	void SetBloomThreshold(float threshold);
@@ -118,7 +118,7 @@ namespace MonoInternalMethods {
 	Vector2 InternalGetTextureSize(uint64_t nativeHandle);
 
 	bool InternalGetPixelPerfect(uint64_t nativeHandle);
-	void InternalSetPixelPerfect(uint64_t nativeHandle, bool enable);
+	void InternalSetPixelPerfect(uint64_t nativeHandle, bool enablePixelPerfect);
 }
 
 } /// ONEngine

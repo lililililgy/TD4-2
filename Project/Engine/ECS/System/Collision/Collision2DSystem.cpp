@@ -242,7 +242,6 @@ void Collision2DSystem::CallEnterFunc(const std::string& ecsGroupName) {
 			}
 
 			GameEntity* selfEntity = (i == 0) ? currentA : currentB;
-			GameEntity* otherEntity = (i == 0) ? currentB : currentA;
 
 			Script* scriptComponent = selfEntity->GetComponent<Script>();
 			if(!scriptComponent) {
@@ -324,7 +323,6 @@ void Collision2DSystem::CallStayFunc(const std::string& ecsGroupName) {
 			}
 
 			GameEntity* selfEntity = (i == 0) ? currentA : currentB;
-			GameEntity* otherEntity = (i == 0) ? currentB : currentA;
 
 			Script* scriptComponent = selfEntity->GetComponent<Script>();
 			if(!scriptComponent) {
@@ -404,7 +402,6 @@ void Collision2DSystem::CallExitFunc(const std::string& ecsGroupName) {
 			}
 
 			GameEntity* selfEntity = (i == 0) ? currentA : currentB;
-			GameEntity* otherEntity = (i == 0) ? currentB : currentA;
 
 			Script* scriptComponent = selfEntity->GetComponent<Script>();
 			if(!scriptComponent) {
