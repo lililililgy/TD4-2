@@ -20,6 +20,8 @@ enum PostEffectFlags_ {
 	PostEffectFlags_Grayscale = 1 << 1, ///< グレースケール
 	PostEffectFlags_EnvironmentReflection = 1 << 2, ///< 天球に合わせて環境反射を行う
 	PostEffectFlags_Shadow = 1 << 3, ///< 影
+	PostEffectFlags_Bloom = 1 << 4, ///< ブルーム
+	PostEffectFlags_Outline = 1 << 5, ///< アウトライン
 };
 
 /// /////////////////////////////////////////////////

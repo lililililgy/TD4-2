@@ -69,6 +69,7 @@ struct SpriteBatch {
 	uint32_t compId;
 	Vector4 color;
 	Vector2 textureSize;
+	uint32_t postEffectFlags;
 	UVTransform uvTransform;
 };
 
@@ -166,6 +167,7 @@ void ONEngine::ComponentApplyFuncs::ApplySprite(void* element, ECSGroup* ecsGrou
 
 	if(SpriteRenderer* sr = array->GetComponent(data->compId)) {
 		sr->SetColor(data->color);
+		sr->SetPostEffectFlags(data->postEffectFlags);
 		sr->SetUVTransform(data->uvTransform);
 	}
 }
@@ -322,6 +324,7 @@ void ONEngine::ComponentApplyFuncs::FetchSprite(void* element, ECSGroup* ecsGrou
 	if(SpriteRenderer* sr = array->GetComponent(data->compId)) {
 		data->color = sr->GetColor();
 		data->textureSize = sr->GetTextureSize(Asset::AssetCollection::GetInstance());
+		data->postEffectFlags = sr->GetPostEffectFlags();
 		data->uvTransform = sr->GetUVTransform();
 	}
 }

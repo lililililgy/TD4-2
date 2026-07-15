@@ -73,6 +73,7 @@ public:
 	void SetColor(const Vector4& color);
 	void SetUVTransform(const UVTransform& uvTransform);
 	void SetPixelPerfect(bool enable);
+	void SetPostEffectFlags(uint32_t flags);
 
 	/// ----- getter ----- ///
 	const Vector4& GetColor() const;
@@ -84,6 +85,8 @@ public:
 	Vector2 GetTextureSize(Asset::AssetCollection* assetCollection) const;
 
 	bool IsPixelPerfect() const;
+
+	uint32_t GetPostEffectFlags() const;
 
 	/// @brief アニメーション制御用マテリアルへの参照取得
 	Asset::Material& GetMaterialForAnimation() { return material_; }

@@ -12,6 +12,7 @@ class SpriteRenderer : Component {
 		public uint compId;
 		public Vector4 color;
 		public Vector2 textureSize;
+		public uint postEffectFlags;
 		public UVTransform uvTransform;
 	}
 
@@ -29,6 +30,7 @@ class SpriteRenderer : Component {
 
 		batchData.color = batch[0].color;
 		batchData.textureSize = batch[0].textureSize;
+		batchData.postEffectFlags = batch[0].postEffectFlags;
 		batchData.uvTransform = batch[0].uvTransform;
 	}
 
@@ -66,6 +68,15 @@ class SpriteRenderer : Component {
 	public Vector2 textureSize {
 		get {
 			return batchData.textureSize;
+		}
+	}
+
+	public uint postEffectFlags {
+		get {
+			return batchData.postEffectFlags;
+		}
+		set {
+			batchData.postEffectFlags = value;
 		}
 	}
 

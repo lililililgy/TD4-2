@@ -107,6 +107,10 @@ void SpriteRenderer::SetPixelPerfect(bool enable) {
 	isPixelPerfect_ = enable;
 }
 
+void SpriteRenderer::SetPostEffectFlags(uint32_t flags) {
+	material_.postEffectFlags = flags;
+}
+
 const Vector4& SpriteRenderer::GetColor() const {
 	return gpuMaterial_.baseColor;
 }
@@ -121,6 +125,10 @@ const UVTransform& SpriteRenderer::GetUVTransform() const {
 
 bool SpriteRenderer::IsPixelPerfect() const {
 	return isPixelPerfect_;
+}
+
+uint32_t SpriteRenderer::GetPostEffectFlags() const {
+	return material_.postEffectFlags;
 }
 
 Vector2 SpriteRenderer::GetTextureSize(Asset::AssetCollection* assetCollection) const {

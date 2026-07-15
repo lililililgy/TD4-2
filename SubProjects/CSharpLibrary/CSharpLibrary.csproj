@@ -248,6 +248,7 @@
     <Compile Include="Scripts\Math\SmoothDamp.cs" />
     <Compile Include="Scripts\Test.cs" />
     <Compile Include="Scripts\Test\AddSceneTest.cs" />
+    <Compile Include="Scripts\Test\BloomTestScript.cs" />
     <Compile Include="Scripts\Test\ColliderTest1.cs" />
     <Compile Include="Scripts\Test\ColliderTest2.cs" />
     <Compile Include="Scripts\Test\CollisionCrashTestMonitor.cs" />

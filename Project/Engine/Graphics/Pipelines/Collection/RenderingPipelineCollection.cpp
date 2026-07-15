@@ -40,6 +40,7 @@ using namespace ONEngine;
 #include "../PostProcess/PerObject/Light/PostProcessLighting.h"
 #include "../PostProcess/PerObject/Grayscale/PostProcessGrayscalePerObject.h"
 #include "../PostProcess/PerObject/Blur/PostProcessGaussianBlurPerObject.h"
+#include "../PostProcess/PerObject/Bloom/PostProcessBloom.h"
 #include "../PostProcess/Screen/Grayscale/PostProcessGrayscale.h"
 #include "../PostProcess/Screen/RadialBlur/PostProcessRadialBlur.h"
 #include "../PostProcess/Screen/Shadow/PostProcessShadowApply.h"
@@ -107,6 +108,7 @@ void RenderingPipelineCollection::Initialize() {
 	GeneratePostProcess3DPipeline<PostProcessTerrainBrush>();
 	GeneratePostProcess3DPipeline<PostProcessVoxelTerrainBrush>();
 	GeneratePostProcess3DPipeline<PostProcessGaussianBlurPerObject>();
+	GeneratePostProcess3DPipeline<PostProcessBloom>();
 
 	/// ----- スクリーンにかける用のポストエフェクトのパイプラインを生成 ----- ///
 	GeneratePostProcess3DPipeline<PostProcessShadowApply>();

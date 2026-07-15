@@ -87,6 +87,7 @@ static class ComponentBatchManager {
 				batch[i].compId = comp.compId;
 				batch[i].color = batchData.color;
 				batch[i].textureSize = batchData.textureSize;
+				batch[i].postEffectFlags = batchData.postEffectFlags;
 				batch[i].uvTransform = batchData.uvTransform;
 			}
 			return batch;
