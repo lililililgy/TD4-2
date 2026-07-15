@@ -87,7 +87,7 @@ ComPtr<IDxcBlob> ShaderCompiler::CompileShader(const std::wstring& filePath, con
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
 		Console::Log(shaderError->GetStringPointer());
-		// Assert(false, shaderError->GetStringPointer());
+		Assert(false, shaderError->GetStringPointer());
 	}
 
 	/// Compile結果を受け取りreturnする

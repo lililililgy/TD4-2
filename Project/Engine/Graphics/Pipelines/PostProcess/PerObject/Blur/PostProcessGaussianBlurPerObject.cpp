@@ -17,17 +17,19 @@ void PostProcessGaussianBlurPerObject::Initialize(ShaderCompiler* shaderCompiler
 		pipeline_ = std::make_unique<ComputePipeline>();
 		pipeline_->SetShader(&shader);
 
-		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); /// scene tex
-		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); /// output tex
+		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); /// scene tex (t0)
+		pipeline_->AddDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); /// flagsTex (t1)
+		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); /// output tex (u0)
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
+		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2);
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 
 		pipeline_->CreatePipeline(dxm->GetDxDevice());
 
 	}
 
-	
+
 
 }
 
@@ -37,10 +39,12 @@ void PostProcessGaussianBlurPerObject::Execute(const std::string& textureName, D
 	auto command = dxCommand->GetCommandList();
 	auto& textures = assetCollection->GetTextures();
 	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
-	textureIndices_[1] = assetCollection->GetTextureIndex("postProcessResult");
+	textureIndices_[1] = assetCollection->GetTextureIndex(textureName + "Flags");
+	textureIndices_[2] = assetCollection->GetTextureIndex("postProcessResult");
 
 	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
-	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetUAVGPUHandle());
+	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetSRVGPUHandle());
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[2]].GetUAVGPUHandle());
 
 	command->Dispatch(
 		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
@@ -51,7 +55,7 @@ void PostProcessGaussianBlurPerObject::Execute(const std::string& textureName, D
 
 	/// 大本のsceneテクスチャに結果をコピー
 	CopyResource(
-		textures[textureIndices_[1]].GetDxResource().Get(),
+		textures[textureIndices_[2]].GetDxResource().Get(),
 		textures[textureIndices_[0]].GetDxResource().Get(),
 		command
 	);
