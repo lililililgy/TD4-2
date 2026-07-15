@@ -6,8 +6,12 @@ public class BloomTestScript : MonoScript {
 	private bool applied = false;
 
 	public override void Initialize() {
-		System.Console.WriteLine("[BloomTestScript] Loading GameScene...");
-		SceneManager.Add("GameScene");
+		try {
+			System.Console.WriteLine("[BloomTestScript] Loading GameScene...");
+			SceneManager.Add("GameScene");
+		} catch (Exception ex) {
+			System.Console.WriteLine("[BloomTestScript] Exception in Initialize: " + ex.ToString());
+		}
 	}
 
 	public override void Update() {
