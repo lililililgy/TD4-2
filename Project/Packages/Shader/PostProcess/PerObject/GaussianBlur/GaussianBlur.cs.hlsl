@@ -28,6 +28,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float4 sum = float4(0, 0, 0, 0);
 	float totalWeight = 0.0;
+	static const float PI = 3.14159265f;
 
 	// 常に最大半径の範囲から周囲のテクセルをサンプリング
 	for (int i = -MAX_BLUR_RADIUS; i <= MAX_BLUR_RADIUS; ++i) {
@@ -46,18 +47,23 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		// 距離がそのサンプリング対象のブラー半径内にある場合のみ、その光を届かせる
 		if (abs(i) <= sampleRadius) {
 			float sampleSigma = max(1.0f, sampleRadius / 3.0f);
-			float weight = Gaussian(i, sampleSigma);
 			
-			// 色と半径（アルファ）の両方をウェイト付きで加算
-			sum += sampleColor * weight;
+			// 1Dガウス分布の積分値（カーネルウェイト総和）で事前正規化
+			float kernelSum = sqrt(2.0f * PI) * sampleSigma;
+			float weight = Gaussian(i, sampleSigma) / kernelSum;
+			
+			// 色をウェイト付きで加算（これで距離による輝度減衰が正しく行われる）
+			sum.rgb += sampleColor.rgb * weight;
+			
+			// 半径（アルファ）は最大の伝播度合いを保つため、ガウス減衰させた値の最大値を取る
+			sum.a = max(sum.a, sampleColor.a * Gaussian(i, sampleSigma));
 			totalWeight += weight;
 		}
 	}
 
-	// 周囲からのブルームの寄与がある場合はそのブラー色とぼけた半径を出力、
-	// そうでなければ（黒の領域など）、黒を出力
 	if (totalWeight > 0.0) {
-		outputTexture[dispatchThreadId.xy] = sum / totalWeight;
+		// すでに事前正規化されているため、そのまま出力（アルファはクランプ）
+		outputTexture[dispatchThreadId.xy] = float4(sum.rgb, saturate(sum.a));
 	} else {
 		outputTexture[dispatchThreadId.xy] = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
