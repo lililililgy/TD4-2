@@ -11,7 +11,8 @@ static const float2 texelSize = float2(1.0f / 1920.0f, 1.0f / 1080.0f);
 
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
-	float2 uv = (float2)dispatchThreadId.xy * texelSize;
+	int2 pixelPos = dispatchThreadId.xy;
+	float2 uv = (float2)pixelPos * texelSize;
 
 	// ラジアルブラーのパラメータ
 	const float2 kCenter = float2(0.5f, 0.5f);
@@ -29,22 +30,25 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 			continue;
 		}
 
-		// サンプリング対象ピクセルの flagsTex 情報を取得
-		float4 sampleFlags = flagsTex.SampleLevel(textureSampler, sampleUV, 0.0f);
+		// テクセル座標を直接計算して Load する（線形補間によるフラグ破損を防止）
+		int2 samplePixelPos = (int2)(sampleUV * TextureSize);
+		float4 sampleFlags = flagsTex[samplePixelPos];
 		
-		if (IsPostEffectEnabled((int)sampleFlags.x, PostEffectFlags_RadialBlur)) {
+		int flagsVal = (int)(sampleFlags.x + 0.5f); // 丸め処理をしてキャスト
+		
+		if (IsPostEffectEnabled(flagsVal, PostEffectFlags_RadialBlur)) {
 			// サンプリング対象がラジアルブラー対象の場合のみ、その色を加算
-			float4 sampleColor = sceneTexture.SampleLevel(textureSampler, sampleUV, 0.0f);
+			float4 sampleColor = sceneTexture[samplePixelPos];
 			float weight = 1.0f - (float)i / (float)kNumSamples; // 遠いサンプリングほど重みを下げる
 			sumColor += sampleColor * weight;
 			totalWeight += weight;
 		}
 	}
 
-	// 寄与が得られた場合はブラー色を出力、そうでなければ元のシーンカラーを出力
+	// 寄与が得られた場合はブラー色を出力、そうでなければ元のシーンカラーをそのまま Load して出力
 	if (totalWeight > 0.0f) {
-		outputTexture[dispatchThreadId.xy] = sumColor / totalWeight;
+		outputTexture[pixelPos] = sumColor / totalWeight;
 	} else {
-		outputTexture[dispatchThreadId.xy] = sceneTexture.SampleLevel(textureSampler, uv, 0.0f);
+		outputTexture[pixelPos] = sceneTexture[pixelPos];
 	}
 }
