@@ -43,6 +43,7 @@ static const int PostEffectFlags_EnvironmentReflection = 1 << 2;
 static const int PostEffectFlags_Shadow                = 1 << 3;
 static const int PostEffectFlags_Bloom                 = 1 << 4;
 static const int PostEffectFlags_Outline               = 1 << 5;
+static const int PostEffectFlags_RadialBlur            = 1 << 6;
 
 
 bool IsPostEffectEnabled(int flags, int effect) {

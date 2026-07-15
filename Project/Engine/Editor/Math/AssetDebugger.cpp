@@ -164,6 +164,10 @@ bool MaterialEdit(const std::string& label, ONEngine::Asset::Material* material,
 			}
 			ImGui::Unindent();
 		}
+
+		if (ImGui::CheckboxFlags("Radial Blur (Per-Object)", &material->postEffectFlags, PostEffectFlags_RadialBlur)) {
+			edit = true;
+		}
 	}
 
 

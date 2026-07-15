@@ -9,4 +9,5 @@ public enum PostEffectFlags : uint {
 	Shadow                = 1 << 3, ///< 影
 	Bloom                 = 1 << 4, ///< ブルーム
 	Outline               = 1 << 5, ///< アウトライン
+	RadialBlur            = 1 << 6, ///< ラジアルブラー
 };

@@ -22,6 +22,7 @@ enum PostEffectFlags_ {
 	PostEffectFlags_Shadow = 1 << 3, ///< 影
 	PostEffectFlags_Bloom = 1 << 4, ///< ブルーム
 	PostEffectFlags_Outline = 1 << 5, ///< アウトライン
+	PostEffectFlags_RadialBlur = 1 << 6, ///< ラジアルブラー
 };
 
 /// /////////////////////////////////////////////////

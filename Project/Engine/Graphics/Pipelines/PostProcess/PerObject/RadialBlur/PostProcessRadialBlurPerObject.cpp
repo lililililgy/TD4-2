@@ -1,0 +1,58 @@
+#include "PostProcessRadialBlurPerObject.h"
+
+using namespace ONEngine;
+
+/// engine
+#include "Engine/Core/Config/EngineConfig.h"
+#include "Engine/Core/DirectX12/Manager/DxManager.h"
+#include "Engine/Asset/Collection/AssetCollection.h"
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
+
+void PostProcessRadialBlurPerObject::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm) {
+
+	{
+		Shader shader;
+		shader.Initialize(shaderCompiler);
+		shader.CompileShader(L"Packages/Shader/PostProcess/PerObject/RadialBlur/RadialBlurPerObject.cs.hlsl", L"cs_6_6", Shader::Type::cs);
+
+		pipeline_ = std::make_unique<ComputePipeline>();
+		pipeline_->SetShader(&shader);
+
+		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // sceneTexture (t0)
+		pipeline_->AddDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // flagsTex (t1)
+		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); // outputTexture (u0)
+		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
+		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
+		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2);
+		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
+		pipeline_->CreatePipeline(dxm->GetDxDevice());
+	}
+
+}
+
+void PostProcessRadialBlurPerObject::Execute(const std::string& textureName, DxCommand* dxCommand, Asset::AssetCollection* assetCollection, [[maybe_unused]] EntityComponentSystem* entityComponentSystem, ECSGroup* /*ecsGroup*/) {
+	pipeline_->SetPipelineStateForCommandList(dxCommand);
+
+	auto command = dxCommand->GetCommandList();
+	auto& textures = assetCollection->GetTextures();
+	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
+	textureIndices_[1] = assetCollection->GetTextureIndex(textureName + "Flags");
+	textureIndices_[2] = assetCollection->GetTextureIndex("postProcessResult");
+
+	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
+	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetSRVGPUHandle());
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[2]].GetUAVGPUHandle());
+
+	command->Dispatch(
+		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
+		1
+	);
+
+	/// 大本のsceneテクスチャに結果をコピー
+	CopyResource(
+		textures[textureIndices_[2]].GetDxResource().Get(),
+		textures[textureIndices_[0]].GetDxResource().Get(),
+		command
+	);
+}

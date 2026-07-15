@@ -48,9 +48,9 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "00000000000000000000000000000000",
+                "baseTextureGuid": "960ec2345ab1ab75a1c74ef79b962c75",
                 "bloomIntensity": 1.0,
-                "bloomRadius": 30.0,
+                "bloomRadius": 120.0,
                 "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
