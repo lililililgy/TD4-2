@@ -69,6 +69,12 @@ struct ScreenPostEffectFlags {
 	// Size limitation (<=0 means full screen)
 	int32_t postEffectWidth = -1;
 	int32_t postEffectHeight = -1;
+
+	// Start offset (0,0 by default)
+	int32_t postEffectStartX = 0;
+	int32_t postEffectStartY = 0;
+	// Pivot (0: Top-Left, 1: Center)
+	int32_t postEffectPivot = 0;
 };
 
 class ScreenPostEffectTag : public IComponent {
@@ -154,7 +160,16 @@ public:
 	void SetPostEffectHeight(int32_t height);
 	int32_t GetPostEffectHeight() const;
 
+	/// Offset & Pivot
+	void SetPostEffectStartX(int32_t x);
+	int32_t GetPostEffectStartX() const;
+	void SetPostEffectStartY(int32_t y);
+	int32_t GetPostEffectStartY() const;
+	void SetPostEffectPivot(int32_t pivot);
+	int32_t GetPostEffectPivot() const;
+
 	static Vector2 GetDispatchSize(ECSGroup* ecsGroup, EntityComponentSystem* entityComponentSystem);
+	static Vector2 GetDispatchStartOffset(ECSGroup* ecsGroup, EntityComponentSystem* entityComponentSystem);
 
 	ScreenPostEffectFlags flags_;
 

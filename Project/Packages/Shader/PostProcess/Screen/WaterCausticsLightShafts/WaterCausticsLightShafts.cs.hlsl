@@ -8,6 +8,8 @@ struct CausticsParams {
     float lightShaftsIntensity;
     float3 lightDir;
     float time;
+    int2 offset;
+    int2 padding;
 };
 
 ConstantBuffer<CausticsParams> gParams : register(b0);
@@ -51,8 +53,9 @@ float voronoi(float2 x) {
 [shader("compute")]
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchId : SV_DispatchThreadID) {
-    if (dispatchId.x >= (uint)screenSize.x || dispatchId.y >= (uint)screenSize.y) return;
-    float2 uv = dispatchId.xy / screenSize;
+    uint2 pixelPos = dispatchId.xy + gParams.offset;
+    if (pixelPos.x >= (uint)screenSize.x || pixelPos.y >= (uint)screenSize.y) return;
+    float2 uv = pixelPos / screenSize;
     
     float4 color = colorTex.Sample(textureSampler, uv);
     
@@ -85,5 +88,5 @@ void main(uint3 dispatchId : SV_DispatchThreadID) {
     // 合成 (加算合成)
     float3 finalColor = color.rgb + color.rgb * caustics + float3(0.8f, 0.95f, 1.0f) * shaft;
     
-    outputTex[dispatchId.xy] = float4(saturate(finalColor), color.a);
+    outputTex[pixelPos] = float4(saturate(finalColor), color.a);
 }

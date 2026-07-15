@@ -82,11 +82,16 @@ void PostProcessWaterDistortion::Execute(const std::string& textureName, DxComma
 	}
 
 	// 定数バッファの更新
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
 	DistortionParams params;
 	params.strength = tag->GetWaterDistortionStrength();
 	params.speed = tag->GetWaterDistortionSpeed();
 	params.frequency = tag->GetWaterDistortionFrequency();
 	params.time = Time::GetTime();
+	params.offsetX = static_cast<int32_t>(offset.x);
+	params.offsetY = static_cast<int32_t>(offset.y);
+	params.padding[0] = 0;
+	params.padding[1] = 0;
 	paramsBuffer_.SetMappedData(params);
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);

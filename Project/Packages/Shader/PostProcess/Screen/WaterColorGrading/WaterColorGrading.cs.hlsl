@@ -6,6 +6,8 @@ struct ColorGradingParams {
     float contrast;
     float saturation;
     float3 colorFilter;
+    int2 offset;
+    int2 padding;
 };
 
 ConstantBuffer<ColorGradingParams> gParams : register(b0);
@@ -21,8 +23,9 @@ static const float2 screenSize = float2(1920.0f, 1080.0f);
 [shader("compute")]
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchId : SV_DispatchThreadID) {
-    if (dispatchId.x >= (uint)screenSize.x || dispatchId.y >= (uint)screenSize.y) return;
-    float2 uv = dispatchId.xy / screenSize;
+    uint2 pixelPos = dispatchId.xy + gParams.offset;
+    if (pixelPos.x >= (uint)screenSize.x || pixelPos.y >= (uint)screenSize.y) return;
+    float2 uv = pixelPos / screenSize;
     
     float4 color = colorTex.Sample(textureSampler, uv);
     
@@ -41,5 +44,5 @@ void main(uint3 dispatchId : SV_DispatchThreadID) {
     float luma = dot(gradedColor, float3(0.299f, 0.587f, 0.114f));
     gradedColor = lerp(float3(luma, luma, luma), gradedColor, gParams.saturation);
     
-    outputTex[dispatchId.xy] = float4(saturate(gradedColor), color.a);
+    outputTex[pixelPos] = float4(saturate(gradedColor), color.a);
 }

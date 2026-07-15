@@ -226,6 +226,34 @@ void GameFramework::Update() {
 						Vector2 size = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem_.get());
 						ONEngine::Assert(size.x == 800.0f, "GetDispatchSize.x should be 800");
 						ONEngine::Assert(size.y == 600.0f, "GetDispatchSize.y should be 600");
+
+						ONEngine::Assert(tag->GetPostEffectStartX() == 0, "Default postEffectStartX should be 0");
+						ONEngine::Assert(tag->GetPostEffectStartY() == 0, "Default postEffectStartY should be 0");
+						ONEngine::Assert(tag->GetPostEffectPivot() == 0, "Default postEffectPivot should be 0");
+
+						Vector2 offsetDefault = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem_.get());
+						ONEngine::Assert(offsetDefault.x == 0.0f, "GetDispatchStartOffset.x should be 0 by default");
+						ONEngine::Assert(offsetDefault.y == 0.0f, "GetDispatchStartOffset.y should be 0 by default");
+
+						tag->SetPostEffectStartX(500);
+						tag->SetPostEffectStartY(400);
+						ONEngine::Assert(tag->GetPostEffectStartX() == 500, "postEffectStartX should be 500 after setting");
+						ONEngine::Assert(tag->GetPostEffectStartY() == 400, "postEffectStartY should be 400 after setting");
+
+						// Top-Left pivot mode (0)
+						Vector2 offsetTopLeft = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem_.get());
+						ONEngine::Assert(offsetTopLeft.x == 500.0f, "GetDispatchStartOffset.x should be 500 in Top-Left mode");
+						ONEngine::Assert(offsetTopLeft.y == 400.0f, "GetDispatchStartOffset.y should be 400 in Top-Left mode");
+
+						// Center pivot mode (1)
+						tag->SetPostEffectPivot(1);
+						ONEngine::Assert(tag->GetPostEffectPivot() == 1, "postEffectPivot should be 1 after setting");
+
+						Vector2 offsetCenter = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem_.get());
+						// 500 - 800/2 = 100
+						// 400 - 600/2 = 100
+						ONEngine::Assert(offsetCenter.x == 100.0f, "GetDispatchStartOffset.x should be 100 in Center mode");
+						ONEngine::Assert(offsetCenter.y == 100.0f, "GetDispatchStartOffset.y should be 100 in Center mode");
 					}
 				}
 			}

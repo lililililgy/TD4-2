@@ -17,7 +17,8 @@ public:
 		float fogDensity;
 		float fogWaterSurfaceY;
 		float vignetteStrength;
-		float padding[2]; // 16byte alignment
+		int32_t offsetX;
+		int32_t offsetY;
 	};
 
 	enum ROOT_PARAM {

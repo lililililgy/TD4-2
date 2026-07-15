@@ -59,10 +59,13 @@ void PostProcessFisheye::Execute(const std::string& textureName, DxCommand* dxCo
 		return; // 魚眼レンズエフェクトが無効な場合は何もしない
 	}
 
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
 	// 定数バッファの更新
 	constantBuffer_.SetMappedData(FisheyeParams{
 		.strength = tag->GetFisheyeStrength(),
-		.scale = tag->GetFisheyeScale()
+		.scale = tag->GetFisheyeScale(),
+		.offsetX = static_cast<int32_t>(offset.x),
+		.offsetY = static_cast<int32_t>(offset.y)
 	});
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);

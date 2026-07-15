@@ -119,7 +119,11 @@ void PostProcessShadowApply::Execute(const std::string& textureName, DxCommand* 
 		cmdList, ROOT_PARAM::CBV_VIEW_PROJECTION
 	);
 
-	shadowParamBuffer_.SetMappedData(shadowCaster->GetShadowParameters());
+	ShadowParameter shadowParams = shadowCaster->GetShadowParameters();
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, ecs);
+	shadowParams.offsetX = static_cast<int32_t>(offset.x);
+	shadowParams.offsetY = static_cast<int32_t>(offset.y);
+	shadowParamBuffer_.SetMappedData(shadowParams);
 	shadowParamBuffer_.BindForComputeCommandList(
 		cmdList, ROOT_PARAM::CBV_SHADOW_PARAM
 	);

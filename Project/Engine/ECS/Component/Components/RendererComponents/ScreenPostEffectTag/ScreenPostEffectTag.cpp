@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <array>
+#include <algorithm>
 
 /// editor
 #include "Engine/Editor/Commands/ImGuiCommand/ImGuiCommand.h"
@@ -128,6 +129,38 @@ Vector2 ScreenPostEffectTag::GetDispatchSize(ECSGroup* ecsGroup, EntityComponent
 	return EngineConfig::kWindowSize;
 }
 
+void ScreenPostEffectTag::SetPostEffectStartX(int32_t x) { flags_.postEffectStartX = x; }
+int32_t ScreenPostEffectTag::GetPostEffectStartX() const { return flags_.postEffectStartX; }
+void ScreenPostEffectTag::SetPostEffectStartY(int32_t y) { flags_.postEffectStartY = y; }
+int32_t ScreenPostEffectTag::GetPostEffectStartY() const { return flags_.postEffectStartY; }
+void ScreenPostEffectTag::SetPostEffectPivot(int32_t pivot) { flags_.postEffectPivot = pivot; }
+int32_t ScreenPostEffectTag::GetPostEffectPivot() const { return flags_.postEffectPivot; }
+
+Vector2 ScreenPostEffectTag::GetDispatchStartOffset(ECSGroup* ecsGroup, EntityComponentSystem* entityComponentSystem) {
+	ECSGroup* activeGroup = ecsGroup ? ecsGroup : entityComponentSystem->GetCurrentGroup();
+	if (activeGroup) {
+		ComponentArray<ScreenPostEffectTag>* screenPostEffectTagArray = activeGroup->GetComponentArray<ScreenPostEffectTag>();
+		if (screenPostEffectTagArray && !screenPostEffectTagArray->GetUsedComponents().empty()) {
+			for (auto& comp : screenPostEffectTagArray->GetUsedComponents()) {
+				if (comp && comp->enable) {
+					int32_t startX = comp->GetPostEffectStartX();
+					int32_t startY = comp->GetPostEffectStartY();
+					if (comp->GetPostEffectPivot() == 1) { // 1: Center
+						int32_t width = comp->GetPostEffectWidth();
+						int32_t height = comp->GetPostEffectHeight();
+						if (width > 0) startX -= width / 2;
+						if (height > 0) startY -= height / 2;
+					}
+					startX = std::max(0, startX);
+					startY = std::max(0, startY);
+					return Vector2(static_cast<float>(startX), static_cast<float>(startY));
+				}
+			}
+		}
+	}
+	return Vector2(0.0f, 0.0f);
+}
+
 
 
 
@@ -208,6 +241,20 @@ void ComponentDebug::ScreenPostEffectTagDebug(ScreenPostEffectTag* component) {
 	if (ImGui::InputInt("Height Limit", &height)) {
 		component->SetPostEffectHeight(height);
 	}
+
+	int startX = component->GetPostEffectStartX();
+	int startY = component->GetPostEffectStartY();
+	int pivot = component->GetPostEffectPivot();
+	if (ImGui::InputInt("Start X Offset", &startX)) {
+		component->SetPostEffectStartX(startX);
+	}
+	if (ImGui::InputInt("Start Y Offset", &startY)) {
+		component->SetPostEffectStartY(startY);
+	}
+	const char* pivotItems[] = { "Top-Left", "Center" };
+	if (ImGui::Combo("Pivot Mode", &pivot, pivotItems, IM_ARRAYSIZE(pivotItems))) {
+		component->SetPostEffectPivot(pivot);
+	}
 }
 
 void ONEngine::from_json(const nlohmann::json& j, ScreenPostEffectTag& c) {
@@ -275,6 +322,11 @@ void ONEngine::from_json(const nlohmann::json& j, ScreenPostEffectTag& c) {
 	// Size limitation
 	if (j.contains("postEffectWidth")) c.SetPostEffectWidth(j["postEffectWidth"].get<int32_t>());
 	if (j.contains("postEffectHeight")) c.SetPostEffectHeight(j["postEffectHeight"].get<int32_t>());
+
+	// Offset & Pivot
+	if (j.contains("postEffectStartX")) c.SetPostEffectStartX(j["postEffectStartX"].get<int32_t>());
+	if (j.contains("postEffectStartY")) c.SetPostEffectStartY(j["postEffectStartY"].get<int32_t>());
+	if (j.contains("postEffectPivot")) c.SetPostEffectPivot(j["postEffectPivot"].get<int32_t>());
 }
 
 void ONEngine::to_json(nlohmann::json& j, const ScreenPostEffectTag& c) {
@@ -327,4 +379,9 @@ void ONEngine::to_json(nlohmann::json& j, const ScreenPostEffectTag& c) {
 	// Size limitation
 	j["postEffectWidth"] = c.GetPostEffectWidth();
 	j["postEffectHeight"] = c.GetPostEffectHeight();
+
+	// Offset & Pivot
+	j["postEffectStartX"] = c.GetPostEffectStartX();
+	j["postEffectStartY"] = c.GetPostEffectStartY();
+	j["postEffectPivot"] = c.GetPostEffectPivot();
 }

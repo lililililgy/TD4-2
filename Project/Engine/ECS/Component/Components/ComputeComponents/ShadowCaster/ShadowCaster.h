@@ -31,6 +31,8 @@ struct ShadowParameter {
 	float shadowBias;
 	float shadowDarkness;
 	int pcfRadius;
+	int32_t offsetX;
+	int32_t offsetY;
 };
 
 

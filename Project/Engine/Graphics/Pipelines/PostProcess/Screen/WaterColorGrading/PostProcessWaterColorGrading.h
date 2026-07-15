@@ -17,6 +17,9 @@ public:
 		float contrast;
 		float saturation;
 		Vector3 colorFilter;
+		int32_t offsetX;
+		int32_t offsetY;
+		int32_t padding[2]; // 16byte alignment
 	};
 
 	enum ROOT_PARAM {

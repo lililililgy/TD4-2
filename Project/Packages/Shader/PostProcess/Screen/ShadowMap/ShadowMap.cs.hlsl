@@ -10,7 +10,7 @@ struct ShadowApplyParameters {
     float shadowBias;         // バイアス（アクネ防止）
     float shadowDarkness;     // 影の濃さ (0〜1)
     int   pcfRadius;          // PCFサンプリング半径
-    float padding[3];         // アラインメント調整（16バイト境界）
+    int2  offset;             // オフセット
 };
 
 /// ===================================================
@@ -38,7 +38,7 @@ RWTexture2D<float4> outputTexture : register(u0);
 [numthreads(16, 16, 1)]
 void main(uint3 DTid : SV_DispatchThreadID)
 {
-    uint2 px = DTid.xy;
+    uint2 px = DTid.xy + shadowParams.offset;
 
     // 画面外チェック
     if (px.x >= (uint)shadowParams.screenSize.x || px.y >= (uint)shadowParams.screenSize.y) {

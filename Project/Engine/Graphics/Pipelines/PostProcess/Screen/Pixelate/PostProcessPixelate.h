@@ -39,7 +39,8 @@ private:
 	struct PixelateParams {
 		float pixelSizeX;
 		float pixelSizeY;
-		float padding[2]; // 16byte alignment
+		int32_t offsetX;
+		int32_t offsetY;
 	};
 
 	ConstantBuffer<PixelateParams> constantBuffer_;

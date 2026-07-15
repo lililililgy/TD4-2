@@ -57,10 +57,13 @@ void PostProcessPixelate::Execute(const std::string& textureName, DxCommand* dxC
 		return; // ピクセレートエフェクトが無効な場合は何もしない
 	}
 
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
 	// 定数バッファの更新
 	constantBuffer_.SetMappedData(PixelateParams{
 		.pixelSizeX = tag->GetPixelSizeX(),
-		.pixelSizeY = tag->GetPixelSizeY()
+		.pixelSizeY = tag->GetPixelSizeY(),
+		.offsetX = static_cast<int32_t>(offset.x),
+		.offsetY = static_cast<int32_t>(offset.y)
 	});
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);

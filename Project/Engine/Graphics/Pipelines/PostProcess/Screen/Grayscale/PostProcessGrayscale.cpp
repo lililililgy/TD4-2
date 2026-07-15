@@ -17,11 +17,14 @@ void PostProcessGrayscale::Initialize(ShaderCompiler* shaderCompiler, DxManager*
 		shader.Initialize(shaderCompiler);
 		shader.CompileShader(L"Packages/Shader/PostProcess/Screen/Grayscale/Grayscale.cs.hlsl", L"cs_6_6", Shader::Type::cs);
 
+		constantBuffer_.Create(dxm->GetDxDevice());
+
 		pipeline_ = std::make_unique<ComputePipeline>();
 		pipeline_->SetShader(&shader);
 
-		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV);
-		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV);
+		pipeline_->AddCBV(D3D12_SHADER_VISIBILITY_ALL, 0); // b0: GrayscaleParams
+		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // t0
+		pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); // u0
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
 		pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
 		pipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
@@ -54,6 +57,11 @@ void PostProcessGrayscale::Execute(const std::string& textureName, DxCommand* dx
 		return; // グレースケールエフェクトが無効な場合は何もしない
 	}
 
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	constantBuffer_.SetMappedData(GrayscaleParams{
+		.offsetX = static_cast<int32_t>(offset.x),
+		.offsetY = static_cast<int32_t>(offset.y)
+	});
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);
 
@@ -62,8 +70,9 @@ void PostProcessGrayscale::Execute(const std::string& textureName, DxCommand* dx
 	textureIndices_[0] = assetCollection->GetTextureIndex(textureName + "Scene");
 	textureIndices_[1] = assetCollection->GetTextureIndex("postProcessResult");
 
-	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
-	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[1]].GetUAVGPUHandle());
+	constantBuffer_.BindForComputeCommandList(command, 0);
+	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[0]].GetSRVGPUHandle());
+	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetUAVGPUHandle());
 
 	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	command->Dispatch(

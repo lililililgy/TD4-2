@@ -3,6 +3,7 @@ static const uint2 TextureSize = uint2(1920, 1080);
 struct FisheyeParams {
 	float strength;
 	float scale;
+	int2 offset;
 };
 ConstantBuffer<FisheyeParams> gFisheyeParams : register(b0);
 
@@ -13,8 +14,10 @@ SamplerState textureSampler : register(s0);
 
 [numthreads(16, 16, 1)]
 void main(uint3 dispatchThreadID : SV_DispatchThreadID) {
+	uint2 pixelPos = dispatchThreadID.xy + gFisheyeParams.offset;
+	
 	// スレッド座標を[0, 1]のUV座標に変換
-	float2 uv = float2(dispatchThreadID.xy) / float2(TextureSize.xy);
+	float2 uv = float2(pixelPos) / float2(TextureSize.xy);
 	
 	// 中心座標
 	float2 center = float2(0.5f, 0.5f);
@@ -45,5 +48,5 @@ void main(uint3 dispatchThreadID : SV_DispatchThreadID) {
 		outputColor = colorTexture.Sample(textureSampler, distortedUV);
 	}
 	
-	outputTexture[dispatchThreadID.xy] = outputColor;
+	outputTexture[pixelPos] = outputColor;
 }

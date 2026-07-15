@@ -60,6 +60,12 @@ void PostProcessFog::Execute(const std::string& textureName, DxCommand* dxComman
 		return;
 	}
 
+	CameraComponent::FogParams fogParams = mainCamera->GetFogParams();
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	fogParams.offsetX = static_cast<int32_t>(offset.x);
+	fogParams.offsetY = static_cast<int32_t>(offset.y);
+	mainCamera->GetFogParamsBuffer().SetMappedData(fogParams);
+
 	mainCamera->GetCameraPosBuffer().BindForComputeCommandList(cmdList, CBV_CAMERA_POS);
 	mainCamera->GetFogParamsBuffer().BindForComputeCommandList(cmdList, CBV_FOG_PARAMS);
 

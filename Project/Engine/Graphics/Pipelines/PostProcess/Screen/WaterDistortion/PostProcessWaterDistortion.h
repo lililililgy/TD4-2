@@ -16,6 +16,9 @@ public:
 		float speed;
 		float frequency;
 		float time;
+		int32_t offsetX;
+		int32_t offsetY;
+		int32_t padding[2]; // 16byte alignment
 	};
 
 	enum ROOT_PARAM {

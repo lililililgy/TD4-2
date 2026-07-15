@@ -40,7 +40,8 @@ private:
 	struct FisheyeParams {
 		float strength;
 		float scale;
-		float padding[2]; // 16byte alignment
+		int32_t offsetX;
+		int32_t offsetY;
 	};
 
 	ConstantBuffer<FisheyeParams> constantBuffer_;
