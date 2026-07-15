@@ -1,5 +1,6 @@
 #include "MeshRenderer.h"
 #include <nlohmann/json.hpp>
+#include "Engine/Script/MonoScriptEngine.h"
 
 /// std
 #include <format>
@@ -97,7 +98,7 @@ MonoString* ONEngine::InternalGetMeshName(uint64_t nativeHandle) {
 		return nullptr;
 	}
 
-	return mono_string_new(mono_domain_get(), renderer->GetMeshPath().c_str());
+	return mono_string_new(MonoScriptEngine::GetInstance().Domain(), renderer->GetMeshPath().c_str());
 }
 
 void ONEngine::InternalSetMeshName(uint64_t nativeHandle, MonoString* meshName) {

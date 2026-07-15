@@ -58,7 +58,15 @@ Meta<Material::MetaData> AssetLoader<Material>::GetMetaData(const std::string& f
 		return {};
 	}
 
-	ifs >> j;
+	try {
+		ifs >> j;
+		ifs.close();
+	} catch (const nlohmann::json::parse_error& e) {
+		Console::LogError("[Material Meta Error] JSON parse error in " + metaPath + ": " + e.what());
+		ifs.close();
+		return res;
+	}
+
 	Material::MetaData data;
 	data.useShader = j.value("useShader", std::string(""));
 	data.albedoColor = j.value("albedoColor", Vector4::One);

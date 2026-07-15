@@ -97,6 +97,7 @@
     <Compile Include="Scripts\Engine\Animation\AnimationPlayer.cs" />
     <Compile Include="Scripts\Engine\Animation\SpriteAnimation.cs" />
     <Compile Include="Scripts\Engine\Attribute\SerializeField.cs" />
+    <Compile Include="Scripts\Engine\Core\Font.cs" />
     <Compile Include="Scripts\Engine\Core\ObjectPool\ObjectPool.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\Application\Application.cs" />
     <Compile Include="Scripts\Engine\Core\Utility\File\FileSystem.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\MeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SkinMeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SpriteRenderer.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Renderer\TextRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Entity\Entity.cs" />
     <Compile Include="Scripts\Engine\ECS\EntityComponentSystem\ECSGroup.cs" />
     <Compile Include="Scripts\Engine\ECS\EntityComponentSystem\EntityComponentSystem.cs" />
@@ -250,10 +252,15 @@
     <Compile Include="Scripts\Test\ColliderTest1.cs" />
     <Compile Include="Scripts\Test\ColliderTest2.cs" />
     <Compile Include="Scripts\Test\EngineLaunchTest.cs" />
+    <Compile Include="Scripts\Test\HotReloadAssetAddTestScript.cs" />
+    <Compile Include="Scripts\Test\HotReloadTestScript.cs" />
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
     <Compile Include="Scripts\Test\SpriteRendererCrashTest.cs" />
     <Compile Include="Scripts\Test\TestSceneScript.cs" />
+    <Compile Include="Scripts\Test\TextRendererTestScript.cs" />
+  </ItemGroup>
+  <ItemGroup>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
