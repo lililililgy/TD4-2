@@ -145,25 +145,25 @@
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Game\Background\Cloud.cs" />
     <Compile Include="Scripts\Game\Background\CloudManager.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingAttack.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingBullet.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingAttackSettings.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageAttack.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageSettings.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBullet.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHandAttackCommand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoWeakPoint.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\IKingGesoAttack.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGeso.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingAttack.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingAttackSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoHomingBullet.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageAttack.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBullet.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoPincerThrustAttack.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoPincerThrustSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoState.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoWaveThrustAttack.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoWaveThrustSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishChargeDamageField.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishElectricField.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishLaser.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGeso\KingGeso.cs" />
-    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoState.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishWeakPoint.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfish.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishState.cs" />
@@ -178,6 +178,7 @@
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
+    <Compile Include="Scripts\Game\Controller\AddSceneScript.cs" />
     <Compile Include="Scripts\Game\Controller\GameSceneController.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
@@ -254,7 +255,8 @@
     <Compile Include="Scripts\Test\SpriteRendererCrashTest.cs" />
     <Compile Include="Scripts\Test\TestSceneScript.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
