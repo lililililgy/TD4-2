@@ -74,6 +74,8 @@ public:
 	void SetUVTransform(const UVTransform& uvTransform);
 	void SetPixelPerfect(bool enable);
 	void SetPostEffectFlags(uint32_t flags);
+	void SetBloomIntensity(float intensity);
+	void SetBloomThreshold(float threshold);
 
 	/// ----- getter ----- ///
 	const Vector4& GetColor() const;
@@ -87,6 +89,8 @@ public:
 	bool IsPixelPerfect() const;
 
 	uint32_t GetPostEffectFlags() const;
+	float GetBloomIntensity() const;
+	float GetBloomThreshold() const;
 
 	/// @brief アニメーション制御用マテリアルへの参照取得
 	Asset::Material& GetMaterialForAnimation() { return material_; }

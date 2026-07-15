@@ -71,8 +71,10 @@ struct SpriteBatch {
 	Vector2 textureSize;
 	uint32_t postEffectFlags;
 	UVTransform uvTransform;
+	float bloomIntensity;
+	float bloomThreshold;
 };
-static_assert(sizeof(SpriteBatch) == 64, "SpriteBatch size must be 64 bytes");
+static_assert(sizeof(SpriteBatch) == 72, "SpriteBatch size must be 72 bytes");
 
 struct TextBatch {
 	uint32_t compId;
@@ -170,6 +172,8 @@ void ONEngine::ComponentApplyFuncs::ApplySprite(void* element, ECSGroup* ecsGrou
 		sr->SetColor(data->color);
 		sr->SetPostEffectFlags(data->postEffectFlags);
 		sr->SetUVTransform(data->uvTransform);
+		sr->SetBloomIntensity(data->bloomIntensity);
+		sr->SetBloomThreshold(data->bloomThreshold);
 	}
 }
 
@@ -327,6 +331,8 @@ void ONEngine::ComponentApplyFuncs::FetchSprite(void* element, ECSGroup* ecsGrou
 		data->textureSize = sr->GetTextureSize(Asset::AssetCollection::GetInstance());
 		data->postEffectFlags = sr->GetPostEffectFlags();
 		data->uvTransform = sr->GetUVTransform();
+		data->bloomIntensity = sr->GetBloomIntensity();
+		data->bloomThreshold = sr->GetBloomThreshold();
 	}
 }
 

@@ -21,7 +21,7 @@ PSOutput main(VSOutput input) {
 	output.color = textureColor * material.baseColor;
 	output.worldPosition = input.worldPosition;
 	output.normal = float4(input.normal, 1.0f);
-	output.flags = float4(material.postEffectFlags, material.entityId, 0, 1);
+	output.flags = float4(material.postEffectFlags, material.entityId, material.bloomIntensity, material.bloomThreshold);
 
 	if (output.color.a == 0.0f) { ///< alpha == 0.0f ? pixel discard
 		discard;

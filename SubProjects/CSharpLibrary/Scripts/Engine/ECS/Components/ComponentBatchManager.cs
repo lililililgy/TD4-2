@@ -89,6 +89,8 @@ static class ComponentBatchManager {
 				batch[i].textureSize = batchData.textureSize;
 				batch[i].postEffectFlags = batchData.postEffectFlags;
 				batch[i].uvTransform = batchData.uvTransform;
+				batch[i].bloomIntensity = comp.bloomIntensity;
+				batch[i].bloomThreshold = comp.bloomThreshold;
 			}
 			return batch;
 		});
@@ -367,6 +369,8 @@ static class ComponentBatchManager {
 				var comp = spriteArray.Get(i);
 				comp.color = spriteBatch[i].color;
 				comp.uvTransform = spriteBatch[i].uvTransform;
+				comp.bloomIntensity = spriteBatch[i].bloomIntensity;
+				comp.bloomThreshold = spriteBatch[i].bloomThreshold;
 			}
 		} else if (componentType == typeof(BoxCollider2D)) {
 			var colliderArray = (ComponentArray<BoxCollider2D>)array;

@@ -13,6 +13,8 @@ struct Material {
     int        entityId;
     int        baseTextureId;
     int        normalTextureId;
+    float      bloomIntensity;
+    float      bloomThreshold;
 };
 
 struct ConstantUVTransform {

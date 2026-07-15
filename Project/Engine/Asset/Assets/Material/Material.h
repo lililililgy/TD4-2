@@ -98,6 +98,8 @@ public:
 	Vector4             baseColor;
 	uint32_t            postEffectFlags;
 	UVTransform         uvTransform;
+	float               bloomIntensity;
+	float               bloomThreshold;
 };
 
 

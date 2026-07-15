@@ -150,6 +150,17 @@ bool MaterialEdit(const std::string& label, ONEngine::Asset::Material* material,
 		if(ImGui::CheckboxFlags("Bloom", &material->postEffectFlags, PostEffectFlags_Bloom)) {
 			edit = true;
 		}
+
+		if (material->postEffectFlags & PostEffectFlags_Bloom) {
+			ImGui::Indent();
+			if (ImGui::DragFloat("Bloom Intensity", &material->bloomIntensity, 0.05f, 0.0f, 10.0f)) {
+				edit = true;
+			}
+			if (ImGui::DragFloat("Bloom Threshold", &material->bloomThreshold, 0.01f, 0.0f, 1.0f)) {
+				edit = true;
+			}
+			ImGui::Unindent();
+		}
 	}
 
 

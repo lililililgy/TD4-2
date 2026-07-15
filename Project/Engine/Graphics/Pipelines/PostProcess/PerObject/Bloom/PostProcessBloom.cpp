@@ -54,12 +54,14 @@ void PostProcessBloom::Initialize(ShaderCompiler* shaderCompiler, DxManager* dxm
 		compositePipeline_ = std::make_unique<ComputePipeline>();
 		compositePipeline_->SetShader(&shader);
 
-		compositePipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // original scene
-		compositePipeline_->AddDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // bloomBlur
-		compositePipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); // postProcessResult
+		compositePipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // original scene (t0)
+		compositePipeline_->AddDescriptorRange(1, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // bloomBlur (t1)
+		compositePipeline_->AddDescriptorRange(2, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV); // flagsTex (t2)
+		compositePipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_UAV); // postProcessResult (u0)
 		compositePipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);
 		compositePipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 1);
 		compositePipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 2);
+		compositePipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 3);
 		compositePipeline_->AddStaticSampler(D3D12_SHADER_VISIBILITY_ALL, 0);
 		compositePipeline_->CreatePipeline(dxm->GetDxDevice());
 	}
@@ -123,11 +125,12 @@ void PostProcessBloom::Execute(
 		dxCommand
 	);
 
-	// 3. 元의 カラーとブレンドして合成
+	// 3. 元のカラーとブレンドして合成
 	compositePipeline_->SetPipelineStateForCommandList(dxCommand);
 	command->SetComputeRootDescriptorTable(0, textures[textureIndices_[0]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(1, textures[textureIndices_[3]].GetSRVGPUHandle());
 	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[4]].GetUAVGPUHandle());
+	command->SetComputeRootDescriptorTable(3, textures[textureIndices_[1]].GetSRVGPUHandle());
 	command->Dispatch(dispatchX, dispatchY, 1);
 
 	// bloomBlur を UAV に戻す

@@ -1,4 +1,4 @@
-﻿#include "Mesh.hlsli"
+#include "Mesh.hlsli"
 
 #include "../../ConstantBufferData/Material.hlsli"
 
@@ -62,7 +62,7 @@ PSOutput main(VSOutput input) {
 
 	output.worldPosition = input.worldPosition;
 	output.normal = float4(input.normal, 1.0f);
-	output.flags = float4(material.postEffectFlags, material.entityId, 0, 1);
+	output.flags = float4(material.postEffectFlags, material.entityId, material.bloomIntensity, material.bloomThreshold);
 
 	if (output.color.a == 0.0f) {
 		discard;

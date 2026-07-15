@@ -77,6 +77,8 @@ void SpriteRenderer::RenderingSetup(Asset::AssetCollection* assetCollection) {
 
 	gpuMaterial_.baseColor = material_.baseColor;
 	gpuMaterial_.postEffectFlags = material_.postEffectFlags;
+	gpuMaterial_.bloomIntensity = material_.bloomIntensity;
+	gpuMaterial_.bloomThreshold = material_.bloomThreshold;
 	/// base texture
 	if (material_.HasBaseTexture()) {
 		int32_t textureIndex = assetCollection->GetTextureIndexFromGuid(material_.GetBaseTextureGuid());
@@ -111,6 +113,14 @@ void SpriteRenderer::SetPostEffectFlags(uint32_t flags) {
 	material_.postEffectFlags = flags;
 }
 
+void SpriteRenderer::SetBloomIntensity(float intensity) {
+	material_.bloomIntensity = intensity;
+}
+
+void SpriteRenderer::SetBloomThreshold(float threshold) {
+	material_.bloomThreshold = threshold;
+}
+
 const Vector4& SpriteRenderer::GetColor() const {
 	return gpuMaterial_.baseColor;
 }
@@ -129,6 +139,14 @@ bool SpriteRenderer::IsPixelPerfect() const {
 
 uint32_t SpriteRenderer::GetPostEffectFlags() const {
 	return material_.postEffectFlags;
+}
+
+float SpriteRenderer::GetBloomIntensity() const {
+	return material_.bloomIntensity;
+}
+
+float SpriteRenderer::GetBloomThreshold() const {
+	return material_.bloomThreshold;
 }
 
 Vector2 SpriteRenderer::GetTextureSize(Asset::AssetCollection* assetCollection) const {

@@ -7,13 +7,15 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 class SpriteRenderer : Component {
-	[StructLayout(LayoutKind.Explicit, Size = 64)]
+	[StructLayout(LayoutKind.Explicit, Size = 72)]
 	public struct BatchData {
 		[FieldOffset(0)] public uint compId;
 		[FieldOffset(4)] public Vector4 color;
 		[FieldOffset(20)] public Vector2 textureSize;
 		[FieldOffset(28)] public uint postEffectFlags;
 		[FieldOffset(32)] public UVTransform uvTransform;
+		[FieldOffset(64)] public float bloomIntensity;
+		[FieldOffset(68)] public float bloomThreshold;
 	}
 
 	BatchData batchData;
@@ -32,6 +34,8 @@ class SpriteRenderer : Component {
 		batchData.textureSize = batch[0].textureSize;
 		batchData.postEffectFlags = batch[0].postEffectFlags;
 		batchData.uvTransform = batch[0].uvTransform;
+		batchData.bloomIntensity = batch[0].bloomIntensity;
+		batchData.bloomThreshold = batch[0].bloomThreshold;
 	}
 
 	//public string meshPath {
@@ -77,6 +81,24 @@ class SpriteRenderer : Component {
 		}
 		set {
 			batchData.postEffectFlags = value;
+		}
+	}
+
+	public float bloomIntensity {
+		get {
+			return batchData.bloomIntensity;
+		}
+		set {
+			batchData.bloomIntensity = value;
+		}
+	}
+
+	public float bloomThreshold {
+		get {
+			return batchData.bloomThreshold;
+		}
+		set {
+			batchData.bloomThreshold = value;
 		}
 	}
 

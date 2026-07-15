@@ -37,6 +37,8 @@ struct GPUMaterial {
 	int32_t     entityId;        /// エンティティID
 	int32_t     baseTextureId;   /// ベーステクスチャID
 	int32_t     normalTextureId; /// 法線テクスチャID
+	float       bloomIntensity;  /// ブルームの強度
+	float       bloomThreshold;  /// ブルームのしきい値
 };
 
 

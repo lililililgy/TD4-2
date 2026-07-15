@@ -40,7 +40,7 @@ PSOutput main(VSOutput input) {
 	output.color = outputColor;
 	output.worldPosition = input.position;
 	output.normal = float4(0, 0, 1, 1);
-	output.flags = float4(material.postEffectFlags, material.entityId, 0, 1);
+	output.flags = float4(material.postEffectFlags, material.entityId, material.bloomIntensity, material.bloomThreshold);
 	
 	return output;
 }
