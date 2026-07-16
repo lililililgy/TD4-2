@@ -19,6 +19,9 @@ Material GenerateMaterial() {
 	material.guid = GenerateGuid();
 	material.baseColor = Vector4::White;
 	material.postEffectFlags = 1;
+	material.bloomIntensity = 1.0f;
+	material.bloomThreshold = 0.8f;
+	material.bloomRadius = 12.0f;
 
 	return material;
 }
@@ -55,6 +58,8 @@ void GenerateMaterialFile(const std::string& filepath, Material* material) {
 	ofs << "UVTransform_Position: " << mat.uvTransform.position.x << " " << mat.uvTransform.position.y << "\n";
 	ofs << "UVTransform_Scale: " << mat.uvTransform.scale.x << " " << mat.uvTransform.scale.y << "\n";
 	ofs << "UVTransform_Rotate: " << mat.uvTransform.rotate << "\n";
+	ofs << "BloomIntensity: " << mat.bloomIntensity << "\n";
+	ofs << "BloomThreshold: " << mat.bloomThreshold << "\n";
 
 	ofs.close();
 }
@@ -73,6 +78,9 @@ void from_json(const nlohmann::json& j, Material& material) {
 	material.baseColor = j.value("baseColor", Vector4::Red);
 	material.postEffectFlags = j.value("postEffectFlags", 1u);
 	material.uvTransform = j.value("uvTransform", UVTransform{});
+	material.bloomIntensity = j.value("bloomIntensity", 1.0f);
+	material.bloomThreshold = j.value("bloomThreshold", 0.8f);
+	material.bloomRadius = j.value("bloomRadius", 12.0f);
 
 	Guid baseTextureGuid = j.value("baseTextureGuid", Guid::kInvalid);
 	if(baseTextureGuid.CheckValid()) {
@@ -98,6 +106,9 @@ void to_json(nlohmann::json& j, const Material& material) {
 		{ "uvTransform", material.uvTransform },
 		{ "baseTextureGuid", material.baseTextureGuid_.has_value() ? material.baseTextureGuid_.value() : Guid::kInvalid },
 		{ "normalTextureGuid", material.normalTextureGuid_.has_value() ? material.normalTextureGuid_.value() : Guid::kInvalid },
+		{ "bloomIntensity", material.bloomIntensity },
+		{ "bloomThreshold", material.bloomThreshold },
+		{ "bloomRadius", material.bloomRadius }
 	};
 }
 
@@ -110,6 +121,9 @@ Material::Material() {
 	baseColor = Vector4::White;
 	postEffectFlags = 1;
 	uvTransform = UVTransform();
+	bloomIntensity = 1.0f;
+	bloomThreshold = 0.8f;
+	bloomRadius = 12.0f;
 };
 Material::~Material() = default;
 

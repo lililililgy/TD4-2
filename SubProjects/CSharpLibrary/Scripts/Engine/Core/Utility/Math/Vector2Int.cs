@@ -73,4 +73,14 @@ public struct Vector2Int {
 		return !(a == b);
 	}
 
+	public override bool Equals(object obj) {
+		if (!(obj is Vector2Int)) return false;
+		Vector2Int other = (Vector2Int)obj;
+		return x == other.x && y == other.y;
+	}
+
+	public override int GetHashCode() {
+		return x.GetHashCode() ^ y.GetHashCode();
+	}
+
 }

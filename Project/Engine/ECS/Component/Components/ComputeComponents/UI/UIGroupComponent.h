@@ -35,6 +35,7 @@ public:
 #pragma pack(push, 4)
 	struct BatchData {
 		uint32_t compId;
+		int32_t enable;
 		int32_t currentSelectedId;
 		uint8_t isFocused;
 		uint8_t isVisible;

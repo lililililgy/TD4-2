@@ -13,6 +13,7 @@ public class AgentIntentComponent : Component {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BatchData {
         public uint compId;
+        public int enable;
         public Vector3 desiredMoveDirection;
         public Quaternion desiredRotation;
         public float rotationSpeed;
@@ -62,6 +63,7 @@ public class AgentIntentComponent : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(AgentIntentComponent), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
 		this.desiredMoveDirection = batch[0].desiredMoveDirection;
 		this.desiredRotation = batch[0].desiredRotation;
 		this.rotationSpeed = batch[0].rotationSpeed;

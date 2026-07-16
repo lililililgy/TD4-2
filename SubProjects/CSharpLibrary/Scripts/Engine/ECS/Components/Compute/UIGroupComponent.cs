@@ -5,6 +5,7 @@ public class UIGroupComponent : Component {
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
+		public int enable;
 		public int currentSelectedId;
 		public byte isFocused;
 		public byte isVisible;
@@ -48,6 +49,7 @@ public class UIGroupComponent : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(UIGroupComponent), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
 		this.currentSelectedId = batch[0].currentSelectedId;
 		this.isFocused_ = batch[0].isFocused != 0;
 		this.isVisible_ = batch[0].isVisible != 0;

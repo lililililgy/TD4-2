@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 public class EnemyHeatMap
     : MonoScript {
 
-    [SerializeField] private Vector2 cellSize_;
+    [SerializeField] private Vector2 cellSize_ = default;
 
     // 2D グリッドのヒートマップ。各セルは敵の出現回数をカウントする。
     private Dictionary<int, int> heatMap_;

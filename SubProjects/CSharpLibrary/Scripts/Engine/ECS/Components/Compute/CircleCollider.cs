@@ -3,47 +3,54 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 public class CircleCollider : Component {
-    public float radius {
-        get { return InternalGetRadius(nativeHandle); }
-        set { InternalSetRadius(nativeHandle, value); }
-    }
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
+	public struct BatchData {
+		public uint compId;
+		public int enable;
+		public float radius;
+		public int isTrigger;
+		public float mass;
+		public int useOwnerScale;
+	}
 
-    public bool isTrigger {
-        get { return InternalIsTriggerCircle(nativeHandle); }
-        set { InternalSetTriggerCircle(nativeHandle, value); }
-    }
+	private BatchData batchData;
 
-    public float mass {
-        get { return InternalGetMassCircle(nativeHandle); }
-        set { InternalSetMassCircle(nativeHandle, value); }
-    }
+	public BatchData GetBatchData() {
+		return batchData;
+	}
 
-    public bool useOwnerScale {
-        get { return InternalIsUseOwnerScaleCircle(nativeHandle); }
-        set { InternalSetUseOwnerScaleCircle(nativeHandle, value); }
-    }
+	public float radius {
+		get { return batchData.radius; }
+		set { batchData.radius = value; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern float InternalGetMassCircle(ulong nativeHandle);
+	public bool isTrigger {
+		get { return batchData.isTrigger != 0; }
+		set { batchData.isTrigger = value ? 1 : 0; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetMassCircle(ulong nativeHandle, float mass);
+	public float mass {
+		get { return batchData.mass; }
+		set { batchData.mass = value; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern float InternalGetRadius(ulong nativeHandle);
+	public bool useOwnerScale {
+		get { return batchData.useOwnerScale != 0; }
+		set { batchData.useOwnerScale = value ? 1 : 0; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetRadius(ulong nativeHandle, float radius);
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern bool InternalIsTriggerCircle(ulong nativeHandle);
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(CircleCollider), batch, 1, ecsGroupName);
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetTriggerCircle(ulong nativeHandle, bool trigger);
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern bool InternalIsUseOwnerScaleCircle(ulong nativeHandle);
-
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetUseOwnerScaleCircle(ulong nativeHandle, bool use);
+		this.enable = batch[0].enable;
+		batchData.enable = batch[0].enable;
+		batchData.radius = batch[0].radius;
+		batchData.isTrigger = batch[0].isTrigger;
+		batchData.mass = batch[0].mass;
+		batchData.useOwnerScale = batch[0].useOwnerScale;
+	}
 }

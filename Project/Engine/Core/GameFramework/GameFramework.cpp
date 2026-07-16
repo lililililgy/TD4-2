@@ -3,6 +3,25 @@
 #include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
 #include "Engine/Core/Utility/Tools/Assert.h"
 
+#include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Agent/AgentIntentComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Mesh/DissolveMeshRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Sprite/SpriteRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/BGMPlayer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/SEPlayer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Animation/AnimationPlayer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/SkinMesh/SkinMeshRenderer.h"
+
 using namespace ONEngine;
 
 /// std
@@ -256,6 +275,43 @@ void GameFramework::Update() {
 						ONEngine::Assert(offsetCenter.y == 100.0f, "GetDispatchStartOffset.y should be 100 in Center mode");
 					}
 				}
+			}
+		}
+
+		if (EngineConfig::testScene == "ComponentEnableTest" && testFrameCount == 60) {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ComponentEnableTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ComponentEnableTest' should not be null");
+			if (ecsGroup) {
+				#define ASSERT_COMP_DISABLED(CompType) \
+				{ \
+					auto* array = ecsGroup->GetComponentArray<CompType>(); \
+					ONEngine::Assert(array != nullptr, #CompType " array should exist"); \
+					if (array && !array->GetUsedComponents().empty()) { \
+						auto* comp = array->GetUsedComponents().front(); \
+						ONEngine::Assert(comp != nullptr, #CompType " component should exist"); \
+						ONEngine::Assert(comp->enable == 0, #CompType " should be disabled by C# script"); \
+					} \
+				}
+
+				ASSERT_COMP_DISABLED(Transform);
+				ASSERT_COMP_DISABLED(MeshRenderer);
+				ASSERT_COMP_DISABLED(DissolveMeshRenderer);
+				ASSERT_COMP_DISABLED(SpriteRenderer);
+				ASSERT_COMP_DISABLED(TextRenderer);
+				ASSERT_COMP_DISABLED(BoxCollider2D);
+				ASSERT_COMP_DISABLED(CameraComponent);
+				ASSERT_COMP_DISABLED(AgentIntentComponent);
+				ASSERT_COMP_DISABLED(UIGroupComponent);
+				ASSERT_COMP_DISABLED(UIElementComponent);
+				ASSERT_COMP_DISABLED(BGMPlayer);
+				ASSERT_COMP_DISABLED(SEPlayer);
+				ASSERT_COMP_DISABLED(BoxCollider);
+				ASSERT_COMP_DISABLED(CircleCollider);
+				ASSERT_COMP_DISABLED(SphereCollider);
+				ASSERT_COMP_DISABLED(AnimationPlayer);
+				ASSERT_COMP_DISABLED(SkinMeshRenderer);
+
+				#undef ASSERT_COMP_DISABLED
 			}
 		}
 

@@ -1,11 +1,23 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 public class SkinMeshRenderer : Component {
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
+	public struct BatchData {
+		public uint compId;
+		public int enable;
+		public int isPlaying;
+		public float animationTime;
+		public float animationScale;
+	}
+
+	private BatchData batchData;
+
+	public BatchData GetBatchData() {
+		return batchData;
+	}
 
 	public string meshPath {
 		get {
@@ -27,32 +39,30 @@ public class SkinMeshRenderer : Component {
 
 	public bool isPlaying {
 		get {
-			return InternalGetIsPlaying(nativeHandle);
+			return batchData.isPlaying != 0;
 		}
 		set {
-			InternalSetIsPlaying(nativeHandle, value);
+			batchData.isPlaying = value ? 1 : 0;
 		}
 	}
 
-
 	public float animationTime {
 		get {
-			return InternalGetAnimationTime(nativeHandle);
+			return batchData.animationTime;
 		}
 		set {
-			InternalSetAnimationTime(nativeHandle, value);
+			batchData.animationTime = value;
 		}
 	}
 
 	public float animationScale {
 		get {
-			return InternalGetAnimationScale(nativeHandle);
+			return batchData.animationScale;
 		}
 		set {
-			InternalSetAnimationScale(nativeHandle, value);
+			batchData.animationScale = value;
 		}
 	}
-
 
 	public TransformData GetJointTransform(string jointName) {
 		Vector3 scale;
@@ -80,27 +90,21 @@ public class SkinMeshRenderer : Component {
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalSetTexturePath(ulong nativeHandle, string texturePath);
 
-	/// IsPlayingのAccessor
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern bool InternalGetIsPlaying(ulong nativeHandle);
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetIsPlaying(ulong nativeHandle, bool isPlaying);
-
-	/// AnimationTimeのAccessor
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern float InternalGetAnimationTime(ulong nativeHandle);
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetAnimationTime(ulong nativeHandle, float animationTime);
-
-	/// AnimationScaleのAccessor
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern float InternalGetAnimationScale(ulong nativeHandle);
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static extern void InternalSetAnimationScale(ulong nativeHandle, float animationScale);
-
 	/// JointTransformを取得
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalGetJointTransform(ulong nativeHandle, string jointName, out Vector3 s, out Quaternion q, out Vector3 t);
 
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
 
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(SkinMeshRenderer), batch, 1, ecsGroupName);
+
+		this.enable = batch[0].enable;
+		batchData.enable = batch[0].enable;
+		batchData.isPlaying = batch[0].isPlaying;
+		batchData.animationTime = batch[0].animationTime;
+		batchData.animationScale = batch[0].animationScale;
+	}
 }

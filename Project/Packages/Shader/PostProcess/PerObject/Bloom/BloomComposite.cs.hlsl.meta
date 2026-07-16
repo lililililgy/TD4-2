@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "81985104c62289874e709805ee1b6167",
+    "name": "BloomComposite.cs",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}

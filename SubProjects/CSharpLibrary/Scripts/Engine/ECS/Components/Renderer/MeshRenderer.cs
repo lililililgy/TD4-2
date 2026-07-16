@@ -7,9 +7,10 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 class MeshRenderer : Component {
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
+		public int enable;
 		public Vector4 color;
 		public uint postEffectFlags;
 		public UVTransform uvTransform;
@@ -27,6 +28,8 @@ class MeshRenderer : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(MeshRenderer), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
+		batchData.enable = batch[0].enable;
 		batchData.color = batch[0].color;
 		batchData.postEffectFlags = batch[0].postEffectFlags;
 		batchData.uvTransform = batch[0].uvTransform;

@@ -18,7 +18,7 @@
 
 using namespace ONEngine;
 
-void ComponentDebug::TextDebug(TextRenderer* tr, Asset::AssetCollection* assetCollection) {
+void ComponentDebug::TextDebug(TextRenderer* tr, [[maybe_unused]] Asset::AssetCollection* assetCollection) {
 	if (!tr) return;
 
 	float indentValue = 1.8f;
@@ -26,13 +26,13 @@ void ComponentDebug::TextDebug(TextRenderer* tr, Asset::AssetCollection* assetCo
 
 	// 簡単なデバッグUI (複数行テキスト入力)
 	char textBuf[1024];
-	strncpy(textBuf, tr->GetText().c_str(), sizeof(textBuf));
+	strncpy_s(textBuf, sizeof(textBuf), tr->GetText().c_str(), _TRUNCATE);
 	if (ImGui::InputTextMultiline("Text", textBuf, sizeof(textBuf), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 10.0f))) {
 		tr->SetText(textBuf);
 	}
 
 	char fontPathBuf[256];
-	strncpy(fontPathBuf, tr->fontPath_.c_str(), sizeof(fontPathBuf));
+	strncpy_s(fontPathBuf, sizeof(fontPathBuf), tr->fontPath_.c_str(), _TRUNCATE);
 	if (ImGui::InputText("Font Path", fontPathBuf, sizeof(fontPathBuf))) {
 		tr->SetFontPath(fontPathBuf);
 	}

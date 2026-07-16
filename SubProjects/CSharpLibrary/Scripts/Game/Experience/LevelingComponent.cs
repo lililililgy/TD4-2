@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 public class LevelingComponent : MonoScript {
-    [SerializeField] private int maxLevel_;
+    [SerializeField] private int maxLevel_ = 0;
     [SerializeField] private float baseRequiredExp_ = 100f;
 
     [SerializeField] private int currentLevel_;

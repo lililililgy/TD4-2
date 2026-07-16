@@ -18,6 +18,7 @@ class TextRenderer : Component {
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
+		public int enable;
 		public Vector4 color;
 		public Vector2 textureSize;
 		public UVTransform uvTransform;
@@ -44,6 +45,8 @@ class TextRenderer : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(TextRenderer), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
+		batchData.enable = batch[0].enable;
 		batchData.color = batch[0].color;
 		batchData.textureSize = batch[0].textureSize;
 		batchData.uvTransform = batch[0].uvTransform;

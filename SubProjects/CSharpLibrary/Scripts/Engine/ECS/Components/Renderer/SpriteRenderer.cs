@@ -7,12 +7,17 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 class SpriteRenderer : Component {
-	[StructLayout(LayoutKind.Sequential, Pack = 4)]
+	[StructLayout(LayoutKind.Explicit, Size = 80)]
 	public struct BatchData {
-		public uint compId;
-		public Vector4 color;
-		public Vector2 textureSize;
-		public UVTransform uvTransform;
+		[FieldOffset(0)] public uint compId;
+		[FieldOffset(4)] public int enable;
+		[FieldOffset(8)] public Vector4 color;
+		[FieldOffset(24)] public Vector2 textureSize;
+		[FieldOffset(32)] public uint postEffectFlags;
+		[FieldOffset(36)] public UVTransform uvTransform;
+		[FieldOffset(68)] public float bloomIntensity;
+		[FieldOffset(72)] public float bloomThreshold;
+		[FieldOffset(76)] public float bloomRadius;
 	}
 
 	BatchData batchData;
@@ -27,9 +32,15 @@ class SpriteRenderer : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(SpriteRenderer), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
+		batchData.enable = batch[0].enable;
 		batchData.color = batch[0].color;
 		batchData.textureSize = batch[0].textureSize;
+		batchData.postEffectFlags = batch[0].postEffectFlags;
 		batchData.uvTransform = batch[0].uvTransform;
+		batchData.bloomIntensity = batch[0].bloomIntensity;
+		batchData.bloomThreshold = batch[0].bloomThreshold;
+		batchData.bloomRadius = batch[0].bloomRadius;
 	}
 
 	//public string meshPath {
@@ -66,6 +77,42 @@ class SpriteRenderer : Component {
 	public Vector2 textureSize {
 		get {
 			return batchData.textureSize;
+		}
+	}
+
+	public uint postEffectFlags {
+		get {
+			return batchData.postEffectFlags;
+		}
+		set {
+			batchData.postEffectFlags = value;
+		}
+	}
+
+	public float bloomIntensity {
+		get {
+			return batchData.bloomIntensity;
+		}
+		set {
+			batchData.bloomIntensity = value;
+		}
+	}
+
+	public float bloomThreshold {
+		get {
+			return batchData.bloomThreshold;
+		}
+		set {
+			batchData.bloomThreshold = value;
+		}
+	}
+
+	public float bloomRadius {
+		get {
+			return batchData.bloomRadius;
+		}
+		set {
+			batchData.bloomRadius = value;
 		}
 	}
 

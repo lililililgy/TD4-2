@@ -1,0 +1,9 @@
+{
+    "entities": [
+        {
+            "guid": "e0000000000000000000000000000001",
+            "parentGuid": null,
+            "path": "./ComponentEnableTest/test_entity.entity"
+        }
+    ]
+}

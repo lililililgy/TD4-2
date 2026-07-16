@@ -75,7 +75,6 @@ bool FontRasterizer::GenerateTexture(
 			assetCollection->AddAsset<Asset::Texture>(texturePath, std::move(newTex));
 			return true;
 		}
-		return false;
 	}
 
 	auto* assetCollection = Asset::AssetCollection::GetInstance();

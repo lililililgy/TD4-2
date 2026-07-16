@@ -1,0 +1,9 @@
+{
+    "entities": [
+        {
+            "guid": "4b652048d773b38c33ed531ab1d043e6",
+            "parentGuid": null,
+            "path": "./RadialBlurTest/verify_entity.entity"
+        }
+    ]
+}

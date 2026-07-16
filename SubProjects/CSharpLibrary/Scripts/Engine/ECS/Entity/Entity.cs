@@ -19,7 +19,6 @@ public class Entity {
 
 	// id
 	private int entityId_;
-	private int parentId_ = 0; // 親のID
 
 	// ecs group name
 	private string ecsGroupName_;
