@@ -5,14 +5,14 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 2.0,
+                "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
-                "y": 0.0,
+                "y": -0.0,
                 "z": 0.0
             },
             "scale": {
@@ -27,15 +27,15 @@
         },
         {
             "enable": 1,
-            "isPixelPerfect": true,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
-                    "x": 0.09803921729326248,
-                    "y": 0.09803921729326248,
-                    "z": 0.09803921729326248
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
                 },
-                "baseTextureGuid": "14196fa931d9b8c11196cdd7eca20cf6",
+                "baseTextureGuid": "960ec2345ab1ab75a1c74ef79b962c75",
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,8 +54,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "acd5f209ab1294a77d4a9d5bc8d9ebc7",
-    "name": "BlackBelt_1",
-    "parentGuid": "c65190a696bc1499bbbfcdebd297d694",
+    "guid": "542426a93ed505008674d09e092af50f",
+    "name": "Button",
+    "parentGuid": "1e15fb18d941c7ce701997e07f26da8a",
     "prefabName": ""
 }

@@ -1,0 +1,33 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 64.0,
+                "y": 64.0,
+                "z": 64.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        }
+    ],
+    "guid": "6243b2904542ef7aefdaf831b544c314",
+    "name": "RightUIRoot",
+    "parentGuid": null,
+    "prefabName": ""
+}

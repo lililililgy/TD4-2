@@ -1,0 +1,33 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 12.0,
+                "y": 3.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        }
+    ],
+    "guid": "e4b5ac52c23b60a5fc4185dec3724c8d",
+    "name": "ShootUI",
+    "parentGuid": "6243b2904542ef7aefdaf831b544c314",
+    "prefabName": ""
+}
