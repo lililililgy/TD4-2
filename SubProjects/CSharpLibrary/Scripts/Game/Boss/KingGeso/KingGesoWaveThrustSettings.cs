@@ -1,6 +1,7 @@
 public class KingGesoWaveThrustSettings : MonoScript
 {
     [SerializeField] public float selectionWeight = 0.5f;
+    [SerializeField] public float tellDuration = 0.8f;
     [SerializeField] public float attackDuration = 3.0f;
     [SerializeField] public float damage = 1.0f;
     [SerializeField] public float rotationSpeed = 8.0f;

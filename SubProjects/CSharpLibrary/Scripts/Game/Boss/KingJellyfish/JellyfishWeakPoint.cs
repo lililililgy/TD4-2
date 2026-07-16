@@ -30,6 +30,18 @@ public class JellyfishWeakPoint : MonoScript
     }
 
     //=============================
+    // 弱点の衝突判定を切り替える
+    //=============================
+    public void SetCollisionEnabled(bool enabled)
+    {
+        BoxCollider2D collider = entity.GetComponent<BoxCollider2D>();
+        if (collider != null)
+        {
+            collider.enable = enabled ? 1 : 0;
+        }
+    }
+
+    //=============================
     // ダメージを与える
     //=============================
     public void Damage(int damage)

@@ -61,14 +61,11 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
 
         if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack)
         {
-            // 体当たり攻撃の準備
             owner.UpdateChargeTell();
         }
-        else if (attackType == KingJellyfishAttackTypeEnum.Omnidirectional_Beam ||
-                 attackType == KingJellyfishAttackTypeEnum.RotatingBeam)
+        else
         {
-            // ビーム攻撃の準備
-            owner.UpdateLaserTell();
+            owner.UpdateLaserTell(attackType);
         }
     }
 
@@ -101,7 +98,11 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
 
     public void Exit(KingJellyfish owner)
     {
-
+        owner.EnsureSpriteOpaque();
+        if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack)
+        {
+            owner.SetWeakPointCollisionEnabled(true);
+        }
     }
 
     private void UpdateChargeAttack(KingJellyfish owner)
@@ -119,6 +120,7 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         {
             if (!chargeStarted)
             {
+                // 体当たり攻撃の開始
                 chargeStarted = owner.BeginChargeAttack();
                 if (!chargeStarted)
                 {
@@ -128,12 +130,18 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
             }
 
             chargeRecovered = owner.UpdateChargeAttack();
+            if (chargeRecovered)
+            {
+                owner.SetWeakPointCollisionEnabled(true);
+            }
             return;
         }
 
         chargeRecovered = true;
+        owner.SetWeakPointCollisionEnabled(true);
         if (chargeStarted)
         {
+            // ダメージフィールドの展開
             owner.DeployChargeDamageField();
         }
 
@@ -165,7 +173,7 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         // ビーム攻撃の準備中
         if (elapsed < tellEndTime)
         {
-            owner.UpdateLaserTell();
+            owner.UpdateLaserTell(KingJellyfishAttackTypeEnum.Omnidirectional_Beam);
             return;
         }
 
@@ -193,6 +201,11 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
 
     private void UpdateElectricField(KingJellyfish owner)
     {
+        if (elapsed < owner.ElectricFieldTellDuration)
+        {
+            owner.UpdateLaserTell(KingJellyfishAttackTypeEnum.ElectricField);
+        }
+
         if (!laserFired)
         {
             owner.DeployElectricFields();
@@ -222,7 +235,7 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
 
         if (elapsed < tellEndTime)
         {
-            owner.UpdateLaserTell();
+            owner.UpdateLaserTell(KingJellyfishAttackTypeEnum.RotatingBeam);
             return;
         }
 

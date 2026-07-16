@@ -48,6 +48,8 @@ public class KingGeso : MonoScript
     private readonly List<Entity> inkBulletPool_ = new List<Entity>();
     private readonly List<Entity> availableInkBullets_ = new List<Entity>();
     private readonly HashSet<Entity> activeInkBullets_ = new HashSet<Entity>();
+    private Vector4 attackTellOriginalColor_;
+    private bool attackTellActive_;
 
 
     //=============================================================
@@ -170,6 +172,90 @@ public class KingGeso : MonoScript
 
     internal float PincerAttackDuration => Positive(pincerSettings_.attackDuration);
 
+    internal float GetAttackTellDuration(KingGesoAttackType attackType)
+    {
+        if (attackType == KingGesoAttackType.PincerThrust)
+        {
+            return NonNegative(pincerSettings_.tellDuration);
+        }
+        if (attackType == KingGesoAttackType.InkBarrage)
+        {
+            return NonNegative(inkSettings_.tellDuration);
+        }
+        if (attackType == KingGesoAttackType.HomingBullet)
+        {
+            return NonNegative(homingSettings_.tellDuration);
+        }
+        return NonNegative(waveSettings_.tellDuration);
+    }
+
+    internal void BeginAttackTell()
+    {
+        SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+        if (renderer == null)
+        {
+            return;
+        }
+
+        attackTellOriginalColor_ = renderer.color;
+        attackTellActive_ = true;
+    }
+
+    internal void UpdateAttackTell(KingGesoAttackType attackType)
+    {
+        if (!attackTellActive_)
+        {
+            return;
+        }
+
+        SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+        if (renderer == null)
+        {
+            return;
+        }
+
+        Vector4 tellColor = GetAttackTellColor(attackType);
+        float pulse = (Mathf.Sin(Time.time * Mathf.PI * 6.0f) + 1.0f) * 0.5f;
+        float blend = 0.25f + pulse * 0.55f;
+        renderer.color = new Vector4(
+            attackTellOriginalColor_.x + (tellColor.x - attackTellOriginalColor_.x) * blend,
+            attackTellOriginalColor_.y + (tellColor.y - attackTellOriginalColor_.y) * blend,
+            attackTellOriginalColor_.z + (tellColor.z - attackTellOriginalColor_.z) * blend,
+            attackTellOriginalColor_.w);
+    }
+
+    internal void EndAttackTell()
+    {
+        if (!attackTellActive_)
+        {
+            return;
+        }
+
+        SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            renderer.color = attackTellOriginalColor_;
+        }
+        attackTellActive_ = false;
+    }
+
+    private static Vector4 GetAttackTellColor(KingGesoAttackType attackType)
+    {
+        if (attackType == KingGesoAttackType.PincerThrust)
+        {
+            return new Vector4(1.0f, 0.25f, 0.25f, 1.0f);
+        }
+        if (attackType == KingGesoAttackType.InkBarrage)
+        {
+            return new Vector4(0.55f, 0.2f, 1.0f, 1.0f);
+        }
+        if (attackType == KingGesoAttackType.HomingBullet)
+        {
+            return new Vector4(0.2f, 0.85f, 1.0f, 1.0f);
+        }
+        return new Vector4(1.0f, 0.75f, 0.15f, 1.0f);
+    }
+
     internal int HomingProjectileCount => homingSettings_.projectileCount > 0 ? homingSettings_.projectileCount : 1;
     internal float HomingProjectileInterval => Positive(homingSettings_.launchInterval);
 
@@ -280,32 +366,69 @@ public class KingGeso : MonoScript
         Vector2 center = GetScreenCenter();
         Vector2 target = GetTargetPosition();
         Vector2 targetOffset = target - center;
-        float halfWidth = screenHalfWidth > 0.0f ? screenHalfWidth : 0.01f;
-        float halfHeight = screenHalfHeight > 0.0f ? screenHalfHeight : 0.01f;
+        float halfWidth = (screenHalfWidth > 0.0f ? screenHalfWidth : 0.01f) + NonNegative(screenEdgeMargin);
+        float halfHeight = (screenHalfHeight > 0.0f ? screenHalfHeight : 0.01f) + NonNegative(screenEdgeMargin);
 
-        Entity first;
-        Entity second;
-        if (RandomUtil.NextFloat() < 0.5f)
-        {
-            float y = Mathf.Clamp(targetOffset.y, -halfHeight, halfHeight);
-            first = SpawnGesoAtPosition(center + new Vector2(-halfWidth - screenEdgeMargin, y));
-            second = SpawnGesoAtPosition(center + new Vector2(halfWidth + screenEdgeMargin, y));
-        }
-        else
-        {
-            float x = Mathf.Clamp(targetOffset.x, -halfWidth, halfWidth);
-            first = SpawnGesoAtPosition(center + new Vector2(x, -halfHeight - screenEdgeMargin));
-            second = SpawnGesoAtPosition(center + new Vector2(x, halfHeight + screenEdgeMargin));
-        }
+        // プレイヤーを通る2種類の対角線から選び、その両端と画面境界の交点へ配置する。
+        float diagonalY = RandomUtil.NextFloat() < 0.5f ? halfHeight : -halfHeight;
+        Vector2 direction = new Vector2(halfWidth, diagonalY).Normalized();
+        Vector2 oppositeDirection = new Vector2(-direction.x, -direction.y);
+        Vector2 firstOffset = FindScreenEdgeIntersection(targetOffset, direction, halfWidth, halfHeight);
+        Vector2 secondOffset = FindScreenEdgeIntersection(targetOffset, oppositeDirection, halfWidth, halfHeight);
+
+        Entity first = SpawnGesoAtPosition(center + firstOffset);
+        Entity second = SpawnGesoAtPosition(center + secondOffset);
 
         if (first == null || second == null)
         {
+            DestroyActiveGeso(first);
+            DestroyActiveGeso(second);
             return false;
         }
 
         spawnedGesos.Add(first);
         spawnedGesos.Add(second);
         return true;
+    }
+
+    //=============================================================
+    // 指定方向の直線と画面境界の交点を取得
+    //=============================================================
+    private static Vector2 FindScreenEdgeIntersection(
+        Vector2 origin,
+        Vector2 direction,
+        float halfWidth,
+        float halfHeight)
+    {
+        float distanceToVerticalEdge = float.MaxValue;
+        if (direction.x > 0.0001f)
+        {
+            distanceToVerticalEdge = (halfWidth - origin.x) / direction.x;
+        }
+        else if (direction.x < -0.0001f)
+        {
+            distanceToVerticalEdge = (-halfWidth - origin.x) / direction.x;
+        }
+
+        float distanceToHorizontalEdge = float.MaxValue;
+        if (direction.y > 0.0001f)
+        {
+            distanceToHorizontalEdge = (halfHeight - origin.y) / direction.y;
+        }
+        else if (direction.y < -0.0001f)
+        {
+            distanceToHorizontalEdge = (-halfHeight - origin.y) / direction.y;
+        }
+
+        float distance = distanceToVerticalEdge < distanceToHorizontalEdge
+            ? distanceToVerticalEdge
+            : distanceToHorizontalEdge;
+        if (distance < 0.0f || distance == float.MaxValue)
+        {
+            return origin;
+        }
+
+        return origin + direction * distance;
     }
 
     //=============================================================
@@ -403,7 +526,7 @@ public class KingGeso : MonoScript
             homingSettings_.spawnOffset.x,
             homingSettings_.spawnOffset.y,
             0.0f);
-        projectile.transform.position = transform.worldPosition + offset;
+        projectile.transform.position = transform.position + offset;
         return projectile;
     }
 
@@ -582,10 +705,10 @@ public class KingGeso : MonoScript
     //=============================================================
     private Vector2 GetScreenCenter()
     {
-        Vector3 center = transform.worldPosition;
+        Vector3 center = transform.position;
         if (cameraEntity_ != null && cameraEntity_.transform != null)
         {
-            center = cameraEntity_.transform.worldPosition;
+            center = cameraEntity_.transform.position;
         }
         return new Vector2(center.x, center.y);
     }
@@ -597,7 +720,7 @@ public class KingGeso : MonoScript
     {
         if (targetEntity_ != null && targetEntity_.transform != null)
         {
-            Vector3 targetPosition = targetEntity_.transform.worldPosition;
+            Vector3 targetPosition = targetEntity_.transform.position;
             return new Vector2(targetPosition.x, targetPosition.y);
         }
 

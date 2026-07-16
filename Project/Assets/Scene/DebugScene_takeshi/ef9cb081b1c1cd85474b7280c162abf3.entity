@@ -1,13 +1,13 @@
 {
-    "active": true,
+    "active": false,
     "components": [
         {
-            "KingGesoWaveThrustSettings": {
-                "attackDuration": 13.0,
-                "gesoLifeTime": 5.0,
-                "moveDuration": 10.0
+            "material": {
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
             },
-            "type": "Variables"
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "ef9cb081b1c1cd85474b7280c162abf3",

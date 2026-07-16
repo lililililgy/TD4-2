@@ -17,6 +17,14 @@
                 "maxBendRad_": 3.1415927410125732
             },
             "type": "Variables"
+        },
+        {
+            "material": {
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "8ef96d013013f25139e7cdb116d191da",

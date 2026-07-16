@@ -159,6 +159,7 @@
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageAttack.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBarrageSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoInkBullet.cs" />
+    <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoMove.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoPincerThrustAttack.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoPincerThrustSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoState.cs" />
@@ -168,6 +169,11 @@
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishElectricField.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishLaser.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishWeakPoint.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishChargeAttackSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishElectricFieldSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishMoveSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishOmnidirectionalBeamSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishRotatingBeamSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfish.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishState.cs" />
     <Compile Include="Scripts\Game\Bullet.cs" />
@@ -278,6 +284,7 @@
     <Compile Include="Scripts\Test\TextRendererTestScript.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Scripts\Game\Boss\KingHermitClub\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

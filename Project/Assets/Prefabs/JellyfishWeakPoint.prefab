@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 0.30000001192092896,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 130.79998779296875,
-                "y": 130.7998046875,
-                "z": 130.7998046875
+                "x": 0.9000000953674316,
+                "y": 0.49999815225601196,
+                "z": 0.9999982118606567
             },
             "type": "Transform"
         },
@@ -37,17 +37,17 @@
             "type": "Script"
         },
         {
-            "categoryBits": 1,
+            "categoryBits": 8,
             "enable": 1,
             "freezeY": false,
             "isTrigger": true,
             "maskBits": 2,
             "mass": 1.0,
             "size": {
-                "x": 1.0,
-                "y": 1.0
+                "x": 0.8999999761581421,
+                "y": 0.9999991059303284
             },
-            "state": "Static",
+            "state": "Dynamic",
             "type": "BoxCollider2D",
             "useOwnerScale": true
         }

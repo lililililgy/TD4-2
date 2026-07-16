@@ -25,6 +25,7 @@ public class LevelingComponent : MonoScript {
         currentExp_ = 0f;
         addedExp_ = 0f;
         totalGainedExp_ = 0f;
+        pendingDestroyIds_.Clear();
         requiredExp_ = CalculateRequiredExp(currentLevel_);
     }
     public override void Update() {
@@ -73,7 +74,18 @@ public class LevelingComponent : MonoScript {
     }
 
     public override void OnCollisionEnter(Entity collision) {
-        ExperiencePoint exp = collision.GetScript<ExperiencePoint>();
+        if (collision == null || collision.Id <= 0 || collision.Id == entity.Id) {
+            return;
+        }
+
+        // 衝突通知までに相手が破棄されている可能性があるため、現在のECSから引き直す。
+        int collisionId = collision.Id;
+        Entity experienceEntity = ecsGroup.GetEntity(collisionId);
+        if (experienceEntity == null) {
+            return;
+        }
+
+        ExperiencePoint exp = experienceEntity.GetScript<ExperiencePoint>();
         if (exp == null) {
             return;
         }
@@ -81,7 +93,7 @@ public class LevelingComponent : MonoScript {
         addedExp_ += exp.ExperiencePoints;
         totalGainedExp_ += exp.ExperiencePoints;
 
-        pendingDestroyIds_.Add(collision.Id);// 経験値オブジェクトを破棄予定リストに追加
+        pendingDestroyIds_.Add(collisionId);// 経験値オブジェクトを破棄予定リストに追加
     }
 
     public void AddExperience(float exp) {
