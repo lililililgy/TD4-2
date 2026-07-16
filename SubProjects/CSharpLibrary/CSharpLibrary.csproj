@@ -253,6 +253,7 @@
     <Compile Include="Scripts\Test\ColliderTest2.cs" />
     <Compile Include="Scripts\Test\CollisionCrashTestMonitor.cs" />
     <Compile Include="Scripts\Test\CollisionCrashTestScript.cs" />
+    <Compile Include="Scripts\Test\ComponentEnableTestScript.cs" />
     <Compile Include="Scripts\Test\EngineLaunchTest.cs" />
     <Compile Include="Scripts\Test\HotReloadAssetAddTestScript.cs" />
     <Compile Include="Scripts\Test\HotReloadTestScript.cs" />

@@ -720,7 +720,6 @@ static class ComponentBatchManager {
 			}
 		}
 	}
-	}
 
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
