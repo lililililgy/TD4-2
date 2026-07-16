@@ -35,6 +35,7 @@ public:
 #pragma pack(push, 4)
 	struct BatchData {
 	    uint32_t compId;
+	    int32_t enable;
 	    Vector3 desiredMoveDirection;
 	    Quaternion desiredRotation;
 	    float rotationSpeed;

@@ -259,6 +259,43 @@ void GameFramework::Update() {
 			}
 		}
 
+		if (EngineConfig::testScene == "ComponentEnableTest" && testFrameCount == 60) {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("GameScene");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'GameScene' should not be null");
+			if (ecsGroup) {
+				#define ASSERT_COMP_DISABLED(CompType) \
+				{ \
+					auto* array = ecsGroup->GetComponentArray<CompType>(); \
+					ONEngine::Assert(array != nullptr, #CompType " array should exist"); \
+					if (array && !array->GetUsedComponents().empty()) { \
+						auto* comp = array->GetUsedComponents().front(); \
+						ONEngine::Assert(comp != nullptr, #CompType " component should exist"); \
+						ONEngine::Assert(comp->enable == 0, #CompType " should be disabled by C# script"); \
+					} \
+				}
+
+				ASSERT_COMP_DISABLED(Transform);
+				ASSERT_COMP_DISABLED(MeshRenderer);
+				ASSERT_COMP_DISABLED(DissolveMeshRenderer);
+				ASSERT_COMP_DISABLED(SpriteRenderer);
+				ASSERT_COMP_DISABLED(TextRenderer);
+				ASSERT_COMP_DISABLED(BoxCollider2D);
+				ASSERT_COMP_DISABLED(CameraComponent);
+				ASSERT_COMP_DISABLED(AgentIntentComponent);
+				ASSERT_COMP_DISABLED(UIGroupComponent);
+				ASSERT_COMP_DISABLED(UIElementComponent);
+				ASSERT_COMP_DISABLED(BGMPlayer);
+				ASSERT_COMP_DISABLED(SEPlayer);
+				ASSERT_COMP_DISABLED(BoxCollider);
+				ASSERT_COMP_DISABLED(CircleCollider);
+				ASSERT_COMP_DISABLED(SphereCollider);
+				ASSERT_COMP_DISABLED(AnimationPlayer);
+				ASSERT_COMP_DISABLED(SkinMeshRenderer);
+
+				#undef ASSERT_COMP_DISABLED
+			}
+		}
+
 		if (testFrameCount >= EngineConfig::testDuration) {
 			nlohmann::json results;
 			results["success"] = true;

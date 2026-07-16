@@ -11,6 +11,7 @@ public class CameraComponent : Component {
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
+		public int enable;
 		public Matrix4x4 matVP;
 		public Matrix4x4 matView;
 		public Matrix4x4 matProjection;
@@ -37,6 +38,7 @@ public class CameraComponent : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(CameraComponent), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
 		this.matVP = batch[0].matVP;
 		this.matView = batch[0].matView;
 		this.matProjection = batch[0].matProjection;

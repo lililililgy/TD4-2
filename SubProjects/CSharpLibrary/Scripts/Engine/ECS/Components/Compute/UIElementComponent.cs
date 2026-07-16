@@ -3,9 +3,10 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 public class UIElementComponent : Component {
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
+		public int enable;
 		public int groupIdId;
 		public int elementIndex;
 	}
@@ -31,6 +32,7 @@ public class UIElementComponent : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(UIElementComponent), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
 		this.groupIdId = batch[0].groupIdId;
 		this.elementIndex = batch[0].elementIndex;
 	}

@@ -10,14 +10,14 @@ class SpriteRenderer : Component {
 	[StructLayout(LayoutKind.Explicit, Size = 80)]
 	public struct BatchData {
 		[FieldOffset(0)] public uint compId;
-		[FieldOffset(4)] public Vector4 color;
-		[FieldOffset(20)] public Vector2 textureSize;
-		[FieldOffset(28)] public uint postEffectFlags;
-		[FieldOffset(32)] public UVTransform uvTransform;
-		[FieldOffset(64)] public float bloomIntensity;
-		[FieldOffset(68)] public float bloomThreshold;
-		[FieldOffset(72)] public float bloomRadius;
-		[FieldOffset(76)] public float dummyPad1;
+		[FieldOffset(4)] public int enable;
+		[FieldOffset(8)] public Vector4 color;
+		[FieldOffset(24)] public Vector2 textureSize;
+		[FieldOffset(32)] public uint postEffectFlags;
+		[FieldOffset(36)] public UVTransform uvTransform;
+		[FieldOffset(68)] public float bloomIntensity;
+		[FieldOffset(72)] public float bloomThreshold;
+		[FieldOffset(76)] public float bloomRadius;
 	}
 
 	BatchData batchData;
@@ -32,6 +32,8 @@ class SpriteRenderer : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(SpriteRenderer), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
+		batchData.enable = batch[0].enable;
 		batchData.color = batch[0].color;
 		batchData.textureSize = batch[0].textureSize;
 		batchData.postEffectFlags = batch[0].postEffectFlags;
