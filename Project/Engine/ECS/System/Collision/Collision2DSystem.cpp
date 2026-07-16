@@ -1,4 +1,4 @@
-﻿#include "Collision2DSystem.h"
+#include "Collision2DSystem.h"
 
 using namespace ONEngine;
 
@@ -208,39 +208,68 @@ void Collision2DSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 void Collision2DSystem::CallEnterFunc(const std::string& ecsGroupName) {
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+	ECSGroup* group = gECS->GetECSGroup(ecsGroupName);
+	if (!group) {
+		return;
+	}
 
-	for(auto& pair : enterPairs_) {
-		GameEntity* entityA = pair.first;
-		GameEntity* entityB = pair.second;
+	std::vector<std::pair<int32_t, int32_t>> enterIds;
+	enterIds.reserve(enterPairs_.size());
+	for (auto& pair : enterPairs_) {
+		if (pair.first && pair.second) {
+			enterIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+		}
+	}
+
+	for(const auto& idPair : enterIds) {
+		int32_t idA = idPair.first;
+		int32_t idB = idPair.second;
+
+		GameEntity* entityA = group->GetEntity(idA);
+		GameEntity* entityB = group->GetEntity(idB);
 
 		if(!entityA || !entityB) {
 			continue;
 		}
 
-		std::array<GameEntity*, 2> entities = { entityA, entityB };
-		std::array<Script*, 2>     scripts = { entityA->GetComponent<Script>(), entityB->GetComponent<Script>() };
+		std::array<int32_t, 2> entityIds = { idA, idB };
 
 		for(size_t i = 0; i < 2; i++) {
-			if(!scripts[i]) {
+			GameEntity* currentA = group->GetEntity(entityIds[0]);
+			GameEntity* currentB = group->GetEntity(entityIds[1]);
+			if (!currentA || !currentB) {
+				break;
+			}
+
+			GameEntity* selfEntity = (i == 0) ? currentA : currentB;
+
+			Script* scriptComponent = selfEntity->GetComponent<Script>();
+			if(!scriptComponent) {
 				continue;
 			}
 
-			auto& data = scripts[i]->GetScriptDataList();
+			auto& data = scriptComponent->GetScriptDataList();
 			for(auto& script : data) {
-				MonoObject* exc = nullptr;
+				GameEntity* checkSelf = group->GetEntity(entityIds[i]);
+				GameEntity* checkOther = group->GetEntity(entityIds[(i + 1) % 2]);
+				if (!checkSelf || !checkOther) {
+					break;
+				}
 
 				if(!script.collisionEventMethods2D[0]) {
 					script.collisionEventMethods2D[0] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionEnter", 1);
 				}
 
 				if(!script.collisionEventMethods2D[0]) {
-					continue; // メソッドが定義されていない場合はスキップ
+					continue;
 				}
 
-				void* params[1];
-				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, entities[(i + 1) % 2]->GetId());
+				MonoObject* exc = nullptr;
 
-				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, scripts[i]->GetOwner()->GetId(), script.scriptName);
+				void* params[1];
+				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
+
+				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, checkSelf->GetId(), script.scriptName);
 				mono_runtime_invoke(script.collisionEventMethods2D[0], monoBehavior, params, &exc);
 
 				Console::Log("Collision Enter 2D Event Invoked");
@@ -260,26 +289,53 @@ void Collision2DSystem::CallEnterFunc(const std::string& ecsGroupName) {
 
 void Collision2DSystem::CallStayFunc(const std::string& ecsGroupName) {
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+	ECSGroup* group = gECS->GetECSGroup(ecsGroupName);
+	if (!group) {
+		return;
+	}
 
-	for(auto& pair : stayPairs_) {
-		GameEntity* entityA = pair.first;
-		GameEntity* entityB = pair.second;
+	std::vector<std::pair<int32_t, int32_t>> stayIds;
+	stayIds.reserve(stayPairs_.size());
+	for (auto& pair : stayPairs_) {
+		if (pair.first && pair.second) {
+			stayIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+		}
+	}
+
+	for(const auto& idPair : stayIds) {
+		int32_t idA = idPair.first;
+		int32_t idB = idPair.second;
+
+		GameEntity* entityA = group->GetEntity(idA);
+		GameEntity* entityB = group->GetEntity(idB);
 
 		if(!entityA || !entityB) {
 			continue;
 		}
 
-		std::array<GameEntity*, 2> entities = { entityA, entityB };
-		std::array<Script*, 2>     scripts = { entityA->GetComponent<Script>(), entityB->GetComponent<Script>() };
+		std::array<int32_t, 2> entityIds = { idA, idB };
 
 		for(size_t i = 0; i < 2; i++) {
-			if(!scripts[i]) {
+			GameEntity* currentA = group->GetEntity(entityIds[0]);
+			GameEntity* currentB = group->GetEntity(entityIds[1]);
+			if (!currentA || !currentB) {
+				break;
+			}
+
+			GameEntity* selfEntity = (i == 0) ? currentA : currentB;
+
+			Script* scriptComponent = selfEntity->GetComponent<Script>();
+			if(!scriptComponent) {
 				continue;
 			}
 
-			auto& data = scripts[i]->GetScriptDataList();
+			auto& data = scriptComponent->GetScriptDataList();
 			for(auto& script : data) {
-				MonoObject* exc = nullptr;
+				GameEntity* checkSelf = group->GetEntity(entityIds[i]);
+				GameEntity* checkOther = group->GetEntity(entityIds[(i + 1) % 2]);
+				if (!checkSelf || !checkOther) {
+					break;
+				}
 
 				if(!script.collisionEventMethods2D[1]) {
 					script.collisionEventMethods2D[1] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionStay", 1);
@@ -289,10 +345,12 @@ void Collision2DSystem::CallStayFunc(const std::string& ecsGroupName) {
 					continue;
 				}
 
-				void* params[1];
-				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, entities[(i + 1) % 2]->GetId());
+				MonoObject* exc = nullptr;
 
-				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, scripts[i]->GetOwner()->GetId(), script.scriptName);
+				void* params[1];
+				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
+
+				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, checkSelf->GetId(), script.scriptName);
 				mono_runtime_invoke(script.collisionEventMethods2D[1], monoBehavior, params, &exc);
 
 				if(exc) {
@@ -310,26 +368,53 @@ void Collision2DSystem::CallStayFunc(const std::string& ecsGroupName) {
 
 void Collision2DSystem::CallExitFunc(const std::string& ecsGroupName) {
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
+	ECSGroup* group = gECS->GetECSGroup(ecsGroupName);
+	if (!group) {
+		return;
+	}
 
-	for(auto& pair : exitPairs_) {
-		GameEntity* entityA = pair.first;
-		GameEntity* entityB = pair.second;
+	std::vector<std::pair<int32_t, int32_t>> exitIds;
+	exitIds.reserve(exitPairs_.size());
+	for (auto& pair : exitPairs_) {
+		if (pair.first && pair.second) {
+			exitIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+		}
+	}
+
+	for(const auto& idPair : exitIds) {
+		int32_t idA = idPair.first;
+		int32_t idB = idPair.second;
+
+		GameEntity* entityA = group->GetEntity(idA);
+		GameEntity* entityB = group->GetEntity(idB);
 
 		if(!entityA || !entityB) {
 			continue;
 		}
 
-		std::array<GameEntity*, 2> entities = { entityA, entityB };
-		std::array<Script*, 2>     scripts = { entityA->GetComponent<Script>(), entityB->GetComponent<Script>() };
+		std::array<int32_t, 2> entityIds = { idA, idB };
 
 		for(size_t i = 0; i < 2; i++) {
-			if(!scripts[i]) {
+			GameEntity* currentA = group->GetEntity(entityIds[0]);
+			GameEntity* currentB = group->GetEntity(entityIds[1]);
+			if (!currentA || !currentB) {
+				break;
+			}
+
+			GameEntity* selfEntity = (i == 0) ? currentA : currentB;
+
+			Script* scriptComponent = selfEntity->GetComponent<Script>();
+			if(!scriptComponent) {
 				continue;
 			}
 
-			auto& data = scripts[i]->GetScriptDataList();
+			auto& data = scriptComponent->GetScriptDataList();
 			for(auto& script : data) {
-				MonoObject* exc = nullptr;
+				GameEntity* checkSelf = group->GetEntity(entityIds[i]);
+				GameEntity* checkOther = group->GetEntity(entityIds[(i + 1) % 2]);
+				if (!checkSelf || !checkOther) {
+					break;
+				}
 
 				if(!script.collisionEventMethods2D[2]) {
 					script.collisionEventMethods2D[2] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionExit", 1);
@@ -339,10 +424,12 @@ void Collision2DSystem::CallExitFunc(const std::string& ecsGroupName) {
 					continue;
 				}
 
-				void* params[1];
-				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, entities[(i + 1) % 2]->GetId());
+				MonoObject* exc = nullptr;
 
-				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, scripts[i]->GetOwner()->GetId(), script.scriptName);
+				void* params[1];
+				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
+
+				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, checkSelf->GetId(), script.scriptName);
 				mono_runtime_invoke(script.collisionEventMethods2D[2], monoBehavior, params, &exc);
 
 				Console::Log("Collision Exit 2D Event Invoked");

@@ -1,0 +1,9 @@
+{
+    "entryPoint": "main",
+    "guid": "b4e901e4c855635cafa404f849316700",
+    "name": "RadialBlurPerObject.cs",
+    "profile": "vs_6_0",
+    "shaderStage": "Vertex",
+    "type": "Shader",
+    "version": 1
+}

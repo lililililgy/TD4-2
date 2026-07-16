@@ -23,6 +23,8 @@ public class HP : MonoScript {
 
         // 死亡時の自動破棄（衝突中のクラッシュ防止のため Update で破棄する）
         if (isDead_ && !disableAutoDestruction_) {
+            // 撃破イベントを発行。Objective 系は MessageBus 経由でこれを購読してカウントする
+            MessageBus.Publish(new EnemyKilledEvent(entity != null ? entity.name : ""));
             entity.Destroy();
         }
     }

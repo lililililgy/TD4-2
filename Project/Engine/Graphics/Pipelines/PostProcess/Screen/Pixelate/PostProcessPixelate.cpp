@@ -57,10 +57,17 @@ void PostProcessPixelate::Execute(const std::string& textureName, DxCommand* dxC
 		return; // ピクセレートエフェクトが無効な場合は何もしない
 	}
 
+	Vector2 offset = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem);
+	Vector2 dispatchSize = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem);
 	// 定数バッファの更新
 	constantBuffer_.SetMappedData(PixelateParams{
 		.pixelSizeX = tag->GetPixelSizeX(),
-		.pixelSizeY = tag->GetPixelSizeY()
+		.pixelSizeY = tag->GetPixelSizeY(),
+		.offsetX = static_cast<int32_t>(offset.x),
+		.offsetY = static_cast<int32_t>(offset.y),
+		.virtualWidth = static_cast<int32_t>(dispatchSize.x),
+		.virtualHeight = static_cast<int32_t>(dispatchSize.y),
+		.padding = {0, 0}
 	});
 
 	pipeline_->SetPipelineStateForCommandList(dxCommand);
@@ -76,8 +83,8 @@ void PostProcessPixelate::Execute(const std::string& textureName, DxCommand* dxC
 	command->SetComputeRootDescriptorTable(2, textures[textureIndices_[1]].GetUAVGPUHandle());
 
 	command->Dispatch(
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.x), 16),
-		Math::DivideAndRoundUp(static_cast<uint32_t>(EngineConfig::kWindowSize.y), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.x), 16),
+		Math::DivideAndRoundUp(static_cast<uint32_t>(dispatchSize.y), 16),
 		1
 	);
 

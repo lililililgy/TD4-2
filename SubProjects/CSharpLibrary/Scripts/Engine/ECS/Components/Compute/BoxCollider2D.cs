@@ -6,6 +6,7 @@ public class BoxCollider2D : Component {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BatchData {
         public uint compId;
+        public int enable;
         public Vector2 size;
         public int isTrigger;
         public float mass;
@@ -25,6 +26,8 @@ public class BoxCollider2D : Component {
         batch[0].compId = compId;
         ComponentBatchManager.InternalGetBatch(typeof(BoxCollider2D), batch, 1, ecsGroupName);
 
+        this.enable = batch[0].enable;
+        batchData.enable = batch[0].enable;
         batchData.size = batch[0].size;
         batchData.isTrigger = batch[0].isTrigger;
         batchData.mass = batch[0].mass;
@@ -32,6 +35,8 @@ public class BoxCollider2D : Component {
     }
 
     public void ApplyBatchData(BatchData data) {
+        this.enable = data.enable;
+        batchData.enable = data.enable;
         batchData.size = data.size;
         batchData.isTrigger = data.isTrigger;
         batchData.mass = data.mass;

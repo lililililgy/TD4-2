@@ -72,7 +72,11 @@ public:
 	/// ----- setter ----- ///
 	void SetColor(const Vector4& color);
 	void SetUVTransform(const UVTransform& uvTransform);
-	void SetPixelPerfect(bool enable);
+	void SetPixelPerfect(bool enablePixelPerfect);
+	void SetPostEffectFlags(uint32_t flags);
+	void SetBloomIntensity(float intensity);
+	void SetBloomThreshold(float threshold);
+	void SetBloomRadius(float radius);
 
 	/// ----- getter ----- ///
 	const Vector4& GetColor() const;
@@ -84,6 +88,11 @@ public:
 	Vector2 GetTextureSize(Asset::AssetCollection* assetCollection) const;
 
 	bool IsPixelPerfect() const;
+
+	uint32_t GetPostEffectFlags() const;
+	float GetBloomIntensity() const;
+	float GetBloomThreshold() const;
+	float GetBloomRadius() const;
 
 	/// @brief アニメーション制御用マテリアルへの参照取得
 	Asset::Material& GetMaterialForAnimation() { return material_; }
@@ -109,7 +118,7 @@ namespace MonoInternalMethods {
 	Vector2 InternalGetTextureSize(uint64_t nativeHandle);
 
 	bool InternalGetPixelPerfect(uint64_t nativeHandle);
-	void InternalSetPixelPerfect(uint64_t nativeHandle, bool enable);
+	void InternalSetPixelPerfect(uint64_t nativeHandle, bool enablePixelPerfect);
 }
 
 } /// ONEngine

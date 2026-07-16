@@ -1,7 +1,18 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 public class BGMPlayer : Component {
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
+	public struct BatchData {
+		public uint compId;
+		public int enable;
+		public float volume;
+		public float pitch;
+		public int loop;
+		public int playOnAwake;
+	}
+
 	public float volume = 1f;
 	public float pitch = 1f;
 	public bool loop = true;
@@ -9,7 +20,6 @@ public class BGMPlayer : Component {
 	public string path = "";
 
 	public void Play() {
-		InternalSetParams(nativeHandle, volume, pitch, loop, playOnAwake);
 		InternalPlay(nativeHandle);
 	}
 
@@ -22,14 +32,7 @@ public class BGMPlayer : Component {
 		pitch = _pitch;
 		loop = _loop;
 		playOnAwake = _playOnAwake;
-		InternalSetParams(nativeHandle, volume, pitch, loop, playOnAwake);
 	}
-
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static private extern void InternalGetParams(ulong _nativeHandle, out float _volume, out float _pitch, out bool _loop, out bool _playOnAwake);
-
-	[MethodImpl(MethodImplOptions.InternalCall)]
-	static private extern void InternalSetParams(ulong _nativeHandle, float volume, float pitch, bool loop, bool playOnAwake);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static private extern void InternalPlay(ulong _nativeHandle);
@@ -39,6 +42,15 @@ public class BGMPlayer : Component {
 
 	public override void SyncFromNative(string ecsGroupName) {
 		if (nativeHandle == 0) return;
-		InternalGetParams(nativeHandle, out volume, out pitch, out loop, out playOnAwake);
+
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(BGMPlayer), batch, 1, ecsGroupName);
+
+		this.enable = batch[0].enable;
+		this.volume = batch[0].volume;
+		this.pitch = batch[0].pitch;
+		this.loop = batch[0].loop != 0;
+		this.playOnAwake = batch[0].playOnAwake != 0;
 	}
 }

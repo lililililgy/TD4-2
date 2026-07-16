@@ -1,0 +1,159 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": -5.599999904632568,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 215.9000244140625,
+                "y": 252.10003662109375,
+                "z": 215.89999389648438
+            },
+            "type": "Transform"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 7,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "ChaseController": {
+                "autoStart": true,
+                "chaseDistance": 656.0,
+                "chaseDuration": 10.0,
+                "chaseSpeed": 282.0,
+                "enableFacing": false,
+                "leachDistance": 0.0,
+                "rushDistance": 90.0,
+                "stopAtRushDistance": false,
+                "targetEntityName": "Player",
+                "waitTime": 1.5
+            },
+            "HP": {
+                "currentHp_": 25.0,
+                "directlyDamageable_": true,
+                "disableAutoDestruction_": false,
+                "enable": true,
+                "isInvincible_": false,
+                "maxHp_": 25.0
+            },
+            "SeaCow": {
+                "blinkColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "blinkIntervalEnd": 0.019999999552965164,
+                "blinkIntervalStart": 0.6000000238418579,
+                "blinkPulseDuration": 0.20000000298023224,
+                "blinkPulseScale": 1.2000000476837158,
+                "enable": true,
+                "explotionTime": 8.0,
+                "maxAnimationFps": 24.0,
+                "maxChaseSpeed": 360.0,
+                "normalColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "rampUpEaseTime": 3.0
+            },
+            "SpriteAnimation": {
+                "cols": 2,
+                "enable": true,
+                "endFrame": 1,
+                "fps": 6.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": false,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 0
+            },
+            "TargetFacingFlip": {
+                "enable": true,
+                "maxTiltAngleDeg": 150.0,
+                "turnLerp": 0.949999988079071
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                },
+                {
+                    "enable": true,
+                    "name": "ChaseController"
+                },
+                {
+                    "enable": true,
+                    "name": "TargetFacingFlip"
+                },
+                {
+                    "enable": true,
+                    "name": "SeaCow"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": true,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "8f0f0bf2be6b7f563929573114e6f177",
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 0.5,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "a90c95a9be33cee0c1f0fa7d835a7a73",
+    "name": "SeaCow",
+    "parentGuid": null,
+    "prefabName": "SeaCow"
+}

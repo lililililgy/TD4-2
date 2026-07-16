@@ -2,9 +2,10 @@ using System.Runtime.InteropServices;
 
 [StructLayout(LayoutKind.Sequential)]
 public class DissolveMeshRenderer : Component {
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
+		public int enable;
 		public float threshold;
 		public UVTransform uvTransform;
 	}
@@ -19,6 +20,7 @@ public class DissolveMeshRenderer : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(DissolveMeshRenderer), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
 		threshold = batch[0].threshold;
 		uvTransform = batch[0].uvTransform;
 	}

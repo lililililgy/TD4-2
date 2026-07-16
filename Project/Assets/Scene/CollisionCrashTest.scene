@@ -1,0 +1,24 @@
+{
+    "entities": [
+        {
+            "guid": "c0000000000000000000000000000001",
+            "parentGuid": null,
+            "path": "./CollisionCrashTest/main_camera.entity"
+        },
+        {
+            "guid": "c0000000000000000000000000000002",
+            "parentGuid": null,
+            "path": "./CollisionCrashTest/entity_a.entity"
+        },
+        {
+            "guid": "c0000000000000000000000000000003",
+            "parentGuid": null,
+            "path": "./CollisionCrashTest/entity_b.entity"
+        },
+        {
+            "guid": "c0000000000000000000000000000004",
+            "parentGuid": null,
+            "path": "./CollisionCrashTest/monitor.entity"
+        }
+    ]
+}

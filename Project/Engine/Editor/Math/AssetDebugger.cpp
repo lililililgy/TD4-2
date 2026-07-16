@@ -8,6 +8,7 @@
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/Editor/Math/ImGuiMath.h"
 #include "Engine/Editor/Commands/ImGuiCommand/ImGuiCommand.h"
+#include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
 
 namespace Editor {
 
@@ -143,6 +144,28 @@ bool MaterialEdit(const std::string& label, ONEngine::Asset::Material* material,
 		}
 
 		if(ImGui::CheckboxFlags("Shadow", &material->postEffectFlags, PostEffectFlags_Shadow)) {
+			edit = true;
+		}
+
+		if(ImGui::CheckboxFlags("Bloom", &material->postEffectFlags, PostEffectFlags_Bloom)) {
+			edit = true;
+		}
+
+		if (material->postEffectFlags & PostEffectFlags_Bloom) {
+			ImGui::Indent();
+			if (ImGui::DragFloat("Bloom Intensity", &material->bloomIntensity, 0.05f, 0.0f, 10.0f)) {
+				edit = true;
+			}
+			if (ImGui::DragFloat("Bloom Threshold", &material->bloomThreshold, 0.01f, 0.0f, 1.0f)) {
+				edit = true;
+			}
+			if (ImGui::DragFloat("Bloom Radius", &material->bloomRadius, 0.1f, 0.0f, 30.0f, "%.1f")) {
+				edit = true;
+			}
+			ImGui::Unindent();
+		}
+
+		if (ImGui::CheckboxFlags("Radial Blur (Per-Object)", &material->postEffectFlags, PostEffectFlags_RadialBlur)) {
 			edit = true;
 		}
 	}

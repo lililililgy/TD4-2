@@ -12,6 +12,9 @@ public class PlayerMoveComponent : MonoScript {
     private Mover mover_;
     private MoveDirector director_;
 
+    // 前フレームに移動入力があったか（PlayerMovedEvent のエッジ検出用）
+    private bool wasMoveInputActive_ = false;
+
     public override void Initialize() {
         mover_ = new Mover(paramReleaseSmoothTime_, paramReleaseMaxSmoothSpeed_);
         director_ = new MoveDirector();
@@ -30,6 +33,14 @@ public class PlayerMoveComponent : MonoScript {
         // 入力を解釈して「最終的な進行方向」を求め、物理だけを Mover に任せる。
         Vector2 rawDir = inputComp != null ? inputComp.MoveDir : new Vector2(0.0f, 0.0f);
         Vector2 desiredDir = director_.Resolve(rawDir, param.canMove_, param.moveForward_);
+
+        // 移動入力が「なし→あり」になったエッジで1回だけ発行する（チュートリアルの「移動した」検知用）。
+        // 速度ではなく生の入力方向で判定する（ノックバック等の受動的な移動を誤検知しないため）。
+        bool isMoveInputActive = rawDir.LengthSq() > 0.0001f;
+        if (isMoveInputActive && !wasMoveInputActive_) {
+            MessageBus.Publish(new PlayerMovedEvent());
+        }
+        wasMoveInputActive_ = isMoveInputActive;
 
         mover_.Move(transform, desiredDir, param);
     }

@@ -6,6 +6,10 @@ using namespace ONEngine;
 #include <numbers>
 #include <algorithm>
 
+/// mono
+#include <mono/metadata/object.h>
+#include <mono/metadata/class.h>
+
 /// engine
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
 
@@ -21,8 +25,9 @@ using namespace ONEngine;
 namespace {
 ECSGroup* gGameGroup = nullptr;
 ECSGroup* gDebugGroup = nullptr;
-EntityComponentSystem* gECS = nullptr;
 }
+
+EntityComponentSystem* ONEngine::gECS = nullptr;
 
 void ONEngine::SetEntityComponentSystemPtr(ECSGroup* _gameGroup, ECSGroup* _debugGroup) {
 	gGameGroup = _gameGroup;
@@ -618,8 +623,19 @@ void ONEngine::MonoInternalMethods::InternalSetBatch(MonoReflectionType* _typeRe
 	}
 
 	size_t elementSize = ComponentApplyFuncs::GetBatchElementSize(monoClass);
+
+	MonoClass* arrayClass = mono_object_get_class((MonoObject*)_batchArray);
+	MonoClass* elementClass = mono_class_get_element_class(arrayClass);
+	int monoElementSize = mono_class_array_element_size(elementClass);
+
+	int finalSize = static_cast<int>(elementSize);
+	if (monoElementSize > 0 && monoElementSize != finalSize) {
+		Console::LogWarning(std::format("[JIT_DEBUG] Size mismatch detected! C++ elementSize = {}, Mono elementSize = {}. Falling back to Mono size.", finalSize, monoElementSize));
+		finalSize = monoElementSize;
+	}
+
 	for(size_t i = 0; i < _count; i++) {
-		void* element = mono_array_addr_with_size(_batchArray, static_cast<int>(elementSize), i);
+		void* element = mono_array_addr_with_size(_batchArray, finalSize, i);
 		func(element, ecsGroup);
 	}
 
@@ -640,8 +656,19 @@ void ONEngine::MonoInternalMethods::InternalGetBatch(MonoReflectionType* _typeRe
 	}
 
 	int elementSize = static_cast<int>(ComponentApplyFuncs::GetBatchElementSize(monoClass));
+
+	MonoClass* arrayClass = mono_object_get_class((MonoObject*)_batchArray);
+	MonoClass* elementClass = mono_class_get_element_class(arrayClass);
+	int monoElementSize = mono_class_array_element_size(elementClass);
+
+	int finalSize = elementSize;
+	if (monoElementSize > 0 && monoElementSize != finalSize) {
+		Console::LogWarning(std::format("[JIT_DEBUG] Size mismatch detected! C++ elementSize = {}, Mono elementSize = {}. Falling back to Mono size.", finalSize, monoElementSize));
+		finalSize = monoElementSize;
+	}
+
 	for(size_t i = 0; i < _count; i++) {
-		void* element = mono_array_addr_with_size(_batchArray, elementSize, i);
+		void* element = mono_array_addr_with_size(_batchArray, finalSize, i);
 		func(element, ecsGroup);
 	}
 

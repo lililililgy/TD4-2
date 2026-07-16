@@ -180,7 +180,6 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 		MonoScriptEngineUtils::HandleException(exc);
 	}
 
-	Variables* vars = entity->GetComponent<Variables>();
 	Script* script = entity->GetComponent<Script>();
 
 	if(script) {

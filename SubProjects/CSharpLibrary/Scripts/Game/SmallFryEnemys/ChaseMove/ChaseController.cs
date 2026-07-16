@@ -32,6 +32,13 @@ public class ChaseController : MonoScript
 
     public Vector3 Velocity => velocity_;
 
+    // 追跡速度。追跡中に外部から徐々に加速させたい場合などに使う
+    public float ChaseSpeed
+    {
+        get => chaseSpeed;
+        set => chaseSpeed = value;
+    }
+
     private Vector3 velocity_       = Vector3.zero;
     private float   chaseTimer_     = 0.0f;
     private float   waitTimer_      = 0.0f;

@@ -8,148 +8,141 @@ using namespace ONEngine;
 /// engine
 #include "Engine/Core/Utility/Utility.h"
 
+// --- EffectEmitShape ---
 EffectEmitShape::EffectEmitShape() {
-	/// 球体の初期化
-	sphere_.center = Vector3::Zero;
-	sphere_.radius = 1.0f;
-	/// 立方体の初期化
-	cube_.center = Vector3::Zero;
-	cube_.size = Vector3(1.0f, 1.0f, 1.0f);
-	/// 円錐の初期化
-	cone_.center = Vector3::Zero;
-	cone_.angle = 30.0f;
-	cone_.radius = 1.0f;
-	cone_.height = 1.0f;
+	/// デフォルトで円錐形状を設定
+	impl_ = std::make_unique<ConeEmitShape>(Cone{ Vector3::Zero, 30.0f, 1.0f, 1.0f });
 }
 
 EffectEmitShape::EffectEmitShape(const EffectEmitShape& shape) {
-	shapeType_ = shape.shapeType_;
-	switch (shapeType_) {
-	case ShapeType::Sphere:   sphere_ = shape.sphere_;     break;
-	case ShapeType::Cube:     cube_ = shape.cube_;         break;
-	case ShapeType::Cone:     cone_ = shape.cone_;         break;
-	}
+	impl_ = shape.impl_ ? shape.impl_->Clone() : nullptr;
 }
 
+EffectEmitShape& EffectEmitShape::operator=(const EffectEmitShape& shape) {
+	if (this != &shape) {
+		impl_ = shape.impl_ ? shape.impl_->Clone() : nullptr;
+	}
+	return *this;
+}
 
 Vector3 EffectEmitShape::GetEmitPosition() {
-	/// 形状ごとに発生位置を取得する
-	switch (shapeType_) {
-	case ShapeType::Sphere:
-	{
-		float theta = Random::Float(0.0f, 2.0f * std::numbers::pi_v<float>);
-		float phi = Random::Float(0.0f, std::numbers::pi_v<float>);
-		float r = Random::Float(0.0f, sphere_.radius);
-		return sphere_.center + Vector3(
-			r * std::sin(phi) * std::cos(theta),
-			r * std::cos(phi),
-			r * std::sin(phi) * std::sin(theta)
-		);
-	}
-	case ShapeType::Cube:
-	{
-		return cube_.center + Vector3(
-			Random::Float(-cube_.size.x, cube_.size.x),
-			Random::Float(-cube_.size.y, cube_.size.y),
-			Random::Float(-cube_.size.z, cube_.size.z)
-		);
-	}
-	case ShapeType::Cone:
-	{
-		float theta = Random::Float(0.0f, 2.0f * std::numbers::pi_v<float>);
-		float r = Random::Float(0.0f, cone_.radius);
-		return cone_.center + Vector3(
-			r * std::cos(theta),
-			Random::Float(0.0f, cone_.height),
-			r * std::sin(theta)
-		);
-	}
-
-	default:
-		break;
-	}
-
-	return Vector3();
+	return impl_ ? impl_->GetEmitPosition() : Vector3::Zero;
 }
 
 Vector3 EffectEmitShape::GetEmitDirection(const Vector3& emitedPosition) {
-	Vector3 direction = Vector3::Zero;
-	/// 形状ごとに発生方向を取得する
-	switch (shapeType_) {
-	case ShapeType::Sphere:
-		direction = emitedPosition - sphere_.center;
-		break;
-	case ShapeType::Cube:
-		direction = emitedPosition - cube_.center;
-		break;
-	case ShapeType::Cone:
-		direction = emitedPosition - cone_.center;
-		break;
-	};
-
-	return direction.Normalize();
+	return impl_ ? impl_->GetEmitDirection(emitedPosition) : Vector3::Zero;
 }
 
 void EffectEmitShape::SetShapeType(ShapeType type) {
-	shapeType_ = type;
-}
+	if (impl_ && impl_->GetType() == type) return;
 
-void EffectEmitShape::SetSphere(const Vector3& center, float radius) {
-	shapeType_ = ShapeType::Sphere;
-	sphere_.center = center;
-	sphere_.radius = radius;
-}
-
-void EffectEmitShape::SetSphere(const Sphere& sphere) {
-	shapeType_ = ShapeType::Sphere;
-	sphere_ = sphere;
-}
-
-void EffectEmitShape::SetCube(const Vector3& center, const Vector3& size) {
-	shapeType_ = ShapeType::Cube;
-	cube_.center = center;
-	cube_.size = size;
-}
-
-void EffectEmitShape::SetCube(const Cube& cube) {
-	shapeType_ = ShapeType::Cube;
-	cube_ = cube;
-}
-
-void EffectEmitShape::SetCone(const Vector3& center, float angle, float radius, float height) {
-	shapeType_ = ShapeType::Cone;
-	cone_.center = center;
-	cone_.angle = angle;
-	cone_.radius = radius;
-	cone_.height = height;
-}
-
-void EffectEmitShape::SetCone(const Cone& cone) {
-	shapeType_ = ShapeType::Cone;
-	cone_ = cone;
-}
-
-Vector3 EffectEmitShape::GetCenter() const {
-	switch (shapeType_) {
-	case ShapeType::Cube: return cube_.center;
-	case ShapeType::Cone: return cone_.center;
-	default: return Vector3::Zero;
+	switch (type) {
+	case ShapeType::Sphere:
+		impl_ = std::make_unique<SphereEmitShape>(Sphere{ Vector3::Zero, 1.0f });
+		break;
+	case ShapeType::Cube:
+		impl_ = std::make_unique<CubeEmitShape>(Cube{ Vector3::Zero, Vector3(1.0f, 1.0f, 1.0f) });
+		break;
+	case ShapeType::Cone:
+		impl_ = std::make_unique<ConeEmitShape>(Cone{ Vector3::Zero, 30.0f, 1.0f, 1.0f });
+		break;
 	}
 }
 
+void EffectEmitShape::SetSphere(const Vector3& center, float radius) {
+	impl_ = std::make_unique<SphereEmitShape>(Sphere{ center, radius });
+}
+
+void EffectEmitShape::SetSphere(const Sphere& sphere) {
+	impl_ = std::make_unique<SphereEmitShape>(sphere);
+}
+
+void EffectEmitShape::SetCube(const Vector3& center, const Vector3& size) {
+	impl_ = std::make_unique<CubeEmitShape>(Cube{ center, size });
+}
+
+void EffectEmitShape::SetCube(const Cube& cube) {
+	impl_ = std::make_unique<CubeEmitShape>(cube);
+}
+
+void EffectEmitShape::SetCone(const Vector3& center, float angle, float radius, float height) {
+	impl_ = std::make_unique<ConeEmitShape>(Cone{ center, angle, radius, height });
+}
+
+void EffectEmitShape::SetCone(const Cone& cone) {
+	impl_ = std::make_unique<ConeEmitShape>(cone);
+}
+
+Vector3 EffectEmitShape::GetCenter() const {
+	return impl_ ? impl_->GetCenter() : Vector3::Zero;
+}
+
 EffectEmitShape::ShapeType EffectEmitShape::GetType() const {
-	return shapeType_;
+	return impl_ ? impl_->GetType() : ShapeType::Cone;
 }
 
 const Sphere& EffectEmitShape::GetSphere() const {
-	return sphere_;
+	static Sphere dummy{ Vector3::Zero, 0.0f };
+	return impl_ ? impl_->GetSphere() : dummy;
 }
 
 const Cube& EffectEmitShape::GetCube() const {
-	return cube_;
+	static Cube dummy{ Vector3::Zero, Vector3::Zero };
+	return impl_ ? impl_->GetCube() : dummy;
 }
 
 const Cone& EffectEmitShape::GetCone() const {
-	return cone_;
+	static Cone dummy{ Vector3::Zero, 0.0f, 0.0f, 0.0f };
+	return impl_ ? impl_->GetCone() : dummy;
+}
+
+
+// --- SphereEmitShape ---
+Vector3 SphereEmitShape::GetEmitPosition() {
+	float theta = Random::Float(0.0f, 2.0f * std::numbers::pi_v<float>);
+	float phi = Random::Float(0.0f, std::numbers::pi_v<float>);
+	float r = Random::Float(0.0f, sphere_.radius);
+	return sphere_.center + Vector3(
+		r * std::sin(phi) * std::cos(theta),
+		r * std::cos(phi),
+		r * std::sin(phi) * std::sin(theta)
+	);
+}
+
+Vector3 SphereEmitShape::GetEmitDirection(const Vector3& emittedPosition) {
+	Vector3 direction = emittedPosition - sphere_.center;
+	return direction.Normalize();
+}
+
+
+// --- CubeEmitShape ---
+Vector3 CubeEmitShape::GetEmitPosition() {
+	return cube_.center + Vector3(
+		Random::Float(-cube_.size.x, cube_.size.x),
+		Random::Float(-cube_.size.y, cube_.size.y),
+		Random::Float(-cube_.size.z, cube_.size.z)
+	);
+}
+
+Vector3 CubeEmitShape::GetEmitDirection(const Vector3& emittedPosition) {
+	Vector3 direction = emittedPosition - cube_.center;
+	return direction.Normalize();
+}
+
+
+// --- ConeEmitShape ---
+Vector3 ConeEmitShape::GetEmitPosition() {
+	float theta = Random::Float(0.0f, 2.0f * std::numbers::pi_v<float>);
+	float r = Random::Float(0.0f, cone_.radius);
+	return cone_.center + Vector3(
+		r * std::cos(theta),
+		Random::Float(0.0f, cone_.height),
+		r * std::sin(theta)
+	);
+}
+
+Vector3 ConeEmitShape::GetEmitDirection(const Vector3& emittedPosition) {
+	Vector3 direction = emittedPosition - cone_.center;
+	return direction.Normalize();
 }
 

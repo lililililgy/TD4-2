@@ -57,6 +57,12 @@ void RenderingFramework::Initialize(DxManager* dxm, WindowManager* windowManager
 	std::unique_ptr<UAVTexture> uavTexture = std::make_unique<UAVTexture>();
 	uavTexture->Initialize("postProcessResult", pDxManager_, assetCollection_.get());
 
+	std::unique_ptr<UAVTexture> bloomBright = std::make_unique<UAVTexture>();
+	bloomBright->Initialize("bloomBright", pDxManager_, assetCollection_.get());
+
+	std::unique_ptr<UAVTexture> bloomBlur = std::make_unique<UAVTexture>();
+	bloomBlur->Initialize("bloomBlur", pDxManager_, assetCollection_.get());
+
 
 	copyImagePipeline_ = std::make_unique<CopyImageRenderingPipeline>(assetCollection_.get());
 	copyImagePipeline_->Initialize(shaderCompiler_.get(), pDxManager_);

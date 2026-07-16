@@ -1,0 +1,87 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "type": "Transform"
+        },
+        {
+            "enable": 1,
+            "type": "MeshRenderer"
+        },
+        {
+            "enable": 1,
+            "type": "DissolveMeshRenderer"
+        },
+        {
+            "enable": 1,
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "type": "TextRenderer"
+        },
+        {
+            "enable": 1,
+            "type": "BoxCollider2D"
+        },
+        {
+            "enable": 1,
+            "type": "CameraComponent"
+        },
+        {
+            "enable": 1,
+            "type": "AgentIntentComponent"
+        },
+        {
+            "enable": 1,
+            "type": "UIGroupComponent"
+        },
+        {
+            "enable": 1,
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "type": "BGMPlayer"
+        },
+        {
+            "enable": 1,
+            "type": "SEPlayer"
+        },
+        {
+            "enable": 1,
+            "type": "BoxCollider"
+        },
+        {
+            "enable": 1,
+            "type": "CircleCollider"
+        },
+        {
+            "enable": 1,
+            "type": "SphereCollider"
+        },
+        {
+            "enable": 1,
+            "type": "AnimationPlayer"
+        },
+        {
+            "enable": 1,
+            "type": "SkinMeshRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ComponentEnableTestScript"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "e0000000000000000000000000000001",
+    "name": "TestEntity",
+    "parentGuid": null,
+    "prefabName": ""
+}

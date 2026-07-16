@@ -1,0 +1,9 @@
+{
+    "entities": [
+        {
+            "guid": "3b652048d773b38c33ed531ab1d043d5",
+            "parentGuid": null,
+            "path": "./BloomTest/verify_entity.entity"
+        }
+    ]
+}

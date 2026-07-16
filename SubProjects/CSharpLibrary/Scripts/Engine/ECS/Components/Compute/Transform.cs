@@ -12,6 +12,7 @@ public class Transform : Component {
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	public struct BatchData {
 		public uint compId;
+		public int enable;
 		public Vector3 position;
 		public Quaternion rotate;
 		public Vector3 scale;
@@ -36,6 +37,7 @@ public class Transform : Component {
 		batch[0].compId = compId;
 		ComponentBatchManager.InternalGetBatch(typeof(Transform), batch, 1, ecsGroupName);
 
+		this.enable = batch[0].enable;
 		this.position = batch[0].position;
 		this.rotate = batch[0].rotate;
 		this.scale = batch[0].scale;

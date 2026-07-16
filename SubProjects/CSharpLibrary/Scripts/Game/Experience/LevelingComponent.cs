@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 public class LevelingComponent : MonoScript {
-    [SerializeField] private int maxLevel_;
+    [SerializeField] private int maxLevel_ = 0;
     [SerializeField] private float baseRequiredExp_ = 100f;
 
     [SerializeField] private int currentLevel_;
@@ -53,6 +53,10 @@ public class LevelingComponent : MonoScript {
     private void LevelUp() {
         isLevelUp_ = true;
         currentLevel_++;
+
+        // レベル上昇の確定を通知する（「レベルnに到達」目標用に新レベル値を運ぶ）。
+        // LevelUp() は1回の呼び出しで1レベルだけ上げるので、上がったレベルごとに1回発行される。
+        MessageBus.Publish(new LevelUpEvent(entity.name, currentLevel_));
 
         float excessExp = currentExp_ - requiredExp_; // 残りの経験値を計算
         currentExp_ = excessExp;

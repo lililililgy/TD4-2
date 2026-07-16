@@ -29,12 +29,15 @@ class UIElementComponent : public IComponent {
 	friend void to_json(nlohmann::json& j, const UIElementComponent& c);
 
 public:
+#pragma pack(push, 4)
 	struct BatchData {
 		uint32_t compId;
+		int32_t enable;
 		int32_t groupIdId;
 		// elementId and elementIndex can be read from JSON or directly from variables
 		int32_t elementIndex;
 	};
+#pragma pack(pop)
 
 public:
 	UIElementComponent() {

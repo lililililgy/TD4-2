@@ -36,7 +36,7 @@
         },
         {
             "ChaseAnimation": {
-                "chasePulseDuration": 0.10000000149011612,
+                "chasePulseDuration": 0.5,
                 "chasePulseScale": 1.100000023841858,
                 "discoveryDuration": 0.6000000238418579,
                 "discoveryScale": 2.0,
@@ -45,17 +45,18 @@
             },
             "ChaseController": {
                 "autoStart": false,
-                "chaseDistance": 600.0,
+                "chaseDistance": 752.0,
                 "chaseDuration": 2.5,
-                "chaseSpeed": 299.0,
-                "enableFacing": true,
-                "rushDistance": 200.0,
+                "chaseSpeed": 171.0,
+                "enableFacing": false,
+                "leachDistance": 0.0,
+                "rushDistance": 0.0,
                 "stopAtRushDistance": false,
                 "targetEntityName": "Player",
-                "waitTime": 1.7999999523162842
+                "waitTime": 0.800000011920929
             },
             "DespawnTimer": {
-                "despawnTime_": 12.0
+                "despawnTime_": 1270.0
             },
             "HP": {
                 "currentHp_": 30.0,
@@ -74,6 +75,24 @@
                 "startChaseDistance": 0.0
             },
             "SmallFryChaseMove": {},
+            "SpriteAnimation": {
+                "cols": 2,
+                "enable": true,
+                "endFrame": 1,
+                "fps": 6.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": false,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 0
+            },
+            "TargetFacingFlip": {
+                "enable": true,
+                "maxTiltAngleDeg": 150.0,
+                "targetEntityName": "Player",
+                "turnLerp": 0.30000001192092896
+            },
             "type": "Variables"
         },
         {
@@ -81,7 +100,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "MorayEel"
+                    "name": "SpriteAnimation"
                 },
                 {
                     "enable": true,
@@ -98,6 +117,14 @@
                 {
                     "enable": true,
                     "name": "SmallFryChaseMove"
+                },
+                {
+                    "enable": true,
+                    "name": "TargetFacingFlip"
+                },
+                {
+                    "enable": true,
+                    "name": "MorayEel"
                 },
                 {
                     "enable": true,
@@ -131,7 +158,7 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 1.0,
+                        "x": 0.5,
                         "y": 1.0
                     }
                 }
@@ -139,7 +166,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "4a6484eb380c57f50d23827e8752eec1",
+    "guid": "4e0b8e4f1f437c26508da2185bec44b8",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

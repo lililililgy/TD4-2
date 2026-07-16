@@ -16,39 +16,26 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 100.0,
-                "y": 100.0,
-                "z": 50.799560546875
+                "x": 4.0,
+                "y": 4.0,
+                "z": 4.0
             },
             "type": "Transform"
         },
         {
-            "AddSceneTest": {},
-            "Test": {},
-            "TestPauseStart": {},
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "Test"
-                }
-            ],
-            "type": "Script"
         },
         {
             "characterSpacing": 0,
             "color": {
                 "w": 1.0,
-                "x": 1.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 0.842293918132782,
+                "y": 0.842293918132782,
+                "z": 0.842293918132782
             },
             "enable": 1,
             "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
-            "fontSize": 256,
+            "fontSize": 128,
             "horizontalAlignment": 1,
             "lineSpacing": 1.0,
             "outlineColor": {
@@ -68,13 +55,13 @@
                 "x": 2.0,
                 "y": -2.0
             },
-            "text": "シンカイ ノ ダイオウ ニ ナッタ",
+            "text": "ハッシャ\n",
             "type": "TextRenderer",
             "verticalAlignment": 1
         }
     ],
-    "guid": "bf0c252395b6840cfed59ce900c910a7",
-    "name": "NewEntity",
-    "parentGuid": null,
+    "guid": "0682b8734078ca75dc01131f2fc6b101",
+    "name": "Text",
+    "parentGuid": "e4b5ac52c23b60a5fc4185dec3724c8d",
     "prefabName": ""
 }

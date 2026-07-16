@@ -77,6 +77,9 @@ void SpriteRenderer::RenderingSetup(Asset::AssetCollection* assetCollection) {
 
 	gpuMaterial_.baseColor = material_.baseColor;
 	gpuMaterial_.postEffectFlags = material_.postEffectFlags;
+	gpuMaterial_.bloomIntensity = material_.bloomIntensity;
+	gpuMaterial_.bloomThreshold = material_.bloomThreshold;
+	gpuMaterial_.bloomRadius = material_.bloomRadius;
 	/// base texture
 	if (material_.HasBaseTexture()) {
 		int32_t textureIndex = assetCollection->GetTextureIndexFromGuid(material_.GetBaseTextureGuid());
@@ -103,8 +106,24 @@ void SpriteRenderer::SetUVTransform(const UVTransform& uvTransform) {
 	material_.uvTransform = uvTransform;
 }
 
-void SpriteRenderer::SetPixelPerfect(bool enable) {
-	isPixelPerfect_ = enable;
+void SpriteRenderer::SetPixelPerfect(bool enablePixelPerfect) {
+	isPixelPerfect_ = enablePixelPerfect;
+}
+
+void SpriteRenderer::SetPostEffectFlags(uint32_t flags) {
+	material_.postEffectFlags = flags;
+}
+
+void SpriteRenderer::SetBloomIntensity(float intensity) {
+	material_.bloomIntensity = intensity;
+}
+
+void SpriteRenderer::SetBloomThreshold(float threshold) {
+	material_.bloomThreshold = threshold;
+}
+
+void SpriteRenderer::SetBloomRadius(float radius) {
+	material_.bloomRadius = radius;
 }
 
 const Vector4& SpriteRenderer::GetColor() const {
@@ -121,6 +140,22 @@ const UVTransform& SpriteRenderer::GetUVTransform() const {
 
 bool SpriteRenderer::IsPixelPerfect() const {
 	return isPixelPerfect_;
+}
+
+uint32_t SpriteRenderer::GetPostEffectFlags() const {
+	return material_.postEffectFlags;
+}
+
+float SpriteRenderer::GetBloomIntensity() const {
+	return material_.bloomIntensity;
+}
+
+float SpriteRenderer::GetBloomThreshold() const {
+	return material_.bloomThreshold;
+}
+
+float SpriteRenderer::GetBloomRadius() const {
+	return material_.bloomRadius;
 }
 
 Vector2 SpriteRenderer::GetTextureSize(Asset::AssetCollection* assetCollection) const {

@@ -11,15 +11,22 @@ static class ComponentBatchManager {
 	private static Dictionary<Type, ComponentBatchAllocator> allocators = new Dictionary<Type, ComponentBatchAllocator>();
 
 	public static void Initialize() {
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(Transform.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Transform.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(MeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(MeshRenderer.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(DissolveMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(DissolveMeshRenderer.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(SpriteRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SpriteRenderer.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(TextRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(TextRenderer.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(CameraComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CameraComponent.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(UIGroupComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIGroupComponent.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(UIElementComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIElementComponent.BatchData))}");
-		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(BoxCollider2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider2D.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(Transform.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Transform.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(MeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(MeshRenderer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(DissolveMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(DissolveMeshRenderer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SpriteRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SpriteRenderer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(TextRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(TextRenderer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(CameraComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CameraComponent.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(UIGroupComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIGroupComponent.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(UIElementComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIElementComponent.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BoxCollider2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider2D.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BGMPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BGMPlayer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SEPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SEPlayer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BoxCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(CircleCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CircleCollider.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SphereCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SphereCollider.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(ONEngine.AnimationPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(ONEngine.AnimationPlayer.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SkinMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SkinMeshRenderer.BatchData))}");
 
 		// --- Transform の登録 ---
 
@@ -30,6 +37,7 @@ static class ComponentBatchManager {
 			for (int i = 0; i < count; i++) {
 				var comp = array.Get(i);
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				batch[i].position = comp.position;
 				batch[i].rotate = comp.rotate;
 				batch[i].scale = comp.scale;
@@ -60,6 +68,7 @@ static class ComponentBatchManager {
 				var comp = array.Get(i);
 				var batchData = comp.GetBatchData();
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				batch[i].color = batchData.color;
 				batch[i].postEffectFlags = batchData.postEffectFlags;
 				batch[i].uvTransform = batchData.uvTransform;
@@ -85,9 +94,14 @@ static class ComponentBatchManager {
 				var comp = array.Get(i);
 				var batchData = comp.GetBatchData();
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				batch[i].color = batchData.color;
 				batch[i].textureSize = batchData.textureSize;
+				batch[i].postEffectFlags = batchData.postEffectFlags;
 				batch[i].uvTransform = batchData.uvTransform;
+				batch[i].bloomIntensity = comp.bloomIntensity;
+				batch[i].bloomThreshold = comp.bloomThreshold;
+				batch[i].bloomRadius = comp.bloomRadius;
 			}
 			return batch;
 		});
@@ -110,6 +124,7 @@ static class ComponentBatchManager {
 				var comp = array.Get(i);
 				var batchData = comp.GetBatchData();
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				batch[i].size = batchData.size;
 				batch[i].isTrigger = batchData.isTrigger;
 				batch[i].mass = batchData.mass;
@@ -135,6 +150,7 @@ static class ComponentBatchManager {
 			for (int i = 0; i < count; i++) {
 				var comp = array.Get(i);
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				batch[i].threshold = comp.threshold;
 				batch[i].uvTransform = comp.uvTransform;
 			}
@@ -158,6 +174,7 @@ static class ComponentBatchManager {
 			for (int i = 0; i < count; i++) {
 				var comp = array.Get(i);
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				// 本来は各行列なども同期すべきだが、まずは構造体サイズの一致を優先
 			}
 			return batch;
@@ -180,6 +197,7 @@ static class ComponentBatchManager {
 			for (int i = 0; i < count; i++) {
 				var comp = array.Get(i);
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				batch[i].desiredMoveDirection = comp.desiredMoveDirection;
 				batch[i].desiredRotation = comp.desiredRotation;
 				batch[i].rotationSpeed = comp.rotationSpeed;
@@ -208,6 +226,7 @@ static class ComponentBatchManager {
 			for (int i = 0; i < count; i++) {
 				var comp = array.Get(i);
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				batch[i].currentSelectedId = comp.currentSelectedId;
 				batch[i].isFocused = (byte)(comp.isFocused ? 1 : 0);
 				batch[i].isVisible = (byte)(comp.isVisible ? 1 : 0);
@@ -233,8 +252,19 @@ static class ComponentBatchManager {
 			for (int i = 0; i < count; i++) {
 				var comp = array.Get(i);
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				batch[i].groupIdId = comp.groupIdId;
 				batch[i].elementIndex = comp.elementIndex;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<UIElementComponent, UIElementComponent.BatchData>((ComponentArray<UIElementComponent> array) => {
+			int count = array.Count;
+			UIElementComponent.BatchData[] batch = new UIElementComponent.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
 			}
 			return batch;
 		});
@@ -247,6 +277,7 @@ static class ComponentBatchManager {
 				var comp = array.Get(i);
 				var batchData = comp.GetBatchData();
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
 				batch[i].color = batchData.color;
 				batch[i].textureSize = batchData.textureSize;
 				batch[i].uvTransform = batchData.uvTransform;
@@ -264,12 +295,172 @@ static class ComponentBatchManager {
 			return batch;
 		});
 
-		RegisterAllocator<UIElementComponent, UIElementComponent.BatchData>((ComponentArray<UIElementComponent> array) => {
+		// --- BGMPlayer の登録 ---
+		RegisterConverter<BGMPlayer, BGMPlayer.BatchData>((ComponentArray<BGMPlayer> array) => {
 			int count = array.Count;
-			UIElementComponent.BatchData[] batch = new UIElementComponent.BatchData[count];
+			BGMPlayer.BatchData[] batch = new BGMPlayer.BatchData[count];
 			for (int i = 0; i < count; i++) {
 				var comp = array.Get(i);
 				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
+				batch[i].volume = comp.volume;
+				batch[i].pitch = comp.pitch;
+				batch[i].loop = comp.loop ? 1 : 0;
+				batch[i].playOnAwake = comp.playOnAwake ? 1 : 0;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<BGMPlayer, BGMPlayer.BatchData>((ComponentArray<BGMPlayer> array) => {
+			int count = array.Count;
+			BGMPlayer.BatchData[] batch = new BGMPlayer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				batch[i].compId = array.Get(i).compId;
+			}
+			return batch;
+		});
+
+		// --- SEPlayer の登録 ---
+		RegisterConverter<SEPlayer, SEPlayer.BatchData>((ComponentArray<SEPlayer> array) => {
+			int count = array.Count;
+			SEPlayer.BatchData[] batch = new SEPlayer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
+				batch[i].volume = comp.volume;
+				batch[i].pitch = comp.pitch;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<SEPlayer, SEPlayer.BatchData>((ComponentArray<SEPlayer> array) => {
+			int count = array.Count;
+			SEPlayer.BatchData[] batch = new SEPlayer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				batch[i].compId = array.Get(i).compId;
+			}
+			return batch;
+		});
+
+		// --- BoxCollider の登録 ---
+		RegisterConverter<BoxCollider, BoxCollider.BatchData>((ComponentArray<BoxCollider> array) => {
+			int count = array.Count;
+			BoxCollider.BatchData[] batch = new BoxCollider.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
+				batch[i].size = comp.size;
+				batch[i].isTrigger = comp.isTrigger ? 1 : 0;
+				batch[i].mass = comp.mass;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<BoxCollider, BoxCollider.BatchData>((ComponentArray<BoxCollider> array) => {
+			int count = array.Count;
+			BoxCollider.BatchData[] batch = new BoxCollider.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				batch[i].compId = array.Get(i).compId;
+			}
+			return batch;
+		});
+
+		// --- CircleCollider の登録 ---
+		RegisterConverter<CircleCollider, CircleCollider.BatchData>((ComponentArray<CircleCollider> array) => {
+			int count = array.Count;
+			CircleCollider.BatchData[] batch = new CircleCollider.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
+				batch[i].radius = comp.radius;
+				batch[i].isTrigger = comp.isTrigger ? 1 : 0;
+				batch[i].mass = comp.mass;
+				batch[i].useOwnerScale = comp.useOwnerScale ? 1 : 0;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<CircleCollider, CircleCollider.BatchData>((ComponentArray<CircleCollider> array) => {
+			int count = array.Count;
+			CircleCollider.BatchData[] batch = new CircleCollider.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				batch[i].compId = array.Get(i).compId;
+			}
+			return batch;
+		});
+
+		// --- SphereCollider の登録 ---
+		RegisterConverter<SphereCollider, SphereCollider.BatchData>((ComponentArray<SphereCollider> array) => {
+			int count = array.Count;
+			SphereCollider.BatchData[] batch = new SphereCollider.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
+				batch[i].radius = comp.radius;
+				batch[i].isTrigger = comp.isTrigger ? 1 : 0;
+				batch[i].mass = comp.mass;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<SphereCollider, SphereCollider.BatchData>((ComponentArray<SphereCollider> array) => {
+			int count = array.Count;
+			SphereCollider.BatchData[] batch = new SphereCollider.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				batch[i].compId = array.Get(i).compId;
+			}
+			return batch;
+		});
+
+		// --- AnimationPlayer の登録 ---
+		RegisterConverter<ONEngine.AnimationPlayer, ONEngine.AnimationPlayer.BatchData>((ComponentArray<ONEngine.AnimationPlayer> array) => {
+			int count = array.Count;
+			ONEngine.AnimationPlayer.BatchData[] batch = new ONEngine.AnimationPlayer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				var bd = comp.GetBatchData();
+				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
+				batch[i].isPlaying = bd.isPlaying;
+				batch[i].currentTime = bd.currentTime;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<ONEngine.AnimationPlayer, ONEngine.AnimationPlayer.BatchData>((ComponentArray<ONEngine.AnimationPlayer> array) => {
+			int count = array.Count;
+			ONEngine.AnimationPlayer.BatchData[] batch = new ONEngine.AnimationPlayer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				batch[i].compId = array.Get(i).compId;
+			}
+			return batch;
+		});
+
+		// --- SkinMeshRenderer の登録 ---
+		RegisterConverter<SkinMeshRenderer, SkinMeshRenderer.BatchData>((ComponentArray<SkinMeshRenderer> array) => {
+			int count = array.Count;
+			SkinMeshRenderer.BatchData[] batch = new SkinMeshRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				var bd = comp.GetBatchData();
+				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
+				batch[i].isPlaying = bd.isPlaying;
+				batch[i].animationTime = bd.animationTime;
+				batch[i].animationScale = bd.animationScale;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<SkinMeshRenderer, SkinMeshRenderer.BatchData>((ComponentArray<SkinMeshRenderer> array) => {
+			int count = array.Count;
+			SkinMeshRenderer.BatchData[] batch = new SkinMeshRenderer.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				batch[i].compId = array.Get(i).compId;
 			}
 			return batch;
 		});
@@ -345,6 +536,7 @@ static class ComponentBatchManager {
 
 			for (int i = 0; i < transformBatch.Length; i++) {
 				var comp = transformArray.Get(i);
+				comp.enable = transformBatch[i].enable;
 				comp.position = transformBatch[i].position;
 				comp.rotate = transformBatch[i].rotate;
 				comp.scale = transformBatch[i].scale;
@@ -356,7 +548,7 @@ static class ComponentBatchManager {
 
 			for (int i = 0; i < meshBatch.Length; i++) {
 				var comp = meshArray.Get(i);
-				// MeshRendererの個別のデータがあればここで適用
+				comp.enable = meshBatch[i].enable;
 			}
 		} else if (componentType == typeof(SpriteRenderer)) {
 			var spriteArray = (ComponentArray<SpriteRenderer>)array;
@@ -364,8 +556,12 @@ static class ComponentBatchManager {
 
 			for (int i = 0; i < spriteBatch.Length; i++) {
 				var comp = spriteArray.Get(i);
+				comp.enable = spriteBatch[i].enable;
 				comp.color = spriteBatch[i].color;
 				comp.uvTransform = spriteBatch[i].uvTransform;
+				comp.bloomIntensity = spriteBatch[i].bloomIntensity;
+				comp.bloomThreshold = spriteBatch[i].bloomThreshold;
+				comp.bloomRadius = spriteBatch[i].bloomRadius;
 			}
 		} else if (componentType == typeof(BoxCollider2D)) {
 			var colliderArray = (ComponentArray<BoxCollider2D>)array;
@@ -383,6 +579,7 @@ static class ComponentBatchManager {
 
 			for (int i = 0; i < limit; i++) {
 				var comp = agentArray.Get(i);
+				comp.enable = agentBatch[i].enable;
 				comp.desiredMoveDirection = agentBatch[i].desiredMoveDirection;
 				comp.desiredRotation = agentBatch[i].desiredRotation;
 				comp.rotationSpeed = agentBatch[i].rotationSpeed;
@@ -398,6 +595,7 @@ static class ComponentBatchManager {
 
 			for (int i = 0; i < limit; i++) {
 				var comp = uiGroupArray.Get(i);
+				comp.enable = uiGroupBatch[i].enable;
 				comp.currentSelectedId = uiGroupBatch[i].currentSelectedId;
 				comp.isFocused = uiGroupBatch[i].isFocused != 0;
 				comp.isVisible = uiGroupBatch[i].isVisible != 0;
@@ -410,6 +608,7 @@ static class ComponentBatchManager {
 
 			for (int i = 0; i < limit; i++) {
 				var comp = uiElementArray.Get(i);
+				comp.enable = uiElementBatch[i].enable;
 				comp.groupIdId = uiElementBatch[i].groupIdId;
 				comp.elementIndex = uiElementBatch[i].elementIndex;
 			}
@@ -420,8 +619,104 @@ static class ComponentBatchManager {
 
 			for (int i = 0; i < limit; i++) {
 				var comp = textArray.Get(i);
+				comp.enable = textBatch[i].enable;
 				comp.color = textBatch[i].color;
 				comp.uvTransform = textBatch[i].uvTransform;
+			}
+		} else if (componentType == typeof(DissolveMeshRenderer)) {
+			var dissolveArray = (ComponentArray<DissolveMeshRenderer>)array;
+			var dissolveBatch = (DissolveMeshRenderer.BatchData[])batch;
+			int limit = Math.Min(dissolveArray.Count, dissolveBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = dissolveArray.Get(i);
+				comp.enable = dissolveBatch[i].enable;
+				comp.threshold = dissolveBatch[i].threshold;
+				comp.uvTransform = dissolveBatch[i].uvTransform;
+			}
+		} else if (componentType == typeof(BGMPlayer)) {
+			var bgmArray = (ComponentArray<BGMPlayer>)array;
+			var bgmBatch = (BGMPlayer.BatchData[])batch;
+			int limit = Math.Min(bgmArray.Count, bgmBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = bgmArray.Get(i);
+				comp.enable = bgmBatch[i].enable;
+				comp.volume = bgmBatch[i].volume;
+				comp.pitch = bgmBatch[i].pitch;
+				comp.loop = bgmBatch[i].loop != 0;
+				comp.playOnAwake = bgmBatch[i].playOnAwake != 0;
+			}
+		} else if (componentType == typeof(SEPlayer)) {
+			var seArray = (ComponentArray<SEPlayer>)array;
+			var seBatch = (SEPlayer.BatchData[])batch;
+			int limit = Math.Min(seArray.Count, seBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = seArray.Get(i);
+				comp.enable = seBatch[i].enable;
+				comp.volume = seBatch[i].volume;
+				comp.pitch = seBatch[i].pitch;
+			}
+		} else if (componentType == typeof(BoxCollider)) {
+			var colArray = (ComponentArray<BoxCollider>)array;
+			var colBatch = (BoxCollider.BatchData[])batch;
+			int limit = Math.Min(colArray.Count, colBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = colArray.Get(i);
+				comp.enable = colBatch[i].enable;
+				comp.size = colBatch[i].size;
+				comp.isTrigger = colBatch[i].isTrigger != 0;
+				comp.mass = colBatch[i].mass;
+			}
+		} else if (componentType == typeof(CircleCollider)) {
+			var colArray = (ComponentArray<CircleCollider>)array;
+			var colBatch = (CircleCollider.BatchData[])batch;
+			int limit = Math.Min(colArray.Count, colBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = colArray.Get(i);
+				comp.enable = colBatch[i].enable;
+				comp.radius = colBatch[i].radius;
+				comp.isTrigger = colBatch[i].isTrigger != 0;
+				comp.mass = colBatch[i].mass;
+				comp.useOwnerScale = colBatch[i].useOwnerScale != 0;
+			}
+		} else if (componentType == typeof(SphereCollider)) {
+			var colArray = (ComponentArray<SphereCollider>)array;
+			var colBatch = (SphereCollider.BatchData[])batch;
+			int limit = Math.Min(colArray.Count, colBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = colArray.Get(i);
+				comp.enable = colBatch[i].enable;
+				comp.radius = colBatch[i].radius;
+				comp.isTrigger = colBatch[i].isTrigger != 0;
+				comp.mass = colBatch[i].mass;
+			}
+		} else if (componentType == typeof(ONEngine.AnimationPlayer)) {
+			var animArray = (ComponentArray<ONEngine.AnimationPlayer>)array;
+			var animBatch = (ONEngine.AnimationPlayer.BatchData[])batch;
+			int limit = Math.Min(animArray.Count, animBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = animArray.Get(i);
+				comp.enable = animBatch[i].enable;
+				comp.IsPlaying = animBatch[i].isPlaying != 0;
+				comp.CurrentTime = animBatch[i].currentTime;
+			}
+		} else if (componentType == typeof(SkinMeshRenderer)) {
+			var smrArray = (ComponentArray<SkinMeshRenderer>)array;
+			var smrBatch = (SkinMeshRenderer.BatchData[])batch;
+			int limit = Math.Min(smrArray.Count, smrBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = smrArray.Get(i);
+				comp.enable = smrBatch[i].enable;
+				comp.isPlaying = smrBatch[i].isPlaying != 0;
+				comp.animationTime = smrBatch[i].animationTime;
+				comp.animationScale = smrBatch[i].animationScale;
 			}
 		}
 	}

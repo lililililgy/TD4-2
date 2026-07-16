@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 358.3999938964844,
-                "y": 0.0,
+                "x": 12.0,
+                "y": -6.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 213.39999389648438,
-                "y": 213.4000701904297,
-                "z": 213.4000701904297
+                "x": 3.0,
+                "y": 3.0,
+                "z": 3.0
             },
             "type": "Transform"
         },
@@ -27,7 +27,7 @@
         },
         {
             "enable": 1,
-            "isPixelPerfect": true,
+            "isPixelPerfect": false,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -54,8 +54,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "0cf65f32fe12ef44917778c1d250199d",
-    "name": "Sprite_2",
-    "parentGuid": null,
+    "guid": "9a20f07aee3e36fd64e88c873a5090b7",
+    "name": "InputTypeSprite",
+    "parentGuid": "6243b2904542ef7aefdaf831b544c314",
     "prefabName": ""
 }

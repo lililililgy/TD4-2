@@ -43,7 +43,7 @@ public class RunBehaviorNode : BehaviorNode
                     _failedToLoad = true;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _failedToLoad = true;
             }

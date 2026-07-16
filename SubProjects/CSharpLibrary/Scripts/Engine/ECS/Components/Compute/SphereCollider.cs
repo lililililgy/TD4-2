@@ -3,36 +3,47 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 public class SphereCollider : Component {
-    public float radius {
-        get { return InternalGetRadius(nativeHandle); }
-        set { InternalSetRadius(nativeHandle, value); }
-    }
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
+	public struct BatchData {
+		public uint compId;
+		public int enable;
+		public float radius;
+		public int isTrigger;
+		public float mass;
+	}
 
-    public bool isTrigger {
-        get { return InternalIsTrigger(nativeHandle); }
-        set { InternalSetTrigger(nativeHandle, value); }
-    }
+	private BatchData batchData;
 
-    public float mass {
-        get { return InternalGetMass(nativeHandle); }
-        set { InternalSetMass(nativeHandle, value); }
-    }
+	public BatchData GetBatchData() {
+		return batchData;
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern float InternalGetMass(ulong nativeHandle);
+	public float radius {
+		get { return batchData.radius; }
+		set { batchData.radius = value; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetMass(ulong nativeHandle, float mass);
+	public bool isTrigger {
+		get { return batchData.isTrigger != 0; }
+		set { batchData.isTrigger = value ? 1 : 0; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern float InternalGetRadius(ulong nativeHandle);
+	public float mass {
+		get { return batchData.mass; }
+		set { batchData.mass = value; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetRadius(ulong nativeHandle, float radius);
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern bool InternalIsTrigger(ulong nativeHandle);
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(SphereCollider), batch, 1, ecsGroupName);
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetTrigger(ulong nativeHandle, bool trigger);
+		this.enable = batch[0].enable;
+		batchData.enable = batch[0].enable;
+		batchData.radius = batch[0].radius;
+		batchData.isTrigger = batch[0].isTrigger;
+		batchData.mass = batch[0].mass;
+	}
 }

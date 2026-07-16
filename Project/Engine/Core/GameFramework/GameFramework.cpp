@@ -3,6 +3,25 @@
 #include "Engine/ECS/Component/Components/RendererComponents/ScreenPostEffectTag/ScreenPostEffectTag.h"
 #include "Engine/Core/Utility/Tools/Assert.h"
 
+#include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Agent/AgentIntentComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Mesh/DissolveMeshRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Sprite/SpriteRenderer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/Text/TextRenderer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/BGMPlayer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Audio/SEPlayer.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Animation/AnimationPlayer.h"
+#include "Engine/ECS/Component/Components/RendererComponents/SkinMesh/SkinMeshRenderer.h"
+
 using namespace ONEngine;
 
 /// std
@@ -214,8 +233,85 @@ void GameFramework::Update() {
 						ONEngine::Assert(isWaterCausticsEnabled, "WaterCaustics posteffect should still be enabled in GameScene");
 						ONEngine::Assert(isWaterColorGradingEnabled, "WaterColorGrading posteffect should still be enabled in GameScene");
 						ONEngine::Assert(isWaterDepthFogEnabled, "WaterDepthFog posteffect should still be enabled in GameScene");
+
+						ONEngine::Assert(tag->GetPostEffectWidth() == -1, "Default postEffectWidth should be -1");
+						ONEngine::Assert(tag->GetPostEffectHeight() == -1, "Default postEffectHeight should be -1");
+
+						tag->SetPostEffectWidth(800);
+						tag->SetPostEffectHeight(600);
+						ONEngine::Assert(tag->GetPostEffectWidth() == 800, "postEffectWidth should be 800 after setting");
+						ONEngine::Assert(tag->GetPostEffectHeight() == 600, "postEffectHeight should be 600 after setting");
+						
+						Vector2 size = ScreenPostEffectTag::GetDispatchSize(ecsGroup, entityComponentSystem_.get());
+						ONEngine::Assert(size.x == 800.0f, "GetDispatchSize.x should be 800");
+						ONEngine::Assert(size.y == 600.0f, "GetDispatchSize.y should be 600");
+
+						ONEngine::Assert(tag->GetPostEffectStartX() == 0, "Default postEffectStartX should be 0");
+						ONEngine::Assert(tag->GetPostEffectStartY() == 0, "Default postEffectStartY should be 0");
+						ONEngine::Assert(tag->GetPostEffectPivot() == 0, "Default postEffectPivot should be 0");
+
+						Vector2 offsetDefault = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem_.get());
+						ONEngine::Assert(offsetDefault.x == 0.0f, "GetDispatchStartOffset.x should be 0 by default");
+						ONEngine::Assert(offsetDefault.y == 0.0f, "GetDispatchStartOffset.y should be 0 by default");
+
+						tag->SetPostEffectStartX(500);
+						tag->SetPostEffectStartY(400);
+						ONEngine::Assert(tag->GetPostEffectStartX() == 500, "postEffectStartX should be 500 after setting");
+						ONEngine::Assert(tag->GetPostEffectStartY() == 400, "postEffectStartY should be 400 after setting");
+
+						// Top-Left pivot mode (0)
+						Vector2 offsetTopLeft = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem_.get());
+						ONEngine::Assert(offsetTopLeft.x == 500.0f, "GetDispatchStartOffset.x should be 500 in Top-Left mode");
+						ONEngine::Assert(offsetTopLeft.y == 400.0f, "GetDispatchStartOffset.y should be 400 in Top-Left mode");
+
+						// Center pivot mode (1)
+						tag->SetPostEffectPivot(1);
+						ONEngine::Assert(tag->GetPostEffectPivot() == 1, "postEffectPivot should be 1 after setting");
+
+						Vector2 offsetCenter = ScreenPostEffectTag::GetDispatchStartOffset(ecsGroup, entityComponentSystem_.get());
+						// 500 - 800/2 = 100
+						// 400 - 600/2 = 100
+						ONEngine::Assert(offsetCenter.x == 100.0f, "GetDispatchStartOffset.x should be 100 in Center mode");
+						ONEngine::Assert(offsetCenter.y == 100.0f, "GetDispatchStartOffset.y should be 100 in Center mode");
 					}
 				}
+			}
+		}
+
+		if (EngineConfig::testScene == "ComponentEnableTest" && testFrameCount == 60) {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ComponentEnableTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ComponentEnableTest' should not be null");
+			if (ecsGroup) {
+				#define ASSERT_COMP_DISABLED(CompType) \
+				{ \
+					auto* array = ecsGroup->GetComponentArray<CompType>(); \
+					ONEngine::Assert(array != nullptr, #CompType " array should exist"); \
+					if (array && !array->GetUsedComponents().empty()) { \
+						auto* comp = array->GetUsedComponents().front(); \
+						ONEngine::Assert(comp != nullptr, #CompType " component should exist"); \
+						ONEngine::Assert(comp->enable == 0, #CompType " should be disabled by C# script"); \
+					} \
+				}
+
+				ASSERT_COMP_DISABLED(Transform);
+				ASSERT_COMP_DISABLED(MeshRenderer);
+				ASSERT_COMP_DISABLED(DissolveMeshRenderer);
+				ASSERT_COMP_DISABLED(SpriteRenderer);
+				ASSERT_COMP_DISABLED(TextRenderer);
+				ASSERT_COMP_DISABLED(BoxCollider2D);
+				ASSERT_COMP_DISABLED(CameraComponent);
+				ASSERT_COMP_DISABLED(AgentIntentComponent);
+				ASSERT_COMP_DISABLED(UIGroupComponent);
+				ASSERT_COMP_DISABLED(UIElementComponent);
+				ASSERT_COMP_DISABLED(BGMPlayer);
+				ASSERT_COMP_DISABLED(SEPlayer);
+				ASSERT_COMP_DISABLED(BoxCollider);
+				ASSERT_COMP_DISABLED(CircleCollider);
+				ASSERT_COMP_DISABLED(SphereCollider);
+				ASSERT_COMP_DISABLED(AnimationPlayer);
+				ASSERT_COMP_DISABLED(SkinMeshRenderer);
+
+				#undef ASSERT_COMP_DISABLED
 			}
 		}
 

@@ -3,36 +3,47 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
 public class BoxCollider : Component {
-    public Vector3 size {
-        get { return InternalGetSize(nativeHandle); }
-        set { InternalSetSize(nativeHandle, value); }
-    }
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
+	public struct BatchData {
+		public uint compId;
+		public int enable;
+		public Vector3 size;
+		public int isTrigger;
+		public float mass;
+	}
 
-    public bool isTrigger {
-        get { return InternalIsTrigger(nativeHandle); }
-        set { InternalSetTrigger(nativeHandle, value); }
-    }
+	private BatchData batchData;
 
-    public float mass {
-        get { return InternalGetMassBox(nativeHandle); }
-        set { InternalSetMassBox(nativeHandle, value); }
-    }
+	public BatchData GetBatchData() {
+		return batchData;
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern float InternalGetMassBox(ulong nativeHandle);
+	public Vector3 size {
+		get { return batchData.size; }
+		set { batchData.size = value; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetMassBox(ulong nativeHandle, float mass);
+	public bool isTrigger {
+		get { return batchData.isTrigger != 0; }
+		set { batchData.isTrigger = value ? 1 : 0; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern Vector3 InternalGetSize(ulong nativeHandle);
+	public float mass {
+		get { return batchData.mass; }
+		set { batchData.mass = value; }
+	}
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetSize(ulong nativeHandle, Vector3 size);
+	public override void SyncFromNative(string ecsGroupName) {
+		if (nativeHandle == 0) return;
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern bool InternalIsTrigger(ulong nativeHandle);
+		BatchData[] batch = new BatchData[1];
+		batch[0].compId = compId;
+		ComponentBatchManager.InternalGetBatch(typeof(BoxCollider), batch, 1, ecsGroupName);
 
-    [MethodImpl(MethodImplOptions.InternalCall)]
-    private static extern void InternalSetTrigger(ulong nativeHandle, bool trigger);
+		this.enable = batch[0].enable;
+		batchData.enable = batch[0].enable;
+		batchData.size = batch[0].size;
+		batchData.isTrigger = batch[0].isTrigger;
+		batchData.mass = batch[0].mass;
+	}
 }

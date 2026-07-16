@@ -40,11 +40,11 @@ public class EnemySpawnSystem : MonoScript {
     [SerializeField] private string originName_ = "EnemySpawnOrigin";
     [SerializeField] private string heatMapEntityName_ = "EnemyHeatMap";
     // スポーン範囲
-    [SerializeField] private Vector2 spawnAreaMin_;
-    [SerializeField] private Vector2 spawnAreaMax_;
+    [SerializeField] private Vector2 spawnAreaMin_ = default;
+    [SerializeField] private Vector2 spawnAreaMax_ = default;
     // 除外範囲（スポーンしない範囲）
-    [SerializeField] private Vector2 exclusionAreaMin_;
-    [SerializeField] private Vector2 exclusionAreaMax_;
+    [SerializeField] private Vector2 exclusionAreaMin_ = default;
+    [SerializeField] private Vector2 exclusionAreaMax_ = default;
     // スポーン間隔
     [SerializeField] private float spawnInterval_ = 5.0f;
     private float spawnTimer_ = 0.0f;
@@ -120,7 +120,7 @@ public class EnemySpawnSystem : MonoScript {
             spawnCount++;
 
             // 敵の発生処理
-            Vector2 spawnPos = CalculateSpawnPos();
+            Vector2 spawnPos = CalculateSpawnPos(heatMap);
             Biome biome = ResolveBiome(spawnPos);
             if (biome == null) continue;
 
@@ -150,9 +150,7 @@ public class EnemySpawnSystem : MonoScript {
     }
 
     // 敵のスポーン位置を計算する。セルを重みに応じて抽選し、そのセル範囲内のランダムな座標を返す。
-    private Vector2 CalculateSpawnPos() {
-        EnemyHeatMap heatMap = entity.GetScript<EnemyHeatMap>();
-
+    private Vector2 CalculateSpawnPos(EnemyHeatMap heatMap) {
         float total = 0.0f;
         foreach (var c in spawnCellWeights_) {
             if (c.weight > 0.0f) total += c.weight;
