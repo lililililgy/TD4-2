@@ -55,5 +55,7 @@ public class ComponentEnableTestScript : MonoScript
         
         var smr = entity.GetComponent<SkinMeshRenderer>();
         if (smr) smr.enable = 0;
+
+        this.enable = false;
     }
 }
