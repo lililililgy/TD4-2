@@ -31,7 +31,8 @@
                 "maxHp_": 300.0
             },
             "KingJellyfish": {
-                "cameraEntityName": "Camera",
+                "cameraEntityName": "MainCamera",
+                "damageInvincibilityDuration": 0.5,
                 "fixedAttackType": 0,
                 "idleDuration": 2.0,
                 "maxHp": 10,

@@ -20,6 +20,7 @@ public class KingJellyfish : MonoScript {
     [SerializeField] public string cameraEntityName = "Camera";
 
     [SerializeField] public float idleDuration = 2.0f;
+    [SerializeField] public float damageInvincibilityDuration = 0.5f;
     [SerializeField] public bool randomizeAttackType = true;
     [SerializeField] public KingJellyfishAttackTypeEnum fixedAttackType = KingJellyfishAttackTypeEnum.ChargeAttack;
 
@@ -35,6 +36,7 @@ public class KingJellyfish : MonoScript {
     private KingJellyfishElectricFieldSettings electricFieldSettings_;
     private KingJellyfishRotatingBeamSettings rotatingBeamSettings_;
     private JellyfishWeakPoint weakPoint_;
+    private float damageInvincibilityRemaining_;
 
     private Vector2 chargeStartPosition_;
     private Vector2 chargeTargetPosition_;
@@ -52,6 +54,7 @@ public class KingJellyfish : MonoScript {
     // 初期化
     //=============================
     public override void Initialize() {
+        hp_ = entity.GetScript<HP>();
 
         moveSettings_ = GetOrAddSettings<KingJellyfishMoveSettings>();
         chargeSettings_ = GetOrAddSettings<KingJellyfishChargeAttackSettings>();
@@ -71,6 +74,7 @@ public class KingJellyfish : MonoScript {
 
         movementDepth_ = transform.position.z;
         attackRequested_ = false;
+        damageInvincibilityRemaining_ = 0.0f;
         ResetActionLoop();
         ChangeState(new KingJellyfishIdleState());
     }
@@ -79,6 +83,7 @@ public class KingJellyfish : MonoScript {
     // 更新
     //=============================
     public override void Update() {
+        UpdateDamageInvincibility();
 
         if (state_ != null) {
             state_.Update(this);
@@ -104,11 +109,26 @@ public class KingJellyfish : MonoScript {
     // ダメージ処理
     //=============================================================
     public void TakeDamage(float damage) {
-        if (hp_ == null) {
+        if (hp_ == null || damage <= 0.0f || damageInvincibilityRemaining_ > 0.0f) {
             return;
         }
 
+        float hpBeforeDamage = hp_.CurrentHp;
         hp_.TakeDamage(damage);
+        if (hp_.CurrentHp < hpBeforeDamage) {
+            damageInvincibilityRemaining_ = NonNegative(damageInvincibilityDuration);
+        }
+    }
+
+    private void UpdateDamageInvincibility() {
+        if (damageInvincibilityRemaining_ <= 0.0f) {
+            return;
+        }
+
+        damageInvincibilityRemaining_ -= Time.deltaTime;
+        if (damageInvincibilityRemaining_ < 0.0f) {
+            damageInvincibilityRemaining_ = 0.0f;
+        }
     }
 
     internal void SetWeakPointCollisionEnabled(bool enabled) {
