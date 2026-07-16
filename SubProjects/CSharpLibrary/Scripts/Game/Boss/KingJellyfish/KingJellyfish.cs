@@ -243,24 +243,15 @@ public class KingJellyfish : MonoScript {
         ResolveTarget();
 
         // ターゲットの位置に向かって回転する
-        RotateTowardPosition(ToPlane(targetEntity_.transform.position));
-
-        //デバッグ::カラーを点滅させる
-        SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null) {
-            float blinkFrequency = 5.0f; // 点滅の周波数（Hz）
-            float blinkPhase = Mathf.Sin(Time.time * blinkFrequency * Mathf.PI * 2.0f);
-            float alpha = Mathf.Clamp01((blinkPhase + 1.0f) * 0.5f); // 0から1の範囲に変換
-            Vector4 originalColor = spriteRenderer.color;
-            spriteRenderer.color = new Vector4(1.0f, 0.0f, 0.0f, alpha);
+        if (targetEntity_ != null && targetEntity_.transform != null) {
+            RotateTowardPosition(ToPlane(targetEntity_.transform.position));
         }
 
+        UpdateAttackTellColor(KingJellyfishAttackTypeEnum.ChargeAttack);
     }
 
     internal bool UpdateChargeAttack() {
-
-        SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
-        spriteRenderer.color = new Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+        SetAttackColor(KingJellyfishAttackTypeEnum.ChargeAttack);
 
         // ターゲットの位置に向かって移動する
         Vector2 currentPosition = ToPlane(transform.position);
@@ -301,10 +292,6 @@ public class KingJellyfish : MonoScript {
         Vector2 currentPosition = ToPlane(transform.position);
         Vector2 next = currentPosition + chargeRecoveryVelocity_ * dampingRatio * Time.deltaTime;
         SetPlanePosition(next);
-
-        //JellyfishWeakPointの衝突判定を有効化する
-        BoxCollider2D weakPointCollider = entity.GetChild(0).GetComponent<BoxCollider2D>();
-        weakPointCollider.enable = 1;
 
         // 回復中もターゲットの位置に向かって回転する
         RotateTowardPosition(chargeTargetPosition_);
@@ -413,29 +400,20 @@ public class KingJellyfish : MonoScript {
     //=============================
     // 8方向レーザー攻撃処理
     //=============================
-    internal void UpdateLaserTell() {
+    internal void UpdateLaserTell(KingJellyfishAttackTypeEnum attackType) {
         ResolveTarget();
         if (targetEntity_ != null && targetEntity_.transform != null) {
             RotateTowardPosition(ToPlane(targetEntity_.transform.position));
-
-            //カラーを点滅させる
-            SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null) {
-                float blinkFrequency = 5.0f; // 点滅の周波数（Hz）
-                float blinkPhase = Mathf.Sin(Time.time * blinkFrequency * Mathf.PI * 2.0f);
-                float alpha = Mathf.Clamp01((blinkPhase + 1.0f) * 0.5f); // 0から1の範囲に変換
-                Vector4 originalColor = spriteRenderer.color;
-                spriteRenderer.color = new Vector4(0.0f, 1.0f, 0.0f, alpha);
-            }
         }
+
+        UpdateAttackTellColor(attackType);
     }
 
     //=============================
     // 8方向レーザー攻撃の発射処理
     //=============================
     internal void FireOmnidirectionalLaser() {
-        SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
-        spriteRenderer.color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+        SetAttackColor(KingJellyfishAttackTypeEnum.Omnidirectional_Beam);
 
         if (String.IsNullOrEmpty(beamSettings_.laserPrefabName)) {
             return;
@@ -463,6 +441,8 @@ public class KingJellyfish : MonoScript {
     // 回転ビーム攻撃
     //=============================
     internal void FireRotatingLasers() {
+        SetAttackColor(KingJellyfishAttackTypeEnum.RotatingBeam);
+
         if (String.IsNullOrEmpty(rotatingBeamSettings_.laserPrefabName)) {
             return;
         }
@@ -493,6 +473,8 @@ public class KingJellyfish : MonoScript {
     // 帯電フィールド攻撃
     //=============================
     internal void DeployElectricFields() {
+        SetAttackColor(KingJellyfishAttackTypeEnum.ElectricField);
+
         if (String.IsNullOrEmpty(electricFieldSettings_.fieldPrefabName)) {
             return;
         }
@@ -537,6 +519,52 @@ public class KingJellyfish : MonoScript {
         if (targetEntity_ != null && targetEntity_.transform != null) {
             RotateTowardPosition(ToPlane(targetEntity_.transform.position));
         }
+    }
+
+    internal void UpdateAttackTellColor(KingJellyfishAttackTypeEnum attackType) {
+        SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+        if (renderer == null) {
+            return;
+        }
+
+        Vector4 color = GetAttackColor(attackType);
+        float blinkPhase = (Mathf.Sin(Time.time * Mathf.PI * 10.0f) + 1.0f) * 0.5f;
+        float brightness = 0.35f + blinkPhase * 0.65f;
+        renderer.color = new Vector4(
+            color.x * brightness,
+            color.y * brightness,
+            color.z * brightness,
+            1.0f);
+    }
+
+    internal void SetAttackColor(KingJellyfishAttackTypeEnum attackType) {
+        SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+        if (renderer != null) {
+            renderer.color = GetAttackColor(attackType);
+        }
+    }
+
+    internal void EnsureSpriteOpaque() {
+        SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
+        if (renderer == null) {
+            return;
+        }
+
+        Vector4 color = renderer.color;
+        renderer.color = new Vector4(color.x, color.y, color.z, 1.0f);
+    }
+
+    private static Vector4 GetAttackColor(KingJellyfishAttackTypeEnum attackType) {
+        if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack) {
+            return new Vector4(1.0f, 0.15f, 0.1f, 1.0f);
+        }
+        if (attackType == KingJellyfishAttackTypeEnum.Omnidirectional_Beam) {
+            return new Vector4(0.15f, 1.0f, 0.25f, 1.0f);
+        }
+        if (attackType == KingJellyfishAttackTypeEnum.ElectricField) {
+            return new Vector4(0.15f, 0.55f, 1.0f, 1.0f);
+        }
+        return new Vector4(0.85f, 0.2f, 1.0f, 1.0f);
     }
 
     private void ConfigureLaserEntity(

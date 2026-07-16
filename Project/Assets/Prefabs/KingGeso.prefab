@@ -66,7 +66,7 @@
                     "x": 50.0,
                     "y": 50.0
                 },
-                "tellDuration": 0.8,
+                "tellDuration": 0.800000011920929,
                 "turnSpeed": 0.5
             },
             "KingGesoInkBarrageSettings": {
@@ -84,7 +84,7 @@
                     "x": 0.0,
                     "y": 0.0
                 },
-                "tellDuration": 1.2,
+                "tellDuration": 1.2000000476837158,
                 "waveCount": 7,
                 "waveInterval": 1.600000023841858
             },
@@ -118,7 +118,7 @@
                 "rotationSpeed": 8.0,
                 "selectionWeight": 1.0,
                 "spawnInterval": 2.0,
-                "tellDuration": 0.8
+                "tellDuration": 0.800000011920929
             },
             "SpriteAnimation": {
                 "cols": 3,
@@ -145,6 +145,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "05a5378f0ccc9ddfe67c691e1e72c324",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
