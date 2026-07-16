@@ -33,6 +33,13 @@ void ApplyAnimator(void* element, ECSGroup* ecsGroup);
 void ApplyUIGroup(void* element, ECSGroup* ecsGroup);
 void ApplyUIElement(void* element, ECSGroup* ecsGroup);
 void ApplyBoxCollider2D(void* element, ECSGroup* ecsGroup);
+void ApplyBGMPlayer(void* element, ECSGroup* ecsGroup);
+void ApplySEPlayer(void* element, ECSGroup* ecsGroup);
+void ApplyBoxCollider(void* element, ECSGroup* ecsGroup);
+void ApplyCircleCollider(void* element, ECSGroup* ecsGroup);
+void ApplySphereCollider(void* element, ECSGroup* ecsGroup);
+void ApplyAnimationPlayer(void* element, ECSGroup* ecsGroup);
+void ApplySkinMeshRenderer(void* element, ECSGroup* ecsGroup);
 
 /// Fetch
 
@@ -47,6 +54,13 @@ void FetchAnimator(void* element, ECSGroup* ecsGroup);
 void FetchUIGroup(void* element, ECSGroup* ecsGroup);
 void FetchUIElement(void* element, ECSGroup* ecsGroup);
 void FetchBoxCollider2D(void* element, ECSGroup* ecsGroup);
+void FetchBGMPlayer(void* element, ECSGroup* ecsGroup);
+void FetchSEPlayer(void* element, ECSGroup* ecsGroup);
+void FetchBoxCollider(void* element, ECSGroup* ecsGroup);
+void FetchCircleCollider(void* element, ECSGroup* ecsGroup);
+void FetchSphereCollider(void* element, ECSGroup* ecsGroup);
+void FetchAnimationPlayer(void* element, ECSGroup* ecsGroup);
+void FetchSkinMeshRenderer(void* element, ECSGroup* ecsGroup);
 
 
 ComponentApplyFunc GetApplyFunc(MonoClass* monoClass);
