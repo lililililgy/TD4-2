@@ -4,8 +4,7 @@ using System.Collections.Generic;
 //==========================================================
 // キングクラゲの攻撃タイプ
 //==========================================================
-public enum KingJellyfishAttackTypeEnum
-{
+public enum KingJellyfishAttackTypeEnum {
     ChargeAttack, //体当たり
     Omnidirectional_Beam, //全方向ビーム攻撃
     ElectricField, //帯電フィールド攻撃
@@ -17,7 +16,6 @@ public enum KingJellyfishAttackTypeEnum
 //================================================================
 public class KingJellyfish : MonoScript {
 
-    [SerializeField] public int maxHp = 10;
     [SerializeField] public string targetEntityName = "Player";
     [SerializeField] public string cameraEntityName = "Camera";
 
@@ -36,6 +34,7 @@ public class KingJellyfish : MonoScript {
     private KingJellyfishOmnidirectionalBeamSettings beamSettings_;
     private KingJellyfishElectricFieldSettings electricFieldSettings_;
     private KingJellyfishRotatingBeamSettings rotatingBeamSettings_;
+    private JellyfishWeakPoint weakPoint_;
 
     private Vector2 chargeStartPosition_;
     private Vector2 chargeTargetPosition_;
@@ -54,28 +53,19 @@ public class KingJellyfish : MonoScript {
     //=============================
     public override void Initialize() {
 
-        // HPコンポーネントを取得または追加
-        hp_ = entity.GetScript<HP>();
-        if(hp_ == null)
-        {
-            hp_ = entity.AddScript<HP>();
-        }
-        hp_.MaxHp = maxHp > 0 ? maxHp : 1;
-        hp_.Initialize();
-
         moveSettings_ = GetOrAddSettings<KingJellyfishMoveSettings>();
         chargeSettings_ = GetOrAddSettings<KingJellyfishChargeAttackSettings>();
         beamSettings_ = GetOrAddSettings<KingJellyfishOmnidirectionalBeamSettings>();
         electricFieldSettings_ = GetOrAddSettings<KingJellyfishElectricFieldSettings>();
         rotatingBeamSettings_ = GetOrAddSettings<KingJellyfishRotatingBeamSettings>();
+        ResolveWeakPoint();
+        SetWeakPointCollisionEnabled(true);
 
         // 初期状態を待機状態に設定
-        if (!String.IsNullOrEmpty(targetEntityName))
-        {
+        if (!String.IsNullOrEmpty(targetEntityName)) {
             targetEntity_ = ecsGroup.FindEntity(targetEntityName);
         }
-        if (!String.IsNullOrEmpty(cameraEntityName))
-        {
+        if (!String.IsNullOrEmpty(cameraEntityName)) {
             cameraEntity_ = ecsGroup.FindEntity(cameraEntityName);
         }
 
@@ -90,8 +80,7 @@ public class KingJellyfish : MonoScript {
     //=============================
     public override void Update() {
 
-        if (state_ != null)
-        {
+        if (state_ != null) {
             state_.Update(this);
         }
 
@@ -100,39 +89,60 @@ public class KingJellyfish : MonoScript {
     //=============================================================
     // ターゲットの設定
     //=============================================================
-    public void SetTarget(Entity target)
-    {
+    public void SetTarget(Entity target) {
         targetEntity_ = target;
     }
 
     //=============================================================
     // 攻撃の要求
     //=============================================================
-    public void RequestAttack()
-    {
+    public void RequestAttack() {
         attackRequested_ = true;
     }
 
     //=============================================================
     // ダメージ処理
     //=============================================================
-    public void TakeDamage(float damage)
-    {
-        if (hp_ == null)
-        {
+    public void TakeDamage(float damage) {
+        if (hp_ == null) {
             return;
         }
 
         hp_.TakeDamage(damage);
     }
 
+    internal void SetWeakPointCollisionEnabled(bool enabled) {
+        if (weakPoint_ == null) {
+            ResolveWeakPoint();
+        }
+
+        if (weakPoint_ != null) {
+            weakPoint_.SetCollisionEnabled(enabled);
+        }
+    }
+
+    private void ResolveWeakPoint() {
+        weakPoint_ = null;
+        uint childCount = entity.GetChildCount();
+        for (uint i = 0; i < childCount; i++) {
+            Entity child = entity.GetChild(i);
+            if (child == null) {
+                continue;
+            }
+
+            JellyfishWeakPoint weakPoint = child.GetScript<JellyfishWeakPoint>();
+            if (weakPoint != null) {
+                weakPoint_ = weakPoint;
+                return;
+            }
+        }
+    }
+
     //=============================================================
     // 攻撃タイプの選択
     //=============================================================
-    internal KingJellyfishAttackTypeEnum SelectAttackType()
-    {   
-        if (!randomizeAttackType)
-        {
+    internal KingJellyfishAttackTypeEnum SelectAttackType() {
+        if (!randomizeAttackType) {
             return fixedAttackType;
         }
 
@@ -141,26 +151,22 @@ public class KingJellyfish : MonoScript {
         float fieldWeight = NonNegative(electricFieldSettings_.selectionWeight);
         float rotatingWeight = NonNegative(rotatingBeamSettings_.selectionWeight);
         float totalWeight = chargeWeight + beamWeight + fieldWeight + rotatingWeight;
-        if (totalWeight <= 0.0f)
-        {
+        if (totalWeight <= 0.0f) {
             return fixedAttackType;
         }
 
         float lottery = RandomUtil.NextFloat() * totalWeight;
-        if (lottery < chargeWeight)
-        {
+        if (lottery < chargeWeight) {
             return KingJellyfishAttackTypeEnum.ChargeAttack;
         }
 
         lottery -= chargeWeight;
-        if (lottery < beamWeight)
-        {
+        if (lottery < beamWeight) {
             return KingJellyfishAttackTypeEnum.Omnidirectional_Beam;
         }
 
         lottery -= beamWeight;
-        if (lottery < fieldWeight)
-        {
+        if (lottery < fieldWeight) {
             return KingJellyfishAttackTypeEnum.ElectricField;
         }
 
@@ -170,8 +176,7 @@ public class KingJellyfish : MonoScript {
     //=============================================================
     // 攻撃リクエスト処理
     //=============================================================
-    internal bool ConsumeAttackRequest()
-    {
+    internal bool ConsumeAttackRequest() {
         bool requested = attackRequested_;
         attackRequested_ = false;
         return requested;
@@ -180,13 +185,11 @@ public class KingJellyfish : MonoScript {
     //=============================================================
     // 行動ループ処理
     //=============================================================
-    internal void ResetActionLoop()
-    {
+    internal void ResetActionLoop() {
         currentActionLoopCount_ = 0;
     }
 
-    internal bool ConsumeActionLoop()
-    {
+    internal bool ConsumeActionLoop() {
         currentActionLoopCount_++;
         return currentActionLoopCount_ < ActionLoopCount;
     }
@@ -194,16 +197,13 @@ public class KingJellyfish : MonoScript {
     //=============================================================
     // 状態の変更
     //=============================================================
-    internal void ChangeState(IKingJellyfishState nextState)
-    {
-        if (state_ != null)
-        {
+    internal void ChangeState(IKingJellyfishState nextState) {
+        if (state_ != null) {
             state_.Exit(this);
         }
 
         state_ = nextState;
-        if (state_ != null)
-        {
+        if (state_ != null) {
             state_.Enter(this);
         }
     }
@@ -211,19 +211,16 @@ public class KingJellyfish : MonoScript {
     //=============================
     // 体当たり攻撃の開始処理
     //=============================
-    internal bool BeginChargeAttack()
-    {
+    internal bool BeginChargeAttack() {
         ResolveTarget();
-        if (targetEntity_ == null || targetEntity_.transform == null)
-        {
+        if (targetEntity_ == null || targetEntity_.transform == null) {
             return false;
         }
 
         Vector2 start = ToPlane(transform.position);
         Vector2 target = ToPlane(targetEntity_.transform.position);
         Vector2 direction = (target - start).Normalized();
-        if (direction.LengthSq() <= 0.001f)
-        {
+        if (direction.LengthSq() <= 0.001f) {
             direction = Vector2.down;
         }
 
@@ -234,39 +231,33 @@ public class KingJellyfish : MonoScript {
         chargeDamageFieldDeployed_ = false;
         movementDepth_ = transform.position.z;
         RotateTowardPosition(chargeTargetPosition_);
+        SetWeakPointCollisionEnabled(false);
         return true;
     }
 
     //=============================
     // 体当たり攻撃の予備動作処理
     //=============================
-    internal void UpdateChargeTell()
-    {
+    internal void UpdateChargeTell() {
         // 設定されていない場合、ターゲットの設定
         ResolveTarget();
 
-        // ターゲットが存在する場合のみ回転処理を行う
-        if (targetEntity_ != null && targetEntity_.transform != null)
-        {
-            RotateTowardPosition(ToPlane(targetEntity_.transform.position));
+        // ターゲットの位置に向かって回転する
+        RotateTowardPosition(ToPlane(targetEntity_.transform.position));
 
-
-            
-            //デバッグ::カラーを点滅させる
-            SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                float blinkFrequency = 5.0f; // 点滅の周波数（Hz）
-                float blinkPhase = Mathf.Sin(Time.time * blinkFrequency * Mathf.PI * 2.0f);
-                float alpha = Mathf.Clamp01((blinkPhase + 1.0f) * 0.5f); // 0から1の範囲に変換
-                Vector4 originalColor = spriteRenderer.color;
-                spriteRenderer.color = new Vector4(1.0f, 0.0f, 0.0f, alpha);
-            }
+        //デバッグ::カラーを点滅させる
+        SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null) {
+            float blinkFrequency = 5.0f; // 点滅の周波数（Hz）
+            float blinkPhase = Mathf.Sin(Time.time * blinkFrequency * Mathf.PI * 2.0f);
+            float alpha = Mathf.Clamp01((blinkPhase + 1.0f) * 0.5f); // 0から1の範囲に変換
+            Vector4 originalColor = spriteRenderer.color;
+            spriteRenderer.color = new Vector4(1.0f, 0.0f, 0.0f, alpha);
         }
+
     }
 
-    internal bool UpdateChargeAttack()
-    {
+    internal bool UpdateChargeAttack() {
 
         SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Vector4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -277,8 +268,7 @@ public class KingJellyfish : MonoScript {
         float remainingDistance = toTarget.Length();
 
         // 目標位置に到達したかどうかを判定する
-        if (remainingDistance <= 0.001f)
-        {
+        if (remainingDistance <= 0.001f) {
             SetPlanePosition(chargeTargetPosition_);
             DeployChargeDamageField();
             return true;
@@ -286,8 +276,7 @@ public class KingJellyfish : MonoScript {
 
         // 移動距離を計算し、目標位置に到達するかどうかを判定する
         float moveDistance = ChargeSpeed * Time.deltaTime;
-        if (moveDistance >= remainingDistance)
-        {
+        if (moveDistance >= remainingDistance) {
             SetPlanePosition(chargeTargetPosition_);
             RotateTowardPosition(chargeTargetPosition_);
             DeployChargeDamageField();
@@ -306,13 +295,16 @@ public class KingJellyfish : MonoScript {
     //=============================
     // 体当たり攻撃の回復処理
     //=============================
-    internal void UpdateChargeRecovery(float elapsed)
-    {
+    internal void UpdateChargeRecovery(float elapsed) {
         float duration = ChargeRecoveryDuration;
         float dampingRatio = 1.0f - Mathf.Clamp01(elapsed / duration);
         Vector2 currentPosition = ToPlane(transform.position);
         Vector2 next = currentPosition + chargeRecoveryVelocity_ * dampingRatio * Time.deltaTime;
         SetPlanePosition(next);
+
+        //JellyfishWeakPointの衝突判定を有効化する
+        BoxCollider2D weakPointCollider = entity.GetChild(0).GetComponent<BoxCollider2D>();
+        weakPointCollider.enable = 1;
 
         // 回復中もターゲットの位置に向かって回転する
         RotateTowardPosition(chargeTargetPosition_);
@@ -321,27 +313,23 @@ public class KingJellyfish : MonoScript {
     //=============================
     // 体当たり攻撃のダメージフィールド生成処理
     //=============================
-    internal void DeployChargeDamageField()
-    {
-        if (chargeDamageFieldDeployed_)
-        {
+    internal void DeployChargeDamageField() {
+        if (chargeDamageFieldDeployed_) {
             return;
         }
 
+        // ダメージフィールドを生成する
         chargeDamageFieldDeployed_ = true;
         CreateChargeDamageField(chargeStartPosition_, chargeTargetPosition_);
     }
 
-    private void CreateChargeDamageField(Vector2 start, Vector2 end)
-    {
-        if (String.IsNullOrEmpty(chargeSettings_.damageFieldPrefabName))
-        {
+    private void CreateChargeDamageField(Vector2 start, Vector2 end) {
+        if (String.IsNullOrEmpty(chargeSettings_.damageFieldPrefabName)) {
             return;
         }
 
         Entity damageField = ecsGroup.CreateEntity(chargeSettings_.damageFieldPrefabName);
-        if (damageField == null)
-        {
+        if (damageField == null) {
             return;
         }
 
@@ -350,12 +338,10 @@ public class KingJellyfish : MonoScript {
         ConfigureChargeDamageField(damageField, start, end);
     }
 
-    private void ConfigureChargeDamageField(Entity damageField, Vector2 start, Vector2 end)
-    {
+    private void ConfigureChargeDamageField(Entity damageField, Vector2 start, Vector2 end) {
         Vector2 move = end - start;
         float length = move.Length();
-        if (length <= 0.001f)
-        {
+        if (length <= 0.001f) {
             damageField.Destroy();
             return;
         }
@@ -368,14 +354,12 @@ public class KingJellyfish : MonoScript {
         damageField.transform.rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
 
         JellyfishChargeDamageField damageFieldScript = damageField.GetScript<JellyfishChargeDamageField>();
-        if (damageFieldScript != null)
-        {
+        if (damageFieldScript != null) {
             damageFieldScript.Configure(start, end, ChargeDamageFieldWidth, chargeSettings_.damage, ChargeDamageFieldDuration, transform.position.z);
         }
 
         AttackCollision attackCollision = damageField.GetScript<AttackCollision>();
-        if (attackCollision != null)
-        {
+        if (attackCollision != null) {
             attackCollision.Damage = chargeSettings_.damage;
         }
     }
@@ -383,8 +367,7 @@ public class KingJellyfish : MonoScript {
     //=============================
     // 弧を描く移動処理
     //=============================
-    internal void BeginArcMove()
-    {
+    internal void BeginArcMove() {
         movementDepth_ = transform.position.z;
         arcMoveStartPosition_ = ToPlane(transform.position);
 
@@ -396,8 +379,7 @@ public class KingJellyfish : MonoScript {
         RotateTowardPosition(arcMoveEndPosition_);
     }
 
-    internal bool UpdateArcMove(float elapsed)
-    {
+    internal bool UpdateArcMove(float elapsed) {
         float duration = MoveDuration;
         float ratio = Mathf.Clamp01(elapsed / duration);
 
@@ -406,8 +388,7 @@ public class KingJellyfish : MonoScript {
         Vector2 next = new Vector2(linePosition.x, linePosition.y + arcOffset);
 
         Vector2 frameMove = next - arcMoveLastPosition_;
-        if (frameMove.LengthSq() > 0.001f)
-        {
+        if (frameMove.LengthSq() > 0.001f) {
             arcMoveLastDirection_ = frameMove.Normalized();
             arcMoveInertiaVelocity_ = arcMoveLastDirection_ * (MoveSpeed * MoveInertiaRate);
         }
@@ -419,8 +400,7 @@ public class KingJellyfish : MonoScript {
         return ratio >= 1.0f;
     }
 
-    internal void UpdateArcMoveInertia(float elapsed)
-    {
+    internal void UpdateArcMoveInertia(float elapsed) {
         float duration = MoveInertiaDuration;
         float dampingRatio = 1.0f - Mathf.Clamp01(elapsed / duration);
         Vector2 currentPosition = ToPlane(transform.position);
@@ -433,17 +413,14 @@ public class KingJellyfish : MonoScript {
     //=============================
     // 8方向レーザー攻撃処理
     //=============================
-    internal void UpdateLaserTell()
-    {
+    internal void UpdateLaserTell() {
         ResolveTarget();
-        if (targetEntity_ != null && targetEntity_.transform != null)
-        {
+        if (targetEntity_ != null && targetEntity_.transform != null) {
             RotateTowardPosition(ToPlane(targetEntity_.transform.position));
 
             //カラーを点滅させる
             SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
+            if (spriteRenderer != null) {
                 float blinkFrequency = 5.0f; // 点滅の周波数（Hz）
                 float blinkPhase = Mathf.Sin(Time.time * blinkFrequency * Mathf.PI * 2.0f);
                 float alpha = Mathf.Clamp01((blinkPhase + 1.0f) * 0.5f); // 0から1の範囲に変換
@@ -456,13 +433,11 @@ public class KingJellyfish : MonoScript {
     //=============================
     // 8方向レーザー攻撃の発射処理
     //=============================
-    internal void FireOmnidirectionalLaser()
-    {
+    internal void FireOmnidirectionalLaser() {
         SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
         spriteRenderer.color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
 
-        if (String.IsNullOrEmpty(beamSettings_.laserPrefabName))
-        {
+        if (String.IsNullOrEmpty(beamSettings_.laserPrefabName)) {
             return;
         }
 
@@ -470,15 +445,13 @@ public class KingJellyfish : MonoScript {
         int count = LaserCount;
 
         // レーザーを全方向に発射する
-        for (int i = 0; i < count; i++)
-        {
+        for (int i = 0; i < count; i++) {
             float angle = Mathf.PI * 2.0f * i / count;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
             // レーザーエンティティを生成する
             Entity laser = ecsGroup.CreateEntity(beamSettings_.laserPrefabName);
-            if (laser == null)
-            {
+            if (laser == null) {
                 continue;
             }
 
@@ -489,22 +462,18 @@ public class KingJellyfish : MonoScript {
     //=============================
     // 回転ビーム攻撃
     //=============================
-    internal void FireRotatingLasers()
-    {
-        if (String.IsNullOrEmpty(rotatingBeamSettings_.laserPrefabName))
-        {
+    internal void FireRotatingLasers() {
+        if (String.IsNullOrEmpty(rotatingBeamSettings_.laserPrefabName)) {
             return;
         }
 
         Vector2 origin = ToPlane(transform.position);
         int count = RotatingLaserCount;
-        for (int i = 0; i < count; i++)
-        {
+        for (int i = 0; i < count; i++) {
             float angle = Mathf.PI * 2.0f * i / count;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             Entity laser = ecsGroup.CreateEntity(rotatingBeamSettings_.laserPrefabName);
-            if (laser == null)
-            {
+            if (laser == null) {
                 continue;
             }
 
@@ -523,10 +492,8 @@ public class KingJellyfish : MonoScript {
     //=============================
     // 帯電フィールド攻撃
     //=============================
-    internal void DeployElectricFields()
-    {
-        if (String.IsNullOrEmpty(electricFieldSettings_.fieldPrefabName))
-        {
+    internal void DeployElectricFields() {
+        if (String.IsNullOrEmpty(electricFieldSettings_.fieldPrefabName)) {
             return;
         }
 
@@ -535,25 +502,21 @@ public class KingJellyfish : MonoScript {
             ? ToPlane(targetEntity_.transform.position)
             : ToPlane(transform.position);
 
-        for (int i = 0; i < ElectricFieldCount; i++)
-        {
+        for (int i = 0; i < ElectricFieldCount; i++) {
             Vector2 position = center;
-            if (i > 0)
-            {
+            if (i > 0) {
                 float angle = RandomUtil.NextFloat() * Mathf.PI * 2.0f;
                 float distance = RandomUtil.NextFloat() * electricFieldSettings_.spreadRadius;
                 position += new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance;
             }
 
             Entity field = ecsGroup.CreateEntity(electricFieldSettings_.fieldPrefabName);
-            if (field == null)
-            {
+            if (field == null) {
                 continue;
             }
 
             JellyfishElectricField fieldScript = field.GetScript<JellyfishElectricField>();
-            if (fieldScript == null)
-            {
+            if (fieldScript == null) {
                 field.Destroy();
                 continue;
             }
@@ -569,11 +532,9 @@ public class KingJellyfish : MonoScript {
         }
     }
 
-    internal void UpdateLaserRecovery()
-    {
+    internal void UpdateLaserRecovery() {
         ResolveTarget();
-        if (targetEntity_ != null && targetEntity_.transform != null)
-        {
+        if (targetEntity_ != null && targetEntity_.transform != null) {
             RotateTowardPosition(ToPlane(targetEntity_.transform.position));
         }
     }
@@ -586,17 +547,14 @@ public class KingJellyfish : MonoScript {
         float width,
         float damage,
         float duration,
-        float rotationSpeed)
-    {
+        float rotationSpeed) {
         Vector2 normalized = direction.Normalized();
-        if (normalized.LengthSq() <= 0.001f)
-        {
+        if (normalized.LengthSq() <= 0.001f) {
             normalized = Vector2.up;
         }
 
         JellyfishLaser laserScript = laser.GetScript<JellyfishLaser>();
-        if (laserScript == null)
-        {
+        if (laserScript == null) {
             laser.Destroy();
             return;
         }
@@ -605,23 +563,19 @@ public class KingJellyfish : MonoScript {
     }
 
 
-    private void SetPlanePosition(Vector2 position)
-    {
+    private void SetPlanePosition(Vector2 position) {
         transform.position = new Vector3(position.x, position.y, movementDepth_);
     }
-    private static Vector2 ToPlane(Vector3 position)
-    {
+    private static Vector2 ToPlane(Vector3 position) {
         return new Vector2(position.x, position.y);
     }
 
     //============================
     // ターゲットの位置に向かって回転する処理
     //============================
-    private void RotateTowardPosition(Vector2 targetPosition)
-    {
+    private void RotateTowardPosition(Vector2 targetPosition) {
         Vector2 direction = targetPosition - ToPlane(transform.position);
-        if (direction.Length() <= 0.001f)
-        {
+        if (direction.Length() <= 0.001f) {
             return;
         }
 
@@ -630,181 +584,144 @@ public class KingJellyfish : MonoScript {
         transform.rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
     }
 
-    internal float ChargeTellDuration
-    {
+    internal float ChargeTellDuration {
         get { return Positive(chargeSettings_.tellDuration); }
-    }   
+    }
 
-    internal float ChargeMoveDuration
-    {
+    internal float ChargeMoveDuration {
         get { return Positive(chargeSettings_.moveDuration); }
     }
 
-    internal float ChargeSpeed
-    {
+    internal float ChargeSpeed {
         get { return chargeSettings_.speed > 0.0f ? chargeSettings_.speed : 1.0f; }
     }
 
-    internal float ChargeInertiaRate
-    {
+    internal float ChargeInertiaRate {
         get { return NonNegative(chargeSettings_.inertiaRate); }
     }
 
-    internal float ChargeRecoveryDuration
-    {
+    internal float ChargeRecoveryDuration {
         get { return Positive(chargeSettings_.recoveryDuration); }
     }
 
-    internal float ChargeDamageFieldWidth
-    {
+    internal float ChargeDamageFieldWidth {
         get { return chargeSettings_.damageFieldWidth > 0.0f ? chargeSettings_.damageFieldWidth : 1.0f; }
     }
 
-    internal float ChargeDamageFieldDuration
-    {
+    internal float ChargeDamageFieldDuration {
         get { return chargeSettings_.damageFieldDuration > 0.0f ? chargeSettings_.damageFieldDuration : ChargeMoveDuration; }
     }
 
-    internal float IdleDuration
-    {
+    internal float IdleDuration {
         get { return idleDuration > 0 ? idleDuration : 0.01f; }
     }
 
-    internal int ActionLoopCount
-    {
+    internal int ActionLoopCount {
         get { return moveSettings_.actionLoopCount > 0 ? moveSettings_.actionLoopCount : 1; }
     }
 
-    internal float MoveDuration
-    {
+    internal float MoveDuration {
         get { return Positive(moveSettings_.moveDuration); }
     }
 
-    internal float MoveDistance
-    {
+    internal float MoveDistance {
         get { return moveSettings_.moveDistance > 0.0f ? moveSettings_.moveDistance : 1.0f; }
     }
 
-    internal float MoveSpeed
-    {
+    internal float MoveSpeed {
         get { return moveSettings_.moveSpeed > 0.0f ? moveSettings_.moveSpeed : 1.0f; }
     }
 
-    internal float MoveArcHeight
-    {
+    internal float MoveArcHeight {
         get { return moveSettings_.moveArcHeight; }
     }
 
-    internal float MoveInertiaDuration
-    {
+    internal float MoveInertiaDuration {
         get { return Positive(moveSettings_.moveInertiaDuration); }
     }
 
-    internal float MoveInertiaRate
-    {
+    internal float MoveInertiaRate {
         get { return NonNegative(moveSettings_.moveInertiaRate); }
     }
 
-    internal float LaserTellDuration
-    {
+    internal float LaserTellDuration {
         get { return Positive(beamSettings_.tellDuration); }
     }
 
-    internal float LaserFireDuration
-    {
+    internal float LaserFireDuration {
         get { return Positive(beamSettings_.fireDuration); }
     }
 
-    internal float LaserRecoveryDuration
-    {
+    internal float LaserRecoveryDuration {
         get { return Positive(beamSettings_.recoveryDuration); }
     }
 
-    internal float LaserLength
-    {
+    internal float LaserLength {
         get { return beamSettings_.length > 0.0f ? beamSettings_.length : 1.0f; }
     }
 
-    internal float LaserWidth
-    {
+    internal float LaserWidth {
         get { return beamSettings_.width > 0.0f ? beamSettings_.width : 1.0f; }
     }
 
-    internal int LaserCount
-    {
+    internal int LaserCount {
         get { return beamSettings_.laserCount > 0 ? beamSettings_.laserCount : 8; }
     }
 
-    internal int ElectricFieldCount
-    {
+    internal int ElectricFieldCount {
         get { return electricFieldSettings_.fieldCount > 0 ? electricFieldSettings_.fieldCount : 1; }
     }
 
-    internal float ElectricFieldTellDuration
-    {
+    internal float ElectricFieldTellDuration {
         get { return Positive(electricFieldSettings_.tellDuration); }
     }
 
-    internal float ElectricFieldSpawnInterval
-    {
+    internal float ElectricFieldSpawnInterval {
         get { return NonNegative(electricFieldSettings_.spawnInterval); }
     }
 
-    internal float ElectricFieldActiveDuration
-    {
+    internal float ElectricFieldActiveDuration {
         get { return Positive(electricFieldSettings_.activeDuration); }
     }
 
-    internal float ElectricFieldRecoveryDuration
-    {
+    internal float ElectricFieldRecoveryDuration {
         get { return Positive(electricFieldSettings_.recoveryDuration); }
     }
 
-    internal float ElectricFieldRadius
-    {
+    internal float ElectricFieldRadius {
         get { return electricFieldSettings_.radius > 0.0f ? electricFieldSettings_.radius : 1.0f; }
     }
 
-    internal int RotatingLaserCount
-    {
+    internal int RotatingLaserCount {
         get { return rotatingBeamSettings_.laserCount > 0 ? rotatingBeamSettings_.laserCount : 1; }
     }
 
-    internal float RotatingLaserTellDuration
-    {
+    internal float RotatingLaserTellDuration {
         get { return Positive(rotatingBeamSettings_.tellDuration); }
     }
 
-    internal float RotatingLaserDuration
-    {
+    internal float RotatingLaserDuration {
         get { return Positive(rotatingBeamSettings_.duration); }
     }
 
-    internal float RotatingLaserRecoveryDuration
-    {
+    internal float RotatingLaserRecoveryDuration {
         get { return Positive(rotatingBeamSettings_.recoveryDuration); }
     }
 
-    internal float RotatingLaserLength
-    {
+    internal float RotatingLaserLength {
         get { return rotatingBeamSettings_.length > 0.0f ? rotatingBeamSettings_.length : 1.0f; }
     }
 
-    internal float RotatingLaserWidth
-    {
+    internal float RotatingLaserWidth {
         get { return rotatingBeamSettings_.width > 0.0f ? rotatingBeamSettings_.width : 1.0f; }
     }
 
-    private Vector2 SelectArcMoveDirection()
-    {
-        if (moveSettings_.moveTowardTarget)
-        {
+    private Vector2 SelectArcMoveDirection() {
+        if (moveSettings_.moveTowardTarget) {
             ResolveTarget();
-            if (targetEntity_ != null && targetEntity_.transform != null)
-            {
+            if (targetEntity_ != null && targetEntity_.transform != null) {
                 Vector2 toTarget = ToPlane(targetEntity_.transform.position) - ToPlane(transform.position);
-                if (toTarget.LengthSq() > 0.001f)
-                {
+                if (toTarget.LengthSq() > 0.001f) {
                     return toTarget.Normalized();
                 }
             }
@@ -818,27 +735,22 @@ public class KingJellyfish : MonoScript {
     //=============================
     // ターゲットの解決処理
     //=============================
-    private void ResolveTarget()
-    {
-        if (targetEntity_ == null && !String.IsNullOrEmpty(targetEntityName))
-        {
+    private void ResolveTarget() {
+        if (targetEntity_ == null && !String.IsNullOrEmpty(targetEntityName)) {
             targetEntity_ = ecsGroup.FindEntity(targetEntityName);
         }
     }
 
-    private T GetOrAddSettings<T>() where T : MonoScript
-    {
+    private T GetOrAddSettings<T>() where T : MonoScript {
         T settings = entity.GetScript<T>();
         return settings != null ? settings : entity.AddScript<T>();
     }
 
-    private static float Positive(float value)
-    {
+    private static float Positive(float value) {
         return value > 0.0f ? value : 0.01f;
     }
 
-    private static float NonNegative(float value)
-    {
+    private static float NonNegative(float value) {
         return value > 0.0f ? value : 0.0f;
     }
 }

@@ -2,7 +2,7 @@
     "active": true,
     "components": [
         {
-            "categoryBits": 8,
+            "state": "Static",
             "type": "BoxCollider2D"
         }
     ],

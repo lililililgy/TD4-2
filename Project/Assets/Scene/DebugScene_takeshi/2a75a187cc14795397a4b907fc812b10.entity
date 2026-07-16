@@ -1,5 +1,5 @@
 {
-    "active": false,
+    "active": true,
     "components": [
         {
             "enable": 1,
@@ -16,19 +16,19 @@
                 "z": 0.9955356121063232
             },
             "scale": {
-                "x": 720.0,
-                "y": 1000.5,
-                "z": 720.0
+                "x": 1214.999267578125,
+                "y": 1688.3421630859375,
+                "z": 1214.99951171875
             },
             "type": "Transform"
         },
         {
             "HP": {
-                "currentHp_": 10.0,
+                "currentHp_": 300.0,
                 "directlyDamageable_": true,
                 "disableAutoDestruction_": false,
                 "isInvincible_": false,
-                "maxHp_": 10.0
+                "maxHp_": 300.0
             },
             "KingJellyfish": {
                 "cameraEntityName": "Camera",
@@ -58,7 +58,7 @@
                 "fieldPrefabName": "",
                 "radius": 0.0,
                 "recoveryDuration": 0.0,
-                "selectionWeight": 0.0,
+                "selectionWeight": 1.0,
                 "spawnInterval": 0.0,
                 "spreadRadius": 134.0,
                 "tellDuration": 0.0
@@ -92,9 +92,20 @@
                 "length": 0.0,
                 "recoveryDuration": 0.0,
                 "rotationSpeed": 0.0,
-                "selectionWeight": 0.0,
+                "selectionWeight": 1.0,
                 "tellDuration": 0.0,
                 "width": 0.0
+            },
+            "SpriteAnimation": {
+                "cols": 3,
+                "endFrame": 2,
+                "fps": 5.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 3
             },
             "type": "Variables"
         },
@@ -128,9 +139,28 @@
                 {
                     "enable": true,
                     "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
                 }
             ],
             "type": "Script"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 2,
+            "mass": 1.0,
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.7999999523162842
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
         },
         {
             "enable": 1,
@@ -148,32 +178,17 @@
                 "postEffectFlags": 0,
                 "uvTransform": {
                     "position": {
-                        "x": -0.019999999552965164,
+                        "x": 0.0,
                         "y": 0.0
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 0.36000001430511475,
-                        "y": 0.6399999856948853
+                        "x": 1.0,
+                        "y": 0.8700000047683716
                     }
                 }
             },
             "type": "SpriteRenderer"
-        },
-        {
-            "categoryBits": 1,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 0,
-            "mass": 1.0,
-            "size": {
-                "x": 0.699999988079071,
-                "y": 0.7999999523162842
-            },
-            "state": "Dynamic",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
         }
     ],
     "guid": "2a75a187cc14795397a4b907fc812b10",

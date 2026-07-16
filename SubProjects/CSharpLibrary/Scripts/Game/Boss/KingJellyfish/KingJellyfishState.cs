@@ -101,7 +101,10 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
 
     public void Exit(KingJellyfish owner)
     {
-
+        if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack)
+        {
+            owner.SetWeakPointCollisionEnabled(true);
+        }
     }
 
     private void UpdateChargeAttack(KingJellyfish owner)
@@ -119,6 +122,7 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         {
             if (!chargeStarted)
             {
+                // 体当たり攻撃の開始
                 chargeStarted = owner.BeginChargeAttack();
                 if (!chargeStarted)
                 {
@@ -128,12 +132,18 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
             }
 
             chargeRecovered = owner.UpdateChargeAttack();
+            if (chargeRecovered)
+            {
+                owner.SetWeakPointCollisionEnabled(true);
+            }
             return;
         }
 
         chargeRecovered = true;
+        owner.SetWeakPointCollisionEnabled(true);
         if (chargeStarted)
         {
+            // ダメージフィールドの展開
             owner.DeployChargeDamageField();
         }
 

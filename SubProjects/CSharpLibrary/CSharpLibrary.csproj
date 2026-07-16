@@ -267,6 +267,7 @@
     <Compile Include="Scripts\Test\TextRendererTestScript.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Scripts\Game\Boss\KingHermitClub\" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

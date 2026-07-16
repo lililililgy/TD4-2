@@ -1,31 +1,5 @@
 {
-    "active": true,
-    "components": [
-        {
-            "position": {
-                "y": -551.8015747070313
-            },
-            "type": "Transform"
-        },
-        {
-            "KingGesoWaveThrustSettings": {
-                "attackDuration": 13.0,
-                "gesoLifeTime": 5.0,
-                "moveDuration": 10.0
-            },
-            "type": "Variables"
-        },
-        {
-            "material": {
-                "uvTransform": {
-                    "scale": {
-                        "x": 1.0
-                    }
-                }
-            },
-            "type": "SpriteRenderer"
-        }
-    ],
+    "active": false,
     "guid": "ef9cb081b1c1cd85474b7280c162abf3",
     "name": "KingGeso",
     "parentGuid": null,
