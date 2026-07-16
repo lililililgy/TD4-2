@@ -279,8 +279,8 @@ void GameFramework::Update() {
 		}
 
 		if (EngineConfig::testScene == "ComponentEnableTest" && testFrameCount == 60) {
-			auto* ecsGroup = entityComponentSystem_->GetECSGroup("GameScene");
-			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'GameScene' should not be null");
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ComponentEnableTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ComponentEnableTest' should not be null");
 			if (ecsGroup) {
 				#define ASSERT_COMP_DISABLED(CompType) \
 				{ \
