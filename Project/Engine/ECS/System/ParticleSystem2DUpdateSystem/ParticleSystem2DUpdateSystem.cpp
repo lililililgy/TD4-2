@@ -316,7 +316,7 @@ namespace ONEngine {
         }
 
         // --- Update ---
-        if (!ps->IsPaused() && ps->IsPlaying()) {
+        if (!ps->IsPaused() && (ps->IsPlaying() || ps->aliveCount > 0)) {
             Vector3 gravity = Vector3(0.0f, -9.81f, 0.0f) * ps->main.gravityModifier;
             
             for (size_t i = 0; i < ps->aliveCount; ) {
