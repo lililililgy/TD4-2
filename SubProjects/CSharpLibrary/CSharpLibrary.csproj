@@ -193,6 +193,7 @@
     <Compile Include="Scripts\Game\Controller\GameSceneController.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera.cs" />
     <Compile Include="Scripts\Game\DebugEntity\DebugCamera2D.cs" />
+    <Compile Include="Scripts\Game\Effects\Vignette.cs" />
     <Compile Include="Scripts\Game\Enemy\BiomeArea.cs" />
     <Compile Include="Scripts\Game\Enemy\DespawnTimer.cs" />
     <Compile Include="Scripts\Game\Enemy\EmitKillEventOnDestroy.cs" />

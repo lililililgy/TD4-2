@@ -1,0 +1,29 @@
+{
+    "active": true,
+    "components": [
+        {
+            "main": {
+                "looping": true,
+                "startColor": {
+                    "max": {
+                        "b": 0.08350354433059692,
+                        "g": 0.08350354433059692,
+                        "r": 0.8960573673248291
+                    },
+                    "min": {
+                        "b": 0.010752677917480469,
+                        "g": 0.010752677917480469
+                    }
+                },
+                "startSize": {
+                    "min": 33.900001525878906
+                }
+            },
+            "type": "ParticleSystem2D"
+        }
+    ],
+    "guid": "777caa8aab1259afe123ad3b73d83ded",
+    "name": "EnemyDeadEffect",
+    "parentGuid": null,
+    "prefabName": "EnemyDeadEffect"
+}

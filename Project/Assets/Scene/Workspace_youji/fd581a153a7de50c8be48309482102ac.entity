@@ -56,11 +56,11 @@
                 1.0,
                 1.0
             ],
-            "contrast": 1.0700000524520874,
+            "contrast": 1.128999948501587,
             "distortionFrequency": 4.591000080108643,
             "distortionSpeed": 0.800000011920929,
             "distortionStrength": 0.002300000051036477,
-            "enable": 0,
+            "enable": 1,
             "fisheyeScale": 0.7139999866485596,
             "fisheyeStrength": 0.382999986410141,
             "fogColor": [
@@ -118,7 +118,7 @@
                     "type": 7
                 }
             ],
-            "saturation": 2.0,
+            "saturation": 1.3350000381469727,
             "type": "ScreenPostEffectTag",
             "vignetteStrength": 1.3930000066757202
         }
