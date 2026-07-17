@@ -69,13 +69,17 @@ void RegisterFieldDrawers() {
 }
 
 bool DrawEnumCombo(MonoClass* enumClass, const char* name, int& value) {
+	if (!enumClass) return false;
 	void* iter = nullptr; MonoClassField* enumField; std::vector<std::string> names; std::vector<int> values; int currentIndex = -1, i = 0;
 	MonoDomain* domain = ONEngine::MonoScriptEngine::GetInstance().Domain();
-	MonoVTable* vtable = mono_class_vtable(domain, enumClass);
+	MonoVTable* vtable = domain ? mono_class_vtable(domain, enumClass) : nullptr;
 	while ((enumField = mono_class_get_fields(enumClass, &iter))) {
 		if (mono_field_get_flags(enumField) & MONO_FIELD_ATTR_STATIC) {
 			names.push_back(mono_field_get_name(enumField));
-			int val = 0; if (vtable) mono_field_static_get_value(vtable, enumField, &val); else mono_field_get_value(nullptr, enumField, &val);
+			int val = 0;
+			if (vtable) {
+				mono_field_static_get_value(vtable, enumField, &val);
+			}
 			values.push_back(val); if (val == value) currentIndex = i; i++;
 		}
 	}
@@ -770,9 +774,12 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 							else if(mono_class_is_enum(ek)) {
 								MonoType* baseType = mono_class_enum_basetype(ek);
 								int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_I4;
-								if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { int8_t v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-								else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { int16_t v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-								else { int v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+								int8_t temp8 = 0;
+								int16_t temp16 = 0;
+								int32_t temp32 = 0;
+								if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { void* args[1] = { &temp8 }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+								else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { void* args[1] = { &temp16 }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+								else { void* args[1] = { &temp32 }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
 							}
 							else {
 								MonoObject* item = mono_object_new(domain, ek);
@@ -821,10 +828,13 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 							else v = *(int32_t*)unboxed;
 						}
 						if(DrawEnumCombo(ek, itemName.c_str(), v)) { 
-							if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { int8_t temp = (int8_t)v; void* setArgs[2] = { &i, &temp }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
-							else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { int16_t temp = (int16_t)v; void* setArgs[2] = { &i, &temp }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
-							else { int32_t temp = (int32_t)v; void* setArgs[2] = { &i, &temp }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
-						} 
+							int8_t temp8 = (int8_t)v;
+							int16_t temp16 = (int16_t)v;
+							int32_t temp32 = (int32_t)v;
+							if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { void* setArgs[2] = { &i, &temp8 }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
+							else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { void* setArgs[2] = { &i, &temp16 }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
+							else { void* setArgs[2] = { &i, &temp32 }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
+						} 		 
 					}
 					else {
 						if (itemObj && ImGui::CollapsingHeader(itemName.c_str())) {
