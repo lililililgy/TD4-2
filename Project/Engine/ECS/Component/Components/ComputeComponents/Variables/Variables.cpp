@@ -16,6 +16,7 @@
 #include <mono/metadata/object.h>
 #include <mono/metadata/class.h>
 #include <mono/metadata/threads.h>
+#include <mono/metadata/reflection.h>
 
 /// engine
 #include "Engine/Core/Utility/Math/Math.h"
@@ -54,6 +55,10 @@ extern "C" {
 
 
 namespace {
+
+	MonoType* GetListElementType(MonoClass* listClass) {
+		return (MonoType*)Variables::GetListElementType(listClass);
+	}
 
 	bool IsVectorN(const json& j, int n) {
 		if (!j.is_object()) {
@@ -169,6 +174,27 @@ namespace {
 
 }	/// namespace
 
+void* Variables::GetListElementType(void* listClass) {
+	MonoClass* lc = (MonoClass*)listClass;
+	if (!lc) return nullptr;
+	MonoType* listType = mono_class_get_type(lc);
+	if (!listType) return nullptr;
+	MonoObject* typeObj = (MonoObject*)mono_type_get_object(mono_domain_get(), listType);
+	if (!typeObj) return nullptr;
+	MonoClass* typeClass = mono_object_get_class(typeObj);
+	if (!typeClass) return nullptr;
+	MonoMethod* getGenericArguments = mono_class_get_method_from_name(typeClass, "GetGenericArguments", 0);
+	if (!getGenericArguments) return nullptr;
+	MonoArray* argsArray = (MonoArray*)mono_runtime_invoke(getGenericArguments, typeObj, nullptr, nullptr);
+	if (argsArray && mono_array_length(argsArray) > 0) {
+		MonoObject* elemTypeObj = mono_array_get(argsArray, MonoObject*, 0);
+		if (elemTypeObj) {
+			return mono_reflection_type_get_type((MonoReflectionType*)elemTypeObj);
+		}
+	}
+	return nullptr;
+}
+
 Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 	int typeId = mono_type_get_type((MonoType*)type);
 
@@ -213,7 +239,28 @@ Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 			}
 			return gen;
 		}
-		case MONO_TYPE_GENERICINST: return std::vector<int>();
+		case MONO_TYPE_GENERICINST:
+		{
+			MonoClass* klass = mono_class_from_mono_type((MonoType*)type);
+			if (klass && strcmp(mono_class_get_name(klass), "List`1") == 0) {
+				MonoType* elemType = (MonoType*)GetListElementType(klass);
+				if (elemType) {
+					int etid = mono_type_get_type(elemType);
+					if (etid == MONO_TYPE_R4) return std::vector<float>();
+					if (etid == MONO_TYPE_BOOLEAN) return std::vector<bool>();
+					if (etid == MONO_TYPE_STRING) return std::vector<std::string>();
+					if (etid == MONO_TYPE_VALUETYPE || etid == MONO_TYPE_CLASS) {
+						MonoClass* ek = mono_class_from_mono_type(elemType);
+						if (ek) {
+							if (strcmp(mono_class_get_name(ek), "Vector3") == 0) return std::vector<Vector3>();
+							if (mono_class_is_enum(ek)) return std::vector<int>();
+							return std::vector<std::shared_ptr<GenericObject>>();
+						}
+					}
+				}
+			}
+			return std::vector<int>();
+		}
 		default: return 0;
 		}
 	}
@@ -237,47 +284,98 @@ Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 	case MONO_TYPE_GENERICINST:
 	{
 		MonoClass* klass = mono_object_get_class((MonoObject*)obj);
-		if (strcmp(mono_class_get_name(klass), "List`1") != 0) return 0;
+		if (!klass || strcmp(mono_class_get_name(klass), "List`1") != 0) return 0;
 		MonoMethod* getCount = mono_class_get_method_from_name(klass, "get_Count", 0);
-		int count = *(int*)mono_object_unbox(mono_runtime_invoke(getCount, (MonoObject*)obj, nullptr, nullptr));
+		if (!getCount) return 0;
+		MonoObject* countObj = mono_runtime_invoke(getCount, (MonoObject*)obj, nullptr, nullptr);
+		if (!countObj) return 0;
+		int count = *(int*)mono_object_unbox(countObj);
+
 		MonoMethod* getItem = mono_class_get_method_from_name(klass, "get_Item", 1);
-		MonoType* elemType = mono_signature_get_return_type(mono_method_signature(getItem));
+		if (!getItem) return 0;
+		MonoType* elemType = (MonoType*)GetListElementType(klass);
+		if (!elemType) {
+			elemType = mono_signature_get_return_type(mono_method_signature(getItem));
+		}
+		if (!elemType) return 0;
 
 		int etid = mono_type_get_type(elemType);
 		if (etid == MONO_TYPE_I4) {
 			std::vector<int> l(count);
-			for (int i = 0; i < count; ++i) { void* a[1] = { &i }; l[i] = *(int*)mono_object_unbox(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); }
+			for (int i = 0; i < count; ++i) { 
+				void* a[1] = { &i }; 
+				MonoObject* itemValObj = mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr);
+				l[i] = itemValObj ? *(int*)mono_object_unbox(itemValObj) : 0; 
+			}
 			return l;
 		}
 		if (etid == MONO_TYPE_R4) {
 			std::vector<float> l(count);
-			for (int i = 0; i < count; ++i) { void* a[1] = { &i }; l[i] = *(float*)mono_object_unbox(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); }
+			for (int i = 0; i < count; ++i) { 
+				void* a[1] = { &i }; 
+				MonoObject* itemValObj = mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr);
+				l[i] = itemValObj ? *(float*)mono_object_unbox(itemValObj) : 0.0f; 
+			}
 			return l;
 		}
 		if (etid == MONO_TYPE_BOOLEAN) {
 			std::vector<bool> l(count);
-			for (int i = 0; i < count; ++i) { void* a[1] = { &i }; l[i] = *(bool*)mono_object_unbox(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); }
+			for (int i = 0; i < count; ++i) { 
+				void* a[1] = { &i }; 
+				MonoObject* itemValObj = mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr);
+				l[i] = itemValObj ? *(bool*)mono_object_unbox(itemValObj) : false; 
+			}
 			return l;
 		}
 		if (etid == MONO_TYPE_STRING) {
 			std::vector<std::string> l(count);
-			for (int i = 0; i < count; ++i) { void* a[1] = { &i }; MonoObject* s = mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr); if (s) l[i] = mono_string_to_utf8((MonoString*)s); }
+			for (int i = 0; i < count; ++i) { 
+				void* a[1] = { &i }; 
+				MonoObject* s = mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr); 
+				if (s) l[i] = mono_string_to_utf8((MonoString*)s); 
+			}
 			return l;
 		}
 		if (etid == MONO_TYPE_VALUETYPE || etid == MONO_TYPE_CLASS) {
 			MonoClass* ek = mono_class_from_mono_type(elemType);
-			if (strcmp(mono_class_get_name(ek), "Vector3") == 0) {
+			if (!ek) return 0;
+			const char* ekName = mono_class_get_name(ek);
+			if (ekName && strcmp(ekName, "Vector3") == 0) {
 				std::vector<Vector3> l(count);
-				for (int i = 0; i < count; ++i) { void* a[1] = { &i }; l[i] = *(Vector3*)mono_object_unbox(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); }
+				for (int i = 0; i < count; ++i) { 
+					void* a[1] = { &i }; 
+					MonoObject* itemValObj = mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr);
+					l[i] = itemValObj ? *(Vector3*)mono_object_unbox(itemValObj) : Vector3::Zero; 
+				}
 				return l;
 			}
 			if (mono_class_is_enum(ek)) {
 				std::vector<int> l(count);
-				for (int i = 0; i < count; ++i) { void* a[1] = { &i }; l[i] = *(int*)mono_object_unbox(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); }
+				MonoType* baseType = mono_class_enum_basetype(ek);
+				int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_I4;
+				for (int i = 0; i < count; ++i) { 
+					void* a[1] = { &i }; 
+					MonoObject* itemValObj = mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr); 
+					if (itemValObj) {
+						void* unboxed = mono_object_unbox(itemValObj);
+						if (baseTypeId == MONO_TYPE_I1) l[i] = *(int8_t*)unboxed;
+						else if (baseTypeId == MONO_TYPE_U1) l[i] = *(uint8_t*)unboxed;
+						else if (baseTypeId == MONO_TYPE_I2) l[i] = *(int16_t*)unboxed;
+						else if (baseTypeId == MONO_TYPE_U2) l[i] = *(uint16_t*)unboxed;
+						else if (baseTypeId == MONO_TYPE_I4) l[i] = *(int32_t*)unboxed;
+						else if (baseTypeId == MONO_TYPE_U4) l[i] = (int)*(uint32_t*)unboxed;
+						else l[i] = *(int32_t*)unboxed;
+					} else {
+						l[i] = 0;
+					}
+				}
 				return l;
 			}
 			std::vector<std::shared_ptr<Variables::GenericObject>> l(count);
-			for (int i = 0; i < count; ++i) { void* a[1] = { &i }; l[i] = MonoObjectToGeneric(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); }
+			for (int i = 0; i < count; ++i) { 
+				void* a[1] = { &i }; 
+				l[i] = MonoObjectToGeneric(mono_runtime_invoke(getItem, (MonoObject*)obj, a, nullptr)); 
+			}
 			return l;
 		}
 	}
@@ -336,11 +434,34 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 					if (clear) mono_runtime_invoke(clear, list, nullptr, nullptr);
 					MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
 					if (add) {
+						MonoType* elemType = (MonoType*)GetListElementType(lc);
+						MonoClass* ek = elemType ? mono_class_from_mono_type(elemType) : nullptr;
+						MonoType* baseType = ek && mono_class_is_enum(ek) ? mono_class_enum_basetype(ek) : nullptr;
+						int baseTypeId = baseType ? mono_type_get_type(baseType) : -1;
+
 						for (auto itemVal : arg) {
 							if constexpr (std::is_same_v<T, std::vector<std::string>>) {
 								MonoString* s = mono_string_new(domain, itemVal.c_str());
 								void* args[1] = { s };
 								mono_runtime_invoke(add, list, args, nullptr);
+							} else if constexpr (std::is_same_v<T, std::vector<int>>) {
+								int intVal = 0;
+								if constexpr (std::is_same_v<T, std::vector<int>>) {
+									intVal = itemVal;
+								}
+								if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) {
+									int8_t temp = (int8_t)intVal;
+									void* args[1] = { &temp };
+									mono_runtime_invoke(add, list, args, nullptr);
+								} else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) {
+									int16_t temp = (int16_t)intVal;
+									void* args[1] = { &temp };
+									mono_runtime_invoke(add, list, args, nullptr);
+								} else {
+									int32_t temp = (int32_t)intVal;
+									void* args[1] = { &temp };
+									mono_runtime_invoke(add, list, args, nullptr);
+								}
 							} else {
 								void* args[1] = { (void*)&itemVal };
 								mono_runtime_invoke(add, list, args, nullptr);
@@ -684,11 +805,34 @@ void Variables::SetScriptVariables(const std::string& scriptName) {
 						if (clear) mono_runtime_invoke(clear, list, nullptr, nullptr);
 						MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
 						if (add) {
+							MonoType* elemType = (MonoType*)GetListElementType(lc);
+							MonoClass* ek = elemType ? mono_class_from_mono_type(elemType) : nullptr;
+							MonoType* baseType = ek && mono_class_is_enum(ek) ? mono_class_enum_basetype(ek) : nullptr;
+							int baseTypeId = baseType ? mono_type_get_type(baseType) : -1;
+
 							for (auto itemVal : arg) {
 								if constexpr (std::is_same_v<T, std::vector<std::string>>) {
 									MonoString* s = mono_string_new(MonoScriptEngine::GetInstance().Domain(), itemVal.c_str());
 									void* args[1] = { s };
 									mono_runtime_invoke(add, list, args, nullptr);
+								} else if constexpr (std::is_same_v<T, std::vector<int>>) {
+									int intVal = 0;
+									if constexpr (std::is_same_v<T, std::vector<int>>) {
+										intVal = itemVal;
+									}
+									if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) {
+										int8_t temp = (int8_t)intVal;
+										void* args[1] = { &temp };
+										mono_runtime_invoke(add, list, args, nullptr);
+									} else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) {
+										int16_t temp = (int16_t)intVal;
+										void* args[1] = { &temp };
+										mono_runtime_invoke(add, list, args, nullptr);
+									} else {
+										int32_t temp = (int32_t)intVal;
+										void* args[1] = { &temp };
+										mono_runtime_invoke(add, list, args, nullptr);
+									}
 								} else {
 									void* args[1] = { (void*)&itemVal };
 									mono_runtime_invoke(add, list, args, nullptr);

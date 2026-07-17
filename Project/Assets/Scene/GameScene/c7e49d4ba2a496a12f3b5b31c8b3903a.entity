@@ -1,5 +1,15 @@
 {
     "active": true,
+    "components": [
+        {
+            "material": {
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
     "guid": "c7e49d4ba2a496a12f3b5b31c8b3903a",
     "name": "Player_Body",
     "parentGuid": null,

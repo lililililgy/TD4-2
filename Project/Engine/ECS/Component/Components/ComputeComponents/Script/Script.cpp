@@ -30,8 +30,13 @@ bool Script::ScriptData::GetEnable(GameEntity* _entity) {
 
 	MonoClass* monoBehaviorClass = mono_object_get_class(obj);
 	MonoClassField* field = mono_class_get_field_from_name(monoBehaviorClass, "enable");
+	if(!field) {
+		field = MonoScriptEngineUtils::FindFieldRecursive(monoBehaviorClass, "enable");
+	}
 
-	mono_field_get_value(obj, field, &enable);
+	if(field) {
+		mono_field_get_value(obj, field, &enable);
+	}
 	return enable;
 }
 
@@ -48,9 +53,14 @@ void Script::ScriptData::SetEnable(GameEntity* _entity, bool _enable) {
 
 	MonoClass* monoBehaviorClass = mono_object_get_class(obj);
 	MonoClassField* field = mono_class_get_field_from_name(monoBehaviorClass, "enable");
+	if(!field) {
+		field = MonoScriptEngineUtils::FindFieldRecursive(monoBehaviorClass, "enable");
+	}
 
-	// 値を設定
-	mono_field_set_value(obj, field, &_enable);
+	if(field) {
+		// 値を設定
+		mono_field_set_value(obj, field, &_enable);
+	}
 	enable = _enable;
 }
 

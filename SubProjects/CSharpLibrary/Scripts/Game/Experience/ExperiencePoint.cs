@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class ExperiencePoint : MonoScript {
+public class ExperiencePoint : MonoScript
+{
     [SerializeField] private float experiencePoints;
 
-    public float ExperiencePoints {
+    public float ExperiencePoints
+    {
         get { return experiencePoints; }
         set { experiencePoints = value; }
     }

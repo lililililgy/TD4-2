@@ -169,12 +169,12 @@
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishElectricField.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishLaser.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishWeakPoint.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfish.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishChargeAttackSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishElectricFieldSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishMoveSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishOmnidirectionalBeamSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishRotatingBeamSettings.cs" />
-    <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfish.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishState.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokari.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariState.cs" />
@@ -218,7 +218,6 @@
     <Compile Include="Scripts\Game\Objective\Objective.cs" />
     <Compile Include="Scripts\Game\Objective\ObjectiveSystem.cs" />
     <Compile Include="Scripts\Game\Objective\TutorialObjective.cs" />
-    <Compile Include="Scripts\Game\Player\Magazine.cs" />
     <Compile Include="Scripts\Game\Player\PlayerAttackComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerDashState.cs" />
     <Compile Include="Scripts\Game\Player\PlayerInputComponent.cs" />
@@ -280,6 +279,7 @@
     <Compile Include="Scripts\Test\EngineLaunchTest.cs" />
     <Compile Include="Scripts\Test\HotReloadAssetAddTestScript.cs" />
     <Compile Include="Scripts\Test\HotReloadTestScript.cs" />
+    <Compile Include="Scripts\Test\ListEnumSerializeTestScript.cs" />
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
     <Compile Include="Scripts\Test\RadialBlurTestScript.cs" />
@@ -288,7 +288,6 @@
     <Compile Include="Scripts\Test\TextRendererTestScript.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Scripts\Game\Boss\KingHermitClub\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

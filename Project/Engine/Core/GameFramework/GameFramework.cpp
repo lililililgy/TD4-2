@@ -311,6 +311,17 @@ void GameFramework::Update() {
 				ASSERT_COMP_DISABLED(AnimationPlayer);
 				ASSERT_COMP_DISABLED(SkinMeshRenderer);
 
+				{
+					auto* array = ecsGroup->GetComponentArray<Script>();
+					ONEngine::Assert(array != nullptr, "Script array should exist");
+					if (array && !array->GetUsedComponents().empty()) {
+						auto* comp = array->GetUsedComponents().front();
+						ONEngine::Assert(comp != nullptr, "Script component should exist");
+						bool scriptEnable = comp->GetEnable("ComponentEnableTestScript");
+						ONEngine::Assert(scriptEnable == false, "ComponentEnableTestScript should be disabled");
+					}
+				}
+
 				#undef ASSERT_COMP_DISABLED
 			}
 		}

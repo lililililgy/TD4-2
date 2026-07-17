@@ -10,7 +10,7 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -23,25 +23,25 @@
             "type": "Transform"
         },
         {
-            "KillCountObjective": {
-                "displayName_": "",
-                "targetCount_": 20
-            },
-            "type": "Variables"
+            "type": "Variables",
+            "ListEnumSerializeTestScript": {
+                "intEnumList": [1, 2, 0],
+                "byteEnumList": [20, 10]
+            }
         },
         {
             "enable": 1,
             "scripts": [
                 {
                     "enable": true,
-                    "name": "KillCountObjective"
+                    "name": "ListEnumSerializeTestScript"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "e8901a3ae500327676c848bdc365be2e",
-    "name": "EnemyHuntPhase_1",
+    "guid": "c0000000000000000000000000000002",
+    "name": "TestEntity",
     "parentGuid": null,
     "prefabName": ""
 }

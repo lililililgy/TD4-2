@@ -2,83 +2,12 @@
     "active": true,
     "components": [
         {
-            "MovementAreaClamper": {
-                "existArea_": false,
-                "fixedCollisionBounds_": true,
-                "fixedPos_": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "movementAreaEntityName_": "Stage",
-                "radius_": 33.0
+            "material": {
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
             },
-            "type": "Variables"
-        },
-        {
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "PlayerInputComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerStateComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "LevelingComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerNormalState"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerDashState"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerMoveComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerShotComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "RoeManager"
-                },
-                {
-                    "enable": true,
-                    "name": "TrailLeader"
-                },
-                {
-                    "enable": true,
-                    "name": "HP"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerLifeComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "Magazine"
-                },
-                {
-                    "enable": true,
-                    "name": "PlayerAttackComponent"
-                },
-                {
-                    "enable": true,
-                    "name": "AttackCollision"
-                },
-                {
-                    "enable": true,
-                    "name": "MovementAreaClamper"
-                }
-            ],
-            "type": "Script"
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",

@@ -68,11 +68,34 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
                         if (clear) mono_runtime_invoke(clear, list, nullptr, nullptr);
                         MonoMethod* add = mono_class_get_method_from_name(lc, "Add", 1);
                         if (add) {
+                            MonoType* elemType = (MonoType*)ONEngine::Variables::GetListElementType(lc);
+                            MonoClass* ek = elemType ? mono_class_from_mono_type(elemType) : nullptr;
+                            MonoType* baseType = ek && mono_class_is_enum(ek) ? mono_class_enum_basetype(ek) : nullptr;
+                            int baseTypeId = baseType ? mono_type_get_type(baseType) : -1;
+
                             for (auto itemVal : arg) {
                                 if constexpr (std::is_same_v<T, std::vector<std::string>>) {
                                     MonoString* s = mono_string_new(mono_domain_get(), itemVal.c_str());
                                     void* args[1] = { s };
                                     mono_runtime_invoke(add, list, args, nullptr);
+                                } else if constexpr (std::is_same_v<T, std::vector<int>>) {
+                                    int intVal = 0;
+                                    if constexpr (std::is_same_v<T, std::vector<int>>) {
+                                        intVal = itemVal;
+                                    }
+                                    if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) {
+                                        int8_t temp = (int8_t)intVal;
+                                        void* args[1] = { &temp };
+                                        mono_runtime_invoke(add, list, args, nullptr);
+                                    } else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) {
+                                        int16_t temp = (int16_t)intVal;
+                                        void* args[1] = { &temp };
+                                        mono_runtime_invoke(add, list, args, nullptr);
+                                    } else {
+                                        int32_t temp = (int32_t)intVal;
+                                        void* args[1] = { &temp };
+                                        mono_runtime_invoke(add, list, args, nullptr);
+                                    }
                                 } else {
                                     void* args[1] = { (void*)&itemVal };
                                     mono_runtime_invoke(add, list, args, nullptr);

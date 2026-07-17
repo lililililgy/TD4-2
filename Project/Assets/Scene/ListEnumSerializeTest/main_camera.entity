@@ -7,10 +7,10 @@
             "position": {
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": -10.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -23,25 +23,20 @@
             "type": "Transform"
         },
         {
-            "KillCountObjective": {
-                "displayName_": "",
-                "targetCount_": 20
-            },
             "type": "Variables"
         },
         {
             "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "KillCountObjective"
-                }
-            ],
-            "type": "Script"
+            "farClip": 1000.0,
+            "fov": 45.0,
+            "isOrthographic": true,
+            "nearClip": 0.1,
+            "orthographicSize": 5.0,
+            "type": "CameraComponent"
         }
     ],
-    "guid": "e8901a3ae500327676c848bdc365be2e",
-    "name": "EnemyHuntPhase_1",
+    "guid": "c0000000000000000000000000000001",
+    "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""
 }

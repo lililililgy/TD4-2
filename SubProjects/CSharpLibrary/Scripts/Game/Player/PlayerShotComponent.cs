@@ -23,17 +23,16 @@ public class PlayerShotComponent : MonoScript {
             return;
         }
 
-        // 発射不可状態の検知 (プレイヤーのステートによるものや残弾数が0の場合など)
+        // 発射不可状態の検知 (プレイヤーのステートによるものなど)
         PlayerStateComponent stateComponent = entity.GetScript<PlayerStateComponent>();
-        Magazine magazine = entity.GetScript<Magazine>();
-        if (!stateComponent.CanShoot() || magazine.IsEmpty) {
+        if (!stateComponent.CanShoot()) {
             return;
         }
 
         if (shootCooldown_ <= 0.0f) {
-            // 弾薬の実体である幼生卵を1つ消費する。無ければ撃てない。
-            Entity larva = roeManager_ != null ? roeManager_.TryConsumeLarvae() : null;
-            if (larva == null) {
+            // 弾の実体である成熟卵を1つ消費する。無ければ撃てない。
+            Entity matureRoe = roeManager_ != null ? roeManager_.TryConsumeMature() : null;
+            if (matureRoe == null) {
                 return;
             }
 
@@ -51,7 +50,7 @@ public class PlayerShotComponent : MonoScript {
             bulletSC.SetMoveDir(Quaternion.RotateVector(playerTrans.rotate, Vector3.up));
 
             // 消費した卵を破棄
-            larva.Destroy();
+            matureRoe.Destroy();
 
             // 弾が実際に発射された（early return を全て抜けた）ことを通知する。
             // チュートリアルの「射撃した」検知用。

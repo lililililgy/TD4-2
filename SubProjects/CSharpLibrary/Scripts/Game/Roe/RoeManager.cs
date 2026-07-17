@@ -2,15 +2,12 @@ using System;
 using System.Collections.Generic;
 
 // プレイヤー（母体）が抱える卵(roe)を統括する。卵は別 Entity で、各卵の状態は RoeStateComponent が持つ。
-// このリスト＋各卵の状態が唯一の真実(single source of truth)で、残機・弾薬はここから導出する：
-//   残機 = 成熟卵(MATURE)の数 = MatureCount()
-//   弾薬 = 幼生卵(LARVAE)の数 = LarveCount()
+// このリスト＋各卵の状態が唯一の真実(single source of truth)で、残機・弾はここから導出する：
+//   残機 = HP = 全卵数(EggCount。未成熟の子たまごも含む)。弾 = 成熟卵(MatureCount)。
+//   発射(TryConsumeMature)は成熟卵を消費する（ただし最後の1卵は残す＝発射で即ゲームオーバーしない）。
+//   被弾(TryKillLife)は隊列末尾の卵を成熟/未成熟問わず1つ失う（最後の1個も失いゲームオーバーになる）。
 //
-// 卵は有限資源。上限は「卵」と「弾」で別管理する：
-//   卵(UNMATURE+MATURE) の上限 = maxRoe_  … 母体が時間（暫定。本来は経験値）で産卵する分の上限
-//   弾(LARVAE)          の上限 = maxAmmo_ … リロードで作り置きできる弾の上限
-//   リロード   : MATURE を1つ LARVAE 化（残機を犠牲に弾を作る。弾が上限なら不可）→ TryReload()
-//   発射       : LARVAE を1つ隊列から外して返す（呼び出し側が弾化して破棄）→ TryConsumeLarvae()
+// 卵は有限資源。上限は maxRoe_ で管理する（母体が時間（暫定。本来は経験値）で産卵する分の上限）。
 //
 // 隊列順は entityId をキーに記録し、卵が自分の Initialize / Update で pull する
 // （生成直後の卵はまだスクリプトインスタンスが無く直接 push できないため）。
@@ -18,8 +15,7 @@ public class RoeManager : MonoScript {
 
     [SerializeField] private string roePrefabName_ = "Roe";  // 生成する卵プレハブ名
 
-    [SerializeField] private int maxRoe_ = 5;    // 卵(UNMATURE+MATURE)の上限
-    [SerializeField] private int maxAmmo_ = 5;    // 弾(LARVAE)の上限
+    [SerializeField] private int maxRoe_ = 5;    // 卵の上限
 
     private readonly List<Entity> roe_ = new List<Entity>();
     private float lastDistributedPlayerExp_ = 0f; // 前フレームまでに卵へ分配済みのプレイヤー累計経験値
@@ -53,7 +49,7 @@ public class RoeManager : MonoScript {
                     continue;
                 }
                 RoeStateComponent state = e.GetScript<RoeStateComponent>();
-                if (state == null || state.CurrentState != RoeState.UNMATURE) {
+                if (state == null || state.IsMature) {
                     continue;
                 }
 
@@ -63,52 +59,34 @@ public class RoeManager : MonoScript {
         }
     }
 
-    // ---- 導出値（残機・弾薬） ----
+    // ---- 導出値（残機・弾・HP） ----
 
-    // 残機 = 成熟した卵の数
+    // 弾数 = 成熟した卵の数
     public int MatureCount() {
-        return CountState(RoeState.MATURE);
+        int count = 0;
+        for (int i = 0; i < roe_.Count; i++) {
+            RoeStateComponent state = GetState(roe_[i]);
+            if (state != null && state.IsMature) {
+                count++;
+            }
+        }
+        return count;
     }
 
-    // 弾薬 = 幼生卵の数
-    public int LarveCount() {
-        return CountState(RoeState.LARVAE);
-    }
-
-    // 卵 = 未成熟＋成熟の数（弾は含まない）。産卵上限の判定に使う。
+    // 残機 = HP = 隊列の全卵数（未成熟の子たまごも含む）。産卵上限の判定にも使う。
     public int EggCount() {
-        return CountState(RoeState.UNMATURE) + CountState(RoeState.MATURE);
+        return roe_.Count;
     }
 
     public int MaxRoe { get { return maxRoe_; } }
-    public int MaxAmmo { get { return maxAmmo_; } }
 
-    // 弾(LARVAE)に空きがあるか（リロード可否）
-    public bool CanLoadAmmo { get { return LarveCount() < maxAmmo_; } }
+    // ---- 状態遷移（発射・被弾） ----
 
-    // ---- 状態遷移（リロード・発射） ----
-
-    // 成熟卵(残機)を1つ幼生卵(弾薬)に変える。インデックスの小さい（隊列の前の）卵から探す。
-    // 弾が上限に達していれば作れない。成功で true。
-    public bool TryReload() {
-        if (!CanLoadAmmo) {
-            return false;
-        }
-        for (int i = 0; i < roe_.Count; i++) {
-            RoeStateComponent state = GetState(roe_[i]);
-            if (state != null && state.CurrentState == RoeState.MATURE) {
-                state.SetState(RoeState.LARVAE);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // ダメージで残機を1つ失う：成熟卵(MATURE)を1つ隊列から外して破棄する。末尾側から。成功で true。
+    // ダメージで残機を1つ失う：隊列末尾の卵を成熟/未成熟問わず1つ外して破棄する。成功で true。
+    // 全卵が残機なので状態を問わない。発射と違い最後の1個も失う（残機0でゲームオーバー）。
     public bool TryKillLife() {
         for (int i = roe_.Count - 1; i >= 0; i--) {
-            RoeStateComponent state = GetState(roe_[i]);
-            if (state != null && state.CurrentState == RoeState.MATURE) {
+            if (roe_[i] != null) {
                 Entity e = roe_[i];
                 roe_.RemoveAt(i);
                 e.Destroy();
@@ -118,30 +96,28 @@ public class RoeManager : MonoScript {
         return false;
     }
 
-    // 幼生卵(弾薬)を1つ隊列から外して返す（発射用）。無ければ null。破棄は呼び出し側に任せる。
-    public Entity TryConsumeLarvae() {
+    // 成熟卵(弾)を1つ隊列から外して返す（発射用）。無ければ null。破棄は呼び出し側に任せる。
+    // 卵が合計1個のときは発射不可（発射での即ゲームオーバー防止。子たまごが残っていれば最後の成熟卵も撃てる）。
+    public Entity TryConsumeMature() {
+        if (EggCount() <= 1) {
+            return null;
+        }
+        return ConsumeMature();
+    }
+
+    // ---- 内部 ----
+
+    // 成熟卵を1つ隊列から外して返す（発射専用ヘルパー）。末尾側から探す。無ければ null。
+    private Entity ConsumeMature() {
         for (int i = roe_.Count - 1; i >= 0; i--) {
             RoeStateComponent state = GetState(roe_[i]);
-            if (state != null && state.CurrentState == RoeState.LARVAE) {
+            if (state != null && state.IsMature) {
                 Entity e = roe_[i];
                 roe_.RemoveAt(i);
                 return e;
             }
         }
         return null;
-    }
-
-    // ---- 内部 ----
-
-    private int CountState(RoeState target) {
-        int count = 0;
-        for (int i = 0; i < roe_.Count; i++) {
-            RoeStateComponent state = GetState(roe_[i]);
-            if (state != null && state.CurrentState == target) {
-                count++;
-            }
-        }
-        return count;
     }
 
     private RoeStateComponent GetState(Entity e) {
