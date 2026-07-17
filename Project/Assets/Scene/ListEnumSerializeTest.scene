@@ -1,0 +1,14 @@
+{
+    "entities": [
+        {
+            "guid": "c0000000000000000000000000000001",
+            "parentGuid": null,
+            "path": "./ListEnumSerializeTest/main_camera.entity"
+        },
+        {
+            "guid": "c0000000000000000000000000000002",
+            "parentGuid": null,
+            "path": "./ListEnumSerializeTest/test_entity.entity"
+        }
+    ]
+}
