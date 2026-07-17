@@ -39,6 +39,18 @@ public class LevelReachObjective : Objective
         return Mathf.Clamp01((float)leveling_.CurrentLevel / targetLevel_);
     }
 
+    // 「1 / 2」形式。IsCompleted() と同様、未解決なら遅延再解決する
+    public override string ProgressText()
+    {
+        if (leveling_ == null)
+        {
+            leveling_ = ResolveLeveling();
+        }
+
+        int current = leveling_ != null ? leveling_.CurrentLevel : 0;
+        return current + " / " + targetLevel_;
+    }
+
     private LevelingComponent ResolveLeveling()
     {
         Entity target = ecsGroup.FindEntity(targetEntityName_);

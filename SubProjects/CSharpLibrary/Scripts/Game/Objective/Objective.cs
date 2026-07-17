@@ -22,6 +22,14 @@ public abstract class Objective : MonoScript {
     // 進捗(0.0〜1.0)
     public abstract float Progress();
 
+    // 進捗の表示文字列。UI はこれを呼ぶだけでよく、Objective の具象型を知る必要はない。
+    // 既定はパーセント表示。「3 / 5」のように数値で見せたいものだけがオーバーライドする
+    // （すべての目標が current/goal の整数ペアを持つわけではないため、
+    //   数値を UI に取り出させるのではなく、表示のしかたを目標自身に答えさせる方針）。
+    public virtual string ProgressText() {
+        return (int)(Progress() * 100.0f) + "%";
+    }
+
     public string DisplayName {
         get { return displayName_; }
     }

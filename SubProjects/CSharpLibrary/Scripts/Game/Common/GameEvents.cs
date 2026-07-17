@@ -17,7 +17,7 @@ public class EnemyKilledEvent
 
 // プレイヤーが移動入力を入れ始めた（入力なし→ありのエッジ）際に PlayerMoveComponent が発行される。
 // チュートリアルの「移動した」検知に購読する想定。押しっぱなし中は再発行されない。
-public class PlayerMovedEvent
+public class PlayerMovingEvent
 {
 }
 

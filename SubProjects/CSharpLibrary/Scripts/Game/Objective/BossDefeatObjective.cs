@@ -36,6 +36,19 @@ public class BossDefeatObjective : CountObjective<EnemyKilledEvent> {
         return Mathf.Clamp01(1.0f - bossHp_.CurrentHpRatio());
     }
 
+    // CountObjective の「0 / 1」は撃破目標では意味をなさないので、HP 残量で見せる。
+    // Progress() と同じく未スポーン時は遅延再解決する。
+    public override string ProgressText() {
+        if (IsCompleted()) return "撃破";
+
+        if (bossHp_ == null) {
+            bossHp_ = ResolveBossHp();
+        }
+
+        if (bossHp_ == null) return "未出現";
+        return "残りHP " + (int)(bossHp_.CurrentHpRatio() * 100.0f) + "%";
+    }
+
     private HP ResolveBossHp() {
         Entity bossEntity = ecsGroup.FindEntity(bossEntityName_);
         return bossEntity != null ? bossEntity.GetScript<HP>() : null;
