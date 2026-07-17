@@ -1,5 +1,10 @@
 #include "EntityCollection.h"
 #include <nlohmann/json.hpp>
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
+#include "Engine/ECS/System/ParticleSystem2DUpdateSystem/ParticleSystem2DUpdateSystem.h"
+#include "Engine/ECS/System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
 
 using namespace ONEngine;
 
@@ -71,6 +76,19 @@ void EntityCollection::RemoveEntity(GameEntity* entity, bool deleteChildren) {
 	/// ------------------------------
 	/// 実際に破棄する
 	/// ------------------------------
+
+	// ParticleSystem2D の退避
+	if (auto* ps2d = entity->GetComponent<ParticleSystem2D>()) {
+		if (ps2d->aliveCount > 0 && entity->GetTransform()) {
+			ParticleSystem2DUpdateSystem::RegisterGhost(ps2d, entity->GetTransform()->matWorld);
+		}
+	}
+	// ParticleSystem (3D) の退避
+	if (auto* ps = entity->GetComponent<ParticleSystem>()) {
+		if (ps->aliveCount > 0 && entity->GetTransform()) {
+			ParticleSystemUpdateSystem::RegisterGhost(ps, entity->GetTransform()->matWorld);
+		}
+	}
 
 	/// Componentの破棄
 	entity->RemoveComponentAll();

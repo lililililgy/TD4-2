@@ -25,7 +25,7 @@ namespace ONEngine {
     class ParticleSystem : public IComponent {
     public:
         ParticleSystem();
-        ~ParticleSystem() override;
+        ~ParticleSystem() override = default;
 
         // --- Controls ---
         void Play();
