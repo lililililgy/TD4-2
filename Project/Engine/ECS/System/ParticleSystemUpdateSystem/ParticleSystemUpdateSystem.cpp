@@ -154,8 +154,6 @@ namespace ONEngine {
         // 停止中や不安定な場合の補正
         if (dt <= 0.0f || dt > 0.1f) dt = 1.0f / 60.0f;
 
-        UpdateGhosts(dt);
-
         auto& entities = ecs->GetEntities();
         for (auto& entityPtr : entities) {
             GameEntity* entity = entityPtr.get();
