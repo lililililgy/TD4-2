@@ -80,12 +80,11 @@ public:
                         pendingAssetReloads_.push_back(relPath);
                     }
 
-                    // C#スクリプト(.cs)、または DLL/PDB が更新された場合はホットリロード要求
-                    bool isCsFile = relPath.ends_with(".cs");
-                    bool isDllOrPdb = relPath.find("CSharpLibrary") != std::string::npos && 
-                                      (relPath.ends_with(".dll") || relPath.ends_with(".pdb"));
+                    // タイムスタンプ付きの DLL が更新された場合のみホットリロード要求
+                    // (固定名 DLL/PDB や PDB 更新での複数回トリガー、およびビルド前の .cs 更新での無駄なトリガーを防ぐため)
+                    bool isTimestampedDll = relPath.find("CSharpLibrary_") != std::string::npos && relPath.ends_with(".dll");
 
-                    if (isCsFile || isDllOrPdb) {
+                    if (isTimestampedDll) {
                         ONEngine::Console::Log("[MonoDbg] Triggering ScriptHotReload for: " + relPath, ONEngine::LogCategory::ScriptEngine);
                         pendingScriptHotReload_ = true;
                     }
