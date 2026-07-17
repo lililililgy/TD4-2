@@ -23,7 +23,10 @@
             "type": "Transform"
         },
         {
-            "KillCountObjective": {},
+            "KillCountObjective": {
+                "displayName_": "",
+                "targetCount_": 20
+            },
             "type": "Variables"
         },
         {

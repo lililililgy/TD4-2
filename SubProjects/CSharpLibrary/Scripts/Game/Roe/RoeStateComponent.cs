@@ -1,28 +1,25 @@
 using System;
 
-public enum RoeState {
-    UNMATURE, // 未成熟（成長中。残機にも弾薬にもならない）
-    MATURE,   // 成熟（残機としてカウント）
-    LARVAE    // 幼生（リロードで成熟卵を犠牲にした状態。弾薬としてカウント）
-}
-
-// 卵(roe)1個の状態。卵プレハブ側に付ける。状態が唯一の真実(single source of truth)で、
-// 残機数・弾薬数は RoeManager がこの状態を数えて導出する。
+// 卵(roe)1個の状態。卵プレハブ側に付ける。成熟したかどうかが唯一の真実(single source of truth)で、
+// 残機数・弾数は RoeManager がこの状態を数えて導出する。
 //
-// UNMATURE → MATURE は自分で成長する（本来は経験値、暫定で時間経過）。
-// MATURE → LARVAE はリロード時に RoeManager から SetState で遷移させられる。
-public class RoeStateComponent : MonoScript {
-    [SerializeField] private float minScale_ = 32.0f;  // 幼生／成長前のスケール
+// 未成熟 → 成熟は自分で成長する（本来は経験値、暫定で時間経過）。
+// 成熟した卵はそのまま弾（＝残機＝HP）としてカウントされる。
+public class RoeStateComponent : MonoScript
+{
+    [SerializeField] private float minScale_ = 32.0f;  // 成長前のスケール
     [SerializeField] private float maxScale_ = 64.0f;  // 成熟後のスケール
 
-    private RoeState currentState_ = RoeState.UNMATURE;
+    private bool isMature_ = false;
 
-    public override void Initialize() {
-        currentState_ = RoeState.UNMATURE;
+    public override void Initialize()
+    {
+        isMature_ = false;
         ApplyScale(minScale_);
 
         SpriteRenderer spriteRenderer = entity.GetComponent<SpriteRenderer>();
-        if (spriteRenderer) {
+        if (spriteRenderer)
+        {
             UVTransform uVTransform = spriteRenderer.uvTransform;
             uVTransform.position = new Vector2(0.5f, 0.5f);
 
@@ -30,15 +27,11 @@ public class RoeStateComponent : MonoScript {
         }
     }
 
-    public override void Update() {
-        // 成長するのは UNMATURE のときだけ。MATURE/LARVAE は遷移待ち。
-        if (currentState_ != RoeState.UNMATURE) {
-            if (currentState_ == RoeState.LARVAE) {
-                SpriteAnimation spriteAnimation = entity.GetScript<SpriteAnimation>();
-                if (spriteAnimation) {
-                    spriteAnimation.Play(); // 幼生はアニメーションしない
-                }
-            }
+    public override void Update()
+    {
+        // 成長するのは未成熟の間だけ。成熟後は最大スケール固定。
+        if (isMature_)
+        {
             ApplyScale(maxScale_);
             return;
         }
@@ -46,26 +39,27 @@ public class RoeStateComponent : MonoScript {
         LevelingComponent levelingComponent = entity.GetScript<LevelingComponent>();
         ApplyScale(Mathf.Lerp(minScale_, maxScale_, levelingComponent.GetExpProgress()));
 
-        // Level UP したら RoeState を MATURE に遷移させる。見た目もここで合わせる。
-        if (levelingComponent.IsLevelUp) {
-            SetState(RoeState.MATURE);
+        // Level UP したら成熟させる。見た目もここで合わせる。
+        if (levelingComponent.IsLevelUp)
+        {
+            isMature_ = true;
+            ApplyScale(maxScale_);
+
+            SpriteAnimation spriteAnimationComponent = entity.GetScript<SpriteAnimation>();
+            if (spriteAnimationComponent)
+            {
+                spriteAnimationComponent.Play();
+            }
         }
     }
 
-    public RoeState CurrentState { get { return currentState_; } }
+    public bool IsMature => isMature_;
 
-    // 外部（RoeManager のリロード等）から状態を遷移させる。見た目もここで合わせる。
-    public void SetState(RoeState next) {
-        currentState_ = next;
-        switch (next) {
-            case RoeState.MATURE: ApplyScale(maxScale_); break;
-            case RoeState.LARVAE: ApplyScale(minScale_); break; // 幼生に戻る
-        }
-    }
-
-    private void ApplyScale(float s) {
+    private void ApplyScale(float s)
+    {
         Transform transform = entity.GetComponent<Transform>();
-        if (transform) {
+        if (transform)
+        {
             transform.scale = Vector3.one * s;
         }
     }

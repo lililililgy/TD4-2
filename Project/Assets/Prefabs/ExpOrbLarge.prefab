@@ -26,7 +26,7 @@
             "categoryBits": 64,
             "enable": 1,
             "freezeY": false,
-            "isTrigger": false,
+            "isTrigger": true,
             "maskBits": 130,
             "mass": 1.0,
             "radius": 0.4000000059604645,
@@ -42,6 +42,7 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -50,6 +51,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "ac842be8df6723ae5fa4c2c06a0e1f11",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -65,7 +69,6 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         },
         {
@@ -79,7 +82,7 @@
             "type": "Script"
         }
     ],
-    "guid": "39c8f358cb4e0ccbaf776e0f50dbc9c8",
+    "guid": "a0655534c6d6540dde4efa2c3f1503fd",
     "name": "ExpOrbLarge",
     "parentGuid": null,
     "prefabName": "ExpOrbLarge"

@@ -33,12 +33,6 @@ public class PlayerDashedEvent
 {
 }
 
-// リロードが実際に成立した（成熟卵→幼生卵の変換に成功した）際に Magazine が発行される。
-// チュートリアルの「リロードした」検知に購読する想定。ボタンを押しただけでは発行されない。
-public class PlayerReloadedEvent
-{
-}
-
 // LevelingComponent を持つエンティティ(Player/Roe 等)のレベルが上がった際に
 // LevelingComponent.LevelUp() から発行される。発行元は entityName で識別する。
 // 「レベルnに到達」目標用に、上がったあとの新レベル値を運ぶ。1レベル上がるごとに1回発行される。

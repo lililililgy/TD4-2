@@ -1,8 +1,8 @@
 using System;
 
 // プレイヤー（母体）の残機(Life)と HP を橋渡しする。
-// 残機の実体は「成熟した卵(roe)」で、HP はそれを反映する汎用の被ダメージ窓口：
-//   HP.CurrentHp == 成熟roe数(残機)、HP.MaxHp == 卵の上限(MaxRoe)。
+// 残機 = HP = 全卵数（未成熟の子たまごも含む）。発射でも被弾でも卵が減れば HP も減る。
+//   HP.CurrentHp == 全roe数(残機)、HP.MaxHp == 卵の上限(MaxRoe)。
 //
 // 汎用 AttackCollision → HP.TakeDamage で減った分を、このブリッジが成熟roeの破棄に変換する。
 // HP 自体は roe を知らない（HP 管理に専念）。roe を真実とし、毎フレーム HP を同期する。
@@ -24,7 +24,7 @@ public class PlayerLifeComponent : MonoScript {
             hp_.DisableAutoDestruction = true; // 死亡判定はこのブリッジが担う（HPは自分で破棄しない）
             if (roeManager_ != null) {
                 hp_.MaxHp = roeManager_.MaxRoe;
-                hp_.SetHp(roeManager_.MatureCount());
+                hp_.SetHp(roeManager_.EggCount());
             }
             lastSyncedHp_ = hp_.CurrentHp;
         }
@@ -47,8 +47,8 @@ public class PlayerLifeComponent : MonoScript {
             }
         }
 
-        // roe(残機) に HP を合わせる（成熟で増えた／reload・発射で減った、いずれもここで同期）
-        int lives = roeManager_.MatureCount();
+        // roe(残機) に HP を合わせる（産卵で増えた／発射・被弾で減った、いずれもここで同期）
+        int lives = roeManager_.EggCount();
         hp_.SetHp(lives);
         lastSyncedHp_ = hp_.CurrentHp;
 
@@ -58,9 +58,9 @@ public class PlayerLifeComponent : MonoScript {
         isAlive_ = !hadLife_ || lives > 0;
     }
 
-    // 現在の残機数（＝成熟した卵の数）
+    // 現在の残機数（＝全卵数。未成熟の子たまごも含む）
     public int RemainingLives() {
-        return roeManager_ != null ? roeManager_.MatureCount() : 0;
+        return roeManager_ != null ? roeManager_.EggCount() : 0;
     }
 
     // 残機が尽きたか（ゲームオーバー判定）

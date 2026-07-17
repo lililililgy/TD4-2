@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 250.3000030517578,
                 "z": 0.0
             },
             "rotate": {
@@ -58,8 +58,12 @@
             "DespawnTimer": {
                 "despawnTime_": 1270.0
             },
+            "ExpDropper": {
+                "dropExp": 128.0
+            },
             "HP": {
                 "currentHp_": 30.0,
+                "directlyDamageable_": true,
                 "disableAutoDestruction_": false,
                 "isInvincible_": false,
                 "maxHp_": 30.0
@@ -133,6 +137,10 @@
                 {
                     "enable": true,
                     "name": "DespawnTimer"
+                },
+                {
+                    "enable": true,
+                    "name": "ExpDropper"
                 }
             ],
             "type": "Script"
@@ -148,6 +156,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "b5d57f5c6d0dba2ba728ef16ef0db666",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -166,7 +177,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "4e0b8e4f1f437c26508da2185bec44b8",
+    "guid": "e4a70aa97e072a4e1245c29ce673f0d3",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

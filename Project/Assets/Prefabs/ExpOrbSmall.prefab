@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": -511.699951171875,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
@@ -26,7 +26,7 @@
             "categoryBits": 64,
             "enable": 1,
             "freezeY": false,
-            "isTrigger": false,
+            "isTrigger": true,
             "maskBits": 130,
             "mass": 1.0,
             "radius": 0.5,
@@ -42,6 +42,7 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -50,6 +51,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "ac842be8df6723ae5fa4c2c06a0e1f11",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -65,7 +69,6 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         },
         {
@@ -79,7 +82,7 @@
             "type": "Script"
         }
     ],
-    "guid": "33e9d0022557dfb99cb04f55226de2bb",
+    "guid": "9c8649b8dff5b183991571bd402a9db7",
     "name": "ExpOrbSmall",
     "parentGuid": null,
     "prefabName": "ExpOrbSmall"

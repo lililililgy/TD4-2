@@ -51,10 +51,12 @@
                 "unitMaxOffset_": 128.0,
                 "unitMinOffset_": 98.0
             },
+            "TrailLeader": {},
             "type": "Variables"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -78,7 +80,6 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         },
         {
@@ -91,6 +92,10 @@
                 {
                     "enable": true,
                     "name": "DamageRelay"
+                },
+                {
+                    "enable": true,
+                    "name": "TrailLeader"
                 }
             ],
             "type": "Script"

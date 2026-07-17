@@ -56,13 +56,13 @@
             },
             "TrailFollower": {
                 "chainName_": "Roe",
-                "leadMaxOffset_": 512.0,
-                "leadMinOffset_": 256.0,
-                "leaderName_": "Player",
-                "maxBendRad_": 0.0,
+                "leadMaxOffset_": 128.0,
+                "leadMinOffset_": 64.0,
+                "leaderName_": "Player_Tentacle",
+                "maxBendRad_": 0.800000011920929,
                 "maxSmoothSpeed_": 423.0,
                 "order_": 1,
-                "rotateToFace_": false,
+                "rotateToFace_": true,
                 "smoothTime_": 0.25999999046325684,
                 "unitMaxOffset_": 86.0,
                 "unitMinOffset_": 43.0
@@ -93,6 +93,7 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -116,11 +117,10 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "03de1cdcd3fa890f5c071f34e960e073",
+    "guid": "59c2e7b501b3c884e71335ce0fa2f03c",
     "name": "Roe",
     "parentGuid": null,
     "prefabName": "Roe"

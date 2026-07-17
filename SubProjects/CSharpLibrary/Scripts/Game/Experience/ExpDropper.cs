@@ -16,6 +16,9 @@ public class ExpDropper : MonoScript
     private const string kLargeOrbPrefabName = "ExpOrbLarge";
 
 
+    /// ドロップする ExperiencePoint の量
+    [SerializeField] private float dropExp = 0.0f;
+
     public override void OnDestroy()
     {
         Drop();
@@ -26,20 +29,12 @@ public class ExpDropper : MonoScript
     /// </summary>
     private void Drop()
     {
-        ExperiencePoint expp = entity.GetScript<ExperiencePoint>();
-        if (expp == null)
-        {
-            return;
-        }
-
-        float exp = expp.ExperiencePoints;
-
         // 大きいオーブから優先的に割り当てる整数個数の分解（例: exp=235 → large 2, medium 3, small 5）
-        int largeCount = (int)(exp / kLargeOrbExp);
-        exp -= largeCount * kLargeOrbExp;
-        int mediumCount = (int)(exp / kMediumOrbExp);
-        exp -= mediumCount * kMediumOrbExp;
-        int smallCount = (int)exp; // kSmallOrbExp == 1 なので端数がそのまま個数になる
+        int largeCount = (int)(dropExp / kLargeOrbExp);
+        dropExp -= largeCount * kLargeOrbExp;
+        int mediumCount = (int)(dropExp / kMediumOrbExp);
+        dropExp -= mediumCount * kMediumOrbExp;
+        int smallCount = (int)dropExp; // kSmallOrbExp == 1 なので端数がそのまま個数になる
 
         Vector2 min, max;
         GetSpawnArea(out min, out max);

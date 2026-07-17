@@ -103,7 +103,7 @@
             "HP": {
                 "MAX_HP": 12,
                 "currentHp": 1,
-                "currentHp_": 0.0,
+                "currentHp_": 4.0,
                 "directlyDamageable_": false,
                 "disableAutoDestruction": false,
                 "disableAutoDestruction_": true,
@@ -118,9 +118,16 @@
                 "currentLevel_": 0,
                 "maxLevel_": 999
             },
-            "Magazine": {
-                "maxAmmo_": 10,
-                "reloadCooldown_": 0.6000000238418579
+            "MovementAreaClamper": {
+                "existArea_": false,
+                "fixedCollisionBounds_": true,
+                "fixedPos_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "movementAreaEntityName_": "Stage",
+                "radius_": 33.0
             },
             "PlayerAttackComponent": {
                 "damageCurve_": [
@@ -173,13 +180,6 @@
                     "x": 0.0,
                     "y": 0.0
                 },
-                "reloadButtons_": [
-                    16384,
-                    32768
-                ],
-                "reloadKeys_": [
-                    19
-                ],
                 "shootCooldownTime_": 0.0,
                 "shootKeys_": [
                     57,
@@ -238,7 +238,6 @@
                 "broodCount_": 3,
                 "layInterval_": 5.0,
                 "leaderName_": "Player",
-                "maxAmmo_": 6,
                 "maxBrood_": 12,
                 "maxRoe_": 12,
                 "roePrefabName_": "Roe"
@@ -295,21 +294,22 @@
                 },
                 {
                     "enable": true,
-                    "name": "Magazine"
-                },
-                {
-                    "enable": true,
                     "name": "PlayerAttackComponent"
                 },
                 {
                     "enable": true,
                     "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "MovementAreaClamper"
                 }
             ],
             "type": "Script"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -333,7 +333,6 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],
