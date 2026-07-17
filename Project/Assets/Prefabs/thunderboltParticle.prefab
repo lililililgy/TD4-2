@@ -1,0 +1,258 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -308.0999755859375,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "colorOverLifetime": {
+                "color": {
+                    "gradient": {
+                        "alphaKeys": [
+                            {
+                                "alpha": 1.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0
+                            },
+                            {
+                                "alpha": 0.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0
+                            }
+                        ],
+                        "colorKeys": []
+                    },
+                    "gradientMax": {
+                        "alphaKeys": [],
+                        "colorKeys": []
+                    },
+                    "gradientMin": {
+                        "alphaKeys": [],
+                        "colorKeys": []
+                    },
+                    "state": 0
+                },
+                "enabled": true
+            },
+            "emission": {
+                "bursts": [],
+                "enabled": true,
+                "rateOverDistance": 0.0,
+                "rateOverTime": 15.0
+            },
+            "enable": 1,
+            "main": {
+                "duration": 5.0,
+                "gravityModifier": 0.0,
+                "looping": true,
+                "maxParticles": 1000,
+                "playOnAwake": true,
+                "prewarm": false,
+                "simulationSpace": 1,
+                "startColor": {
+                    "constant": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "max": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "min": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "state": 0
+                },
+                "startDelay": {
+                    "constant": 0.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startLifetime": {
+                    "constant": 0.75,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startRotation": {
+                    "constant": 1.5700000524520874,
+                    "max": 1.6699999570846558,
+                    "min": 1.4700000286102295,
+                    "state": 1
+                },
+                "startSize": {
+                    "constant": 66.69999694824219,
+                    "max": 80.0,
+                    "min": -80.0,
+                    "state": 1
+                },
+                "startSpeed": {
+                    "constant": 5.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                }
+            },
+            "renderer": {
+                "blendMode": 0,
+                "flipMode": 0,
+                "materialGuid": "6b19ef90e5548c428a73340dce15203d",
+                "meshGuid": "",
+                "renderMode": 0
+            },
+            "shape": {
+                "angle": 25.0,
+                "arc": 360.0,
+                "boxScale": {
+                    "x": 1.0,
+                    "y": 100.0,
+                    "z": 1.0
+                },
+                "enabled": true,
+                "radius": 1.0,
+                "radiusThickness": 1.0,
+                "type": 3
+            },
+            "sizeOverLifetime": {
+                "enabled": true,
+                "size": {
+                    "constant": 1.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 1.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 2.0
+                            }
+                        ]
+                    },
+                    "curveMin": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 1.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 2.0
+                            }
+                        ]
+                    },
+                    "state": 3
+                }
+            },
+            "textureSheetAnimation": {
+                "enabled": true,
+                "fps": 12.0,
+                "tilesX": 4,
+                "tilesY": 1
+            },
+            "type": "ParticleSystem2D",
+            "velocityOverLifetime": {
+                "enabled": false,
+                "space": 0,
+                "speedModifier": {
+                    "constant": 1.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "x": {
+                    "constant": 1.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "y": {
+                    "constant": 1.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "z": {
+                    "constant": 1.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                }
+            }
+        }
+    ],
+    "guid": "55ac90d5904cffe0c4278f466fe29386",
+    "name": "thunderboltParticle",
+    "parentGuid": null,
+    "prefabName": ""
+}
