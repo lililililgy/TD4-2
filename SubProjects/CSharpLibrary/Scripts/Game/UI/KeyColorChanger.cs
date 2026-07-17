@@ -40,7 +40,7 @@ public class KeyColorChanger : MonoScript
 	{
 		foreach (KeyCode key in keys)
 		{
-			if (Input.TriggerKey(key))
+			if (Input.PressKey(key))
 			{
 				return true;
 			}
@@ -48,7 +48,7 @@ public class KeyColorChanger : MonoScript
 
 		foreach (Gamepad pad in pads)
 		{
-			if (Input.TriggerGamepad(pad))
+			if (Input.PressGamepad(pad))
 			{
 				return true;
 			}

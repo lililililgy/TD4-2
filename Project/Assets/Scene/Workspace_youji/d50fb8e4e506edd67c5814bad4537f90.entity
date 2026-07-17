@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": -0.3510005474090576,
+                "x": -1.0,
+                "y": 0.5269999504089355,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 0.800000011920929,
-                "y": 0.320000022649765,
-                "z": 0.10000000149011612
+                "x": 1.6339999437332153,
+                "y": 0.8169998526573181,
+                "z": 0.08170001953840256
             },
             "type": "Transform"
         },
@@ -31,7 +31,10 @@
                     "z": 0.0
                 },
                 "keys": [
-                    57
+                    17,
+                    30,
+                    31,
+                    32
                 ]
             },
             "type": "Variables"
@@ -46,7 +49,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "41cc38b8f0507ce94c632206249dc0fa",
+                "baseTextureGuid": "c0a1ad0986b6dd846e479533dfcf9079",
                 "bloomIntensity": 1.0,
                 "bloomRadius": 12.0,
                 "bloomThreshold": 0.800000011920929,
@@ -78,8 +81,8 @@
             "type": "Script"
         }
     ],
-    "guid": "63acc79f5ef48ee22b7a6103a1ceb26b",
-    "name": "Space",
-    "parentGuid": "6c6ff24fceec80cee23a9c6eb4d73783",
+    "guid": "d50fb8e4e506edd67c5814bad4537f90",
+    "name": "Stick",
+    "parentGuid": "5833a6909c39d75bd73c994d550d51c6",
     "prefabName": ""
 }

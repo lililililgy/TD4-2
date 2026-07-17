@@ -23,6 +23,17 @@
             "type": "Transform"
         },
         {
+            "KeyColorChanger": {
+                "color": {
+                    "w": 1.0,
+                    "x": 0.699999988079071,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "keys": [
+                    42
+                ]
+            },
             "type": "Variables"
         },
         {
@@ -55,6 +66,16 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KeyColorChanger"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "30a238c91c7a869920a6164477423b21",
