@@ -70,8 +70,8 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
                         if (add) {
                             MonoType* elemType = (MonoType*)ONEngine::Variables::GetListElementType(lc);
                             MonoClass* ek = elemType ? mono_class_from_mono_type(elemType) : nullptr;
-                            MonoType* baseType = ek && mono_class_is_enum(ek) ? mono_class_get_enum_basetype(ek) : nullptr;
-                            int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_UNKNOWN;
+                            MonoType* baseType = ek && mono_class_is_enum(ek) ? mono_class_enum_basetype(ek) : nullptr;
+                            int baseTypeId = baseType ? mono_type_get_type(baseType) : -1;
 
                             for (auto itemVal : arg) {
                                 if constexpr (std::is_same_v<T, std::vector<std::string>>) {

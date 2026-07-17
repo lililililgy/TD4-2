@@ -766,7 +766,7 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 							const char* ekName = mono_class_get_name(ek);
 							if(ekName && strcmp(ekName, "Vector3") == 0) { ONEngine::Vector3 v = ONEngine::Vector3::Zero; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
 							else if(mono_class_is_enum(ek)) {
-								MonoType* baseType = mono_class_get_enum_basetype(ek);
+								MonoType* baseType = mono_class_enum_basetype(ek);
 								int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_I4;
 								if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { int8_t v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
 								else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { int16_t v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
@@ -805,7 +805,7 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 						if(ImGui::DragFloat3(itemName.c_str(), &v.x)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } 
 					}
 					else if(mono_class_is_enum(ek)) { 
-						MonoType* baseType = mono_class_get_enum_basetype(ek);
+						MonoType* baseType = mono_class_enum_basetype(ek);
 						int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_I4;
 						int v = 0;
 						if (itemObj) {

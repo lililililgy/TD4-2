@@ -243,7 +243,7 @@ Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 		{
 			MonoClass* klass = mono_class_from_mono_type((MonoType*)type);
 			if (klass && strcmp(mono_class_get_name(klass), "List`1") == 0) {
-				MonoType* elemType = GetListElementType(klass);
+				MonoType* elemType = (MonoType*)GetListElementType(klass);
 				if (elemType) {
 					int etid = mono_type_get_type(elemType);
 					if (etid == MONO_TYPE_R4) return std::vector<float>();
@@ -293,7 +293,7 @@ Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 
 		MonoMethod* getItem = mono_class_get_method_from_name(klass, "get_Item", 1);
 		if (!getItem) return 0;
-		MonoType* elemType = GetListElementType(klass);
+		MonoType* elemType = (MonoType*)GetListElementType(klass);
 		if (!elemType) {
 			elemType = mono_signature_get_return_type(mono_method_signature(getItem));
 		}
@@ -351,7 +351,7 @@ Variables::Var Variables::MonoObjectToVar(void* obj, void* type) {
 			}
 			if (mono_class_is_enum(ek)) {
 				std::vector<int> l(count);
-				MonoType* baseType = mono_class_get_enum_basetype(ek);
+				MonoType* baseType = mono_class_enum_basetype(ek);
 				int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_I4;
 				for (int i = 0; i < count; ++i) { 
 					void* a[1] = { &i }; 
@@ -436,8 +436,8 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 					if (add) {
 						MonoType* elemType = GetListElementType(lc);
 						MonoClass* ek = elemType ? mono_class_from_mono_type(elemType) : nullptr;
-						MonoType* baseType = ek && mono_class_is_enum(ek) ? mono_class_get_enum_basetype(ek) : nullptr;
-						int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_UNKNOWN;
+						MonoType* baseType = ek && mono_class_is_enum(ek) ? mono_class_enum_basetype(ek) : nullptr;
+						int baseTypeId = baseType ? mono_type_get_type(baseType) : -1;
 
 						for (auto itemVal : arg) {
 							if constexpr (std::is_same_v<T, std::vector<std::string>>) {
@@ -803,8 +803,8 @@ void Variables::SetScriptVariables(const std::string& scriptName) {
 						if (add) {
 							MonoType* elemType = GetListElementType(lc);
 							MonoClass* ek = elemType ? mono_class_from_mono_type(elemType) : nullptr;
-							MonoType* baseType = ek && mono_class_is_enum(ek) ? mono_class_get_enum_basetype(ek) : nullptr;
-							int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_UNKNOWN;
+							MonoType* baseType = ek && mono_class_is_enum(ek) ? mono_class_enum_basetype(ek) : nullptr;
+							int baseTypeId = baseType ? mono_type_get_type(baseType) : -1;
 
 							for (auto itemVal : arg) {
 								if constexpr (std::is_same_v<T, std::vector<std::string>>) {
