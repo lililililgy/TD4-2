@@ -119,6 +119,26 @@
             "guid": "cce534c42aa14f70adac26931ce67a9e",
             "parentGuid": null,
             "path": "./DebugScene_takeshi/cce534c42aa14f70adac26931ce67a9e.entity"
+        },
+        {
+            "guid": "d2cdf7286b8a5e5bc5ad933744d4f4ad",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/d2cdf7286b8a5e5bc5ad933744d4f4ad.entity"
+        },
+        {
+            "guid": "a14b65d9d20c40aad48d5b087c9b6d5b",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/a14b65d9d20c40aad48d5b087c9b6d5b.entity"
+        },
+        {
+            "guid": "65609141e4577178095f754e29b48016",
+            "parentGuid": "cce534c42aa14f70adac26931ce67a9e",
+            "path": "./DebugScene_takeshi/65609141e4577178095f754e29b48016.entity"
+        },
+        {
+            "guid": "ace547fb01b9d9a68bd495a2ca57145b",
+            "parentGuid": "cce534c42aa14f70adac26931ce67a9e",
+            "path": "./DebugScene_takeshi/ace547fb01b9d9a68bd495a2ca57145b.entity"
         }
     ]
 }

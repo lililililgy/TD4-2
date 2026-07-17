@@ -15,11 +15,54 @@ internal sealed class KingYadokariIdleState : IKingYadokariState {
     public void Update(KingYadokari owner) {
         elapsed_ += Time.deltaTime;
         if (elapsed_ >= owner.IdleDuration) {
-            owner.ChangeState(new KingYadokariShellBulletAttackState());
+            KingYadokariAttackTypeEnum attackType = owner.SelectAttackType();
+            if (attackType == KingYadokariAttackTypeEnum.ShellBullet) {
+                owner.ChangeState(new KingYadokariShellBulletAttackState());
+                return;
+            }
+
+            owner.ChangeState(new KingYadokariGiantClawAttackState());
         }
     }
 
     public void Exit(KingYadokari owner) {
+    }
+}
+
+internal sealed class KingYadokariGiantClawAttackState : IKingYadokariState {
+    private float elapsed_;
+    private bool attackStarted_;
+
+    public void Enter(KingYadokari owner) {
+        elapsed_ = 0.0f;
+        attackStarted_ = false;
+        owner.BeginAttackTell();
+    }
+
+    public void Update(KingYadokari owner) {
+        elapsed_ += Time.deltaTime;
+        if (!attackStarted_) {
+            if (elapsed_ < owner.GiantClawTellDuration) {
+                return;
+            }
+
+            attackStarted_ = owner.BeginGiantClawAttack();
+            if (!attackStarted_) {
+                owner.ChangeState(new KingYadokariRecoveryState(owner.GiantClawRecoveryDuration));
+                return;
+            }
+        }
+
+        if (elapsed_ < owner.GiantClawTellDuration + owner.GiantClawActiveDuration) {
+            return;
+        }
+
+        owner.EndGiantClawAttack();
+        owner.ChangeState(new KingYadokariRecoveryState(owner.GiantClawRecoveryDuration));
+    }
+
+    public void Exit(KingYadokari owner) {
+        owner.EndGiantClawAttack();
     }
 }
 
@@ -36,14 +79,14 @@ internal sealed class KingYadokariShellBulletAttackState : IKingYadokariState {
     public void Update(KingYadokari owner) {
         elapsed_ += Time.deltaTime;
         if (!fired_) {
-            if (elapsed_ < owner.AttackTellDuration) {
+            if (elapsed_ < owner.ShellBulletTellDuration) {
                 return;
             }
 
             fired_ = true;
             owner.RestoreNormalVisual();
             if (!owner.FireShellBullet()) {
-                owner.ChangeState(new KingYadokariRecoveryState());
+                owner.ChangeState(new KingYadokariRecoveryState(owner.ShellBulletRecoveryDuration));
                 return;
             }
         }
@@ -58,7 +101,7 @@ internal sealed class KingYadokariShellBulletAttackState : IKingYadokariState {
             return;
         }
 
-        owner.ChangeState(new KingYadokariRecoveryState());
+        owner.ChangeState(new KingYadokariRecoveryState(owner.ShellBulletRecoveryDuration));
     }
 
     public void Exit(KingYadokari owner) {
@@ -67,6 +110,11 @@ internal sealed class KingYadokariShellBulletAttackState : IKingYadokariState {
 
 internal sealed class KingYadokariRecoveryState : IKingYadokariState {
     private float elapsed_;
+    private readonly float duration_;
+
+    public KingYadokariRecoveryState(float duration) {
+        duration_ = duration;
+    }
 
     public void Enter(KingYadokari owner) {
         elapsed_ = 0.0f;
@@ -75,7 +123,7 @@ internal sealed class KingYadokariRecoveryState : IKingYadokariState {
 
     public void Update(KingYadokari owner) {
         elapsed_ += Time.deltaTime;
-        if (elapsed_ >= owner.AttackRecoveryDuration) {
+        if (elapsed_ >= duration_) {
             owner.ChangeState(new KingYadokariIdleState());
         }
     }
