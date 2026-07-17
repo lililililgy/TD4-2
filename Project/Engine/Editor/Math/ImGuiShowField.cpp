@@ -70,7 +70,8 @@ void RegisterFieldDrawers() {
 
 bool DrawEnumCombo(MonoClass* enumClass, const char* name, int& value) {
 	void* iter = nullptr; MonoClassField* enumField; std::vector<std::string> names; std::vector<int> values; int currentIndex = -1, i = 0;
-	MonoVTable* vtable = mono_class_vtable(mono_domain_get(), enumClass);
+	MonoDomain* domain = ONEngine::MonoScriptEngine::GetInstance().Domain();
+	MonoVTable* vtable = mono_class_vtable(domain, enumClass);
 	while ((enumField = mono_class_get_fields(enumClass, &iter))) {
 		if (mono_field_get_flags(enumField) & MONO_FIELD_ATTR_STATIC) {
 			names.push_back(mono_field_get_name(enumField));
@@ -721,18 +722,19 @@ void CSGui::BoolField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 }
 
 void CSGui::StringField::Draw(const std::string& scriptName, MonoObject* obj, MonoClassField* field, const char* name) {
-	MonoString* monoStr = (MonoString*)mono_field_get_value_object(mono_domain_get(), field, obj);
+	MonoDomain* domain = ONEngine::MonoScriptEngine::GetInstance().Domain();
+	MonoString* monoStr = (MonoString*)mono_field_get_value_object(domain, field, obj);
 	if(!monoStr) return;
 	char* utf8 = mono_string_to_utf8(monoStr); std::string oldValue = utf8; std::string value = utf8; mono_free(utf8);
 	if(ImGuiInputText(name, &value, ImGuiInputTextFlags_EnterReturnsTrue)) {
 		ONEngine::GameEntity* entity = ONEngine::MonoScriptEngine::GetInstance().GetOwnerEntity(obj);
 		if (entity) EditCommand::Execute<ModifyScriptVariableCommand>(entity, scriptName, name, MONO_TYPE_STRING, oldValue, value);
-		else mono_field_set_value(obj, field, mono_string_new(mono_domain_get(), value.c_str()));
+		else mono_field_set_value(obj, field, mono_string_new(domain, value.c_str()));
 	}
 }
 
 void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, MonoClassField* field, const char* name) {
-	MonoDomain* domain = mono_domain_get();
+	MonoDomain* domain = ONEngine::MonoScriptEngine::GetInstance().Domain();
 	MonoObject* listObj = mono_field_get_value_object(domain, field, obj);
 	if(!listObj) { ImGui::Text("%s: (null)", name); return; }
 	ImGui::PushID(field);
@@ -864,7 +866,8 @@ void CSGui::StructGui::Draw(const std::string& scriptName, MonoObject* obj, Mono
 	// --- カスタム構造体の描画とトラッキング ---
 	ImGui::PushID(field);
 
-	MonoObject* structObj = mono_field_get_value_object(mono_domain_get(), field, obj);
+	MonoDomain* domain = ONEngine::MonoScriptEngine::GetInstance().Domain();
+	MonoObject* structObj = mono_field_get_value_object(domain, field, obj);
 	if (!structObj) {
 		ImGui::Text("%s: (null)", name);
 		ImGui::PopID();

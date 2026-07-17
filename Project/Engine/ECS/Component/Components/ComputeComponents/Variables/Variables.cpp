@@ -179,7 +179,8 @@ void* Variables::GetListElementType(void* listClass) {
 	if (!lc) return nullptr;
 	MonoType* listType = mono_class_get_type(lc);
 	if (!listType) return nullptr;
-	MonoObject* typeObj = (MonoObject*)mono_type_get_object(mono_domain_get(), listType);
+	MonoDomain* domain = ONEngine::MonoScriptEngine::GetInstance().Domain();
+	MonoObject* typeObj = (MonoObject*)mono_type_get_object(domain, listType);
 	if (!typeObj) return nullptr;
 	MonoClass* typeClass = mono_object_get_class(typeObj);
 	if (!typeClass) return nullptr;
