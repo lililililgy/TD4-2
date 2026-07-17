@@ -1,5 +1,8 @@
 #include "ParticleSystem.h"
 #include <algorithm>
+#include "Engine/ECS/System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
+#include "Engine/ECS/Entity/GameEntity/GameEntity.h"
 
 namespace ONEngine {
 
@@ -148,6 +151,14 @@ namespace ONEngine {
 
     void ParticleSystem::Pause() {
         isPaused_ = true;
+    }
+
+    ParticleSystem::~ParticleSystem() {
+        if (aliveCount > 0 && GetOwner()) {
+            if (auto* transform = GetOwner()->GetTransform()) {
+                ParticleSystemUpdateSystem::RegisterGhost(this, transform->matWorld);
+            }
+        }
     }
 
 }

@@ -153,6 +153,8 @@ namespace ONEngine {
         float dt = Time::UnscaledDeltaTime();
         if (dt <= 0.0f || dt > 0.1f) dt = 1.0f / 60.0f;
 
+        UpdateGhosts(dt);
+
         auto& entities = ecs->GetEntities();
         for (auto& entityPtr : entities) {
             GameEntity* entity = entityPtr.get();
@@ -170,6 +172,8 @@ namespace ONEngine {
 
         float dt = Time::DeltaTime();
         if (dt <= 0.0f) return;
+
+        UpdateGhosts(dt);
 
         auto& entities = ecs->GetEntities();
         for (auto& entityPtr : entities) {
@@ -471,4 +475,93 @@ namespace ONEngine {
             }
         }
     }
+
+    std::vector<GhostParticleSystem2D> ParticleSystem2DUpdateSystem::ghostSystems_;
+
+    void ParticleSystem2DUpdateSystem::RegisterGhost(const ParticleSystem2D* ps, const Matrix4x4& worldMat) {
+        if (!ps || ps->aliveCount == 0) return;
+
+        GhostParticleSystem2D ghost;
+        ghost.particles = ps->particles;
+        ghost.aliveCount = ps->aliveCount;
+        ghost.main = ps->main;
+        ghost.renderer = ps->renderer;
+        ghost.colorOverLifetime = ps->colorOverLifetime;
+        ghost.sizeOverLifetime = ps->sizeOverLifetime;
+        ghost.velocityOverLifetime = ps->velocityOverLifetime;
+        ghost.textureSheetAnimation = ps->textureSheetAnimation;
+        ghost.finalWorldMat = worldMat;
+
+        ghostSystems_.push_back(std::move(ghost));
+    }
+
+    void ParticleSystem2DUpdateSystem::UpdateGhosts(float dt) {
+        Vector3 gravity = Vector3(0.0f, -9.81f, 0.0f);
+
+        for (auto it = ghostSystems_.begin(); it != ghostSystems_.end(); ) {
+            GhostParticleSystem2D& ghost = *it;
+            Vector3 finalGravity = gravity * ghost.main.gravityModifier;
+
+            for (size_t i = 0; i < ghost.aliveCount; ) {
+                Particle2D& p = ghost.particles[i];
+                p.remainingLifetime -= dt;
+
+                if (p.remainingLifetime <= 0.0f) {
+                    if (ghost.aliveCount > 1) {
+                        p = ghost.particles[ghost.aliveCount - 1];
+                    }
+                    ghost.aliveCount--;
+                } else {
+                    float normalizedTime = 1.0f - (p.remainingLifetime / p.startLifetime);
+                    normalizedTime = std::clamp(normalizedTime, 0.0f, 1.0f);
+
+                    if (ghost.velocityOverLifetime.enabled) {
+                        Vector3 linearVelocity(
+                            EvaluateMinMaxCurve(ghost.velocityOverLifetime.x, normalizedTime, p.randomValue),
+                            EvaluateMinMaxCurve(ghost.velocityOverLifetime.y, normalizedTime, p.randomValue),
+                            0.0f
+                        );
+                        float speedMultiplier = EvaluateMinMaxCurve(ghost.velocityOverLifetime.speedModifier, normalizedTime, p.randomValue);
+
+                        if (ghost.velocityOverLifetime.space == SimulationSpace::World) {
+                            p.velocity = p.baseVelocity * speedMultiplier + linearVelocity;
+                        } else {
+                            p.velocity = p.baseVelocity * speedMultiplier + Matrix4x4::TransformNormal(linearVelocity, ghost.finalWorldMat);
+                        }
+                    }
+
+                    if (p.simulationSpace == 1) { // Local
+                        Vector3 localGravity = Matrix4x4::TransformNormal(finalGravity, Matrix4x4::MakeInverse(ghost.finalWorldMat));
+                        localGravity.z = 0.0f;
+                        p.velocity += localGravity * dt;
+                    } else {
+                        p.velocity += finalGravity * dt;
+                    }
+
+                    p.velocity.z = 0.0f;
+                    p.position += p.velocity * dt;
+                    p.position.z = 0.0f;
+
+                    if (ghost.colorOverLifetime.enabled) {
+                        Color overLifeColor = EvaluateMinMaxGradient(ghost.colorOverLifetime.color, normalizedTime, p.randomValue);
+                        p.color.r = p.startColor.r * overLifeColor.r;
+                        p.color.g = p.startColor.g * overLifeColor.g;
+                        p.color.b = p.startColor.b * overLifeColor.b;
+                        p.color.a = p.startColor.a * overLifeColor.a;
+                    }
+                    if (ghost.sizeOverLifetime.enabled) {
+                        p.size = p.startSize * EvaluateMinMaxCurve(ghost.sizeOverLifetime.size, normalizedTime, p.randomValue);
+                    }
+                    i++;
+                }
+            }
+
+            if (ghost.aliveCount == 0) {
+                it = ghostSystems_.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
 }
