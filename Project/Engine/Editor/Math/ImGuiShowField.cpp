@@ -7,6 +7,7 @@
 #include <mono/metadata/class.h>
 #include <mono/metadata/blob.h>
 #include <mono/metadata/loader.h>
+#include <mono/metadata/reflection.h>
 
 /// std
 #include <vector>
@@ -28,6 +29,11 @@
 using namespace Editor;
 
 namespace {
+
+MonoType* GetListElementType(MonoClass* listClass) {
+	return (MonoType*)ONEngine::Variables::GetListElementType(listClass);
+}
+
 bool HasSerializeField(MonoClassField* field) {
 	MonoClass* klass = mono_field_get_parent(field);
 	MonoCustomAttrInfo* attrs = mono_custom_attrs_from_field(klass, field);
@@ -392,9 +398,14 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 	{
 		ImGui::PushID(name);
 		MonoClass* fieldClass = mono_class_from_mono_type(mono_field_get_type(field));
-		if (strcmp(mono_class_get_name(fieldClass), "List`1") != 0) { ImGui::PopID(); break; }
+		if (!fieldClass || strcmp(mono_class_get_name(fieldClass), "List`1") != 0) { ImGui::PopID(); break; }
 		MonoMethod* getItemMethod = mono_class_get_method_from_name(fieldClass, "get_Item", 1);
-		MonoType* elemType = mono_signature_get_return_type(mono_method_signature(getItemMethod));
+		if (!getItemMethod) { ImGui::PopID(); break; }
+		MonoType* elemType = GetListElementType(fieldClass);
+		if (!elemType) {
+			elemType = mono_signature_get_return_type(mono_method_signature(getItemMethod));
+		}
+		if (!elemType) { ImGui::PopID(); break; }
 		int elemTypeId = mono_type_get_type(elemType);
 
 		std::string key = std::format("{}_{}_{}", (void*)vars, groupName, name);
@@ -558,7 +569,7 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 							}
 						}
 					}
-				} else if (mono_class_is_enum(elemClass)) {
+				} else if (elemClass && mono_class_is_enum(elemClass)) {
 					if (!group.Has(name) || !std::holds_alternative<std::vector<int>>(group.Get(name))) group.Add(name, std::vector<int>());
 					auto& list = std::get<std::vector<int>>(const_cast<ONEngine::Variables::Var&>(group.Get(name)));
 					int size = (int)list.size();
@@ -734,7 +745,11 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 		MonoMethod* setItemMethod = mono_class_get_method_from_name(listClass, "set_Item", 2);
 		MonoMethod* addMethod = mono_class_get_method_from_name(listClass, "Add", 1);
 		MonoMethod* removeAtMethod = mono_class_get_method_from_name(listClass, "RemoveAt", 1);
-		MonoType* elemType = mono_signature_get_return_type(mono_method_signature(getItemMethod));
+		MonoType* elemType = GetListElementType(listClass);
+		if (!elemType) {
+			elemType = mono_signature_get_return_type(mono_method_signature(getItemMethod));
+		}
+		if (!elemType) { ImGui::Unindent(); ImGui::PopID(); return; }
 		int elemTypeId = mono_type_get_type(elemType);
 		int size = count;
 		if(ImGui::InputInt("Size", &size)) {
@@ -747,15 +762,24 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 					else if(elemTypeId == MONO_TYPE_STRING) { void* args[1] = { mono_string_new(domain, "") }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
 					else if(elemTypeId == MONO_TYPE_VALUETYPE || elemTypeId == MONO_TYPE_CLASS) {
 						MonoClass* ek = mono_class_from_mono_type(elemType);
-						if(strcmp(mono_class_get_name(ek), "Vector3") == 0) { ONEngine::Vector3 v = ONEngine::Vector3::Zero; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-						else if(mono_class_is_enum(ek)) { int v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-						else {
-							MonoObject* item = mono_object_new(domain, ek);
-							if (!mono_class_is_valuetype(ek)) {
-								mono_runtime_object_init(item);
+						if (ek) {
+							const char* ekName = mono_class_get_name(ek);
+							if(ekName && strcmp(ekName, "Vector3") == 0) { ONEngine::Vector3 v = ONEngine::Vector3::Zero; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+							else if(mono_class_is_enum(ek)) {
+								MonoType* baseType = mono_class_get_enum_basetype(ek);
+								int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_I4;
+								if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { int8_t v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+								else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { int16_t v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+								else { int v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
 							}
-							void* args[1] = { item };
-							mono_runtime_invoke(addMethod, listObj, args, nullptr);
+							else {
+								MonoObject* item = mono_object_new(domain, ek);
+								if (!mono_class_is_valuetype(ek)) {
+									mono_runtime_object_init(item);
+								}
+								void* args[1] = { item };
+								mono_runtime_invoke(addMethod, listObj, args, nullptr);
+							}
 						}
 					}
 				}
@@ -774,13 +798,38 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 			else if(elemTypeId == MONO_TYPE_STRING) { char* u = mono_string_to_utf8((MonoString*)itemObj); std::string v = u; mono_free(u); if(ImGuiInputText(itemName.c_str(), &v)) { void* setArgs[2] = { &i, mono_string_new(domain, v.c_str()) }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
 			else if(elemTypeId == MONO_TYPE_VALUETYPE || elemTypeId == MONO_TYPE_CLASS) {
 				MonoClass* ek = mono_class_from_mono_type(elemType);
-				if(strcmp(mono_class_get_name(ek), "Vector3") == 0) { ONEngine::Vector3 v = *(ONEngine::Vector3*)mono_object_unbox(itemObj); if(ImGui::DragFloat3(itemName.c_str(), &v.x)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
-				else if(mono_class_is_enum(ek)) { int v = *(int*)mono_object_unbox(itemObj); if(DrawEnumCombo(ek, itemName.c_str(), v)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
-				else {
-					if (ImGui::CollapsingHeader(itemName.c_str())) {
-						ImGui::Indent(); void* iter = nullptr; MonoClassField* f;
-						while ((f = mono_class_get_fields(ek, &iter))) ShowField(scriptName, mono_type_get_type(mono_field_get_type(f)), itemObj, f, mono_field_get_name(f));
-						ImGui::Unindent();
+				if (ek) {
+					const char* ekName = mono_class_get_name(ek);
+					if(ekName && strcmp(ekName, "Vector3") == 0) { 
+						ONEngine::Vector3 v = itemObj ? *(ONEngine::Vector3*)mono_object_unbox(itemObj) : ONEngine::Vector3::Zero; 
+						if(ImGui::DragFloat3(itemName.c_str(), &v.x)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } 
+					}
+					else if(mono_class_is_enum(ek)) { 
+						MonoType* baseType = mono_class_get_enum_basetype(ek);
+						int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_I4;
+						int v = 0;
+						if (itemObj) {
+							void* unboxed = mono_object_unbox(itemObj);
+							if (baseTypeId == MONO_TYPE_I1) v = *(int8_t*)unboxed;
+							else if (baseTypeId == MONO_TYPE_U1) v = *(uint8_t*)unboxed;
+							else if (baseTypeId == MONO_TYPE_I2) v = *(int16_t*)unboxed;
+							else if (baseTypeId == MONO_TYPE_U2) v = *(uint16_t*)unboxed;
+							else if (baseTypeId == MONO_TYPE_I4) v = *(int32_t*)unboxed;
+							else if (baseTypeId == MONO_TYPE_U4) v = (int)*(uint32_t*)unboxed;
+							else v = *(int32_t*)unboxed;
+						}
+						if(DrawEnumCombo(ek, itemName.c_str(), v)) { 
+							if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { int8_t temp = (int8_t)v; void* setArgs[2] = { &i, &temp }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
+							else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { int16_t temp = (int16_t)v; void* setArgs[2] = { &i, &temp }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
+							else { int32_t temp = (int32_t)v; void* setArgs[2] = { &i, &temp }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
+						} 
+					}
+					else {
+						if (itemObj && ImGui::CollapsingHeader(itemName.c_str())) {
+							ImGui::Indent(); void* iter = nullptr; MonoClassField* f;
+							while ((f = mono_class_get_fields(ek, &iter))) ShowField(scriptName, mono_type_get_type(mono_field_get_type(f)), itemObj, f, mono_field_get_name(f));
+							ImGui::Unindent();
+						}
 					}
 				}
 			}
