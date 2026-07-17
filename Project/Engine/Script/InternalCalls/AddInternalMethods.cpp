@@ -277,6 +277,8 @@ void ONEngine::AddInputInternalCalls() {
 	mono_add_internal_call("Input::InternalPressGamepad", (void*)Input::PressGamepad);
 	mono_add_internal_call("Input::InternalReleaseGamepad", (void*)Input::ReleaseGamepad);
 	mono_add_internal_call("Input::InternalGetGamepadThumb", (void*)InternalGetGamepadThumb);
+	mono_add_internal_call("Input::InternalSetGamepadVibration", (void*)Input::SetGamepadVibration);
+	mono_add_internal_call("Input::InternalGetGamepadVibration", (void*)MonoInternalMethods::InternalGetGamepadVibration);
 
 	mono_add_internal_call("Input::InternalTriggerMouse", (void*)Input::TriggerMouse);
 	mono_add_internal_call("Input::InternalPressMouse", (void*)Input::PressMouse);

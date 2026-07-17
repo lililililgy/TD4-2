@@ -1,0 +1,9 @@
+{
+    "entities": [
+        {
+            "guid": "5f2b87a8b0ac19bd95a8fd428bec2604",
+            "parentGuid": null,
+            "path": "./RumbleTest/verify_entity.entity"
+        }
+    ]
+}

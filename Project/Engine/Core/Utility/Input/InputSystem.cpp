@@ -1,4 +1,4 @@
-﻿#include "InputSystem.h"
+#include "InputSystem.h"
 
 using namespace ONEngine;
 
@@ -82,4 +82,12 @@ void ONEngine::MonoInternalMethods::InternalGetMouseWheel(float* wheelVal) {
 	if(wheel) {
 		*wheelVal = wheel;
 	}
+}
+
+void ONEngine::MonoInternalMethods::InternalGetGamepadVibration(float* left, float* right) {
+	float l = 0.0f;
+	float r = 0.0f;
+	Input::GetGamepadVibration(l, r);
+	*left = l;
+	*right = r;
 }

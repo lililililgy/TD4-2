@@ -281,6 +281,7 @@
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
     <Compile Include="Scripts\Test\RadialBlurTestScript.cs" />
+    <Compile Include="Scripts\Test\RumbleTestScript.cs" />
     <Compile Include="Scripts\Test\SpriteRendererCrashTest.cs" />
     <Compile Include="Scripts\Test\TestSceneScript.cs" />
     <Compile Include="Scripts\Test\TextRendererTestScript.cs" />

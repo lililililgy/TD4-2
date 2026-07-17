@@ -54,6 +54,8 @@ namespace ONEngine::MockInput {
 	MouseState mockPreMouse;
 	GamepadState mockGamepad;
 	GamepadState mockPreGamepad;
+	float mockLeftVibration = 0.0f;
+	float mockRightVibration = 0.0f;
 
 	void Initialize() {
 		if (isInitialized) return;
@@ -62,6 +64,8 @@ namespace ONEngine::MockInput {
 		currentTestFrame = 0;
 		std::memset(mockKeys, 0, sizeof(mockKeys));
 		std::memset(mockPreKeys, 0, sizeof(mockPreKeys));
+		mockLeftVibration = 0.0f;
+		mockRightVibration = 0.0f;
 		testInputs.clear();
 		
 		if (EngineConfig::testInputPath.empty()) return;
@@ -309,5 +313,31 @@ const Vector2& Input::GetImGuiImagePos(const std::string& imageName) {
 
 const Vector2& Input::GetImGuiImageSize(const std::string& imageName) {
 	return gInputSystem_->mouse_->GetImGuiImageSize(imageName);
+}
+
+void Input::SetGamepadVibration(float leftMotorSpeed, float rightMotorSpeed) {
+	if (EngineConfig::isTestMode) {
+		MockInput::mockLeftVibration = std::clamp(leftMotorSpeed, 0.0f, 1.0f);
+		MockInput::mockRightVibration = std::clamp(rightMotorSpeed, 0.0f, 1.0f);
+		return;
+	}
+	if (gInputSystem_ && gInputSystem_->gamepad_) {
+		gInputSystem_->gamepad_->SetVibration(leftMotorSpeed, rightMotorSpeed);
+	}
+}
+
+void Input::GetGamepadVibration(float& left, float& right) {
+	if (EngineConfig::isTestMode) {
+		left = MockInput::mockLeftVibration;
+		right = MockInput::mockRightVibration;
+		return;
+	}
+	if (gInputSystem_ && gInputSystem_->gamepad_) {
+		left = gInputSystem_->gamepad_->GetLeftVibration();
+		right = gInputSystem_->gamepad_->GetRightVibration();
+	} else {
+		left = 0.0f;
+		right = 0.0f;
+	}
 }
 
