@@ -1,6 +1,7 @@
 #include "ParticleSystem2DRenderingPipeline.h"
 
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
+#include "Engine/ECS/System/ParticleSystem2DUpdateSystem/ParticleSystem2DUpdateSystem.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/Core/DirectX12/Manager/DxManager.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
@@ -81,7 +82,11 @@ void ParticleSystem2DRenderingPipeline::Initialize(ShaderCompiler* shaderCompile
 
 void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
     ComponentArray<ParticleSystem2D>* psArray = ecs->GetComponentArray<ParticleSystem2D>();
-    if (!psArray || psArray->GetUsedComponents().empty()) {
+    auto* updateSystem = ecs->GetSystem<ParticleSystem2DUpdateSystem>();
+    bool hasNormalSystems = psArray && !psArray->GetUsedComponents().empty();
+    bool hasGhostSystems = updateSystem && !updateSystem->GetGhosts().empty();
+
+    if (!hasNormalSystems && !hasGhostSystems) {
         return;
     }
 
@@ -114,16 +119,29 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
 
     // Sort particle systems by their emitter's Z coordinate (from far to near)
     struct SortingData {
+        bool isGhost;
         ParticleSystem2D* ps;
+        const GhostParticleSystem2D* gps;
         float z;
     };
     std::vector<SortingData> sortedSystems;
-    sortedSystems.reserve(psArray->GetUsedComponents().size());
+    size_t normalCount = psArray ? psArray->GetUsedComponents().size() : 0;
+    size_t ghostCount = updateSystem ? updateSystem->GetGhosts().size() : 0;
+    sortedSystems.reserve(normalCount + ghostCount);
 
-    for (auto& ps : psArray->GetUsedComponents()) {
-        if (!ps || !ps->enable || ps->aliveCount == 0) continue;
-        if (GameEntity* owner = ps->GetOwner()) {
-            sortedSystems.push_back({ ps, owner->GetPosition().z });
+    if (psArray) {
+        for (auto& ps : psArray->GetUsedComponents()) {
+            if (!ps || !ps->enable || ps->aliveCount == 0) continue;
+            if (GameEntity* owner = ps->GetOwner()) {
+                sortedSystems.push_back({ false, ps, nullptr, owner->GetPosition().z });
+            }
+        }
+    }
+
+    if (updateSystem) {
+        for (auto& gps : updateSystem->GetGhosts()) {
+            if (gps.aliveCount == 0) continue;
+            sortedSystems.push_back({ true, nullptr, &gps, gps.finalWorldMat.m[3][2] });
         }
     }
 
@@ -132,23 +150,43 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
     });
 
     for (auto& sortedData : sortedSystems) {
-        ParticleSystem2D* ps = sortedData.ps;
+        Matrix4x4 worldMat;
+        ParticleSystemRenderer renderer;
+        ParticleSystemTextureSheetAnimation textureSheetAnimation;
+        size_t aliveCount = 0;
+        const Particle2D* particlesData = nullptr;
+
+        if (sortedData.isGhost) {
+            const GhostParticleSystem2D* gps = sortedData.gps;
+            worldMat = gps->finalWorldMat;
+            renderer = gps->renderer;
+            textureSheetAnimation = gps->textureSheetAnimation;
+            aliveCount = gps->aliveCount;
+            particlesData = gps->particles.data();
+        } else {
+            ParticleSystem2D* ps = sortedData.ps;
+            worldMat = ps->GetOwner()->GetTransform()->matWorld;
+            renderer = ps->renderer;
+            textureSheetAnimation = ps->textureSheetAnimation;
+            aliveCount = ps->aliveCount;
+            particlesData = ps->particles.data();
+        }
 
         // Per-system data
         PerSystemData perSystemData{};
-        perSystemData.emitterWorldMatrix = ps->GetOwner()->GetTransform()->matWorld;
-        perSystemData.renderMode = static_cast<uint32_t>(ps->renderer.renderMode);
-        perSystemData.renderAlignment = static_cast<uint32_t>(ps->renderer.alignment);
-        perSystemData.speedScale = ps->renderer.speedScale;
-        perSystemData.lengthScale = ps->renderer.lengthScale;
+        perSystemData.emitterWorldMatrix = worldMat;
+        perSystemData.renderMode = static_cast<uint32_t>(renderer.renderMode);
+        perSystemData.renderAlignment = static_cast<uint32_t>(renderer.alignment);
+        perSystemData.speedScale = renderer.speedScale;
+        perSystemData.lengthScale = renderer.lengthScale;
         perSystemData.instanceOffset = static_cast<uint32_t>(globalParticleIndex);
-        perSystemData.flipMode = static_cast<uint32_t>(ps->renderer.flipMode);
-        perSystemData.textureSheetEnabled = ps->textureSheetAnimation.enabled ? 1u : 0u;
-        perSystemData.tilesX = static_cast<uint32_t>(ps->textureSheetAnimation.tilesX);
-        perSystemData.tilesY = static_cast<uint32_t>(ps->textureSheetAnimation.tilesY);
-        perSystemData.fps = ps->textureSheetAnimation.fps;
+        perSystemData.flipMode = static_cast<uint32_t>(renderer.flipMode);
+        perSystemData.textureSheetEnabled = textureSheetAnimation.enabled ? 1u : 0u;
+        perSystemData.tilesX = static_cast<uint32_t>(textureSheetAnimation.tilesX);
+        perSystemData.tilesY = static_cast<uint32_t>(textureSheetAnimation.tilesY);
+        perSystemData.fps = textureSheetAnimation.fps;
 
-        size_t blendMode = static_cast<size_t>(ps->renderer.blendMode);
+        size_t blendMode = static_cast<size_t>(renderer.blendMode);
         if (blendMode >= pipelines_.size()) blendMode = 0; 
 
         if (blendMode != currentBlendMode) {
@@ -169,8 +207,8 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
 
         // Try to get texture from material guid if possible
         std::string texturePath = "./Packages/Textures/white.png"; // Default fallback
-        if (!ps->renderer.materialGuid.empty()) {
-            Guid guid = Guid::FromString(ps->renderer.materialGuid);
+        if (!renderer.materialGuid.empty()) {
+            Guid guid = Guid::FromString(renderer.materialGuid);
             Asset::AssetType assetType = pAssetCollection_->GetAssetTypeFromGuid(guid);
 
             if (assetType == Asset::AssetType::Material) {
@@ -192,8 +230,8 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
         // Get mesh
         std::string meshPath = "./Packages/Models/primitive/frontToPlane.obj"; // Default billboard quad
         const Asset::Model* model = nullptr;
-        if (!ps->renderer.meshGuid.empty()) {
-            const Asset::Model* customModel = pAssetCollection_->GetAsset<Asset::Model>(Guid::FromString(ps->renderer.meshGuid));
+        if (!renderer.meshGuid.empty()) {
+            const Asset::Model* customModel = pAssetCollection_->GetAsset<Asset::Model>(Guid::FromString(renderer.meshGuid));
             if (customModel) {
                 model = customModel;
             } else {
@@ -207,10 +245,10 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
 
         // Map data to buffers
         size_t startInstance = globalParticleIndex;
-        for (size_t i = 0; i < ps->aliveCount; i++) {
+        for (size_t i = 0; i < aliveCount; i++) {
             if (globalParticleIndex >= kMaxParticlesTotal_) break;
             
-            particleBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), ps->particles[i]);
+            particleBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), particlesData[i]);
             materialBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), Vector4::One);
             textureIdBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), texSrvIndex);
 
