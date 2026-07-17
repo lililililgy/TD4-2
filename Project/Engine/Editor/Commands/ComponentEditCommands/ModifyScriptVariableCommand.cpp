@@ -79,17 +79,20 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
                                     void* args[1] = { s };
                                     mono_runtime_invoke(add, list, args, nullptr);
                                 } else if constexpr (std::is_same_v<T, std::vector<int>>) {
-                                    auto valCopy = itemVal;
+                                    int intVal = 0;
+                                    if constexpr (std::is_same_v<T, std::vector<int>>) {
+                                        intVal = itemVal;
+                                    }
                                     if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) {
-                                        int8_t temp = (int8_t)valCopy;
+                                        int8_t temp = (int8_t)intVal;
                                         void* args[1] = { &temp };
                                         mono_runtime_invoke(add, list, args, nullptr);
                                     } else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) {
-                                        int16_t temp = (int16_t)valCopy;
+                                        int16_t temp = (int16_t)intVal;
                                         void* args[1] = { &temp };
                                         mono_runtime_invoke(add, list, args, nullptr);
                                     } else {
-                                        int32_t temp = (int32_t)valCopy;
+                                        int32_t temp = (int32_t)intVal;
                                         void* args[1] = { &temp };
                                         mono_runtime_invoke(add, list, args, nullptr);
                                     }
