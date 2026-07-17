@@ -2,11 +2,28 @@
     "active": true,
     "components": [
         {
+            "cameraType": 1,
+            "enable": 1,
+            "farClip": 1000.0,
+            "fogColor": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fogEnd": 10000.0,
+            "fogStart": 0.0,
+            "fovY": 0.699999988079071,
+            "isDrawFrustum": false,
+            "isMainCamera": true,
+            "nearClip": 0.10000000149011612,
+            "type": "CameraComponent"
+        },
+        {
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": 24.000009536743164,
                 "z": 0.0
             },
             "rotate": {
@@ -16,68 +33,98 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1230.89990234375,
-                "y": 1230.8997802734375,
-                "z": 1230.8997802734375
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
-            "Vignette": {
-                "amplitude": 0.800000011920929,
-                "baseAlpha": 0.20000000298023224,
-                "maxTime": 0.800000011920929,
-                "playRequested": false,
-                "power": 4.0,
-                "speed": 3.0,
-                "time": 0.0
-            },
             "type": "Variables"
         },
         {
-            "enable": 1,
-            "isPixelPerfect": false,
-            "material": {
-                "baseColor": {
-                    "w": 1.0,
-                    "x": 1.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "baseTextureGuid": "1d5101d848a75af5e3ec2efcf5d1a4ab",
-                "bloomIntensity": 1.0,
-                "bloomRadius": 12.0,
-                "bloomThreshold": 0.800000011920929,
-                "guid": "00000000000000000000000000000000",
-                "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 0,
-                "uvTransform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "rotate": 0.0,
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                }
-            },
-            "type": "SpriteRenderer"
-        },
-        {
-            "enable": 1,
-            "scripts": [
+            "absorptionCoefficients": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "causticsIntensity": 0.5329999923706055,
+            "causticsScale": 0.2759999930858612,
+            "causticsSpeed": 0.2669999897480011,
+            "colorFilter": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "contrast": 1.128999948501587,
+            "distortionFrequency": 4.591000080108643,
+            "distortionSpeed": 0.800000011920929,
+            "distortionStrength": 0.002300000051036477,
+            "enable": 0,
+            "fisheyeScale": 0.7139999866485596,
+            "fisheyeStrength": 0.382999986410141,
+            "fogColor": [
+                0.21247155964374542,
+                0.5236766934394836,
+                0.5340501666069031
+            ],
+            "fogDensity": 0.000699999975040555,
+            "fogWaterSurfaceY": -100.0,
+            "id": 1,
+            "lightDirection": [
+                -0.5289999842643738,
+                -0.0820000022649765,
+                -1.0
+            ],
+            "lightShaftsIntensity": 0.6930000185966492,
+            "pixelSizeX": 8.0,
+            "pixelSizeY": 8.0,
+            "postEffectHeight": -1,
+            "postEffectPivot": 0,
+            "postEffectStartX": 0,
+            "postEffectStartY": 0,
+            "postEffectWidth": -1,
+            "postEffects": [
                 {
-                    "enable": true,
-                    "name": "Vignette"
+                    "enabled": false,
+                    "type": 0
+                },
+                {
+                    "enabled": false,
+                    "type": 1
+                },
+                {
+                    "enabled": true,
+                    "type": 2
+                },
+                {
+                    "enabled": true,
+                    "type": 3
+                },
+                {
+                    "enabled": true,
+                    "type": 4
+                },
+                {
+                    "enabled": true,
+                    "type": 5
+                },
+                {
+                    "enabled": true,
+                    "type": 6
+                },
+                {
+                    "enabled": false,
+                    "type": 7
                 }
             ],
-            "type": "Script"
+            "saturation": 1.3350000381469727,
+            "type": "ScreenPostEffectTag",
+            "vignetteStrength": 1.3930000066757202
         }
     ],
     "guid": "b5fc40cb630c8b52494abcff66bd4680",
-    "name": "PlayerDamageReaction",
+    "name": "MainCamera",
     "parentGuid": null,
     "prefabName": ""
 }

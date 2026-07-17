@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Project\Packages\Scripts\</OutputPath>
@@ -250,6 +250,7 @@
     <Compile Include="Scripts\Game\UI\GameClear\ClearBackMainMenu.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearExitGame.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearRestart.cs" />
+    <Compile Include="Scripts\Game\UI\KeyColorChanger.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseBackMainMenu.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseCommon.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseExitGame.cs" />
