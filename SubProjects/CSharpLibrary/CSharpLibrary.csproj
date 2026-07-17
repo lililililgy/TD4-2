@@ -176,6 +176,10 @@
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishRotatingBeamSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfish.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishState.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokari.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariState.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariShellBullet.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariWeakPoint.cs" />
     <Compile Include="Scripts\Game\Bullet.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
     <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
