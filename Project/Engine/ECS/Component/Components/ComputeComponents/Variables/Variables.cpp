@@ -445,16 +445,17 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 								void* args[1] = { s };
 								mono_runtime_invoke(add, list, args, nullptr);
 							} else if constexpr (std::is_same_v<T, std::vector<int>>) {
+								auto valCopy = itemVal;
 								if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) {
-									int8_t temp = (int8_t)itemVal;
+									int8_t temp = (int8_t)valCopy;
 									void* args[1] = { &temp };
 									mono_runtime_invoke(add, list, args, nullptr);
 								} else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) {
-									int16_t temp = (int16_t)itemVal;
+									int16_t temp = (int16_t)valCopy;
 									void* args[1] = { &temp };
 									mono_runtime_invoke(add, list, args, nullptr);
 								} else {
-									int32_t temp = (int32_t)itemVal;
+									int32_t temp = (int32_t)valCopy;
 									void* args[1] = { &temp };
 									mono_runtime_invoke(add, list, args, nullptr);
 								}
@@ -812,16 +813,17 @@ void Variables::SetScriptVariables(const std::string& scriptName) {
 									void* args[1] = { s };
 									mono_runtime_invoke(add, list, args, nullptr);
 								} else if constexpr (std::is_same_v<T, std::vector<int>>) {
+									auto valCopy = itemVal;
 									if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) {
-										int8_t temp = (int8_t)itemVal;
+										int8_t temp = (int8_t)valCopy;
 										void* args[1] = { &temp };
 										mono_runtime_invoke(add, list, args, nullptr);
 									} else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) {
-										int16_t temp = (int16_t)itemVal;
+										int16_t temp = (int16_t)valCopy;
 										void* args[1] = { &temp };
 										mono_runtime_invoke(add, list, args, nullptr);
 									} else {
-										int32_t temp = (int32_t)itemVal;
+										int32_t temp = (int32_t)valCopy;
 										void* args[1] = { &temp };
 										mono_runtime_invoke(add, list, args, nullptr);
 									}
