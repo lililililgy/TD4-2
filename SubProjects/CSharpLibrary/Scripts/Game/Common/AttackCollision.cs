@@ -27,6 +27,15 @@ public class AttackCollision : MonoScript {
             return;
         }
 
+        YadokariWeakPoint yadokariWeakPoint = collision.GetScript<YadokariWeakPoint>();
+        if (yadokariWeakPoint != null) {
+            yadokariWeakPoint.Damage(damage_ * multiplier);
+            if (destroyOnHit_) {
+                entity.Destroy();
+            }
+            return;
+        }
+
         // 相手が DamageRelay(中継)を持っていれば、その所有者(頭)の共有 HP へダメージを送る。
         // 持っていなければ従来通り相手の HP を直接削る（敵など）。
         DamageRelay relay = collision.GetScript<DamageRelay>();

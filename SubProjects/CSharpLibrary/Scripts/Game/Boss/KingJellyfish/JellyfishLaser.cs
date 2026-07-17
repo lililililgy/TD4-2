@@ -38,6 +38,7 @@ public class JellyfishLaser : MonoScript
 
         if (!geometryApplied_)
         {
+            // レーザーの形状を子オブジェクトに適用する
             geometryApplied_ = ApplyGeometryToChild();
             if (!geometryApplied_)
             {

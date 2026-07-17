@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 0.0,
-                "y": 0.0,
+                "x": 0.5,
+                "y": -0.20000000298023224,
                 "z": 0.0
             },
             "rotate": {
@@ -16,48 +16,41 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 435.0592956542969,
-                "y": 831.8331298828125,
-                "z": 1.403064489364624
+                "x": 0.5,
+                "y": 0.5,
+                "z": 0.5
             },
             "type": "Transform"
         },
         {
             "AttackCollision": {
-                "damage_": 20.0,
+                "damage_": 0.0,
                 "destroyOnHit_": false
             },
-            "JellyfishChargeDamageField": {
-                "damage": 20.0,
-                "duration": 0.6000000238418579,
-                "width": 180.0
+            "HP": {
+                "currentHp_": 80.0,
+                "directlyDamageable_": true,
+                "disableAutoDestruction_": true,
+                "isInvincible_": false,
+                "maxHp_": 80.0
             },
             "SpriteAnimation": {
-                "cols": 8,
+                "cols": 2,
                 "endFrame": 1,
-                "fps": 7.0,
+                "fps": 5.0,
                 "invertY": false,
                 "isLoop": true,
                 "isPlay": true,
-                "rows": 0,
+                "rows": 1,
                 "startFrame": 0,
-                "totalFrames": 1
+                "totalFrames": 2
+            },
+            "YadokariGiantClaw": {
+                "destroyDuration_": 0.20000000298023224,
+                "ownerEntityName_": "KingYadokari",
+                "returnDuration_": 0.30000001192092896
             },
             "type": "Variables"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "AttackCollision"
-                },
-                {
-                    "enable": true,
-                    "name": "JellyfishChargeDamageField"
-                }
-            ],
-            "type": "Script"
         },
         {
             "categoryBits": 8,
@@ -68,9 +61,9 @@
             "mass": 1.0,
             "size": {
                 "x": 1.0,
-                "y": 1.0
+                "y": 1.0000001192092896
             },
-            "state": "Static",
+            "state": "Dynamic",
             "type": "BoxCollider2D",
             "useOwnerScale": true
         },
@@ -79,12 +72,12 @@
             "isPixelPerfect": false,
             "material": {
                 "baseColor": {
-                    "w": 0.8784313797950745,
+                    "w": 1.0,
                     "x": 1.0,
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "6b19ef90e5548c428a73340dce15203d",
+                "baseTextureGuid": "4af8d9e1c80e828f3c864533e809e4dc",
                 "bloomIntensity": 1.0,
                 "bloomRadius": 12.0,
                 "bloomThreshold": 0.800000011920929,
@@ -96,18 +89,40 @@
                         "x": 0.0,
                         "y": 0.0
                     },
-                    "rotate": 1.5,
+                    "rotate": 0.0,
                     "scale": {
-                        "x": 0.699999988079071,
-                        "y": 0.44999998807907104
+                        "x": 1.0,
+                        "y": 1.0
                     }
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "YadokariGiantClaw"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "3fc76bc55195c9458002449fbd62c40f",
-    "name": "JellyfishChargeDamageField",
+    "guid": "03d3b0b31be6d6166a9797b71db4f1e0",
+    "name": "YadokariClaw_Left",
     "parentGuid": null,
-    "prefabName": "JellyfishChargeDamageField"
+    "prefabName": "YadokariClaw_Left"
 }
