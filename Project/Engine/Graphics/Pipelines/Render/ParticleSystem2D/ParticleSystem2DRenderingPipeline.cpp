@@ -82,7 +82,10 @@ void ParticleSystem2DRenderingPipeline::Initialize(ShaderCompiler* shaderCompile
 
 void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
     ComponentArray<ParticleSystem2D>* psArray = ecs->GetComponentArray<ParticleSystem2D>();
-    if (!psArray || psArray->GetUsedComponents().empty()) {
+    bool hasNormalSystems = psArray && !psArray->GetUsedComponents().empty();
+    bool hasGhostSystems = !ParticleSystem2DUpdateSystem::GetGhosts().empty();
+
+    if (!hasNormalSystems && !hasGhostSystems) {
         return;
     }
 
@@ -121,12 +124,15 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
         float z;
     };
     std::vector<SortingData> sortedSystems;
-    sortedSystems.reserve(psArray->GetUsedComponents().size() + ParticleSystem2DUpdateSystem::GetGhosts().size());
+    size_t normalCount = psArray ? psArray->GetUsedComponents().size() : 0;
+    sortedSystems.reserve(normalCount + ParticleSystem2DUpdateSystem::GetGhosts().size());
 
-    for (auto& ps : psArray->GetUsedComponents()) {
-        if (!ps || !ps->enable || ps->aliveCount == 0) continue;
-        if (GameEntity* owner = ps->GetOwner()) {
-            sortedSystems.push_back({ false, ps, nullptr, owner->GetPosition().z });
+    if (psArray) {
+        for (auto& ps : psArray->GetUsedComponents()) {
+            if (!ps || !ps->enable || ps->aliveCount == 0) continue;
+            if (GameEntity* owner = ps->GetOwner()) {
+                sortedSystems.push_back({ false, ps, nullptr, owner->GetPosition().z });
+            }
         }
     }
 

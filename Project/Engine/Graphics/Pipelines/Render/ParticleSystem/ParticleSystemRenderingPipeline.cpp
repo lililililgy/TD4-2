@@ -80,7 +80,10 @@ void ParticleSystemRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler,
 
 void ParticleSystemRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
     ComponentArray<ParticleSystem>* psArray = ecs->GetComponentArray<ParticleSystem>();
-    if (!psArray || psArray->GetUsedComponents().empty()) {
+    bool hasNormalSystems = psArray && !psArray->GetUsedComponents().empty();
+    bool hasGhostSystems = !ParticleSystemUpdateSystem::GetGhosts().empty();
+
+    if (!hasNormalSystems && !hasGhostSystems) {
         return;
     }
 
@@ -118,108 +121,110 @@ void ParticleSystemRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camer
 
     cmdList->SetGraphicsRootDescriptorTable(SRV_TEXTURES, pDxManager_->GetDxSRVHeap()->GetSRVStartGPUHandle());
 
-    for (auto& ps : psArray->GetUsedComponents()) {
-        if (!ps || !ps->enable || ps->aliveCount == 0) continue;
+    if (psArray) {
+        for (auto& ps : psArray->GetUsedComponents()) {
+            if (!ps || !ps->enable || ps->aliveCount == 0) continue;
 
-        // Per-system data
-        PerSystemData perSystemData{};
-        perSystemData.emitterWorldMatrix = ps->GetOwner()->GetTransform()->matWorld;
-        perSystemData.renderMode = static_cast<uint32_t>(ps->renderer.renderMode);
-        perSystemData.renderAlignment = static_cast<uint32_t>(ps->renderer.alignment);
-        perSystemData.speedScale = ps->renderer.speedScale;
-        perSystemData.lengthScale = ps->renderer.lengthScale;
-        perSystemData.instanceOffset = static_cast<uint32_t>(globalParticleIndex);
+            // Per-system data
+            PerSystemData perSystemData{};
+            perSystemData.emitterWorldMatrix = ps->GetOwner()->GetTransform()->matWorld;
+            perSystemData.renderMode = static_cast<uint32_t>(ps->renderer.renderMode);
+            perSystemData.renderAlignment = static_cast<uint32_t>(ps->renderer.alignment);
+            perSystemData.speedScale = ps->renderer.speedScale;
+            perSystemData.lengthScale = ps->renderer.lengthScale;
+            perSystemData.instanceOffset = static_cast<uint32_t>(globalParticleIndex);
 
-        size_t blendMode = static_cast<size_t>(ps->renderer.blendMode);
-        
-        if (blendMode >= pipelines_.size()) blendMode = 0; 
+            size_t blendMode = static_cast<size_t>(ps->renderer.blendMode);
+            
+            if (blendMode >= pipelines_.size()) blendMode = 0; 
 
-        if (blendMode != currentBlendMode) {
-            if (pipelines_.find(blendMode) != pipelines_.end()) {
-                pipelines_[blendMode]->SetPipelineStateForCommandList(dxCommand);
-                
-                cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-                camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
-                cameraDataBuffer_.BindForGraphicsCommandList(cmdList, CBV_CAMERA_DATA);
-                cmdList->SetGraphicsRootDescriptorTable(SRV_TEXTURES, pDxManager_->GetDxSRVHeap()->GetSRVStartGPUHandle());
-                
-                currentBlendMode = blendMode;
-            }
-        }
-
-        // Apply per-system root constants
-        cmdList->SetGraphicsRoot32BitConstants(ROOT_PER_SYSTEM, sizeof(PerSystemData) / 4, &perSystemData, 0);
-
-        // Try to get texture from material guid if possible
-        std::string texturePath = "./Packages/Textures/white.png"; // Default fallback (verified exists)
-        
-        if (!ps->renderer.materialGuid.empty()) {
-            Guid guid = Guid::FromString(ps->renderer.materialGuid);
-            Asset::AssetType assetType = pAssetCollection_->GetAssetTypeFromGuid(guid);
-
-            if (assetType == Asset::AssetType::Material) {
-                const Asset::Material* material = pAssetCollection_->GetAsset<Asset::Material>(guid);
-                if (material && material->HasBaseTexture()) {
-                    texturePath = pAssetCollection_->GetTexturePath(material->GetBaseTextureGuid());
+            if (blendMode != currentBlendMode) {
+                if (pipelines_.find(blendMode) != pipelines_.end()) {
+                    pipelines_[blendMode]->SetPipelineStateForCommandList(dxCommand);
+                    
+                    cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                    camera->GetViewProjectionBuffer().BindForGraphicsCommandList(cmdList, CBV_VIEW_PROJECTION);
+                    cameraDataBuffer_.BindForGraphicsCommandList(cmdList, CBV_CAMERA_DATA);
+                    cmdList->SetGraphicsRootDescriptorTable(SRV_TEXTURES, pDxManager_->GetDxSRVHeap()->GetSRVStartGPUHandle());
+                    
+                    currentBlendMode = blendMode;
                 }
-            } else if (assetType == Asset::AssetType::Texture) {
-                texturePath = pAssetCollection_->GetTexturePath(guid);
             }
-        }
 
-        int32_t texIndex = pAssetCollection_->GetTextureIndex(texturePath);
-        uint32_t texSrvIndex = 0xFFFFFFFF;
-        if (texIndex != -1 && static_cast<size_t>(texIndex) < textures.size()) {
-            texSrvIndex = textures[texIndex].GetSRVDescriptorIndex();
-        }
+            // Apply per-system root constants
+            cmdList->SetGraphicsRoot32BitConstants(ROOT_PER_SYSTEM, sizeof(PerSystemData) / 4, &perSystemData, 0);
 
-        // Get mesh
-        std::string meshPath = "./Packages/Models/primitive/frontToPlane.obj"; // Default billboard quad
-        const Asset::Model* model = nullptr;
-        if (!ps->renderer.meshGuid.empty()) {
-            const Asset::Model* customModel = pAssetCollection_->GetAsset<Asset::Model>(Guid::FromString(ps->renderer.meshGuid));
-            if (customModel) {
-                model = customModel;
+            // Try to get texture from material guid if possible
+            std::string texturePath = "./Packages/Textures/white.png"; // Default fallback (verified exists)
+            
+            if (!ps->renderer.materialGuid.empty()) {
+                Guid guid = Guid::FromString(ps->renderer.materialGuid);
+                Asset::AssetType assetType = pAssetCollection_->GetAssetTypeFromGuid(guid);
+
+                if (assetType == Asset::AssetType::Material) {
+                    const Asset::Material* material = pAssetCollection_->GetAsset<Asset::Material>(guid);
+                    if (material && material->HasBaseTexture()) {
+                        texturePath = pAssetCollection_->GetTexturePath(material->GetBaseTextureGuid());
+                    }
+                } else if (assetType == Asset::AssetType::Texture) {
+                    texturePath = pAssetCollection_->GetTexturePath(guid);
+                }
+            }
+
+            int32_t texIndex = pAssetCollection_->GetTextureIndex(texturePath);
+            uint32_t texSrvIndex = 0xFFFFFFFF;
+            if (texIndex != -1 && static_cast<size_t>(texIndex) < textures.size()) {
+                texSrvIndex = textures[texIndex].GetSRVDescriptorIndex();
+            }
+
+            // Get mesh
+            std::string meshPath = "./Packages/Models/primitive/frontToPlane.obj"; // Default billboard quad
+            const Asset::Model* model = nullptr;
+            if (!ps->renderer.meshGuid.empty()) {
+                const Asset::Model* customModel = pAssetCollection_->GetAsset<Asset::Model>(Guid::FromString(ps->renderer.meshGuid));
+                if (customModel) {
+                    model = customModel;
+                } else {
+                    model = pAssetCollection_->GetModel(meshPath);
+                }
             } else {
                 model = pAssetCollection_->GetModel(meshPath);
             }
-        } else {
-            model = pAssetCollection_->GetModel(meshPath);
-        }
-        
-        if (!model) continue;
-
-        // Map data to buffers
-        size_t startInstance = globalParticleIndex;
-        
-        for (size_t i = 0; i < ps->aliveCount; i++) {
-            if (globalParticleIndex >= kMaxParticlesTotal_) break;
             
-            particleBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), ps->particles[i]);
-            materialBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), Vector4::One);
-            textureIdBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), texSrvIndex);
+            if (!model) continue;
 
-            globalParticleIndex++;
-        }
+            // Map data to buffers
+            size_t startInstance = globalParticleIndex;
+            
+            for (size_t i = 0; i < ps->aliveCount; i++) {
+                if (globalParticleIndex >= kMaxParticlesTotal_) break;
+                
+                particleBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), ps->particles[i]);
+                materialBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), Vector4::One);
+                textureIdBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), texSrvIndex);
 
-        size_t drawCount = globalParticleIndex - startInstance;
-        if (drawCount == 0) continue;
+                globalParticleIndex++;
+            }
 
-        // Bind buffers
-        particleBuffer_.SRVBindForGraphicsCommandList(cmdList, SRV_PARTICLES);
-        materialBuffer_.SRVBindForGraphicsCommandList(cmdList, SRV_MATERIALS);
-        textureIdBuffer_.SRVBindForGraphicsCommandList(cmdList, SRV_TEXTURE_IDS);
+            size_t drawCount = globalParticleIndex - startInstance;
+            if (drawCount == 0) continue;
 
-        // Draw
-        for (auto& mesh : model->GetMeshes()) {
-            cmdList->IASetVertexBuffers(0, 1, &mesh->GetVBV());
-            cmdList->IASetIndexBuffer(&mesh->GetIBV());
+            // Bind buffers
+            particleBuffer_.SRVBindForGraphicsCommandList(cmdList, SRV_PARTICLES);
+            materialBuffer_.SRVBindForGraphicsCommandList(cmdList, SRV_MATERIALS);
+            textureIdBuffer_.SRVBindForGraphicsCommandList(cmdList, SRV_TEXTURE_IDS);
 
-            cmdList->DrawIndexedInstanced(
-                static_cast<UINT>(mesh->GetIndices().size()),
-                static_cast<UINT>(drawCount),
-                0, 0, 0
-            );
+            // Draw
+            for (auto& mesh : model->GetMeshes()) {
+                cmdList->IASetVertexBuffers(0, 1, &mesh->GetVBV());
+                cmdList->IASetIndexBuffer(&mesh->GetIBV());
+
+                cmdList->DrawIndexedInstanced(
+                    static_cast<UINT>(mesh->GetIndices().size()),
+                    static_cast<UINT>(drawCount),
+                    0, 0, 0
+                );
+            }
         }
     }
 
