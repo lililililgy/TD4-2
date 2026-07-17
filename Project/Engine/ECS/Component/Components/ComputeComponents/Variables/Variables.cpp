@@ -180,13 +180,20 @@ void* Variables::GetListElementType(void* listClass) {
 	MonoType* listType = mono_class_get_type(lc);
 	if (!listType) return nullptr;
 	MonoDomain* domain = ONEngine::MonoScriptEngine::GetInstance().Domain();
+	if (!domain) domain = mono_domain_get();
+	if (!domain) return nullptr;
 	MonoObject* typeObj = (MonoObject*)mono_type_get_object(domain, listType);
 	if (!typeObj) return nullptr;
 	MonoClass* typeClass = mono_object_get_class(typeObj);
 	if (!typeClass) return nullptr;
 	MonoMethod* getGenericArguments = mono_class_get_method_from_name(typeClass, "GetGenericArguments", 0);
 	if (!getGenericArguments) return nullptr;
-	MonoArray* argsArray = (MonoArray*)mono_runtime_invoke(getGenericArguments, typeObj, nullptr, nullptr);
+	MonoObject* exc = nullptr;
+	MonoArray* argsArray = (MonoArray*)mono_runtime_invoke(getGenericArguments, typeObj, nullptr, &exc);
+	if (exc) {
+		ONEngine::MonoScriptEngineUtils::HandleException(exc);
+		return nullptr;
+	}
 	if (argsArray && mono_array_length(argsArray) > 0) {
 		MonoObject* elemTypeObj = mono_array_get(argsArray, MonoObject*, 0);
 		if (elemTypeObj) {
@@ -450,17 +457,17 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 								if constexpr (std::is_same_v<T, std::vector<int>>) {
 									intVal = itemVal;
 								}
+								int8_t temp8 = (int8_t)intVal;
+								int16_t temp16 = (int16_t)intVal;
+								int32_t temp32 = (int32_t)intVal;
 								if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) {
-									int8_t temp = (int8_t)intVal;
-									void* args[1] = { &temp };
+									void* args[1] = { &temp8 };
 									mono_runtime_invoke(add, list, args, nullptr);
 								} else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) {
-									int16_t temp = (int16_t)intVal;
-									void* args[1] = { &temp };
+									void* args[1] = { &temp16 };
 									mono_runtime_invoke(add, list, args, nullptr);
 								} else {
-									int32_t temp = (int32_t)intVal;
-									void* args[1] = { &temp };
+									void* args[1] = { &temp32 };
 									mono_runtime_invoke(add, list, args, nullptr);
 								}
 							} else {
@@ -821,17 +828,17 @@ void Variables::SetScriptVariables(const std::string& scriptName) {
 									if constexpr (std::is_same_v<T, std::vector<int>>) {
 										intVal = itemVal;
 									}
+									int8_t temp8 = (int8_t)intVal;
+									int16_t temp16 = (int16_t)intVal;
+									int32_t temp32 = (int32_t)intVal;
 									if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) {
-										int8_t temp = (int8_t)intVal;
-										void* args[1] = { &temp };
+										void* args[1] = { &temp8 };
 										mono_runtime_invoke(add, list, args, nullptr);
 									} else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) {
-										int16_t temp = (int16_t)intVal;
-										void* args[1] = { &temp };
+										void* args[1] = { &temp16 };
 										mono_runtime_invoke(add, list, args, nullptr);
 									} else {
-										int32_t temp = (int32_t)intVal;
-										void* args[1] = { &temp };
+										void* args[1] = { &temp32 };
 										mono_runtime_invoke(add, list, args, nullptr);
 									}
 								} else {
