@@ -474,8 +474,6 @@ namespace ONEngine {
         }
     }
 
-    std::vector<GhostParticleSystem2D> ParticleSystem2DUpdateSystem::ghostSystems_;
-
     void ParticleSystem2DUpdateSystem::RegisterGhost(const ParticleSystem2D* ps, const Matrix4x4& worldMat) {
         if (!ps || ps->aliveCount == 0) return;
 

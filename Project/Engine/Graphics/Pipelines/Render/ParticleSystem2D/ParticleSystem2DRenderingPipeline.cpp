@@ -82,8 +82,9 @@ void ParticleSystem2DRenderingPipeline::Initialize(ShaderCompiler* shaderCompile
 
 void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
     ComponentArray<ParticleSystem2D>* psArray = ecs->GetComponentArray<ParticleSystem2D>();
+    auto* updateSystem = ecs->GetSystem<ParticleSystem2DUpdateSystem>();
     bool hasNormalSystems = psArray && !psArray->GetUsedComponents().empty();
-    bool hasGhostSystems = !ParticleSystem2DUpdateSystem::GetGhosts().empty();
+    bool hasGhostSystems = updateSystem && !updateSystem->GetGhosts().empty();
 
     if (!hasNormalSystems && !hasGhostSystems) {
         return;
@@ -125,7 +126,8 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
     };
     std::vector<SortingData> sortedSystems;
     size_t normalCount = psArray ? psArray->GetUsedComponents().size() : 0;
-    sortedSystems.reserve(normalCount + ParticleSystem2DUpdateSystem::GetGhosts().size());
+    size_t ghostCount = updateSystem ? updateSystem->GetGhosts().size() : 0;
+    sortedSystems.reserve(normalCount + ghostCount);
 
     if (psArray) {
         for (auto& ps : psArray->GetUsedComponents()) {
@@ -136,9 +138,11 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
         }
     }
 
-    for (auto& gps : ParticleSystem2DUpdateSystem::GetGhosts()) {
-        if (gps.aliveCount == 0) continue;
-        sortedSystems.push_back({ true, nullptr, &gps, gps.finalWorldMat.m[3][2] });
+    if (updateSystem) {
+        for (auto& gps : updateSystem->GetGhosts()) {
+            if (gps.aliveCount == 0) continue;
+            sortedSystems.push_back({ true, nullptr, &gps, gps.finalWorldMat.m[3][2] });
+        }
     }
 
     std::sort(sortedSystems.begin(), sortedSystems.end(), [](const SortingData& a, const SortingData& b) {

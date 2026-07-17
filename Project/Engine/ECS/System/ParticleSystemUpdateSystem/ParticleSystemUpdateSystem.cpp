@@ -512,8 +512,6 @@ namespace ONEngine {
         }
     }
 
-    std::vector<GhostParticleSystem> ParticleSystemUpdateSystem::ghostSystems_;
-
     void ParticleSystemUpdateSystem::RegisterGhost(const ParticleSystem* ps, const Matrix4x4& worldMat) {
         if (!ps || ps->aliveCount == 0) return;
 

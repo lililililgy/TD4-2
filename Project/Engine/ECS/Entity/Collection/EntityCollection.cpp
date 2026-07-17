@@ -5,6 +5,7 @@
 #include "Engine/ECS/System/ParticleSystem2DUpdateSystem/ParticleSystem2DUpdateSystem.h"
 #include "Engine/ECS/System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
+#include "Engine/ECS/EntityComponentSystem/ECSGroup.h"
 
 using namespace ONEngine;
 
@@ -80,13 +81,21 @@ void EntityCollection::RemoveEntity(GameEntity* entity, bool deleteChildren) {
 	// ParticleSystem2D の退避
 	if (auto* ps2d = entity->GetComponent<ParticleSystem2D>()) {
 		if (ps2d->aliveCount > 0 && entity->GetTransform()) {
-			ParticleSystem2DUpdateSystem::RegisterGhost(ps2d, entity->GetTransform()->matWorld);
+			if (auto* group = entity->GetECSGroup()) {
+				if (auto* sys = group->GetSystem<ParticleSystem2DUpdateSystem>()) {
+					sys->RegisterGhost(ps2d, entity->GetTransform()->matWorld);
+				}
+			}
 		}
 	}
 	// ParticleSystem (3D) の退避
 	if (auto* ps = entity->GetComponent<ParticleSystem>()) {
 		if (ps->aliveCount > 0 && entity->GetTransform()) {
-			ParticleSystemUpdateSystem::RegisterGhost(ps, entity->GetTransform()->matWorld);
+			if (auto* group = entity->GetECSGroup()) {
+				if (auto* sys = group->GetSystem<ParticleSystemUpdateSystem>()) {
+					sys->RegisterGhost(ps, entity->GetTransform()->matWorld);
+				}
+			}
 		}
 	}
 

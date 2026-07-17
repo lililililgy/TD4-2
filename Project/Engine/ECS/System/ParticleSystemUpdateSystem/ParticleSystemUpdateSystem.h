@@ -25,16 +25,17 @@ namespace ONEngine {
         void RuntimeUpdate(class ECSGroup* ecs) override;
         void OutsideOfRuntimeUpdate(class ECSGroup* ecs) override;
 
-        static void RegisterGhost(const class ParticleSystem* ps, const Matrix4x4& worldMat);
-        static void UpdateGhosts(float dt);
-        static const std::vector<GhostParticleSystem>& GetGhosts() { return ghostSystems_; }
-        static void ClearGhosts() { ghostSystems_.clear(); }
+        void RegisterGhost(const class ParticleSystem* ps, const Matrix4x4& worldMat);
+        void UpdateGhosts(float dt);
+        const std::vector<GhostParticleSystem>& GetGhosts() const { return ghostSystems_; }
+        std::vector<GhostParticleSystem>& GetGhosts() { return ghostSystems_; }
+        void ClearGhosts() { ghostSystems_.clear(); }
 
     private:
         void DrawGizmos(class ECSGroup* ecs);
         void UpdateSingleSystem(class ParticleSystem* ps, class GameEntity* entity, float dt);
 
-        static std::vector<GhostParticleSystem> ghostSystems_;
+        std::vector<GhostParticleSystem> ghostSystems_;
     };
 
 }

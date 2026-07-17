@@ -80,8 +80,9 @@ void ParticleSystemRenderingPipeline::Initialize(ShaderCompiler* shaderCompiler,
 
 void ParticleSystemRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camera, DxCommand* dxCommand) {
     ComponentArray<ParticleSystem>* psArray = ecs->GetComponentArray<ParticleSystem>();
+    auto* updateSystem = ecs->GetSystem<ParticleSystemUpdateSystem>();
     bool hasNormalSystems = psArray && !psArray->GetUsedComponents().empty();
-    bool hasGhostSystems = !ParticleSystemUpdateSystem::GetGhosts().empty();
+    bool hasGhostSystems = updateSystem && !updateSystem->GetGhosts().empty();
 
     if (!hasNormalSystems && !hasGhostSystems) {
         return;
@@ -229,7 +230,8 @@ void ParticleSystemRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camer
     }
 
     // Ghostを描画
-    for (auto& gps : ParticleSystemUpdateSystem::GetGhosts()) {
+    if (updateSystem) {
+        for (auto& gps : updateSystem->GetGhosts()) {
         if (gps.aliveCount == 0) continue;
 
         // Per-system data
@@ -333,6 +335,7 @@ void ParticleSystemRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camer
             );
         }
     }
+}
 
     GPUTimeStamp::GetInstance().EndTimeStamp(GPUTimeStampID::ParticleRendering);
 }
