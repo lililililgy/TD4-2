@@ -385,7 +385,6 @@ void GameFramework::Update() {
 				}
 			}
 		}
-
 		if (testFrameCount >= EngineConfig::testDuration) {
 			nlohmann::json results;
 			results["success"] = true;
