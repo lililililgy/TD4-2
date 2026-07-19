@@ -50,6 +50,10 @@ static public class Input {
 		InternalGetGamepadVibration(out left, out right);
 	}
 
+	static public void PlayGamepadVibration(float leftMotorSpeed, float rightMotorSpeed, float duration) {
+		InternalPlayGamepadVibration(leftMotorSpeed, rightMotorSpeed, duration);
+	}
+
 	static public Vector2 KeyboardAxis(KeyboardAxis axis) {
 		Vector2 output = new Vector2(0.0f, 0.0f);
 		if (axis == global::KeyboardAxis.WASD) {
@@ -137,6 +141,9 @@ static public class Input {
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static private extern void InternalGetGamepadVibration(out float left, out float right);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static private extern void InternalPlayGamepadVibration(float leftMotorSpeed, float rightMotorSpeed, float duration);
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern bool InternalTriggerMouse(int mouse);

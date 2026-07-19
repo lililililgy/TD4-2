@@ -11,9 +11,11 @@ using namespace ONEngine;
 /// engine
 #include "InputSystem.h"
 #include "Engine/Core/Config/EngineConfig.h"
+#include "Engine/Core/Utility/Time/Time.h"
 
 namespace {
 	std::unique_ptr<InputSystem> gInputSystem_;
+	float vibrationTimer_ = 0.0f;
 } /// namespace
 
 namespace ONEngine::MockInput {
@@ -174,12 +176,20 @@ void Input::Initialize(WindowManager* windowManager, Editor::ImGuiManager* imgui
 	gInputSystem_ = std::make_unique<InputSystem>();
 	gInputSystem_->Initialize(windowManager, imguiManager);
 	MockInput::isInitialized = false;
+	vibrationTimer_ = 0.0f;
 }
 
 void Input::Update() {
 	gInputSystem_->Update();
 	if (EngineConfig::isTestMode) {
 		MockInput::Update();
+	}
+
+	if (vibrationTimer_ > 0.0f) {
+		vibrationTimer_ -= Time::UnscaledDeltaTime();
+		if (vibrationTimer_ <= 0.0f) {
+			SetGamepadVibration(0.0f, 0.0f);
+		}
 	}
 }
 
@@ -339,5 +349,10 @@ void Input::GetGamepadVibration(float& left, float& right) {
 		left = 0.0f;
 		right = 0.0f;
 	}
+}
+
+void Input::PlayGamepadVibration(float leftMotorSpeed, float rightMotorSpeed, float duration) {
+	SetGamepadVibration(leftMotorSpeed, rightMotorSpeed);
+	vibrationTimer_ = duration;
 }
 

@@ -123,6 +123,12 @@ public:
 	/// @brief Gamepadの振動強さを取得する（検証用）
 	static void GetGamepadVibration(float& left, float& right);
 
+	/// @brief Gamepadを指定時間振動させる
+	/// @param leftMotorSpeed 左モーターの速度 (0.0f - 1.0f)
+	/// @param rightMotorSpeed 右モーターの速度 (0.0f - 1.0f)
+	/// @param duration 振動時間（秒）
+	static void PlayGamepadVibration(float leftMotorSpeed, float rightMotorSpeed, float duration);
+
 };
 
 
