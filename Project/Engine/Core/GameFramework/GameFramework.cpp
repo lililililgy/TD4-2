@@ -359,6 +359,31 @@ void GameFramework::Update() {
 			}
 		}
 
+		if (EngineConfig::testScene == "ParticleRotationTest") {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ParticleRotationTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ParticleRotationTest' should not be null");
+			if (ecsGroup) {
+				if (testFrameCount == 20) {
+					auto* psArray = ecsGroup->GetComponentArray<ParticleSystem>();
+					ONEngine::Assert(psArray != nullptr, "ParticleSystem array should exist");
+					if (psArray && !psArray->GetUsedComponents().empty()) {
+						auto* ps = psArray->GetUsedComponents().front();
+						ONEngine::Assert(ps != nullptr, "ParticleSystem component should exist");
+						ONEngine::Assert(ps->aliveCount > 0, "Particles should be emitted by frame 20");
+						
+						bool rotated = false;
+						for (size_t i = 0; i < ps->aliveCount; ++i) {
+							if (ps->particles[i].rotation != 0.0f) {
+								rotated = true;
+								break;
+							}
+						}
+						ONEngine::Assert(rotated, "Particles should rotate over lifetime");
+					}
+				}
+			}
+		}
+
 		if (testFrameCount >= EngineConfig::testDuration) {
 			nlohmann::json results;
 			results["success"] = true;

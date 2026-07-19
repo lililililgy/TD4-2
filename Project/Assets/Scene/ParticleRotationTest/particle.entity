@@ -1,0 +1,70 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "enable": 1,
+            "main": {
+                "duration": 5.0,
+                "looping": true,
+                "startDelay": {
+                    "constant": 0.0
+                },
+                "startLifetime": {
+                    "constant": 1.0
+                },
+                "startSpeed": {
+                    "constant": 5.0
+                },
+                "startSize": {
+                    "constant": 1.0
+                },
+                "startRotation": {
+                    "constant": 0.0
+                },
+                "maxParticles": 1000
+            },
+            "emission": {
+                "enabled": true,
+                "rateOverTime": 100.0
+            },
+            "shape": {
+                "enabled": true,
+                "type": 0,
+                "radius": 1.0
+            },
+            "rotationOverLifetime": {
+                "enabled": true,
+                "angularVelocity": {
+                    "state": 0,
+                    "constant": 90.0
+                }
+            },
+            "type": "ParticleSystem"
+        }
+    ],
+    "guid": "777caa8aab1259afe123ad3b73d83ded",
+    "name": "TestParticle",
+    "parentGuid": null,
+    "prefabName": ""
+}
