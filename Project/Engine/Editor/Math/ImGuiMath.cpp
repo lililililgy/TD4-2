@@ -968,6 +968,12 @@ void ONEngine::ParticleSystemDebug(ParticleSystem* ps) {
 	}
 	EndModuleHeader();
 
+	if (BeginModuleHeader("Rotation over Lifetime", &ps->rotationOverLifetime.enabled)) {
+		DrawMinMaxCurve("Angular Velocity", ps->rotationOverLifetime.angularVelocity);
+		if (!ps->rotationOverLifetime.enabled) ImGui::EndDisabled();
+	}
+	EndModuleHeader();
+
 	bool rendererEnabled = true;
 	if (BeginModuleHeader("Renderer", &rendererEnabled)) {
 		Editor::ImMathf::InputEnum<ParticleSystemRenderer::RenderMode>("Render Mode", &ps->renderer.renderMode);
@@ -1107,6 +1113,12 @@ void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
 		DrawMinMaxCurve("Speed Modifier", ps->velocityOverLifetime.speedModifier);
 		Editor::ImMathf::InputEnum<SimulationSpace>("Space", &ps->velocityOverLifetime.space);
 		if (!ps->velocityOverLifetime.enabled) ImGui::EndDisabled();
+	}
+	EndModuleHeader();
+
+	if (BeginModuleHeader("Rotation over Lifetime", &ps->rotationOverLifetime.enabled)) {
+		DrawMinMaxCurve("Angular Velocity", ps->rotationOverLifetime.angularVelocity);
+		if (!ps->rotationOverLifetime.enabled) ImGui::EndDisabled();
 	}
 	EndModuleHeader();
 

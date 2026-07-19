@@ -164,6 +164,11 @@ namespace ONEngine {
         }
     };
 
+    struct ParticleSystemRotationOverLifetime {
+        bool enabled = false;
+        MinMaxCurve angularVelocity;
+    };
+
     enum class FlipMode : uint8_t {
         None,
         X,
