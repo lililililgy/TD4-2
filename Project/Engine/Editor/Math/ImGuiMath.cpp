@@ -543,6 +543,15 @@ void DrawMinMaxCurve(const char* label, ONEngine::MinMaxCurve& val) {
     if (val.state == ONEngine::MinMaxState::Constant) {
         ImGui::SetNextItemWidth(fieldW);
         ImGui::DragFloat("##constant", &val.constant, 0.1f);
+    } else if (val.state == ONEngine::MinMaxState::RandomBetweenTwoConstants) {
+        float halfW = (fieldW - ImGui::GetStyle().ItemSpacing.x * 2.0f - ImGui::CalcTextSize("-").x) * 0.5f;
+        ImGui::SetNextItemWidth(halfW);
+        ImGui::DragFloat("##constantMin", &val.constantMin, 0.1f);
+        ImGui::SameLine();
+        ImGui::Text("-");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(halfW);
+        ImGui::DragFloat("##constantMax", &val.constantMax, 0.1f);
     } else if (val.state == ONEngine::MinMaxState::Curve) {
         DrawCurve("Curve", val.curve);
     } else {
@@ -554,6 +563,7 @@ void DrawMinMaxCurve(const char* label, ONEngine::MinMaxCurve& val) {
     if (ImGui::Button("v", ImVec2(buttonW, 0))) ImGui::OpenPopup("MinMaxPopup");
     if (ImGui::BeginPopup("MinMaxPopup")) {
         if (ImGui::MenuItem("Constant", nullptr, val.state == ONEngine::MinMaxState::Constant)) val.state = ONEngine::MinMaxState::Constant;
+        if (ImGui::MenuItem("Random Between Two Constants", nullptr, val.state == ONEngine::MinMaxState::RandomBetweenTwoConstants)) val.state = ONEngine::MinMaxState::RandomBetweenTwoConstants;
         if (ImGui::MenuItem("Curve", nullptr, val.state == ONEngine::MinMaxState::Curve)) val.state = ONEngine::MinMaxState::Curve;
         if (ImGui::MenuItem("Random Between Two Curves", nullptr, val.state == ONEngine::MinMaxState::RandomBetweenTwoCurves)) val.state = ONEngine::MinMaxState::RandomBetweenTwoCurves;
         ImGui::EndPopup();

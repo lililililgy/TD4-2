@@ -56,8 +56,10 @@
             "rotationOverLifetime": {
                 "enabled": true,
                 "angularVelocity": {
-                    "state": 0,
-                    "constant": 90.0
+                    "state": 1,
+                    "constant": 0.0,
+                    "constantMin": 45.0,
+                    "constantMax": 90.0
                 }
             },
             "type": "ParticleSystem"

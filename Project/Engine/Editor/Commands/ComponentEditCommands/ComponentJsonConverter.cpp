@@ -391,6 +391,8 @@ void ONEngine::to_json(nlohmann::json& j, const AnimationCurve& c) {
 void ONEngine::from_json(const nlohmann::json& j, MinMaxCurve& m) {
 	m.state = static_cast<MinMaxState>(j.value("state", static_cast<uint8_t>(MinMaxState::Constant)));
 	m.constant = j.value("constant", 1.0f);
+	m.constantMin = j.value("constantMin", 0.0f);
+	m.constantMax = j.value("constantMax", 1.0f);
 	m.curve = j.value("curve", AnimationCurve());
 	m.curveMin = j.value("curveMin", AnimationCurve());
 	m.curveMax = j.value("curveMax", AnimationCurve());
@@ -399,6 +401,8 @@ void ONEngine::to_json(nlohmann::json& j, const MinMaxCurve& m) {
 	j = nlohmann::json{
 		{"state", static_cast<uint8_t>(m.state)},
 		{"constant", m.constant},
+		{"constantMin", m.constantMin},
+		{"constantMax", m.constantMax},
 		{"curve", m.curve},
 		{"curveMin", m.curveMin},
 		{"curveMax", m.curveMax}

@@ -35,6 +35,9 @@ namespace ONEngine {
     static float EvaluateMinMaxCurve(const MinMaxCurve& mmc, float time, float randomValue = 0.5f) {
         switch (mmc.state) {
             case MinMaxState::Constant: return mmc.constant;
+            case MinMaxState::RandomBetweenTwoConstants: {
+                return mmc.constantMin + (mmc.constantMax - mmc.constantMin) * randomValue;
+            }
             case MinMaxState::Curve: return mmc.curve.Evaluate(time);
             case MinMaxState::RandomBetweenTwoCurves: {
                 float vMin = mmc.curveMin.Evaluate(time);
