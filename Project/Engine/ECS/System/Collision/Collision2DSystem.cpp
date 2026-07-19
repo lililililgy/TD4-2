@@ -14,6 +14,7 @@ using namespace ONEngine;
 #include "Engine/Core/Utility/Time/CPUTimeStamp.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Rigidbody2D/Rigidbody2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/CollisionCheck/CollisionCheck.h"
 #include "Engine/ECS/System/Collision/CollisionSystem.h" // 衝突情報を流用するため
 
@@ -486,7 +487,68 @@ void Collision2DSystem::PushBack(GameEntity* a, CollisionState aState, GameEntit
 		if (bCol && bCol->IsFreezeY()) posB.y = b->GetPosition().y;
 		b->SetPosition(posB);
 	}
+
+	Rigidbody2D* aRB = a->GetComponent<Rigidbody2D>();
+	Rigidbody2D* bRB = b->GetComponent<Rigidbody2D>();
+
+	if (aRB || bRB) {
+		Vector2 normal(info.normal.x, info.normal.y);
+		if (normal.LengthSquared() > 0.0f) {
+			normal = normal.Normalize();
+		}
+
+		Vector2 velA = aRB ? aRB->GetVelocity() : Vector2::Zero;
+		Vector2 velB = bRB ? bRB->GetVelocity() : Vector2::Zero;
+		Vector2 relVel = velA - velB;
+
+		float velAlongNormal = relVel.Dot(normal);
+
+		if (velAlongNormal < -0.0001f) {
+			float restitution = 1.0f;
+			if (aRB && bRB) {
+				restitution = (std::min)(aRB->GetRestitution(), bRB->GetRestitution());
+			} else if (aRB) {
+				restitution = aRB->GetRestitution();
+			} else if (bRB) {
+				restitution = bRB->GetRestitution();
+			}
+
+			float invMassA = 0.0f;
+			if (aRB) {
+				invMassA = (aDynamic) ? (1.0f / aRB->GetMass()) : 0.0f;
+			}
+
+			float invMassB = 0.0f;
+			if (bRB) {
+				invMassB = (bDynamic) ? (1.0f / bRB->GetMass()) : 0.0f;
+			}
+
+			float totalInvMass = invMassA + invMassB;
+			if (totalInvMass > 0.0f) {
+				float impulseMagnitude = -(1.0f + restitution) * velAlongNormal;
+				impulseMagnitude /= totalInvMass;
+
+				Vector2 impulse = normal * impulseMagnitude;
+
+				if (aRB && aDynamic) {
+					Vector2 newVelA = velA + impulse * invMassA;
+					if (aRB->IsFreezeX()) newVelA.x = 0.0f;
+					if (aRB->IsFreezeY()) newVelA.y = 0.0f;
+					aRB->SetVelocity(newVelA);
+				}
+
+				if (bRB && bDynamic) {
+					Vector2 newVelB = velB - impulse * invMassB;
+					if (bRB->IsFreezeX()) newVelB.x = 0.0f;
+					if (bRB->IsFreezeY()) newVelB.y = 0.0f;
+					bRB->SetVelocity(newVelB);
+				}
+			}
+		}
+	}
 }
+
+
 
 
 bool CheckMethod2D::CollisionCheckCircleVsCircle(CircleCollider* c1, CircleCollider* c2, CollisionInfo* info) {

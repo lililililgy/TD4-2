@@ -14,6 +14,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Rigidbody2D/Rigidbody2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
@@ -277,6 +278,33 @@ void GameFramework::Update() {
 						// 400 - 600/2 = 100
 						ONEngine::Assert(offsetCenter.x == 100.0f, "GetDispatchStartOffset.x should be 100 in Center mode");
 						ONEngine::Assert(offsetCenter.y == 100.0f, "GetDispatchStartOffset.y should be 100 in Center mode");
+					}
+				}
+			}
+		}
+
+		if (EngineConfig::testScene == "Rigidbody2DTest" && testFrameCount == 60) {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("Rigidbody2DTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'Rigidbody2DTest' should not be null");
+			if (ecsGroup) {
+				auto* rbArray = ecsGroup->GetComponentArray<Rigidbody2D>();
+				ONEngine::Assert(rbArray != nullptr, "Rigidbody2D array should exist");
+				if (rbArray && rbArray->GetUsedComponents().size() >= 2) {
+					auto used = rbArray->GetUsedComponents();
+					Rigidbody2D* realRbA = nullptr;
+					Rigidbody2D* realRbB = nullptr;
+					for (auto* rb : used) {
+						if (rb->GetOwner()->GetName() == "EntityA") realRbA = rb;
+						if (rb->GetOwner()->GetName() == "EntityB") realRbB = rb;
+					}
+					
+					ONEngine::Assert(realRbA != nullptr && realRbB != nullptr, "Could not find EntityA and EntityB");
+					if (realRbA && realRbB) {
+						Vector2 velA = realRbA->GetVelocity();
+						Vector2 velB = realRbB->GetVelocity();
+						
+						ONEngine::Assert(velA.x < 0.0f, "EntityA velocity.x should be negative after collision");
+						ONEngine::Assert(velB.x > 0.0f, "EntityB velocity.x should be positive after collision");
 					}
 				}
 			}

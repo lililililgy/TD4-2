@@ -20,6 +20,7 @@ static class ComponentBatchManager {
 		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(UIGroupComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIGroupComponent.BatchData))}");
 		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(UIElementComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIElementComponent.BatchData))}");
 		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BoxCollider2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider2D.BatchData))}");
+		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(Rigidbody2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Rigidbody2D.BatchData))}");
 		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BGMPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BGMPlayer.BatchData))}");
 		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SEPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SEPlayer.BatchData))}");
 		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BoxCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider.BatchData))}");
@@ -27,6 +28,35 @@ static class ComponentBatchManager {
 		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SphereCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SphereCollider.BatchData))}");
 		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(ONEngine.AnimationPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(ONEngine.AnimationPlayer.BatchData))}");
 		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SkinMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SkinMeshRenderer.BatchData))}");
+
+		// --- Rigidbody2D の登録 ---
+		RegisterConverter<Rigidbody2D, Rigidbody2D.BatchData>((ComponentArray<Rigidbody2D> array) => {
+			int count = array.Count;
+			Rigidbody2D.BatchData[] batch = new Rigidbody2D.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				var comp = array.Get(i);
+				var batchData = comp.GetBatchData();
+				batch[i].compId = comp.compId;
+				batch[i].enable = comp.enable;
+				batch[i].velocity = batchData.velocity;
+				batch[i].mass = batchData.mass;
+				batch[i].restitution = batchData.restitution;
+				batch[i].useGravity = batchData.useGravity;
+				batch[i].gravityScale = batchData.gravityScale;
+				batch[i].freezeX = batchData.freezeX;
+				batch[i].freezeY = batchData.freezeY;
+			}
+			return batch;
+		});
+
+		RegisterAllocator<Rigidbody2D, Rigidbody2D.BatchData>((ComponentArray<Rigidbody2D> array) => {
+			int count = array.Count;
+			Rigidbody2D.BatchData[] batch = new Rigidbody2D.BatchData[count];
+			for (int i = 0; i < count; i++) {
+				batch[i].compId = array.Get(i).compId;
+			}
+			return batch;
+		});
 
 		// --- Transform の登録 ---
 
@@ -572,6 +602,15 @@ static class ComponentBatchManager {
 				var comp = colliderArray.Get(i);
 				comp.ApplyBatchData(colliderBatch[i]);
 			}
+		} else if (componentType == typeof(Rigidbody2D)) {
+			var rbArray = (ComponentArray<Rigidbody2D>)array;
+			var rbBatch = (Rigidbody2D.BatchData[])batch;
+			int limit = Math.Min(rbArray.Count, rbBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = rbArray.Get(i);
+				comp.ApplyBatchData(rbBatch[i]);
+			}
 		} else if (componentType == typeof(AgentIntentComponent)) {
 			var agentArray = (ComponentArray<AgentIntentComponent>)array;
 			var agentBatch = (AgentIntentComponent.BatchData[])batch;
@@ -669,6 +708,22 @@ static class ComponentBatchManager {
 				comp.size = colBatch[i].size;
 				comp.isTrigger = colBatch[i].isTrigger != 0;
 				comp.mass = colBatch[i].mass;
+			}
+		} else if (componentType == typeof(Rigidbody2D)) {
+			var rbArray = (ComponentArray<Rigidbody2D>)array;
+			var rbBatch = (Rigidbody2D.BatchData[])batch;
+			int limit = Math.Min(rbArray.Count, rbBatch.Length);
+
+			for (int i = 0; i < limit; i++) {
+				var comp = rbArray.Get(i);
+				comp.enable = rbBatch[i].enable;
+				comp.velocity = rbBatch[i].velocity;
+				comp.mass = rbBatch[i].mass;
+				comp.restitution = rbBatch[i].restitution;
+				comp.useGravity = rbBatch[i].useGravity != 0;
+				comp.gravityScale = rbBatch[i].gravityScale;
+				comp.freezeX = rbBatch[i].freezeX != 0;
+				comp.freezeY = rbBatch[i].freezeY != 0;
 			}
 		} else if (componentType == typeof(CircleCollider)) {
 			var colArray = (ComponentArray<CircleCollider>)array;
