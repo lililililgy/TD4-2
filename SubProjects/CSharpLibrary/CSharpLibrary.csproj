@@ -258,6 +258,7 @@
     <Compile Include="Scripts\Game\UI\GameClear\ClearBackMainMenu.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearExitGame.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearRestart.cs" />
+    <Compile Include="Scripts\Game\UI\KeyColorChanger.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseBackMainMenu.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseCommon.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseExitGame.cs" />
@@ -288,6 +289,7 @@
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
     <Compile Include="Scripts\Test\RadialBlurTestScript.cs" />
+    <Compile Include="Scripts\Test\RumbleTestScript.cs" />
     <Compile Include="Scripts\Test\SpriteRendererCrashTest.cs" />
     <Compile Include="Scripts\Test\TestSceneScript.cs" />
     <Compile Include="Scripts\Test\TextRendererTestScript.cs" />

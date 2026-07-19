@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include <set>
 #include <vector>
+#include <unordered_map>
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 #include <malloc.h>
@@ -133,15 +134,34 @@ namespace ImCurveEdit
       return ret;
    }
 
+   struct CurveEditorState
+   {
+      bool selectingQuad = false;
+      ImVec2 quadSelection = ImVec2(0.f, 0.f);
+      int overCurve = -1;
+      int movingCurve = -1;
+      bool scrollingV = false;
+      std::set<EditPoint> selection;
+      bool overSelectedPoint = false;
+      bool pointsMoved = false;
+      ImVec2 mousePosOrigin = ImVec2(0.f, 0.f);
+      std::vector<ImVec2> originalPoints;
+   };
+   static std::unordered_map<unsigned int, CurveEditorState> s_EditorStates;
+
    int Edit(Delegate& delegate, const ImVec2& size, unsigned int id, const ImRect* clippingRect, ImVector<EditPoint>* selectedPoints)
    {
-      static bool selectingQuad = false;
-      static ImVec2 quadSelection;
-      static int overCurve = -1;
-      static int movingCurve = -1;
-      static bool scrollingV = false;
-      static std::set<EditPoint> selection;
-      static bool overSelectedPoint = false;
+      auto& state = s_EditorStates[id];
+      bool& selectingQuad = state.selectingQuad;
+      ImVec2& quadSelection = state.quadSelection;
+      int& overCurve = state.overCurve;
+      int& movingCurve = state.movingCurve;
+      bool& scrollingV = state.scrollingV;
+      std::set<EditPoint>& selection = state.selection;
+      bool& overSelectedPoint = state.overSelectedPoint;
+      bool& pointsMoved = state.pointsMoved;
+      ImVec2& mousePosOrigin = state.mousePosOrigin;
+      std::vector<ImVec2>& originalPoints = state.originalPoints;
 
       int ret = 0;
 
@@ -319,9 +339,6 @@ namespace ImCurveEdit
          overCurve = -1;
 
       // move selection
-      static bool pointsMoved = false;
-      static ImVec2 mousePosOrigin;
-      static std::vector<ImVec2> originalPoints;
       if (overSelectedPoint && io.MouseDown[0])
       {
          if ((fabsf(io.MouseDelta.x) > 0.f || fabsf(io.MouseDelta.y) > 0.f) && !selection.empty())

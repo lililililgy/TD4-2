@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "DInput.h"
 /// directX12
@@ -57,6 +57,15 @@ public:
 	void Update(class Window* window);
 
 
+	/// @brief 振動を設定する
+	/// @param leftMotorSpeed 左モーターの速度 (0.0f - 1.0f)
+	/// @param rightMotorSpeed 右モーターの速度 (0.0f - 1.0f)
+	void SetVibration(float leftMotorSpeed, float rightMotorSpeed);
+
+	/// @brief 振動の強さを取得
+	float GetLeftVibration() const { return leftVibration_; }
+	float GetRightVibration() const { return rightVibration_; }
+
 private:
 	/// ===================================================
 	/// private : methods
@@ -68,6 +77,9 @@ private:
 	XINPUT_STATE prevState_;
 
 	int stickDeadZone_ = 8000; // スティックのデッドゾーン
+
+	float leftVibration_ = 0.0f;
+	float rightVibration_ = 0.0f;
 };
 
 

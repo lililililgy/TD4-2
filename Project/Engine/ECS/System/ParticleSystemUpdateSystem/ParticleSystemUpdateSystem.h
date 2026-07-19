@@ -14,6 +14,7 @@ namespace ONEngine {
         ParticleSystemColorOverLifetime colorOverLifetime;
         ParticleSystemSizeOverLifetime sizeOverLifetime;
         ParticleSystemVelocityOverLifetime velocityOverLifetime;
+        ParticleSystemRotationOverLifetime rotationOverLifetime;
         Matrix4x4 finalWorldMat;
     };
 

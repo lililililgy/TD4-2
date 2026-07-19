@@ -28,6 +28,7 @@ EDITOR_STATE ModifyScriptVariableCommand::Undo() {
 
 void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
     auto& monoEngine = ONEngine::MonoScriptEngine::GetInstance();
+    MonoDomain* domain = monoEngine.Domain();
     
     ONEngine::GameEntity* entity = monoEngine.GetOwnerEntity(entityGuid_);
     if (!entity) {
@@ -48,10 +49,10 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
             std::visit([&](auto&& arg) {
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (std::is_same_v<T, std::string>) {
-                    MonoString* ms = mono_string_new(mono_domain_get(), arg.c_str());
+                    MonoString* ms = mono_string_new(domain, arg.c_str());
                     mono_field_set_value(obj, field, ms);
                 } else if constexpr (std::is_same_v<T, std::shared_ptr<ONEngine::Variables::GenericObject>>) {
-                    MonoObject* structObj = mono_field_get_value_object(mono_domain_get(), field, obj);
+                    MonoObject* structObj = mono_field_get_value_object(domain, field, obj);
                     if (structObj && arg) {
                         MonoClass* structClass = mono_object_get_class(structObj);
                         ONEngine::Variables::VarToMonoObject(structObj, structClass, arg);
@@ -61,7 +62,7 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
                         }
                     }
                 } else if constexpr (std::is_same_v<T, std::vector<int>> || std::is_same_v<T, std::vector<float>> || std::is_same_v<T, std::vector<bool>> || std::is_same_v<T, std::vector<std::string>> || std::is_same_v<T, std::vector<ONEngine::Vector3>>) {
-                    MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, obj);
+                    MonoObject* list = mono_field_get_value_object(domain, field, obj);
                     if (list) {
                         MonoClass* lc = mono_object_get_class(list);
                         MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
@@ -75,7 +76,7 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
 
                             for (auto itemVal : arg) {
                                 if constexpr (std::is_same_v<T, std::vector<std::string>>) {
-                                    MonoString* s = mono_string_new(mono_domain_get(), itemVal.c_str());
+                                    MonoString* s = mono_string_new(domain, itemVal.c_str());
                                     void* args[1] = { s };
                                     mono_runtime_invoke(add, list, args, nullptr);
                                 } else if constexpr (std::is_same_v<T, std::vector<int>>) {
@@ -83,17 +84,17 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
                                     if constexpr (std::is_same_v<T, std::vector<int>>) {
                                         intVal = itemVal;
                                     }
+                                    int8_t temp8 = (int8_t)intVal;
+                                    int16_t temp16 = (int16_t)intVal;
+                                    int32_t temp32 = (int32_t)intVal;
                                     if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) {
-                                        int8_t temp = (int8_t)intVal;
-                                        void* args[1] = { &temp };
+                                        void* args[1] = { &temp8 };
                                         mono_runtime_invoke(add, list, args, nullptr);
                                     } else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) {
-                                        int16_t temp = (int16_t)intVal;
-                                        void* args[1] = { &temp };
+                                        void* args[1] = { &temp16 };
                                         mono_runtime_invoke(add, list, args, nullptr);
                                     } else {
-                                        int32_t temp = (int32_t)intVal;
-                                        void* args[1] = { &temp };
+                                        void* args[1] = { &temp32 };
                                         mono_runtime_invoke(add, list, args, nullptr);
                                     }
                                 } else {
@@ -104,7 +105,7 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
                         }
                     }
                 } else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<ONEngine::Variables::GenericObject>>>) {
-                    MonoObject* list = mono_field_get_value_object(mono_domain_get(), field, obj);
+                    MonoObject* list = mono_field_get_value_object(domain, field, obj);
                     if (list) {
                         MonoClass* lc = mono_object_get_class(list);
                         MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
@@ -114,7 +115,7 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
                             MonoType* et = mono_signature_get_return_type(mono_method_signature(mono_class_get_method_from_name(lc, "get_Item", 1)));
                             MonoClass* ek = mono_class_from_mono_type(et);
                             for (auto& itemGen : arg) {
-                                MonoObject* item = mono_object_new(mono_domain_get(), ek);
+                                MonoObject* item = mono_object_new(domain, ek);
                                 if (!mono_class_is_valuetype(ek)) {
                                     mono_runtime_object_init(item);
                                 }

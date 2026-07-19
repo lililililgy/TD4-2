@@ -1,0 +1,4 @@
+{
+    "message": "ONEngine Assertion failed:\nCompile Not Succeended\n\nLocation:\nFile: ShaderCompiler.cpp\nFunction: class Microsoft::WRL::ComPtr<struct IDxcBlob> __cdecl ONEngine::ShaderCompiler::CompileShader(const class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > &,const wchar_t *,const class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > &)\nLine: 44",
+    "success": false
+}

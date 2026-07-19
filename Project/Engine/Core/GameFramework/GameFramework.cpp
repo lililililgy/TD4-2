@@ -39,6 +39,10 @@ using namespace ONEngine;
 #include "Engine/Core/Threading/ThreadPool.h"
 #include "Engine/Core/Event/FrameEventQueue.h"
 #include "Engine/ECS/System/Audio/AudioPlaybackSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
+#include "Engine/ECS/System/ParticleSystem2DUpdateSystem/ParticleSystem2DUpdateSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
+#include "Engine/ECS/System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
 
 GameFramework::GameFramework() {}
 GameFramework::~GameFramework() {
@@ -326,6 +330,61 @@ void GameFramework::Update() {
 			}
 		}
 
+		if (EngineConfig::testScene == "ParticlePersistenceTest") {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ParticlePersistenceTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ParticlePersistenceTest' should not be null");
+			if (ecsGroup) {
+				if (testFrameCount == 20) {
+					auto* psArray = ecsGroup->GetComponentArray<ParticleSystem2D>();
+					ONEngine::Assert(psArray != nullptr, "ParticleSystem2D array should exist");
+					if (psArray && !psArray->GetUsedComponents().empty()) {
+						auto* ps = psArray->GetUsedComponents().front();
+						ONEngine::Assert(ps != nullptr, "ParticleSystem2D component should exist");
+						ONEngine::Assert(ps->aliveCount > 0, "Particles should be emitted by frame 20");
+					}
+				}
+				else if (testFrameCount == 40) {
+					// Simulate playback stop
+					DebugConfig::isDebugging = false;
+					if (sceneManager_) {
+						sceneManager_->ReloadScene(true);
+					}
+				}
+				else if (testFrameCount == 60) {
+					// Verify ghost particles are cleared
+					auto* updateSys = ecsGroup->GetSystem<ParticleSystem2DUpdateSystem>();
+					ONEngine::Assert(updateSys != nullptr, "ParticleSystem2DUpdateSystem should exist");
+					if (updateSys) {
+						ONEngine::Assert(updateSys->GetGhosts().empty(), "Ghost particles should be cleared after playback stops");
+					}
+				}
+			}
+		}
+
+		if (EngineConfig::testScene == "ParticleRotationTest") {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ParticleRotationTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ParticleRotationTest' should not be null");
+			if (ecsGroup) {
+				if (testFrameCount == 20) {
+					auto* psArray = ecsGroup->GetComponentArray<ParticleSystem>();
+					ONEngine::Assert(psArray != nullptr, "ParticleSystem array should exist");
+					if (psArray && !psArray->GetUsedComponents().empty()) {
+						auto* ps = psArray->GetUsedComponents().front();
+						ONEngine::Assert(ps != nullptr, "ParticleSystem component should exist");
+						ONEngine::Assert(ps->aliveCount > 0, "Particles should be emitted by frame 20");
+						
+						bool rotated = false;
+						for (size_t i = 0; i < ps->aliveCount; ++i) {
+							if (ps->particles[i].rotation != 0.0f) {
+								rotated = true;
+								break;
+							}
+						}
+						ONEngine::Assert(rotated, "Particles should rotate over lifetime");
+					}
+				}
+			}
+		}
 		if (testFrameCount >= EngineConfig::testDuration) {
 			nlohmann::json results;
 			results["success"] = true;

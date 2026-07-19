@@ -53,6 +53,7 @@ namespace ONEngine {
         ParticleSystemColorOverLifetime colorOverLifetime;
         ParticleSystemSizeOverLifetime sizeOverLifetime;
         ParticleSystemVelocityOverLifetime velocityOverLifetime;
+        ParticleSystemRotationOverLifetime rotationOverLifetime;
         ParticleSystemRenderer renderer;
         ParticleSystemTextureSheetAnimation textureSheetAnimation;
 

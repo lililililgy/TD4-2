@@ -391,6 +391,8 @@ void ONEngine::to_json(nlohmann::json& j, const AnimationCurve& c) {
 void ONEngine::from_json(const nlohmann::json& j, MinMaxCurve& m) {
 	m.state = static_cast<MinMaxState>(j.value("state", static_cast<uint8_t>(MinMaxState::Constant)));
 	m.constant = j.value("constant", 1.0f);
+	m.constantMin = j.value("constantMin", 0.0f);
+	m.constantMax = j.value("constantMax", 1.0f);
 	m.curve = j.value("curve", AnimationCurve());
 	m.curveMin = j.value("curveMin", AnimationCurve());
 	m.curveMax = j.value("curveMax", AnimationCurve());
@@ -399,6 +401,8 @@ void ONEngine::to_json(nlohmann::json& j, const MinMaxCurve& m) {
 	j = nlohmann::json{
 		{"state", static_cast<uint8_t>(m.state)},
 		{"constant", m.constant},
+		{"constantMin", m.constantMin},
+		{"constantMax", m.constantMax},
 		{"curve", m.curve},
 		{"curveMin", m.curveMin},
 		{"curveMax", m.curveMax}
@@ -466,6 +470,7 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystem& p) {
 	if (j.contains("colorOverLifetime")) p.colorOverLifetime = j.at("colorOverLifetime").get<ParticleSystemColorOverLifetime>();
 	if (j.contains("sizeOverLifetime")) p.sizeOverLifetime = j.at("sizeOverLifetime").get<ParticleSystemSizeOverLifetime>();
 	if (j.contains("velocityOverLifetime")) p.velocityOverLifetime = j.at("velocityOverLifetime").get<ParticleSystemVelocityOverLifetime>();
+	if (j.contains("rotationOverLifetime")) p.rotationOverLifetime = j.at("rotationOverLifetime").get<ParticleSystemRotationOverLifetime>();
 	if (j.contains("renderer")) p.renderer = j.at("renderer").get<ParticleSystemRenderer>();
 }
 
@@ -479,6 +484,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystem& p) {
 		{ "colorOverLifetime", p.colorOverLifetime },
 		{ "sizeOverLifetime", p.sizeOverLifetime },
 		{ "velocityOverLifetime", p.velocityOverLifetime },
+		{ "rotationOverLifetime", p.rotationOverLifetime },
 		{ "renderer", p.renderer },
 	};
 }
@@ -491,6 +497,7 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystem2D& p) {
 	if (j.contains("colorOverLifetime")) p.colorOverLifetime = j.at("colorOverLifetime").get<ParticleSystemColorOverLifetime>();
 	if (j.contains("sizeOverLifetime")) p.sizeOverLifetime = j.at("sizeOverLifetime").get<ParticleSystemSizeOverLifetime>();
 	if (j.contains("velocityOverLifetime")) p.velocityOverLifetime = j.at("velocityOverLifetime").get<ParticleSystemVelocityOverLifetime>();
+	if (j.contains("rotationOverLifetime")) p.rotationOverLifetime = j.at("rotationOverLifetime").get<ParticleSystemRotationOverLifetime>();
 	if (j.contains("renderer")) p.renderer = j.at("renderer").get<ParticleSystemRenderer>();
 	if (j.contains("textureSheetAnimation")) {
 		auto& ta = j.at("textureSheetAnimation");
@@ -511,6 +518,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystem2D& p) {
 		{ "colorOverLifetime", p.colorOverLifetime },
 		{ "sizeOverLifetime", p.sizeOverLifetime },
 		{ "velocityOverLifetime", p.velocityOverLifetime },
+		{ "rotationOverLifetime", p.rotationOverLifetime },
 		{ "renderer", p.renderer },
 		{ "textureSheetAnimation", nlohmann::json{{ "enabled", p.textureSheetAnimation.enabled }, { "tilesX", p.textureSheetAnimation.tilesX }, { "tilesY", p.textureSheetAnimation.tilesY }, { "fps", p.textureSheetAnimation.fps }} },
 	};
@@ -692,5 +700,14 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystemVelocityOverLifeti
 		{ "speedModifier", v.speedModifier },
 		{ "space", static_cast<uint8_t>(v.space) }
 	};
+}
+
+void ONEngine::from_json(const nlohmann::json& j, ParticleSystemRotationOverLifetime& r) {
+	r.enabled = j.value("enabled", false);
+	r.angularVelocity = j.value("angularVelocity", MinMaxCurve());
+}
+
+void ONEngine::to_json(nlohmann::json& j, const ParticleSystemRotationOverLifetime& r) {
+	j = nlohmann::json{ { "enabled", r.enabled }, { "angularVelocity", r.angularVelocity } };
 }
 

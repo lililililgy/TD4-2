@@ -1,0 +1,66 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "ParticleSystem2D",
+            "main": {
+                "looping": true,
+                "duration": 5.0
+            },
+            "emission": {
+                "enabled": true,
+                "rateOverTime": 50.0
+            },
+            "velocityOverLifetime": {
+                "enabled": true,
+                "x": {
+                    "state": 2,
+                    "curve": {
+                        "keys": [
+                            { "time": 0.0, "value": 0.0, "inTangent": 0.0, "outTangent": 0.0 },
+                            { "time": 1.0, "value": 1.0, "inTangent": 0.0, "outTangent": 0.0 }
+                        ]
+                    }
+                },
+                "y": {
+                    "state": 2,
+                    "curve": {
+                        "keys": [
+                            { "time": 0.0, "value": 1.0, "inTangent": 0.0, "outTangent": 0.0 },
+                            { "time": 1.0, "value": 0.0, "inTangent": 0.0, "outTangent": 0.0 }
+                        ]
+                    }
+                },
+                "speedModifier": {
+                    "state": 0,
+                    "constant": 1.0
+                }
+            }
+        }
+    ],
+    "guid": "777caa8aab1259afe123ad3b73d83ded",
+    "name": "TestParticle2D",
+    "parentGuid": null,
+    "prefabName": ""
+}
