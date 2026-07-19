@@ -499,7 +499,7 @@ void Collision2DSystem::PushBack(GameEntity* a, CollisionState aState, GameEntit
 
 		Vector2 velA = aRB ? aRB->GetVelocity() : Vector2::Zero;
 		Vector2 velB = bRB ? bRB->GetVelocity() : Vector2::Zero;
-		Vector2 relVel = velA - velB;
+		Vector2 relVel = velB - velA;
 
 		float velAlongNormal = relVel.Dot(normal);
 
@@ -531,14 +531,14 @@ void Collision2DSystem::PushBack(GameEntity* a, CollisionState aState, GameEntit
 				Vector2 impulse = normal * impulseMagnitude;
 
 				if (aRB && aDynamic) {
-					Vector2 newVelA = velA + impulse * invMassA;
+					Vector2 newVelA = velA - impulse * invMassA;
 					if (aRB->IsFreezeX()) newVelA.x = 0.0f;
 					if (aRB->IsFreezeY()) newVelA.y = 0.0f;
 					aRB->SetVelocity(newVelA);
 				}
 
 				if (bRB && bDynamic) {
-					Vector2 newVelB = velB - impulse * invMassB;
+					Vector2 newVelB = velB + impulse * invMassB;
 					if (bRB->IsFreezeX()) newVelB.x = 0.0f;
 					if (bRB->IsFreezeY()) newVelB.y = 0.0f;
 					bRB->SetVelocity(newVelB);
