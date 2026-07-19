@@ -1017,7 +1017,7 @@ MonoDomain* MonoScriptEngine::CreateReloadDomain() {
 }
 
 void MonoScriptEngine::ClearPendingDomains() {
-#if defined(DEBUG_MODE) && !defined(DEBUG_BUILD)
+#if defined(DEBUG_MODE)
 	// テスト実行中、またはデバッガが接続（アタッチ）されている間は、
 	// アンロードに伴うスレッド競合やデッドロッククラッシュ（table が 0xFFFFFFFFFFFFFFF7 になる等）を防ぐため、
 	// ドメインのアンロードを一切行わず、リストに保留（蓄積）したままにします。
@@ -1030,6 +1030,12 @@ void MonoScriptEngine::ClearPendingDomains() {
 
 	if (domainsToUnload_.empty()) {
 		return;
+	}
+
+	// アンロードする前に、現在のスレッド（メインスレッド）のアタッチ先を rootDomain_ に切り替える。
+	// これにより、アンロード対象のドメインにスレッドが属した状態になるのを防ぎ、スレッド競合クラッシュを防ぎます。
+	if (rootDomain_) {
+		mono_thread_attach(rootDomain_);
 	}
 
 	for(auto* domain : domainsToUnload_) {
