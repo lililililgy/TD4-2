@@ -29,8 +29,44 @@
             "colorOverLifetime": {
                 "color": {
                     "gradient": {
-                        "alphaKeys": [],
-                        "colorKeys": []
+                        "alphaKeys": [
+                            {
+                                "alpha": 0.699999988079071,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0
+                            },
+                            {
+                                "alpha": 0.3499999940395355,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.20000000298023224
+                            }
+                        ],
+                        "colorKeys": [
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.24449841678142548,
+                                    "g": 0.33155927062034607,
+                                    "r": 0.4372760057449341
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.4172607958316803,
+                                    "g": 0.4172607958316803,
+                                    "r": 0.5017920732498169
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.5699999928474426
+                            }
+                        ]
                     },
                     "gradientMax": {
                         "alphaKeys": [],
@@ -42,13 +78,13 @@
                     },
                     "state": 0
                 },
-                "enabled": false
+                "enabled": true
             },
             "emission": {
                 "bursts": [],
                 "enabled": true,
                 "rateOverDistance": 0.0,
-                "rateOverTime": 50.0
+                "rateOverTime": 100.0
             },
             "enable": 1,
             "main": {
@@ -118,6 +154,50 @@
                 "meshGuid": "",
                 "renderMode": 0
             },
+            "rotationOverLifetime": {
+                "angularVelocity": {
+                    "constant": 48.79999923706055,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 500.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.3376811444759369,
+                                "value": 0.7583333253860474
+                            }
+                        ]
+                    },
+                    "curveMin": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 500.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.3376811444759369,
+                                "value": 0.7583333253860474
+                            }
+                        ]
+                    },
+                    "state": 3
+                },
+                "enabled": true
+            },
             "shape": {
                 "angle": 25.0,
                 "arc": 360.0,
@@ -135,6 +215,8 @@
                 "enabled": true,
                 "size": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -185,6 +267,8 @@
                 "space": 0,
                 "speedModifier": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -198,6 +282,8 @@
                 },
                 "x": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -237,6 +323,8 @@
                 },
                 "y": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -276,6 +364,8 @@
                 },
                 "z": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -290,7 +380,7 @@
             }
         }
     ],
-    "guid": "d9c179653ddf87c0ee31fd9284a75a8c",
+    "guid": "682a55b9e05c6ed22a7d4479f001d679",
     "name": "dustParticle",
     "parentGuid": null,
     "prefabName": "dustParticle"
