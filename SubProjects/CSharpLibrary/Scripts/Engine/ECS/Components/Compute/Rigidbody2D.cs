@@ -57,7 +57,7 @@ public class Rigidbody2D : Component {
             ComponentBatchManager.InternalSetBatch(typeof(Rigidbody2D), new BatchData[] {
                 new BatchData {
                     compId = compId,
-                    enable = this.enable ? 1 : 0,
+                    enable = this.enable,
                     velocity = batchData.velocity,
                     mass = batchData.mass,
                     restitution = batchData.restitution,
