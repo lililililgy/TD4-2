@@ -41,6 +41,8 @@ using namespace ONEngine;
 #include "Engine/ECS/System/Audio/AudioPlaybackSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/ECS/System/ParticleSystem2DUpdateSystem/ParticleSystem2DUpdateSystem.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem/ParticleSystem.h"
+#include "Engine/ECS/System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
 
 GameFramework::GameFramework() {}
 GameFramework::~GameFramework() {
