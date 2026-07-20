@@ -310,6 +310,20 @@ void GameFramework::Update() {
 			}
 		}
 
+		if (EngineConfig::testScene == "AdditiveSceneTest" && testFrameCount == 60) {
+			auto* sceneMgr = sceneManager_.get();
+			ONEngine::Assert(sceneMgr->GetCurrentSceneName() == "AdditiveSceneTest", "Current scene name should remain AdditiveSceneTest");
+			const auto& activeGroups = entityComponentSystem_->GetActiveGroupNames();
+			bool hasBase = false;
+			bool hasUI = false;
+			for (const auto& name : activeGroups) {
+				if (name == "AdditiveSceneTest") hasBase = true;
+				if (name == "GameUIScene") hasUI = true;
+			}
+			ONEngine::Assert(hasBase, "Active groups should contain AdditiveSceneTest");
+			ONEngine::Assert(hasUI, "Active groups should contain GameUIScene");
+		}
+
 		if (EngineConfig::testScene == "ComponentEnableTest" && testFrameCount == 60) {
 			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ComponentEnableTest");
 			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ComponentEnableTest' should not be null");

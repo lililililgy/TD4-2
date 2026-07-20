@@ -257,15 +257,19 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 		}
 	}
 
+	bool isAdditive = isNextSceneAdditive_;
 	isNextSceneAdditive_ = false; // Reset the flag
 
-	currentScene_ = std::move(nextScene_);
+	std::string sceneToLoad = std::move(nextScene_);
 	nextScene_.clear();
 
-	ECSGroup* nextSceneGroup = pEcs_->AddECSGroup(GetCurrentSceneName());
+	ECSGroup* nextSceneGroup = pEcs_->AddECSGroup(sceneToLoad);
 	const std::string& sceneName = nextSceneGroup->GetGroupName();
 
-	pEcs_->SetCurrentGroupName(sceneName);
+	if (!isAdditive) {
+		currentScene_ = sceneToLoad;
+		pEcs_->SetCurrentGroupName(sceneName);
+	}
 	pEcs_->AddActiveGroupName(sceneName);
 
 	/// sceneに必要な情報を渡して初期化
