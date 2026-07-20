@@ -421,11 +421,11 @@ void MonoScriptEngine::Initialize() {
 
 	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
 
-	// mono_jit_parse_options にもデバッガオプションを確実に渡す (ポインタが永続メモリを指すようにする)
-	const char* debugOptions[] = {
-		"--soft-breakpoints",
-		debugAgentOptA.c_str()
-	};
+	// mono_jit_parse_options にもデバッガオプションを確実に渡す (配列のポインタ自体がスコープを抜けても破壊されないようにstatic化)
+	static std::string softBreakpointsOpt = "--soft-breakpoints";
+	static const char* debugOptions[2];
+	debugOptions[0] = softBreakpointsOpt.c_str();
+	debugOptions[1] = debugAgentOptA.c_str();
 	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
 	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 
