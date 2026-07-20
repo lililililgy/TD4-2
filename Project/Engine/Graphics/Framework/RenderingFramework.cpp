@@ -1,4 +1,5 @@
 #include "RenderingFramework.h"
+#include <iostream>
 
 using namespace ONEngine;
 
@@ -180,6 +181,30 @@ void RenderingFramework::DrawScene() {
 		groupsToDraw = activeGroupNames;
 	}
 
+	static int drawLogFrameCount = 0;
+	drawLogFrameCount++;
+	if (drawLogFrameCount <= 10 || drawLogFrameCount % 60 == 0) {
+		std::string logStr = "[RenderingFramework] Frame " + std::to_string(drawLogFrameCount) + " - Groups to draw in order: ";
+		if (groupsToDraw.empty()) {
+			logStr += "None";
+		} else {
+			for (size_t i = 0; i < groupsToDraw.size(); ++i) {
+				const auto& name = groupsToDraw[i];
+				ECSGroup* group = pEntityComponentSystem_->GetECSGroup(name);
+				std::string camStatus = "Null";
+				if (group) {
+					CameraComponent* camera = group->GetMainCamera();
+					if (!camera) camera = group->GetMainCamera2D();
+					if (camera) {
+						camStatus = camera->enable ? (camera->IsMakeViewProjection() ? "Active" : "ProjFail") : "Disabled";
+					}
+				}
+				logStr += "[" + std::to_string(i) + ": " + name + " (Camera: " + camStatus + ")] ";
+			}
+		}
+		std::cout << logStr << std::endl;
+	}
+
 	D3D12_VIEWPORT viewport = { 0.0f, 0.0f, EngineConfig::kWindowSize.x, EngineConfig::kWindowSize.y, 0.0f, 1.0f };
 	D3D12_RECT scissor = { 0, 0, (LONG)EngineConfig::kWindowSize.x, (LONG)EngineConfig::kWindowSize.y };
 
@@ -190,7 +215,7 @@ void RenderingFramework::DrawScene() {
 		if (!ecsGroup) continue;
 		if (ecsGroup->IsDrawPaused()) continue;
 
-		Vector4 clearColor = (i == 0) ? Vector4(0.1f, 0.25f, 0.5f, 1.0f) : Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+		Vector4 clearColor = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
 		CameraComponent* camera = ecsGroup->GetMainCamera();
 		if (!camera) {

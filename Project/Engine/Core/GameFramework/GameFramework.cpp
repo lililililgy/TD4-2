@@ -310,6 +310,51 @@ void GameFramework::Update() {
 			}
 		}
 
+		if (EngineConfig::testScene == "AdditiveSceneTest") {
+			if (testFrameCount == 1) {
+				Console::Log("[TestSim] Step 1: Loading GameUIScene (reproducing startup scene)...");
+				sceneManager_->LoadScene("GameUIScene");
+			}
+			else if (testFrameCount == 15) {
+				Console::Log("[TestSim] Step 2: Switching to GameScene (reproducing editor scene switch)...");
+				sceneManager_->LoadScene("GameScene");
+			}
+			else if (testFrameCount == 35) {
+				Console::Log("[TestSim] Step 3: Triggering Play button simulation (Save, HotReload, ReloadTemp)...");
+				DebugConfig::isDebugging = true;
+				DebugConfig::isPause = false;
+				sceneManager_->SaveCurrentSceneTemporary();
+				MonoScriptEngine::GetInstance().HotReload();
+				sceneManager_->ReloadScene(true);
+			}
+			else if (testFrameCount == 90) {
+				Console::Log("[TestSim] Step 4: Verifying final state...");
+				auto* sceneMgr = sceneManager_.get();
+				ONEngine::Assert(sceneMgr->GetCurrentSceneName() == "GameScene", "Current scene name should remain GameScene");
+				const auto& activeGroups = entityComponentSystem_->GetActiveGroupNames();
+				bool hasBase = false;
+				bool hasUI = false;
+				for (const auto& name : activeGroups) {
+					if (name == "GameScene") hasBase = true;
+					if (name == "GameUIScene") hasUI = true;
+				}
+				ONEngine::Assert(hasBase, "Active groups should contain GameScene");
+				ONEngine::Assert(hasUI, "Active groups should contain GameUIScene");
+				
+				auto* gameSceneGroup = entityComponentSystem_->GetECSGroup("GameScene");
+				ONEngine::Assert(gameSceneGroup != nullptr, "GameScene group must exist");
+				if (gameSceneGroup) {
+					auto* camera = gameSceneGroup->GetMainCamera();
+					if (!camera) camera = gameSceneGroup->GetMainCamera2D();
+					ONEngine::Assert(camera != nullptr, "GameScene main camera must not be null");
+					if (camera) {
+						ONEngine::Assert(camera->enable, "GameScene main camera must be enabled");
+					}
+				}
+				Console::Log("[TestSim] All assertions passed!");
+			}
+		}
+
 		if (EngineConfig::testScene == "ComponentEnableTest" && testFrameCount == 60) {
 			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ComponentEnableTest");
 			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ComponentEnableTest' should not be null");
@@ -409,6 +454,32 @@ void GameFramework::Update() {
 							}
 						}
 						ONEngine::Assert(rotated, "Particles should rotate over lifetime");
+					}
+				}
+			}
+		}
+
+		if (EngineConfig::testScene == "ParticleAlignToVelocityTest") {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ParticleAlignToVelocityTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ParticleAlignToVelocityTest' should not be null");
+			if (ecsGroup) {
+				if (testFrameCount == 20) {
+					auto* psArray = ecsGroup->GetComponentArray<ParticleSystem2D>();
+					ONEngine::Assert(psArray != nullptr, "ParticleSystem2D array should exist");
+					if (psArray && !psArray->GetUsedComponents().empty()) {
+						auto* ps = psArray->GetUsedComponents().front();
+						ONEngine::Assert(ps != nullptr, "ParticleSystem2D component should exist");
+						ONEngine::Assert(ps->aliveCount > 0, "Particles should be emitted by frame 20");
+						ONEngine::Assert(ps->renderer.alignment == ParticleSystemRenderer::RenderAlignment::Velocity, "Renderer alignment should be Velocity");
+						
+						bool hasVelocity = false;
+						for (size_t i = 0; i < ps->aliveCount; ++i) {
+							if (ps->particles[i].velocity.LengthSquared() > 0.01f) {
+								hasVelocity = true;
+								break;
+							}
+						}
+						ONEngine::Assert(hasVelocity, "Emitted particles should have non-zero velocity");
 					}
 				}
 			}

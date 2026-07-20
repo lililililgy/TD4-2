@@ -650,6 +650,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystemShape& s) {
 
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystemRenderer& r) {
 	r.renderMode = static_cast<ParticleSystemRenderer::RenderMode>(j.value("renderMode", static_cast<uint8_t>(ParticleSystemRenderer::RenderMode::Billboard)));
+	r.alignment = static_cast<ParticleSystemRenderer::RenderAlignment>(j.value("alignment", static_cast<uint8_t>(ParticleSystemRenderer::RenderAlignment::View)));
 	r.blendMode = static_cast<ParticleSystemRenderer::BlendMode>(j.value("blendMode", static_cast<uint8_t>(ParticleSystemRenderer::BlendMode::Normal)));
 	r.flipMode = static_cast<FlipMode>(j.value("flipMode", static_cast<uint8_t>(FlipMode::None)));
 	r.materialGuid = j.value("materialGuid", "");
@@ -659,6 +660,7 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystemRenderer& r) {
 void ONEngine::to_json(nlohmann::json& j, const ParticleSystemRenderer& r) {
 	j = nlohmann::json{
 		{ "renderMode", static_cast<uint8_t>(r.renderMode) },
+		{ "alignment", static_cast<uint8_t>(r.alignment) },
 		{ "blendMode", static_cast<uint8_t>(r.blendMode) },
 		{ "flipMode", static_cast<uint8_t>(r.flipMode) },
 		{ "materialGuid", r.materialGuid },
