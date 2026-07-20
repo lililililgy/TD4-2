@@ -24,7 +24,8 @@
                 "activePhases_": [
                     "EnemyHuntPhase_1",
                     "EnemyHuntPhase_2",
-                    "EnemyHuntPhase_3"
+                    "EnemyHuntPhase_3",
+                    "TutorialPhase_Enemy"
                 ]
             },
             "type": "Variables"
