@@ -8,9 +8,9 @@ public class TatunoMousigo : MonoScript
     [SerializeField] private string targetEntityName = "Player";
 
     /* ----- 横移動 ----- */
-    [SerializeField] private float moveSpeed = 330.0f; // 追いかける速さ
+    [SerializeField] private float moveSpeed = 330.0f;    // 追いかける速さ
     [SerializeField] private float stepDistance = 110.0f; // 着地フレームのたびに進む距離
-    [SerializeField] private float turnDelay = 0.35f;  // 逆方向へ切り替わるまで待つ時間
+    [SerializeField] private float turnDelay = 0.35f;     // 逆方向へ切り替わるまで待つ時間
 
     /* ----- BaseYの微調整 ----- */
     [SerializeField] private float baseYOffset = 0.0f;
@@ -120,7 +120,7 @@ public class TatunoMousigo : MonoScript
             return;
         }
 
-        // ターゲットが反対側へ移った: turnDelay 待ってからそのまま向きを切り替える
+        // turnDelay 待ってからそのまま向きを切り替える
         turnDelayTimer_ += Time.deltaTime;
         if (turnDelayTimer_ >= turnDelay)
         {
@@ -211,7 +211,7 @@ public class TatunoMousigo : MonoScript
         int colIndex = spriteAnimation_.CurrentFrame % cols;
         float baseU = colIndex * baseScaleX;
 
-        // 元絵は左向きなので、右(facingDir_ > 0)を向く時だけUVを反転する
+        // 元絵は左向きなので、右を向く時だけUVを反転する
         bool isRight = facingDir_ > 0;
 
         uv.scale.x = isRight ? -baseScaleX : baseScaleX;
