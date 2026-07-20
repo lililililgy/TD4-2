@@ -413,6 +413,32 @@ void GameFramework::Update() {
 				}
 			}
 		}
+
+		if (EngineConfig::testScene == "ParticleAlignToVelocityTest") {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ParticleAlignToVelocityTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ParticleAlignToVelocityTest' should not be null");
+			if (ecsGroup) {
+				if (testFrameCount == 20) {
+					auto* psArray = ecsGroup->GetComponentArray<ParticleSystem2D>();
+					ONEngine::Assert(psArray != nullptr, "ParticleSystem2D array should exist");
+					if (psArray && !psArray->GetUsedComponents().empty()) {
+						auto* ps = psArray->GetUsedComponents().front();
+						ONEngine::Assert(ps != nullptr, "ParticleSystem2D component should exist");
+						ONEngine::Assert(ps->aliveCount > 0, "Particles should be emitted by frame 20");
+						ONEngine::Assert(ps->renderer.alignment == ParticleSystemRenderer::RenderAlignment::Velocity, "Renderer alignment should be Velocity");
+						
+						bool hasVelocity = false;
+						for (size_t i = 0; i < ps->aliveCount; ++i) {
+							if (ps->particles[i].velocity.LengthSquared() > 0.01f) {
+								hasVelocity = true;
+								break;
+							}
+						}
+						ONEngine::Assert(hasVelocity, "Emitted particles should have non-zero velocity");
+					}
+				}
+			}
+		}
 		if (testFrameCount >= EngineConfig::testDuration) {
 			nlohmann::json results;
 			results["success"] = true;

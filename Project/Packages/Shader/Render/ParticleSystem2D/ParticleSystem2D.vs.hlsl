@@ -58,8 +58,21 @@ VSOutput main(VSInput input, uint instanceId : SV_InstanceID) {
     }
 
     // Apply rotation around the Z axis in 2D space
-    float s = sin(p.rotation);
-    float c = cos(p.rotation);
+    float angle = p.rotation;
+    if (renderAlignment == 1) { // RenderAlignment::Velocity
+        float3 worldVelocity;
+        if (p.simulationSpace == 1) { // Local
+            worldVelocity = mul(float4(p.velocity, 0.0f), emitterWorldMatrix).xyz;
+        } else { // World
+            worldVelocity = p.velocity;
+        }
+        if (length(worldVelocity.xy) > 0.0001f) {
+            angle += atan2(worldVelocity.y, worldVelocity.x) - 1.57079632f;
+        }
+    }
+
+    float s = sin(angle);
+    float c = cos(angle);
     
     float2 localPos = input.position.xy;
     float2 rotPos;
