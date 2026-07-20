@@ -36,6 +36,14 @@
                     512
                 ]
             },
+            "TriggerColorChanger": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
             "type": "Variables"
         },
         {
@@ -75,6 +83,10 @@
                 {
                     "enable": true,
                     "name": "KeyColorChanger"
+                },
+                {
+                    "enable": true,
+                    "name": "TriggerColorChanger"
                 }
             ],
             "type": "Script"
