@@ -36,6 +36,7 @@ public class KingJellyfish : MonoScript {
     private KingJellyfishElectricFieldSettings electricFieldSettings_;
     private KingJellyfishRotatingBeamSettings rotatingBeamSettings_;
     private JellyfishWeakPoint weakPoint_;
+    private Rigidbody2D rigidbody_;
     private float damageInvincibilityRemaining_;
 
     private Vector2 chargeStartPosition_;
@@ -61,7 +62,9 @@ public class KingJellyfish : MonoScript {
         beamSettings_ = GetOrAddSettings<KingJellyfishOmnidirectionalBeamSettings>();
         electricFieldSettings_ = GetOrAddSettings<KingJellyfishElectricFieldSettings>();
         rotatingBeamSettings_ = GetOrAddSettings<KingJellyfishRotatingBeamSettings>();
+        rigidbody_ = entity.GetComponent<Rigidbody2D>();
         ResolveWeakPoint();
+        SetMovementVelocity(Vector2.zero);
         SetWeakPointCollisionEnabled(true);
 
         // 初期状態を待機状態に設定
@@ -247,7 +250,9 @@ public class KingJellyfish : MonoScript {
         chargeStartPosition_ = start;
         chargeTargetPosition_ = target + direction * chargeSettings_.passThroughDistance;
         chargeMoveDirection_ = direction;
-        chargeRecoveryVelocity_ = direction * (ChargeSpeed * ChargeInertiaRate);
+        Vector2 chargeVelocity = direction * ChargeSpeed;
+        chargeRecoveryVelocity_ = chargeVelocity * ChargeInertiaRate;
+        SetMovementVelocity(chargeVelocity);
         chargeDamageFieldDeployed_ = false;
         movementDepth_ = transform.position.z;
         RotateTowardPosition(chargeTargetPosition_);
@@ -281,21 +286,24 @@ public class KingJellyfish : MonoScript {
         // 目標位置に到達したかどうかを判定する
         if (remainingDistance <= 0.001f) {
             SetPlanePosition(chargeTargetPosition_);
+            SetMovementVelocity(chargeRecoveryVelocity_);
             DeployChargeDamageField();
             return true;
         }
 
         // 移動距離を計算し、目標位置に到達するかどうかを判定する
-        float moveDistance = ChargeSpeed * Time.deltaTime;
+        Vector2 velocity = GetMovementVelocity();
+        float moveDistance = velocity.Length() * Time.deltaTime;
         if (moveDistance >= remainingDistance) {
             SetPlanePosition(chargeTargetPosition_);
+            SetMovementVelocity(chargeRecoveryVelocity_);
             RotateTowardPosition(chargeTargetPosition_);
             DeployChargeDamageField();
             return true;
         }
 
         // 移動距離が残り距離よりも小さい場合は、移動する
-        Vector2 next = currentPosition + chargeMoveDirection_ * moveDistance;
+        Vector2 next = currentPosition + velocity * Time.deltaTime;
         SetPlanePosition(next);
 
         // 移動中もターゲットの位置に向かって回転する
@@ -309,12 +317,18 @@ public class KingJellyfish : MonoScript {
     internal void UpdateChargeRecovery(float elapsed) {
         float duration = ChargeRecoveryDuration;
         float dampingRatio = 1.0f - Mathf.Clamp01(elapsed / duration);
+        Vector2 velocity = chargeRecoveryVelocity_ * dampingRatio;
+        SetMovementVelocity(velocity);
         Vector2 currentPosition = ToPlane(transform.position);
-        Vector2 next = currentPosition + chargeRecoveryVelocity_ * dampingRatio * Time.deltaTime;
+        Vector2 next = currentPosition + velocity * Time.deltaTime;
         SetPlanePosition(next);
 
         // 回復中もターゲットの位置に向かって回転する
         RotateTowardPosition(chargeTargetPosition_);
+    }
+
+    internal void EndChargeAttackMovement() {
+        SetMovementVelocity(Vector2.zero);
     }
 
     //=============================
@@ -375,6 +389,7 @@ public class KingJellyfish : MonoScript {
     // 弧を描く移動処理
     //=============================
     internal void BeginArcMove() {
+        SetMovementVelocity(Vector2.zero);
         movementDepth_ = transform.position.z;
         arcMoveStartPosition_ = ToPlane(transform.position);
 
@@ -614,6 +629,34 @@ public class KingJellyfish : MonoScript {
     private void SetPlanePosition(Vector2 position) {
         transform.position = new Vector3(position.x, position.y, movementDepth_);
     }
+
+    private Vector2 GetMovementVelocity() {
+        if (rigidbody_ == null) {
+            rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        }
+
+        return rigidbody_ != null
+            ? rigidbody_.velocity
+            : chargeMoveDirection_ * ChargeSpeed;
+    }
+
+    private void SetMovementVelocity(Vector2 velocity) {
+        if (rigidbody_ == null) {
+            rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        }
+
+        if (rigidbody_ != null) {
+            rigidbody_.velocity = velocity;
+        }
+
+        if (weakPoint_ == null) {
+            ResolveWeakPoint();
+        }
+        if (weakPoint_ != null) {
+            weakPoint_.SetVelocity(velocity);
+        }
+    }
+
     private static Vector2 ToPlane(Vector3 position) {
         return new Vector2(position.x, position.y);
     }

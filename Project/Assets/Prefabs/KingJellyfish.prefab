@@ -53,6 +53,20 @@
                     "state": "Static",
                     "type": "BoxCollider2D",
                     "useOwnerScale": true
+                },
+                {
+                    "enable": 1,
+                    "freezeX": false,
+                    "freezeY": false,
+                    "gravityScale": 1.0,
+                    "mass": 1.0,
+                    "restitution": 0.5,
+                    "type": "Rigidbody2D",
+                    "useGravity": false,
+                    "velocity": {
+                        "x": 0.0,
+                        "y": 0.0
+                    }
                 }
             ],
             "guid": "90d9adbd347df4438eaad55f0c4bcf15",
