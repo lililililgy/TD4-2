@@ -13,6 +13,7 @@
 #include "../System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
 #include "../System/ParticleSystem2DUpdateSystem/ParticleSystem2DUpdateSystem.h"
 #include "../System/ScriptUpdateSystem/ScriptUpdateSystem.h"
+#include "../System/Rigidbody2D/Rigidbody2DUpdateSystem.h"
 #include "../System/Collision/CollisionSystem.h"
 #include "../System/Collision/Collision2DSystem.h"
 #include "../System/Collision/ColliderRenderQueueSystem.h"
@@ -50,6 +51,7 @@ void ONEngine::GameECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Asse
 	ecs->AddSystem<UIInputNavigationSystem>();
 	ecs->AddSystem<AISystem>();
 	ecs->AddSystem<MovementSystem>();
+	ecs->AddSystem<Rigidbody2DUpdateSystem>();
 	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);
 	ecs->AddSystem<EffectUpdateSystem>();
 	ecs->AddSystem<ParticleSystemUpdateSystem>();
@@ -91,6 +93,7 @@ void ONEngine::DebugECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Ass
 	ecs->AddSystem<UIInputNavigationSystem>();
 	ecs->AddSystem<AISystem>();
 	ecs->AddSystem<MovementSystem>();
+	ecs->AddSystem<Rigidbody2DUpdateSystem>();
 	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);
 	ecs->AddSystem<EffectUpdateSystem>();
 	ecs->AddSystem<ParticleSystemUpdateSystem>();

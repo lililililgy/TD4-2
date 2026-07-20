@@ -1,4 +1,4 @@
-#include "EngineConfig.h"
+﻿#include "EngineConfig.h"
 #include <fstream>
 #include <filesystem>
 #include <nlohmann/json.hpp>
@@ -31,6 +31,7 @@ namespace ONEngine::EngineConfig {
 	std::string testInputPath = "";
 	int testDuration = 180;
 	std::string testOutputPath = "./test_results.json";
+	bool waitDebug = true;
 
 	void LoadConfig() {
 		std::string configPath = "./Assets/engine_config.json";
@@ -129,6 +130,8 @@ namespace ONEngine::EngineConfig {
 			} else if (arg == "--test-output" && i + 1 < argc) {
 				std::wstring valW = argv[++i];
 				testOutputPath = std::string(valW.begin(), valW.end());
+			} else if (arg == "--wait-dbg") {
+				waitDebug = true;
 			}
 		}
 		LocalFree(argv);

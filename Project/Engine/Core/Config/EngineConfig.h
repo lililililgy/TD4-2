@@ -25,6 +25,7 @@ extern std::string testScene;
 extern std::string testInputPath;
 extern int testDuration;
 extern std::string testOutputPath;
+extern bool waitDebug;
 
 void LoadConfig();
 void SaveConfig();

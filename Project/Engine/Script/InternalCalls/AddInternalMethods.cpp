@@ -21,6 +21,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Rigidbody2D/Rigidbody2D.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Skybox/Skybox.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/CustomMeshRenderer.h"
@@ -184,6 +185,23 @@ namespace {
 		mono_add_internal_call("SEPlayer::InternalStop", (void*)SEPlayer_Stop);
 		mono_add_internal_call("SEPlayer::InternalPlayOneShot", (void*)SEPlayer_PlayOneShot);
 	}
+
+	void AddRigidbody2DInternalCalls() {
+		mono_add_internal_call("Rigidbody2D::InternalGetVelocity", (void*)InternalGetVelocity2D);
+		mono_add_internal_call("Rigidbody2D::InternalSetVelocity", (void*)InternalSetVelocity2D);
+		mono_add_internal_call("Rigidbody2D::InternalGetMass", (void*)InternalGetRigidbody2DMass);
+		mono_add_internal_call("Rigidbody2D::InternalSetMass", (void*)InternalSetRigidbody2DMass);
+		mono_add_internal_call("Rigidbody2D::InternalGetRestitution", (void*)InternalGetRigidbody2DRestitution);
+		mono_add_internal_call("Rigidbody2D::InternalSetRestitution", (void*)InternalSetRigidbody2DRestitution);
+		mono_add_internal_call("Rigidbody2D::InternalGetUseGravity", (void*)InternalGetRigidbody2DUseGravity);
+		mono_add_internal_call("Rigidbody2D::InternalSetUseGravity", (void*)InternalSetRigidbody2DUseGravity);
+		mono_add_internal_call("Rigidbody2D::InternalGetGravityScale", (void*)InternalGetRigidbody2DGravityScale);
+		mono_add_internal_call("Rigidbody2D::InternalSetGravityScale", (void*)InternalSetRigidbody2DGravityScale);
+		mono_add_internal_call("Rigidbody2D::InternalGetFreezeX", (void*)InternalGetRigidbody2DFreezeX);
+		mono_add_internal_call("Rigidbody2D::InternalSetFreezeX", (void*)InternalSetRigidbody2DFreezeX);
+		mono_add_internal_call("Rigidbody2D::InternalGetFreezeY", (void*)InternalGetRigidbody2DFreezeY);
+		mono_add_internal_call("Rigidbody2D::InternalSetFreezeY", (void*)InternalSetRigidbody2DFreezeY);
+	}
 }
 
 void ONEngine::AddWindowInternalCalls() {
@@ -200,6 +218,7 @@ void ONEngine::AddComponentInternalCalls() {
 	AddMeshRendererInternalCalls();
 	AddSkinMeshInternalCalls();
 	AddColliderInternalCalls();
+	AddRigidbody2DInternalCalls();
 	AddAudioInternalCalls();
 
 	/// sprite renderer
