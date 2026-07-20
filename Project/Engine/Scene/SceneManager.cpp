@@ -73,8 +73,6 @@ void SceneManager::Initialize(Asset::AssetCollection* assetCollection) {
 	}
 
 	MoveNextToCurrentScene(false);
-
-	pEcs_->MainCameraSetting();
 }
 
 void SceneManager::Update() {
@@ -275,10 +273,12 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 	/// sceneに必要な情報を渡して初期化
 	if (isTemporary) {
 		sceneIO_->InputTemporary(nextSceneGroup);
+		pEcs_->MainCameraSetting();
 		return;
 	}
 
 	sceneIO_->Input(sceneName, nextSceneGroup);
+	pEcs_->MainCameraSetting();
 
 	SetDirty(false);
 
