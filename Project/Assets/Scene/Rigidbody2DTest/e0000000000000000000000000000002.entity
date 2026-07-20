@@ -5,46 +5,52 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 5.0,
-                "y": 0.0,
+                "x": 300.0,
+                "y": 340.99200439453125,
                 "z": 0.0
             },
             "rotate": {
                 "w": 1.0,
                 "x": 0.0,
-                "y": 0.0,
+                "y": -0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 250.0,
+                "y": 250.0,
+                "z": 250.0
             },
             "type": "Transform"
         },
         {
+            "categoryBits": 1,
             "enable": 1,
-            "radius": 1.0,
-            "isTrigger": false,
-            "useOwnerScale": true,
             "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 4294967295,
             "mass": 1.0,
+            "radius": 1.0,
             "state": "Dynamic",
-            "type": "CircleCollider"
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "Rigidbody2DTestScript": {},
+            "type": "Variables"
         },
         {
             "enable": 1,
-            "velocity": {
-                "x": -5.0,
-                "y": 0.0
-            },
-            "mass": 1.0,
-            "restitution": 1.0,
-            "useGravity": false,
-            "gravityScale": 1.0,
             "freezeX": false,
             "freezeY": false,
-            "type": "Rigidbody2D"
+            "gravityScale": 0.8999999761581421,
+            "mass": 1.0,
+            "restitution": 100.0,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": -10.0,
+                "y": 0.0
+            }
         },
         {
             "enable": 1,
