@@ -561,6 +561,7 @@ void MonoScriptEngine::RegisterFunctions() {
 		if(ecsGroupClass) {
 			getComponentCollectionField_ = MonoScriptEngineUtils::FindFieldRecursive(ecsGroupClass, "componentCollection");
 			addEntityMethod_ = mono_class_get_method_from_name(ecsGroupClass, "AddEntity", 1);
+			clearEntitiesFromNativeMethod_ = mono_class_get_method_from_name(ecsGroupClass, "ClearEntitiesFromNative", 0);
 		}
 
 		// class Entity
@@ -893,6 +894,29 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupN
 	}
 
 	return result;
+}
+
+void MonoScriptEngine::ClearEntitiesFromNativeCS(const std::string& groupName) {
+	/// 起動時のシーン読み込みなど、mono初期化前にも呼ばれる。
+	/// image_ は nullptr 初期化されていないので domain_ を先に見ること。
+	/// clearEntitiesFromNativeMethod_ も初期化後にしか入らないため、ここで揃えて弾く。
+	if(!domain_ || !clearEntitiesFromNativeMethod_) {
+		return;
+	}
+
+	mono_thread_attach(domain_);
+
+	/// まだC#側にグループが作られていない場合は何もしなくてよい
+	MonoObject* ecsGroupObj = GetEcsGroupObject(groupName);
+	if(!ecsGroupObj) {
+		return;
+	}
+
+	MonoObject* exc = nullptr;
+	MonoScriptEngineUtils::SafeInvoke(clearEntitiesFromNativeMethod_, ecsGroupObj, nullptr, &exc);
+	if(exc) {
+		MonoScriptEngineUtils::HandleException(exc);
+	}
 }
 
 MonoObject* MonoScriptEngine::GetEcsGroupObject(const std::string& groupName) {
