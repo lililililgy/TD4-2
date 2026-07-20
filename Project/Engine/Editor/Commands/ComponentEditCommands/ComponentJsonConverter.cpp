@@ -26,6 +26,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/ShadowCaster/ShadowCaster.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Agent/AgentIntentComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Rigidbody2D/Rigidbody2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animation/AnimationPlayer.h"
 
 /// engine/renderer
@@ -72,6 +73,7 @@ namespace {
 			Register<AgentIntentComponent>();
 			Register<Animator>();
 			Register<AnimationPlayer>();
+			Register<Rigidbody2D>();
 
 			/// renderer
 			Register<SpriteRenderer>();
