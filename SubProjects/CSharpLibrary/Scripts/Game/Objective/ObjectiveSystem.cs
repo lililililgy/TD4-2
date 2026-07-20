@@ -35,7 +35,23 @@ public class ObjectiveSystem : MonoScript {
     private List<Objective> activeObjectives_ = new List<Objective>();
 
     public override void Initialize() {
-        JumpToPhase(0);
+        JumpToPhase(ResolveStartIndex());
+    }
+
+    // 開始フェーズを決める。既定は先頭で、GameFlow.ResumeFromCheckPoint() 経由で
+    // 再開要求が出ている時だけ保存地点から始める。
+    // 保存が無い／フェーズ名が現在の列に見つからない場合（フェーズをリネーム・削除した、
+    // セーブが古い等）も先頭に倒す。番号ではなく名前で引き直すのはこのため。
+    private int ResolveStartIndex() {
+        // 要求はワンショット。次に普通に GameScene を読んだ時は先頭から始まる。
+        if (!GameFlow.ConsumeResumeRequest()) return 0;
+        if (phaseSequence_ == null) return 0;
+
+        string savedPhaseName = ContinueState.PhaseName;
+        if (string.IsNullOrEmpty(savedPhaseName)) return 0;
+
+        int index = phaseSequence_.IndexOf(savedPhaseName);
+        return index >= 0 ? index : 0;
     }
 
     public override void Update() {
@@ -140,6 +156,11 @@ public class ObjectiveSystem : MonoScript {
         // 目標の BeginObjective() を済ませてから通知する。
         // これで購読側は「目標が動き出した状態」を前提にしてよい。
         phaseBegan_ = true;
+
+        // 突入したフェーズをコンティニュー地点として記録する。
+        // ここは「フェーズが実際に始まった瞬間」なので、チェックポイントの定義そのものになる。
+        ContinueState.Save(CurrentPhaseName);
+
         MessageBus.Publish(new PhaseBeganEvent(CurrentPhaseName));
     }
 

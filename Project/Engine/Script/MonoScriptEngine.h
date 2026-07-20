@@ -90,6 +90,12 @@ public:
 	/// C#側のECSGroupインスタンスを取得
 	MonoObject* GetEcsGroupObject(const std::string& groupName);
 
+	/// @brief シーン破棄時に、C#側が保持しているエンティティを捨てさせる。
+	/// C++のエンティティ破棄はC#へ通知されないため、これを呼ばないと旧シーンの
+	/// MonoScriptインスタンスがID使い回しで再利用されてしまう。
+	/// @param groupName 対象のECSGroup名
+	void ClearEntitiesFromNativeCS(const std::string& groupName);
+
 	/// C#側のEntityを取得
 	MonoObject* GetEntityFromCS(const std::string& ecsGroupName, int32_t entityId);
 	MonoObject* GetMonoBehaviorFromCS(const std::string& ecsGroupName, int32_t entityId, const std::string& behaviorName);
@@ -171,6 +177,7 @@ private:
 	MonoMethod* addEcsGroupMethod_ = nullptr;
 	MonoMethod* clearEcsGroupMethod_ = nullptr;
 	MonoMethod* addEntityMethod_ = nullptr;
+	MonoMethod* clearEntitiesFromNativeMethod_ = nullptr;
 	MonoMethod* fetchInitialDataMethod_ = nullptr;
 	MonoClassField* getComponentCollectionField_ = nullptr;
 	MonoMethod* updateAiIntentsMethod_ = nullptr;

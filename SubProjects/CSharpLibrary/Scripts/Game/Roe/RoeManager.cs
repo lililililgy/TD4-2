@@ -11,16 +11,28 @@ using System.Collections.Generic;
 //
 // 隊列順は entityId をキーに記録し、卵が自分の Initialize / Update で pull する
 // （生成直後の卵はまだスクリプトインスタンスが無く直接 push できないため）。
-public class RoeManager : MonoScript {
+public class RoeManager : MonoScript
+{
 
     [SerializeField] private string roePrefabName_ = "Roe";  // 生成する卵プレハブ名
 
+    [SerializeField] private int initialRoeCount_ = 3; // 初期卵数（母体生成時に Spawn される）
     [SerializeField] private int maxRoe_ = 5;    // 卵の上限
 
     private readonly List<Entity> roe_ = new List<Entity>();
     private float lastDistributedPlayerExp_ = 0f; // 前フレームまでに卵へ分配済みのプレイヤー累計経験値
 
-    public override void Update() {
+    public override void Initialize()
+    {
+        // 初期卵を Spawn する
+        for (int i = 0; i < initialRoeCount_; i++)
+        {
+            Spawn();
+        }
+    }
+
+    public override void Update()
+    {
         // 破棄済み（発射・撃破）の卵を隊列から掃除
         Prune();
 
@@ -30,8 +42,10 @@ public class RoeManager : MonoScript {
 
         LevelingComponent levelingComponent = entity.GetScript<LevelingComponent>();
         // Levelが上がったタイミングで産卵
-        if (levelingComponent.IsLevelUp) {
-            if (EggCount() < maxRoe_) {
+        if (levelingComponent.IsLevelUp)
+        {
+            if (EggCount() < maxRoe_)
+            {
                 Spawn();
             }
         }
@@ -43,13 +57,17 @@ public class RoeManager : MonoScript {
         float playerTotalExp = levelingComponent.TotalGainedExp;
         float gainedExp = playerTotalExp - lastDistributedPlayerExp_;
         lastDistributedPlayerExp_ = playerTotalExp;
-        if (gainedExp > 0) {
-            foreach (Entity e in roe_) {
-                if (e == null) {
+        if (gainedExp > 0)
+        {
+            foreach (Entity e in roe_)
+            {
+                if (e == null)
+                {
                     continue;
                 }
                 RoeStateComponent state = e.GetScript<RoeStateComponent>();
-                if (state == null || state.IsMature) {
+                if (state == null || state.IsMature)
+                {
                     continue;
                 }
 
@@ -62,11 +80,14 @@ public class RoeManager : MonoScript {
     // ---- 導出値（残機・弾・HP） ----
 
     // 弾数 = 成熟した卵の数
-    public int MatureCount() {
+    public int MatureCount()
+    {
         int count = 0;
-        for (int i = 0; i < roe_.Count; i++) {
+        for (int i = 0; i < roe_.Count; i++)
+        {
             RoeStateComponent state = GetState(roe_[i]);
-            if (state != null && state.IsMature) {
+            if (state != null && state.IsMature)
+            {
                 count++;
             }
         }
@@ -74,7 +95,8 @@ public class RoeManager : MonoScript {
     }
 
     // 残機 = HP = 隊列の全卵数（未成熟の子たまごも含む）。産卵上限の判定にも使う。
-    public int EggCount() {
+    public int EggCount()
+    {
         return roe_.Count;
     }
 
@@ -84,9 +106,12 @@ public class RoeManager : MonoScript {
 
     // ダメージで残機を1つ失う：隊列末尾の卵を成熟/未成熟問わず1つ外して破棄する。成功で true。
     // 全卵が残機なので状態を問わない。発射と違い最後の1個も失う（残機0でゲームオーバー）。
-    public bool TryKillLife() {
-        for (int i = roe_.Count - 1; i >= 0; i--) {
-            if (roe_[i] != null) {
+    public bool TryKillLife()
+    {
+        for (int i = roe_.Count - 1; i >= 0; i--)
+        {
+            if (roe_[i] != null)
+            {
                 Entity e = roe_[i];
                 roe_.RemoveAt(i);
                 e.Destroy();
@@ -98,8 +123,10 @@ public class RoeManager : MonoScript {
 
     // 成熟卵(弾)を1つ隊列から外して返す（発射用）。無ければ null。破棄は呼び出し側に任せる。
     // 卵が合計1個のときは発射不可（発射での即ゲームオーバー防止。子たまごが残っていれば最後の成熟卵も撃てる）。
-    public Entity TryConsumeMature() {
-        if (EggCount() <= 1) {
+    public Entity TryConsumeMature()
+    {
+        if (EggCount() <= 1)
+        {
             return null;
         }
         return ConsumeMature();
@@ -108,10 +135,13 @@ public class RoeManager : MonoScript {
     // ---- 内部 ----
 
     // 成熟卵を1つ隊列から外して返す（発射専用ヘルパー）。末尾側から探す。無ければ null。
-    private Entity ConsumeMature() {
-        for (int i = roe_.Count - 1; i >= 0; i--) {
+    private Entity ConsumeMature()
+    {
+        for (int i = roe_.Count - 1; i >= 0; i--)
+        {
             RoeStateComponent state = GetState(roe_[i]);
-            if (state != null && state.IsMature) {
+            if (state != null && state.IsMature)
+            {
                 Entity e = roe_[i];
                 roe_.RemoveAt(i);
                 return e;
@@ -120,14 +150,18 @@ public class RoeManager : MonoScript {
         return null;
     }
 
-    private RoeStateComponent GetState(Entity e) {
+    private RoeStateComponent GetState(Entity e)
+    {
         return e != null ? e.GetScript<RoeStateComponent>() : null;
     }
 
     // 破棄済みの卵をリストから除去する（隊列順は Update の PushOrders で詰め直す）
-    private void Prune() {
-        for (int i = roe_.Count - 1; i >= 0; i--) {
-            if (roe_[i] == null) {
+    private void Prune()
+    {
+        for (int i = roe_.Count - 1; i >= 0; i--)
+        {
+            if (roe_[i] == null)
+            {
                 roe_.RemoveAt(i);
             }
         }
@@ -135,9 +169,12 @@ public class RoeManager : MonoScript {
 
     // リスト順 = 隊列順(1始まり) を各卵の TrailFollower に push する。
     // 各卵は order を自分で持ち、母体(Player)を order に応じた距離で追従する。
-    private void PushOrders() {
-        for (int i = 0; i < roe_.Count; i++) {
-            if (roe_[i] != null) {
+    private void PushOrders()
+    {
+        for (int i = 0; i < roe_.Count; i++)
+        {
+            if (roe_[i] != null)
+            {
                 TrailFollower follower = roe_[i].GetScript<TrailFollower>();
                 follower?.SetOrder(i + 1);
             }
@@ -145,15 +182,18 @@ public class RoeManager : MonoScript {
     }
 
     // 卵を1個生成し隊列末尾に加える。生成できたら true。
-    private bool Spawn() {
+    private bool Spawn()
+    {
         Entity e = ecsGroup.CreateEntity(roePrefabName_);
-        if (e == null) {
+        if (e == null)
+        {
             return false;
         }
 
         // 初期位置はプレイヤー位置に寄せる（以後 TrailFollower が追従）
         Transform t = e.GetComponent<Transform>();
-        if (t != null) {
+        if (t != null)
+        {
             t.position = transform.position;
         }
 

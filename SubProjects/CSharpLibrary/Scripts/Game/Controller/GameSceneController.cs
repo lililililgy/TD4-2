@@ -55,6 +55,9 @@ public class GameSceneController : MonoScript
 		// ゲームをクリアしたか
 		if (CheckClear())
 		{
+			// 最後まで遊び切ったのでコンティニュー地点を破棄する（次回は最初から）
+			ContinueState.Clear();
+
 			// クリアシーンへ遷移
 			SceneManager.LoadScene("GameClearScene");
 		}
@@ -97,7 +100,5 @@ public class GameSceneController : MonoScript
 	{
 		return isGameOver_;
 	}
-
-
 
 }
