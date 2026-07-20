@@ -438,7 +438,7 @@ void MonoScriptEngine::Initialize() {
 	else {
 		Console::Log("[Mono] Debug Mode: Disabled during automated test to prevent hang", LogCategory::ScriptEngine);
 		// テスト時はデバッガを起動せず、高速化用に最適化オプションを適用
-		const char* options[] = {
+		static const char* options[] = {
 			"--optimize=all",
 		};
 		mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**)options);
@@ -446,7 +446,7 @@ void MonoScriptEngine::Initialize() {
 #else
 	Console::Log("[Mono] Non-Debug Mode: Debugger Disabled (suspend=n)", LogCategory::ScriptEngine);
 	/// 高速化用オプション
-	const char* options[] = {
+	static const char* options[] = {
 		"--optimize=all",   // JIT最適化フル
 	};
 	mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**)options);
