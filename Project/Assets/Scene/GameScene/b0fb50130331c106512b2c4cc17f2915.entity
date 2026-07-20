@@ -24,16 +24,20 @@
         },
         {
             "KillCountObjective": {
-                "targetCount_": 100,
-                "targetEntityName_": ""
+                "targetCount_": 1,
+                "targetEntityName_": "KingGeso"
             },
-            "SpawnOnDestroy": {
-                "spawnPos": {
+            "PhaseSpawnActivator": {
+                "activePhases_": []
+            },
+            "SpawnOnPhaseBegan": {
+                "phaseName_": "BossBattlePhase_2",
+                "prefabName_": "KingJellyfish",
+                "spawnPos_": {
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
-                },
-                "spawnPrefabName": "KingGeso"
+                }
             },
             "type": "Variables"
         },
@@ -43,13 +47,17 @@
                 {
                     "enable": true,
                     "name": "KillCountObjective"
+                },
+                {
+                    "enable": true,
+                    "name": "SpawnOnPhaseBegan"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "e8901a3ae500327676c848bdc365be2e",
-    "name": "EnemyHuntPhase_3",
+    "guid": "b0fb50130331c106512b2c4cc17f2915",
+    "name": "BossBattlePhase_2",
     "parentGuid": null,
     "prefabName": ""
 }

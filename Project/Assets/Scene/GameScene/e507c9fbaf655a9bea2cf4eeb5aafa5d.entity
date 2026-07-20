@@ -48,8 +48,8 @@
             "type": "Script"
         }
     ],
-    "guid": "e8901a3ae500327676c848bdc365be2e",
-    "name": "EnemyHuntPhase_3",
+    "guid": "e507c9fbaf655a9bea2cf4eeb5aafa5d",
+    "name": "EnemyHuntPhase_2",
     "parentGuid": null,
     "prefabName": ""
 }

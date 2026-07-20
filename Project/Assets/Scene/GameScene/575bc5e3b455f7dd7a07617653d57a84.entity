@@ -23,17 +23,11 @@
             "type": "Transform"
         },
         {
-            "KillCountObjective": {
-                "targetCount_": 100,
-                "targetEntityName_": ""
+            "DashCountObjective": {
+                "targetCount_": 3
             },
-            "SpawnOnDestroy": {
-                "spawnPos": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "spawnPrefabName": "KingGeso"
+            "PhaseSpawnActivator": {
+                "activePhases_": []
             },
             "type": "Variables"
         },
@@ -42,14 +36,14 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "KillCountObjective"
+                    "name": "DashCountObjective"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "e8901a3ae500327676c848bdc365be2e",
-    "name": "EnemyHuntPhase_3",
+    "guid": "575bc5e3b455f7dd7a07617653d57a84",
+    "name": "TutorialPhase_Dash",
     "parentGuid": null,
     "prefabName": ""
 }

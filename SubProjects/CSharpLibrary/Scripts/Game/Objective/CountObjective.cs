@@ -77,6 +77,14 @@ public abstract class CountObjective<TEvent> : Objective where TEvent : class
         return Mathf.Clamp01((float)count_ / targetCount_);
     }
 
+    // 「3 / 5」形式。IsCompleted() と同じ防御（targetCount_ が 0 以下なら 1 扱い）を通し、
+    // 表示上の目標値と達成判定の目標値がずれないようにする。
+    public override string ProgressText()
+    {
+        int target = targetCount_ > 0 ? targetCount_ : 1;
+        return count_ + " / " + target;
+    }
+
     // このフェーズ開始からのカウント数（UI 表示用）
     public int CurrentCount
     {

@@ -23,17 +23,8 @@
             "type": "Transform"
         },
         {
-            "KillCountObjective": {
-                "targetCount_": 100,
-                "targetEntityName_": ""
-            },
-            "SpawnOnDestroy": {
-                "spawnPos": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "spawnPrefabName": "KingGeso"
+            "ShotObjective": {
+                "targetCount_": 1
             },
             "type": "Variables"
         },
@@ -42,14 +33,14 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "KillCountObjective"
+                    "name": "ShotObjective"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "e8901a3ae500327676c848bdc365be2e",
-    "name": "EnemyHuntPhase_3",
+    "guid": "94ebfa5794b876fccdf8c869dae129d7",
+    "name": "TutorialPhase_Shot",
     "parentGuid": null,
     "prefabName": ""
 }

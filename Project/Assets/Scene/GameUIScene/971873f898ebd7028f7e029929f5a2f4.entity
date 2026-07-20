@@ -1,0 +1,87 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -811.401123046875,
+                "y": -32.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 128.0,
+                "y": 128.0,
+                "z": 128.0
+            },
+            "type": "Transform"
+        },
+        {
+            "ObjectiveProgressForText": {
+                "finishedText_": "---",
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene"
+            },
+            "ShowOnPhase": {
+                "visiblePhases_": [
+                    "TutorialPhase_Enemy"
+                ]
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ShowOnPhase"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "outlineWidth": 0,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "テキを たおして みよう",
+            "type": "TextRenderer",
+            "verticalAlignment": 1
+        }
+    ],
+    "guid": "971873f898ebd7028f7e029929f5a2f4",
+    "name": "EnemyTutorial",
+    "parentGuid": null,
+    "prefabName": ""
+}

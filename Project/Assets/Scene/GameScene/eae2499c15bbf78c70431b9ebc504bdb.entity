@@ -24,16 +24,17 @@
         },
         {
             "KillCountObjective": {
-                "targetCount_": 100,
-                "targetEntityName_": ""
+                "targetCount_": 1,
+                "targetEntityName_": "KingGeso"
             },
-            "SpawnOnDestroy": {
-                "spawnPos": {
+            "SpawnOnPhaseBegan": {
+                "phaseName_": "BossBattlePhase_3",
+                "prefabName_": "KingYadokari",
+                "spawnPos_": {
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
-                },
-                "spawnPrefabName": "KingGeso"
+                }
             },
             "type": "Variables"
         },
@@ -43,13 +44,17 @@
                 {
                     "enable": true,
                     "name": "KillCountObjective"
+                },
+                {
+                    "enable": true,
+                    "name": "SpawnOnPhaseBegan"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "e8901a3ae500327676c848bdc365be2e",
-    "name": "EnemyHuntPhase_3",
+    "guid": "eae2499c15bbf78c70431b9ebc504bdb",
+    "name": "BossBattlePhase_3",
     "parentGuid": null,
     "prefabName": ""
 }

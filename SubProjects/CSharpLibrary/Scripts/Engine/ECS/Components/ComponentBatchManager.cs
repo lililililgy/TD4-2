@@ -311,6 +311,16 @@ static class ComponentBatchManager {
 				batch[i].color = batchData.color;
 				batch[i].textureSize = batchData.textureSize;
 				batch[i].uvTransform = batchData.uvTransform;
+				// native の ApplyText は以下も無条件に書き戻すため、
+				// 埋め忘れるとエンティティ側の設定が毎フレーム 0 で潰される
+				batch[i].horizontalAlignment = batchData.horizontalAlignment;
+				batch[i].verticalAlignment = batchData.verticalAlignment;
+				batch[i].outlineColor = batchData.outlineColor;
+				batch[i].outlineWidth = batchData.outlineWidth;
+				batch[i].shadowColor = batchData.shadowColor;
+				batch[i].shadowOffset = batchData.shadowOffset;
+				batch[i].characterSpacing = batchData.characterSpacing;
+				batch[i].lineSpacing = batchData.lineSpacing;
 			}
 			return batch;
 		});
@@ -658,9 +668,7 @@ static class ComponentBatchManager {
 
 			for (int i = 0; i < limit; i++) {
 				var comp = textArray.Get(i);
-				comp.enable = textBatch[i].enable;
-				comp.color = textBatch[i].color;
-				comp.uvTransform = textBatch[i].uvTransform;
+				comp.ApplyBatchData(textBatch[i]);
 			}
 		} else if (componentType == typeof(DissolveMeshRenderer)) {
 			var dissolveArray = (ComponentArray<DissolveMeshRenderer>)array;

@@ -24,16 +24,20 @@
         },
         {
             "KillCountObjective": {
-                "targetCount_": 100,
+                "targetCount_": 5,
                 "targetEntityName_": ""
             },
-            "SpawnOnDestroy": {
-                "spawnPos": {
+            "SpawnOnPhaseBegan": {
+                "count_": 5,
+                "phaseName_": "TutorialPhase_Enemy",
+                "prefabName_": "MorayEel",
+                "spawnAroundEntityName_": "Player",
+                "spawnPos_": {
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
                 },
-                "spawnPrefabName": "KingGeso"
+                "spawnRadius_": 600.0
             },
             "type": "Variables"
         },
@@ -43,13 +47,17 @@
                 {
                     "enable": true,
                     "name": "KillCountObjective"
+                },
+                {
+                    "enable": true,
+                    "name": "SpawnOnPhaseBegan"
                 }
             ],
             "type": "Script"
         }
     ],
-    "guid": "e8901a3ae500327676c848bdc365be2e",
-    "name": "EnemyHuntPhase_3",
+    "guid": "19a0b57860276d31f9f73513ca24908a",
+    "name": "TutorialPhase_Enemy",
     "parentGuid": null,
     "prefabName": ""
 }

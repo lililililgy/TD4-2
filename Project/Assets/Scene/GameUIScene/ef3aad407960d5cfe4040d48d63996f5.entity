@@ -1,0 +1,82 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -683.6998901367188,
+                "y": -68.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 86.49998474121094,
+                "y": 86.4998550415039,
+                "z": 86.4998550415039
+            },
+            "type": "Transform"
+        },
+        {
+            "ObjectiveProgressForText": {
+                "finishedText_": "---",
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene"
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ObjectiveProgressForText"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "outlineWidth": 0,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "111 ／ 111",
+            "type": "TextRenderer",
+            "verticalAlignment": 1
+        }
+    ],
+    "guid": "ef3aad407960d5cfe4040d48d63996f5",
+    "name": "ProgressText",
+    "parentGuid": null,
+    "prefabName": ""
+}
