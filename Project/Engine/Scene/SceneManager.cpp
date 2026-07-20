@@ -113,11 +113,18 @@ void SceneManager::SaveCurrentScene() {
 
 void SceneManager::SaveCurrentSceneTemporary() {
 	temporarySavedSceneName_ = currentScene_;
+	temporarySavedAdditiveScenes_.clear();
+	for (const auto& activeName : pEcs_->GetActiveGroupNames()) {
+		if (activeName != currentScene_) {
+			temporarySavedAdditiveScenes_.push_back(activeName);
+		}
+	}
 	sceneIO_->OutputTemporary(pEcs_->GetCurrentGroup());
 }
 
 void SceneManager::ClearTemporarySavedSceneName() {
 	temporarySavedSceneName_.clear();
+	temporarySavedAdditiveScenes_.clear();
 }
 
 void SceneManager::LoadScene(const std::string& sceneName) {
@@ -147,8 +154,12 @@ void SceneManager::AddScene(const std::string& sceneName) {
 
 void SceneManager::ReloadScene(bool isTemporary) {
 	std::string sceneToLoad = currentScene_;
-	if (isTemporary && !temporarySavedSceneName_.empty()) {
-		sceneToLoad = temporarySavedSceneName_;
+	std::vector<std::string> additivesToLoad;
+	if (isTemporary) {
+		if (!temporarySavedSceneName_.empty()) {
+			sceneToLoad = temporarySavedSceneName_;
+		}
+		additivesToLoad = temporarySavedAdditiveScenes_;
 	}
 
 	if (sceneToLoad.empty()) {
@@ -162,6 +173,11 @@ void SceneManager::ReloadScene(bool isTemporary) {
 		return;
 	}
 	MoveNextToCurrentScene(isTemporary);
+
+	/// 追加シーンを再読み込み
+	for (const auto& additiveScene : additivesToLoad) {
+		AddScene(additiveScene);
+	}
 }
 
 SceneIO* SceneManager::GetSceneIO() {
