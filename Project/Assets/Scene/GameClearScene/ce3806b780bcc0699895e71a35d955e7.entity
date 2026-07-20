@@ -1,0 +1,57 @@
+{
+    "active": true,
+    "components": [
+        {
+            "renderer": {
+                "alignment": 0
+            },
+            "rotationOverLifetime": {
+                "angularVelocity": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "enabled": false
+            },
+            "sizeOverLifetime": {
+                "size": {
+                    "constantMax": 1.0,
+                    "constantMin": 0.0
+                }
+            },
+            "type": "ParticleSystem2D",
+            "velocityOverLifetime": {
+                "speedModifier": {
+                    "constantMax": 1.0,
+                    "constantMin": 0.0
+                },
+                "x": {
+                    "constantMax": 1.0,
+                    "constantMin": 0.0
+                },
+                "y": {
+                    "constantMax": 1.0,
+                    "constantMin": 0.0
+                },
+                "z": {
+                    "constantMax": 1.0,
+                    "constantMin": 0.0
+                }
+            }
+        }
+    ],
+    "guid": "ce3806b780bcc0699895e71a35d955e7",
+    "name": "farFishParticle",
+    "parentGuid": null,
+    "prefabName": "farFishParticle"
+}

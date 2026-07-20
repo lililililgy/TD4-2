@@ -1,0 +1,103 @@
+{
+    "active": true,
+    "components": [
+        {
+            "emission": {
+                "rateOverTime": 0.5
+            },
+            "main": {
+                "startDelay": {
+                    "constant": 2.0,
+                    "max": 2.0,
+                    "state": 1
+                },
+                "startLifetime": {
+                    "constant": 4.0
+                },
+                "startSize": {
+                    "max": 150.0,
+                    "min": 120.0,
+                    "state": 1
+                }
+            },
+            "sizeOverLifetime": {
+                "size": {
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 0.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.10999999940395355,
+                                "value": 1.0
+                            }
+                        ]
+                    }
+                }
+            },
+            "type": "ParticleSystem2D",
+            "velocityOverLifetime": {
+                "x": {
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 0.22300000488758087
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.27550724148750305,
+                                "value": 1.7730000019073486
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.3855072557926178,
+                                "value": 0.9229999780654907
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.5155072212219238,
+                                "value": 1.309999942779541
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.6359999775886536,
+                                "value": 0.6700000166893005
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.765999972820282,
+                                "value": 1.6699999570846558
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.8059999942779541,
+                                "value": 2.1500000953674316
+                            }
+                        ]
+                    }
+                },
+                "y": {
+                    "constantMax": 3.0
+                }
+            }
+        }
+    ],
+    "guid": "31f2334d1e008872df696fbdc893e6a2",
+    "name": "utuboParticle",
+    "parentGuid": "3c6cb216a34fcfabaa488397d8c97339",
+    "prefabName": "utuboParticle"
+}

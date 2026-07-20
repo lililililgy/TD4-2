@@ -34,6 +34,21 @@
             "guid": "4ce554ff59e02428831148c29363f9b8",
             "parentGuid": "fe7717145a0734ae5c8d141d1587f32e",
             "path": "./GameOverScene/4ce554ff59e02428831148c29363f9b8.entity"
+        },
+        {
+            "guid": "9f8184808bb5e2cae9c4ac7bd5ecc61d",
+            "parentGuid": null,
+            "path": "./GameOverScene/9f8184808bb5e2cae9c4ac7bd5ecc61d.entity"
+        },
+        {
+            "guid": "3c6cb216a34fcfabaa488397d8c97339",
+            "parentGuid": null,
+            "path": "./GameOverScene/3c6cb216a34fcfabaa488397d8c97339.entity"
+        },
+        {
+            "guid": "31f2334d1e008872df696fbdc893e6a2",
+            "parentGuid": "3c6cb216a34fcfabaa488397d8c97339",
+            "path": "./GameOverScene/31f2334d1e008872df696fbdc893e6a2.entity"
         }
     ]
 }
