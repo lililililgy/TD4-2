@@ -388,6 +388,9 @@ void MonoScriptEngine::Initialize() {
 	_putenv(debugEnv1.c_str());
 
 	bool waitDebug = EngineConfig::waitDebug;
+	if (EngineConfig::isTestMode) {
+		waitDebug = false;
+	}
 
 	// ポートが既に他のプロセスに占有されているか事前に競合検知
 	if (waitDebug && IsDebugPortInUse(55555)) {
