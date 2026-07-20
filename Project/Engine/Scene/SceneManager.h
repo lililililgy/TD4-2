@@ -118,6 +118,7 @@ private:
 
 	std::unique_ptr<SceneIO> sceneIO_;
 	std::string temporarySavedSceneName_;
+	std::vector<std::string> temporarySavedAdditiveScenes_;
 
 
 public:

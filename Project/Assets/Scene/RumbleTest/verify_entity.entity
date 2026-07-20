@@ -1,0 +1,40 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "RumbleTestScript"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "5f2b87a8b0ac19bd95a8fd428bec2604",
+    "name": "VerifyEntity",
+    "parentGuid": null,
+    "prefabName": ""
+}

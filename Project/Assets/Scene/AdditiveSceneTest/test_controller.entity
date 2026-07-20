@@ -1,0 +1,33 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "type": "Transform"
+        },
+        {
+            "enable": 1,
+            "type": "CameraComponent"
+        },
+        {
+            "AddSceneScript": {
+                "isAddRequested": true,
+                "sceneName": "GameUIScene"
+            },
+            "type": "Variables"
+        },
+        {
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "AddSceneScript"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "e0000000000000000000000000000002",
+    "name": "TestController",
+    "parentGuid": null,
+    "prefabName": ""
+}

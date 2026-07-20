@@ -37,6 +37,13 @@ public class Biome {
 public class EnemySpawnSystem : MonoScript {
     [SerializeField] private bool isActive_ = false;
 
+    // 稼働のON/OFF。フェーズごとの湧き制御は PhaseSpawnActivator がここを叩く。
+    // エディタでの初期値は isActive_ でそのまま設定できる。
+    public bool IsActive {
+        get { return isActive_; }
+        set { isActive_ = value; }
+    }
+
     [SerializeField] private string originName_ = "EnemySpawnOrigin";
     [SerializeField] private string heatMapEntityName_ = "EnemyHeatMap";
     // スポーン範囲

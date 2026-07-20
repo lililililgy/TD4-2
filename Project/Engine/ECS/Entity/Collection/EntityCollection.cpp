@@ -166,6 +166,8 @@ void EntityCollection::RemoveEntityAll() {
 		}
 	}
 
+	mainCamera_ = nullptr;
+	mainCamera2D_ = nullptr;
 }
 
 void EntityCollection::AddDoNotDestroyEntity(GameEntity* entity) {

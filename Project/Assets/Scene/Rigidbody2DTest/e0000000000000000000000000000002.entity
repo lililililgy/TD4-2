@@ -1,0 +1,70 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 300.0,
+                "y": 340.99200439453125,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 250.0,
+                "y": 250.0,
+                "z": 250.0
+            },
+            "type": "Transform"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 4294967295,
+            "mass": 1.0,
+            "radius": 1.0,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "Rigidbody2DTestScript": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 0.8999999761581421,
+            "mass": 1.0,
+            "restitution": 100.0,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": -10.0,
+                "y": 0.0
+            }
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "Rigidbody2DTestScript"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "e0000000000000000000000000000002",
+    "name": "EntityB",
+    "parentGuid": null,
+    "prefabName": ""
+}

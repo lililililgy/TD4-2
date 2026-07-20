@@ -79,6 +79,11 @@
             "lightShaftsIntensity": 0.6930000185966492,
             "pixelSizeX": 8.0,
             "pixelSizeY": 8.0,
+            "postEffectHeight": -1,
+            "postEffectPivot": 0,
+            "postEffectStartX": 0,
+            "postEffectStartY": 0,
+            "postEffectWidth": -1,
             "postEffects": [
                 {
                     "enabled": false,

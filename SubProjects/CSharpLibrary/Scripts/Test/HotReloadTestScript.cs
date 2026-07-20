@@ -7,7 +7,7 @@ public class HotReloadTestScript : MonoScript {
 	private static bool isTriggered = false;
 
 	// この行をビルドトリガー時に isHotReloaded = true; に書き換える
-	private bool isHotReloaded = false;
+	private bool isHotReloaded = true;
 
 	public override void Initialize() {
 		Debug.Log("HotReloadTestScript: Initialize. isHotReloaded = " + isHotReloaded);
@@ -44,7 +44,7 @@ public class HotReloadTestScript : MonoScript {
 			if (File.Exists(scriptPath)) {
 				string content = File.ReadAllText(scriptPath);
 				// isHotReloaded = false; を isHotReloaded = true; に書き換える
-				string newContent = content.Replace("private bool isHotReloaded = false;", "private bool isHotReloaded = true;");
+				string newContent = content.Replace("private bool isHotReloaded = true;", "private bool isHotReloaded = true;");
 				File.WriteAllText(scriptPath, newContent);
 
 				Debug.Log("HotReloadTestScript: File modified. Running dotnet build...");

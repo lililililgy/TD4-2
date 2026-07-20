@@ -24,8 +24,16 @@
         },
         {
             "KillCountObjective": {
-                "displayName_": "",
-                "targetCount_": 20
+                "targetCount_": 100,
+                "targetEntityName_": ""
+            },
+            "SpawnOnDestroy": {
+                "spawnPos": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "spawnPrefabName": "KingGeso"
             },
             "type": "Variables"
         },
@@ -41,7 +49,7 @@
         }
     ],
     "guid": "e8901a3ae500327676c848bdc365be2e",
-    "name": "EnemyHuntPhase_1",
+    "name": "EnemyHuntPhase_3",
     "parentGuid": null,
     "prefabName": ""
 }

@@ -120,6 +120,8 @@ void from_json(const nlohmann::json& j, ParticleSystemSizeOverLifetime& s);
 void to_json(nlohmann::json& j, const ParticleSystemSizeOverLifetime& s);
 void from_json(const nlohmann::json& j, ParticleSystemVelocityOverLifetime& v);
 void to_json(nlohmann::json& j, const ParticleSystemVelocityOverLifetime& v);
+void from_json(const nlohmann::json& j, ParticleSystemRotationOverLifetime& r);
+void to_json(nlohmann::json& j, const ParticleSystemRotationOverLifetime& r);
 
 
 void from_json(const nlohmann::json& j, ParticleSystem2D& p);

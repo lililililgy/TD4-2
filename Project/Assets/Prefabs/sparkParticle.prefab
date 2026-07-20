@@ -10,15 +10,15 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 1.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 200.0,
-                "y": 200.0,
-                "z": 200.0
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
@@ -37,13 +37,36 @@
                                 "time": 0.0
                             },
                             {
-                                "alpha": 0.0,
+                                "alpha": 0.6000000238418579,
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
-                                "time": 0.800000011920929
+                                "time": 1.0
                             }
                         ],
-                        "colorKeys": []
+                        "colorKeys": [
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 0.7534976005554199,
+                                    "r": 0.44086021184921265
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0
+                            }
+                        ]
                     },
                     "gradientMax": {
                         "alphaKeys": [],
@@ -61,7 +84,7 @@
                 "bursts": [],
                 "enabled": true,
                 "rateOverDistance": 0.0,
-                "rateOverTime": 7.0
+                "rateOverTime": 30.0
             },
             "enable": 1,
             "main": {
@@ -100,36 +123,55 @@
                     "state": 0
                 },
                 "startLifetime": {
-                    "constant": 2.0,
-                    "max": 3.0,
-                    "min": 2.0,
-                    "state": 1
-                },
-                "startRotation": {
-                    "constant": 0.0,
-                    "max": 6.28000020980835,
-                    "min": 0.0,
-                    "state": 1
-                },
-                "startSize": {
-                    "constant": 100.0,
-                    "max": 150.0,
-                    "min": 50.0,
-                    "state": 1
-                },
-                "startSpeed": {
-                    "constant": 5.0,
+                    "constant": 1.0,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
+                },
+                "startRotation": {
+                    "constant": 0.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSize": {
+                    "constant": 50.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSpeed": {
+                    "constant": 124.19999694824219,
+                    "max": 200.0,
+                    "min": 30.0,
+                    "state": 1
                 }
             },
             "renderer": {
-                "blendMode": 0,
+                "alignment": 1,
+                "blendMode": 1,
                 "flipMode": 0,
                 "materialGuid": "6b19ef90e5548c428a73340dce15203d",
                 "meshGuid": "",
                 "renderMode": 0
+            },
+            "rotationOverLifetime": {
+                "angularVelocity": {
+                    "constant": 25.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "enabled": false
             },
             "shape": {
                 "angle": 25.0,
@@ -142,17 +184,38 @@
                 "enabled": true,
                 "radius": 1.0,
                 "radiusThickness": 1.0,
-                "type": 3
+                "type": 0
             },
             "sizeOverLifetime": {
                 "enabled": true,
                 "size": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
                     "curveMax": {
-                        "keys": []
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 0.30000001192092896
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.75,
+                                "value": 1.5
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 0.10000000149011612
+                            }
+                        ]
                     },
                     "curveMin": {
                         "keys": [
@@ -160,13 +223,19 @@
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 0.0,
-                                "value": 1.0
+                                "value": 0.30000001192092896
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.75,
+                                "value": 1.5
                             },
                             {
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 1.0,
-                                "value": 2.0
+                                "value": 0.10000000149011612
                             }
                         ]
                     },
@@ -175,7 +244,7 @@
             },
             "textureSheetAnimation": {
                 "enabled": true,
-                "fps": 10.0,
+                "fps": 12.0,
                 "tilesX": 4,
                 "tilesY": 1
             },
@@ -185,6 +254,8 @@
                 "space": 0,
                 "speedModifier": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -197,7 +268,9 @@
                     "state": 0
                 },
                 "x": {
-                    "constant": 0.0,
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -210,7 +283,9 @@
                     "state": 0
                 },
                 "y": {
-                    "constant": 0.0,
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -224,6 +299,8 @@
                 },
                 "z": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -238,7 +315,7 @@
             }
         }
     ],
-    "guid": "d48a0c4c58921326665dbdbc53c7d6c4",
+    "guid": "c91aa77b5824794d8845156d183eb036",
     "name": "sparkParticle",
     "parentGuid": null,
     "prefabName": "sparkParticle"

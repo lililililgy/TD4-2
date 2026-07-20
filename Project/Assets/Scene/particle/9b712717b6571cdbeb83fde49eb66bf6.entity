@@ -1,0 +1,15 @@
+{
+    "active": true,
+    "components": [
+        {
+            "rotate": {
+                "w": 1.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "9b712717b6571cdbeb83fde49eb66bf6",
+    "name": "enemySwimParticle",
+    "parentGuid": null,
+    "prefabName": "enemySwimParticle"
+}

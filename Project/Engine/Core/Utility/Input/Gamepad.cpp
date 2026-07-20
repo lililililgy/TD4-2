@@ -1,4 +1,5 @@
-﻿#include "Gamepad.h"
+#include "Gamepad.h"
+#include <algorithm>
 
 using namespace ONEngine;
 
@@ -42,4 +43,15 @@ void Gamepad::Update(Window* /*window*/) {
 	/// 現在の状態を取得
 	ZeroMemory(&state_, sizeof(XINPUT_STATE));
 	XInputGetState(0, &state_);
+}
+
+void Gamepad::SetVibration(float leftMotorSpeed, float rightMotorSpeed) {
+	leftVibration_ = std::clamp(leftMotorSpeed, 0.0f, 1.0f);
+	rightVibration_ = std::clamp(rightMotorSpeed, 0.0f, 1.0f);
+
+	XINPUT_VIBRATION vibration;
+	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+	vibration.wLeftMotorSpeed = static_cast<WORD>(leftVibration_ * 65535.0f);
+	vibration.wRightMotorSpeed = static_cast<WORD>(rightVibration_ * 65535.0f);
+	XInputSetState(0, &vibration);
 }

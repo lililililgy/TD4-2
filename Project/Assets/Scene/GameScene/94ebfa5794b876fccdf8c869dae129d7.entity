@@ -1,0 +1,46 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "ShotObjective": {
+                "targetCount_": 1
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ShotObjective"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "94ebfa5794b876fccdf8c869dae129d7",
+    "name": "TutorialPhase_Shot",
+    "parentGuid": null,
+    "prefabName": ""
+}
