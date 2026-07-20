@@ -1,33 +1,7 @@
 {
     "active": true,
-    "components": [
-        {
-            "enable": 1,
-            "matrixCalcFlags": 7,
-            "position": {
-                "x": 731.2996215820313,
-                "y": -409.8999328613281,
-                "z": 0.0
-            },
-            "rotate": {
-                "w": 0.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 128.0,
-                "y": 128.0,
-                "z": 128.0
-            },
-            "type": "Transform"
-        },
-        {
-            "type": "Variables"
-        }
-    ],
     "guid": "8a4b75a99a9fad9d6e67c9dab898bea4",
     "name": "KeyboardUIRoot",
     "parentGuid": null,
-    "prefabName": ""
+    "prefabName": "KeyboardUIRoot"
 }

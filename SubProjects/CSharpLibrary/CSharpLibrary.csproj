@@ -259,7 +259,9 @@
     <Compile Include="Scripts\Game\UI\GameClear\ClearBackMainMenu.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearExitGame.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearRestart.cs" />
-    <Compile Include="Scripts\Game\UI\KeyColorChanger.cs" />
+    <Compile Include="Scripts\Game\UI\InputColorChanger\KeyColorChanger.cs" />
+    <Compile Include="Scripts\Game\UI\InputColorChanger\StickColorChanger.cs" />
+    <Compile Include="Scripts\Game\UI\InputColorChanger\TriggerColorChanger.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseBackMainMenu.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseCommon.cs" />
     <Compile Include="Scripts\Game\UI\Pause\PauseExitGame.cs" />

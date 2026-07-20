@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": -0.3510005474090576,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,24 +16,13 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 0.800000011920929,
-                "y": 0.320000022649765,
-                "z": 0.10000000149011612
+                "x": 2.0,
+                "y": 1.3333282470703125,
+                "z": 0.020833253860473633
             },
             "type": "Transform"
         },
         {
-            "KeyColorChanger": {
-                "color": {
-                    "w": 1.0,
-                    "x": 0.699999988079071,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "keys": [
-                    57
-                ]
-            },
             "type": "Variables"
         },
         {
@@ -46,7 +35,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "41cc38b8f0507ce94c632206249dc0fa",
+                "baseTextureGuid": "efbec84b1b291b6d376ac5e71fc7f45e",
                 "bloomIntensity": 1.0,
                 "bloomRadius": 12.0,
                 "bloomThreshold": 0.800000011920929,
@@ -66,20 +55,10 @@
                 }
             },
             "type": "SpriteRenderer"
-        },
-        {
-            "enable": 1,
-            "scripts": [
-                {
-                    "enable": true,
-                    "name": "KeyColorChanger"
-                }
-            ],
-            "type": "Script"
         }
     ],
-    "guid": "63acc79f5ef48ee22b7a6103a1ceb26b",
-    "name": "Space",
-    "parentGuid": "6c6ff24fceec80cee23a9c6eb4d73783",
+    "guid": "1aecea4d9919829792f3ac84522b2d2e",
+    "name": "Frame",
+    "parentGuid": "a59bf647014bc3faab12978472ac8a8f",
     "prefabName": ""
 }
