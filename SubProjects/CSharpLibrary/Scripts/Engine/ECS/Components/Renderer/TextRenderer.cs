@@ -38,6 +38,25 @@ class TextRenderer : Component {
 		return batchData;
 	}
 
+	// native から受け取った値を丸ごと取り込む。
+	// 個別プロパティの setter は native 側への書き戻しを伴うので、
+	// 受信時はここで batchData を直接更新する。
+	public void ApplyBatchData(BatchData data) {
+		this.enable = data.enable;
+		batchData.enable = data.enable;
+		batchData.color = data.color;
+		batchData.textureSize = data.textureSize;
+		batchData.uvTransform = data.uvTransform;
+		batchData.horizontalAlignment = data.horizontalAlignment;
+		batchData.verticalAlignment = data.verticalAlignment;
+		batchData.outlineColor = data.outlineColor;
+		batchData.outlineWidth = data.outlineWidth;
+		batchData.shadowColor = data.shadowColor;
+		batchData.shadowOffset = data.shadowOffset;
+		batchData.characterSpacing = data.characterSpacing;
+		batchData.lineSpacing = data.lineSpacing;
+	}
+
 	public override void SyncFromNative(string ecsGroupName) {
 		if (nativeHandle == 0) return;
 

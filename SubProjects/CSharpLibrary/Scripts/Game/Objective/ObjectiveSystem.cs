@@ -78,6 +78,13 @@ public class ObjectiveSystem : MonoScript {
         get { return finished_; }
     }
 
+    // 現在のフェーズが開始済み（PhaseBeganEvent 発行済み）か。
+    // PhaseBeganEvent を取りこぼしうる別 ECSGroup の購読者が、
+    // イベントの代わりに毎フレーム引くための状態。
+    public bool IsPhaseBegan {
+        get { return phaseBegan_; }
+    }
+
     // 任意のフェーズへ飛ぶ（デバッグ・イベント演出・外部スクリプトからの制御用）。
     // 範囲外の index を渡すと進行終了扱いになる。
     // 解決待ち中に呼ばれた場合は待ちを破棄して新しい対象に切り替える。
