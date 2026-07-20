@@ -1,4 +1,5 @@
 #include "RenderingFramework.h"
+#include <iostream>
 
 using namespace ONEngine;
 
@@ -182,7 +183,7 @@ void RenderingFramework::DrawScene() {
 
 	static int drawLogFrameCount = 0;
 	drawLogFrameCount++;
-	if (drawLogFrameCount % 60 == 0) {
+	if (drawLogFrameCount <= 10 || drawLogFrameCount % 60 == 0) {
 		std::string logStr = "[RenderingFramework] Frame " + std::to_string(drawLogFrameCount) + " - Groups to draw in order: ";
 		if (groupsToDraw.empty()) {
 			logStr += "None";
@@ -201,7 +202,7 @@ void RenderingFramework::DrawScene() {
 				logStr += "[" + std::to_string(i) + ": " + name + " (Camera: " + camStatus + ")] ";
 			}
 		}
-		Console::Log(logStr, LogCategory::Engine);
+		std::cout << logStr << std::endl;
 	}
 
 	D3D12_VIEWPORT viewport = { 0.0f, 0.0f, EngineConfig::kWindowSize.x, EngineConfig::kWindowSize.y, 0.0f, 1.0f };
