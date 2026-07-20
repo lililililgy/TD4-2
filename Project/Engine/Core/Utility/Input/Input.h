@@ -115,6 +115,12 @@ public:
 	/// @brief Gamepadの右スティックの値を取得
 	static Vector2 GetGamepadRightThumb();
 
+	/// @brief Gamepadの左トリガーの値を取得（0.0f - 1.0f）
+	static float GetGamepadLeftTrigger();
+
+	/// @brief Gamepadの右トリガーの値を取得（0.0f - 1.0f）
+	static float GetGamepadRightTrigger();
+
 	/// @brief Gamepadの振動を設定する
 	/// @param leftMotorSpeed 左モーターの速度 (0.0f - 1.0f)
 	/// @param rightMotorSpeed 右モーターの速度 (0.0f - 1.0f)

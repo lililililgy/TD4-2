@@ -57,6 +57,8 @@ namespace MonoInternalMethods {
 	void InternalGetMousePosition(float* x, float* y);
 	void InternalGetMouseWheel(float* wheel);
 	void InternalGetGamepadVibration(float* left, float* right);
+	float InternalGetGamepadLeftTrigger();
+	float InternalGetGamepadRightTrigger();
 }
 
 } /// ONEngine

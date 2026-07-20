@@ -42,6 +42,14 @@ static public class Input {
 		return output;
 	}
 
+	static public float GamepadLeftTrigger() {
+		return InternalGetGamepadLeftTrigger();
+	}
+
+	static public float GamepadRightTrigger() {
+		return InternalGetGamepadRightTrigger();
+	}
+
 	static public void SetGamepadVibration(float leftMotorSpeed, float rightMotorSpeed) {
 		InternalSetGamepadVibration(leftMotorSpeed, rightMotorSpeed);
 	}
@@ -135,6 +143,12 @@ static public class Input {
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalGetGamepadThumb(int axisIndex, out float x, out float y);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern float InternalGetGamepadLeftTrigger();
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern float InternalGetGamepadRightTrigger();
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static private extern void InternalSetGamepadVibration(float leftMotorSpeed, float rightMotorSpeed);
