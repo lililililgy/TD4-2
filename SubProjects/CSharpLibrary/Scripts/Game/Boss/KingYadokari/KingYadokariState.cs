@@ -21,11 +21,78 @@ internal sealed class KingYadokariIdleState : IKingYadokariState {
                 return;
             }
 
+            if (attackType == KingYadokariAttackTypeEnum.JumpDrop) {
+                owner.ChangeState(new KingYadokariJumpDropAttackState());
+                return;
+            }
+
             owner.ChangeState(new KingYadokariGiantClawAttackState());
         }
     }
 
     public void Exit(KingYadokari owner) {
+    }
+}
+
+internal sealed class KingYadokariJumpDropAttackState : IKingYadokariState {
+    private enum Phase {
+        Charge,
+        Jump,
+        Aim,
+        Fall
+    }
+
+    private Phase phase_;
+    private float chargeElapsed_;
+    private float aimElapsed_;
+
+    public void Enter(KingYadokari owner) {
+        phase_ = Phase.Charge;
+        chargeElapsed_ = 0.0f;
+        aimElapsed_ = 0.0f;
+        if (!owner.BeginJumpDropAttack()) {
+            owner.ChangeState(new KingYadokariRecoveryState(owner.JumpDropRecoveryDuration));
+        }
+    }
+
+    public void Update(KingYadokari owner) {
+        if (phase_ == Phase.Charge) {
+            chargeElapsed_ += Time.deltaTime;
+            if (chargeElapsed_ >= owner.JumpDropChargeDuration) {
+                phase_ = Phase.Jump;
+            }
+            return;
+        }
+
+        if (phase_ == Phase.Jump) {
+            if (owner.UpdateJumpToOffscreen()) {
+                phase_ = Phase.Aim;
+                aimElapsed_ = 0.0f;
+            }
+            return;
+        }
+
+        if (phase_ == Phase.Aim) {
+            aimElapsed_ += Time.deltaTime;
+            owner.UpdateJumpDropAim(aimElapsed_);
+            if (aimElapsed_ >= owner.JumpDropAimDuration) {
+                if (!owner.BeginJumpDropFall()) {
+                    owner.ChangeState(new KingYadokariRecoveryState(owner.JumpDropRecoveryDuration));
+                    return;
+                }
+
+                phase_ = Phase.Fall;
+            }
+            return;
+        }
+
+        if (owner.UpdateJumpDropFall()) {
+            owner.ChangeState(new KingYadokariRecoveryState(owner.JumpDropRecoveryDuration));
+        }
+    }
+
+    public void Exit(KingYadokari owner) {
+        owner.EndJumpDropAttack();
     }
 }
 

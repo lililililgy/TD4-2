@@ -179,6 +179,7 @@
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishState.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokari.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariGiantClawAttackSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariJumpDropAttackSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariShellBulletAttackSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariState.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariClawState.cs" />
@@ -217,7 +218,6 @@
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
     <Compile Include="Scripts\Game\Movement\TrailFollower.cs" />
     <Compile Include="Scripts\Game\Movement\TrailLeader.cs" />
-    <Compile Include="Scripts\Game\Objective\BossDefeatObjective.cs" />
     <Compile Include="Scripts\Game\Objective\CountObjective.cs" />
     <Compile Include="Scripts\Game\Objective\KillCountObjective.cs" />
     <Compile Include="Scripts\Game\Objective\LevelReachObjective.cs" />
