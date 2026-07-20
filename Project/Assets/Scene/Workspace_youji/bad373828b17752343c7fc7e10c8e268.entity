@@ -23,7 +23,20 @@
             "type": "Transform"
         },
         {
-            "KeyColorChanger": {},
+            "KeyColorChanger": {
+                "color": {
+                    "w": 1.0,
+                    "x": 0.699999988079071,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "keys": [
+                    17,
+                    30,
+                    31,
+                    32
+                ]
+            },
             "type": "Variables"
         },
         {
