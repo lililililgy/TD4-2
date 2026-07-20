@@ -374,67 +374,74 @@ void MonoScriptEngine::Initialize() {
 	_wputenv(monoPathEnvW.c_str());
 
 #if defined(DEBUG_MODE)
-	// Monoの診断ログ出力を詳細化 - staticにしてメモリを永続化
-	static std::string logEnv1 = "MONO_LOG_LEVEL=debug";
-	static std::string logEnv2 = "MONO_LOG_MASK=asm,dll,gc,cfg";
-	SetEnvironmentVariableA("MONO_LOG_LEVEL", "debug");
-	_putenv(logEnv1.c_str());
-	SetEnvironmentVariableA("MONO_LOG_MASK", "asm,dll,gc,cfg");
-	_putenv(logEnv2.c_str());
-
-	// デバッグシーケンスポイント生成を強化 - staticにしてメモリを永続化
-	static std::string debugEnv1 = "MONO_DEBUG=gen-compact-seq-points";
-	SetEnvironmentVariableA("MONO_DEBUG", "gen-compact-seq-points");
-	_putenv(debugEnv1.c_str());
-
-	bool waitDebug = EngineConfig::waitDebug;
-
-	// ポートが既に他のプロセスに占有されているか事前に競合検知
-	if (waitDebug && IsDebugPortInUse(55555)) {
-		Console::LogError("[Mono] WARNING: Debugger port 55555 is ALREADY IN USE by another process! Mono Debugger binding may fail.", LogCategory::ScriptEngine);
-	}
-
-	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
-	static std::string debugAgentOptA;
-	static std::wstring debugAgentOptW;
-	debugAgentOptA = waitDebug 
-		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
-	debugAgentOptW = waitDebug 
-		? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
-
-	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
-	static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
-	static std::wstring monoEnvOptW = L"MONO_ENV_OPTIONS=" + debugAgentOptW;
-	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
-	SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", debugAgentOptW.c_str());
-	_putenv(monoEnvOptA.c_str());
-	_wputenv(monoEnvOptW.c_str());
-
-	static std::string monoOptA = "MONO_OPTIONS=" + debugAgentOptA;
-	static std::wstring monoOptW = L"MONO_OPTIONS=" + debugAgentOptW;
-	SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
-	SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str());
-	_putenv(monoOptA.c_str());
-	_wputenv(monoOptW.c_str());
-
-	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
-
-	// mono_jit_parse_options にもデバッガオプションを確実に渡す (配列のポインタ自体がスコープを抜けても破壊されないようにstatic化)
-	static std::string softBreakpointsOpt = "--soft-breakpoints";
-	static const char* debugOptions[2];
-	debugOptions[0] = softBreakpointsOpt.c_str();
-	debugOptions[1] = debugAgentOptA.c_str();
-	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
-	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
-
-	// デバッガが物理的にアタッチされる前であっても、JIT時に常にデバッグ行情報（シーケンスポイント）を
-	// 生成させるために、Monoのデバッガ接続フラグを強制的にONに設定します。
-	// これにより、waitDebug=false時の後発アタッチや、デバッガ再アタッチ時にもブレイクポイントが確実に効くようになります。
-	// ただし、自動テストモード時はデバッガが接続されず、ソケット送信ブロックによるハングアップが発生するため除外します。
 	if (!EngineConfig::isTestMode) {
+		// Monoの診断ログ出力を詳細化 - staticにしてメモリを永続化
+		static std::string logEnv1 = "MONO_LOG_LEVEL=debug";
+		static std::string logEnv2 = "MONO_LOG_MASK=asm,dll,gc,cfg";
+		SetEnvironmentVariableA("MONO_LOG_LEVEL", "debug");
+		_putenv(logEnv1.c_str());
+		SetEnvironmentVariableA("MONO_LOG_MASK", "asm,dll,gc,cfg");
+		_putenv(logEnv2.c_str());
+
+		// デバッグシーケンスポイント生成を強化 - staticにしてメモリを永続化
+		static std::string debugEnv1 = "MONO_DEBUG=gen-compact-seq-points";
+		SetEnvironmentVariableA("MONO_DEBUG", "gen-compact-seq-points");
+		_putenv(debugEnv1.c_str());
+
+		bool waitDebug = EngineConfig::waitDebug;
+
+		// ポートが既に他のプロセスに占有されているか事前に競合検知
+		if (waitDebug && IsDebugPortInUse(55555)) {
+			Console::LogError("[Mono] WARNING: Debugger port 55555 is ALREADY IN USE by another process! Mono Debugger binding may fail.", LogCategory::ScriptEngine);
+		}
+
+		// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
+		static std::string debugAgentOptA;
+		static std::wstring debugAgentOptW;
+		debugAgentOptA = waitDebug 
+			? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+			: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+		debugAgentOptW = waitDebug 
+			? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+			: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+
+		// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
+		static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
+		static std::wstring monoEnvOptW = L"MONO_ENV_OPTIONS=" + debugAgentOptW;
+		SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
+		SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", debugAgentOptW.c_str());
+		_putenv(monoEnvOptA.c_str());
+		_wputenv(monoEnvOptW.c_str());
+
+		static std::string monoOptA = "MONO_OPTIONS=" + debugAgentOptA;
+		static std::wstring monoOptW = L"MONO_OPTIONS=" + debugAgentOptW;
+		SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
+		SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str());
+		_putenv(monoOptA.c_str());
+		_wputenv(monoOptW.c_str());
+
+		Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
+
+		// mono_jit_parse_options にもデバッガオプションを確実に渡す (配列のポインタ自体がスコープを抜けても破壊されないようにstatic化)
+		static std::string softBreakpointsOpt = "--soft-breakpoints";
+		static const char* debugOptions[2];
+		debugOptions[0] = softBreakpointsOpt.c_str();
+		debugOptions[1] = debugAgentOptA.c_str();
+		mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
+		mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+
+		// デバッガが物理的にアタッチされる前であっても、JIT時に常にデバッグ行情報（シーケンスポイント）を
+		// 生成させるために、Monoのデバッガ接続フラグを強制的にONに設定します。
+		// これにより、waitDebug=false時の後発アタッチや、デバッガ再アタッチ時にもブレイクポイントが確実に効くようになります。
 		mono_set_is_debugger_attached(true);
+	}
+	else {
+		Console::Log("[Mono] Debug Mode: Disabled during automated test to prevent hang", LogCategory::ScriptEngine);
+		// テスト時はデバッガを起動せず、高速化用に最適化オプションを適用
+		const char* options[] = {
+			"--optimize=all",
+		};
+		mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**)options);
 	}
 #else
 	Console::Log("[Mono] Non-Debug Mode: Debugger Disabled (suspend=n)", LogCategory::ScriptEngine);
