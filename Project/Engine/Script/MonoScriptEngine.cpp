@@ -217,7 +217,7 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 		}
 	}
 
-#if defined(DEBUG_MODE) && !defined(DEBUG_BUILD)
+#if defined(DEBUG_MODE)
 	std::string pdbPath = dllPath;
 	size_t extPos = pdbPath.find_last_of('.');
 	if (extPos != std::string::npos) {
@@ -373,7 +373,7 @@ void MonoScriptEngine::Initialize() {
 	_putenv(monoPathEnvA.c_str());
 	_wputenv(monoPathEnvW.c_str());
 
-#if defined(DEBUG_MODE) && !defined(DEBUG_BUILD)
+#if defined(DEBUG_MODE)
 	// Monoの診断ログ出力を詳細化 - staticにしてメモリを永続化
 	static std::string logEnv1 = "MONO_LOG_LEVEL=debug";
 	static std::string logEnv2 = "MONO_LOG_MASK=asm,dll,gc,cfg";
@@ -388,9 +388,6 @@ void MonoScriptEngine::Initialize() {
 	_putenv(debugEnv1.c_str());
 
 	bool waitDebug = EngineConfig::waitDebug;
-	if (EngineConfig::isTestMode) {
-		waitDebug = false;
-	}
 
 	// ポートが既に他のプロセスに占有されているか事前に競合検知
 	if (waitDebug && IsDebugPortInUse(55555)) {
@@ -465,7 +462,7 @@ void MonoScriptEngine::Initialize() {
 		return;
 	}
 
-#if defined(DEBUG_MODE) && !defined(DEBUG_BUILD)
+#if defined(DEBUG_MODE)
 	// ルートドメイン用のデバッグ情報を登録
 	mono_debug_domain_create(rootDomain_);
 #endif
@@ -1011,7 +1008,7 @@ MonoDomain* MonoScriptEngine::CreateReloadDomain() {
 		return nullptr;
 	}
 
-#if defined(DEBUG_MODE) && !defined(DEBUG_BUILD)
+#if defined(DEBUG_MODE)
 	// ホットリロード時の新しいドメイン用のデバッグ情報を登録
 	mono_debug_domain_create(domain);
 #endif
