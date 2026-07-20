@@ -105,7 +105,7 @@ void CollisionSystem::RuntimeUpdate(ECSGroup* ecs) {
 	/// sphere colliderを配列に格納する、インスタンスのnullチェックと有効フラグのチェックを行う
 	if(sphereColliderArray) {
 		for(auto& sphereCollider : sphereColliderArray->GetUsedComponents()) {
-			if(sphereCollider && sphereCollider->enable) {
+			if(CheckComponentEnable(sphereCollider)) {
 				colliders.push_back(sphereCollider);
 			}
 		}
@@ -114,7 +114,7 @@ void CollisionSystem::RuntimeUpdate(ECSGroup* ecs) {
 	/// box colliderを配列に格納する、インスタンスのnullチェックと有効フラグのチェックを行う
 	if(boxColliderArray) {
 		for(auto& boxCollider : boxColliderArray->GetUsedComponents()) {
-			if(boxCollider && boxCollider->enable) {
+			if(CheckComponentEnable(boxCollider)) {
 				colliders.push_back(boxCollider);
 			}
 		}

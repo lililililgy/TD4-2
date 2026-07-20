@@ -13,6 +13,7 @@
 #include "Engine/Core/Utility/Math/Interpolation.h"
 #include "Engine/Script/MonoScriptEngine.h"
 #include "Engine/Core/Config/EngineConfig.h"
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 
 using namespace ONEngine;
 
@@ -58,7 +59,7 @@ void AnimationSystem::Update(ECSGroup* ecs, float deltaTime) {
     auto* ac = Asset::AssetCollection::GetInstance();
 
     for (auto& player : playerArray->GetUsedComponents()) {
-        if (!player || !player->enable) continue;
+        if (!CheckComponentEnable(player)) continue;
         
         // プレイ開始時の自動再生処理 (autoPlay)
 #ifdef DEBUG_MODE

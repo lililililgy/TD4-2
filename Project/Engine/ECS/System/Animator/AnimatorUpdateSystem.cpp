@@ -1,6 +1,7 @@
 #include "AnimatorUpdateSystem.h"
 
 /// engine
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/EntityComponentSystem/ECSGroup.h"
 #include "Engine/ECS/Component/Array/ComponentArray.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
@@ -69,7 +70,7 @@ void AnimatorUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
     Asset::AssetCollection* assetCollection = Asset::AssetCollection::GetInstance();
 
     for (auto& animator : animatorArray->GetUsedComponents()) {
-        if (!animator || !animator->enable || !animator->GetOwner()->active) continue;
+        if (!CheckComponentEnable(animator)) continue;
 
         SkinMeshRenderer* skinMesh = animator->GetOwner()->GetComponent<SkinMeshRenderer>();
         
