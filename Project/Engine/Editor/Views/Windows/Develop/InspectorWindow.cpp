@@ -46,6 +46,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/VoxelTerrain/VoxelTerrain.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Agent/AgentIntentComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animator/Animator.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Rigidbody2D/Rigidbody2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Animation/AnimationPlayer.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
@@ -92,6 +93,7 @@ InspectorWindow::InspectorWindow(const std::string& windowName, DxManager* dxm, 
 	RegisterComponent<AgentIntentComponent>(ComponentType::Compute, [&](AgentIntentComponent* comp) { ComponentDebug::AgentIntentComponentDebug(comp); });
 	RegisterComponentMulti<Animator>(ComponentType::Compute, [&](const std::vector<Animator*>& comps) { ComponentDebug::AnimatorDebug(comps); });
 	RegisterComponent<UIGroupComponent>(ComponentType::Compute, [&](UIGroupComponent* comp) { ComponentDebug::UIGroupComponentInspectorDebug(comp); });
+	RegisterComponent<Rigidbody2D>(ComponentType::Compute, [&](Rigidbody2D* comp) { ComponentDebug::Rigidbody2DDebug(comp); });
 
 	/// light
 	RegisterComponent<DirectionalLight>(ComponentType::Light, [&](DirectionalLight* comp) { DirectionalLightDebug(comp); });
