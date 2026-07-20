@@ -73,8 +73,6 @@ void SceneManager::Initialize(Asset::AssetCollection* assetCollection) {
 	}
 
 	MoveNextToCurrentScene(false);
-
-	pEcs_->MainCameraSetting();
 }
 
 void SceneManager::Update() {
@@ -115,11 +113,18 @@ void SceneManager::SaveCurrentScene() {
 
 void SceneManager::SaveCurrentSceneTemporary() {
 	temporarySavedSceneName_ = currentScene_;
+	temporarySavedAdditiveScenes_.clear();
+	for (const auto& activeName : pEcs_->GetActiveGroupNames()) {
+		if (activeName != currentScene_) {
+			temporarySavedAdditiveScenes_.push_back(activeName);
+		}
+	}
 	sceneIO_->OutputTemporary(pEcs_->GetCurrentGroup());
 }
 
 void SceneManager::ClearTemporarySavedSceneName() {
 	temporarySavedSceneName_.clear();
+	temporarySavedAdditiveScenes_.clear();
 }
 
 void SceneManager::LoadScene(const std::string& sceneName) {
@@ -149,8 +154,12 @@ void SceneManager::AddScene(const std::string& sceneName) {
 
 void SceneManager::ReloadScene(bool isTemporary) {
 	std::string sceneToLoad = currentScene_;
-	if (isTemporary && !temporarySavedSceneName_.empty()) {
-		sceneToLoad = temporarySavedSceneName_;
+	std::vector<std::string> additivesToLoad;
+	if (isTemporary) {
+		if (!temporarySavedSceneName_.empty()) {
+			sceneToLoad = temporarySavedSceneName_;
+		}
+		additivesToLoad = temporarySavedAdditiveScenes_;
 	}
 
 	if (sceneToLoad.empty()) {
@@ -164,6 +173,11 @@ void SceneManager::ReloadScene(bool isTemporary) {
 		return;
 	}
 	MoveNextToCurrentScene(isTemporary);
+
+	/// 追加シーンを再読み込み
+	for (const auto& additiveScene : additivesToLoad) {
+		AddScene(additiveScene);
+	}
 }
 
 SceneIO* SceneManager::GetSceneIO() {
@@ -257,24 +271,30 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 		}
 	}
 
+	bool isAdditive = isNextSceneAdditive_;
 	isNextSceneAdditive_ = false; // Reset the flag
 
-	currentScene_ = std::move(nextScene_);
+	std::string sceneToLoad = std::move(nextScene_);
 	nextScene_.clear();
 
-	ECSGroup* nextSceneGroup = pEcs_->AddECSGroup(GetCurrentSceneName());
+	ECSGroup* nextSceneGroup = pEcs_->AddECSGroup(sceneToLoad);
 	const std::string& sceneName = nextSceneGroup->GetGroupName();
 
-	pEcs_->SetCurrentGroupName(sceneName);
+	if (!isAdditive) {
+		currentScene_ = sceneToLoad;
+		pEcs_->SetCurrentGroupName(sceneName);
+	}
 	pEcs_->AddActiveGroupName(sceneName);
 
 	/// sceneに必要な情報を渡して初期化
 	if (isTemporary) {
 		sceneIO_->InputTemporary(nextSceneGroup);
+		pEcs_->MainCameraSetting();
 		return;
 	}
 
 	sceneIO_->Input(sceneName, nextSceneGroup);
+	pEcs_->MainCameraSetting();
 
 	SetDirty(false);
 
