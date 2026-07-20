@@ -4,6 +4,8 @@ using namespace ONEngine;
 
 /// engine
 #include "AddECSComponentFactoryFunction.h"
+#include "Engine/ECS/System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
+#include "Engine/ECS/System/ParticleSystem2DUpdateSystem/ParticleSystem2DUpdateSystem.h"
 
 ECSGroup::ECSGroup(DxManager* dxm) {
 	/// インスタンスの生成
@@ -61,6 +63,14 @@ void ECSGroup::RemoveEntity(GameEntity* entity, bool deleteChildren) {
 
 void ECSGroup::RemoveEntityAll() {
 	entityCollection_->RemoveEntityAll();
+
+	// ゴーストパーティクルをクリア
+	if (auto* psUpdateSys = GetSystem<ParticleSystemUpdateSystem>()) {
+		psUpdateSys->ClearGhosts();
+	}
+	if (auto* ps2DUpdateSys = GetSystem<ParticleSystem2DUpdateSystem>()) {
+		ps2DUpdateSys->ClearGhosts();
+	}
 }
 
 void ECSGroup::AddDoNotDestroyEntity(GameEntity* entity) {

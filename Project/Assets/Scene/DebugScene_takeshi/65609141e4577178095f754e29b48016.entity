@@ -1,0 +1,15 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": -0.5
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "65609141e4577178095f754e29b48016",
+    "name": "YadokariClaw_Left",
+    "parentGuid": "cce534c42aa14f70adac26931ce67a9e",
+    "prefabName": "YadokariClaw_Left"
+}

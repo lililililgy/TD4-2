@@ -1,0 +1,24 @@
+{
+    "entities": [
+        {
+            "guid": "4f6e72f15f5c2f71a13cb6e0b55a9248",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/4f6e72f15f5c2f71a13cb6e0b55a9248.entity"
+        },
+        {
+            "guid": "fdd14a8c056d126471f6ed804cdec2c2",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/fdd14a8c056d126471f6ed804cdec2c2.entity"
+        },
+        {
+            "guid": "850fcbab879074c83a8e3260f9e89ddd",
+            "parentGuid": "fdd14a8c056d126471f6ed804cdec2c2",
+            "path": "./DebugScene_takeshi/850fcbab879074c83a8e3260f9e89ddd.entity"
+        },
+        {
+            "guid": "cce534c42aa14f70adac26931ce67a9e",
+            "parentGuid": null,
+            "path": "./KingYadokariTest/cce534c42aa14f70adac26931ce67a9e.entity"
+        }
+    ]
+}

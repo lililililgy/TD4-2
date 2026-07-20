@@ -1,0 +1,15 @@
+{
+    "active": true,
+    "components": [
+        {
+            "rotate": {
+                "w": 1.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "c97e848642770a3b71d997d67ced4016",
+    "name": "surfaceOctopusParticle",
+    "parentGuid": null,
+    "prefabName": "surfaceOctopusParticle"
+}

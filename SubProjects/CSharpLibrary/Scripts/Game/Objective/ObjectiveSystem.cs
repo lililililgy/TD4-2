@@ -30,6 +30,8 @@ public class ObjectiveSystem : MonoScript {
     private bool finished_ = false;
     // フェーズエンティティを解決済みか。false の間は Update() で毎フレーム再試行する
     private bool phaseEntityResolved_ = false;
+    // PhaseBeganEvent を発行済みか。PhaseEndedEvent を必ず対で出すために持つ
+    private bool phaseBegan_ = false;
     private List<Objective> activeObjectives_ = new List<Objective>();
 
     public override void Initialize() {
@@ -74,6 +76,13 @@ public class ObjectiveSystem : MonoScript {
     // フェーズ列を最後まで終えた（末尾のフェーズを完了した）か
     public bool IsFinished {
         get { return finished_; }
+    }
+
+    // 現在のフェーズが開始済み（PhaseBeganEvent 発行済み）か。
+    // PhaseBeganEvent を取りこぼしうる別 ECSGroup の購読者が、
+    // イベントの代わりに毎フレーム引くための状態。
+    public bool IsPhaseBegan {
+        get { return phaseBegan_; }
     }
 
     // 任意のフェーズへ飛ぶ（デバッグ・イベント演出・外部スクリプトからの制御用）。
@@ -127,6 +136,11 @@ public class ObjectiveSystem : MonoScript {
             activeObjectives_.Add(objective);
         }
         phaseEntityResolved_ = true;
+
+        // 目標の BeginObjective() を済ませてから通知する。
+        // これで購読側は「目標が動き出した状態」を前提にしてよい。
+        phaseBegan_ = true;
+        MessageBus.Publish(new PhaseBeganEvent(CurrentPhaseName));
     }
 
     // アクティブな目標すべてに EndObjective()（購読解除などの後始末）を呼んでクリアする
@@ -136,5 +150,13 @@ public class ObjectiveSystem : MonoScript {
             objective.EndObjective();
         }
         activeObjectives_.Clear();
+
+        // PhaseBeganEvent を出したフェーズにだけ、対になる終了を通知する
+        // （Initialize() の JumpToPhase(0) でもここを通るため、フラグで空撃ちを防ぐ）。
+        // currentIndex_ を進める前に呼ばれるので、CurrentPhaseName はまだ「終わるフェーズ」を指す。
+        if (phaseBegan_) {
+            phaseBegan_ = false;
+            MessageBus.Publish(new PhaseEndedEvent(CurrentPhaseName));
+        }
     }
 }

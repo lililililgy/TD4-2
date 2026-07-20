@@ -79,6 +79,8 @@ namespace ONEngine {
     struct MinMaxCurve {
         MinMaxState state = MinMaxState::Constant;
         float constant = 1.0f;
+        float constantMin = 0.0f;
+        float constantMax = 1.0f;
         AnimationCurve curve;
         AnimationCurve curveMin;
         AnimationCurve curveMax;
@@ -162,6 +164,11 @@ namespace ONEngine {
         ParticleSystemVelocityOverLifetime() {
             speedModifier.constant = 1.0f;
         }
+    };
+
+    struct ParticleSystemRotationOverLifetime {
+        bool enabled = false;
+        MinMaxCurve angularVelocity;
     };
 
     enum class FlipMode : uint8_t {

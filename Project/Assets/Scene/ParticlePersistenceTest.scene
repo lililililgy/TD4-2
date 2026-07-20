@@ -1,0 +1,14 @@
+{
+    "entities": [
+        {
+            "guid": "8a7fdabd0f57a6816b342502204e6f34",
+            "parentGuid": null,
+            "path": "./ParticlePersistenceTest/camera.entity"
+        },
+        {
+            "guid": "777caa8aab1259afe123ad3b73d83ded",
+            "parentGuid": null,
+            "path": "./ParticlePersistenceTest/particle.entity"
+        }
+    ]
+}

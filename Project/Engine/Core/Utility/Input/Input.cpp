@@ -11,9 +11,11 @@ using namespace ONEngine;
 /// engine
 #include "InputSystem.h"
 #include "Engine/Core/Config/EngineConfig.h"
+#include "Engine/Core/Utility/Time/Time.h"
 
 namespace {
 	std::unique_ptr<InputSystem> gInputSystem_;
+	float vibrationTimer_ = 0.0f;
 } /// namespace
 
 namespace ONEngine::MockInput {
@@ -54,6 +56,8 @@ namespace ONEngine::MockInput {
 	MouseState mockPreMouse;
 	GamepadState mockGamepad;
 	GamepadState mockPreGamepad;
+	float mockLeftVibration = 0.0f;
+	float mockRightVibration = 0.0f;
 
 	void Initialize() {
 		if (isInitialized) return;
@@ -62,6 +66,8 @@ namespace ONEngine::MockInput {
 		currentTestFrame = 0;
 		std::memset(mockKeys, 0, sizeof(mockKeys));
 		std::memset(mockPreKeys, 0, sizeof(mockPreKeys));
+		mockLeftVibration = 0.0f;
+		mockRightVibration = 0.0f;
 		testInputs.clear();
 		
 		if (EngineConfig::testInputPath.empty()) return;
@@ -170,12 +176,20 @@ void Input::Initialize(WindowManager* windowManager, Editor::ImGuiManager* imgui
 	gInputSystem_ = std::make_unique<InputSystem>();
 	gInputSystem_->Initialize(windowManager, imguiManager);
 	MockInput::isInitialized = false;
+	vibrationTimer_ = 0.0f;
 }
 
 void Input::Update() {
 	gInputSystem_->Update();
 	if (EngineConfig::isTestMode) {
 		MockInput::Update();
+	}
+
+	if (vibrationTimer_ > 0.0f) {
+		vibrationTimer_ -= Time::UnscaledDeltaTime();
+		if (vibrationTimer_ <= 0.0f) {
+			SetGamepadVibration(0.0f, 0.0f);
+		}
 	}
 }
 
@@ -309,5 +323,36 @@ const Vector2& Input::GetImGuiImagePos(const std::string& imageName) {
 
 const Vector2& Input::GetImGuiImageSize(const std::string& imageName) {
 	return gInputSystem_->mouse_->GetImGuiImageSize(imageName);
+}
+
+void Input::SetGamepadVibration(float leftMotorSpeed, float rightMotorSpeed) {
+	if (EngineConfig::isTestMode) {
+		MockInput::mockLeftVibration = std::clamp(leftMotorSpeed, 0.0f, 1.0f);
+		MockInput::mockRightVibration = std::clamp(rightMotorSpeed, 0.0f, 1.0f);
+		return;
+	}
+	if (gInputSystem_ && gInputSystem_->gamepad_) {
+		gInputSystem_->gamepad_->SetVibration(leftMotorSpeed, rightMotorSpeed);
+	}
+}
+
+void Input::GetGamepadVibration(float& left, float& right) {
+	if (EngineConfig::isTestMode) {
+		left = MockInput::mockLeftVibration;
+		right = MockInput::mockRightVibration;
+		return;
+	}
+	if (gInputSystem_ && gInputSystem_->gamepad_) {
+		left = gInputSystem_->gamepad_->GetLeftVibration();
+		right = gInputSystem_->gamepad_->GetRightVibration();
+	} else {
+		left = 0.0f;
+		right = 0.0f;
+	}
+}
+
+void Input::PlayGamepadVibration(float leftMotorSpeed, float rightMotorSpeed, float duration) {
+	SetGamepadVibration(leftMotorSpeed, rightMotorSpeed);
+	vibrationTimer_ = duration;
 }
 

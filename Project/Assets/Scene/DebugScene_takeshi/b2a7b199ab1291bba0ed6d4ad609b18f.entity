@@ -1,0 +1,29 @@
+{
+    "active": true,
+    "components": [
+        {
+            "AddSceneScript": {
+                "isAddRequested": true,
+                "sceneName": "GameUIScene"
+            },
+            "type": "Variables"
+        },
+        {
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "GameSceneController"
+                },
+                {
+                    "enable": true,
+                    "name": "AddSceneScript"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "b2a7b199ab1291bba0ed6d4ad609b18f",
+    "name": "GameController",
+    "parentGuid": null,
+    "prefabName": "GameController"
+}

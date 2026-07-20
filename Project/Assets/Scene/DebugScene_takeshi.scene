@@ -39,6 +39,106 @@
             "guid": "fd699c02287ffb7593425d82e7c7add5",
             "parentGuid": "2a75a187cc14795397a4b907fc812b10",
             "path": "./DebugScene_takeshi/fd699c02287ffb7593425d82e7c7add5.entity"
+        },
+        {
+            "guid": "b2a7b199ab1291bba0ed6d4ad609b18f",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/b2a7b199ab1291bba0ed6d4ad609b18f.entity"
+        },
+        {
+            "guid": "ea84975ec301b3dcee0116fca3f76b1b",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/ea84975ec301b3dcee0116fca3f76b1b.entity"
+        },
+        {
+            "guid": "5e6fe5ce02405d7ef477c6c027297fdb",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/5e6fe5ce02405d7ef477c6c027297fdb.entity"
+        },
+        {
+            "guid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/9a240c217f9a6fe470f6c5c3af5e1ad9.entity"
+        },
+        {
+            "guid": "efda3cd83c84909f0afd9cebfa57fa63",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "path": "./DebugScene_takeshi/efda3cd83c84909f0afd9cebfa57fa63.entity"
+        },
+        {
+            "guid": "9e8c6017860216c6330e8a0562708f7f",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "path": "./DebugScene_takeshi/9e8c6017860216c6330e8a0562708f7f.entity"
+        },
+        {
+            "guid": "349dbabd409909a4d10d9711a9159f42",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "path": "./DebugScene_takeshi/349dbabd409909a4d10d9711a9159f42.entity"
+        },
+        {
+            "guid": "52857c49748063e8359a78a714ddf31c",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "path": "./DebugScene_takeshi/52857c49748063e8359a78a714ddf31c.entity"
+        },
+        {
+            "guid": "d3fce46966a69c4d0dd9ac79637ca86a",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "path": "./DebugScene_takeshi/d3fce46966a69c4d0dd9ac79637ca86a.entity"
+        },
+        {
+            "guid": "0904d7e09a94f47ab071fbc09f48fb02",
+            "parentGuid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+            "path": "./DebugScene_takeshi/0904d7e09a94f47ab071fbc09f48fb02.entity"
+        },
+        {
+            "guid": "13f6261efbbe22f150b278ad24482dc1",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/13f6261efbbe22f150b278ad24482dc1.entity"
+        },
+        {
+            "guid": "f8bce2b5e0575abca25011a6d252abc7",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/f8bce2b5e0575abca25011a6d252abc7.entity"
+        },
+        {
+            "guid": "49606b24cabf44f082b38f399f5200e9",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/49606b24cabf44f082b38f399f5200e9.entity"
+        },
+        {
+            "guid": "ea3fbbacef4c82cb9807e72766edb052",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/ea3fbbacef4c82cb9807e72766edb052.entity"
+        },
+        {
+            "guid": "e8901a3ae500327676c848bdc365be2e",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/e8901a3ae500327676c848bdc365be2e.entity"
+        },
+        {
+            "guid": "cce534c42aa14f70adac26931ce67a9e",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/cce534c42aa14f70adac26931ce67a9e.entity"
+        },
+        {
+            "guid": "d2cdf7286b8a5e5bc5ad933744d4f4ad",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/d2cdf7286b8a5e5bc5ad933744d4f4ad.entity"
+        },
+        {
+            "guid": "a14b65d9d20c40aad48d5b087c9b6d5b",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/a14b65d9d20c40aad48d5b087c9b6d5b.entity"
+        },
+        {
+            "guid": "65609141e4577178095f754e29b48016",
+            "parentGuid": "cce534c42aa14f70adac26931ce67a9e",
+            "path": "./DebugScene_takeshi/65609141e4577178095f754e29b48016.entity"
+        },
+        {
+            "guid": "ace547fb01b9d9a68bd495a2ca57145b",
+            "parentGuid": "cce534c42aa14f70adac26931ce67a9e",
+            "path": "./DebugScene_takeshi/ace547fb01b9d9a68bd495a2ca57145b.entity"
         }
     ]
 }

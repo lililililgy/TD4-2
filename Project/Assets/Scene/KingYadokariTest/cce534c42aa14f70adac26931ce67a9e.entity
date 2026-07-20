@@ -1,0 +1,23 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": 500.0,
+                "y": 450.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "cce534c42aa14f70adac26931ce67a9e",
+    "name": "KingYadokari",
+    "parentGuid": null,
+    "prefabName": "KingYadokari"
+}

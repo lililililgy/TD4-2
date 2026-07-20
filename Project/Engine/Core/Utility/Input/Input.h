@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// engine
 #include "Keyboard.h"
@@ -114,6 +114,20 @@ public:
 
 	/// @brief Gamepadの右スティックの値を取得
 	static Vector2 GetGamepadRightThumb();
+
+	/// @brief Gamepadの振動を設定する
+	/// @param leftMotorSpeed 左モーターの速度 (0.0f - 1.0f)
+	/// @param rightMotorSpeed 右モーターの速度 (0.0f - 1.0f)
+	static void SetGamepadVibration(float leftMotorSpeed, float rightMotorSpeed);
+
+	/// @brief Gamepadの振動強さを取得する（検証用）
+	static void GetGamepadVibration(float& left, float& right);
+
+	/// @brief Gamepadを指定時間振動させる
+	/// @param leftMotorSpeed 左モーターの速度 (0.0f - 1.0f)
+	/// @param rightMotorSpeed 右モーターの速度 (0.0f - 1.0f)
+	/// @param duration 振動時間（秒）
+	static void PlayGamepadVibration(float leftMotorSpeed, float rightMotorSpeed, float duration);
 
 };
 

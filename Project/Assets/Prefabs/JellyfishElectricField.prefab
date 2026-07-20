@@ -41,7 +41,7 @@
             },
             "JellyfishElectricField": {
                 "activationDelay": 1.0,
-                "activeDuration": 1.2,
+                "activeDuration": 1.2000000476837158,
                 "damage": 12.0,
                 "radius": 140.0
             },
@@ -66,12 +66,15 @@
             "isPixelPerfect": false,
             "material": {
                 "baseColor": {
-                    "w": 0.35,
+                    "w": 1.0,
                     "x": 1.0,
-                    "y": 0.85,
-                    "z": 0.2
+                    "y": 1.0,
+                    "z": 1.0
                 },
-                "baseTextureGuid": "2b1b8b572356f6c42b296f1a5cd80124",
+                "baseTextureGuid": "4f883331d0262d09420a9cc5a09df410",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -82,7 +85,7 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 1.0,
+                        "x": 0.33000001311302185,
                         "y": 1.0
                     }
                 }
@@ -90,7 +93,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "19b8227a2148479ba3476f323b978432",
+    "guid": "28d47d639d0635c8ac9dd466a76e90f5",
     "name": "JellyfishElectricField",
     "parentGuid": null,
     "prefabName": "JellyfishElectricField"

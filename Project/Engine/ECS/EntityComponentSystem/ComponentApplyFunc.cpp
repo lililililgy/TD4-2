@@ -21,6 +21,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIGroupComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/Rigidbody2D/Rigidbody2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/SphereCollider.h"
@@ -136,6 +137,18 @@ struct SEPlayerBatch {
 	int32_t enable;
 	float volume;
 	float pitch;
+};
+
+struct Rigidbody2DBatch {
+	uint32_t compId;
+	int32_t enable;
+	Vector2 velocity;
+	float mass;
+	float restitution;
+	int32_t useGravity;
+	float gravityScale;
+	int32_t freezeX;
+	int32_t freezeY;
 };
 
 struct BoxColliderBatch {
@@ -559,6 +572,40 @@ void ONEngine::ComponentApplyFuncs::FetchBoxCollider2D(void* element, ECSGroup* 
 	}
 }
 
+void ONEngine::ComponentApplyFuncs::ApplyRigidbody2D(void* element, ECSGroup* ecsGroup) {
+	Rigidbody2DBatch* data = static_cast<Rigidbody2DBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<Rigidbody2D>();
+	if (!array) return;
+
+	if (Rigidbody2D* comp = array->GetComponent(data->compId)) {
+		comp->enable = data->enable;
+		comp->SetVelocity(data->velocity);
+		comp->SetMass(data->mass);
+		comp->SetRestitution(data->restitution);
+		comp->SetUseGravity(data->useGravity != 0);
+		comp->SetGravityScale(data->gravityScale);
+		comp->SetFreezeX(data->freezeX != 0);
+		comp->SetFreezeY(data->freezeY != 0);
+	}
+}
+
+void ONEngine::ComponentApplyFuncs::FetchRigidbody2D(void* element, ECSGroup* ecsGroup) {
+	Rigidbody2DBatch* data = static_cast<Rigidbody2DBatch*>(element);
+	auto* array = ecsGroup->GetComponentArray<Rigidbody2D>();
+	if (!array) return;
+
+	if (Rigidbody2D* comp = array->GetComponent(data->compId)) {
+		data->enable = comp->enable;
+		data->velocity = comp->GetVelocity();
+		data->mass = comp->GetMass();
+		data->restitution = comp->GetRestitution();
+		data->useGravity = comp->GetUseGravity() ? 1 : 0;
+		data->gravityScale = comp->GetGravityScale();
+		data->freezeX = comp->IsFreezeX() ? 1 : 0;
+		data->freezeY = comp->IsFreezeY() ? 1 : 0;
+	}
+}
+
 void ONEngine::ComponentApplyFuncs::ApplyBGMPlayer(void* element, ECSGroup* ecsGroup) {
 	auto* data = static_cast<BGMPlayerBatch*>(element);
 	auto* array = ecsGroup->GetComponentArray<BGMPlayer>();
@@ -785,6 +832,8 @@ size_t ONEngine::ComponentApplyFuncs::GetBatchElementSize(MonoClass* monoClass) 
 	if (className == "UIGroupComponent") return sizeof(UIGroupComponent::BatchData);
 	if (className == "UIElementComponent") return sizeof(UIElementComponent::BatchData);
 	if (className == "BoxCollider2D") return sizeof(BoxCollider2DBatch);
+	if (className == "Rigidbody2D") return sizeof(Rigidbody2DBatch);
+
 	if (className == "BGMPlayer") return sizeof(BGMPlayerBatch);
 	if (className == "SEPlayer") return sizeof(SEPlayerBatch);
 	if (className == "BoxCollider") return sizeof(BoxColliderBatch);
@@ -836,6 +885,8 @@ void ONEngine::ComponentApplyFuncs::Initialize(MonoImage* monoImage) {
 	Register(mono_class_from_name(monoImage, "", "UIGroupComponent"), ApplyUIGroup, FetchUIGroup, sizeof(UIGroupComponent::BatchData));
 	Register(mono_class_from_name(monoImage, "", "UIElementComponent"), ApplyUIElement, FetchUIElement, sizeof(UIElementComponent::BatchData));
 	Register(mono_class_from_name(monoImage, "", "BoxCollider2D"), ApplyBoxCollider2D, FetchBoxCollider2D, sizeof(BoxCollider2DBatch));
+	Register(mono_class_from_name(monoImage, "", "Rigidbody2D"), ApplyRigidbody2D, FetchRigidbody2D, sizeof(Rigidbody2DBatch));
+
 	Register(mono_class_from_name(monoImage, "", "BGMPlayer"), ApplyBGMPlayer, FetchBGMPlayer, sizeof(BGMPlayerBatch));
 	Register(mono_class_from_name(monoImage, "", "SEPlayer"), ApplySEPlayer, FetchSEPlayer, sizeof(SEPlayerBatch));
 	Register(mono_class_from_name(monoImage, "", "BoxCollider"), ApplyBoxCollider, FetchBoxCollider, sizeof(BoxColliderBatch));

@@ -3,7 +3,7 @@ using System;
 // MessageBus で流すゲームイベントの定義置き場。
 
 // 敵(HPで死亡判定される Entity)が撃破された際に HP.Update() から発行される。
-// KillCountObjective が撃破数のカウントに、BossDefeatObjective がボス撃破判定に購読する。
+// KillCountObjective が撃破数のカウント（ボス撃破の判定も含む）に購読する。
 public class EnemyKilledEvent
 {
     public EnemyKilledEvent(string entityName)
@@ -17,7 +17,7 @@ public class EnemyKilledEvent
 
 // プレイヤーが移動入力を入れ始めた（入力なし→ありのエッジ）際に PlayerMoveComponent が発行される。
 // チュートリアルの「移動した」検知に購読する想定。押しっぱなし中は再発行されない。
-public class PlayerMovedEvent
+public class PlayerMovingEvent
 {
 }
 
@@ -31,6 +31,37 @@ public class PlayerShotEvent
 // チュートリアルの「ダッシュした」検知に購読する想定。
 public class PlayerDashedEvent
 {
+}
+
+// ObjectiveSystem がフェーズに突入した際に発行される（各 Objective の BeginObjective() 後）。
+// フェーズごとの敵湧き切り替えやボス出現など、「そのフェーズの開始で何かする」側が購読する。
+//
+// 購読は必ず Awake() で行うこと。ObjectiveSystem.Initialize() が最初の1発を発行するため、
+// Initialize() で購読するとエンティティの並び順次第で初回を取りこぼす
+// （ECSGroup は CallAwake() → CallInitialize() の順に全エンティティを回す）。
+public class PhaseBeganEvent
+{
+    public PhaseBeganEvent(string phaseName)
+    {
+        this.phaseName = phaseName;
+    }
+
+    // 突入したフェーズエンティティ名（例: "Phase_Boss"）
+    public readonly string phaseName;
+}
+
+// ObjectiveSystem がフェーズを離脱した際に発行される。PhaseBeganEvent と必ず対になる
+// （Began を出していないフェーズでは Ended も出ない）。進行終了（末尾のフェーズ完了）時にも出るため、
+// 「フェーズ外では止める」側はこれを見て止められる。
+public class PhaseEndedEvent
+{
+    public PhaseEndedEvent(string phaseName)
+    {
+        this.phaseName = phaseName;
+    }
+
+    // 離脱したフェーズエンティティ名
+    public readonly string phaseName;
 }
 
 // LevelingComponent を持つエンティティ(Player/Roe 等)のレベルが上がった際に

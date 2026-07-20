@@ -1,0 +1,87 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -777.2998657226563,
+                "y": 32.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 132.0,
+                "y": 131.99984741210938,
+                "z": 131.99984741210938
+            },
+            "type": "Transform"
+        },
+        {
+            "ObjectiveProgressForText": {
+                "finishedText_": "---",
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene"
+            },
+            "ShowOnPhase": {
+                "visiblePhases_": [
+                    "BossBattlePhase_1"
+                ]
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ShowOnPhase"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "outlineWidth": 0,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "ダイオウイカ があらわれた",
+            "type": "TextRenderer",
+            "verticalAlignment": 1
+        }
+    ],
+    "guid": "40dbcd7523d752ee169bddcc6b92c8ae",
+    "name": "BossBattlePhase_1",
+    "parentGuid": null,
+    "prefabName": ""
+}

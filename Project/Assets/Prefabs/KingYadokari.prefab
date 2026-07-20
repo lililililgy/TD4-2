@@ -1,0 +1,425 @@
+{
+    "active": true,
+    "children": [
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": -0.5,
+                        "y": -0.20000000298023224,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 0.5,
+                        "y": 0.5,
+                        "z": 0.5
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "AttackCollision": {
+                        "damage_": 0.0,
+                        "destroyOnHit_": false
+                    },
+                    "HP": {
+                        "currentHp_": 80.0,
+                        "directlyDamageable_": true,
+                        "disableAutoDestruction_": true,
+                        "isInvincible_": false,
+                        "maxHp_": 80.0
+                    },
+                    "SpriteAnimation": {
+                        "cols": 2,
+                        "endFrame": 1,
+                        "fps": 5.0,
+                        "invertY": false,
+                        "isLoop": true,
+                        "isPlay": true,
+                        "rows": 1,
+                        "startFrame": 0,
+                        "totalFrames": 2
+                    },
+                    "YadokariGiantClaw": {
+                        "destroyDuration_": 0.20000000298023224,
+                        "ownerEntityName_": "KingYadokari",
+                        "returnDuration_": 0.30000001192092896
+                    },
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "isPixelPerfect": false,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "4af8d9e1c80e828f3c864533e809e4dc",
+                        "bloomIntensity": 1.0,
+                        "bloomRadius": 12.0,
+                        "bloomThreshold": 0.800000011920929,
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                },
+                {
+                    "categoryBits": 8,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 4294967042,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 1.0,
+                        "y": 1.0000001192092896
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": true
+                },
+                {
+                    "enable": 1,
+                    "scripts": [
+                        {
+                            "enable": true,
+                            "name": "YadokariGiantClaw"
+                        },
+                        {
+                            "enable": true,
+                            "name": "AttackCollision"
+                        },
+                        {
+                            "enable": true,
+                            "name": "HP"
+                        },
+                        {
+                            "enable": true,
+                            "name": "SpriteAnimation"
+                        }
+                    ],
+                    "type": "Script"
+                }
+            ],
+            "guid": "65609141e4577178095f754e29b48016",
+            "name": "YadokariClaw_Left",
+            "parentGuid": "cce534c42aa14f70adac26931ce67a9e",
+            "prefabName": "YadokariClaw_Left"
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.5,
+                        "y": -0.20000000298023224,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 0.5,
+                        "y": 0.5,
+                        "z": 0.5
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "AttackCollision": {
+                        "damage_": 0.0,
+                        "destroyOnHit_": false
+                    },
+                    "HP": {
+                        "currentHp_": 80.0,
+                        "directlyDamageable_": true,
+                        "disableAutoDestruction_": true,
+                        "isInvincible_": false,
+                        "maxHp_": 80.0
+                    },
+                    "SpriteAnimation": {
+                        "cols": 2,
+                        "endFrame": 1,
+                        "fps": 5.0,
+                        "invertY": false,
+                        "isLoop": true,
+                        "isPlay": true,
+                        "rows": 1,
+                        "startFrame": 0,
+                        "totalFrames": 2
+                    },
+                    "YadokariGiantClaw": {
+                        "destroyDuration_": 0.20000000298023224,
+                        "ownerEntityName_": "KingYadokari",
+                        "returnDuration_": 0.30000001192092896
+                    },
+                    "type": "Variables"
+                },
+                {
+                    "categoryBits": 8,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 4294967042,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 1.0,
+                        "y": 1.0000001192092896
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": true
+                },
+                {
+                    "enable": 1,
+                    "isPixelPerfect": false,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "4af8d9e1c80e828f3c864533e809e4dc",
+                        "bloomIntensity": 1.0,
+                        "bloomRadius": 12.0,
+                        "bloomThreshold": 0.800000011920929,
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": -1.0,
+                                "y": 1.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                },
+                {
+                    "enable": 1,
+                    "scripts": [
+                        {
+                            "enable": true,
+                            "name": "YadokariGiantClaw"
+                        },
+                        {
+                            "enable": true,
+                            "name": "AttackCollision"
+                        },
+                        {
+                            "enable": true,
+                            "name": "HP"
+                        },
+                        {
+                            "enable": true,
+                            "name": "SpriteAnimation"
+                        }
+                    ],
+                    "type": "Script"
+                }
+            ],
+            "guid": "ace547fb01b9d9a68bd495a2ca57145b",
+            "name": "YadokariClaw_Right",
+            "parentGuid": "cce534c42aa14f70adac26931ce67a9e",
+            "prefabName": "YadokariClaw_Right"
+        }
+    ],
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 500.0,
+                "y": 450.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1060.5,
+                "y": 1060.5,
+                "z": 1060.5
+            },
+            "type": "Transform"
+        },
+        {
+            "HP": {
+                "currentHp_": 200.0,
+                "directlyDamageable_": false,
+                "disableAutoDestruction_": false,
+                "enable": true,
+                "isInvincible_": false,
+                "maxHp_": 200.0
+            },
+            "KingYadokari": {
+                "enable": true,
+                "fixedAttackType": 0,
+                "getUpDuration": 1.0,
+                "idleDuration": 1.5,
+                "knockDownDuration": 4.0,
+                "randomizeAttackType": true,
+                "targetEntityName": "Player"
+            },
+            "KingYadokariGiantClawAttackSettings": {
+                "activeDuration": 0.800000011920929,
+                "damage": 1.0,
+                "enable": true,
+                "launchDistance": 700.0,
+                "launchSpeed": 1200.0,
+                "recoveryDuration": 4.800000190734863,
+                "selectionWeight": 1.0,
+                "tellDuration": 1.0
+            },
+            "KingYadokariShellBulletAttackSettings": {
+                "damage": 1.0,
+                "enable": true,
+                "lifeTime": 7.0,
+                "prefabName": "YadokariShellBullet",
+                "recoveryDuration": 0.800000011920929,
+                "reflectedSpeed": 720.0,
+                "reflectionMinDamage": 1.0,
+                "selectionWeight": 1.0,
+                "spawnOffset": {
+                    "x": 0.0,
+                    "y": -300.0
+                },
+                "speed": 420.0,
+                "tellDuration": 1.0
+            },
+            "SpriteAnimation": {
+                "cols": 4,
+                "endFrame": 1,
+                "fps": 5.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 2
+            },
+            "YadokariWeakPoint": {
+                "enable": true,
+                "ownerEntityName_": "KingYadokari"
+            },
+            "type": "Variables"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 2,
+            "mass": 1.0,
+            "size": {
+                "x": 0.800000011920929,
+                "y": 0.800000011920929
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "632624b2540fe5279d02660dd4099f8d",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KingYadokari"
+                },
+                {
+                    "enable": true,
+                    "name": "YadokariWeakPoint"
+                },
+                {
+                    "enable": true,
+                    "name": "KingYadokariGiantClawAttackSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "KingYadokariShellBulletAttackSettings"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "cce534c42aa14f70adac26931ce67a9e",
+    "name": "KingYadokari",
+    "parentGuid": null,
+    "prefabName": "KingYadokari"
+}

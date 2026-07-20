@@ -125,11 +125,29 @@
                 }
             },
             "renderer": {
-                "blendMode": 0,
+                "blendMode": 1,
                 "flipMode": 0,
                 "materialGuid": "6b19ef90e5548c428a73340dce15203d",
                 "meshGuid": "",
                 "renderMode": 0
+            },
+            "rotationOverLifetime": {
+                "angularVelocity": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "enabled": false
             },
             "shape": {
                 "angle": 25.0,
@@ -148,6 +166,8 @@
                 "enabled": true,
                 "size": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -185,6 +205,8 @@
                 "space": 0,
                 "speedModifier": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -198,6 +220,8 @@
                 },
                 "x": {
                     "constant": 0.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -211,6 +235,8 @@
                 },
                 "y": {
                     "constant": 0.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },
@@ -224,6 +250,8 @@
                 },
                 "z": {
                     "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
                     "curve": {
                         "keys": []
                     },

@@ -1,0 +1,81 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1000.0,
+                "y": 1000.0,
+                "z": 1000.0
+            },
+            "type": "Transform"
+        },
+        {
+            "EnemyHeatMap": {
+                "cellSize_": {
+                    "x": 256.0,
+                    "y": 256.0
+                },
+                "enemies_": [],
+                "enemyCount_": 0
+            },
+            "MovementArea": {
+                "fixedCollisionBounds_": true,
+                "max_": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "min_": {
+                    "x": 0.0,
+                    "y": 0.0
+                }
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "MovementArea"
+                },
+                {
+                    "enable": true,
+                    "name": "EnemyHeatMap"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "categoryBits": 32,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 0,
+            "mass": 1.0,
+            "size": {
+                "x": 64.0,
+                "y": 64.0
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "ea84975ec301b3dcee0116fca3f76b1b",
+    "name": "Stage",
+    "parentGuid": null,
+    "prefabName": ""
+}

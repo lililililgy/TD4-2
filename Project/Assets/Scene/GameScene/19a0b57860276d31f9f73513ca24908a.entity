@@ -1,0 +1,63 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "KillCountObjective": {
+                "targetCount_": 5,
+                "targetEntityName_": ""
+            },
+            "SpawnOnPhaseBegan": {
+                "count_": 5,
+                "phaseName_": "TutorialPhase_Enemy",
+                "prefabName_": "MorayEel",
+                "spawnAroundEntityName_": "Player",
+                "spawnPos_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "spawnRadius_": 600.0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KillCountObjective"
+                },
+                {
+                    "enable": true,
+                    "name": "SpawnOnPhaseBegan"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "19a0b57860276d31f9f73513ca24908a",
+    "name": "TutorialPhase_Enemy",
+    "parentGuid": null,
+    "prefabName": ""
+}

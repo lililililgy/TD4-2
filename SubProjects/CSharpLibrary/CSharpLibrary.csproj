@@ -128,6 +128,7 @@
     <Compile Include="Scripts\Engine\ECS\Components\Compute\BoxCollider2D.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\CameraComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\CircleCollider.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\Rigidbody2D.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\SEPlayer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\SphereCollider.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Transform.cs" />
@@ -176,6 +177,14 @@
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishOmnidirectionalBeamSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishRotatingBeamSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishState.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokari.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariGiantClawAttackSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariShellBulletAttackSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariState.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariClawState.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariGiantClaw.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariShellBullet.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariWeakPoint.cs" />
     <Compile Include="Scripts\Game\Bullet.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
     <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
@@ -283,6 +292,8 @@
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
     <Compile Include="Scripts\Test\RadialBlurTestScript.cs" />
+    <Compile Include="Scripts\Test\Rigidbody2DTestScript.cs" />
+    <Compile Include="Scripts\Test\RumbleTestScript.cs" />
     <Compile Include="Scripts\Test\SpriteRendererCrashTest.cs" />
     <Compile Include="Scripts\Test\TestSceneScript.cs" />
     <Compile Include="Scripts\Test\TextRendererTestScript.cs" />

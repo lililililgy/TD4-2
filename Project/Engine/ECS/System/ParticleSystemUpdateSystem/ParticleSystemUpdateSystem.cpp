@@ -35,6 +35,9 @@ namespace ONEngine {
     static float EvaluateMinMaxCurve(const MinMaxCurve& mmc, float time, float randomValue = 0.5f) {
         switch (mmc.state) {
             case MinMaxState::Constant: return mmc.constant;
+            case MinMaxState::RandomBetweenTwoConstants: {
+                return mmc.constantMin + (mmc.constantMax - mmc.constantMin) * randomValue;
+            }
             case MinMaxState::Curve: return mmc.curve.Evaluate(time);
             case MinMaxState::RandomBetweenTwoCurves: {
                 float vMin = mmc.curveMin.Evaluate(time);
@@ -363,6 +366,11 @@ namespace ONEngine {
                     if (ps->sizeOverLifetime.enabled) {
                         p.size = p.startSize * EvaluateMinMaxCurve(ps->sizeOverLifetime.size, normalizedTime, p.randomValue);
                     }
+                    if (ps->rotationOverLifetime.enabled) {
+                        float angularVelocityDeg = EvaluateMinMaxCurve(ps->rotationOverLifetime.angularVelocity, normalizedTime, p.randomValue);
+                        float angularVelocityRad = angularVelocityDeg * (3.14159265f / 180.0f);
+                        p.rotation += angularVelocityRad * dt;
+                    }
                     i++;
                 }
             }
@@ -523,6 +531,7 @@ namespace ONEngine {
         ghost.colorOverLifetime = ps->colorOverLifetime;
         ghost.sizeOverLifetime = ps->sizeOverLifetime;
         ghost.velocityOverLifetime = ps->velocityOverLifetime;
+        ghost.rotationOverLifetime = ps->rotationOverLifetime;
         ghost.finalWorldMat = worldMat;
 
         ghostSystems_.push_back(std::move(ghost));
@@ -581,6 +590,11 @@ namespace ONEngine {
                     }
                     if (ghost.sizeOverLifetime.enabled) {
                         p.size = p.startSize * EvaluateMinMaxCurve(ghost.sizeOverLifetime.size, normalizedTime, p.randomValue);
+                    }
+                    if (ghost.rotationOverLifetime.enabled) {
+                        float angularVelocityDeg = EvaluateMinMaxCurve(ghost.rotationOverLifetime.angularVelocity, normalizedTime, p.randomValue);
+                        float angularVelocityRad = angularVelocityDeg * (3.14159265f / 180.0f);
+                        p.rotation += angularVelocityRad * dt;
                     }
                     i++;
                 }

@@ -1,68 +1,5 @@
 {
     "active": true,
-    "children": [
-        {
-            "active": true,
-            "components": [
-                {
-                    "enable": 1,
-                    "matrixCalcFlags": 3,
-                    "position": {
-                        "x": 0.0,
-                        "y": -606.2999267578125,
-                        "z": 0.0
-                    },
-                    "rotate": {
-                        "w": 0.0,
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "scale": {
-                        "x": 500.0,
-                        "y": 500.0,
-                        "z": 0.625
-                    },
-                    "type": "Transform"
-                },
-                {
-                    "type": "Variables"
-                },
-                {
-                    "enable": 1,
-                    "isPixelPerfect": false,
-                    "material": {
-                        "baseColor": {
-                            "w": 1.0,
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0
-                        },
-                        "baseTextureGuid": "4f883331d0262d09420a9cc5a09df410",
-                        "guid": "00000000000000000000000000000000",
-                        "normalTextureGuid": "00000000000000000000000000000000",
-                        "postEffectFlags": 0,
-                        "uvTransform": {
-                            "position": {
-                                "x": 0.0,
-                                "y": 0.0
-                            },
-                            "rotate": 0.0,
-                            "scale": {
-                                "x": 0.3400000035762787,
-                                "y": 1.0
-                            }
-                        }
-                    },
-                    "type": "SpriteRenderer"
-                }
-            ],
-            "guid": "d520fbccb58c9ae8cb6c43b99b52b31f",
-            "name": "NewEntity",
-            "parentGuid": "a0e65fa1739efe4cad84dd6a0268ddbb",
-            "prefabName": ""
-        }
-    ],
     "components": [
         {
             "enable": 1,
@@ -79,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 400.0,
-                "y": 764.8001098632813,
-                "z": 1.2899999618530273
+                "x": 435.0592956542969,
+                "y": 831.8331298828125,
+                "z": 1.403064489364624
             },
             "type": "Transform"
         },
@@ -94,6 +31,17 @@
                 "damage": 20.0,
                 "duration": 0.6000000238418579,
                 "width": 180.0
+            },
+            "SpriteAnimation": {
+                "cols": 8,
+                "endFrame": 1,
+                "fps": 7.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 0,
+                "startFrame": 0,
+                "totalFrames": 1
             },
             "type": "Variables"
         },
@@ -112,34 +60,6 @@
             "type": "Script"
         },
         {
-            "enable": 1,
-            "isPixelPerfect": false,
-            "material": {
-                "baseColor": {
-                    "w": 0.8784313797950745,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "baseTextureGuid": "2b1b8b572356f6c42b296f1a5cd80124",
-                "guid": "00000000000000000000000000000000",
-                "normalTextureGuid": "00000000000000000000000000000000",
-                "postEffectFlags": 0,
-                "uvTransform": {
-                    "position": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "rotate": 0.0,
-                    "scale": {
-                        "x": 1.0,
-                        "y": 1.0
-                    }
-                }
-            },
-            "type": "SpriteRenderer"
-        },
-        {
             "categoryBits": 8,
             "enable": 1,
             "freezeY": false,
@@ -153,9 +73,40 @@
             "state": "Static",
             "type": "BoxCollider2D",
             "useOwnerScale": true
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 0.8784313797950745,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "6b19ef90e5548c428a73340dce15203d",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 1.5,
+                    "scale": {
+                        "x": 0.699999988079071,
+                        "y": 0.44999998807907104
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
         }
     ],
-    "guid": "a0e65fa1739efe4cad84dd6a0268ddbb",
+    "guid": "3fc76bc55195c9458002449fbd62c40f",
     "name": "JellyfishChargeDamageField",
     "parentGuid": null,
     "prefabName": "JellyfishChargeDamageField"

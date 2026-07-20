@@ -1,0 +1,63 @@
+{
+    "active": true,
+    "components": [
+        {
+            "absorptionCoefficients": [
+                0.04100000113248825,
+                0.0,
+                0.0
+            ],
+            "lightDirection": [
+                0.6570000052452087,
+                -1.0,
+                0.30000001192092896
+            ],
+            "pixelSizeX": 3.0,
+            "pixelSizeY": 3.0,
+            "postEffectHeight": -1,
+            "postEffectPivot": 0,
+            "postEffectStartX": 0,
+            "postEffectStartY": 0,
+            "postEffectWidth": -1,
+            "postEffects": [
+                {
+                    "enabled": false,
+                    "type": 0
+                },
+                {
+                    "enabled": false,
+                    "type": 1
+                },
+                {
+                    "enabled": true,
+                    "type": 2
+                },
+                {
+                    "enabled": true,
+                    "type": 3
+                },
+                {
+                    "enabled": true,
+                    "type": 4
+                },
+                {
+                    "enabled": true,
+                    "type": 5
+                },
+                {
+                    "enabled": true,
+                    "type": 6
+                },
+                {
+                    "enabled": false,
+                    "type": 7
+                }
+            ],
+            "type": "ScreenPostEffectTag"
+        }
+    ],
+    "guid": "9a240c217f9a6fe470f6c5c3af5e1ad9",
+    "name": "Background",
+    "parentGuid": null,
+    "prefabName": "Background"
+}

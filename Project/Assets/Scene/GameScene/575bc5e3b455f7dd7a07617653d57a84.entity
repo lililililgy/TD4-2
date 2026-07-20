@@ -1,0 +1,49 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "DashCountObjective": {
+                "targetCount_": 3
+            },
+            "PhaseSpawnActivator": {
+                "activePhases_": []
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "DashCountObjective"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "575bc5e3b455f7dd7a07617653d57a84",
+    "name": "TutorialPhase_Dash",
+    "parentGuid": null,
+    "prefabName": ""
+}
