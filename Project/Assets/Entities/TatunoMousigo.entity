@@ -1,0 +1,15 @@
+{
+    "active": true,
+    "components": [
+        {
+            "TatunoMousigo": {
+                "moveSpeed": 220.0
+            },
+            "type": "Variables"
+        }
+    ],
+    "guid": "353a89b82aa34b4bbdbaebd61ee7722e",
+    "name": "TatunoMousigo",
+    "parentGuid": null,
+    "prefabName": "TatunoMousigo"
+}

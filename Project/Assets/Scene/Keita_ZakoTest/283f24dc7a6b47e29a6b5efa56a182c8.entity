@@ -1,5 +1,15 @@
 {
     "active": true,
+    "components": [
+        {
+            "material": {
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
     "guid": "283f24dc7a6b47e29a6b5efa56a182c8",
     "name": "FlapjackOctopus",
     "parentGuid": null,

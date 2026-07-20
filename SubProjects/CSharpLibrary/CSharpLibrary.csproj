@@ -180,11 +180,12 @@
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariGiantClawAttackSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariShellBulletAttackSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariState.cs" />
-    <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariGiantClaw.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariClawState.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariGiantClaw.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariShellBullet.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariWeakPoint.cs" />
     <Compile Include="Scripts\Game\Bullet.cs" />
+    <Compile Include="Scripts\Game\Camera\CameraShake.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
     <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
     <Compile Include="Scripts\Game\Common\Attractor.cs" />
@@ -249,6 +250,7 @@
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFish.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishAroundNeedle.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishNeedle.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\TatunoMousigo\TatunoMousigo.cs" />
     <Compile Include="Scripts\Game\Stage\MovementArea.cs" />
     <Compile Include="Scripts\Game\Stage\MovementAreaClamper.cs" />
     <Compile Include="Scripts\Game\Test\InheritSerializeFieldTestScript.cs" />

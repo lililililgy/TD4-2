@@ -11,6 +11,14 @@
                 "rampUpEaseTime": 7.0
             },
             "type": "Variables"
+        },
+        {
+            "material": {
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "a90c95a9be33cee0c1f0fa7d835a7a73",
