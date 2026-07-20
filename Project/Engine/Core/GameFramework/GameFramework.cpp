@@ -483,6 +483,8 @@ void GameFramework::Update() {
 					}
 				}
 			}
+		}
+
 		if (EngineConfig::testScene == "EntityActiveTest") {
 			auto* ecsGroup = entityComponentSystem_->GetECSGroup("EntityActiveTest");
 			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'EntityActiveTest' should not be null");
