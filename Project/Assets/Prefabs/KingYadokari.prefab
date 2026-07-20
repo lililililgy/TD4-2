@@ -122,6 +122,20 @@
                         }
                     ],
                     "type": "Script"
+                },
+                {
+                    "enable": 1,
+                    "freezeX": false,
+                    "freezeY": false,
+                    "gravityScale": 1.0,
+                    "mass": 1.0,
+                    "restitution": 0.5,
+                    "type": "Rigidbody2D",
+                    "useGravity": false,
+                    "velocity": {
+                        "x": 0.0,
+                        "y": 0.0
+                    }
                 }
             ],
             "guid": "65609141e4577178095f754e29b48016",
@@ -281,6 +295,10 @@
             "type": "Transform"
         },
         {
+            "AttackCollision": {
+                "damage_": 0.0,
+                "destroyOnHit_": false
+            },
             "HP": {
                 "currentHp_": 200.0,
                 "directlyDamageable_": false,
@@ -307,6 +325,20 @@
                 "recoveryDuration": 4.800000190734863,
                 "selectionWeight": 1.0,
                 "tellDuration": 1.0
+            },
+            "KingYadokariJumpDropAttackSettings": {
+                "aimDuration": 1.2000000476837158,
+                "cameraEntityName": "MainCamera",
+                "chargeDuration": 0.800000011920929,
+                "damage": 3.0,
+                "enable": true,
+                "fallSpeed": 2600.0,
+                "fallThroughDistance": 300.0,
+                "jumpSpeed": 1600.0,
+                "offscreenOffset": 700.0,
+                "recoveryDuration": 0.800000011920929,
+                "screenHalfHeight": 720.0,
+                "selectionWeight": 1.0
             },
             "KingYadokariShellBulletAttackSettings": {
                 "damage": 1.0,
@@ -342,21 +374,6 @@
             "type": "Variables"
         },
         {
-            "categoryBits": 8,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 2,
-            "mass": 1.0,
-            "size": {
-                "x": 0.800000011920929,
-                "y": 0.800000011920929
-            },
-            "state": "Static",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
-        },
-        {
             "enable": 1,
             "isPixelPerfect": false,
             "material": {
@@ -388,6 +405,21 @@
             "type": "SpriteRenderer"
         },
         {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 18,
+            "mass": 1.0,
+            "size": {
+                "x": 0.800000011920929,
+                "y": 0.800000011920929
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        },
+        {
             "enable": 1,
             "scripts": [
                 {
@@ -404,6 +436,10 @@
                 },
                 {
                     "enable": true,
+                    "name": "KingYadokariJumpDropAttackSettings"
+                },
+                {
+                    "enable": true,
                     "name": "KingYadokariShellBulletAttackSettings"
                 },
                 {
@@ -413,9 +449,27 @@
                 {
                     "enable": true,
                     "name": "SpriteAnimation"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
                 }
             ],
             "type": "Script"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
     "guid": "cce534c42aa14f70adac26931ce67a9e",
