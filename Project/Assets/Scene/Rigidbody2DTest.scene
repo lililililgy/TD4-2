@@ -1,14 +1,19 @@
 {
     "entities": [
         {
+            "guid": "1b94d2667886a6d2ba32064a1ceebb25",
+            "parentGuid": null,
+            "path": "./Rigidbody2DTest/1b94d2667886a6d2ba32064a1ceebb25.entity"
+        },
+        {
             "guid": "e0000000000000000000000000000001",
             "parentGuid": null,
-            "path": "./Rigidbody2DTest/entityA.entity"
+            "path": "./Rigidbody2DTest/e0000000000000000000000000000001.entity"
         },
         {
             "guid": "e0000000000000000000000000000002",
             "parentGuid": null,
-            "path": "./Rigidbody2DTest/entityB.entity"
+            "path": "./Rigidbody2DTest/e0000000000000000000000000000002.entity"
         }
     ]
 }
