@@ -22,8 +22,14 @@ public class EnemyMoveComponent : MonoScript {
     private Mover mover_;
     private MoveParam moveParam_;
 
+    // 速度の書き出し先。持たない敵プレハブが多いので、ここで一度だけ引いて null なら null のまま使う。
+    // 毎フレーム引き直すと、持っていない敵の数だけ native 呼び出しが走る（GetComponent は
+    // 見つからなかった結果をキャッシュしないため）。
+    private Rigidbody2D rigidbody_;
+
     public override void Initialize() {
         mover_ = new Mover(paramReleaseSmoothTime_, paramReleaseMaxSmoothSpeed_);
+        rigidbody_ = entity.GetComponent<Rigidbody2D>();
         // 敵は常にターゲット方向（最終的な進行方向）を直接 Mover へ渡すので、
         // canMove/moveForward の解釈は不要（Mover も解釈しない）。
         moveParam_ = new MoveParam {
@@ -53,6 +59,6 @@ public class EnemyMoveComponent : MonoScript {
             }
         }
 
-        mover_.Move(transform, desiredDir, moveParam_);
+        mover_.Move(transform, rigidbody_, desiredDir, moveParam_);
     }
 }

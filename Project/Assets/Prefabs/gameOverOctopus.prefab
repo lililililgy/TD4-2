@@ -6,11 +6,11 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "y": -720.0,
+                "z": 0.5
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
                 "y": 0.0,
                 "z": 0.0
@@ -29,44 +29,8 @@
             "colorOverLifetime": {
                 "color": {
                     "gradient": {
-                        "alphaKeys": [
-                            {
-                                "alpha": 1.0,
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 0.0
-                            },
-                            {
-                                "alpha": 0.6000000238418579,
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 1.0
-                            }
-                        ],
-                        "colorKeys": [
-                            {
-                                "color": {
-                                    "a": 1.0,
-                                    "b": 1.0,
-                                    "g": 1.0,
-                                    "r": 1.0
-                                },
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 0.0
-                            },
-                            {
-                                "color": {
-                                    "a": 1.0,
-                                    "b": 1.0,
-                                    "g": 0.7534976005554199,
-                                    "r": 0.44086021184921265
-                                },
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 1.0
-                            }
-                        ]
+                        "alphaKeys": [],
+                        "colorKeys": []
                     },
                     "gradientMax": {
                         "alphaKeys": [],
@@ -78,13 +42,13 @@
                     },
                     "state": 0
                 },
-                "enabled": true
+                "enabled": false
             },
             "emission": {
                 "bursts": [],
                 "enabled": true,
                 "rateOverDistance": 0.0,
-                "rateOverTime": 30.0
+                "rateOverTime": 1.0
             },
             "enable": 1,
             "main": {
@@ -117,13 +81,13 @@
                     "state": 0
                 },
                 "startDelay": {
-                    "constant": 0.0,
+                    "constant": 2.0,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
                 },
                 "startLifetime": {
-                    "constant": 1.0,
+                    "constant": 7.5,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
@@ -135,29 +99,29 @@
                     "state": 0
                 },
                 "startSize": {
-                    "constant": 50.0,
+                    "constant": 64.0,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
                 },
                 "startSpeed": {
-                    "constant": 124.19999694824219,
-                    "max": 200.0,
-                    "min": 30.0,
-                    "state": 1
+                    "constant": 5.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
                 }
             },
             "renderer": {
                 "alignment": 1,
-                "blendMode": 1,
+                "blendMode": 0,
                 "flipMode": 0,
-                "materialGuid": "6b19ef90e5548c428a73340dce15203d",
+                "materialGuid": "4dbfa96c01a2c1ff7b4d182af8d8e545",
                 "meshGuid": "",
                 "renderMode": 0
             },
             "rotationOverLifetime": {
                 "angularVelocity": {
-                    "constant": 25.0,
+                    "constant": 1.0,
                     "constantMax": 1.0,
                     "constantMin": 0.0,
                     "curve": {
@@ -177,14 +141,14 @@
                 "angle": 25.0,
                 "arc": 360.0,
                 "boxScale": {
-                    "x": 1.0,
+                    "x": 1200.0,
                     "y": 1.0,
                     "z": 1.0
                 },
                 "enabled": true,
                 "radius": 1.0,
                 "radiusThickness": 1.0,
-                "type": 0
+                "type": 3
             },
             "sizeOverLifetime": {
                 "enabled": true,
@@ -196,61 +160,23 @@
                         "keys": []
                     },
                     "curveMax": {
-                        "keys": [
-                            {
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 0.0,
-                                "value": 0.30000001192092896
-                            },
-                            {
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 0.75,
-                                "value": 1.5
-                            },
-                            {
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 1.0,
-                                "value": 0.10000000149011612
-                            }
-                        ]
+                        "keys": []
                     },
                     "curveMin": {
-                        "keys": [
-                            {
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 0.0,
-                                "value": 0.30000001192092896
-                            },
-                            {
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 0.75,
-                                "value": 1.5
-                            },
-                            {
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 1.0,
-                                "value": 0.10000000149011612
-                            }
-                        ]
+                        "keys": []
                     },
-                    "state": 3
+                    "state": 2
                 }
             },
             "textureSheetAnimation": {
                 "enabled": true,
-                "fps": 12.0,
-                "tilesX": 4,
+                "fps": 6.0,
+                "tilesX": 9,
                 "tilesY": 1
             },
             "type": "ParticleSystem2D",
             "velocityOverLifetime": {
-                "enabled": false,
+                "enabled": true,
                 "space": 0,
                 "speedModifier": {
                     "constant": 1.0,
@@ -269,8 +195,8 @@
                 },
                 "x": {
                     "constant": 1.0,
-                    "constantMax": 1.0,
-                    "constantMin": 0.0,
+                    "constantMax": 50.0,
+                    "constantMin": -50.0,
                     "curve": {
                         "keys": []
                     },
@@ -280,12 +206,12 @@
                     "curveMin": {
                         "keys": []
                     },
-                    "state": 0
+                    "state": 1
                 },
                 "y": {
                     "constant": 1.0,
-                    "constantMax": 1.0,
-                    "constantMin": 0.0,
+                    "constantMax": 300.0,
+                    "constantMin": 200.0,
                     "curve": {
                         "keys": []
                     },
@@ -295,7 +221,7 @@
                     "curveMin": {
                         "keys": []
                     },
-                    "state": 0
+                    "state": 1
                 },
                 "z": {
                     "constant": 1.0,
@@ -315,8 +241,8 @@
             }
         }
     ],
-    "guid": "c91aa77b5824794d8845156d183eb036",
-    "name": "sparkParticle",
+    "guid": "9f8184808bb5e2cae9c4ac7bd5ecc61d",
+    "name": "gameOverOctopus",
     "parentGuid": null,
-    "prefabName": "sparkParticle"
+    "prefabName": "gameOverOctopus"
 }

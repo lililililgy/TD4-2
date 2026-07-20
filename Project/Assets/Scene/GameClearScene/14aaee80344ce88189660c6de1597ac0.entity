@@ -1,5 +1,13 @@
 {
     "active": true,
+    "components": [
+        {
+            "position": {
+                "z": -100.0
+            },
+            "type": "Transform"
+        }
+    ],
     "guid": "14aaee80344ce88189660c6de1597ac0",
     "name": "GameClearUI",
     "parentGuid": null,

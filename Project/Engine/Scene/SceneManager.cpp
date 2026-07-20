@@ -19,6 +19,7 @@ using namespace ONEngine;
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 #include "Engine/ECS/System/Audio/AudioPlaybackSystem.h"
+#include "Engine/Script/MonoScriptEngine.h"
 
 
 namespace {
@@ -244,11 +245,17 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 	ECSGroup* prevSceneGroup = pEcs_->GetCurrentGroup();
 	if (!isNextSceneAdditive_) {
 		// Clear all active scenes
+		// NOTE: C++のエンティティ破棄はC#へ通知されないため、先にC#側の保持を捨てさせる。
+		// これを省くと entities_ に旧シーンのエンティティが残り、IDが使い回された際に
+		// ECSGroup.AddEntity() が早期returnして、旧シーンのMonoScriptインスタンスが
+		// 状態を保ったまま再利用される（Initialize()も呼ばれない）。
+		// ネイティブ側がまだ生きているうちに呼ぶことで、OnDestroy() から安全に参照できる。
 		if (pEcs_->GetActiveGroupNames().empty()) {
 			if (prevSceneGroup) {
 				if (auto* audioSys = prevSceneGroup->GetSystem<AudioPlaybackSystem>()) {
 					audioSys->StopAllAudio();
 				}
+				MonoScriptEngine::GetInstance().ClearEntitiesFromNativeCS(prevSceneGroup->GetGroupName());
 				prevSceneGroup->RemoveEntityAll();
 			}
 		} else {
@@ -257,6 +264,7 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 					if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
 						audioSys->StopAllAudio();
 					}
+					MonoScriptEngine::GetInstance().ClearEntitiesFromNativeCS(activeName);
 					group->RemoveEntityAll();
 				}
 			}

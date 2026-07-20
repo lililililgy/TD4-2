@@ -7,7 +7,7 @@
             "position": {
                 "x": 0.0,
                 "y": 201.9000244140625,
-                "z": 0.0
+                "z": -100.0
             },
             "rotate": {
                 "w": 0.0,
@@ -36,6 +36,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "43b9444c09467c88a9b3d982923f2d16",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
