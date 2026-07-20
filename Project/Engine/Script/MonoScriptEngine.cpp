@@ -1,4 +1,4 @@
-#include <winsock2.h>
+﻿#include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
@@ -47,18 +47,18 @@ namespace {
 // ポート 55555 に対する TCP 接続 (ESTABLISHED) が存在するかどうかを判定
 bool IsDebuggerAttachedViaTcp() {
 	ULONG size = 0;
-	if (GetExtendedTcpTable(NULL, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) != ERROR_INSUFFICIENT_BUFFER) {
+	if(GetExtendedTcpTable(NULL, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) != ERROR_INSUFFICIENT_BUFFER) {
 		return false;
 	}
 
 	std::vector<char> buffer(size);
 	PMIB_TCPTABLE_OWNER_PID tcpTable = reinterpret_cast<PMIB_TCPTABLE_OWNER_PID>(buffer.data());
 
-	if (GetExtendedTcpTable(tcpTable, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) == NO_ERROR) {
-		for (DWORD i = 0; i < tcpTable->dwNumEntries; ++i) {
+	if(GetExtendedTcpTable(tcpTable, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) == NO_ERROR) {
+		for(DWORD i = 0; i < tcpTable->dwNumEntries; ++i) {
 			USHORT localPort = ntohs((USHORT)tcpTable->table[i].dwLocalPort);
-			if (localPort == 55555) {
-				if (tcpTable->table[i].dwState == MIB_TCP_STATE_ESTAB) {
+			if(localPort == 55555) {
+				if(tcpTable->table[i].dwState == MIB_TCP_STATE_ESTAB) {
 					return true;
 				}
 			}
@@ -70,7 +70,7 @@ bool IsDebuggerAttachedViaTcp() {
 // ポート 55555 に対する TCP コネクション状態を詳細ログ出力する
 void LogTcpConnections() {
 	ULONG size = 0;
-	if (GetExtendedTcpTable(NULL, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) != ERROR_INSUFFICIENT_BUFFER) {
+	if(GetExtendedTcpTable(NULL, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) != ERROR_INSUFFICIENT_BUFFER) {
 		Console::LogWarning("[MonoDbg] Failed to query size of ExtendedTcpTable", LogCategory::ScriptEngine);
 		return;
 	}
@@ -78,38 +78,38 @@ void LogTcpConnections() {
 	std::vector<char> buffer(size);
 	PMIB_TCPTABLE_OWNER_PID tcpTable = reinterpret_cast<PMIB_TCPTABLE_OWNER_PID>(buffer.data());
 
-	if (GetExtendedTcpTable(tcpTable, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) == NO_ERROR) {
+	if(GetExtendedTcpTable(tcpTable, &size, FALSE, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) == NO_ERROR) {
 		Console::Log("[MonoDbg] Dump TCP Connections on Port 55555 (Total entries: " + std::to_string(tcpTable->dwNumEntries) + "):", LogCategory::ScriptEngine);
 		bool found = false;
-		for (DWORD i = 0; i < tcpTable->dwNumEntries; ++i) {
+		for(DWORD i = 0; i < tcpTable->dwNumEntries; ++i) {
 			USHORT localPort = ntohs((USHORT)tcpTable->table[i].dwLocalPort);
 			USHORT remotePort = ntohs((USHORT)tcpTable->table[i].dwRemotePort);
-			if (localPort == 55555 || remotePort == 55555) {
+			if(localPort == 55555 || remotePort == 55555) {
 				found = true;
 				std::string stateStr;
-				switch (tcpTable->table[i].dwState) {
-					case MIB_TCP_STATE_CLOSED: stateStr = "CLOSED"; break;
-					case MIB_TCP_STATE_LISTEN: stateStr = "LISTEN"; break;
-					case MIB_TCP_STATE_SYN_SENT: stateStr = "SYN_SENT"; break;
-					case MIB_TCP_STATE_SYN_RCVD: stateStr = "SYN_RCVD"; break;
-					case MIB_TCP_STATE_ESTAB: stateStr = "ESTABLISHED"; break;
-					case MIB_TCP_STATE_FIN_WAIT1: stateStr = "FIN_WAIT1"; break;
-					case MIB_TCP_STATE_FIN_WAIT2: stateStr = "FIN_WAIT2"; break;
-					case MIB_TCP_STATE_CLOSE_WAIT: stateStr = "CLOSE_WAIT"; break;
-					case MIB_TCP_STATE_CLOSING: stateStr = "CLOSING"; break;
-					case MIB_TCP_STATE_LAST_ACK: stateStr = "LAST_ACK"; break;
-					case MIB_TCP_STATE_TIME_WAIT: stateStr = "TIME_WAIT"; break;
-					case MIB_TCP_STATE_DELETE_TCB: stateStr = "DELETE_TCB"; break;
-					default: stateStr = "UNKNOWN (" + std::to_string(tcpTable->table[i].dwState) + ")"; break;
+				switch(tcpTable->table[i].dwState) {
+				case MIB_TCP_STATE_CLOSED: stateStr = "CLOSED"; break;
+				case MIB_TCP_STATE_LISTEN: stateStr = "LISTEN"; break;
+				case MIB_TCP_STATE_SYN_SENT: stateStr = "SYN_SENT"; break;
+				case MIB_TCP_STATE_SYN_RCVD: stateStr = "SYN_RCVD"; break;
+				case MIB_TCP_STATE_ESTAB: stateStr = "ESTABLISHED"; break;
+				case MIB_TCP_STATE_FIN_WAIT1: stateStr = "FIN_WAIT1"; break;
+				case MIB_TCP_STATE_FIN_WAIT2: stateStr = "FIN_WAIT2"; break;
+				case MIB_TCP_STATE_CLOSE_WAIT: stateStr = "CLOSE_WAIT"; break;
+				case MIB_TCP_STATE_CLOSING: stateStr = "CLOSING"; break;
+				case MIB_TCP_STATE_LAST_ACK: stateStr = "LAST_ACK"; break;
+				case MIB_TCP_STATE_TIME_WAIT: stateStr = "TIME_WAIT"; break;
+				case MIB_TCP_STATE_DELETE_TCB: stateStr = "DELETE_TCB"; break;
+				default: stateStr = "UNKNOWN (" + std::to_string(tcpTable->table[i].dwState) + ")"; break;
 				}
 				Console::Log("[MonoDbg]   Entry: LocalPort=" + std::to_string(localPort) +
-					", RemotePort=" + std::to_string(remotePort) +
-					", State=" + stateStr +
-					", PID=" + std::to_string(tcpTable->table[i].dwOwningPid),
-					LogCategory::ScriptEngine);
+							 ", RemotePort=" + std::to_string(remotePort) +
+							 ", State=" + stateStr +
+							 ", PID=" + std::to_string(tcpTable->table[i].dwOwningPid),
+							 LogCategory::ScriptEngine);
 			}
 		}
-		if (!found) {
+		if(!found) {
 			Console::Log("[MonoDbg]   No connections found on port 55555.", LogCategory::ScriptEngine);
 		}
 	} else {
@@ -120,11 +120,11 @@ void LogTcpConnections() {
 // デバッグ用ポート競合検知関数
 bool IsDebugPortInUse(unsigned short port) {
 	WSADATA wsaData;
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+	if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
 		return false;
 	}
 	SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (s == INVALID_SOCKET) {
+	if(s == INVALID_SOCKET) {
 		WSACleanup();
 		return false;
 	}
@@ -135,9 +135,9 @@ bool IsDebugPortInUse(unsigned short port) {
 	addr.sin_port = htons(port);
 
 	bool inUse = false;
-	if (bind(s, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) {
+	if(bind(s, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) {
 		int err = WSAGetLastError();
-		if (err == WSAEADDRINUSE) {
+		if(err == WSAEADDRINUSE) {
 			inUse = true;
 		}
 	}
@@ -172,7 +172,7 @@ void ApplicationQuit() {
 MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dllPath, std::vector<char>& outPdbBuffer) {
 	// アセンブリのロード開始時の診断ログを出力
 	Console::Log("[Mono] LoadAssemblyWithSymbols started for: " + dllPath, LogCategory::ScriptEngine);
-	if (std::filesystem::exists(dllPath)) {
+	if(std::filesystem::exists(dllPath)) {
 		auto ftime = std::filesystem::last_write_time(dllPath);
 		auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
 		std::time_t ctime = std::chrono::system_clock::to_time_t(sctp);
@@ -189,7 +189,7 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 		std::string latestDllPath = dllPath;
 		std::string latestPdbPath = dllPath;
 		size_t extPos = latestPdbPath.find_last_of('.');
-		if (extPos != std::string::npos) {
+		if(extPos != std::string::npos) {
 			latestPdbPath = latestPdbPath.substr(0, extPos) + ".pdb";
 		} else {
 			latestPdbPath += ".pdb";
@@ -198,29 +198,29 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 		std::string targetDllPath = "./Packages/Scripts/CSharpLibrary.dll";
 		std::string targetPdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
 
-		if (std::filesystem::exists(latestDllPath) && latestDllPath != targetDllPath) {
+		if(std::filesystem::exists(latestDllPath) && latestDllPath != targetDllPath) {
 			try {
 				std::filesystem::copy_file(latestDllPath, targetDllPath, std::filesystem::copy_options::overwrite_existing);
 				Console::Log("[Mono] LoadAssembly: Copied DLL to logical path: " + targetDllPath, LogCategory::ScriptEngine);
-			} catch (const std::exception& e) {
+			} catch(const std::exception& e) {
 				Console::LogWarning("[Mono] LoadAssembly: Failed to copy DLL to logical path (it might be locked): " + std::string(e.what()), LogCategory::ScriptEngine);
 			}
 		}
 
-		if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
+		if(std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
 			try {
 				std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
 				Console::Log("[Mono] LoadAssembly: Copied PDB to logical path: " + targetPdbPath, LogCategory::ScriptEngine);
-			} catch (const std::exception& e) {
+			} catch(const std::exception& e) {
 				Console::LogWarning("[Mono] LoadAssembly: Failed to copy PDB to logical path (it might be locked): " + std::string(e.what()), LogCategory::ScriptEngine);
 			}
 		}
 	}
 
-#if defined(DEBUG_MODE) && !defined(DEBUG_BUILD)
+#if defined(DEBUG_MODE)
 	std::string pdbPath = dllPath;
 	size_t extPos = pdbPath.find_last_of('.');
-	if (extPos != std::string::npos) {
+	if(extPos != std::string::npos) {
 		pdbPath = pdbPath.substr(0, extPos) + ".pdb";
 	} else {
 		pdbPath += ".pdb";
@@ -229,14 +229,14 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 	std::ifstream dllFile(dllPath, std::ios::binary | std::ios::ate);
 	std::ifstream pdbFile(pdbPath, std::ios::binary | std::ios::ate);
 
-	if (!dllFile.is_open()) {
+	if(!dllFile.is_open()) {
 		Console::LogWarning("[Mono] LoadAssembly: Failed to open DLL file: " + dllPath, LogCategory::ScriptEngine);
 	}
-	if (!pdbFile.is_open()) {
+	if(!pdbFile.is_open()) {
 		Console::LogWarning("[Mono] LoadAssembly: Failed to open PDB file: " + pdbPath, LogCategory::ScriptEngine);
 	}
 
-	if (dllFile.is_open() && pdbFile.is_open()) {
+	if(dllFile.is_open() && pdbFile.is_open()) {
 		std::streamsize dllSize = dllFile.tellg();
 		dllFile.seekg(0, std::ios::beg);
 		std::vector<char> dllBuffer(dllSize);
@@ -247,14 +247,14 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 
 		Console::Log("[Mono] LoadAssembly: DLL size = " + std::to_string(dllSize) + " bytes, PDB size = " + std::to_string(pdbSize) + " bytes", LogCategory::ScriptEngine);
 
-		if (dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(outPdbBuffer.data(), pdbSize)) {
+		if(dllFile.read(dllBuffer.data(), dllSize) && pdbFile.read(outPdbBuffer.data(), pdbSize)) {
 			// デバッガが接続されている場合（IsDebuggerAttachedViaTcp() == true）は、古いドメインのアンロードが
 			// 保留されるため、同じ論理名（CSharpLibrary.dll）でロードしようとするとMonoがロード済みの古いキャッシュを
 			// 返してしまい、最新コードが反映されません。
 			// そのため、デバッガ接続時は論理パスの固定化を行わず、ユニークなタイムスタンプ付きファイル名（dllPath）
 			// のままでアセンブリをロードさせることで、確実に最新コードを適用します。
 			std::string logicalPath = dllPath;
-			if (!IsDebuggerAttachedViaTcp() || MonoScriptEngine::GetInstance().GetDomainReloadCounter() <= 1) {
+			if(!IsDebuggerAttachedViaTcp() || MonoScriptEngine::GetInstance().GetDomainReloadCounter() <= 1) {
 				std::string logicalDllPath = dllPath;
 				size_t lastSlash = logicalDllPath.find_last_of("/\\");
 				std::string dir = (lastSlash != std::string::npos) ? logicalDllPath.substr(0, lastSlash + 1) : "";
@@ -264,18 +264,18 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 			MonoImageOpenStatus status = MONO_IMAGE_OK;
 			// DLLデータからMonoImageをオープン (論理パスを報告)
 			MonoImage* image = mono_image_open_from_data_with_name(
-				dllBuffer.data(), 
-				(uint32_t)dllSize, 
+				dllBuffer.data(),
+				(uint32_t)dllSize,
 				true, // need_copy
-				&status, 
+				&status,
 				false, // refonly
 				logicalPath.c_str()
 			);
 
-			if (image && status == MONO_IMAGE_OK) {
+			if(image && status == MONO_IMAGE_OK) {
 				// アセンブリロードの前にデバッグ情報を登録
 				mono_debug_open_image_from_memory(image, (const mono_byte*)outPdbBuffer.data(), (int)pdbSize);
-				
+
 				// ImageからAssemblyをロード (論理パスを報告)
 				MonoAssembly* assembly = mono_assembly_load_from_full(
 					image,
@@ -286,7 +286,7 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 
 				mono_image_close(image);
 
-				if (assembly) {
+				if(assembly) {
 					Console::Log("[Mono] Successfully loaded assembly and debug symbols from memory: " + dllPath + " (logical: " + logicalPath + ")", LogCategory::ScriptEngine);
 					return assembly;
 				} else {
@@ -308,7 +308,7 @@ std::string GetUtf8Path(const std::filesystem::path& path) {
 	std::filesystem::path absPath = std::filesystem::absolute(path);
 	std::wstring wpath = absPath.wstring();
 	int len = WideCharToMultiByte(CP_UTF8, 0, wpath.c_str(), -1, nullptr, 0, nullptr, nullptr);
-	if (len > 0) {
+	if(len > 0) {
 		std::string utf8Path(len - 1, '\0');
 		WideCharToMultiByte(CP_UTF8, 0, wpath.c_str(), -1, &utf8Path[0], len, nullptr, nullptr);
 		return utf8Path;
@@ -332,7 +332,7 @@ void MonoScriptEngine::Initialize() {
 	Console::Log("[Mono] Building C# project...", LogCategory::ScriptEngine);
 	std::string buildOutput;
 	bool buildSuccess = BuildCSharpProject(buildOutput);
-	if (buildSuccess) {
+	if(buildSuccess) {
 		Console::Log("[Mono] C# project built successfully.", LogCategory::ScriptEngine);
 	} else {
 		Console::LogError("[Mono] C# project build failed!\n" + buildOutput, LogCategory::ScriptEngine);
@@ -373,70 +373,79 @@ void MonoScriptEngine::Initialize() {
 	_putenv(monoPathEnvA.c_str());
 	_wputenv(monoPathEnvW.c_str());
 
-#if defined(DEBUG_MODE) && !defined(DEBUG_BUILD)
-	// Monoの診断ログ出力を詳細化 - staticにしてメモリを永続化
-	static std::string logEnv1 = "MONO_LOG_LEVEL=debug";
-	static std::string logEnv2 = "MONO_LOG_MASK=asm,dll,gc,cfg";
-	SetEnvironmentVariableA("MONO_LOG_LEVEL", "debug");
-	_putenv(logEnv1.c_str());
-	SetEnvironmentVariableA("MONO_LOG_MASK", "asm,dll,gc,cfg");
-	_putenv(logEnv2.c_str());
+#if defined(DEBUG_MODE)
+	if(!EngineConfig::isTestMode) {
+		// Monoの診断ログ出力を詳細化 - staticにしてメモリを永続化
+		static std::string logEnv1 = "MONO_LOG_LEVEL=debug";
+		static std::string logEnv2 = "MONO_LOG_MASK=asm,dll,gc,cfg";
+		SetEnvironmentVariableA("MONO_LOG_LEVEL", "debug");
+		_putenv(logEnv1.c_str());
+		SetEnvironmentVariableA("MONO_LOG_MASK", "asm,dll,gc,cfg");
+		_putenv(logEnv2.c_str());
 
-	// デバッグシーケンスポイント生成を強化 - staticにしてメモリを永続化
-	static std::string debugEnv1 = "MONO_DEBUG=gen-compact-seq-points";
-	SetEnvironmentVariableA("MONO_DEBUG", "gen-compact-seq-points");
-	_putenv(debugEnv1.c_str());
+		// デバッグシーケンスポイント生成を強化 - staticにしてメモリを永続化
+		static std::string debugEnv1 = "MONO_DEBUG=gen-compact-seq-points";
+		SetEnvironmentVariableA("MONO_DEBUG", "gen-compact-seq-points");
+		_putenv(debugEnv1.c_str());
 
-	bool waitDebug = EngineConfig::waitDebug;
+		bool waitDebug = EngineConfig::waitDebug;
 
-	// ポートが既に他のプロセスに占有されているか事前に競合検知
-	if (waitDebug && IsDebugPortInUse(55555)) {
-		Console::LogError("[Mono] WARNING: Debugger port 55555 is ALREADY IN USE by another process! Mono Debugger binding may fail.", LogCategory::ScriptEngine);
+		// ポートが既に他のプロセスに占有されているか事前に競合検知
+		if(waitDebug && IsDebugPortInUse(55555)) {
+			Console::LogError("[Mono] WARNING: Debugger port 55555 is ALREADY IN USE by another process! Mono Debugger binding may fail.", LogCategory::ScriptEngine);
+		}
+
+		// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
+		static std::string debugAgentOptA;
+		static std::wstring debugAgentOptW;
+		debugAgentOptA = waitDebug
+			? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+			: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+		debugAgentOptW = waitDebug
+			? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
+			: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
+
+		// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
+		static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
+		static std::wstring monoEnvOptW = L"MONO_ENV_OPTIONS=" + debugAgentOptW;
+		SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
+		SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", debugAgentOptW.c_str());
+		_putenv(monoEnvOptA.c_str());
+		_wputenv(monoEnvOptW.c_str());
+
+		static std::string monoOptA = "MONO_OPTIONS=" + debugAgentOptA;
+		static std::wstring monoOptW = L"MONO_OPTIONS=" + debugAgentOptW;
+		SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
+		SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str());
+		_putenv(monoOptA.c_str());
+		_wputenv(monoOptW.c_str());
+
+		Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
+
+		// mono_jit_parse_options にもデバッガオプションを確実に渡す (配列のポインタ自体がスコープを抜けても破壊されないようにstatic化)
+		static std::string softBreakpointsOpt = "--soft-breakpoints";
+		static const char* debugOptions[2];
+		debugOptions[0] = softBreakpointsOpt.c_str();
+		debugOptions[1] = debugAgentOptA.c_str();
+		mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
+		mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+
+		// デバッガが物理的にアタッチされる前であっても、JIT時に常にデバッグ行情報（シーケンスポイント）を
+		// 生成させるために、Monoのデバッガ接続フラグを強制的にONに設定します。
+		// これにより、waitDebug=false時の後発アタッチや、デバッガ再アタッチ時にもブレイクポイントが確実に効くようになります。
+		mono_set_is_debugger_attached(true);
+	} else {
+		Console::Log("[Mono] Debug Mode: Disabled during automated test to prevent hang", LogCategory::ScriptEngine);
+		// テスト時はデバッガを起動せず、高速化用に最適化オプションを適用
+		static const char* options[] = {
+			"--optimize=all",
+		};
+		mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**)options);
 	}
-
-	// アドレス解決不具合を防ぐため IPv4 0.0.0.0 でバインド - staticにしてメモリを永続化
-	static std::string debugAgentOptA;
-	static std::wstring debugAgentOptW;
-	debugAgentOptA = waitDebug 
-		? "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: "--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
-	debugAgentOptW = waitDebug 
-		? L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=y"
-		: L"--debugger-agent=transport=dt_socket,address=0.0.0.0:55555,server=y,suspend=n";
-
-	// MONO_ENV_OPTIONS と MONO_OPTIONS の両方に環境変数を設定 (A/W両対応) - staticにしてメモリを永続化
-	static std::string monoEnvOptA = "MONO_ENV_OPTIONS=" + debugAgentOptA;
-	static std::wstring monoEnvOptW = L"MONO_ENV_OPTIONS=" + debugAgentOptW;
-	SetEnvironmentVariableA("MONO_ENV_OPTIONS", debugAgentOptA.c_str());
-	SetEnvironmentVariableW(L"MONO_ENV_OPTIONS", debugAgentOptW.c_str());
-	_putenv(monoEnvOptA.c_str());
-	_wputenv(monoEnvOptW.c_str());
-
-	static std::string monoOptA = "MONO_OPTIONS=" + debugAgentOptA;
-	static std::wstring monoOptW = L"MONO_OPTIONS=" + debugAgentOptW;
-	SetEnvironmentVariableA("MONO_OPTIONS", debugAgentOptA.c_str());
-	SetEnvironmentVariableW(L"MONO_OPTIONS", debugAgentOptW.c_str());
-	_putenv(monoOptA.c_str());
-	_wputenv(monoOptW.c_str());
-
-	Console::Log("[Mono] Debug Mode: waitDebug = " + std::string(waitDebug ? "true (suspend=y)" : "false (suspend=n)"), LogCategory::ScriptEngine);
-
-	// mono_jit_parse_options にもデバッガオプションを確実に渡す (配列のポインタ自体がスコープを抜けても破壊されないようにstatic化)
-	static std::string softBreakpointsOpt = "--soft-breakpoints";
-	static const char* debugOptions[2];
-	debugOptions[0] = softBreakpointsOpt.c_str();
-	debugOptions[1] = debugAgentOptA.c_str();
-	mono_jit_parse_options(sizeof(debugOptions) / sizeof(char*), (char**)debugOptions);
-	mono_debug_init(MONO_DEBUG_FORMAT_MONO);
-
-	// デバッガが物理的にアタッチされる前であっても、JIT時に常にデバッグ行情報（シーケンスポイント）を
-	// 生成させるために、Monoのデバッガ接続フラグを強制的にONに設定します。
-	// これにより、waitDebug=false時の後発アタッチや、デバッガ再アタッチ時にもブレイクポイントが確実に効くようになります。
-	mono_set_is_debugger_attached(true);
 #else
 	Console::Log("[Mono] Non-Debug Mode: Debugger Disabled (suspend=n)", LogCategory::ScriptEngine);
 	/// 高速化用オプション
-	const char* options[] = {
+	static const char* options[] = {
 		"--optimize=all",   // JIT最適化フル
 	};
 	mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**)options);
@@ -462,7 +471,7 @@ void MonoScriptEngine::Initialize() {
 		return;
 	}
 
-#if defined(DEBUG_MODE) && !defined(DEBUG_BUILD)
+#if defined(DEBUG_MODE)
 	// ルートドメイン用のデバッグ情報を登録
 	mono_debug_domain_create(rootDomain_);
 #endif
@@ -574,10 +583,10 @@ void MonoScriptEngine::RegisterFunctions() {
 	// C#側のSerializeField登録処理を安全に一括実行する
 	{
 		MonoMethod* initCacheMethod = GetMethodFromCS("", "EntityComponentSystem", "InitializeSerializeFieldCache", 0);
-		if (initCacheMethod) {
+		if(initCacheMethod) {
 			MonoObject* exc = nullptr;
 			MonoScriptEngineUtils::SafeInvoke(initCacheMethod, nullptr, nullptr, &exc);
-			if (exc) {
+			if(exc) {
 				Console::LogError("Failed to invoke InitializeSerializeFieldCache from C++", LogCategory::ScriptEngine);
 				MonoScriptEngineUtils::HandleException(exc);
 			}
@@ -593,10 +602,10 @@ void MonoScriptEngine::HotReload() {
 	struct ReloadGuard {
 		MonoScriptEngine& engine;
 		ReloadGuard(MonoScriptEngine& eng) : engine(eng) { engine.SetIsReloading(true); }
-		~ReloadGuard() { 
+		~ReloadGuard() {
 			// コピー処理中に FileWatcher に蓄積された自己変更イベントを根こそぎクリアして破棄する
 			Editor::HotReloadManager::GetInstance().ClearQueuedEvents();
-			engine.SetIsReloading(false); 
+			engine.SetIsReloading(false);
 		}
 	} guard(*this);
 
@@ -620,7 +629,7 @@ void MonoScriptEngine::HotReload() {
 	// 新しいアセンブリをロードする前に、古いドメインを完全にアンロード（解放）する。
 	// これにより、デバッガ（VS Code）は古いアセンブリのアンロードを検知でき、
 	// 同じ名前のアセンブリがメモリ上に重複してキャッシュの競合が発生するのを防ぎます。
-	if (oldDomain && oldDomain != rootDomain_) {
+	if(oldDomain && oldDomain != rootDomain_) {
 		domainsToUnload_.push_back(oldDomain);
 		ClearPendingDomains();
 		domain_ = nullptr;
@@ -650,16 +659,16 @@ void MonoScriptEngine::HotReload() {
 		const int maxRetries = 20; // 最大2秒
 		bool fileReady = false;
 		std::filesystem::path dllPath(*latestDll);
-		while (retryCount < maxRetries) {
+		while(retryCount < maxRetries) {
 			std::ifstream file(dllPath, std::ios::binary | std::ios::in);
-			if (file.good()) {
+			if(file.good()) {
 				fileReady = true;
 				break;
 			}
 			retryCount++;
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
-		if (!fileReady) {
+		if(!fileReady) {
 			Console::LogError("Latest DLL is still locked or inaccessible: " + utf8DllPath, LogCategory::ScriptEngine);
 			domain_ = nullptr;
 			return;
@@ -670,25 +679,25 @@ void MonoScriptEngine::HotReload() {
 	{
 		std::string latestPdbPath = utf8DllPath;
 		size_t extPos = latestPdbPath.find_last_of('.');
-		if (extPos != std::string::npos) {
+		if(extPos != std::string::npos) {
 			latestPdbPath = latestPdbPath.substr(0, extPos) + ".pdb";
 		} else {
 			latestPdbPath += ".pdb";
 		}
 
 		std::string targetPdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
-		if (std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
+		if(std::filesystem::exists(latestPdbPath) && latestPdbPath != targetPdbPath) {
 			try {
 				std::filesystem::copy_file(latestPdbPath, targetPdbPath, std::filesystem::copy_options::overwrite_existing);
 				Console::Log("[Mono] HotReload: Copied latest PDB to logical path: " + targetPdbPath, LogCategory::ScriptEngine);
-			} catch (const std::exception& e) {
+			} catch(const std::exception& e) {
 				Console::LogWarning("[Mono] HotReload: Failed to copy PDB to logical path: " + std::string(e.what()), LogCategory::ScriptEngine);
 			}
 		}
 	}
 
 	// 古い PDB バッファを保留リストに退避（クリアはせず、ClearPendingDomains() が実際にアンロードするタイミングまで寿命を維持する）
-	if (!activePdbBuffer_.empty()) {
+	if(!activePdbBuffer_.empty()) {
 		pendingPdbBuffers_.push_back(std::move(activePdbBuffer_));
 	}
 
@@ -724,12 +733,12 @@ void MonoScriptEngine::HotReload() {
 }
 
 void MonoScriptEngine::ApplyCSharpLogSetting() {
-	if (!image_ || !domain_) return;
+	if(!image_ || !domain_) return;
 
 	MonoClass* debugClass = mono_class_from_name(image_, "", "Debug");
-	if (debugClass) {
+	if(debugClass) {
 		MonoClassField* ignoreLogField = mono_class_get_field_from_name(debugClass, "IgnoreLog");
-		if (ignoreLogField) {
+		if(ignoreLogField) {
 			mono_bool value = EngineConfig::ignoreCSharpLog ? 1 : 0;
 			mono_field_static_set_value(mono_class_vtable(domain_, debugClass), ignoreLogField, &value);
 		}
@@ -800,7 +809,7 @@ std::optional<std::string> MonoScriptEngine::FindLatestDll(const std::string& di
 }
 
 void MonoScriptEngine::ResetCS() {
-	if (!image_ || !domain_) {
+	if(!image_ || !domain_) {
 		return;
 	}
 
@@ -1008,7 +1017,7 @@ MonoDomain* MonoScriptEngine::CreateReloadDomain() {
 		return nullptr;
 	}
 
-#if defined(DEBUG_MODE) && !defined(DEBUG_BUILD)
+#if defined(DEBUG_MODE)
 	// ホットリロード時の新しいドメイン用のデバッグ情報を登録
 	mono_debug_domain_create(domain);
 #endif
@@ -1023,18 +1032,18 @@ void MonoScriptEngine::ClearPendingDomains() {
 	// ドメインのアンロードを一切行わず、リストに保留（蓄積）したままにします。
 	// デバッガが切断された直後のフレームから安全に一括アンロードが実行されます。
 	// （※毎フレームの GetExtendedTcpTable 呼び出しを避けるため、キャッシュされた変数 wasDebuggerAttached_ を使用します）
-	if (EngineConfig::isTestMode || wasDebuggerAttached_) {
+	if(EngineConfig::isTestMode || wasDebuggerAttached_) {
 		return;
 	}
 #endif
 
-	if (domainsToUnload_.empty()) {
+	if(domainsToUnload_.empty()) {
 		return;
 	}
 
 	// アンロードする前に、現在のスレッド（メインスレッド）のアタッチ先を rootDomain_ に切り替える。
 	// これにより、アンロード対象のドメインにスレッドが属した状態になるのを防ぎ、スレッド競合クラッシュを防ぎます。
-	if (rootDomain_) {
+	if(rootDomain_) {
 		mono_thread_attach(rootDomain_);
 	}
 
@@ -1398,9 +1407,9 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 
 	// dotnet.exeの絶対パスを探索
 	std::wstring dotnetPath = L"dotnet";
-	if (std::filesystem::exists(L"C:\\Program Files\\dotnet\\dotnet.exe")) {
+	if(std::filesystem::exists(L"C:\\Program Files\\dotnet\\dotnet.exe")) {
 		dotnetPath = L"\"C:\\Program Files\\dotnet\\dotnet.exe\"";
-	} else if (std::filesystem::exists(L"C:\\Program Files (x86)\\dotnet\\dotnet.exe")) {
+	} else if(std::filesystem::exists(L"C:\\Program Files (x86)\\dotnet\\dotnet.exe")) {
 		dotnetPath = L"\"C:\\Program Files (x86)\\dotnet\\dotnet.exe\"";
 	}
 
@@ -1413,12 +1422,12 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 	saAttr.bInheritHandle = TRUE;
 	saAttr.lpSecurityDescriptor = NULL;
 
-	if (!CreatePipe(&hReadPipe, &hWritePipe, &saAttr, 0)) {
+	if(!CreatePipe(&hReadPipe, &hWritePipe, &saAttr, 0)) {
 		outMessage = "Failed to create pipe for dotnet build.";
 		return false;
 	}
 
-	if (!SetHandleInformation(hReadPipe, HANDLE_FLAG_INHERIT, 0)) {
+	if(!SetHandleInformation(hReadPipe, HANDLE_FLAG_INHERIT, 0)) {
 		outMessage = "Failed to set handle information.";
 		CloseHandle(hReadPipe);
 		CloseHandle(hWritePipe);
@@ -1453,7 +1462,7 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 
 	CloseHandle(hWritePipe);
 
-	if (!success) {
+	if(!success) {
 		DWORD err = GetLastError();
 		outMessage = "dotnet command not found or failed to execute. Error Code: " + std::to_string(err) + ". Please ensure .NET SDK is installed.";
 		CloseHandle(hReadPipe);
@@ -1463,7 +1472,7 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 	std::string output;
 	char buffer[4096];
 	DWORD bytesRead;
-	while (ReadFile(hReadPipe, buffer, sizeof(buffer) - 1, &bytesRead, NULL) && bytesRead > 0) {
+	while(ReadFile(hReadPipe, buffer, sizeof(buffer) - 1, &bytesRead, NULL) && bytesRead > 0) {
 		buffer[bytesRead] = '\0';
 		output += buffer;
 	}
@@ -1483,7 +1492,7 @@ bool MonoScriptEngine::BuildCSharpProject(std::string& outMessage) {
 
 void MonoScriptEngine::UpdateDebuggerStatus() {
 #if defined(DEBUG_MODE)
-	if (!domain_) return;
+	if(!domain_) return;
 	MonoThread* monoThread = mono_thread_attach(domain_);
 
 	bool currentAttached = IsDebuggerAttachedViaTcp();
@@ -1491,13 +1500,13 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 	// 接続状態に変化があった場合、詳細なステータスログを出す
 	static bool lastCurrentAttached = false;
 	static bool lastWasDebuggerAttached = false;
-	if (currentAttached != lastCurrentAttached || wasDebuggerAttached_ != lastWasDebuggerAttached) {
-		Console::Log("[MonoDbg] State Change -> currentAttached: " + std::string(currentAttached ? "TRUE" : "FALSE") + 
-			", wasDebuggerAttached_: " + std::string(wasDebuggerAttached_ ? "TRUE" : "FALSE") + 
-			", monoThread: " + std::string(monoThread ? "YES" : "NO") + 
-			", isGameplayRunning: " + std::string(DebugConfig::isDebugging ? "YES" : "NO"),
-			LogCategory::ScriptEngine);
-		
+	if(currentAttached != lastCurrentAttached || wasDebuggerAttached_ != lastWasDebuggerAttached) {
+		Console::Log("[MonoDbg] State Change -> currentAttached: " + std::string(currentAttached ? "TRUE" : "FALSE") +
+					 ", wasDebuggerAttached_: " + std::string(wasDebuggerAttached_ ? "TRUE" : "FALSE") +
+					 ", monoThread: " + std::string(monoThread ? "YES" : "NO") +
+					 ", isGameplayRunning: " + std::string(DebugConfig::isDebugging ? "YES" : "NO"),
+					 LogCategory::ScriptEngine);
+
 		// TCP接続の詳細情報を出力
 		LogTcpConnections();
 
@@ -1505,7 +1514,7 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		lastWasDebuggerAttached = wasDebuggerAttached_;
 	}
 
-	if (currentAttached && !wasDebuggerAttached_) {
+	if(currentAttached && !wasDebuggerAttached_) {
 		Console::Log("[Mono] Debugger newly attached! Syncing breakpoints...", LogCategory::ScriptEngine);
 		showAttachedPopup_ = true;
 
@@ -1515,7 +1524,7 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 		// CSharpLibrary.dll / PDB のタイムスタンプを詳細出力
 		std::string dllPath = "./Packages/Scripts/CSharpLibrary.dll";
 		std::string pdbPath = "./Packages/Scripts/CSharpLibrary.pdb";
-		if (std::filesystem::exists(dllPath)) {
+		if(std::filesystem::exists(dllPath)) {
 			auto ftime = std::filesystem::last_write_time(dllPath);
 			auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
 			std::time_t ctime = std::chrono::system_clock::to_time_t(sctp);
@@ -1525,7 +1534,7 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 			std::strftime(timeBuf, sizeof(timeBuf), "%Y-%m-%d %H:%M:%S", &timeInfo);
 			Console::Log("[MonoDbg] CSharpLibrary.dll last modified: " + std::string(timeBuf), LogCategory::ScriptEngine);
 		}
-		if (std::filesystem::exists(pdbPath)) {
+		if(std::filesystem::exists(pdbPath)) {
 			auto ftime = std::filesystem::last_write_time(pdbPath);
 			auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
 			std::time_t ctime = std::chrono::system_clock::to_time_t(sctp);
@@ -1545,16 +1554,16 @@ void MonoScriptEngine::UpdateDebuggerStatus() {
 	}
 
 	// アタッチ時の同期猶予フレームカウント処理
-	if (debuggerAttachFrameCounter_ > 0) {
+	if(debuggerAttachFrameCounter_ > 0) {
 		debuggerAttachFrameCounter_--;
-		if (debuggerAttachFrameCounter_ == 0) {
+		if(debuggerAttachFrameCounter_ == 0) {
 			DebugConfig::isPause = true;
 			Console::Log("[Mono] Debugger synchronization delay finished. Game execution suspended.", LogCategory::ScriptEngine);
 		}
 	}
 
 	// デバッガ切断時の状態同期処理
-	if (!currentAttached && wasDebuggerAttached_) {
+	if(!currentAttached && wasDebuggerAttached_) {
 		Console::Log("[Mono] Debugger disconnected. Clearing attached state in Mono.", LogCategory::ScriptEngine);
 		mono_set_is_debugger_attached(false);
 	}
