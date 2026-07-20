@@ -432,7 +432,10 @@ void MonoScriptEngine::Initialize() {
 	// デバッガが物理的にアタッチされる前であっても、JIT時に常にデバッグ行情報（シーケンスポイント）を
 	// 生成させるために、Monoのデバッガ接続フラグを強制的にONに設定します。
 	// これにより、waitDebug=false時の後発アタッチや、デバッガ再アタッチ時にもブレイクポイントが確実に効くようになります。
-	mono_set_is_debugger_attached(true);
+	// ただし、自動テストモード時はデバッガが接続されず、ソケット送信ブロックによるハングアップが発生するため除外します。
+	if (!EngineConfig::isTestMode) {
+		mono_set_is_debugger_attached(true);
+	}
 #else
 	Console::Log("[Mono] Non-Debug Mode: Debugger Disabled (suspend=n)", LogCategory::ScriptEngine);
 	/// 高速化用オプション
