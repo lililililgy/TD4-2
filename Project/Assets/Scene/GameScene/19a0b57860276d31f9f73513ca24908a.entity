@@ -27,6 +27,18 @@
                 "targetCount_": 5,
                 "targetEntityName_": ""
             },
+            "SpawnOnPhaseBegan": {
+                "count_": 5,
+                "phaseName_": "TutorialPhase_Enemy",
+                "prefabName_": "MorayEel",
+                "spawnAroundEntityName_": "Player",
+                "spawnPos_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "spawnRadius_": 600.0
+            },
             "type": "Variables"
         },
         {
@@ -35,6 +47,10 @@
                 {
                     "enable": true,
                     "name": "KillCountObjective"
+                },
+                {
+                    "enable": true,
+                    "name": "SpawnOnPhaseBegan"
                 }
             ],
             "type": "Script"

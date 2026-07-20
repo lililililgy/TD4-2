@@ -24,9 +24,10 @@
                 "activePhases_": [
                     "EnemyHuntPhase_1",
                     "EnemyHuntPhase_2",
-                    "EnemyHuntPhase_3",
-                    "TutorialPhase_Enemy"
-                ]
+                    "EnemyHuntPhase_3"
+                ],
+                "enemySpawnSystemEntityName_": "EnemySpawnSystem",
+                "objectiveSystemEntityName_": "GameController"
             },
             "type": "Variables"
         },
