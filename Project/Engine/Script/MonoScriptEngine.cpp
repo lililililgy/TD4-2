@@ -254,7 +254,7 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 			// そのため、デバッガ接続時は論理パスの固定化を行わず、ユニークなタイムスタンプ付きファイル名（dllPath）
 			// のままでアセンブリをロードさせることで、確実に最新コードを適用します。
 			std::string logicalPath = dllPath;
-			if (!IsDebuggerAttachedViaTcp()) {
+			if (!IsDebuggerAttachedViaTcp() || MonoScriptEngine::GetInstance().GetDomainReloadCounter() <= 1) {
 				std::string logicalDllPath = dllPath;
 				size_t lastSlash = logicalDllPath.find_last_of("/\\");
 				std::string dir = (lastSlash != std::string::npos) ? logicalDllPath.substr(0, lastSlash + 1) : "";
@@ -387,7 +387,7 @@ void MonoScriptEngine::Initialize() {
 	SetEnvironmentVariableA("MONO_DEBUG", "gen-compact-seq-points");
 	_putenv(debugEnv1.c_str());
 
-	bool waitDebug = false;
+	bool waitDebug = EngineConfig::waitDebug;
 
 	// ポートが既に他のプロセスに占有されているか事前に競合検知
 	if (waitDebug && IsDebugPortInUse(55555)) {
