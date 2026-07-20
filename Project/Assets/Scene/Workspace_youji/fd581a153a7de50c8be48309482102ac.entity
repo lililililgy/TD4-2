@@ -14,7 +14,7 @@
             "fogStart": 0.0,
             "fovY": 0.699999988079071,
             "isDrawFrustum": false,
-            "isMainCamera": true,
+            "isMainCamera": false,
             "nearClip": 0.10000000149011612,
             "type": "CameraComponent"
         },
@@ -60,7 +60,7 @@
             "distortionFrequency": 4.591000080108643,
             "distortionSpeed": 0.800000011920929,
             "distortionStrength": 0.002300000051036477,
-            "enable": 1,
+            "enable": 0,
             "fisheyeScale": 0.7139999866485596,
             "fisheyeStrength": 0.382999986410141,
             "fogColor": [

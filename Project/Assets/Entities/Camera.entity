@@ -33,9 +33,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 3.799999952316284,
-                "y": 3.799999952316284,
-                "z": 3.799999952316284
+                "x": 5.999999046325684,
+                "y": 5.999999046325684,
+                "z": 5.999999523162842
             },
             "type": "Transform"
         },
@@ -43,7 +43,7 @@
             "type": "Variables"
         }
     ],
-    "guid": "ad157d5862e2dd4ffe02ebabd43f43fe",
+    "guid": "9ddaf8fc5e826d1a3914d9c2a34a3726",
     "name": "Camera",
     "parentGuid": null,
     "prefabName": ""

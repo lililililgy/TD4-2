@@ -1,15 +1,5 @@
 {
     "active": false,
-    "components": [
-        {
-            "material": {
-                "bloomIntensity": 1.0,
-                "bloomRadius": 12.0,
-                "bloomThreshold": 0.800000011920929
-            },
-            "type": "SpriteRenderer"
-        }
-    ],
     "guid": "ef9cb081b1c1cd85474b7280c162abf3",
     "name": "KingGeso",
     "parentGuid": null,

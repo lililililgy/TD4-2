@@ -1,0 +1,33 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.6969999670982361,
+                "y": 0.69700026512146,
+                "z": 0.69700026512146
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        }
+    ],
+    "guid": "6c6ff24fceec80cee23a9c6eb4d73783",
+    "name": "Buttons",
+    "parentGuid": "8a4b75a99a9fad9d6e67c9dab898bea4",
+    "prefabName": ""
+}

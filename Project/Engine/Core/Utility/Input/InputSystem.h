@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /// std
 #include <memory>
@@ -56,6 +56,7 @@ namespace MonoInternalMethods {
 	void InternalGetMouseVelocity(float* x, float* y);
 	void InternalGetMousePosition(float* x, float* y);
 	void InternalGetMouseWheel(float* wheel);
+	void InternalGetGamepadVibration(float* left, float* right);
 }
 
 } /// ONEngine
