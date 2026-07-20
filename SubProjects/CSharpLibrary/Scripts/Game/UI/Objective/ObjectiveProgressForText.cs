@@ -1,6 +1,7 @@
 using System;
 
-// 現在アクティブな目標の進捗を TextRenderer に「目標名 : 進捗」形式で出す UI スクリプト。
+// 現在アクティブな目標の進捗（例: 「3 / 5」）を TextRenderer に出す UI スクリプト。
+// 目標名は出さない（名前は ProgressLabel / チュートリアル指示テキスト側の担当）。
 // TextRenderer が付いた UI エンティティに付ける。
 //
 // 目標は ObjectiveSystem.ActiveObjectives（収集済みの List<Objective>）から取る。
@@ -57,7 +58,7 @@ public class ObjectiveProgressForText : MonoScript
             if (objective == null) continue;
 
             if (result.Length > 0) result += "\n";
-            result += objective.DisplayName + " : " + objective.ProgressText();
+            result += objective.ProgressText();
         }
         return result;
     }

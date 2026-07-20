@@ -23,7 +23,21 @@
             "type": "Transform"
         },
         {
+            "KillCountObjective": {
+                "targetCount_": 5,
+                "targetEntityName_": ""
+            },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KillCountObjective"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "19a0b57860276d31f9f73513ca24908a",

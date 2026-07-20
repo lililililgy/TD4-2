@@ -6,9 +6,6 @@ using System;
 // PlayerState と同様、entity に付く独立スクリプトとして自分のパラメーターを [SerializeField] で持つ。
 public abstract class Objective : MonoScript {
 
-    // UI 表示用の目標名。ゲーム内表示名はデータ側(SerializeField)に持たせる方針。
-    [SerializeField] private string displayName_ = "";
-
     // フェーズ開始時に ObjectiveSystem が呼ぶ。引数なしに統一
     // （目標値などのパラメータは各 Objective 自身の [SerializeField] で完結させる）。
     public virtual void BeginObjective() { }
@@ -28,9 +25,5 @@ public abstract class Objective : MonoScript {
     //   数値を UI に取り出させるのではなく、表示のしかたを目標自身に答えさせる方針）。
     public virtual string ProgressText() {
         return (int)(Progress() * 100.0f) + "%";
-    }
-
-    public string DisplayName {
-        get { return displayName_; }
     }
 }

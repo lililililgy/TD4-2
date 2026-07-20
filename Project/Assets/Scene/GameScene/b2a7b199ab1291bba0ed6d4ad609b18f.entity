@@ -6,6 +6,27 @@
                 "isAddRequested": true,
                 "sceneName": "GameUIScene"
             },
+            "ObjectiveSystem": {
+                "phaseSequence_": [
+                    "TutorialPhase_Move",
+                    "TutorialPhase_Dash",
+                    "TutorialPhase_Enemy",
+                    "TutorialPhase_Shot",
+                    "EnemyHuntPhase_1",
+                    "BossBattlePhase_1",
+                    "EnemyHuntPhase_2",
+                    "BossBattlePhase_2",
+                    "EnemyHuntPhase_3",
+                    "BossBattlePhase_3"
+                ]
+            },
+            "PhaseSpawnActivator": {
+                "activePhases_": [
+                    "EnemyHuntPhase_1",
+                    "EnemyHuntPhase_2",
+                    "EnemyHuntPhase_3"
+                ]
+            },
             "type": "Variables"
         },
         {
@@ -17,6 +38,14 @@
                 {
                     "enable": true,
                     "name": "AddSceneScript"
+                },
+                {
+                    "enable": true,
+                    "name": "ObjectiveSystem"
+                },
+                {
+                    "enable": true,
+                    "name": "PhaseSpawnActivator"
                 }
             ],
             "type": "Script"

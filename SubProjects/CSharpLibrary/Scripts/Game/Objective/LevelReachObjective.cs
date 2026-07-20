@@ -4,8 +4,7 @@ using System;
 // 毎フレームのポーリング（ObjectiveSystem が呼ぶ IsCompleted()）で調べる方式。
 // イベント購読ではないので、フェーズ開始前に既に達成済みのケースもそのまま拾える。
 // 対象は targetEntityName_ で指定する（LevelingComponent は Player 以外に Roe 等にも付くため）。
-// LevelingComponent の解決は BeginObjective() で行い、未解決なら判定時に遅延再解決する
-// （BossDefeatObjective の bossHp_ と同じ流儀）。
+// LevelingComponent の解決は BeginObjective() で行い、未解決なら判定時に遅延再解決する。
 public class LevelReachObjective : Objective
 {
     [SerializeField] private int targetLevel_ = 2;

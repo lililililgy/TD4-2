@@ -23,7 +23,23 @@
             "type": "Transform"
         },
         {
+            "DashCountObjective": {
+                "targetCount_": 3
+            },
+            "PhaseSpawnActivator": {
+                "activePhases_": []
+            },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "DashCountObjective"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "575bc5e3b455f7dd7a07617653d57a84",

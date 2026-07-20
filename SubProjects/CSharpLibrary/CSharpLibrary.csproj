@@ -187,7 +187,9 @@
     <Compile Include="Scripts\Game\Common\HP.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
+    <Compile Include="Scripts\Game\Common\ShowOnPhase.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnDestroy.cs" />
+    <Compile Include="Scripts\Game\Common\SpawnOnPhaseBegan.cs" />
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
     <Compile Include="Scripts\Game\Controller\AddSceneScript.cs" />
     <Compile Include="Scripts\Game\Controller\GameSceneController.cs" />
@@ -199,6 +201,7 @@
     <Compile Include="Scripts\Game\Enemy\EmitKillEventOnDestroy.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemySpawnSystem.cs" />
+    <Compile Include="Scripts\Game\Enemy\PhaseSpawnActivator.cs" />
     <Compile Include="Scripts\Game\Enemy\SpawnEntry.cs" />
     <Compile Include="Scripts\Game\Experience\ExpDropper.cs" />
     <Compile Include="Scripts\Game\Experience\ExperiencePoint.cs" />
@@ -209,7 +212,6 @@
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
     <Compile Include="Scripts\Game\Movement\TrailFollower.cs" />
     <Compile Include="Scripts\Game\Movement\TrailLeader.cs" />
-    <Compile Include="Scripts\Game\Objective\BossDefeatObjective.cs" />
     <Compile Include="Scripts\Game\Objective\CountObjective.cs" />
     <Compile Include="Scripts\Game\Objective\DashCountObjective.cs" />
     <Compile Include="Scripts\Game\Objective\KillCountObjective.cs" />

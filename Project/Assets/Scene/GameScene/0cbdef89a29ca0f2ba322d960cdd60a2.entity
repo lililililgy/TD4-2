@@ -23,7 +23,20 @@
             "type": "Transform"
         },
         {
+            "MoveObjective": {
+                "targetCount_": 60
+            },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "MoveObjective"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "0cbdef89a29ca0f2ba322d960cdd60a2",

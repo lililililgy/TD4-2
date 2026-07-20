@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -683.6998901367188,
-                "y": -68.0,
+                "x": -777.2998657226563,
+                "y": 32.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 86.49998474121094,
-                "y": 86.4998550415039,
-                "z": 86.4998550415039
+                "x": 132.0,
+                "y": 131.99984741210938,
+                "z": 131.99984741210938
             },
             "type": "Transform"
         },
@@ -28,6 +28,11 @@
                 "objectiveSystemEntityName_": "GameController",
                 "objectiveSystemSceneName_": "GameScene"
             },
+            "ShowOnPhase": {
+                "visiblePhases_": [
+                    "BossBattlePhase_1"
+                ]
+            },
             "type": "Variables"
         },
         {
@@ -35,7 +40,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "ObjectiveProgressForText"
+                    "name": "ShowOnPhase"
                 }
             ],
             "type": "Script"
@@ -70,13 +75,13 @@
                 "x": 2.0,
                 "y": -2.0
             },
-            "text": "111 ／ 111",
+            "text": "ダイオウイカ があらわれた",
             "type": "TextRenderer",
             "verticalAlignment": 1
         }
     ],
-    "guid": "ef3aad407960d5cfe4040d48d63996f5",
-    "name": "ProgressText",
+    "guid": "40dbcd7523d752ee169bddcc6b92c8ae",
+    "name": "BossBattlePhase_1",
     "parentGuid": null,
     "prefabName": ""
 }

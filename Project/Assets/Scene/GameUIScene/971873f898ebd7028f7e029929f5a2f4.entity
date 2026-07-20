@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -683.6998901367188,
-                "y": -68.0,
+                "x": -811.401123046875,
+                "y": -32.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 86.49998474121094,
-                "y": 86.4998550415039,
-                "z": 86.4998550415039
+                "x": 128.0,
+                "y": 128.0,
+                "z": 128.0
             },
             "type": "Transform"
         },
@@ -28,6 +28,11 @@
                 "objectiveSystemEntityName_": "GameController",
                 "objectiveSystemSceneName_": "GameScene"
             },
+            "ShowOnPhase": {
+                "visiblePhases_": [
+                    "TutorialPhase_Enemy"
+                ]
+            },
             "type": "Variables"
         },
         {
@@ -35,7 +40,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "ObjectiveProgressForText"
+                    "name": "ShowOnPhase"
                 }
             ],
             "type": "Script"
@@ -70,13 +75,13 @@
                 "x": 2.0,
                 "y": -2.0
             },
-            "text": "111 ／ 111",
+            "text": "テキを たおして みよう",
             "type": "TextRenderer",
             "verticalAlignment": 1
         }
     ],
-    "guid": "ef3aad407960d5cfe4040d48d63996f5",
-    "name": "ProgressText",
+    "guid": "971873f898ebd7028f7e029929f5a2f4",
+    "name": "EnemyTutorial",
     "parentGuid": null,
     "prefabName": ""
 }

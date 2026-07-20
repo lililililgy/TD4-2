@@ -23,7 +23,20 @@
             "type": "Transform"
         },
         {
+            "ShotObjective": {
+                "targetCount_": 1
+            },
             "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ShotObjective"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "94ebfa5794b876fccdf8c869dae129d7",
