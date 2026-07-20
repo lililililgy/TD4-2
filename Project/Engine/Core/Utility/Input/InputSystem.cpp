@@ -91,3 +91,11 @@ void ONEngine::MonoInternalMethods::InternalGetGamepadVibration(float* left, flo
 	*left = l;
 	*right = r;
 }
+
+float ONEngine::MonoInternalMethods::InternalGetGamepadLeftTrigger() {
+	return Input::GetGamepadLeftTrigger();
+}
+
+float ONEngine::MonoInternalMethods::InternalGetGamepadRightTrigger() {
+	return Input::GetGamepadRightTrigger();
+}

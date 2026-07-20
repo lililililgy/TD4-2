@@ -56,6 +56,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "9bed8ed4bfb77d3c6f620141c7c49acb",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,

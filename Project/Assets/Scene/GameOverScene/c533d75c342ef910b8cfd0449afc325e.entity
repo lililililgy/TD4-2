@@ -18,7 +18,7 @@
             "scale": {
                 "x": 1024.0,
                 "y": 128.0,
-                "z": 100.0
+                "z": 1.0
             },
             "type": "Transform"
         },
@@ -36,6 +36,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "3e99d086fb41c9c1ca690d300051c0c5",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,

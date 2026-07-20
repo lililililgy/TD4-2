@@ -34,6 +34,16 @@
             "guid": "b483b8102fc5179da2061600894c08d0",
             "parentGuid": "f02b20a697856bb4da0100284f7b8abc",
             "path": "./GameClearScene/b483b8102fc5179da2061600894c08d0.entity"
+        },
+        {
+            "guid": "ce3806b780bcc0699895e71a35d955e7",
+            "parentGuid": null,
+            "path": "./GameClearScene/ce3806b780bcc0699895e71a35d955e7.entity"
+        },
+        {
+            "guid": "3702ea06f8a1bf898619612596279f57",
+            "parentGuid": null,
+            "path": "./GameClearScene/3702ea06f8a1bf898619612596279f57.entity"
         }
     ]
 }
