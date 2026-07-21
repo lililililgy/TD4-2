@@ -16,7 +16,7 @@ using System.Collections.Generic;
 // スキップ先は「skipPhases_ に載っていない最初のフェーズ」を列の前方向に探して決める。
 // 飛び先の名前を別項目で持たせると、フェーズ名を変えた時に2箇所直すことになり、
 // 片方だけ直した状態（＝飛び先が見つからず無反応）を作りやすいため、対象リスト1つを設定の正にしている。
-public class PhaseSkipInput : MonoScript {
+public class PhaseSkipInput : MonoScript, IGaugeSource {
 
     // スキップ対象のフェーズ名。この中にいる間だけスキップ入力を受け付ける。
     [SerializeField] private List<string> skipPhases_ = new List<string> {
@@ -74,6 +74,13 @@ public class PhaseSkipInput : MonoScript {
             if (holdSeconds_ <= 0.0f) return 0.0f;
             return Mathf.Clamp01(heldSeconds_ / holdSeconds_);
         }
+    }
+
+    // スキップゲージ(SpriteGauge)が毎フレーム引く割合。
+    // 押している間だけ伸び、離す・対象外フェーズへ移ると Update() で heldSeconds_ が
+    // 0 に戻るので、ゲージも即座に空へ戻る。
+    public float GetGaugeRatio() {
+        return HoldProgress;
     }
 
     // 今スキップ入力を受け付けているか。「スキップできます」の表示出し分け用。

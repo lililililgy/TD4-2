@@ -16,7 +16,7 @@ using System.Collections.Generic;
 //
 // 常に「今アクティブな Objective」を保持し、UI はここを見て表示する想定。
 // シーン遷移そのものは GameSceneController の責務。ここでは目標達成判定とフェーズ送りだけを行う。
-public class ObjectiveSystem : MonoScript {
+public class ObjectiveSystem : MonoScript, IGaugeSource {
 
     // フェーズ列（フェーズエンティティ名の並び）。ここを書き換えるだけで進行順を自由に変えられる。
     // チュートリアルを飛ばしたい場合は Phase_Tutorial の項目を消せばよい。
@@ -69,6 +69,39 @@ public class ObjectiveSystem : MonoScript {
     // 現在アクティブな目標一覧（UI 表示用）
     public List<Objective> ActiveObjectives {
         get { return activeObjectives_; }
+    }
+
+    // 現在のフェーズの進捗(0.0〜1.0)。ProgressUI のゲージ(SpriteGauge)が毎フレーム引く。
+    // 目標の具象型は見ずに Objective.Progress() だけを使うので、
+    // 目標の種類が増えてもここは変わらない（ObjectiveProgressForText と同じ方針）。
+    //
+    // 1フェーズに複数の目標(AND条件)が積まれている場合は平均を取る。
+    // 最小値ではなく平均なのは、片方だけ進んでいる間バーが一切動かないと
+    // 進んでいないように見えるため。全部 1.0 にならないと 1.0 にならない点は変わらない。
+    public float PhaseProgress {
+        get {
+            // 全フェーズ終了。バーは満タンのままにする（テキスト側は finishedText_ に切り替わる）
+            if (finished_) return 1.0f;
+
+            // フェーズエンティティの解決待ち。まだ目標が動き出していないので 0
+            if (activeObjectives_.Count == 0) return 0.0f;
+
+            float total = 0.0f;
+            int count = 0;
+            foreach (var objective in activeObjectives_) {
+                if (objective == null) continue;
+
+                total += Mathf.Clamp01(objective.Progress());
+                count++;
+            }
+
+            return count > 0 ? total / count : 0.0f;
+        }
+    }
+
+    // 進捗ゲージ(SpriteGauge)が毎フレーム引く割合
+    public float GetGaugeRatio() {
+        return PhaseProgress;
     }
 
     // 現在のフェーズエンティティ名。範囲外（未設定・進行終了など）なら ""

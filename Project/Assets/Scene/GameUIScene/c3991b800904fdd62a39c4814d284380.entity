@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -683.9996948242188,
-                "y": -70.30001068115234,
+                "x": -683.6998901367188,
+                "y": -51.399993896484375,
                 "z": 0.0
             },
             "rotate": {
@@ -16,8 +16,8 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 86.49998474121094,
-                "y": 86.4998550415039,
+                "x": 155.7999725341797,
+                "y": 35.29984664916992,
                 "z": 86.4998550415039
             },
             "type": "Transform"
@@ -42,48 +42,45 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "ObjectiveProgressForText"
+                    "name": "SpriteGauge"
                 }
             ],
             "type": "Script"
         },
         {
-            "characterSpacing": 0,
-            "color": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
             "enable": 1,
-            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
-            "fontSize": 128,
-            "horizontalAlignment": 1,
-            "lineSpacing": 1.0,
-            "outlineColor": {
-                "w": 1.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 0.686274528503418,
+                    "y": 0.5921568870544434,
+                    "z": 0.0
+                },
+                "baseTextureGuid": "e15a742c92ed072dbb9b12306aa7b4a4",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
             },
-            "outlineWidth": 0,
-            "shadowColor": {
-                "w": 0.0,
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "shadowOffset": {
-                "x": 2.0,
-                "y": -2.0
-            },
-            "text": "111 ／ 111",
-            "type": "TextRenderer",
-            "verticalAlignment": 1
+            "type": "SpriteRenderer"
         }
     ],
-    "guid": "ef3aad407960d5cfe4040d48d63996f5",
-    "name": "ProgressUI",
+    "guid": "c3991b800904fdd62a39c4814d284380",
+    "name": "ProgressUI_1",
     "parentGuid": "4c123bd93950d3de425d84db5e344735",
     "prefabName": ""
 }
