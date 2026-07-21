@@ -17,12 +17,17 @@ public enum KingJellyfishAttackTypeEnum {
 public class KingJellyfish : MonoScript {
 
     [SerializeField] public string targetEntityName = "Player";
-    [SerializeField] public string cameraEntityName = "Camera";
+    [SerializeField] public string cameraEntityName = "MainCamera";
+    [SerializeField] public string postEffectEntityName = "Background";
 
     [SerializeField] public float idleDuration = 2.0f;
     [SerializeField] public float damageInvincibilityDuration = 0.5f;
     [SerializeField] public bool randomizeAttackType = true;
     [SerializeField] public KingJellyfishAttackTypeEnum fixedAttackType = KingJellyfishAttackTypeEnum.ChargeAttack;
+    [SerializeField] public float laserCameraShakeDuration = 0.35f;
+    [SerializeField] public float laserCameraShakeIntensity = 22.0f;
+    [SerializeField] public float laserCameraShakeFrequency = 26.0f;
+    [SerializeField] public float laserGrayscaleDuration = 0.35f;
 
     private HP hp_;
     private IKingJellyfishState state_;
@@ -38,6 +43,11 @@ public class KingJellyfish : MonoScript {
     private JellyfishWeakPoint weakPoint_;
     private Rigidbody2D rigidbody_;
     private float damageInvincibilityRemaining_;
+    private PlayerFollowCamera followCamera_;
+    private ScreenPostEffectTag screenPostEffect_;
+    private float grayscaleRemaining_;
+    private bool grayscaleActive_;
+    private bool grayscaleWasEnabled_;
 
     private Vector2 chargeStartPosition_;
     private Vector2 chargeTargetPosition_;
@@ -78,6 +88,8 @@ public class KingJellyfish : MonoScript {
         movementDepth_ = transform.position.z;
         attackRequested_ = false;
         damageInvincibilityRemaining_ = 0.0f;
+        grayscaleRemaining_ = 0.0f;
+        grayscaleActive_ = false;
         ResetActionLoop();
         ChangeState(new KingJellyfishIdleState());
     }
@@ -86,12 +98,19 @@ public class KingJellyfish : MonoScript {
     // 更新
     //=============================
     public override void Update() {
-        UpdateDamageInvincibility();
+		// 攻撃リクエストの処理
+		UpdateDamageInvincibility();
+		// 8方向レーザー攻撃の演出処理
+		UpdateLaserPresentation();
 
         if (state_ != null) {
             state_.Update(this);
         }
 
+    }
+
+    public override void OnDestroy() {
+        EndLaserGrayscale();
     }
 
     //=============================================================
@@ -454,6 +473,8 @@ public class KingJellyfish : MonoScript {
             return;
         }
 
+        BeginLaserPresentation();
+
         Vector2 origin = ToPlane(transform.position);
         int count = LaserCount;
 
@@ -481,6 +502,8 @@ public class KingJellyfish : MonoScript {
         if (String.IsNullOrEmpty(rotatingBeamSettings_.laserPrefabName)) {
             return;
         }
+
+        BeginLaserPresentation();
 
         Vector2 origin = ToPlane(transform.position);
         int count = RotatingLaserCount;
@@ -623,6 +646,82 @@ public class KingJellyfish : MonoScript {
         }
 
         laserScript.Configure(origin, normalized, length, width, damage, duration, transform.position.z, rotationSpeed);
+    }
+
+    private void BeginLaserPresentation() {
+
+		// 8方向レーザー攻撃の演出対象を解決する
+		ResolveLaserPresentationTargets();
+
+		// カメラの揺れを開始する
+		if (followCamera_ != null) {
+            followCamera_.Shake(
+                NonNegative(laserCameraShakeDuration),
+                NonNegative(laserCameraShakeIntensity),
+                NonNegative(laserCameraShakeFrequency));
+        }
+
+
+		// 画面をグレースケールにする
+		float duration = NonNegative(laserGrayscaleDuration);
+        if (screenPostEffect_ == null || duration <= 0.0f) {
+            return;
+        }
+
+        if (!grayscaleActive_) {
+            grayscaleWasEnabled_ = screenPostEffect_.IsEffectEnabled(ScreenPostEffectType.RadialBlur);
+        }
+
+        screenPostEffect_.SetEffectEnabled(ScreenPostEffectType.RadialBlur, true);
+        grayscaleRemaining_ = duration;
+        grayscaleActive_ = true;
+    }
+
+    private void UpdateLaserPresentation() {
+        if (!grayscaleActive_) {
+            return;
+        }
+
+        grayscaleRemaining_ -= Time.deltaTime;
+        if (grayscaleRemaining_ <= 0.0f) {
+            EndLaserGrayscale();
+        }
+    }
+
+    private void EndLaserGrayscale() {
+        if (grayscaleActive_
+            && screenPostEffect_ != null
+            && screenPostEffect_.entity != null
+            && screenPostEffect_.entity.Id != 0) {
+            screenPostEffect_.SetEffectEnabled(ScreenPostEffectType.RadialBlur, grayscaleWasEnabled_);
+        }
+
+        grayscaleRemaining_ = 0.0f;
+        grayscaleActive_ = false;
+    }
+
+    private void ResolveLaserPresentationTargets() {
+        if (cameraEntity_ == null && !String.IsNullOrEmpty(cameraEntityName)) {
+            cameraEntity_ = ecsGroup.FindEntity(cameraEntityName);
+        }
+
+        if (followCamera_ == null && cameraEntity_ != null) {
+            followCamera_ = cameraEntity_.GetScript<PlayerFollowCamera>();
+        }
+
+        if (screenPostEffect_ == null && !String.IsNullOrEmpty(postEffectEntityName)) {
+            Entity postEffectEntity = ecsGroup.FindEntity(postEffectEntityName);
+            if (postEffectEntity != null) {
+                screenPostEffect_ = postEffectEntity.GetComponent<ScreenPostEffectTag>();
+            }
+        }
+
+        if (screenPostEffect_ == null && cameraEntity_ != null) {
+            screenPostEffect_ = cameraEntity_.GetComponent<ScreenPostEffectTag>();
+            if (screenPostEffect_ == null) {
+                screenPostEffect_ = cameraEntity_.AddComponent<ScreenPostEffectTag>();
+            }
+        }
     }
 
 

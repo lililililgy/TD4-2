@@ -6,6 +6,12 @@
                 "x": 2000.0
             },
             "type": "Transform"
+        },
+        {
+            "KingJellyfish": {
+                "laserGrayscaleDuration": 3.3499999046325684
+            },
+            "type": "Variables"
         }
     ],
     "guid": "2a75a187cc14795397a4b907fc812b10",

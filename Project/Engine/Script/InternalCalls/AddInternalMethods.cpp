@@ -221,6 +221,10 @@ void ONEngine::AddComponentInternalCalls() {
 	AddRigidbody2DInternalCalls();
 	AddAudioInternalCalls();
 
+	/// screen post effect
+	mono_add_internal_call("ScreenPostEffectTag::InternalGetPostEffectEnabled", (void*)InternalGetScreenPostEffectEnabled);
+	mono_add_internal_call("ScreenPostEffectTag::InternalSetPostEffectEnabled", (void*)InternalSetScreenPostEffectEnabled);
+
 	/// sprite renderer
 	mono_add_internal_call("SpriteRenderer::InternalSetColor", (void*)InternalSetColor);
 	mono_add_internal_call("SpriteRenderer::InternalGetTextureSize", (void*)InternalGetTextureSize);

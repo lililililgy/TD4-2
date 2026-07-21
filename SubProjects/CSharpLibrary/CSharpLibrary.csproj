@@ -137,6 +137,7 @@
     <Compile Include="Scripts\Engine\ECS\Components\Compute\UILinkNavigationComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\DissolveMeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\MeshRenderer.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Renderer\ScreenPostEffectTag.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SkinMeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SpriteRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\TextRenderer.cs" />

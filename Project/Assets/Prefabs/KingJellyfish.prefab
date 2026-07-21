@@ -110,7 +110,12 @@
                 "damageInvincibilityDuration": 0.5,
                 "fixedAttackType": 0,
                 "idleDuration": 2.0,
+                "laserCameraShakeDuration": 0.3499999940395355,
+                "laserCameraShakeFrequency": 26.0,
+                "laserCameraShakeIntensity": 22.0,
+                "laserGrayscaleDuration": 0.3499999940395355,
                 "maxHp": 10,
+                "postEffectEntityName": "Background",
                 "randomizeAttackType": true,
                 "targetEntityName": "Player"
             },

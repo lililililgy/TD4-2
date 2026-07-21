@@ -11,6 +11,13 @@
                 "z": -0.591576874256134
             },
             "type": "Transform"
+        },
+        {
+            "HP": {
+                "currentHp_": 720.0,
+                "maxHp_": 792.0
+            },
+            "type": "Variables"
         }
     ],
     "guid": "fdd14a8c056d126471f6ed804cdec2c2",
