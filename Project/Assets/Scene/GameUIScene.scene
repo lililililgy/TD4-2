@@ -21,6 +21,11 @@
             "path": "./GameUIScene/e1466420638ccb60469ba3b9ef8533e0.entity"
         },
         {
+            "guid": "8eb6618475ba5605395d00bb35e82896",
+            "parentGuid": null,
+            "path": "./GameUIScene/8eb6618475ba5605395d00bb35e82896.entity"
+        },
+        {
             "guid": "ef3aad407960d5cfe4040d48d63996f5",
             "parentGuid": null,
             "path": "./GameUIScene/ef3aad407960d5cfe4040d48d63996f5.entity"

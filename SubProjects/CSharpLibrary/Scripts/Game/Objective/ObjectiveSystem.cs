@@ -38,23 +38,21 @@ public class ObjectiveSystem : MonoScript {
         JumpToPhase(ResolveStartIndex());
     }
 
-    // 開始フェーズを決める。既定は先頭で、GameFlow.ResumeFromCheckPoint() 経由で
-    // 再開要求が出ている時だけ保存地点から始める。
-    // 保存が無い／フェーズ名が現在の列に見つからない場合（フェーズをリネーム・削除した、
+    // 開始フェーズを決める。既定は先頭で、GameFlow.ResumeFromCheckPoint() 経由などで
+    // フェーズ要求が出ている時だけそこから始める。
+    // 要求が無い／要求されたフェーズ名が現在の列に見つからない場合（フェーズをリネーム・削除した、
     // セーブが古い等）も先頭に倒す。番号ではなく名前で引き直すのはこのため。
     private int ResolveStartIndex() {
         // 要求はワンショット。次に普通に GameScene を読んだ時は先頭から始まる。
-        if (!GameFlow.ConsumeResumeRequest()) return 0;
-        if (phaseSequence_ == null) return 0;
-
-        string savedPhaseName = ContinueState.PhaseName;
-        if (string.IsNullOrEmpty(savedPhaseName)) return 0;
-
-        int index = phaseSequence_.IndexOf(savedPhaseName);
+        int index = IndexOfPhase(PhaseRequest.Consume());
         return index >= 0 ? index : 0;
     }
 
     public override void Update() {
+        // プレイ中に出されたフェーズ要求（チュートリアルスキップ等）に追従する。
+        // 進行終了後でも受け付けたいので finished_ の判定より先に引く。
+        ConsumePhaseRequest();
+
         if (finished_) return;
 
         // フェーズエンティティが未生成だった場合の遅延解決
@@ -75,13 +73,26 @@ public class ObjectiveSystem : MonoScript {
 
     // 現在のフェーズエンティティ名。範囲外（未設定・進行終了など）なら ""
     public string CurrentPhaseName {
-        get {
-            if (phaseSequence_ == null ||
-                currentIndex_ < 0 || currentIndex_ >= phaseSequence_.Count) {
-                return "";
-            }
-            return phaseSequence_[currentIndex_];
-        }
+        get { return PhaseNameAt(currentIndex_); }
+    }
+
+    // フェーズ列の長さ
+    public int PhaseCount {
+        get { return phaseSequence_ != null ? phaseSequence_.Count : 0; }
+    }
+
+    // index 番目のフェーズ名。範囲外なら ""
+    public string PhaseNameAt(int index) {
+        if (phaseSequence_ == null || index < 0 || index >= phaseSequence_.Count) return "";
+        return phaseSequence_[index];
+    }
+
+    // フェーズ列上の位置を名前で引く。見つからなければ -1。
+    // 「この先どこまで飛ばすか」を外から決める側（PhaseSkipInput 等）がフェーズ列を
+    // 直接持たずに済むよう、名前⇔位置の変換はここに集約する。
+    public int IndexOfPhase(string phaseName) {
+        if (phaseSequence_ == null || string.IsNullOrEmpty(phaseName)) return -1;
+        return phaseSequence_.IndexOf(phaseName);
     }
 
     // 現在のフェーズ列上の位置（0始まり）
@@ -121,10 +132,31 @@ public class ObjectiveSystem : MonoScript {
         TryResolvePhaseEntity();
     }
 
+    // 名前でフェーズへ飛ぶ。列に無い名前なら何もせず false を返す。
+    // 範囲外を進行終了に倒す JumpToPhase(int) と違い、こちらは知らない名前を無視する
+    // （プレイ中の要求で、名前の打ち間違い1つがクリア扱いになるのを防ぐ）。
+    public bool JumpToPhase(string phaseName) {
+        int index = IndexOfPhase(phaseName);
+        if (index < 0) return false;
+
+        JumpToPhase(index);
+        return true;
+    }
+
     // 現在のフェーズを打ち切って次へ進める（達成を待たないスキップにも使える）。
     // 末尾を超えた index は JumpToPhase 側の範囲外処理で進行終了（finished_ = true）になる。
     public void AdvancePhase() {
         JumpToPhase(currentIndex_ + 1);
+    }
+
+    // 出ているフェーズ要求を1つ引いて、その名前のフェーズへ飛ぶ。
+    // 要求が無ければ何もしない。飛んだ先で ContinueState.Save() が走るため、
+    // スキップした結果もそのままコンティニュー地点になる。
+    private void ConsumePhaseRequest() {
+        string requestedPhaseName = PhaseRequest.Consume();
+        if (string.IsNullOrEmpty(requestedPhaseName)) return;
+
+        JumpToPhase(requestedPhaseName);
     }
 
     private bool IsPhaseCompleted() {

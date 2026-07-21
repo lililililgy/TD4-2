@@ -6,6 +6,10 @@ using System.Collections.Generic;
 public class GameSceneController : MonoScript
 {
 
+	// ポーズを開くキー割り当て（キーボードとゲームパッドの両方をサポート）
+	[SerializeField] private List<KeyCode> pauseKeys_ = new List<KeyCode> { KeyCode.Escape };
+	[SerializeField] private List<Gamepad> pauseButtons_ = new List<Gamepad> { Gamepad.Start };
+
 	// PlayerDeadEvent を受け取ったら立てるラッチ。以降クリアされない
 	// （死亡フレームのうちに遷移するが、発行元の実行順に依存しないようフラグで受ける）。
 	private bool isGameOver_ = false;
@@ -71,19 +75,10 @@ public class GameSceneController : MonoScript
 
 
 
+	// ポーズは押しっぱなしで開き直されると困るので、押された瞬間だけを見る
 	private bool CheckInput()
 	{
-		if (Input.TriggerKey(KeyCode.Escape))
-		{
-			return true;
-		}
-
-		if (Input.TriggerGamepad(Gamepad.Start))
-		{
-			return true;
-		}
-
-		return false;
+		return InputUtil.AnyTriggered(pauseKeys_, pauseButtons_);
 	}
 
 	private bool CheckClear()

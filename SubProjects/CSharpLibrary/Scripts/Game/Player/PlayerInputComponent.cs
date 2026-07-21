@@ -17,43 +17,10 @@ public class PlayerInputComponent
         moveDir_ = moveDir_.Normalized();
 
         //発射
-        isShootButtonPressed_ = false;
-
-        foreach (var key in shootKeys_) {
-            if (Input.PressKey(key)) {
-                isShootButtonPressed_ = true;
-                break;
-            }
-        }
-
-        if (isShootButtonPressed_) {
-            foreach (var button in shotButtons_) {
-                if (Input.PressGamepad(button)) {
-                    isShootButtonPressed_ = true;
-                    break;
-                }
-            }
-        }
+        isShootButtonPressed_ = InputUtil.AnyPressed(shootKeys_, shotButtons_);
 
         // ダッシュ
-        isDashButtonPressed_ = false;
-
-        foreach (var key in dashKeys_) {
-            if (Input.PressKey(key)) {
-                isDashButtonPressed_ = true;
-                break;
-            }
-        }
-
-        if (!isDashButtonPressed_) {
-            foreach (var button in dashButtons_) {
-                if (Input.PressGamepad(button)) {
-                    isDashButtonPressed_ = true;
-                    break;
-                }
-            }
-        }
-
+        isDashButtonPressed_ = InputUtil.AnyPressed(dashKeys_, dashButtons_);
     }
 
     public Vector2 MoveDir {
