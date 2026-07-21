@@ -82,10 +82,6 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "KeyColorChanger"
-                },
-                {
-                    "enable": true,
                     "name": "TriggerColorChanger"
                 }
             ],
