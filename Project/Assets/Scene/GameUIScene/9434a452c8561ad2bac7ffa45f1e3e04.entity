@@ -29,6 +29,8 @@
                 "objectiveSystemSceneName_": "GameScene"
             },
             "ShowOnPhase": {
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene",
                 "visiblePhases_": [
                     "TutorialPhase_Move",
                     "TutorialPhase_Dash",
@@ -85,6 +87,6 @@
     ],
     "guid": "9434a452c8561ad2bac7ffa45f1e3e04",
     "name": "ProgressLabelTutorial",
-    "parentGuid": null,
+    "parentGuid": "4c123bd93950d3de425d84db5e344735",
     "prefabName": ""
 }

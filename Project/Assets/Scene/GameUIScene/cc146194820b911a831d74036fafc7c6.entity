@@ -29,6 +29,8 @@
                 "objectiveSystemSceneName_": "GameScene"
             },
             "ShowOnPhase": {
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene",
                 "visiblePhases_": [
                     "EnemyHuntPhase_1",
                     "EnemyHuntPhase_2",
@@ -84,6 +86,6 @@
     ],
     "guid": "cc146194820b911a831d74036fafc7c6",
     "name": "ProgressLabelHunt",
-    "parentGuid": null,
+    "parentGuid": "4c123bd93950d3de425d84db5e344735",
     "prefabName": ""
 }
