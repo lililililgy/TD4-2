@@ -32,6 +32,8 @@ namespace ONEngine {
         void Stop();
         void Clear();
         void Pause();
+        void Emit(int count);
+        int ConsumePendingEmitCount();
 
         void UpdateTime(float dt) { playbackTime_ += dt; }
         void ResetTime(float t = 0.0f) { playbackTime_ = t; }
@@ -70,6 +72,9 @@ namespace ONEngine {
         bool isPlaying_ = false;
         bool isPaused_ = false;
         float playbackTime_ = 0.0f;
+        int pendingEmitCount_ = 0;
     };
+
+    void InternalEmitParticleSystem2D(uint64_t nativeHandle, int32_t count);
 
 }

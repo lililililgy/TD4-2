@@ -139,6 +139,21 @@
             "guid": "ace547fb01b9d9a68bd495a2ca57145b",
             "parentGuid": "cce534c42aa14f70adac26931ce67a9e",
             "path": "./DebugScene_takeshi/ace547fb01b9d9a68bd495a2ca57145b.entity"
+        },
+        {
+            "guid": "34385fcde32556e8bae700fce81432a4",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/34385fcde32556e8bae700fce81432a4.entity"
+        },
+        {
+            "guid": "4d1dccc91bfa114d65af09b56a6794bb",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/4d1dccc91bfa114d65af09b56a6794bb.entity"
+        },
+        {
+            "guid": "351c853213de36d23f775678447a1075",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/351c853213de36d23f775678447a1075.entity"
         }
     ]
 }
