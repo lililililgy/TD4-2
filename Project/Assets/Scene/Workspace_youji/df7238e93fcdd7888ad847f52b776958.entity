@@ -1,0 +1,67 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": -0.23600077629089355,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 3.5029988288879395,
+                "y": 3.502997398376465,
+                "z": 3.502997398376465
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 0.09403785318136215,
+                "y": 0.6559139490127563,
+                "z": 0.13028788566589355
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/MPLUSRounded1c-Black.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.9605734944343567,
+                "y": 0.9089297652244568,
+                "z": 0.9089297652244568
+            },
+            "outlineWidth": 2,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "A",
+            "type": "TextRenderer",
+            "verticalAlignment": 0
+        }
+    ],
+    "guid": "df7238e93fcdd7888ad847f52b776958",
+    "name": "A",
+    "parentGuid": "605c70baa59edc007be60326d7e67d34",
+    "prefabName": ""
+}
