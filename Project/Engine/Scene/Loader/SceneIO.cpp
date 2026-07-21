@@ -12,6 +12,7 @@ using namespace ONEngine;
 #include <nlohmann/json.hpp>
 
 /// engine
+#include "Engine/Core/GameFramework/DebugSceneGenerator.h"
 #include "Engine/ECS/Entity/EntityJsonConverter.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/Editor/Commands/ComponentEditCommands/ComponentJsonConverter.h"
@@ -32,6 +33,9 @@ void SceneIO::Output(const std::string& sceneName, ECSGroup* ecsGroup) {
 
 void SceneIO::Input(const std::string& sceneName, ECSGroup* ecsGroup) {
 	/* jsonを読み込んでsceneに変換する */
+	if (sceneName == "Debug") {
+		DebugSceneGenerator::GenerateDefaultDebugSceneIfNeeded();
+	}
 	fileName_ = sceneName + ".scene";
 	LoadScene(fileName_, ecsGroup);
 }

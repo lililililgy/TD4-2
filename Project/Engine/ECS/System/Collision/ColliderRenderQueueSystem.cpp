@@ -1,4 +1,4 @@
-﻿#include "ColliderRenderQueueSystem.h"
+#include "ColliderRenderQueueSystem.h"
 
 using namespace ONEngine;
 
@@ -25,14 +25,10 @@ void ColliderRenderQueueSystem::UpdateSphereCollider(ComponentArray<SphereCollid
 
 
 	for (auto& sphereCollider : sphereColliderArray->GetUsedComponents()) {
-		if (!sphereCollider) {
-			continue; // 無効なコライダーはスキップ
+		if (!CheckComponentEnable(sphereCollider)) {
+			continue;
 		}
-
 		GameEntity* owner = sphereCollider->GetOwner();
-		if (!owner) {
-			continue; // オーナーが無効な場合はスキップ
-		}
 
 		Vector3 position = owner->GetPosition();
 		float radius = sphereCollider->GetRadius();
@@ -55,13 +51,10 @@ void ColliderRenderQueueSystem::UpdateBoxCollider(ComponentArray<BoxCollider>* b
 
 	/// gizmoを使って表示する
 	for (auto& boxCollider : boxColliderArray->GetUsedComponents()) {
-		if (!boxCollider) {
-			continue; // 無効なコライダーはスキップ
+		if (!CheckComponentEnable(boxCollider)) {
+			continue;
 		}
 		GameEntity* owner = boxCollider->GetOwner();
-		if (!owner) {
-			continue; // オーナーが無効な場合はスキップ
-		}
 
 		const Vector3 position = owner->GetPosition();
 		Vector3 size = boxCollider->GetSize();
@@ -84,13 +77,10 @@ void ColliderRenderQueueSystem::UpdateCircleCollider(ComponentArray<CircleCollid
 	}
 
 	for (auto& circleCollider : circleColliderArray->GetUsedComponents()) {
-		if (!circleCollider) {
+		if (!CheckComponentEnable(circleCollider)) {
 			continue;
 		}
 		GameEntity* owner = circleCollider->GetOwner();
-		if (!owner) {
-			continue;
-		}
 
 		Vector3 position = owner->GetPosition();
 		float radius = circleCollider->GetRadius();
@@ -108,13 +98,10 @@ void ColliderRenderQueueSystem::UpdateBoxCollider2D(ComponentArray<BoxCollider2D
 	}
 
 	for (auto& boxCollider2D : boxCollider2DArray->GetUsedComponents()) {
-		if (!boxCollider2D) {
+		if (!CheckComponentEnable(boxCollider2D)) {
 			continue;
 		}
 		GameEntity* owner = boxCollider2D->GetOwner();
-		if (!owner) {
-			continue;
-		}
 
 		const Vector3 position = owner->GetPosition();
 		Vector2 size2D = boxCollider2D->GetSize();

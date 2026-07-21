@@ -1,4 +1,4 @@
-﻿#include "SkinMeshUpdateSystem.h"
+#include "SkinMeshUpdateSystem.h"
 
 using namespace ONEngine;
 
@@ -21,7 +21,7 @@ void SkinMeshUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 	for (auto& skinMesh : skinMeshArray->GetUsedComponents()) {
 		/// 以降の処理を無視する条件
-		if (!skinMesh || !skinMesh->enable || !skinMesh->GetOwner()->active) {
+		if (!CheckComponentEnable(skinMesh)) {
 			continue;
 		}
 

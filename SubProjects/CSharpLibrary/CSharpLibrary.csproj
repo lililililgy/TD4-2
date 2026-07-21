@@ -303,10 +303,12 @@
     <Compile Include="Scripts\Test\CollisionCrashTestScript.cs" />
     <Compile Include="Scripts\Test\ComponentEnableTestScript.cs" />
     <Compile Include="Scripts\Test\EngineLaunchTest.cs" />
+    <Compile Include="Scripts\Test\EntityActiveTestScript.cs" />
     <Compile Include="Scripts\Test\HotReloadAssetAddTestScript.cs" />
     <Compile Include="Scripts\Test\HotReloadTestScript.cs" />
     <Compile Include="Scripts\Test\ListEnumSerializeTestScript.cs" />
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
+    <Compile Include="Scripts\Test\PressAnyKeyGamepadTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
     <Compile Include="Scripts\Test\RadialBlurTestScript.cs" />
     <Compile Include="Scripts\Test\Rigidbody2DTestScript.cs" />

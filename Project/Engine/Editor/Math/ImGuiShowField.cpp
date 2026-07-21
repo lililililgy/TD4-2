@@ -744,7 +744,24 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 	ImGui::PushID(field);
 	MonoClass* listClass = mono_object_get_class(listObj);
 	MonoMethod* getCountMethod = mono_class_get_method_from_name(listClass, "get_Count", 0);
-	int count = *(int*)mono_object_unbox(mono_runtime_invoke(getCountMethod, listObj, nullptr, nullptr));
+	
+	MonoObject* exc = nullptr;
+	MonoObject* countObj = mono_runtime_invoke(getCountMethod, listObj, nullptr, &exc);
+	if (exc) {
+		ONEngine::MonoScriptEngineUtils::HandleException(exc);
+		ImGui::Text("%s: (exception in get_Count)", name);
+		ImGui::PopID();
+		return;
+	}
+	int count = 0;
+	if (countObj) {
+		count = *(int*)mono_object_unbox(countObj);
+	} else {
+		ImGui::Text("%s: (null count)", name);
+		ImGui::PopID();
+		return;
+	}
+
 	if(ImGui::CollapsingHeader(name)) {
 		ImGui::Indent();
 		MonoMethod* getItemMethod = mono_class_get_method_from_name(listClass, "get_Item", 1);
@@ -762,24 +779,25 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 			if(size < 0) size = 0;
 			if(size > count) {
 				for(int i = 0; i < size - count; ++i) {
-					if(elemTypeId == MONO_TYPE_I4) { int v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-					else if(elemTypeId == MONO_TYPE_R4) { float v = 0.0f; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-					else if(elemTypeId == MONO_TYPE_BOOLEAN) { bool v = false; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-					else if(elemTypeId == MONO_TYPE_STRING) { void* args[1] = { mono_string_new(domain, "") }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+					exc = nullptr;
+					if(elemTypeId == MONO_TYPE_I4) { int v = 0; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, &exc); }
+					else if(elemTypeId == MONO_TYPE_R4) { float v = 0.0f; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, &exc); }
+					else if(elemTypeId == MONO_TYPE_BOOLEAN) { bool v = false; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, &exc); }
+					else if(elemTypeId == MONO_TYPE_STRING) { MonoString* monoStr = mono_string_new(domain, ""); void* args[1] = { monoStr }; mono_runtime_invoke(addMethod, listObj, args, &exc); }
 					else if(elemTypeId == MONO_TYPE_VALUETYPE || elemTypeId == MONO_TYPE_CLASS) {
 						MonoClass* ek = mono_class_from_mono_type(elemType);
 						if (ek) {
 							const char* ekName = mono_class_get_name(ek);
-							if(ekName && strcmp(ekName, "Vector3") == 0) { ONEngine::Vector3 v = ONEngine::Vector3::Zero; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+							if(ekName && strcmp(ekName, "Vector3") == 0) { ONEngine::Vector3 v = ONEngine::Vector3::Zero; void* args[1] = { &v }; mono_runtime_invoke(addMethod, listObj, args, &exc); }
 							else if(mono_class_is_enum(ek)) {
 								MonoType* baseType = mono_class_enum_basetype(ek);
 								int baseTypeId = baseType ? mono_type_get_type(baseType) : MONO_TYPE_I4;
 								int8_t temp8 = 0;
 								int16_t temp16 = 0;
 								int32_t temp32 = 0;
-								if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { void* args[1] = { &temp8 }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-								else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { void* args[1] = { &temp16 }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
-								else { void* args[1] = { &temp32 }; mono_runtime_invoke(addMethod, listObj, args, nullptr); }
+								if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { void* args[1] = { &temp8 }; mono_runtime_invoke(addMethod, listObj, args, &exc); }
+								else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { void* args[1] = { &temp16 }; mono_runtime_invoke(addMethod, listObj, args, &exc); }
+								else { void* args[1] = { &temp32 }; mono_runtime_invoke(addMethod, listObj, args, &exc); }
 							}
 							else {
 								MonoObject* item = mono_object_new(domain, ek);
@@ -787,31 +805,110 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 									mono_runtime_object_init(item);
 								}
 								void* args[1] = { item };
-								mono_runtime_invoke(addMethod, listObj, args, nullptr);
+								mono_runtime_invoke(addMethod, listObj, args, &exc);
 							}
 						}
 					}
+					if (exc) {
+						ONEngine::MonoScriptEngineUtils::HandleException(exc);
+					}
 				}
 			} else if(size < count) {
-				for(int i = 0; i < count - size; ++i) { int idx = size; void* args[1] = { &idx }; mono_runtime_invoke(removeAtMethod, listObj, args, nullptr); }
+				for(int i = 0; i < count - size; ++i) { 
+					int idx = size; 
+					void* args[1] = { &idx }; 
+					exc = nullptr;
+					mono_runtime_invoke(removeAtMethod, listObj, args, &exc); 
+					if (exc) {
+						ONEngine::MonoScriptEngineUtils::HandleException(exc);
+					}
+				}
 			}
 			count = size;
 		}
 		for(int i = 0; i < count; ++i) {
 			ImGui::PushID(i);
-			void* getArgs[1] = { &i }; MonoObject* itemObj = mono_runtime_invoke(getItemMethod, listObj, getArgs, nullptr);
+			int index = i;
+			void* getArgs[1] = { &index }; 
+			exc = nullptr;
+			MonoObject* itemObj = mono_runtime_invoke(getItemMethod, listObj, getArgs, &exc);
+			if (exc) {
+				ONEngine::MonoScriptEngineUtils::HandleException(exc);
+				ImGui::Text("[%d]: (exception)", i);
+				ImGui::PopID();
+				continue;
+			}
 			std::string itemName = std::format("[{}]", i);
-			if(elemTypeId == MONO_TYPE_I4) { int v = *(int*)mono_object_unbox(itemObj); if(ImGui::DragInt(itemName.c_str(), &v)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
-			else if(elemTypeId == MONO_TYPE_R4) { float v = *(float*)mono_object_unbox(itemObj); if(ImGui::DragFloat(itemName.c_str(), &v)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
-			else if(elemTypeId == MONO_TYPE_BOOLEAN) { bool v = *(bool*)mono_object_unbox(itemObj); if(ImGui::Checkbox(itemName.c_str(), &v)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
-			else if(elemTypeId == MONO_TYPE_STRING) { char* u = mono_string_to_utf8((MonoString*)itemObj); std::string v = u; mono_free(u); if(ImGuiInputText(itemName.c_str(), &v)) { void* setArgs[2] = { &i, mono_string_new(domain, v.c_str()) }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } }
+			if(elemTypeId == MONO_TYPE_I4) { 
+				int v = 0;
+				if (itemObj) {
+					v = *(int*)mono_object_unbox(itemObj);
+				}
+				if(ImGui::DragInt(itemName.c_str(), &v)) { 
+					int setIndex = i;
+					void* setArgs[2] = { &setIndex, &v }; 
+					exc = nullptr;
+					mono_runtime_invoke(setItemMethod, listObj, setArgs, &exc); 
+					if (exc) ONEngine::MonoScriptEngineUtils::HandleException(exc);
+				} 
+			}
+			else if(elemTypeId == MONO_TYPE_R4) { 
+				float v = 0.0f;
+				if (itemObj) {
+					v = *(float*)mono_object_unbox(itemObj);
+				}
+				if(ImGui::DragFloat(itemName.c_str(), &v)) { 
+					int setIndex = i;
+					void* setArgs[2] = { &setIndex, &v }; 
+					exc = nullptr;
+					mono_runtime_invoke(setItemMethod, listObj, setArgs, &exc); 
+					if (exc) ONEngine::MonoScriptEngineUtils::HandleException(exc);
+				} 
+			}
+			else if(elemTypeId == MONO_TYPE_BOOLEAN) { 
+				bool v = false;
+				if (itemObj) {
+					v = *(bool*)mono_object_unbox(itemObj);
+				}
+				if(ImGui::Checkbox(itemName.c_str(), &v)) { 
+					int setIndex = i;
+					void* setArgs[2] = { &setIndex, &v }; 
+					exc = nullptr;
+					mono_runtime_invoke(setItemMethod, listObj, setArgs, &exc); 
+					if (exc) ONEngine::MonoScriptEngineUtils::HandleException(exc);
+				} 
+			}
+			else if(elemTypeId == MONO_TYPE_STRING) { 
+				std::string v = "";
+				if (itemObj) {
+					char* u = mono_string_to_utf8((MonoString*)itemObj); 
+					if (u) {
+						v = u; 
+						mono_free(u);
+					}
+				}
+				if(ImGuiInputText(itemName.c_str(), &v)) { 
+					int setIndex = i;
+					MonoString* monoStr = mono_string_new(domain, v.c_str());
+					void* setArgs[2] = { &setIndex, monoStr }; 
+					exc = nullptr;
+					mono_runtime_invoke(setItemMethod, listObj, setArgs, &exc); 
+					if (exc) ONEngine::MonoScriptEngineUtils::HandleException(exc);
+				} 
+			}
 			else if(elemTypeId == MONO_TYPE_VALUETYPE || elemTypeId == MONO_TYPE_CLASS) {
 				MonoClass* ek = mono_class_from_mono_type(elemType);
 				if (ek) {
 					const char* ekName = mono_class_get_name(ek);
 					if(ekName && strcmp(ekName, "Vector3") == 0) { 
 						ONEngine::Vector3 v = itemObj ? *(ONEngine::Vector3*)mono_object_unbox(itemObj) : ONEngine::Vector3::Zero; 
-						if(ImGui::DragFloat3(itemName.c_str(), &v.x)) { void* setArgs[2] = { &i, &v }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); } 
+						if(ImGui::DragFloat3(itemName.c_str(), &v.x)) { 
+							int setIndex = i;
+							void* setArgs[2] = { &setIndex, &v }; 
+							exc = nullptr;
+							mono_runtime_invoke(setItemMethod, listObj, setArgs, &exc); 
+							if (exc) ONEngine::MonoScriptEngineUtils::HandleException(exc);
+						} 
 					}
 					else if(mono_class_is_enum(ek)) { 
 						MonoType* baseType = mono_class_enum_basetype(ek);
@@ -828,12 +925,15 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 							else v = *(int32_t*)unboxed;
 						}
 						if(DrawEnumCombo(ek, itemName.c_str(), v)) { 
+							int setIndex = i;
 							int8_t temp8 = (int8_t)v;
 							int16_t temp16 = (int16_t)v;
 							int32_t temp32 = (int32_t)v;
-							if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { void* setArgs[2] = { &i, &temp8 }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
-							else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { void* setArgs[2] = { &i, &temp16 }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
-							else { void* setArgs[2] = { &i, &temp32 }; mono_runtime_invoke(setItemMethod, listObj, setArgs, nullptr); }
+							exc = nullptr;
+							if (baseTypeId == MONO_TYPE_I1 || baseTypeId == MONO_TYPE_U1) { void* setArgs[2] = { &setIndex, &temp8 }; mono_runtime_invoke(setItemMethod, listObj, setArgs, &exc); }
+							else if (baseTypeId == MONO_TYPE_I2 || baseTypeId == MONO_TYPE_U2) { void* setArgs[2] = { &setIndex, &temp16 }; mono_runtime_invoke(setItemMethod, listObj, setArgs, &exc); }
+							else { void* setArgs[2] = { &setIndex, &temp32 }; mono_runtime_invoke(setItemMethod, listObj, setArgs, &exc); }
+							if (exc) ONEngine::MonoScriptEngineUtils::HandleException(exc);
 						} 		 
 					}
 					else {

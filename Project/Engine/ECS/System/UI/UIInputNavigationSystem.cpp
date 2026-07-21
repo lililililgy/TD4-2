@@ -7,6 +7,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UIElementComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/UI/UILinkNavigationComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Script/Script.h"
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Entity/GameEntity/GameEntity.h"
 #include "Engine/Script/MonoScriptEngine.h"
 
@@ -193,6 +194,9 @@ void UIInputNavigationSystem::ProcessInputNavigation(ECSGroup* ecs) {
 	if (!groupArray) return;
 
 	for (auto& groupComp : groupArray->GetUsedComponents()) {
+		if (!CheckComponentEnable(groupComp)) {
+			continue;
+		}
 		GameEntity* groupOwner = groupComp->GetOwner();
 		Guid groupGuid = groupOwner ? groupOwner->GetGuid() : Guid::kInvalid;
 

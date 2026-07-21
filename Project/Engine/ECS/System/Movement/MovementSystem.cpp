@@ -1,4 +1,4 @@
-﻿#include "MovementSystem.h"
+#include "MovementSystem.h"
 #include "Engine/ECS/EntityComponentSystem/ECSGroup.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Agent/AgentIntentComponent.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Transform/Transform.h"
@@ -6,6 +6,7 @@
 #include "Engine/Core/Utility/Time/CPUTimeStamp.h"
 #include "Engine/ECS/Component/Array/ComponentArray.h"
 #include "Engine/ECS/Entity/GameEntity/GameEntity.h"
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 
 namespace ONEngine {
 
@@ -24,7 +25,7 @@ void MovementSystem::RuntimeUpdate(ECSGroup* ecs) {
     }
 
     for (auto& intent : intentArray->GetUsedComponents()) {
-        if (!intent || !intent->enable) {
+        if (!CheckComponentEnable(intent)) {
             continue;
         }
 

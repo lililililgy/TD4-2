@@ -124,7 +124,7 @@ void ParticleSystemRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* camer
 
     if (psArray) {
         for (auto& ps : psArray->GetUsedComponents()) {
-            if (!ps || !ps->enable || ps->aliveCount == 0) continue;
+            if (!CheckComponentEnable(ps) || ps->aliveCount == 0) continue;
 
             // Per-system data
             PerSystemData perSystemData{};
