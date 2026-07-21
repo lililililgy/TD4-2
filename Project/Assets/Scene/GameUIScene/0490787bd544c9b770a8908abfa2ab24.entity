@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 12.0,
-                "y": -6.0,
+                "x": -0.9359999895095825,
+                "y": -0.17600002884864807,
                 "z": 0.0
             },
             "rotate": {
@@ -16,18 +16,29 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 3.0,
-                "y": 3.0,
-                "z": 3.0
+                "x": 0.800000011920929,
+                "y": 0.3199999928474426,
+                "z": 1.0
             },
             "type": "Transform"
         },
         {
+            "KeyColorChanger": {
+                "color": {
+                    "w": 1.0,
+                    "x": 0.699999988079071,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "keys": [
+                    42
+                ]
+            },
             "type": "Variables"
         },
         {
             "enable": 1,
-            "isPixelPerfect": false,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -35,7 +46,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "00000000000000000000000000000000",
+                "baseTextureGuid": "12b10e8f59d91ebd317ada95f3413ea6",
                 "bloomIntensity": 1.0,
                 "bloomRadius": 12.0,
                 "bloomThreshold": 0.800000011920929,
@@ -55,10 +66,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "KeyColorChanger"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "9a20f07aee3e36fd64e88c873a5090b7",
-    "name": "InputTypeSprite",
-    "parentGuid": "6243b2904542ef7aefdaf831b544c314",
+    "guid": "0490787bd544c9b770a8908abfa2ab24",
+    "name": "Shift",
+    "parentGuid": "35399754cfd804c274275f0b2058c389",
     "prefabName": ""
 }

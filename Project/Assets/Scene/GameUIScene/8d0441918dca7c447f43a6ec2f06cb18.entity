@@ -6,11 +6,16 @@
                 "x": 0.0,
                 "y": 0.0
             },
+            "scale": {
+                "x": 2.0,
+                "y": 2.0,
+                "z": 2.0
+            },
             "type": "Transform"
         }
     ],
-    "guid": "a59bf647014bc3faab12978472ac8a8f",
+    "guid": "8d0441918dca7c447f43a6ec2f06cb18",
     "name": "GamepadUIRoot",
-    "parentGuid": "387362fb5dddbdd852badabb28aeef48",
+    "parentGuid": "5319d7d124ab41b36bddad5d32de0ae7",
     "prefabName": "GamepadUIRoot"
 }

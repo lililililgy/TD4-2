@@ -6,11 +6,16 @@
                 "x": 0.0,
                 "y": 0.0
             },
+            "scale": {
+                "x": 2.0,
+                "y": 2.0,
+                "z": 2.0
+            },
             "type": "Transform"
         }
     ],
-    "guid": "8a4b75a99a9fad9d6e67c9dab898bea4",
+    "guid": "4962b15b0b5e237e693faf89beb6e6dc",
     "name": "KeyboardUIRoot",
-    "parentGuid": "387362fb5dddbdd852badabb28aeef48",
+    "parentGuid": "5319d7d124ab41b36bddad5d32de0ae7",
     "prefabName": "KeyboardUIRoot"
 }
