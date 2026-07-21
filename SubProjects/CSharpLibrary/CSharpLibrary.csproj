@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Project\Packages\Scripts\</OutputPath>
@@ -198,11 +198,15 @@
     <Compile Include="Scripts\Game\Common\GameEvents.cs" />
     <Compile Include="Scripts\Game\Common\GameFlow.cs" />
     <Compile Include="Scripts\Game\Common\HP.cs" />
+    <Compile Include="Scripts\Game\Common\IGaugeSource.cs" />
+    <Compile Include="Scripts\Game\Common\InputUtil.cs" />
+    <Compile Include="Scripts\Game\Common\PhaseRequest.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
     <Compile Include="Scripts\Game\Common\ShowOnPhase.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnDestroy.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnPhaseBegan.cs" />
+    <Compile Include="Scripts\Game\Common\SpriteGauge.cs" />
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
     <Compile Include="Scripts\Game\Controller\AddSceneScript.cs" />
     <Compile Include="Scripts\Game\Controller\GameSceneController.cs" />
@@ -232,6 +236,7 @@
     <Compile Include="Scripts\Game\Objective\MoveObjective.cs" />
     <Compile Include="Scripts\Game\Objective\Objective.cs" />
     <Compile Include="Scripts\Game\Objective\ObjectiveSystem.cs" />
+    <Compile Include="Scripts\Game\Objective\PhaseSkipInput.cs" />
     <Compile Include="Scripts\Game\Objective\ShotObjective.cs" />
     <Compile Include="Scripts\Game\Objective\TutorialObjective.cs" />
     <Compile Include="Scripts\Game\Player\PlayerAttackComponent.cs" />
@@ -266,6 +271,7 @@
     <Compile Include="Scripts\Game\Test\OnDestroyTestScript.cs" />
     <Compile Include="Scripts\Game\Test\SerializeFieldVerificationScript.cs" />
     <Compile Include="Scripts\Game\UI\BaseUI.cs" />
+    <Compile Include="Scripts\Game\UI\Game\LastInputType.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearBackMainMenu.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearExitGame.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearRestart.cs" />
