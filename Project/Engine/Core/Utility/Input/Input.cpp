@@ -35,6 +35,8 @@ namespace ONEngine::MockInput {
 		WORD buttons = 0;
 		Vector2 leftThumb = Vector2::Zero;
 		Vector2 rightThumb = Vector2::Zero;
+		float leftTrigger = 0.0f;
+		float rightTrigger = 0.0f;
 	};
 
 	struct FrameInput {
@@ -135,6 +137,8 @@ namespace ONEngine::MockInput {
 							fi.gamepad.rightThumb.x = gp["rightStick"][0].get<float>();
 							fi.gamepad.rightThumb.y = gp["rightStick"][1].get<float>();
 						}
+						fi.gamepad.leftTrigger = gp.value("leftTrigger", 0.0f);
+						fi.gamepad.rightTrigger = gp.value("rightTrigger", 0.0f);
 					}
 					
 					testInputs.push_back(fi);
@@ -265,11 +269,11 @@ Vector2 Input::GetGamepadLeftThumb() {
 		return MockInput::mockGamepad.leftThumb;
 	}
 	Gamepad* gamepad = gInputSystem_->gamepad_.get();
-	if (std::abs(gamepad->state_.Gamepad.sThumbLX) != gamepad->stickDeadZone_
-		|| std::abs(gamepad->state_.Gamepad.sThumbLY) != gamepad->stickDeadZone_) {
+	if (std::abs(gamepad->state_.Gamepad.sThumbLX) > gamepad->stickDeadZone_
+		|| std::abs(gamepad->state_.Gamepad.sThumbLY) > gamepad->stickDeadZone_) {
 		return Vector2(
-			static_cast<float>(gamepad->state_.Gamepad.sThumbLX) / XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE,
-			static_cast<float>(gamepad->state_.Gamepad.sThumbLY) / XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE
+			static_cast<float>(gamepad->state_.Gamepad.sThumbLX) / 32768.0f,
+			static_cast<float>(gamepad->state_.Gamepad.sThumbLY) / 32768.0f
 		);
 	}
 
@@ -281,15 +285,41 @@ Vector2 Input::GetGamepadRightThumb() {
 		return MockInput::mockGamepad.rightThumb;
 	}
 	Gamepad* gamepad = gInputSystem_->gamepad_.get();
-	if (std::abs(gamepad->state_.Gamepad.sThumbRX) != gamepad->stickDeadZone_
-		|| std::abs(gamepad->state_.Gamepad.sThumbRY) != gamepad->stickDeadZone_) {
+	if (std::abs(gamepad->state_.Gamepad.sThumbRX) > gamepad->stickDeadZone_
+		|| std::abs(gamepad->state_.Gamepad.sThumbRY) > gamepad->stickDeadZone_) {
 		return Vector2(
-			static_cast<float>(gamepad->state_.Gamepad.sThumbRX) / XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE,
-			static_cast<float>(gamepad->state_.Gamepad.sThumbRY) / XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE
+			static_cast<float>(gamepad->state_.Gamepad.sThumbRX) / 32768.0f,
+			static_cast<float>(gamepad->state_.Gamepad.sThumbRY) / 32768.0f
 		);
 	}
 
 	return Vector2::Zero;
+}
+
+float Input::GetGamepadLeftTrigger() {
+	if (EngineConfig::isTestMode) {
+		return MockInput::mockGamepad.leftTrigger;
+	}
+	if (gInputSystem_ && gInputSystem_->gamepad_) {
+		BYTE val = gInputSystem_->gamepad_->state_.Gamepad.bLeftTrigger;
+		if (val > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) {
+			return static_cast<float>(val) / 255.0f;
+		}
+	}
+	return 0.0f;
+}
+
+float Input::GetGamepadRightTrigger() {
+	if (EngineConfig::isTestMode) {
+		return MockInput::mockGamepad.rightTrigger;
+	}
+	if (gInputSystem_ && gInputSystem_->gamepad_) {
+		BYTE val = gInputSystem_->gamepad_->state_.Gamepad.bRightTrigger;
+		if (val > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) {
+			return static_cast<float>(val) / 255.0f;
+		}
+	}
+	return 0.0f;
 }
 
 float Input::GetMouseWheel() {

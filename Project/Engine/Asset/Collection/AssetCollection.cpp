@@ -96,13 +96,17 @@ void AssetCollection::LoadResourcesAsync(const std::vector<std::string>& filePat
 		AssetType type = GetAssetTypeFromExtension(FileSystem::FileExtension(path));
 		if(type != AssetType::None && type != AssetType::Count) {
 
-			/// 非同期タスクをスレッドプールに投げる
+			/// 非同期タスクをスレッドプールに投げる (ただしTextureはインデックス一致を保証するため同期ロード)
 			if(auto* bundle = GetBaseBundle(type)) {
-				auto future = ThreadPool::Instance().Enqueue([bundle, path]() {
+				if (type == AssetType::Texture) {
 					bundle->Load(path);
-				});
+				} else {
+					auto future = ThreadPool::Instance().Enqueue([bundle, path]() {
+						bundle->Load(path);
+					});
 
-				pendingTasks_.push_back(std::move(future));
+					pendingTasks_.push_back(std::move(future));
+				}
 			}
 		}
 
