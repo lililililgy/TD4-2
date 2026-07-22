@@ -170,6 +170,7 @@
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoWaveThrustSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishChargeDamageField.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishElectricField.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishAttackTelegraph.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishLaser.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishWeakPoint.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfish.cs" />

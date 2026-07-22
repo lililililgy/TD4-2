@@ -106,6 +106,8 @@
                 "maxHp_": 300.0
             },
             "KingJellyfish": {
+                "attackTelegraphAlpha": 0.30000001192092896,
+                "attackTelegraphPrefabName": "JellyfishAttackTelegraph",
                 "cameraEntityName": "MainCamera",
                 "damageInvincibilityDuration": 0.5,
                 "fixedAttackType": 0,
@@ -113,6 +115,12 @@
                 "laserCameraShakeDuration": 0.3499999940395355,
                 "laserCameraShakeFrequency": 26.0,
                 "laserCameraShakeIntensity": 22.0,
+                "laserEffect01EmitCount": 98,
+                "laserEffect01EntityName": "Jellyfish_LaserEffect01",
+                "laserEffect02EmitCount": 1,
+                "laserEffect02EntityName": "Jellyfish_LaserEffect02",
+                "laserEffect03EmitCount": 1,
+                "laserEffect03EntityName": "Jellyfish_LaserEffect03",
                 "laserGrayscaleDuration": 0.3499999940395355,
                 "maxHp": 10,
                 "postEffectEntityName": "Background",

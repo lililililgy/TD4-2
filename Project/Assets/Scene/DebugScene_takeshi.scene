@@ -154,6 +154,11 @@
             "guid": "351c853213de36d23f775678447a1075",
             "parentGuid": null,
             "path": "./DebugScene_takeshi/351c853213de36d23f775678447a1075.entity"
+        },
+        {
+            "guid": "4170e6df9ecda4ba6b1598128067c7a3",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/4170e6df9ecda4ba6b1598128067c7a3.entity"
         }
     ]
 }
