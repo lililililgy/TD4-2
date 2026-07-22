@@ -1,0 +1,36 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": 79.20001983642578,
+                "y": 108.60005187988281
+            },
+            "scale": {
+                "x": -50.00038146972656,
+                "y": 150.0
+            },
+            "type": "Transform"
+        },
+        {
+            "SpriteAnimation": {
+                "fps": 1.899999976158142
+            },
+            "type": "Variables"
+        },
+        {
+            "material": {
+                "baseColor": {
+                    "x": 0.36917561292648315,
+                    "y": 0.36917561292648315,
+                    "z": 0.36917561292648315
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "7771a73f8bc91d410d468d870f7d795d",
+    "name": "seaweed_1",
+    "parentGuid": "5ef46f18949210899a5e9fb4a7515235",
+    "prefabName": "seaweed"
+}

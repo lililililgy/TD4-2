@@ -3,22 +3,22 @@
     "components": [
         {
             "enable": 1,
-            "matrixCalcFlags": 7,
+            "matrixCalcFlags": 1,
             "position": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
+                "x": 50.0,
+                "y": 46.100013732910156,
+                "z": -1.0
             },
             "rotate": {
-                "w": 0.0,
+                "w": 0.9990482330322266,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": 0.04361938312649727
             },
             "scale": {
-                "x": 100.0,
-                "y": 100.0,
-                "z": 100.0
+                "x": 70.0,
+                "y": 70.0,
+                "z": 70.0
             },
             "type": "Transform"
         },
@@ -31,11 +31,14 @@
             "material": {
                 "baseColor": {
                     "w": 1.0,
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 0.36917561292648315,
+                    "y": 0.36917561292648315,
+                    "z": 0.36917561292648315
                 },
-                "baseTextureGuid": "4041325c0bdc1ae8b56e812eba2f4fef",
+                "baseTextureGuid": "00ecb6a6aa4e6602201781732f7295c8",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,8 +57,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "5896805ba7fcfdf5c9c2d155c2964334",
+    "guid": "9275815debaf0fc3f0ed7b44192209f4",
     "name": "lock",
-    "parentGuid": null,
-    "prefabName": ""
+    "parentGuid": "5ef46f18949210899a5e9fb4a7515235",
+    "prefabName": "lock"
 }
