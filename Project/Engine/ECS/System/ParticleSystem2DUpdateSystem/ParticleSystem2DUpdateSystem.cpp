@@ -257,7 +257,13 @@ namespace ONEngine {
                 p.remainingLifetime = p.startLifetime;
                 p.startColor = GetMinMaxColor(ps->main.startColor);
                 p.color = p.startColor;
-                p.startSize = GetMinMaxFloat(ps->main.startSize);
+                if (ps->main.startSize3D) {
+                    p.startSize.x = GetMinMaxFloat(ps->main.startSizeX);
+                    p.startSize.y = GetMinMaxFloat(ps->main.startSizeY);
+                } else {
+                    float s = GetMinMaxFloat(ps->main.startSize);
+                    p.startSize = Vector2(s, s);
+                }
                 p.size = p.startSize;
                 p.rotation = GetMinMaxFloat(ps->main.startRotation);
                 p.randomValue = Random::Float(0.0f, 1.0f);
@@ -299,7 +305,13 @@ namespace ONEngine {
                                 p.remainingLifetime = p.startLifetime;
                                 p.startColor = GetMinMaxColor(ps->main.startColor);
                                 p.color = p.startColor;
-                                p.startSize = GetMinMaxFloat(ps->main.startSize);
+                                if (ps->main.startSize3D) {
+                                    p.startSize.x = GetMinMaxFloat(ps->main.startSizeX);
+                                    p.startSize.y = GetMinMaxFloat(ps->main.startSizeY);
+                                } else {
+                                    float s = GetMinMaxFloat(ps->main.startSize);
+                                    p.startSize = Vector2(s, s);
+                                }
                                 p.size = p.startSize;
                                 p.rotation = GetMinMaxFloat(ps->main.startRotation);
                                 p.randomValue = Random::Float(0.0f, 1.0f);
@@ -373,7 +385,15 @@ namespace ONEngine {
                         p.color.a = p.startColor.a * overLifeColor.a;
                     }
                     if (ps->sizeOverLifetime.enabled) {
-                        p.size = p.startSize * EvaluateMinMaxCurve(ps->sizeOverLifetime.size, normalizedTime, p.randomValue);
+                        if (ps->sizeOverLifetime.separateAxes) {
+                            float multX = EvaluateMinMaxCurve(ps->sizeOverLifetime.x, normalizedTime, p.randomValue);
+                            float multY = EvaluateMinMaxCurve(ps->sizeOverLifetime.y, normalizedTime, p.randomValue);
+                            p.size.x = p.startSize.x * multX;
+                            p.size.y = p.startSize.y * multY;
+                        } else {
+                            float mult = EvaluateMinMaxCurve(ps->sizeOverLifetime.size, normalizedTime, p.randomValue);
+                            p.size = p.startSize * mult;
+                        }
                     }
                     if (ps->rotationOverLifetime.enabled) {
                         float angularVelocityDeg = EvaluateMinMaxCurve(ps->rotationOverLifetime.angularVelocity, normalizedTime, p.randomValue);
@@ -555,7 +575,15 @@ namespace ONEngine {
                         p.color.a = p.startColor.a * overLifeColor.a;
                     }
                     if (ghost.sizeOverLifetime.enabled) {
-                        p.size = p.startSize * EvaluateMinMaxCurve(ghost.sizeOverLifetime.size, normalizedTime, p.randomValue);
+                        if (ghost.sizeOverLifetime.separateAxes) {
+                            float multX = EvaluateMinMaxCurve(ghost.sizeOverLifetime.x, normalizedTime, p.randomValue);
+                            float multY = EvaluateMinMaxCurve(ghost.sizeOverLifetime.y, normalizedTime, p.randomValue);
+                            p.size.x = p.startSize.x * multX;
+                            p.size.y = p.startSize.y * multY;
+                        } else {
+                            float mult = EvaluateMinMaxCurve(ghost.sizeOverLifetime.size, normalizedTime, p.randomValue);
+                            p.size = p.startSize * mult;
+                        }
                     }
                     if (ghost.rotationOverLifetime.enabled) {
                         float angularVelocityDeg = EvaluateMinMaxCurve(ghost.rotationOverLifetime.angularVelocity, normalizedTime, p.randomValue);

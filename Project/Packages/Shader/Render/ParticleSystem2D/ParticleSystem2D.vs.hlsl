@@ -8,13 +8,15 @@ struct Particle {
     float4 color;
     float startLifetime;
     float remainingLifetime;
-    float size;
+    float2 size;
     float rotation;
+    float pad0;
     float4 startColor;
-    float startSize;
-    float3 baseVelocity;
+    float2 startSize;
     float randomValue;
     uint simulationSpace;
+    float3 baseVelocity;
+    float pad1;
 };
 
 ConstantBuffer<ViewProjection> viewProjection : register(b0);
@@ -74,14 +76,11 @@ VSOutput main(VSInput input, uint instanceId : SV_InstanceID) {
     float s = sin(angle);
     float c = cos(angle);
     
-    float2 localPos = input.position.xy;
+    // Apply scaling in local space prior to rotation
+    float2 scaledLocalPos = input.position.xy * p.size;
     float2 rotPos;
-    rotPos.x = localPos.x * c - localPos.y * s;
-    rotPos.y = localPos.x * s + localPos.y * c;
-
-    // Apply scaling
-    float currentSize = p.size;
-    rotPos *= currentSize;
+    rotPos.x = scaledLocalPos.x * c - scaledLocalPos.y * s;
+    rotPos.y = scaledLocalPos.x * s + scaledLocalPos.y * c;
 
     // Output final world position
     float4 worldPos;

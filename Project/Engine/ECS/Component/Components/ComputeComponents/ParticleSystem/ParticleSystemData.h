@@ -100,7 +100,11 @@ namespace ONEngine {
         MinMaxFloat startDelay = MinMaxFloat(0.0f);
         MinMaxFloat startLifetime = MinMaxFloat(5.0f);
         MinMaxFloat startSpeed = MinMaxFloat(5.0f);
+        bool startSize3D = false;
         MinMaxFloat startSize = MinMaxFloat(1.0f);
+        MinMaxFloat startSizeX = MinMaxFloat(1.0f);
+        MinMaxFloat startSizeY = MinMaxFloat(1.0f);
+        MinMaxFloat startSizeZ = MinMaxFloat(1.0f);
         MinMaxFloat startRotation = MinMaxFloat(0.0f);
         MinMaxColor startColor = MinMaxColor(Color::kWhite);
         float gravityModifier = 0.0f;
@@ -150,7 +154,11 @@ namespace ONEngine {
 
     struct ParticleSystemSizeOverLifetime {
         bool enabled = false;
+        bool separateAxes = false;
         MinMaxCurve size;
+        MinMaxCurve x;
+        MinMaxCurve y;
+        MinMaxCurve z;
     };
 
     struct ParticleSystemVelocityOverLifetime {
