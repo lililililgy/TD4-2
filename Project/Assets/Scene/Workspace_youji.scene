@@ -90,6 +90,11 @@
             "guid": "b037b63d4149b7c18dbc6387c66c2205",
             "parentGuid": "5833a6909c39d75bd73c994d550d51c6",
             "path": "./Workspace_youji/b037b63d4149b7c18dbc6387c66c2205.entity"
+        },
+        {
+            "guid": "46838e77cf93d36ec074acf6cb5754de",
+            "parentGuid": null,
+            "path": "./Workspace_youji/46838e77cf93d36ec074acf6cb5754de.entity"
         }
     ],
     "hasClearColor": true

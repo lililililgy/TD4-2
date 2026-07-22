@@ -17,6 +17,16 @@ public class Test : MonoScript
 	[SerializeField] Vector4 color = Vector4.red;
 	[SerializeField] private Vector2 min = Vector2.zero;
 
+	struct TestStruct
+	{
+		[SerializeField] public int testInt;
+		[SerializeField] public float testFloat;
+		[SerializeField] public string testString;
+	}
+
+	[SerializeField] List<TestStruct> testStructList = new List<TestStruct>();
+
+
 	public override void Initialize()
 	{
 
