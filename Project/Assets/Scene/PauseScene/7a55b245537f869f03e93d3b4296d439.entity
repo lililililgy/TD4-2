@@ -80,15 +80,6 @@
             "type": "SpriteRenderer"
         },
         {
-            "enable": 1,
-            "links": {
-                "DownArrow": "8820e517ebe0c5a3b20230d236c64665",
-                "GamepadDPadDown": "8820e517ebe0c5a3b20230d236c64665",
-                "S": "8820e517ebe0c5a3b20230d236c64665"
-            },
-            "type": "UILinkNavigationComponent"
-        },
-        {
             "characterSpacing": 0,
             "color": {
                 "w": 1.0,
@@ -121,6 +112,15 @@
             "text": "ゲーム ニ モドル",
             "type": "TextRenderer",
             "verticalAlignment": 0
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "8820e517ebe0c5a3b20230d236c64665",
+                "GamepadDPadDown": "8820e517ebe0c5a3b20230d236c64665",
+                "S": "8820e517ebe0c5a3b20230d236c64665"
+            },
+            "type": "UILinkNavigationComponent"
         },
         {
             "enable": 1,

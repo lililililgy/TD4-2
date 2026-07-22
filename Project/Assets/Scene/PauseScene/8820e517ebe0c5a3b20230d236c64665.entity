@@ -66,18 +66,6 @@
             "type": "SpriteRenderer"
         },
         {
-            "enable": 1,
-            "links": {
-                "DownArrow": "0abbe7a8d0ac19bd95a8fd428bec2603",
-                "GamepadDPadDown": "0abbe7a8d0ac19bd95a8fd428bec2603",
-                "GamepadDPadUp": "7a55b245537f869f03e93d3b4296d439",
-                "S": "0abbe7a8d0ac19bd95a8fd428bec2603",
-                "UpArrow": "7a55b245537f869f03e93d3b4296d439",
-                "W": "7a55b245537f869f03e93d3b4296d439"
-            },
-            "type": "UILinkNavigationComponent"
-        },
-        {
             "characterSpacing": 0,
             "color": {
                 "w": 1.0,
@@ -110,6 +98,18 @@
             "text": "チェックポイント カラ ハジメル",
             "type": "TextRenderer",
             "verticalAlignment": 0
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "GamepadDPadDown": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "GamepadDPadUp": "7a55b245537f869f03e93d3b4296d439",
+                "S": "0abbe7a8d0ac19bd95a8fd428bec2603",
+                "UpArrow": "7a55b245537f869f03e93d3b4296d439",
+                "W": "7a55b245537f869f03e93d3b4296d439"
+            },
+            "type": "UILinkNavigationComponent"
         },
         {
             "enable": 1,

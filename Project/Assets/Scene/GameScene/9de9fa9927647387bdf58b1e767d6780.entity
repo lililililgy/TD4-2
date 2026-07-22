@@ -8,7 +8,7 @@
             "pitch": 1.0,
             "playOnAwake": true,
             "type": "BGMPlayer",
-            "volume": 1.0
+            "volume": 0.009999999776482582
         },
         {
             "enable": 1,
