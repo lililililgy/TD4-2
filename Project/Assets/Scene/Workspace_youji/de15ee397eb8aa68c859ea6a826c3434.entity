@@ -1,0 +1,60 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "Rigidbody2DTestScript": {},
+            "Test": {
+                "color": {
+                    "w": 0.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "min": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "testVector2": {
+                    "x": 0.0,
+                    "y": 0.0
+                }
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "Test"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "de15ee397eb8aa68c859ea6a826c3434",
+    "name": "NewEntity",
+    "parentGuid": null,
+    "prefabName": ""
+}
