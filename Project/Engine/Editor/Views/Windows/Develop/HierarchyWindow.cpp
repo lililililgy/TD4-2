@@ -62,6 +62,25 @@ void HierarchyWindow::ShowImGui() {
 	DrawSearchBarAndCount();
 	ImGui::Separator();
 
+	if (pEcsGroup_) {
+		bool hasClear = pEcsGroup_->HasClearColor();
+		if (ImGui::Checkbox("Use ClearColor", &hasClear)) {
+			pEcsGroup_->SetHasClearColor(hasClear);
+			if (pSceneManager_) pSceneManager_->MarkDirty();
+		}
+		if (hasClear) {
+			ImGui::SameLine();
+			ONEngine::Vector4 color = pEcsGroup_->GetClearColor();
+			float col[4] = { color.x, color.y, color.z, color.w };
+			ImGui::SetNextItemWidth(120.0f);
+			if (ImGui::ColorEdit4("Clear Color", col, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_AlphaPreview)) {
+				pEcsGroup_->SetClearColor(ONEngine::Vector4(col[0], col[1], col[2], col[3]));
+				if (pSceneManager_) pSceneManager_->MarkDirty();
+			}
+		}
+		ImGui::Separator();
+	}
+
 	// スクロール可能なエリアを開始
 	ImGui::BeginChild("HierarchyScrollArea", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 

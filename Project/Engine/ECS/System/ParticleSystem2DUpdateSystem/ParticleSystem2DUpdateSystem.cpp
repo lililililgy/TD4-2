@@ -1,4 +1,4 @@
-#define NOMINMAX
+﻿#define NOMINMAX
 #include "ParticleSystem2DUpdateSystem.h"
 #include "Engine/ECS/EntityComponentSystem/ECSGroup.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
@@ -69,6 +69,14 @@ namespace ONEngine {
 
     static Vector3 Vector3Lerp(const Vector3& a, const Vector3& b, float t) {
         return a + (b - a) * t;
+    }
+
+    static float ExtractRotationZ(const Matrix4x4& matrix) {
+        return std::atan2(matrix.m[0][1], matrix.m[0][0]);
+    }
+
+    static float ShortestAngleDelta(float current, float previous) {
+        return std::remainder(current - previous, std::numbers::pi_v<float> * 2.0f);
     }
 
     // 2D shape evaluation (generates position & direction on the XY plane)
@@ -146,6 +154,82 @@ namespace ONEngine {
         }
     }
 
+    static void InitializeParticle2D(
+        ParticleSystem2D* ps,
+        Particle2D& particle,
+        const Matrix4x4& emitMat) {
+        Vector3 shapePos;
+        Vector3 shapeDir;
+        EvaluateShape2D(ps->shape, shapePos, shapeDir);
+
+        if (ps->main.simulationSpace == SimulationSpace::World) {
+            particle.position = Matrix4x4::Transform(shapePos, emitMat);
+            particle.velocity = Matrix4x4::TransformNormal(shapeDir, emitMat).Normalize()
+                * GetMinMaxFloat(ps->main.startSpeed);
+            particle.simulationSpace = 0;
+        } else {
+            particle.position = shapePos;
+            particle.velocity = shapeDir * GetMinMaxFloat(ps->main.startSpeed);
+            particle.simulationSpace = 1;
+        }
+
+        particle.position.z = 0.0f;
+        particle.velocity.z = 0.0f;
+        particle.baseVelocity = particle.velocity;
+        particle.startLifetime = GetMinMaxFloat(ps->main.startLifetime);
+        particle.remainingLifetime = particle.startLifetime;
+        particle.startColor = GetMinMaxColor(ps->main.startColor);
+        particle.color = particle.startColor;
+        if (ps->main.startSize3D) {
+            particle.startSize.x = GetMinMaxFloat(ps->main.startSizeX);
+            particle.startSize.y = GetMinMaxFloat(ps->main.startSizeY);
+        } else {
+            float s = GetMinMaxFloat(ps->main.startSize);
+            particle.startSize = Vector2(s, s);
+        }
+        particle.size = particle.startSize;
+        particle.rotation = GetMinMaxFloat(ps->main.startRotation);
+        if (ps->inheritEmitterRotation
+            && ps->renderer.alignment != ParticleSystemRenderer::RenderAlignment::Velocity) {
+            particle.rotation += ExtractRotationZ(emitMat);
+        }
+        particle.randomValue = Random::Float(0.0f, 1.0f);
+    }
+
+    static void EmitParticles2D(
+        ParticleSystem2D* ps,
+        Transform* transform,
+        int count,
+        bool interpolateEmitterPosition) {
+        if (!ps || !transform || count <= 0) return;
+
+        const Matrix4x4 currentMat = transform->matWorld;
+        for (int i = 0; i < count; ++i) {
+            if (ps->aliveCount >= ps->particles.size()) break;
+
+            Matrix4x4 emitMat = currentMat;
+            if (interpolateEmitterPosition && ps->hasPreviousWorldMat) {
+                const float interpolation = static_cast<float>(i)
+                    / static_cast<float>(count > 1 ? count - 1 : 1);
+                const Vector3 previousPosition(
+                    ps->previousWorldMat.m[3][0],
+                    ps->previousWorldMat.m[3][1],
+                    ps->previousWorldMat.m[3][2]);
+                const Vector3 currentPosition(
+                    currentMat.m[3][0],
+                    currentMat.m[3][1],
+                    currentMat.m[3][2]);
+                const Vector3 emitPosition = Vector3Lerp(previousPosition, currentPosition, interpolation);
+                emitMat.m[3][0] = emitPosition.x;
+                emitMat.m[3][1] = emitPosition.y;
+                emitMat.m[3][2] = emitPosition.z;
+            }
+
+            Particle2D& particle = ps->particles[ps->aliveCount++];
+            InitializeParticle2D(ps, particle, emitMat);
+        }
+    }
+
     // --- System Methods ---
 
     ParticleSystem2DUpdateSystem::ParticleSystem2DUpdateSystem() : ECSISystem() {}
@@ -211,6 +295,22 @@ namespace ONEngine {
             ps->burstCycleCounts.resize(ps->emission.bursts.size(), 0);
         }
 
+        if (ps->inheritEmitterRotation
+            && ps->renderer.alignment != ParticleSystemRenderer::RenderAlignment::Velocity
+            && ps->hasPreviousWorldMat) {
+            float currentRotation = ExtractRotationZ(transform->matWorld);
+            float previousRotation = ExtractRotationZ(ps->previousWorldMat);
+            float rotationDelta = ShortestAngleDelta(currentRotation, previousRotation);
+
+            if (std::abs(rotationDelta) > 0.000001f) {
+                for (size_t i = 0; i < ps->aliveCount; ++i) {
+                    ps->particles[i].rotation += rotationDelta;
+                }
+            }
+        }
+
+        EmitParticles2D(ps, transform, ps->ConsumePendingEmitCount(), false);
+
         float currentPlaybackTime = ps->GetTime();
 
         // --- Emission ---
@@ -257,11 +357,18 @@ namespace ONEngine {
                 p.remainingLifetime = p.startLifetime;
                 p.startColor = GetMinMaxColor(ps->main.startColor);
                 p.color = p.startColor;
-                p.startSize = GetMinMaxFloat(ps->main.startSize);
+                if (ps->main.startSize3D) {
+                    p.startSize.x = GetMinMaxFloat(ps->main.startSizeX);
+                    p.startSize.y = GetMinMaxFloat(ps->main.startSizeY);
+                } else {
+                    float s = GetMinMaxFloat(ps->main.startSize);
+                    p.startSize = Vector2(s, s);
+                }
                 p.size = p.startSize;
                 p.rotation = GetMinMaxFloat(ps->main.startRotation);
                 p.randomValue = Random::Float(0.0f, 1.0f);
             }
+            EmitParticles2D(ps, transform, emitCount, true);
 
             for (size_t i = 0; i < ps->emission.bursts.size(); ++i) {
                 auto& burst = ps->emission.bursts[i];
@@ -299,11 +406,18 @@ namespace ONEngine {
                                 p.remainingLifetime = p.startLifetime;
                                 p.startColor = GetMinMaxColor(ps->main.startColor);
                                 p.color = p.startColor;
-                                p.startSize = GetMinMaxFloat(ps->main.startSize);
+                                if (ps->main.startSize3D) {
+                                    p.startSize.x = GetMinMaxFloat(ps->main.startSizeX);
+                                    p.startSize.y = GetMinMaxFloat(ps->main.startSizeY);
+                                } else {
+                                    float s = GetMinMaxFloat(ps->main.startSize);
+                                    p.startSize = Vector2(s, s);
+                                }
                                 p.size = p.startSize;
                                 p.rotation = GetMinMaxFloat(ps->main.startRotation);
                                 p.randomValue = Random::Float(0.0f, 1.0f);
                             }
+                            EmitParticles2D(ps, transform, burst.count, false);
                         }
                         cycleCount++;
                     }
@@ -373,7 +487,15 @@ namespace ONEngine {
                         p.color.a = p.startColor.a * overLifeColor.a;
                     }
                     if (ps->sizeOverLifetime.enabled) {
-                        p.size = p.startSize * EvaluateMinMaxCurve(ps->sizeOverLifetime.size, normalizedTime, p.randomValue);
+                        if (ps->sizeOverLifetime.separateAxes) {
+                            float multX = EvaluateMinMaxCurve(ps->sizeOverLifetime.x, normalizedTime, p.randomValue);
+                            float multY = EvaluateMinMaxCurve(ps->sizeOverLifetime.y, normalizedTime, p.randomValue);
+                            p.size.x = p.startSize.x * multX;
+                            p.size.y = p.startSize.y * multY;
+                        } else {
+                            float mult = EvaluateMinMaxCurve(ps->sizeOverLifetime.size, normalizedTime, p.randomValue);
+                            p.size = p.startSize * mult;
+                        }
                     }
                     if (ps->rotationOverLifetime.enabled) {
                         float angularVelocityDeg = EvaluateMinMaxCurve(ps->rotationOverLifetime.angularVelocity, normalizedTime, p.randomValue);
@@ -555,7 +677,15 @@ namespace ONEngine {
                         p.color.a = p.startColor.a * overLifeColor.a;
                     }
                     if (ghost.sizeOverLifetime.enabled) {
-                        p.size = p.startSize * EvaluateMinMaxCurve(ghost.sizeOverLifetime.size, normalizedTime, p.randomValue);
+                        if (ghost.sizeOverLifetime.separateAxes) {
+                            float multX = EvaluateMinMaxCurve(ghost.sizeOverLifetime.x, normalizedTime, p.randomValue);
+                            float multY = EvaluateMinMaxCurve(ghost.sizeOverLifetime.y, normalizedTime, p.randomValue);
+                            p.size.x = p.startSize.x * multX;
+                            p.size.y = p.startSize.y * multY;
+                        } else {
+                            float mult = EvaluateMinMaxCurve(ghost.sizeOverLifetime.size, normalizedTime, p.randomValue);
+                            p.size = p.startSize * mult;
+                        }
                     }
                     if (ghost.rotationOverLifetime.enabled) {
                         float angularVelocityDeg = EvaluateMinMaxCurve(ghost.rotationOverLifetime.angularVelocity, normalizedTime, p.randomValue);

@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.09999999403953552,
+        0.2290322184562683,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "5bc1a40a4cd20b1edc841d10f2c728d2",
@@ -49,6 +55,97 @@
             "guid": "31f2334d1e008872df696fbdc893e6a2",
             "parentGuid": "3c6cb216a34fcfabaa488397d8c97339",
             "path": "./GameOverScene/31f2334d1e008872df696fbdc893e6a2.entity"
+        },
+        {
+            "guid": "1b2482062f6287ab0a74be4ffd2db4d7",
+            "parentGuid": null,
+            "path": "./GameOverScene/1b2482062f6287ab0a74be4ffd2db4d7.entity"
+        },
+        {
+            "guid": "615284669a9ab4492c03637cda147e99",
+            "parentGuid": null,
+            "path": "./GameOverScene/615284669a9ab4492c03637cda147e99.entity"
+        },
+        {
+            "guid": "e339574b9311034650511c8a50cbd53e",
+            "parentGuid": null,
+            "path": "./GameOverScene/e339574b9311034650511c8a50cbd53e.entity"
+        },
+        {
+            "guid": "accd4b1315cc68fd07be1a6e876a0f56",
+            "parentGuid": null,
+            "path": "./GameOverScene/accd4b1315cc68fd07be1a6e876a0f56.entity"
+        },
+        {
+            "guid": "92adb6234b444adb742c80dc9eb6a9be",
+            "parentGuid": "accd4b1315cc68fd07be1a6e876a0f56",
+            "path": "./GameOverScene/92adb6234b444adb742c80dc9eb6a9be.entity"
+        },
+        {
+            "guid": "d7a7d7da0cec11a51bdb533087d327d1",
+            "parentGuid": "accd4b1315cc68fd07be1a6e876a0f56",
+            "path": "./GameOverScene/d7a7d7da0cec11a51bdb533087d327d1.entity"
+        },
+        {
+            "guid": "21a06e0034ebda4848d0b8e6cd6872f7",
+            "parentGuid": "accd4b1315cc68fd07be1a6e876a0f56",
+            "path": "./GameOverScene/21a06e0034ebda4848d0b8e6cd6872f7.entity"
+        },
+        {
+            "guid": "04e0d5b0c5beb201c8a8459bbb64ad08",
+            "parentGuid": "accd4b1315cc68fd07be1a6e876a0f56",
+            "path": "./GameOverScene/04e0d5b0c5beb201c8a8459bbb64ad08.entity"
+        },
+        {
+            "guid": "76cfebca283cd9752ca8460aa0378db7",
+            "parentGuid": null,
+            "path": "./GameOverScene/76cfebca283cd9752ca8460aa0378db7.entity"
+        },
+        {
+            "guid": "35b20bd597e8720b4abef0cd50add092",
+            "parentGuid": "76cfebca283cd9752ca8460aa0378db7",
+            "path": "./GameOverScene/35b20bd597e8720b4abef0cd50add092.entity"
+        },
+        {
+            "guid": "4349a3682647cb7d6e1f09ea00cf0042",
+            "parentGuid": "76cfebca283cd9752ca8460aa0378db7",
+            "path": "./GameOverScene/4349a3682647cb7d6e1f09ea00cf0042.entity"
+        },
+        {
+            "guid": "e305b04c152ed85000a47d7ef4df1a4e",
+            "parentGuid": null,
+            "path": "./GameOverScene/e305b04c152ed85000a47d7ef4df1a4e.entity"
+        },
+        {
+            "guid": "d1e83a900ec2a0dd51948f06788c0b83",
+            "parentGuid": "e305b04c152ed85000a47d7ef4df1a4e",
+            "path": "./GameOverScene/d1e83a900ec2a0dd51948f06788c0b83.entity"
+        },
+        {
+            "guid": "21b48124af9bbd793cae600b4d9f8f0a",
+            "parentGuid": "e305b04c152ed85000a47d7ef4df1a4e",
+            "path": "./GameOverScene/21b48124af9bbd793cae600b4d9f8f0a.entity"
+        },
+        {
+            "guid": "02674e5dc99f5120a0098cf5a76efff0",
+            "parentGuid": "e305b04c152ed85000a47d7ef4df1a4e",
+            "path": "./GameOverScene/02674e5dc99f5120a0098cf5a76efff0.entity"
+        },
+        {
+            "guid": "2a8497034db601798762765e36a39331",
+            "parentGuid": "e305b04c152ed85000a47d7ef4df1a4e",
+            "path": "./GameOverScene/2a8497034db601798762765e36a39331.entity"
+        },
+        {
+            "guid": "e28104091a9aea0c13ac24aefb39845a",
+            "parentGuid": "e305b04c152ed85000a47d7ef4df1a4e",
+            "path": "./GameOverScene/e28104091a9aea0c13ac24aefb39845a.entity"
+        },
+        {
+            "guid": "e1e2597dcebe3424ad4efdf939cdf0c7",
+            "parentGuid": null,
+            "path": "./GameOverScene/e1e2597dcebe3424ad4efdf939cdf0c7.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }

@@ -6,6 +6,7 @@
 #include "Engine/Core/Utility/Time/CPUTimeStamp.h"
 #include "Engine/ECS/Component/Array/ComponentArray.h"
 #include "Engine/ECS/Entity/GameEntity/GameEntity.h"
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include <algorithm>
 
 namespace ONEngine {
@@ -27,7 +28,7 @@ void Rigidbody2DUpdateSystem::RuntimeUpdate(ECSGroup* ecs) {
 	Vector2 gravity(0.0f, -9.81f);
 
 	for (auto& rb : rbArray->GetUsedComponents()) {
-		if (!rb || !rb->enable) {
+		if (!CheckComponentEnable(rb)) {
 			continue;
 		}
 

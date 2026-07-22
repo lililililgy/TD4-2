@@ -215,7 +215,7 @@ void RenderingFramework::DrawScene() {
 		if (!ecsGroup) continue;
 		if (ecsGroup->IsDrawPaused()) continue;
 
-		Vector4 clearColor = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+		Vector4 clearColor = ecsGroup->HasClearColor() ? ecsGroup->GetClearColor() : Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
 		CameraComponent* camera = ecsGroup->GetMainCamera();
 		if (!camera) {
@@ -232,6 +232,7 @@ void RenderingFramework::DrawScene() {
 		}
 
 		SceneRenderTexture* groupRenderTex = GetOrCreateSceneRenderTexture(groupName, clearColor);
+		groupRenderTex->SetClearColor(clearColor);
 
 		static std::unordered_map<std::string, bool> drawnLogged;
 		if (!drawnLogged[groupName]) {

@@ -8,6 +8,7 @@ public class YadokariGiantClaw : MonoScript {
     private KingYadokari owner_;
     private AttackCollision attackCollision_;
     private HP hp_;
+    private Rigidbody2D rigidbody_;
     private IYadokariClawState state_;
     private Vector3 homePosition_;
     private Quaternion homeRotation_;
@@ -23,6 +24,8 @@ public class YadokariGiantClaw : MonoScript {
         ResolveOwner();
         attackCollision_ = entity.GetScript<AttackCollision>();
         hp_ = entity.GetScript<HP>();
+        rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        SetVelocity(Vector2.zero);
         if (hp_ != null) {
             hp_.DisableAutoDestruction = true;
         }
@@ -82,6 +85,7 @@ public class YadokariGiantClaw : MonoScript {
     }
 
     internal void ApplyIdle() {
+        SetVelocity(Vector2.zero);
         SetAttackDamage(0.0f);
         SetDamageInvincible(false);
         SetColliderEnabled(true);
@@ -105,6 +109,7 @@ public class YadokariGiantClaw : MonoScript {
         attackSpeed_ = speed > 0.0f ? speed : 1.0f;
         attackDistance_ = distance > 0.0f ? distance : 0.0f;
         attackTravelled_ = 0.0f;
+        SetVelocity(new Vector2(attackDirection_.x, attackDirection_.y) * attackSpeed_);
         SetAttackDamage(damage);
         SetDamageInvincible(true);
         SetColliderEnabled(true);
@@ -115,7 +120,10 @@ public class YadokariGiantClaw : MonoScript {
     }
 
     internal bool UpdateAttack() {
-        float worldStep = attackSpeed_ * Time.deltaTime;
+        Vector2 velocity = rigidbody_ != null
+            ? rigidbody_.velocity
+            : new Vector2(attackDirection_.x, attackDirection_.y) * attackSpeed_;
+        float worldStep = velocity.Length() * Time.deltaTime;
         if (attackDistance_ > 0.0f) {
             float remaining = attackDistance_ - attackTravelled_;
             if (worldStep > remaining) {
@@ -123,13 +131,17 @@ public class YadokariGiantClaw : MonoScript {
             }
         }
 
-        Vector3 localStep = WorldDirectionToLocalStep(attackDirection_, worldStep);
+        Vector3 movementDirection = velocity.LengthSq() > 0.0001f
+            ? new Vector3(velocity.x, velocity.y, 0.0f).Normalized()
+            : attackDirection_;
+        Vector3 localStep = WorldDirectionToLocalStep(movementDirection, worldStep);
         transform.position += localStep;
         attackTravelled_ += worldStep;
         return attackDistance_ > 0.0f && attackTravelled_ >= attackDistance_;
     }
 
     internal void BeginReturn() {
+        SetVelocity(Vector2.zero);
         SetAttackDamage(0.0f);
         SetDamageInvincible(false);
         returnStartPosition_ = transform.position;
@@ -144,6 +156,7 @@ public class YadokariGiantClaw : MonoScript {
     }
 
     internal void ApplyDestroyed() {
+        SetVelocity(Vector2.zero);
         SetAttackDamage(0.0f);
         SetDamageInvincible(false);
         SetColliderEnabled(false);
@@ -177,6 +190,16 @@ public class YadokariGiantClaw : MonoScript {
 
         if (attackCollision_ != null) {
             attackCollision_.Damage = damage > 0.0f ? damage : 0.0f;
+        }
+    }
+
+    private void SetVelocity(Vector2 velocity) {
+        if (rigidbody_ == null) {
+            rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        }
+
+        if (rigidbody_ != null) {
+            rigidbody_.velocity = velocity;
         }
     }
 

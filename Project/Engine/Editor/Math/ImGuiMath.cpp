@@ -1052,7 +1052,13 @@ void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
 		DrawMinMaxFloat("Start Delay", ps->main.startDelay);
 		DrawMinMaxFloat("Start Lifetime", ps->main.startLifetime);
 		DrawMinMaxFloat("Start Speed", ps->main.startSpeed);
-		DrawMinMaxFloat("Start Size", ps->main.startSize);
+		ImGui::Checkbox("Start Size 3D", &ps->main.startSize3D);
+		if (ps->main.startSize3D) {
+			DrawMinMaxFloat("Start Size X", ps->main.startSizeX);
+			DrawMinMaxFloat("Start Size Y", ps->main.startSizeY);
+		} else {
+			DrawMinMaxFloat("Start Size", ps->main.startSize);
+		}
 		DrawMinMaxFloat("Start Rotation", ps->main.startRotation);
 		DrawMinMaxColor("Start Color", ps->main.startColor);
 		Editor::ImMathf::DragFloat("Gravity Modifier", &ps->main.gravityModifier);
@@ -1112,7 +1118,13 @@ void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
 	EndModuleHeader();
 
 	if (BeginModuleHeader("Size over Lifetime", &ps->sizeOverLifetime.enabled)) {
-		DrawMinMaxCurve("Size", ps->sizeOverLifetime.size);
+		ImGui::Checkbox("Separate Axes", &ps->sizeOverLifetime.separateAxes);
+		if (ps->sizeOverLifetime.separateAxes) {
+			DrawMinMaxCurve("Size X", ps->sizeOverLifetime.x);
+			DrawMinMaxCurve("Size Y", ps->sizeOverLifetime.y);
+		} else {
+			DrawMinMaxCurve("Size", ps->sizeOverLifetime.size);
+		}
 		if (!ps->sizeOverLifetime.enabled) ImGui::EndDisabled();
 	}
 	EndModuleHeader();
@@ -1144,6 +1156,7 @@ void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
 
 		Editor::ImMathf::InputEnum<ParticleSystemRenderer::BlendMode>("Blend Mode", &ps->renderer.blendMode);
 		Editor::ImMathf::InputEnum<FlipMode>("Flip Mode", &ps->renderer.flipMode);
+		ImGui::Checkbox("Inherit Emitter Rotation", &ps->inheritEmitterRotation);
 		DrawAssetGuidField("Material", ps->renderer.materialGuid, Asset::AssetType::Material);
 		DrawAssetGuidField("Mesh", ps->renderer.meshGuid, Asset::AssetType::Mesh);
 	}

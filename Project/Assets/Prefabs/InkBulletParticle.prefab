@@ -293,7 +293,7 @@
         }
     ],
     "guid": "483345bd7e686bbfe98e7764b440de4d",
-    "name": "inkBulletParticle",
+    "name": "InkBulletParticle",
     "parentGuid": null,
-    "prefabName": "inkBulletParticle"
+    "prefabName": "InkBulletParticle"
 }

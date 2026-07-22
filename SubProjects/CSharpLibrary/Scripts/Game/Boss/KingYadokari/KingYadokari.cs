@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public enum KingYadokariAttackTypeEnum {
     GiantClaw,
-    ShellBullet
+    ShellBullet,
+    JumpDrop
 }
 
 public class KingYadokari : MonoScript {
@@ -19,12 +20,16 @@ public class KingYadokari : MonoScript {
     private IKingYadokariState state_;
     private KingYadokariGiantClawAttackSettings giantClawSettings_;
     private KingYadokariShellBulletAttackSettings shellBulletSettings_;
+    private KingYadokariJumpDropAttackSettings jumpDropSettings_;
+    private AttackCollision attackCollision_;
+    private Rigidbody2D rigidbody_;
     private readonly List<YadokariGiantClaw> giantClaws_ = new List<YadokariGiantClaw>();
     private YadokariGiantClaw activeGiantClaw_;
     private bool bulletResolved_;
     private bool reflectedBulletHit_;
     private bool isKnockedDown_;
     private bool giantClawDestroyed_;
+    private float jumpDropDestinationY_;
     private Quaternion standingRotation_;
 
     public override void Initialize() {
@@ -35,6 +40,11 @@ public class KingYadokari : MonoScript {
 
         giantClawSettings_ = GetOrAddSettings<KingYadokariGiantClawAttackSettings>();
         shellBulletSettings_ = GetOrAddSettings<KingYadokariShellBulletAttackSettings>();
+        jumpDropSettings_ = GetOrAddSettings<KingYadokariJumpDropAttackSettings>();
+        attackCollision_ = entity.GetScript<AttackCollision>();
+        rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        StopBodyMovement();
+        SetBodyAttackDamage(0.0f);
         ResolveGiantClaws();
         ResolveTarget();
         standingRotation_ = transform.rotation;
@@ -104,12 +114,13 @@ public class KingYadokari : MonoScript {
     internal KingYadokariAttackTypeEnum SelectAttackType() {
         float giantClawWeight = giantClawDestroyed_ ? 0.0f : NonNegative(giantClawSettings_.selectionWeight);
         float shellBulletWeight = giantClawDestroyed_ ? NonNegative(shellBulletSettings_.selectionWeight) : 0.0f;
+        float jumpDropWeight = NonNegative(jumpDropSettings_.selectionWeight);
 
         if (!randomizeAttackType && IsAttackAvailable(fixedAttackType)) {
             return fixedAttackType;
         }
 
-        float totalWeight = giantClawWeight + shellBulletWeight;
+        float totalWeight = giantClawWeight + shellBulletWeight + jumpDropWeight;
         if (totalWeight <= 0.0f) {
             return giantClawDestroyed_
                 ? KingYadokariAttackTypeEnum.ShellBullet
@@ -121,7 +132,12 @@ public class KingYadokari : MonoScript {
             return KingYadokariAttackTypeEnum.GiantClaw;
         }
 
-        return KingYadokariAttackTypeEnum.ShellBullet;
+        lottery -= giantClawWeight;
+        if (lottery < shellBulletWeight) {
+            return KingYadokariAttackTypeEnum.ShellBullet;
+        }
+
+        return KingYadokariAttackTypeEnum.JumpDrop;
     }
 
     internal bool BeginGiantClawAttack() {
@@ -174,6 +190,73 @@ public class KingYadokari : MonoScript {
             activeGiantClaw_ = null;
         }
         giantClawDestroyed_ = giantClaws_.Count == 0;
+    }
+
+    internal bool BeginJumpDropAttack() {
+        ResolveTarget();
+        if (targetEntity_ == null || targetEntity_.transform == null) {
+            return false;
+        }
+
+        StopBodyMovement();
+        SetBodyAttackDamage(0.0f);
+        SetVisualState(new Vector4(1.0f, 0.85f, 0.2f, 1.0f), standingRotation_);
+        return true;
+    }
+
+    internal bool UpdateJumpToOffscreen() {
+        float destinationY = GetCameraCenterY()
+            + NonNegative(jumpDropSettings_.screenHalfHeight)
+            + NonNegative(jumpDropSettings_.offscreenOffset);
+        return MoveBodyTowardY(destinationY, Positive(jumpDropSettings_.jumpSpeed));
+    }
+
+    internal void UpdateJumpDropAim(float elapsed) {
+        ResolveTarget();
+        if (targetEntity_ == null || targetEntity_.transform == null) {
+            StopBodyMovement();
+            return;
+        }
+
+        float duration = JumpDropAimDuration;
+        float remaining = duration - elapsed;
+        float ratio = remaining > Time.deltaTime ? Time.deltaTime / remaining : 1.0f;
+        Vector3 position = transform.position;
+        float nextX = position.x
+            + (targetEntity_.transform.position.x - position.x) * Mathf.Clamp01(ratio);
+        float deltaTime = Time.deltaTime;
+        Vector2 velocity = deltaTime > 0.0f
+            ? new Vector2((nextX - position.x) / deltaTime, 0.0f)
+            : Vector2.zero;
+        SetBodyVelocity(velocity);
+        position.x += velocity.x * deltaTime;
+        transform.position = position;
+    }
+
+    internal bool BeginJumpDropFall() {
+        ResolveTarget();
+        if (targetEntity_ == null || targetEntity_.transform == null) {
+            return false;
+        }
+
+        Vector3 position = transform.position;
+        position.x = targetEntity_.transform.position.x;
+        transform.position = position;
+        jumpDropDestinationY_ = targetEntity_.transform.position.y - NonNegative(jumpDropSettings_.fallThroughDistance);
+        SetBodyVelocity(new Vector2(0.0f, -Positive(jumpDropSettings_.fallSpeed)));
+        SetBodyAttackDamage(jumpDropSettings_.damage);
+        SetVisualState(new Vector4(1.0f, 0.2f, 0.1f, 1.0f), standingRotation_);
+        return true;
+    }
+
+    internal bool UpdateJumpDropFall() {
+        return MoveBodyTowardY(jumpDropDestinationY_, Positive(jumpDropSettings_.fallSpeed));
+    }
+
+    internal void EndJumpDropAttack() {
+        StopBodyMovement();
+        SetBodyAttackDamage(0.0f);
+        RestoreNormalVisual();
     }
 
     internal void NotifyBulletResolved(bool reflectedHit) {
@@ -260,6 +343,10 @@ public class KingYadokari : MonoScript {
     }
 
     private bool IsAttackAvailable(KingYadokariAttackTypeEnum attackType) {
+        if (attackType == KingYadokariAttackTypeEnum.JumpDrop) {
+            return true;
+        }
+
         if (attackType == KingYadokariAttackTypeEnum.GiantClaw) {
             return !giantClawDestroyed_;
         }
@@ -274,6 +361,66 @@ public class KingYadokari : MonoScript {
 
     private static float NonNegative(float value) {
         return value > 0.0f ? value : 0.0f;
+    }
+
+    private static float Positive(float value) {
+        return value > 0.0f ? value : 0.01f;
+    }
+
+    private bool MoveBodyTowardY(float destinationY, float speed) {
+
+        Vector3 position = transform.position;
+        float difference = destinationY - position.y;
+        float step = speed * Time.deltaTime;
+        if (Mathf.Abs(difference) <= step) {
+            position.y = destinationY;
+            transform.position = position;
+            StopBodyMovement();
+            return true;
+        }
+
+        Vector2 velocity = new Vector2(0.0f, Mathf.Sign(difference) * speed);
+        SetBodyVelocity(velocity);
+        position.y += velocity.y * Time.deltaTime;
+        transform.position = position;
+        return false;
+    }
+
+    private void SetBodyVelocity(Vector2 velocity) {
+        if (rigidbody_ == null) {
+            rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        }
+
+        if (rigidbody_ != null) {
+            rigidbody_.velocity = velocity;
+        }
+    }
+
+    private void StopBodyMovement() {
+        SetBodyVelocity(Vector2.zero);
+    }
+
+    private float GetCameraCenterY() {
+        if (!String.IsNullOrEmpty(jumpDropSettings_.cameraEntityName)) {
+            Entity camera = ecsGroup.FindEntity(jumpDropSettings_.cameraEntityName);
+            if (camera != null && camera.transform != null) {
+                return camera.transform.position.y;
+            }
+        }
+
+        return targetEntity_ != null && targetEntity_.transform != null
+            ? targetEntity_.transform.position.y
+            : transform.position.y;
+    }
+
+    private void SetBodyAttackDamage(float damage) {
+        if (attackCollision_ == null) {
+            attackCollision_ = entity.GetScript<AttackCollision>();
+        }
+
+        if (attackCollision_ != null) {
+            attackCollision_.Damage = damage > 0.0f ? damage : 0.0f;
+        }
     }
 
     private void SetVisualState(Vector4 color, Quaternion rotation) {
@@ -292,6 +439,9 @@ public class KingYadokari : MonoScript {
     public float GiantClawRecoveryDuration { get { return NonNegative(giantClawSettings_.recoveryDuration); } }
     public float ShellBulletTellDuration { get { return NonNegative(shellBulletSettings_.tellDuration); } }
     public float ShellBulletRecoveryDuration { get { return NonNegative(shellBulletSettings_.recoveryDuration); } }
+    public float JumpDropChargeDuration { get { return NonNegative(jumpDropSettings_.chargeDuration); } }
+    public float JumpDropAimDuration { get { return NonNegative(jumpDropSettings_.aimDuration); } }
+    public float JumpDropRecoveryDuration { get { return NonNegative(jumpDropSettings_.recoveryDuration); } }
     public float KnockDownDuration { get { return knockDownDuration; } }
     public float GetUpDuration { get { return getUpDuration; } }
 }

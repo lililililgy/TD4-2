@@ -1,4 +1,4 @@
-#include "ComponentJsonConverter.h"
+﻿#include "ComponentJsonConverter.h"
 
 /// std
 #include <unordered_map>
@@ -107,10 +107,9 @@ namespace {
 				return *static_cast<const T*>(component);
 				};
 
-			fromJsonConverters_[typeName] = [this](IComponent* component, const nlohmann::json& j) {
-				uint32_t id = component->id;
- 				*static_cast<T*>(component) = j.get<T>();
-				component->id = id;
+			fromJsonConverters_[typeName] = [](IComponent* component, const nlohmann::json& j) {
+				// Deserialize into the ECS-owned instance so its id and owner are preserved.
+				j.get_to(*static_cast<T*>(component));
 				};
 		}
 
@@ -136,6 +135,11 @@ nlohmann::json ComponentJsonConverter::ToJson(const IComponent* component) {
 }
 
 void ComponentJsonConverter::FromJson(const nlohmann::json& j, IComponent* component) {
+	if (!component) {
+		Console::LogError("ComponentJsonConverter::FromJson: component is null.");
+		return;
+	}
+
 	std::string name = GetComponentTypeName(component);
 
 	auto itr = jsonConverter.fromJsonConverters_.find(name);
@@ -144,7 +148,17 @@ void ComponentJsonConverter::FromJson(const nlohmann::json& j, IComponent* compo
 		return;
 	}
 
-	itr->second(component, j);
+	try {
+		itr->second(component, j);
+	} catch (const nlohmann::json::exception& exception) {
+		Console::LogError(
+			"ComponentJsonConverter::FromJson: failed to deserialize "
+			+ name + ": " + exception.what());
+	} catch (const std::exception& exception) {
+		Console::LogError(
+			"ComponentJsonConverter::FromJson: failed to apply "
+			+ name + ": " + exception.what());
+	}
 }
 
 void ONEngine::from_json(const nlohmann::json& j, Quaternion& q) {
@@ -493,6 +507,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystem& p) {
 
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystem2D& p) {
 	p.enable = j.value("enable", 1);
+	p.inheritEmitterRotation = j.value("inheritEmitterRotation", false);
 	if (j.contains("main")) p.main = j.at("main").get<ParticleSystemMain>();
 	if (j.contains("emission")) p.emission = j.at("emission").get<ParticleSystemEmission>();
 	if (j.contains("shape")) p.shape = j.at("shape").get<ParticleSystemShape>();
@@ -514,6 +529,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystem2D& p) {
 	j = nlohmann::json{
 		{ "type", "ParticleSystem2D" },
 		{ "enable", p.enable },
+		{ "inheritEmitterRotation", p.inheritEmitterRotation },
 		{ "main", p.main },
 		{ "emission", p.emission },
 		{ "shape", p.shape },
@@ -565,7 +581,11 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystemMain& m) {
 	m.startDelay = j.value("startDelay", MinMaxFloat(0.0f));
 	m.startLifetime = j.value("startLifetime", MinMaxFloat(5.0f));
 	m.startSpeed = j.value("startSpeed", MinMaxFloat(5.0f));
+	m.startSize3D = j.value("startSize3D", false);
 	m.startSize = j.value("startSize", MinMaxFloat(1.0f));
+	m.startSizeX = j.value("startSizeX", MinMaxFloat(1.0f));
+	m.startSizeY = j.value("startSizeY", MinMaxFloat(1.0f));
+	m.startSizeZ = j.value("startSizeZ", MinMaxFloat(1.0f));
 	m.startRotation = j.value("startRotation", MinMaxFloat(0.0f));
 	m.startColor = j.value("startColor", MinMaxColor(Color::kWhite));
 	m.gravityModifier = j.value("gravityModifier", 0.0f);
@@ -582,7 +602,11 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystemMain& m) {
 		{ "startDelay", m.startDelay },
 		{ "startLifetime", m.startLifetime },
 		{ "startSpeed", m.startSpeed },
+		{ "startSize3D", m.startSize3D },
 		{ "startSize", m.startSize },
+		{ "startSizeX", m.startSizeX },
+		{ "startSizeY", m.startSizeY },
+		{ "startSizeZ", m.startSizeZ },
 		{ "startRotation", m.startRotation },
 		{ "startColor", m.startColor },
 		{ "gravityModifier", m.gravityModifier },
@@ -679,11 +703,22 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystemColorOverLifetime&
 
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystemSizeOverLifetime& s) {
 	s.enabled = j.value("enabled", false);
+	s.separateAxes = j.value("separateAxes", false);
 	s.size = j.value("size", MinMaxCurve());
+	s.x = j.value("x", MinMaxCurve());
+	s.y = j.value("y", MinMaxCurve());
+	s.z = j.value("z", MinMaxCurve());
 }
 
 void ONEngine::to_json(nlohmann::json& j, const ParticleSystemSizeOverLifetime& s) {
-	j = nlohmann::json{ { "enabled", s.enabled }, { "size", s.size } };
+	j = nlohmann::json{
+		{ "enabled", s.enabled },
+		{ "separateAxes", s.separateAxes },
+		{ "size", s.size },
+		{ "x", s.x },
+		{ "y", s.y },
+		{ "z", s.z }
+	};
 }
 
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystemVelocityOverLifetime& v) {

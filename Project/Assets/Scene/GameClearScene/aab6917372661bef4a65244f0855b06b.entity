@@ -1,0 +1,15 @@
+{
+    "active": true,
+    "components": [
+        {
+            "renderer": {
+                "materialGuid": "2f17254568be32fd690176436cb4e474"
+            },
+            "type": "ParticleSystem2D"
+        }
+    ],
+    "guid": "aab6917372661bef4a65244f0855b06b",
+    "name": "crackerParticle_1",
+    "parentGuid": "e0e78e17c1bb026f37a323443fcd61a8",
+    "prefabName": "crackerParticle"
+}

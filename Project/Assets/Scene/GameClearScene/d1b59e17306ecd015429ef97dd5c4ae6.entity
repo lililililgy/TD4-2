@@ -1,0 +1,31 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": -176.50001525878906,
+                "y": 47.9000129699707
+            },
+            "scale": {
+                "x": 120.0,
+                "y": 120.0,
+                "z": 120.0
+            },
+            "type": "Transform"
+        },
+        {
+            "material": {
+                "baseColor": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "d1b59e17306ecd015429ef97dd5c4ae6",
+    "name": "lock",
+    "parentGuid": "6689a2c8170250f9e2af7980175a88f7",
+    "prefabName": "lock"
+}

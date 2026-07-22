@@ -7,6 +7,8 @@
 
 #include "Engine/Editor/Commands/ComponentEditCommands/ComponentEditCommands.h"
 
+#include "Engine/Core/Utility/Math/Vector4.h"
+
 namespace ONEngine {
 
 template<typename T>
@@ -102,6 +104,9 @@ private:
 	bool isUpdatePaused_ = false;
 	bool isDrawPaused_ = false;
 
+	bool hasClearColor_ = true;
+	Vector4 clearColor_ = Vector4(0.1f, 0.25f, 0.5f, 1.0f);
+
 	/// ----- collections ----- ///
 	std::unique_ptr<EntityCollection> entityCollection_;
 	std::unique_ptr<ComponentCollection> componentCollection_;
@@ -124,6 +129,9 @@ public:
 	void SetUpdatePaused(bool paused);
 	void SetDrawPaused(bool paused);
 
+	void SetHasClearColor(bool hasClearColor);
+	void SetClearColor(const Vector4& clearColor);
+
 
 	/// ----- getter ----- ///
 
@@ -141,6 +149,9 @@ public:
 
 	bool IsUpdatePaused() const;
 	bool IsDrawPaused() const;
+
+	bool HasClearColor() const;
+	const Vector4& GetClearColor() const;
 };
 
 /// ===================================================

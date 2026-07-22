@@ -1,0 +1,86 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.7071067690849304,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.7071067690849304
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "enable": 1,
+            "inheritEmitterRotation": true,
+            "main": {
+                "duration": 5.0,
+                "looping": true,
+                "startDelay": {
+                    "constant": 0.0
+                },
+                "startLifetime": {
+                    "constant": 1.0
+                },
+                "startSpeed": {
+                    "constant": 0.0
+                },
+                "startSize": {
+                    "constant": 1.0
+                },
+                "simulationSpace": 1,
+                "maxParticles": 1000
+            },
+            "emission": {
+                "enabled": true,
+                "rateOverTime": 100.0
+            },
+            "shape": {
+                "enabled": true,
+                "type": 3,
+                "radius": 1.0
+            },
+            "velocityOverLifetime": {
+                "enabled": false,
+                "x": {
+                    "constant": 5.0
+                },
+                "y": {
+                    "constant": 0.0
+                },
+                "z": {
+                    "constant": 0.0
+                },
+                "speedModifier": {
+                    "constant": 1.0
+                },
+                "space": 0
+            },
+            "renderer": {
+                "renderMode": 0,
+                "alignment": 0,
+                "blendMode": 0,
+                "flipMode": 0,
+                "materialGuid": "",
+                "meshGuid": ""
+            },
+            "type": "ParticleSystem2D"
+        }
+    ],
+    "guid": "b77caa8aab1259afe123ad3b73d83ded",
+    "name": "ParticleEmitterRotationTestParticle",
+    "parentGuid": null,
+    "prefabName": ""
+}

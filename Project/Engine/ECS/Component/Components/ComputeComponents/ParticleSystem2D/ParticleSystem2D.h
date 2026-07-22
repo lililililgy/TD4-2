@@ -3,6 +3,7 @@
 #include "../../Interface/IComponent.h"
 #include "../ParticleSystem/ParticleSystemData.h"
 #include "Engine/Core/Utility/Math/Matrix4x4.h"
+#include "Engine/Core/Utility/Math/Vector2.h"
 
 namespace ONEngine {
 
@@ -11,16 +12,19 @@ namespace ONEngine {
         Vector3 position;
         Vector3 velocity;
         Color color;
-        float startLifetime;
-        float remainingLifetime;
-        float size;
-        float rotation;
+        float startLifetime = 0.0f;
+        float remainingLifetime = 0.0f;
+        Vector2 size = { 1.0f, 1.0f };
+        float rotation = 0.0f;
+        float pad0 = 0.0f;
         Color startColor;
-        float startSize;
+        Vector2 startSize = { 1.0f, 1.0f };
+        float randomValue = 0.0f;
+        uint32_t simulationSpace = 0; // 0: World, 1: Local
         Vector3 baseVelocity;
-        float randomValue;
-        uint32_t simulationSpace; // 0: World, 1: Local
+        float pad1 = 0.0f;
     };
+    static_assert(sizeof(Particle2D) == 112, "Particle2D layout must match HLSL Particle struct size (112 bytes)");
 
     class ParticleSystem2D : public IComponent {
     public:
@@ -32,6 +36,8 @@ namespace ONEngine {
         void Stop();
         void Clear();
         void Pause();
+        void Emit(int count);
+        int ConsumePendingEmitCount();
 
         void UpdateTime(float dt) { playbackTime_ += dt; }
         void ResetTime(float t = 0.0f) { playbackTime_ = t; }
@@ -56,6 +62,7 @@ namespace ONEngine {
         ParticleSystemRotationOverLifetime rotationOverLifetime;
         ParticleSystemRenderer renderer;
         ParticleSystemTextureSheetAnimation textureSheetAnimation;
+        bool inheritEmitterRotation = false;
 
         // --- CPU Simulation State ---
         std::vector<Particle2D> particles;
@@ -70,6 +77,9 @@ namespace ONEngine {
         bool isPlaying_ = false;
         bool isPaused_ = false;
         float playbackTime_ = 0.0f;
+        int pendingEmitCount_ = 0;
     };
+
+    void InternalEmitParticleSystem2D(uint64_t nativeHandle, int32_t count);
 
 }

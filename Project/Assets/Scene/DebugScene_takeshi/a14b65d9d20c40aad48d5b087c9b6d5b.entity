@@ -1,5 +1,14 @@
 {
     "active": false,
+    "components": [
+        {
+            "inheritEmitterRotation": false,
+            "renderer": {
+                "alignment": 0
+            },
+            "type": "ParticleSystem2D"
+        }
+    ],
     "guid": "a14b65d9d20c40aad48d5b087c9b6d5b",
     "name": "InkBulletParticle",
     "parentGuid": null,

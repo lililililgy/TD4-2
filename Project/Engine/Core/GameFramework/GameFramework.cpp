@@ -27,6 +27,7 @@ using namespace ONEngine;
 
 /// std
 #include <chrono>
+#include <cmath>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -484,6 +485,53 @@ void GameFramework::Update() {
 				}
 			}
 		}
+
+		if (EngineConfig::testScene == "EntityActiveTest") {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("EntityActiveTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'EntityActiveTest' should not be null");
+			if (ecsGroup) {
+				if (testFrameCount == 20) {
+					// 1. 各種コンポーネントの有効状態がすべて false (無効) になっていること
+					// (Entityが非アクティブのため、CheckComponentEnableがすべてfalseを返すこと)
+					#define ASSERT_COMP_INACTIVE(CompType) \
+					{ \
+						auto* array = ecsGroup->GetComponentArray<CompType>(); \
+						ONEngine::Assert(array != nullptr, #CompType " array should exist"); \
+						if (array && !array->GetUsedComponents().empty()) { \
+							auto* comp = array->GetUsedComponents().front(); \
+							ONEngine::Assert(comp != nullptr, #CompType " component should exist"); \
+							ONEngine::Assert(!CheckComponentEnable(comp), #CompType " should be inactive due to Entity disabled"); \
+						} \
+					}
+
+					ASSERT_COMP_INACTIVE(SpriteRenderer);
+					ASSERT_COMP_INACTIVE(BoxCollider2D);
+					ASSERT_COMP_INACTIVE(BoxCollider);
+					ASSERT_COMP_INACTIVE(CircleCollider);
+					ASSERT_COMP_INACTIVE(ParticleSystem2D);
+					ASSERT_COMP_INACTIVE(ParticleSystem);
+
+					#undef ASSERT_COMP_INACTIVE
+
+					// 2. 非アクティブなのでパーティクルは一切放出・更新されていないこと (aliveCount == 0)
+					{
+						auto* array = ecsGroup->GetComponentArray<ParticleSystem2D>();
+						if (array && !array->GetUsedComponents().empty()) {
+							auto* ps = array->GetUsedComponents().front();
+							ONEngine::Assert(ps->aliveCount == 0, "ParticleSystem2D should not emit particles while Entity is disabled");
+						}
+					}
+					{
+						auto* array = ecsGroup->GetComponentArray<ParticleSystem>();
+						if (array && !array->GetUsedComponents().empty()) {
+							auto* ps = array->GetUsedComponents().front();
+							ONEngine::Assert(ps->aliveCount == 0, "ParticleSystem should not emit particles while Entity is disabled");
+						}
+					}
+				}
+			}
+		}
+
 		if (testFrameCount >= EngineConfig::testDuration) {
 			nlohmann::json results;
 			results["success"] = true;

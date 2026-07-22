@@ -91,9 +91,23 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "28d47d639d0635c8ac9dd466a76e90f5",
+    "guid": "6b3aab2f43dd61cb25ba2bdaa0384015",
     "name": "JellyfishElectricField",
     "parentGuid": null,
     "prefabName": "JellyfishElectricField"

@@ -12,6 +12,7 @@ using namespace ONEngine;
 #include <nlohmann/json.hpp>
 
 /// engine
+#include "Engine/Core/GameFramework/DebugSceneGenerator.h"
 #include "Engine/ECS/Entity/EntityJsonConverter.h"
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/Editor/Commands/ComponentEditCommands/ComponentJsonConverter.h"
@@ -32,6 +33,9 @@ void SceneIO::Output(const std::string& sceneName, ECSGroup* ecsGroup) {
 
 void SceneIO::Input(const std::string& sceneName, ECSGroup* ecsGroup) {
 	/* jsonを読み込んでsceneに変換する */
+	if (sceneName == "Debug") {
+		DebugSceneGenerator::GenerateDefaultDebugSceneIfNeeded();
+	}
 	fileName_ = sceneName + ".scene";
 	LoadScene(fileName_, ecsGroup);
 }
@@ -105,6 +109,10 @@ void SceneIO::SaveScene(const std::string& filename, ECSGroup* ecsGroup) {
 		}
 	}
 
+	sceneJson["hasClearColor"] = ecsGroup->HasClearColor();
+	const Vector4& clearCol = ecsGroup->GetClearColor();
+	sceneJson["clearColor"] = { clearCol.x, clearCol.y, clearCol.z, clearCol.w };
+
 	OutputJson(sceneJson, filename);
 }
 
@@ -122,12 +130,20 @@ void SceneIO::LoadScene(const std::string& filename, ECSGroup* ecsGroup) {
 	inputFile >> sceneJson;
 	inputFile.close();
 
+	nlohmann::json fullSceneJson = nlohmann::json::object();
+	if (sceneJson.contains("hasClearColor")) {
+		fullSceneJson["hasClearColor"] = sceneJson["hasClearColor"];
+	}
+	if (sceneJson.contains("clearColor")) {
+		fullSceneJson["clearColor"] = sceneJson["clearColor"];
+	}
+
 	if (!sceneJson.contains("entities")) {
+		LoadSceneFromJson(fullSceneJson, ecsGroup);
 		MonoScriptEngine::GetInstance().SyncInitialComponentsToCS(ecsGroup);
 		return;
 	}
 
-	nlohmann::json fullSceneJson = nlohmann::json::object();
 	std::string sceneDirName = FileSystem::FileNameWithoutExtension(filename);
 
 	for (const auto& entityRef : sceneJson["entities"]) {
@@ -180,6 +196,10 @@ void SceneIO::LoadScene(const std::string& filename, ECSGroup* ecsGroup) {
 
 void SceneIO::SaveSceneToJson(nlohmann::json& output, ECSGroup* ecsGroup) {
 
+	output["hasClearColor"] = ecsGroup->HasClearColor();
+	const Vector4& clearCol = ecsGroup->GetClearColor();
+	output["clearColor"] = { clearCol.x, clearCol.y, clearCol.z, clearCol.w };
+
 	auto& entities = ecsGroup->GetEntities();
 	for (auto& entity : entities) {
 		/// マイナスIDはruntimeに生成されたエンティティなのでスキップ
@@ -202,6 +222,23 @@ void SceneIO::SaveSceneToJson(nlohmann::json& output, ECSGroup* ecsGroup) {
 }
 
 void SceneIO::LoadSceneFromJson(const nlohmann::json& input, ECSGroup* ecsGroup) {
+	if (input.contains("hasClearColor")) {
+		ecsGroup->SetHasClearColor(input["hasClearColor"].get<bool>());
+	} else {
+		ecsGroup->SetHasClearColor(true);
+	}
+
+	if (input.contains("clearColor") && input["clearColor"].is_array() && input["clearColor"].size() == 4) {
+		Vector4 cc;
+		cc.x = input["clearColor"][0].get<float>();
+		cc.y = input["clearColor"][1].get<float>();
+		cc.z = input["clearColor"][2].get<float>();
+		cc.w = input["clearColor"][3].get<float>();
+		ecsGroup->SetClearColor(cc);
+	} else {
+		ecsGroup->SetClearColor(Vector4(0.1f, 0.25f, 0.5f, 1.0f));
+	}
+
 	std::unordered_map<Guid, GameEntity*> entityMap;
 	std::unordered_map<uint32_t, GameEntity*> oldIdMap; // 互換性用
 

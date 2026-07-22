@@ -6,6 +6,10 @@
                 "x": -0.5
             },
             "type": "Transform"
+        },
+        {
+            "enable": 0,
+            "type": "BoxCollider2D"
         }
     ],
     "guid": "65609141e4577178095f754e29b48016",

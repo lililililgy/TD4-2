@@ -1,4 +1,4 @@
-#include "BoxCollider2D.h"
+﻿#include "BoxCollider2D.h"
 
 #include <magic_enum/magic_enum.hpp>
 #include <vector>
@@ -92,7 +92,7 @@ void ComponentDebug::BoxCollider2DDebug(BoxCollider2D* bc) {
 	/// box parameter
 	ImGui::SeparatorText("box parameter");
 	static bool unified = false;
-	Editor::DrawVec2Control("size", bc->size_, 0.1f, 0.0f, 1024.0f, 100.0f, &unified);
+	Editor::DrawVec2Control("size", bc->size_, 0.1f, 0.0f, 0.0f, 100.0f, &unified);
 }
 
 void ONEngine::from_json(const nlohmann::json& j, BoxCollider2D& b) {

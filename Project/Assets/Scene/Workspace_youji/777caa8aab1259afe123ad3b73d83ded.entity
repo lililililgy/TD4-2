@@ -19,6 +19,9 @@
                     "min": 33.900001525878906
                 }
             },
+            "renderer": {
+                "alignment": 0
+            },
             "rotationOverLifetime": {
                 "angularVelocity": {
                     "constant": 1.0,

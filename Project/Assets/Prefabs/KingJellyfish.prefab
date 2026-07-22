@@ -1,5 +1,5 @@
 {
-    "active": false,
+    "active": true,
     "children": [
         {
             "active": true,
@@ -53,6 +53,20 @@
                     "state": "Static",
                     "type": "BoxCollider2D",
                     "useOwnerScale": true
+                },
+                {
+                    "enable": 1,
+                    "freezeX": false,
+                    "freezeY": false,
+                    "gravityScale": 1.0,
+                    "mass": 1.0,
+                    "restitution": 0.5,
+                    "type": "Rigidbody2D",
+                    "useGravity": false,
+                    "velocity": {
+                        "x": 0.0,
+                        "y": 0.0
+                    }
                 }
             ],
             "guid": "fd699c02287ffb7593425d82e7c7add5",
@@ -66,7 +80,7 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 512.7865600585938,
+                "x": 2000.0,
                 "y": -151.79234313964844,
                 "z": 0.0
             },
@@ -92,11 +106,32 @@
                 "maxHp_": 300.0
             },
             "KingJellyfish": {
+                "attackTelegraphAlpha": 0.30000001192092896,
+                "attackTelegraphPrefabName": "JellyfishAttackTelegraph",
                 "cameraEntityName": "MainCamera",
                 "damageInvincibilityDuration": 0.5,
+                "damageReactionBlinkInterval": 0.05999999865889549,
+                "damageReactionColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.05000000074505806,
+                    "z": 0.05000000074505806
+                },
+                "damageReactionDuration": 0.18000000715255737,
                 "fixedAttackType": 0,
                 "idleDuration": 2.0,
+                "laserCameraShakeDuration": 0.3499999940395355,
+                "laserCameraShakeFrequency": 26.0,
+                "laserCameraShakeIntensity": 22.0,
+                "laserEffect01EmitCount": 98,
+                "laserEffect01EntityName": "Jellyfish_LaserEffect01",
+                "laserEffect02EmitCount": 1,
+                "laserEffect02EntityName": "Jellyfish_LaserEffect02",
+                "laserEffect03EmitCount": 1,
+                "laserEffect03EntityName": "Jellyfish_LaserEffect03",
+                "laserGrayscaleDuration": 3.3499999046325684,
                 "maxHp": 10,
+                "postEffectEntityName": "Background",
                 "randomizeAttackType": true,
                 "targetEntityName": "Player"
             },
@@ -105,6 +140,9 @@
                 "damageFieldDuration": 0.6000000238418579,
                 "damageFieldPrefabName": "JellyfishChargeDamageField",
                 "damageFieldWidth": 180.0,
+                "effect01EmitCount": 1,
+                "effect01EmitInterval": 0.05000000074505806,
+                "effect01EntityName": "Jellyfish_ChargeAttackEffect01",
                 "inertiaRate": 0.9990000128746033,
                 "moveDuration": 2.5999999046325684,
                 "passThroughDistance": 300.0,
@@ -153,7 +191,7 @@
                 "laserPrefabName": "JellyfishLaser",
                 "length": 1200.0,
                 "recoveryDuration": 1.0,
-                "rotationSpeed": 0.699999988079071,
+                "rotationSpeed": 0.5,
                 "selectionWeight": 1.0,
                 "tellDuration": 1.0,
                 "width": 60.0
@@ -254,10 +292,24 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
     "guid": "2a75a187cc14795397a4b907fc812b10",
     "name": "KingJellyfish",
     "parentGuid": null,
-    "prefabName": ""
+    "prefabName": "KingJellyfish"
 }

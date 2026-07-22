@@ -3,10 +3,11 @@
     "components": [
         {
             "position": {
+                "y": -432.0999755859375,
                 "z": 2.0
             },
             "scale": {
-                "y": 90.0
+                "y": 128.0
             },
             "type": "Transform"
         }

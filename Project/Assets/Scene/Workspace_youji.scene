@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.025089621543884277,
+        0.39068126678466797,
+        1.0,
+        1.0
+    ],
     "entities": [
         {
             "guid": "fd581a153a7de50c8be48309482102ac",
@@ -22,7 +28,7 @@
         },
         {
             "guid": "8a4b75a99a9fad9d6e67c9dab898bea4",
-            "parentGuid": null,
+            "parentGuid": "387362fb5dddbdd852badabb28aeef48",
             "path": "./Workspace_youji/8a4b75a99a9fad9d6e67c9dab898bea4.entity"
         },
         {
@@ -52,7 +58,7 @@
         },
         {
             "guid": "a59bf647014bc3faab12978472ac8a8f",
-            "parentGuid": null,
+            "parentGuid": "387362fb5dddbdd852badabb28aeef48",
             "path": "./Workspace_youji/a59bf647014bc3faab12978472ac8a8f.entity"
         },
         {
@@ -84,6 +90,77 @@
             "guid": "b037b63d4149b7c18dbc6387c66c2205",
             "parentGuid": "5833a6909c39d75bd73c994d550d51c6",
             "path": "./Workspace_youji/b037b63d4149b7c18dbc6387c66c2205.entity"
+        },
+        {
+            "guid": "387362fb5dddbdd852badabb28aeef48",
+            "parentGuid": null,
+            "path": "./Workspace_youji/387362fb5dddbdd852badabb28aeef48.entity"
+        },
+        {
+            "guid": "58f60b4462c1d424ebd1d66c81126687",
+            "parentGuid": "560b0751a9b773257469d94a2e36ffb5",
+            "path": "./Workspace_youji/58f60b4462c1d424ebd1d66c81126687.entity"
+        },
+        {
+            "guid": "00c8a77253b693c5a3fb13cbc9faa08c",
+            "parentGuid": "625ad0c52fed4ebafa0b2f34d71e9b30",
+            "path": "./Workspace_youji/00c8a77253b693c5a3fb13cbc9faa08c.entity"
+        },
+        {
+            "guid": "58ac16b4f7a0174cafd7329ded1ac10a",
+            "parentGuid": "625ad0c52fed4ebafa0b2f34d71e9b30",
+            "path": "./Workspace_youji/58ac16b4f7a0174cafd7329ded1ac10a.entity"
+        },
+        {
+            "guid": "07fe564495f20ffadbd0a1b593919d98",
+            "parentGuid": "146b1ec785e1144a77873296a0253626",
+            "path": "./Workspace_youji/07fe564495f20ffadbd0a1b593919d98.entity"
+        },
+        {
+            "guid": "605c70baa59edc007be60326d7e67d34",
+            "parentGuid": "560b0751a9b773257469d94a2e36ffb5",
+            "path": "./Workspace_youji/605c70baa59edc007be60326d7e67d34.entity"
+        },
+        {
+            "guid": "387e023ded53b0a37eb46947e20a1728",
+            "parentGuid": "146b1ec785e1144a77873296a0253626",
+            "path": "./Workspace_youji/387e023ded53b0a37eb46947e20a1728.entity"
+        },
+        {
+            "guid": "625ad0c52fed4ebafa0b2f34d71e9b30",
+            "parentGuid": "387362fb5dddbdd852badabb28aeef48",
+            "path": "./Workspace_youji/625ad0c52fed4ebafa0b2f34d71e9b30.entity"
+        },
+        {
+            "guid": "1249ff40080aa27b020ee01fc8151b40",
+            "parentGuid": null,
+            "path": "./Workspace_youji/1249ff40080aa27b020ee01fc8151b40.entity"
+        },
+        {
+            "guid": "560b0751a9b773257469d94a2e36ffb5",
+            "parentGuid": "387362fb5dddbdd852badabb28aeef48",
+            "path": "./Workspace_youji/560b0751a9b773257469d94a2e36ffb5.entity"
+        },
+        {
+            "guid": "146b1ec785e1144a77873296a0253626",
+            "parentGuid": "387362fb5dddbdd852badabb28aeef48",
+            "path": "./Workspace_youji/146b1ec785e1144a77873296a0253626.entity"
+        },
+        {
+            "guid": "df7238e93fcdd7888ad847f52b776958",
+            "parentGuid": "605c70baa59edc007be60326d7e67d34",
+            "path": "./Workspace_youji/df7238e93fcdd7888ad847f52b776958.entity"
+        },
+        {
+            "guid": "297a57b079e5773ed9844136288a4a98",
+            "parentGuid": "387e023ded53b0a37eb46947e20a1728",
+            "path": "./Workspace_youji/297a57b079e5773ed9844136288a4a98.entity"
+        },
+        {
+            "guid": "bd94901d53472146488966a03293796a",
+            "parentGuid": "387e023ded53b0a37eb46947e20a1728",
+            "path": "./Workspace_youji/bd94901d53472146488966a03293796a.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }

@@ -8,7 +8,12 @@ using namespace ONEngine;
 
 void DebugSceneGenerator::GenerateDefaultDebugSceneIfNeeded() {
 	std::string scenePath = "./Assets/Scene/Debug.scene";
-	if (!std::filesystem::exists(scenePath)) {
+	std::string camera3DPath = "./Assets/Scene/Debug/5777e8cd7fb89b14e6ba044b8f737e69.entity";
+	std::string camera2DPath = "./Assets/Scene/Debug/476d1cadb33306de007290e0c4acae92.entity";
+
+	if (!std::filesystem::exists(scenePath) ||
+		!std::filesystem::exists(camera3DPath) ||
+		!std::filesystem::exists(camera2DPath)) {
 		std::filesystem::create_directories("./Assets/Scene/Debug");
 
 		// Debug.scene の作成

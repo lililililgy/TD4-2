@@ -7,6 +7,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Audio/SEPlayer.h"
 #include "Engine/Asset/Collection/AssetCollection.h"
 #include "Engine/Asset/Assets/AudioClip/AudioClip.h"
+#include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 
 namespace ONEngine {
 
@@ -170,7 +171,7 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 	ComponentArray<BGMPlayer>* bgmArray = ecs->GetComponentArray<BGMPlayer>();
 	if (bgmArray && !bgmArray->GetUsedComponents().empty()) {
 		for (auto& bgm : bgmArray->GetUsedComponents()) {
-			if (!bgm || !bgm->enable) {
+			if (!CheckComponentEnable(bgm)) {
 				continue;
 			}
 
@@ -245,7 +246,7 @@ void AudioPlaybackSystem::RuntimeUpdate(ECSGroup* ecs) {
 	ComponentArray<SEPlayer>* seArray = ecs->GetComponentArray<SEPlayer>();
 	if (seArray && !seArray->GetUsedComponents().empty()) {
 		for (auto& se : seArray->GetUsedComponents()) {
-			if (!se || !se->enable) {
+			if (!CheckComponentEnable(se)) {
 				continue;
 			}
 

@@ -72,6 +72,9 @@
                     "z": 0.3499999940395355
                 },
                 "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -88,9 +91,23 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "641ddc0076565e4699d6fc5fff3b6477",
+    "guid": "d947e8551b5e80307ddde840bcd643ca",
     "name": "KingGesoHomingBullet",
     "parentGuid": null,
     "prefabName": "KingGesoHomingBullet"

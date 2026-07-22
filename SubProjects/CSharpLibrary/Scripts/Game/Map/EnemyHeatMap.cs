@@ -40,10 +40,7 @@ public class EnemyHeatMap
     }
 
     public int GetHeat(Vector2 position) {
-        Vector2Int cellId = new Vector2Int(
-            (int)(position.x / cellSize_.x),
-            (int)(position.y / cellSize_.y)
-        );
+        Vector2Int cellId = GetCellId(position);
         int hash = CalclateHash(cellId);
         if (heatMap_.ContainsKey(hash)) {
             return heatMap_[hash];
@@ -53,10 +50,7 @@ public class EnemyHeatMap
     }
 
     public void AddHeat(Vector2 position) {
-        Vector2Int cellId = new Vector2Int(
-            (int)(position.x / cellSize_.x),
-            (int)(position.y / cellSize_.y)
-        );
+        Vector2Int cellId = GetCellId(position);
         int hash = CalclateHash(cellId);
         if (heatMap_.ContainsKey(hash)) {
             heatMap_[hash]++;
@@ -86,10 +80,12 @@ public class EnemyHeatMap
         return cellSize_;
     }
 
+    // 負座標でも正しくセル境界を跨ぐよう floor で丸める。
+    // (int)キャストは 0 方向への切り捨てになり、セル0だけ倍幅になってしまう。
     public Vector2Int GetCellId(Vector2 position) {
         return new Vector2Int(
-            (int)(position.x / cellSize_.x),
-            (int)(position.y / cellSize_.y)
+            (int)Math.Floor(position.x / cellSize_.x),
+            (int)Math.Floor(position.y / cellSize_.y)
         );
     }
 }
