@@ -69,6 +69,8 @@ public:
 
 	DxResource& GetDxResource();
 
+	void SetClearColor(const Vector4& clearColor) { clearColor_ = clearColor; }
+
 private:
 	/// ===================================================
 	/// private : methods

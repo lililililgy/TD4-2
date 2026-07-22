@@ -1,4 +1,11 @@
 {
+    "clearColor": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "hasClearColor": false,
     "entities": [
         {
             "guid": "10950c1617ca9c6f84998cc1b65115fb",
