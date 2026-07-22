@@ -937,10 +937,26 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 						} 		 
 					}
 					else {
-						if (itemObj && ImGui::CollapsingHeader(itemName.c_str())) {
-							ImGui::Indent(); void* iter = nullptr; MonoClassField* f;
-							while ((f = mono_class_get_fields(ek, &iter))) ShowField(scriptName, mono_type_get_type(mono_field_get_type(f)), itemObj, f, mono_field_get_name(f));
-							ImGui::Unindent();
+						if (itemObj) {
+							auto currentGeneric = ONEngine::Variables::MonoObjectToGeneric(itemObj);
+							if (currentGeneric && ImGui::CollapsingHeader(itemName.c_str())) {
+								ImGui::Indent();
+								auto tempGeneric = ONEngine::Variables::CloneGenericObject(currentGeneric);
+								bool anyItemActive = false;
+								bool anyItemDeactivatedAfterEdit = false;
+								DrawGenericObjectWithTracking(tempGeneric, anyItemActive, anyItemDeactivatedAfterEdit);
+
+								if (tempGeneric && !ONEngine::Variables::IsEqualGenericObject(currentGeneric, tempGeneric)) {
+									ONEngine::Variables::VarToMonoObject(itemObj, ek, tempGeneric);
+									int setIndex = i;
+									void* setItemArg = mono_class_is_valuetype(ek) ? mono_object_unbox(itemObj) : (void*)itemObj;
+									void* setArgs[2] = { &setIndex, setItemArg };
+									exc = nullptr;
+									mono_runtime_invoke(setItemMethod, listObj, setArgs, &exc);
+									if (exc) ONEngine::MonoScriptEngineUtils::HandleException(exc);
+								}
+								ImGui::Unindent();
+							}
 						}
 					}
 				}
