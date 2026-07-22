@@ -22,6 +22,9 @@ public class KingJellyfish : MonoScript {
 
     [SerializeField] public float idleDuration = 2.0f;
     [SerializeField] public float damageInvincibilityDuration = 0.5f;
+    [SerializeField] public float damageReactionDuration = 0.18f;
+    [SerializeField] public float damageReactionBlinkInterval = 0.06f;
+    [SerializeField] public Vector4 damageReactionColor = new Vector4(1.0f, 0.05f, 0.05f, 1.0f);
     [SerializeField] public bool randomizeAttackType = true;
     [SerializeField] public KingJellyfishAttackTypeEnum fixedAttackType = KingJellyfishAttackTypeEnum.ChargeAttack;
     [SerializeField] public float laserCameraShakeDuration = 0.35f;
@@ -51,6 +54,11 @@ public class KingJellyfish : MonoScript {
     private JellyfishWeakPoint weakPoint_;
     private Rigidbody2D rigidbody_;
     private float damageInvincibilityRemaining_;
+    private float damageReactionRemaining_;
+    private float damageReactionElapsed_;
+    private bool damageReactionColorApplied_;
+    private Vector4 damageReactionBaseColor_;
+    private SpriteRenderer damageReactionRenderer_;
     private PlayerFollowCamera followCamera_;
     private ScreenPostEffectTag screenPostEffect_;
     private Entity laserEffect01Entity_;
@@ -102,6 +110,10 @@ public class KingJellyfish : MonoScript {
         movementDepth_ = transform.position.z;
         attackRequested_ = false;
         damageInvincibilityRemaining_ = 0.0f;
+        damageReactionRemaining_ = 0.0f;
+        damageReactionElapsed_ = 0.0f;
+        damageReactionColorApplied_ = false;
+        damageReactionRenderer_ = entity.GetComponent<SpriteRenderer>();
         grayscaleRemaining_ = 0.0f;
         grayscaleActive_ = false;
         ResetActionLoop();
@@ -112,6 +124,7 @@ public class KingJellyfish : MonoScript {
     // 更新
     //=============================
     public override void Update() {
+        RestoreDamageReactionColor();
         // 攻撃リクエストの処理
         UpdateDamageInvincibility();
         // 8方向レーザー攻撃の演出処理
@@ -121,9 +134,11 @@ public class KingJellyfish : MonoScript {
             state_.Update(this);
         }
 
+        UpdateDamageReaction();
     }
 
     public override void OnDestroy() {
+        RestoreDamageReactionColor();
         HideAttackTelegraph();
         EndLaserGrayscale();
     }
@@ -154,6 +169,7 @@ public class KingJellyfish : MonoScript {
         hp_.TakeDamage(damage);
         if (hp_.CurrentHp < hpBeforeDamage) {
             damageInvincibilityRemaining_ = NonNegative(damageInvincibilityDuration);
+            BeginDamageReaction();
         }
     }
 
@@ -166,6 +182,68 @@ public class KingJellyfish : MonoScript {
         if (damageInvincibilityRemaining_ < 0.0f) {
             damageInvincibilityRemaining_ = 0.0f;
         }
+    }
+
+    private void BeginDamageReaction() {
+        float duration = NonNegative(damageReactionDuration);
+        if (duration <= 0.0f) {
+            return;
+        }
+
+        RestoreDamageReactionColor();
+        damageReactionRemaining_ = duration;
+        damageReactionElapsed_ = 0.0f;
+        ApplyDamageReactionColor();
+    }
+
+    private void UpdateDamageReaction() {
+        if (damageReactionRemaining_ <= 0.0f) {
+            return;
+        }
+
+        damageReactionElapsed_ += Time.deltaTime;
+        damageReactionRemaining_ -= Time.deltaTime;
+        if (damageReactionRemaining_ <= 0.0f) {
+            damageReactionRemaining_ = 0.0f;
+            return;
+        }
+
+        float blinkInterval = NonNegative(damageReactionBlinkInterval);
+        bool shouldShowRed = blinkInterval <= 0.0f
+            || ((int)(damageReactionElapsed_ / blinkInterval) % 2) == 0;
+        if (shouldShowRed) {
+            ApplyDamageReactionColor();
+        }
+    }
+
+    private void ApplyDamageReactionColor() {
+        SpriteRenderer renderer = ResolveDamageReactionRenderer();
+        if (renderer == null || damageReactionColorApplied_) {
+            return;
+        }
+
+        damageReactionBaseColor_ = renderer.color;
+        renderer.color = damageReactionColor;
+        damageReactionColorApplied_ = true;
+    }
+
+    private void RestoreDamageReactionColor() {
+        if (!damageReactionColorApplied_) {
+            return;
+        }
+
+        SpriteRenderer renderer = ResolveDamageReactionRenderer();
+        if (renderer != null) {
+            renderer.color = damageReactionBaseColor_;
+        }
+        damageReactionColorApplied_ = false;
+    }
+
+    private SpriteRenderer ResolveDamageReactionRenderer() {
+        if (damageReactionRenderer_ == null) {
+            damageReactionRenderer_ = entity.GetComponent<SpriteRenderer>();
+        }
+        return damageReactionRenderer_;
     }
 
     internal void SetWeakPointCollisionEnabled(bool enabled) {
@@ -689,7 +767,10 @@ public class KingJellyfish : MonoScript {
                 electricFieldSettings_.damage,
                 activationDelay,
                 ElectricFieldActiveDuration,
-                transform.position.z);
+                transform.position.z,
+                electricFieldSettings_.thunderboltParticlePrefabName,
+                electricFieldSettings_.thunderboltParticleEmitCount,
+                electricFieldSettings_.thunderboltParticleDuration);
         }
     }
 

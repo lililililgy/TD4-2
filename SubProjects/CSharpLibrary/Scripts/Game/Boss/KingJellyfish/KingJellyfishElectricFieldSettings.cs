@@ -10,4 +10,7 @@ public class KingJellyfishElectricFieldSettings : MonoScript
     [SerializeField] public float radius = 140.0f;
     [SerializeField] public float spreadRadius = 300.0f;
     [SerializeField] public float damage = 12.0f;
+    [SerializeField] public string thunderboltParticlePrefabName = "thunderboltParticle";
+    [SerializeField] public int thunderboltParticleEmitCount = 1;
+    [SerializeField] public float thunderboltParticleDuration = 1.0f;
 }

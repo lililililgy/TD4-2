@@ -69,9 +69,9 @@
                     }
                 }
             ],
-            "guid": "90d9adbd347df4438eaad55f0c4bcf15",
+            "guid": "fd699c02287ffb7593425d82e7c7add5",
             "name": "JellyfishWeakPoint",
-            "parentGuid": "6b9bf4c8f1d113060363484d62196b7a",
+            "parentGuid": "2a75a187cc14795397a4b907fc812b10",
             "prefabName": "JellyfishWeakPoint"
         }
     ],
@@ -80,7 +80,7 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 512.7865600585938,
+                "x": 2000.0,
                 "y": -151.79234313964844,
                 "z": 0.0
             },
@@ -110,6 +110,14 @@
                 "attackTelegraphPrefabName": "JellyfishAttackTelegraph",
                 "cameraEntityName": "MainCamera",
                 "damageInvincibilityDuration": 0.5,
+                "damageReactionBlinkInterval": 0.05999999865889549,
+                "damageReactionColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.05000000074505806,
+                    "z": 0.05000000074505806
+                },
+                "damageReactionDuration": 0.18000000715255737,
                 "fixedAttackType": 0,
                 "idleDuration": 2.0,
                 "laserCameraShakeDuration": 0.3499999940395355,
@@ -121,7 +129,7 @@
                 "laserEffect02EntityName": "Jellyfish_LaserEffect02",
                 "laserEffect03EmitCount": 1,
                 "laserEffect03EntityName": "Jellyfish_LaserEffect03",
-                "laserGrayscaleDuration": 0.3499999940395355,
+                "laserGrayscaleDuration": 3.3499999046325684,
                 "maxHp": 10,
                 "postEffectEntityName": "Background",
                 "randomizeAttackType": true,
@@ -183,7 +191,7 @@
                 "laserPrefabName": "JellyfishLaser",
                 "length": 1200.0,
                 "recoveryDuration": 1.0,
-                "rotationSpeed": 0.699999988079071,
+                "rotationSpeed": 0.5,
                 "selectionWeight": 1.0,
                 "tellDuration": 1.0,
                 "width": 60.0
@@ -240,6 +248,21 @@
             "type": "Script"
         },
         {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 2,
+            "mass": 1.0,
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.7999999523162842
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        },
+        {
             "enable": 1,
             "isPixelPerfect": false,
             "material": {
@@ -271,21 +294,6 @@
             "type": "SpriteRenderer"
         },
         {
-            "categoryBits": 8,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 2,
-            "mass": 1.0,
-            "size": {
-                "x": 0.699999988079071,
-                "y": 0.7999999523162842
-            },
-            "state": "Static",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
-        },
-        {
             "enable": 1,
             "freezeX": false,
             "freezeY": false,
@@ -300,7 +308,7 @@
             }
         }
     ],
-    "guid": "6b9bf4c8f1d113060363484d62196b7a",
+    "guid": "2a75a187cc14795397a4b907fc812b10",
     "name": "KingJellyfish",
     "parentGuid": null,
     "prefabName": "KingJellyfish"
