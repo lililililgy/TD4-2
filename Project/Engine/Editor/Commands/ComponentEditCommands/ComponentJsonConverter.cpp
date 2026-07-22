@@ -581,7 +581,11 @@ void ONEngine::from_json(const nlohmann::json& j, ParticleSystemMain& m) {
 	m.startDelay = j.value("startDelay", MinMaxFloat(0.0f));
 	m.startLifetime = j.value("startLifetime", MinMaxFloat(5.0f));
 	m.startSpeed = j.value("startSpeed", MinMaxFloat(5.0f));
+	m.startSize3D = j.value("startSize3D", false);
 	m.startSize = j.value("startSize", MinMaxFloat(1.0f));
+	m.startSizeX = j.value("startSizeX", MinMaxFloat(1.0f));
+	m.startSizeY = j.value("startSizeY", MinMaxFloat(1.0f));
+	m.startSizeZ = j.value("startSizeZ", MinMaxFloat(1.0f));
 	m.startRotation = j.value("startRotation", MinMaxFloat(0.0f));
 	m.startColor = j.value("startColor", MinMaxColor(Color::kWhite));
 	m.gravityModifier = j.value("gravityModifier", 0.0f);
@@ -598,7 +602,11 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystemMain& m) {
 		{ "startDelay", m.startDelay },
 		{ "startLifetime", m.startLifetime },
 		{ "startSpeed", m.startSpeed },
+		{ "startSize3D", m.startSize3D },
 		{ "startSize", m.startSize },
+		{ "startSizeX", m.startSizeX },
+		{ "startSizeY", m.startSizeY },
+		{ "startSizeZ", m.startSizeZ },
 		{ "startRotation", m.startRotation },
 		{ "startColor", m.startColor },
 		{ "gravityModifier", m.gravityModifier },
@@ -695,11 +703,22 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystemColorOverLifetime&
 
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystemSizeOverLifetime& s) {
 	s.enabled = j.value("enabled", false);
+	s.separateAxes = j.value("separateAxes", false);
 	s.size = j.value("size", MinMaxCurve());
+	s.x = j.value("x", MinMaxCurve());
+	s.y = j.value("y", MinMaxCurve());
+	s.z = j.value("z", MinMaxCurve());
 }
 
 void ONEngine::to_json(nlohmann::json& j, const ParticleSystemSizeOverLifetime& s) {
-	j = nlohmann::json{ { "enabled", s.enabled }, { "size", s.size } };
+	j = nlohmann::json{
+		{ "enabled", s.enabled },
+		{ "separateAxes", s.separateAxes },
+		{ "size", s.size },
+		{ "x", s.x },
+		{ "y", s.y },
+		{ "z", s.z }
+	};
 }
 
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystemVelocityOverLifetime& v) {

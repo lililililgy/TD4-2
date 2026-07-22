@@ -3,6 +3,7 @@
 #include "../../Interface/IComponent.h"
 #include "../ParticleSystem/ParticleSystemData.h"
 #include "Engine/Core/Utility/Math/Matrix4x4.h"
+#include "Engine/Core/Utility/Math/Vector2.h"
 
 namespace ONEngine {
 
@@ -11,16 +12,19 @@ namespace ONEngine {
         Vector3 position;
         Vector3 velocity;
         Color color;
-        float startLifetime;
-        float remainingLifetime;
-        float size;
-        float rotation;
+        float startLifetime = 0.0f;
+        float remainingLifetime = 0.0f;
+        Vector2 size = { 1.0f, 1.0f };
+        float rotation = 0.0f;
+        float pad0 = 0.0f;
         Color startColor;
-        float startSize;
+        Vector2 startSize = { 1.0f, 1.0f };
+        float randomValue = 0.0f;
+        uint32_t simulationSpace = 0; // 0: World, 1: Local
         Vector3 baseVelocity;
-        float randomValue;
-        uint32_t simulationSpace; // 0: World, 1: Local
+        float pad1 = 0.0f;
     };
+    static_assert(sizeof(Particle2D) == 112, "Particle2D layout must match HLSL Particle struct size (112 bytes)");
 
     class ParticleSystem2D : public IComponent {
     public:

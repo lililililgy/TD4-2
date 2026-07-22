@@ -23,9 +23,25 @@
             "type": "Transform"
         },
         {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 4294967048,
+            "mass": 1.0,
+            "radius": 0.4000000059604645,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "AttackCollision": {
+                "damage_": 256.0,
+                "destroyOnHit_": false
+            },
             "Bullet": {
                 "lifeTime_": 20.0,
-                "speed_": 256.0
+                "speed_": 512.0
             },
             "type": "Variables"
         },
@@ -35,6 +51,10 @@
                 {
                     "enable": true,
                     "name": "Bullet"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
                 }
             ],
             "type": "Script"
@@ -71,7 +91,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "2b03edc01bfe3173f21cf1a2a0e7afa4",
+    "guid": "cb16e6dd3b50b5275d2a3883a63e5353",
     "name": "Bullet",
     "parentGuid": null,
     "prefabName": ""

@@ -1,4 +1,4 @@
-#define NOMINMAX
+﻿#define NOMINMAX
 #include "ParticleSystem2DUpdateSystem.h"
 #include "Engine/ECS/EntityComponentSystem/ECSGroup.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
@@ -180,7 +180,13 @@ namespace ONEngine {
         particle.remainingLifetime = particle.startLifetime;
         particle.startColor = GetMinMaxColor(ps->main.startColor);
         particle.color = particle.startColor;
-        particle.startSize = GetMinMaxFloat(ps->main.startSize);
+        if (ps->main.startSize3D) {
+            particle.startSize.x = GetMinMaxFloat(ps->main.startSizeX);
+            particle.startSize.y = GetMinMaxFloat(ps->main.startSizeY);
+        } else {
+            float s = GetMinMaxFloat(ps->main.startSize);
+            particle.startSize = Vector2(s, s);
+        }
         particle.size = particle.startSize;
         particle.rotation = GetMinMaxFloat(ps->main.startRotation);
         if (ps->inheritEmitterRotation
@@ -312,6 +318,56 @@ namespace ONEngine {
             ps->emitAccumulator += ps->emission.rateOverTime * dt;
             int emitCount = static_cast<int>(ps->emitAccumulator);
             ps->emitAccumulator -= static_cast<float>(emitCount);
+
+            for (int i = 0; i < emitCount; ++i) {
+                if (ps->aliveCount >= ps->particles.size()) break;
+
+                Particle2D& p = ps->particles[ps->aliveCount++];
+                Vector3 shapePos, shapeDir;
+                EvaluateShape2D(ps->shape, shapePos, shapeDir);
+
+                Matrix4x4 currentMat = transform->matWorld;
+                Matrix4x4 emitMat = currentMat;
+                if (ps->hasPreviousWorldMat) {
+                    float t_emit = (float)i / (float)(emitCount > 1 ? emitCount - 1 : 1);
+                    Vector3 prevPos(ps->previousWorldMat.m[3][0], ps->previousWorldMat.m[3][1], ps->previousWorldMat.m[3][2]);
+                    Vector3 currPos(currentMat.m[3][0], currentMat.m[3][1], currentMat.m[3][2]);
+                    Vector3 lerpedPos = Vector3Lerp(prevPos, currPos, t_emit);
+                    emitMat.m[3][0] = lerpedPos.x;
+                    emitMat.m[3][1] = lerpedPos.y;
+                    emitMat.m[3][2] = lerpedPos.z;
+                }
+
+                if (ps->main.simulationSpace == SimulationSpace::World) {
+                    p.position = Matrix4x4::Transform(shapePos, emitMat);
+                    p.velocity = Matrix4x4::TransformNormal(shapeDir, emitMat).Normalize() * GetMinMaxFloat(ps->main.startSpeed);
+                    p.simulationSpace = 0; // World
+                } else {
+                    p.position = shapePos;
+                    p.velocity = shapeDir * GetMinMaxFloat(ps->main.startSpeed);
+                    p.simulationSpace = 1; // Local
+                }
+
+                // Force 2D alignment (Z = 0)
+                p.position.z = 0.0f;
+                p.velocity.z = 0.0f;
+
+                p.baseVelocity = p.velocity;
+                p.startLifetime = GetMinMaxFloat(ps->main.startLifetime);
+                p.remainingLifetime = p.startLifetime;
+                p.startColor = GetMinMaxColor(ps->main.startColor);
+                p.color = p.startColor;
+                if (ps->main.startSize3D) {
+                    p.startSize.x = GetMinMaxFloat(ps->main.startSizeX);
+                    p.startSize.y = GetMinMaxFloat(ps->main.startSizeY);
+                } else {
+                    float s = GetMinMaxFloat(ps->main.startSize);
+                    p.startSize = Vector2(s, s);
+                }
+                p.size = p.startSize;
+                p.rotation = GetMinMaxFloat(ps->main.startRotation);
+                p.randomValue = Random::Float(0.0f, 1.0f);
+            }
             EmitParticles2D(ps, transform, emitCount, true);
 
             for (size_t i = 0; i < ps->emission.bursts.size(); ++i) {
@@ -323,6 +379,44 @@ namespace ONEngine {
                     float nextBurstTime = burstTime + static_cast<float>(cycleCount) * burst.interval;
                     if (currentPlaybackTime >= nextBurstTime) {
                         if (Random::Float(0.0f, 1.0f) <= burst.probability) {
+                            int burstEmitCount = burst.count;
+                            for (int e = 0; e < burstEmitCount; ++e) {
+                                if (ps->aliveCount >= ps->particles.size()) break;
+                                Particle2D& p = ps->particles[ps->aliveCount++];
+                                Vector3 shapePos, shapeDir;
+                                EvaluateShape2D(ps->shape, shapePos, shapeDir);
+                                
+                                Matrix4x4 worldMat = transform->matWorld;
+                                if (ps->main.simulationSpace == SimulationSpace::World) {
+                                    p.position = Matrix4x4::Transform(shapePos, worldMat);
+                                    p.velocity = Matrix4x4::TransformNormal(shapeDir, worldMat).Normalize() * GetMinMaxFloat(ps->main.startSpeed);
+                                    p.simulationSpace = 0; // World
+                                } else {
+                                    p.position = shapePos;
+                                    p.velocity = shapeDir * GetMinMaxFloat(ps->main.startSpeed);
+                                    p.simulationSpace = 1; // Local
+                                }
+
+                                // Force 2D alignment (Z = 0)
+                                p.position.z = 0.0f;
+                                p.velocity.z = 0.0f;
+
+                                p.baseVelocity = p.velocity;
+                                p.startLifetime = GetMinMaxFloat(ps->main.startLifetime);
+                                p.remainingLifetime = p.startLifetime;
+                                p.startColor = GetMinMaxColor(ps->main.startColor);
+                                p.color = p.startColor;
+                                if (ps->main.startSize3D) {
+                                    p.startSize.x = GetMinMaxFloat(ps->main.startSizeX);
+                                    p.startSize.y = GetMinMaxFloat(ps->main.startSizeY);
+                                } else {
+                                    float s = GetMinMaxFloat(ps->main.startSize);
+                                    p.startSize = Vector2(s, s);
+                                }
+                                p.size = p.startSize;
+                                p.rotation = GetMinMaxFloat(ps->main.startRotation);
+                                p.randomValue = Random::Float(0.0f, 1.0f);
+                            }
                             EmitParticles2D(ps, transform, burst.count, false);
                         }
                         cycleCount++;
@@ -393,7 +487,15 @@ namespace ONEngine {
                         p.color.a = p.startColor.a * overLifeColor.a;
                     }
                     if (ps->sizeOverLifetime.enabled) {
-                        p.size = p.startSize * EvaluateMinMaxCurve(ps->sizeOverLifetime.size, normalizedTime, p.randomValue);
+                        if (ps->sizeOverLifetime.separateAxes) {
+                            float multX = EvaluateMinMaxCurve(ps->sizeOverLifetime.x, normalizedTime, p.randomValue);
+                            float multY = EvaluateMinMaxCurve(ps->sizeOverLifetime.y, normalizedTime, p.randomValue);
+                            p.size.x = p.startSize.x * multX;
+                            p.size.y = p.startSize.y * multY;
+                        } else {
+                            float mult = EvaluateMinMaxCurve(ps->sizeOverLifetime.size, normalizedTime, p.randomValue);
+                            p.size = p.startSize * mult;
+                        }
                     }
                     if (ps->rotationOverLifetime.enabled) {
                         float angularVelocityDeg = EvaluateMinMaxCurve(ps->rotationOverLifetime.angularVelocity, normalizedTime, p.randomValue);
@@ -575,7 +677,15 @@ namespace ONEngine {
                         p.color.a = p.startColor.a * overLifeColor.a;
                     }
                     if (ghost.sizeOverLifetime.enabled) {
-                        p.size = p.startSize * EvaluateMinMaxCurve(ghost.sizeOverLifetime.size, normalizedTime, p.randomValue);
+                        if (ghost.sizeOverLifetime.separateAxes) {
+                            float multX = EvaluateMinMaxCurve(ghost.sizeOverLifetime.x, normalizedTime, p.randomValue);
+                            float multY = EvaluateMinMaxCurve(ghost.sizeOverLifetime.y, normalizedTime, p.randomValue);
+                            p.size.x = p.startSize.x * multX;
+                            p.size.y = p.startSize.y * multY;
+                        } else {
+                            float mult = EvaluateMinMaxCurve(ghost.sizeOverLifetime.size, normalizedTime, p.randomValue);
+                            p.size = p.startSize * mult;
+                        }
                     }
                     if (ghost.rotationOverLifetime.enabled) {
                         float angularVelocityDeg = EvaluateMinMaxCurve(ghost.rotationOverLifetime.angularVelocity, normalizedTime, p.randomValue);
