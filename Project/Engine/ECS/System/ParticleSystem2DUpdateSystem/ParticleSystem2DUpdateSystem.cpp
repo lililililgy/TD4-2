@@ -71,6 +71,14 @@ namespace ONEngine {
         return a + (b - a) * t;
     }
 
+    static float ExtractRotationZ(const Matrix4x4& matrix) {
+        return std::atan2(matrix.m[0][1], matrix.m[0][0]);
+    }
+
+    static float ShortestAngleDelta(float current, float previous) {
+        return std::remainder(current - previous, std::numbers::pi_v<float> * 2.0f);
+    }
+
     // 2D shape evaluation (generates position & direction on the XY plane)
     static void EvaluateShape2D(const ParticleSystemShape& shape, Vector3& outPos, Vector3& outDir) {
         if (!shape.enabled) {
@@ -146,6 +154,76 @@ namespace ONEngine {
         }
     }
 
+    static void InitializeParticle2D(
+        ParticleSystem2D* ps,
+        Particle2D& particle,
+        const Matrix4x4& emitMat) {
+        Vector3 shapePos;
+        Vector3 shapeDir;
+        EvaluateShape2D(ps->shape, shapePos, shapeDir);
+
+        if (ps->main.simulationSpace == SimulationSpace::World) {
+            particle.position = Matrix4x4::Transform(shapePos, emitMat);
+            particle.velocity = Matrix4x4::TransformNormal(shapeDir, emitMat).Normalize()
+                * GetMinMaxFloat(ps->main.startSpeed);
+            particle.simulationSpace = 0;
+        } else {
+            particle.position = shapePos;
+            particle.velocity = shapeDir * GetMinMaxFloat(ps->main.startSpeed);
+            particle.simulationSpace = 1;
+        }
+
+        particle.position.z = 0.0f;
+        particle.velocity.z = 0.0f;
+        particle.baseVelocity = particle.velocity;
+        particle.startLifetime = GetMinMaxFloat(ps->main.startLifetime);
+        particle.remainingLifetime = particle.startLifetime;
+        particle.startColor = GetMinMaxColor(ps->main.startColor);
+        particle.color = particle.startColor;
+        particle.startSize = GetMinMaxFloat(ps->main.startSize);
+        particle.size = particle.startSize;
+        particle.rotation = GetMinMaxFloat(ps->main.startRotation);
+        if (ps->inheritEmitterRotation
+            && ps->renderer.alignment != ParticleSystemRenderer::RenderAlignment::Velocity) {
+            particle.rotation += ExtractRotationZ(emitMat);
+        }
+        particle.randomValue = Random::Float(0.0f, 1.0f);
+    }
+
+    static void EmitParticles2D(
+        ParticleSystem2D* ps,
+        Transform* transform,
+        int count,
+        bool interpolateEmitterPosition) {
+        if (!ps || !transform || count <= 0) return;
+
+        const Matrix4x4 currentMat = transform->matWorld;
+        for (int i = 0; i < count; ++i) {
+            if (ps->aliveCount >= ps->particles.size()) break;
+
+            Matrix4x4 emitMat = currentMat;
+            if (interpolateEmitterPosition && ps->hasPreviousWorldMat) {
+                const float interpolation = static_cast<float>(i)
+                    / static_cast<float>(count > 1 ? count - 1 : 1);
+                const Vector3 previousPosition(
+                    ps->previousWorldMat.m[3][0],
+                    ps->previousWorldMat.m[3][1],
+                    ps->previousWorldMat.m[3][2]);
+                const Vector3 currentPosition(
+                    currentMat.m[3][0],
+                    currentMat.m[3][1],
+                    currentMat.m[3][2]);
+                const Vector3 emitPosition = Vector3Lerp(previousPosition, currentPosition, interpolation);
+                emitMat.m[3][0] = emitPosition.x;
+                emitMat.m[3][1] = emitPosition.y;
+                emitMat.m[3][2] = emitPosition.z;
+            }
+
+            Particle2D& particle = ps->particles[ps->aliveCount++];
+            InitializeParticle2D(ps, particle, emitMat);
+        }
+    }
+
     // --- System Methods ---
 
     ParticleSystem2DUpdateSystem::ParticleSystem2DUpdateSystem() : ECSISystem() {}
@@ -211,6 +289,22 @@ namespace ONEngine {
             ps->burstCycleCounts.resize(ps->emission.bursts.size(), 0);
         }
 
+        if (ps->inheritEmitterRotation
+            && ps->renderer.alignment != ParticleSystemRenderer::RenderAlignment::Velocity
+            && ps->hasPreviousWorldMat) {
+            float currentRotation = ExtractRotationZ(transform->matWorld);
+            float previousRotation = ExtractRotationZ(ps->previousWorldMat);
+            float rotationDelta = ShortestAngleDelta(currentRotation, previousRotation);
+
+            if (std::abs(rotationDelta) > 0.000001f) {
+                for (size_t i = 0; i < ps->aliveCount; ++i) {
+                    ps->particles[i].rotation += rotationDelta;
+                }
+            }
+        }
+
+        EmitParticles2D(ps, transform, ps->ConsumePendingEmitCount(), false);
+
         float currentPlaybackTime = ps->GetTime();
 
         // --- Emission ---
@@ -218,50 +312,7 @@ namespace ONEngine {
             ps->emitAccumulator += ps->emission.rateOverTime * dt;
             int emitCount = static_cast<int>(ps->emitAccumulator);
             ps->emitAccumulator -= static_cast<float>(emitCount);
-
-            for (int i = 0; i < emitCount; ++i) {
-                if (ps->aliveCount >= ps->particles.size()) break;
-
-                Particle2D& p = ps->particles[ps->aliveCount++];
-                Vector3 shapePos, shapeDir;
-                EvaluateShape2D(ps->shape, shapePos, shapeDir);
-
-                Matrix4x4 currentMat = transform->matWorld;
-                Matrix4x4 emitMat = currentMat;
-                if (ps->hasPreviousWorldMat) {
-                    float t_emit = (float)i / (float)(emitCount > 1 ? emitCount - 1 : 1);
-                    Vector3 prevPos(ps->previousWorldMat.m[3][0], ps->previousWorldMat.m[3][1], ps->previousWorldMat.m[3][2]);
-                    Vector3 currPos(currentMat.m[3][0], currentMat.m[3][1], currentMat.m[3][2]);
-                    Vector3 lerpedPos = Vector3Lerp(prevPos, currPos, t_emit);
-                    emitMat.m[3][0] = lerpedPos.x;
-                    emitMat.m[3][1] = lerpedPos.y;
-                    emitMat.m[3][2] = lerpedPos.z;
-                }
-
-                if (ps->main.simulationSpace == SimulationSpace::World) {
-                    p.position = Matrix4x4::Transform(shapePos, emitMat);
-                    p.velocity = Matrix4x4::TransformNormal(shapeDir, emitMat).Normalize() * GetMinMaxFloat(ps->main.startSpeed);
-                    p.simulationSpace = 0; // World
-                } else {
-                    p.position = shapePos;
-                    p.velocity = shapeDir * GetMinMaxFloat(ps->main.startSpeed);
-                    p.simulationSpace = 1; // Local
-                }
-
-                // Force 2D alignment (Z = 0)
-                p.position.z = 0.0f;
-                p.velocity.z = 0.0f;
-
-                p.baseVelocity = p.velocity;
-                p.startLifetime = GetMinMaxFloat(ps->main.startLifetime);
-                p.remainingLifetime = p.startLifetime;
-                p.startColor = GetMinMaxColor(ps->main.startColor);
-                p.color = p.startColor;
-                p.startSize = GetMinMaxFloat(ps->main.startSize);
-                p.size = p.startSize;
-                p.rotation = GetMinMaxFloat(ps->main.startRotation);
-                p.randomValue = Random::Float(0.0f, 1.0f);
-            }
+            EmitParticles2D(ps, transform, emitCount, true);
 
             for (size_t i = 0; i < ps->emission.bursts.size(); ++i) {
                 auto& burst = ps->emission.bursts[i];
@@ -272,38 +323,7 @@ namespace ONEngine {
                     float nextBurstTime = burstTime + static_cast<float>(cycleCount) * burst.interval;
                     if (currentPlaybackTime >= nextBurstTime) {
                         if (Random::Float(0.0f, 1.0f) <= burst.probability) {
-                            int burstEmitCount = burst.count;
-                            for (int e = 0; e < burstEmitCount; ++e) {
-                                if (ps->aliveCount >= ps->particles.size()) break;
-                                Particle2D& p = ps->particles[ps->aliveCount++];
-                                Vector3 shapePos, shapeDir;
-                                EvaluateShape2D(ps->shape, shapePos, shapeDir);
-                                
-                                Matrix4x4 worldMat = transform->matWorld;
-                                if (ps->main.simulationSpace == SimulationSpace::World) {
-                                    p.position = Matrix4x4::Transform(shapePos, worldMat);
-                                    p.velocity = Matrix4x4::TransformNormal(shapeDir, worldMat).Normalize() * GetMinMaxFloat(ps->main.startSpeed);
-                                    p.simulationSpace = 0; // World
-                                } else {
-                                    p.position = shapePos;
-                                    p.velocity = shapeDir * GetMinMaxFloat(ps->main.startSpeed);
-                                    p.simulationSpace = 1; // Local
-                                }
-
-                                // Force 2D alignment (Z = 0)
-                                p.position.z = 0.0f;
-                                p.velocity.z = 0.0f;
-
-                                p.baseVelocity = p.velocity;
-                                p.startLifetime = GetMinMaxFloat(ps->main.startLifetime);
-                                p.remainingLifetime = p.startLifetime;
-                                p.startColor = GetMinMaxColor(ps->main.startColor);
-                                p.color = p.startColor;
-                                p.startSize = GetMinMaxFloat(ps->main.startSize);
-                                p.size = p.startSize;
-                                p.rotation = GetMinMaxFloat(ps->main.startRotation);
-                                p.randomValue = Random::Float(0.0f, 1.0f);
-                            }
+                            EmitParticles2D(ps, transform, burst.count, false);
                         }
                         cycleCount++;
                     }

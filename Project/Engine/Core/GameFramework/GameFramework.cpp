@@ -27,6 +27,7 @@ using namespace ONEngine;
 
 /// std
 #include <chrono>
+#include <cmath>
 #include <fstream>
 #include <nlohmann/json.hpp>
 

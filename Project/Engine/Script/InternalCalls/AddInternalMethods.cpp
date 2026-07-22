@@ -22,6 +22,7 @@
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/CircleCollider.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/BoxCollider2D.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Rigidbody2D/Rigidbody2D.h"
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Skybox/Skybox.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/MeshRenderer.h"
 #include "Engine/ECS/Component/Components/RendererComponents/Mesh/CustomMeshRenderer.h"
@@ -220,6 +221,9 @@ void ONEngine::AddComponentInternalCalls() {
 	AddColliderInternalCalls();
 	AddRigidbody2DInternalCalls();
 	AddAudioInternalCalls();
+
+	/// particle system 2D
+	mono_add_internal_call("ParticleSystem2D::InternalEmit", (void*)InternalEmitParticleSystem2D);
 
 	/// screen post effect
 	mono_add_internal_call("ScreenPostEffectTag::InternalGetPostEffectEnabled", (void*)InternalGetScreenPostEffectEnabled);

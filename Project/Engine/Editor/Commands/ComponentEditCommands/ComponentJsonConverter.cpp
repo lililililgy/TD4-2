@@ -1,4 +1,4 @@
-#include "ComponentJsonConverter.h"
+﻿#include "ComponentJsonConverter.h"
 
 /// std
 #include <unordered_map>
@@ -107,10 +107,9 @@ namespace {
 				return *static_cast<const T*>(component);
 				};
 
-			fromJsonConverters_[typeName] = [this](IComponent* component, const nlohmann::json& j) {
-				uint32_t id = component->id;
- 				*static_cast<T*>(component) = j.get<T>();
-				component->id = id;
+			fromJsonConverters_[typeName] = [](IComponent* component, const nlohmann::json& j) {
+				// Deserialize into the ECS-owned instance so its id and owner are preserved.
+				j.get_to(*static_cast<T*>(component));
 				};
 		}
 
@@ -136,6 +135,11 @@ nlohmann::json ComponentJsonConverter::ToJson(const IComponent* component) {
 }
 
 void ComponentJsonConverter::FromJson(const nlohmann::json& j, IComponent* component) {
+	if (!component) {
+		Console::LogError("ComponentJsonConverter::FromJson: component is null.");
+		return;
+	}
+
 	std::string name = GetComponentTypeName(component);
 
 	auto itr = jsonConverter.fromJsonConverters_.find(name);
@@ -144,7 +148,17 @@ void ComponentJsonConverter::FromJson(const nlohmann::json& j, IComponent* compo
 		return;
 	}
 
-	itr->second(component, j);
+	try {
+		itr->second(component, j);
+	} catch (const nlohmann::json::exception& exception) {
+		Console::LogError(
+			"ComponentJsonConverter::FromJson: failed to deserialize "
+			+ name + ": " + exception.what());
+	} catch (const std::exception& exception) {
+		Console::LogError(
+			"ComponentJsonConverter::FromJson: failed to apply "
+			+ name + ": " + exception.what());
+	}
 }
 
 void ONEngine::from_json(const nlohmann::json& j, Quaternion& q) {
@@ -493,6 +507,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystem& p) {
 
 void ONEngine::from_json(const nlohmann::json& j, ParticleSystem2D& p) {
 	p.enable = j.value("enable", 1);
+	p.inheritEmitterRotation = j.value("inheritEmitterRotation", false);
 	if (j.contains("main")) p.main = j.at("main").get<ParticleSystemMain>();
 	if (j.contains("emission")) p.emission = j.at("emission").get<ParticleSystemEmission>();
 	if (j.contains("shape")) p.shape = j.at("shape").get<ParticleSystemShape>();
@@ -514,6 +529,7 @@ void ONEngine::to_json(nlohmann::json& j, const ParticleSystem2D& p) {
 	j = nlohmann::json{
 		{ "type", "ParticleSystem2D" },
 		{ "enable", p.enable },
+		{ "inheritEmitterRotation", p.inheritEmitterRotation },
 		{ "main", p.main },
 		{ "emission", p.emission },
 		{ "shape", p.shape },

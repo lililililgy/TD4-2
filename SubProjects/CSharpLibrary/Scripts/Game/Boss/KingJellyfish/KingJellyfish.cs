@@ -28,6 +28,14 @@ public class KingJellyfish : MonoScript {
     [SerializeField] public float laserCameraShakeIntensity = 22.0f;
     [SerializeField] public float laserCameraShakeFrequency = 26.0f;
     [SerializeField] public float laserGrayscaleDuration = 0.35f;
+    [SerializeField] public string laserEffect01EntityName = "Jellyfish_LaserEffect01";
+    [SerializeField] public string laserEffect02EntityName = "Jellyfish_LaserEffect02";
+    [SerializeField] public string laserEffect03EntityName = "Jellyfish_LaserEffect03";
+    [SerializeField] public int laserEffect01EmitCount = 98;
+    [SerializeField] public int laserEffect02EmitCount = 1;
+    [SerializeField] public int laserEffect03EmitCount = 1;
+    [SerializeField] public string attackTelegraphPrefabName = "JellyfishAttackTelegraph";
+    [SerializeField] public float attackTelegraphAlpha = 0.3f;
 
     private HP hp_;
     private IKingJellyfishState state_;
@@ -45,9 +53,15 @@ public class KingJellyfish : MonoScript {
     private float damageInvincibilityRemaining_;
     private PlayerFollowCamera followCamera_;
     private ScreenPostEffectTag screenPostEffect_;
+    private Entity laserEffect01Entity_;
+    private Entity laserEffect02Entity_;
+    private Entity laserEffect03Entity_;
+    private Entity chargeAttackEffect01Entity_;
+    private float chargeAttackEffectEmitElapsed_;
     private float grayscaleRemaining_;
     private bool grayscaleActive_;
     private bool grayscaleWasEnabled_;
+    private readonly List<JellyfishAttackTelegraph> attackTelegraphs_ = new List<JellyfishAttackTelegraph>();
 
     private Vector2 chargeStartPosition_;
     private Vector2 chargeTargetPosition_;
@@ -98,10 +112,10 @@ public class KingJellyfish : MonoScript {
     // 更新
     //=============================
     public override void Update() {
-		// 攻撃リクエストの処理
-		UpdateDamageInvincibility();
-		// 8方向レーザー攻撃の演出処理
-		UpdateLaserPresentation();
+        // 攻撃リクエストの処理
+        UpdateDamageInvincibility();
+        // 8方向レーザー攻撃の演出処理
+        UpdateLaserPresentation();
 
         if (state_ != null) {
             state_.Update(this);
@@ -110,6 +124,7 @@ public class KingJellyfish : MonoScript {
     }
 
     public override void OnDestroy() {
+        HideAttackTelegraph();
         EndLaserGrayscale();
     }
 
@@ -254,6 +269,7 @@ public class KingJellyfish : MonoScript {
     // 体当たり攻撃の開始処理
     //=============================
     internal bool BeginChargeAttack() {
+        HideAttackTelegraph();
         ResolveTarget();
         if (targetEntity_ == null || targetEntity_.transform == null) {
             return false;
@@ -276,6 +292,8 @@ public class KingJellyfish : MonoScript {
         movementDepth_ = transform.position.z;
         RotateTowardPosition(chargeTargetPosition_);
         SetWeakPointCollisionEnabled(false);
+        chargeAttackEffectEmitElapsed_ = 0.0f;
+        EmitChargeAttackParticle();
         return true;
     }
 
@@ -292,6 +310,7 @@ public class KingJellyfish : MonoScript {
         }
 
         UpdateAttackTellColor(KingJellyfishAttackTypeEnum.ChargeAttack);
+        UpdateAttackTelegraph(KingJellyfishAttackTypeEnum.ChargeAttack);
     }
 
     internal bool UpdateChargeAttack() {
@@ -307,6 +326,7 @@ public class KingJellyfish : MonoScript {
             SetPlanePosition(chargeTargetPosition_);
             SetMovementVelocity(chargeRecoveryVelocity_);
             DeployChargeDamageField();
+            UpdateChargeAttackParticle();
             return true;
         }
 
@@ -318,6 +338,7 @@ public class KingJellyfish : MonoScript {
             SetMovementVelocity(chargeRecoveryVelocity_);
             RotateTowardPosition(chargeTargetPosition_);
             DeployChargeDamageField();
+            UpdateChargeAttackParticle();
             return true;
         }
 
@@ -327,6 +348,7 @@ public class KingJellyfish : MonoScript {
 
         // 移動中もターゲットの位置に向かって回転する
         RotateTowardPosition(chargeTargetPosition_);
+        UpdateChargeAttackParticle();
         return false;
     }
 
@@ -344,6 +366,7 @@ public class KingJellyfish : MonoScript {
 
         // 回復中もターゲットの位置に向かって回転する
         RotateTowardPosition(chargeTargetPosition_);
+        UpdateChargeAttackParticle();
     }
 
     internal void EndChargeAttackMovement() {
@@ -461,12 +484,110 @@ public class KingJellyfish : MonoScript {
         }
 
         UpdateAttackTellColor(attackType);
+        UpdateAttackTelegraph(attackType);
+    }
+
+    //=============================
+    // 攻撃範囲の予告表示
+    //=============================
+    internal void ShowAttackTelegraph(KingJellyfishAttackTypeEnum attackType) {
+        HideAttackTelegraph();
+        if (String.IsNullOrEmpty(attackTelegraphPrefabName)) {
+            return;
+        }
+
+        int count = 1;
+        if (attackType == KingJellyfishAttackTypeEnum.Omnidirectional_Beam) {
+            count = LaserCount;
+        }
+        else if (attackType == KingJellyfishAttackTypeEnum.RotatingBeam) {
+            count = RotatingLaserCount;
+        }
+
+        for (int i = 0; i < count; i++) {
+            Entity telegraphEntity = ecsGroup.CreateEntity(attackTelegraphPrefabName);
+            if (telegraphEntity == null) {
+                continue;
+            }
+
+            telegraphEntity.enable = true;
+            telegraphEntity.parent = entity;
+            JellyfishAttackTelegraph telegraph = telegraphEntity.GetScript<JellyfishAttackTelegraph>();
+            if (telegraph == null) {
+                telegraphEntity.Destroy();
+                continue;
+            }
+
+            attackTelegraphs_.Add(telegraph);
+        }
+
+        UpdateAttackTelegraph(attackType);
+    }
+
+    internal void HideAttackTelegraph() {
+        for (int i = 0; i < attackTelegraphs_.Count; i++) {
+            JellyfishAttackTelegraph telegraph = attackTelegraphs_[i];
+            if (telegraph != null && telegraph.entity != null) {
+                telegraph.entity.Destroy();
+            }
+        }
+        attackTelegraphs_.Clear();
+    }
+
+    private void UpdateAttackTelegraph(KingJellyfishAttackTypeEnum attackType) {
+        if (attackTelegraphs_.Count == 0) {
+            return;
+        }
+
+        Vector4 attackColor = GetAttackColor(attackType);
+        float alpha = Mathf.Clamp01(attackTelegraphAlpha);
+        Vector4 telegraphColor = new Vector4(attackColor.x, attackColor.y, attackColor.z, alpha);
+
+        if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack) {
+            ResolveTarget();
+            Vector2 origin = ToPlane(transform.position);
+            Vector2 target = targetEntity_ != null && targetEntity_.transform != null
+                ? ToPlane(targetEntity_.transform.position)
+                : origin + Vector2.down;
+            Vector2 direction = (target - origin).Normalized();
+            if (direction.LengthSq() <= 0.001f) {
+                direction = Vector2.down;
+            }
+            float chargeLength = (target - origin).Length() + NonNegative(chargeSettings_.passThroughDistance);
+            attackTelegraphs_[0].ConfigureLine(Vector2.zero, direction, chargeLength, ChargeDamageFieldWidth, telegraphColor);
+            return;
+        }
+
+        if (attackType == KingJellyfishAttackTypeEnum.ElectricField) {
+            ResolveTarget();
+            Vector2 ownerPosition = ToPlane(transform.position);
+            Vector2 center = targetEntity_ != null && targetEntity_.transform != null
+                ? ToPlane(targetEntity_.transform.position)
+                : ownerPosition;
+            float radius = ElectricFieldRadius + NonNegative(electricFieldSettings_.spreadRadius);
+            attackTelegraphs_[0].ConfigureArea(center - ownerPosition, radius, telegraphColor);
+            return;
+        }
+
+        int count = attackTelegraphs_.Count;
+        float laserLength = attackType == KingJellyfishAttackTypeEnum.RotatingBeam
+            ? RotatingLaserLength
+            : LaserLength;
+        float width = attackType == KingJellyfishAttackTypeEnum.RotatingBeam
+            ? RotatingLaserWidth
+            : LaserWidth;
+        for (int i = 0; i < count; i++) {
+            float angle = Mathf.PI * 2.0f * i / count;
+            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            attackTelegraphs_[i].ConfigureLine(Vector2.zero, direction, laserLength, width, telegraphColor);
+        }
     }
 
     //=============================
     // 8方向レーザー攻撃の発射処理
     //=============================
     internal void FireOmnidirectionalLaser() {
+        HideAttackTelegraph();
         SetAttackColor(KingJellyfishAttackTypeEnum.Omnidirectional_Beam);
 
         if (String.IsNullOrEmpty(beamSettings_.laserPrefabName)) {
@@ -497,12 +618,12 @@ public class KingJellyfish : MonoScript {
     // 回転ビーム攻撃
     //=============================
     internal void FireRotatingLasers() {
+        HideAttackTelegraph();
+
+        // 攻撃色を設定する
         SetAttackColor(KingJellyfishAttackTypeEnum.RotatingBeam);
 
-        if (String.IsNullOrEmpty(rotatingBeamSettings_.laserPrefabName)) {
-            return;
-        }
-
+        // レーザーのプレゼンテーションを開始する
         BeginLaserPresentation();
 
         Vector2 origin = ToPlane(transform.position);
@@ -652,9 +773,11 @@ public class KingJellyfish : MonoScript {
 
 		// 8方向レーザー攻撃の演出対象を解決する
 		ResolveLaserPresentationTargets();
+        // パーティクルを発生させる
+        EmitLaserParticles();
 
-		// カメラの揺れを開始する
-		if (followCamera_ != null) {
+        // カメラの揺れを開始する
+        if (followCamera_ != null) {
             followCamera_.Shake(
                 NonNegative(laserCameraShakeDuration),
                 NonNegative(laserCameraShakeIntensity),
@@ -662,16 +785,18 @@ public class KingJellyfish : MonoScript {
         }
 
 
-		// 画面をグレースケールにする
-		float duration = NonNegative(laserGrayscaleDuration);
+        // 画面をグレースケールにする
+        float duration = NonNegative(laserGrayscaleDuration);
         if (screenPostEffect_ == null || duration <= 0.0f) {
             return;
         }
 
+        // グレースケールが有効かどうかを記録する
         if (!grayscaleActive_) {
             grayscaleWasEnabled_ = screenPostEffect_.IsEffectEnabled(ScreenPostEffectType.RadialBlur);
         }
 
+        // グレースケールを有効にする
         screenPostEffect_.SetEffectEnabled(ScreenPostEffectType.RadialBlur, true);
         grayscaleRemaining_ = duration;
         grayscaleActive_ = true;
@@ -721,6 +846,70 @@ public class KingJellyfish : MonoScript {
             if (screenPostEffect_ == null) {
                 screenPostEffect_ = cameraEntity_.AddComponent<ScreenPostEffectTag>();
             }
+        }
+    }
+
+    private void EmitLaserParticles() {
+        EmitParticleAtOwner(
+            ref laserEffect01Entity_,
+            laserEffect01EntityName,
+            laserEffect01EmitCount);
+        EmitParticleAtOwner(
+            ref laserEffect02Entity_,
+            laserEffect02EntityName,
+            laserEffect02EmitCount);
+        EmitParticleAtOwner(
+            ref laserEffect03Entity_,
+            laserEffect03EntityName,
+            laserEffect03EmitCount);
+    }
+
+    private void EmitChargeAttackParticle() {
+        EmitParticleAtOwner(
+            ref chargeAttackEffect01Entity_,
+            chargeSettings_.effect01EntityName,
+            chargeSettings_.effect01EmitCount);
+    }
+
+    private void UpdateChargeAttackParticle() {
+        float interval = chargeSettings_.effect01EmitInterval;
+        if (interval <= 0.0f) {
+            EmitChargeAttackParticle();
+            return;
+        }
+
+        chargeAttackEffectEmitElapsed_ += Time.deltaTime;
+        if (chargeAttackEffectEmitElapsed_ < interval) {
+            return;
+        }
+
+        chargeAttackEffectEmitElapsed_ %= interval;
+        EmitChargeAttackParticle();
+    }
+
+    private void EmitParticleAtOwner(ref Entity effectEntity, string entityName, int emitCount) {
+        if (emitCount <= 0 || String.IsNullOrEmpty(entityName)) {
+            return;
+        }
+
+        if (effectEntity == null || effectEntity.Id == 0) {
+            effectEntity = ecsGroup.FindEntity(entityName);
+        }
+        if (effectEntity == null) {
+            return;
+        }
+
+        effectEntity.enable = true;
+        if (effectEntity.transform != null) {
+
+            // エフェクトの位置と回転をボスの位置に合わせる
+            effectEntity.transform.position = transform.position;
+            effectEntity.transform.rotation = transform.rotation;
+        }
+
+        ParticleSystem2D particleSystem = effectEntity.GetComponent<ParticleSystem2D>();
+        if (particleSystem != null) {
+            particleSystem.Emit(emitCount);
         }
     }
 

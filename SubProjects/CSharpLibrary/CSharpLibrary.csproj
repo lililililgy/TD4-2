@@ -128,6 +128,7 @@
     <Compile Include="Scripts\Engine\ECS\Components\Compute\BoxCollider2D.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\CameraComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\CircleCollider.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\ParticleSystem2D.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Rigidbody2D.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\SEPlayer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\SphereCollider.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Scripts\Game\Boss\KingGeso\KingGesoWaveThrustSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishChargeDamageField.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishElectricField.cs" />
+    <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishAttackTelegraph.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishLaser.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\JellyfishWeakPoint.cs" />
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfish.cs" />
