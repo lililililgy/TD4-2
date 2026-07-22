@@ -40,6 +40,9 @@
             "type": "Transform"
         },
         {
+            "CameraShake": {
+                "shakeScale_": 1.0
+            },
             "ContactZoomSource": {
                 "easeType_": 0,
                 "maxAddScale_": 1.2000000476837158,
@@ -73,6 +76,10 @@
                 {
                     "enable": true,
                     "name": "PlayerFollowCamera"
+                },
+                {
+                    "enable": true,
+                    "name": "CameraShake"
                 },
                 {
                     "enable": true,

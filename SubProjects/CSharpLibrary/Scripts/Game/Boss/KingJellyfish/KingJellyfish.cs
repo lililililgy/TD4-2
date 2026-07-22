@@ -857,13 +857,11 @@ public class KingJellyfish : MonoScript {
         // パーティクルを発生させる
         EmitLaserParticles();
 
-        // カメラの揺れを開始する
-        if (followCamera_ != null) {
-            followCamera_.Shake(
-                NonNegative(laserCameraShakeDuration),
-                NonNegative(laserCameraShakeIntensity),
-                NonNegative(laserCameraShakeFrequency));
-        }
+        // カメラの揺れを開始する（CameraShake が購読している）
+        MessageBus.Publish(new CameraShakeEvent(
+            NonNegative(laserCameraShakeDuration),
+            NonNegative(laserCameraShakeIntensity),
+            NonNegative(laserCameraShakeFrequency)));
 
 
         // 画面をグレースケールにする

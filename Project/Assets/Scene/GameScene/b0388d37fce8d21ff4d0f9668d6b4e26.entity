@@ -1,5 +1,30 @@
 {
     "active": true,
+    "components": [
+        {
+            "AttackCollision": {
+                "shakeAmplitude_": 3.0,
+                "shakeDuration_": 0.05000000074505806
+            },
+            "Critical": {
+                "criticalRate_": 0.0,
+                "threshold_": 0.0
+            },
+            "PlayerNormalState": {
+                "decelMaxSmoothSpeed_": 382.0,
+                "rotateMaxSmoothSpeed_": 3.0,
+                "rotateSmoothTime_": 0.6000000238418579
+            },
+            "ShakeOnHit": {
+                "durationScale_": 0.6000000238418579,
+                "maxAmplitude_": 109.0,
+                "minAmplitude_": 32.0,
+                "referenceAmplitude_": 8.0,
+                "referenceDamage_": 6.0
+            },
+            "type": "Variables"
+        }
+    ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
     "name": "Player",
     "parentGuid": null,

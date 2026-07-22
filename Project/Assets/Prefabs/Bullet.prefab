@@ -43,6 +43,15 @@
                 "lifeTime_": 20.0,
                 "speed_": 512.0
             },
+            "ShakeOnHit": {
+                "durationScale_": 0.5,
+                "frequency_": 25.0,
+                "maxAmplitude_": 0.5,
+                "minAmplitude_": 0.05000000074505806,
+                "referenceAmplitude_": 0.20000000298023224,
+                "referenceDamage_": 256.0,
+                "referenceDuration_": 0.15000000596046448
+            },
             "type": "Variables"
         },
         {
@@ -55,6 +64,10 @@
                 {
                     "enable": true,
                     "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "ShakeOnHit"
                 }
             ],
             "type": "Script"
