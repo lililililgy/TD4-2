@@ -19,8 +19,30 @@ public class ExpDropper : MonoScript
     /// ドロップする ExperiencePoint の量
     [SerializeField] private float dropExp = 0.0f;
 
+    // 破棄理由の判別に使う。OnDestroy 時に native を引き直さずに済むよう Initialize で持つ。
+    private HP hp_;
+
+    public override void Initialize()
+    {
+        hp_ = entity.GetScript<HP>();
+    }
+
     public override void OnDestroy()
     {
+        // 撃破されたときだけ撒く。
+        // entity.Destroy() は撃破以外の経路からも呼ばれるため、OnDestroy だけでは区別できない:
+        //   ・DespawnTimer の時間切れ  ・SeaCow の自爆  ・シーン遷移時の一括破棄
+        // いずれも HP を経由しないので、HP.IsDead が「倒された」の唯一の証拠になる。
+        // HP を持たない entity はそもそも撃破され得ないので落とさない。
+        if (hp_ == null)
+        {
+            hp_ = entity.GetScript<HP>();
+        }
+        if (hp_ == null || !hp_.IsDead)
+        {
+            return;
+        }
+
         Drop();
     }
 
