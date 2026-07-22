@@ -40,6 +40,15 @@ void SceneRenderTexture::Initialize(
 
 }
 
+void SceneRenderTexture::SetClearColor(const Vector4& clearColor) {
+	clearColor_ = clearColor;
+	for (size_t i = 0; i < renderTextures_.size(); ++i) {
+		if (i != 3 && renderTextures_[i]) {
+			renderTextures_[i]->SetClearColor(clearColor);
+		}
+	}
+}
+
 void SceneRenderTexture::SetRenderTarget(DxCommand* dxCommand, DxDSVHeap* dxDSVHeap, bool clear) {
 	renderTextures_[0]->SetRenderTarget(
 		dxCommand, dxDSVHeap,

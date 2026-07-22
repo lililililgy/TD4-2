@@ -6,7 +6,7 @@
             "path": "./Assets/Sounds/pause-ui-select.mp3",
             "pitch": 1.0,
             "type": "SEPlayer",
-            "volume": 1.0
+            "volume": 0.20000000298023224
         },
         {
             "enable": 1,
@@ -33,15 +33,15 @@
             "PauseGroup": {
                 "defaultColor": {
                     "w": 1.0,
-                    "x": 0.0,
+                    "x": 0.800000011920929,
                     "y": 0.0,
                     "z": 0.0
                 },
                 "height": 0.10000000149011612,
                 "selectedColor": {
                     "w": 1.0,
-                    "x": 1.0,
-                    "y": 0.0,
+                    "x": 0.0,
+                    "y": 0.800000011920929,
                     "z": 0.0
                 },
                 "speed": 1.0,

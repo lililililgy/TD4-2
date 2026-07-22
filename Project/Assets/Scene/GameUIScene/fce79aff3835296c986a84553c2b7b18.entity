@@ -1,0 +1,67 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -0.19000005722045898,
+                "y": -0.08600001782178879,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.5,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 0.9725490212440491,
+                "y": 0.9725490212440491,
+                "z": 0.9725490212440491
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.929411768913269,
+                "y": 0.32549020648002625,
+                "z": 0.32549020648002625
+            },
+            "outlineWidth": 4,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "LT",
+            "type": "TextRenderer",
+            "verticalAlignment": 0
+        }
+    ],
+    "guid": "fce79aff3835296c986a84553c2b7b18",
+    "name": "LT",
+    "parentGuid": "fb80dd7c9171b82020bf88410670f6b8",
+    "prefabName": ""
+}

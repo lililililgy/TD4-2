@@ -53,6 +53,8 @@ public:
 	void SetRenderTargetColorOnly(DxCommand* dxCommand, DxDSVHeap* dxDSVHeap, bool clear = true);
 	RenderTexture* GetRenderTexture(size_t index) const { return renderTextures_[index].get(); }
 
+	void SetClearColor(const Vector4& clearColor);
+
 	void CreateBarrierRenderTarget(DxCommand* dxCommand);
 	void CreateBarrierPixelShaderResource(DxCommand* dxCommand);
 

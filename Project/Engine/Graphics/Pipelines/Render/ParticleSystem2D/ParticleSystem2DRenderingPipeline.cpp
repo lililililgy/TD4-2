@@ -131,7 +131,7 @@ void ParticleSystem2DRenderingPipeline::Draw(ECSGroup* ecs, CameraComponent* cam
 
     if (psArray) {
         for (auto& ps : psArray->GetUsedComponents()) {
-            if (!ps || !ps->enable || ps->aliveCount == 0) continue;
+            if (!CheckComponentEnable(ps) || ps->aliveCount == 0) continue;
             if (GameEntity* owner = ps->GetOwner()) {
                 sortedSystems.push_back({ false, ps, nullptr, owner->GetPosition().z });
             }

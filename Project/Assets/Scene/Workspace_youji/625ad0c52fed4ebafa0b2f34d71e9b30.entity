@@ -1,0 +1,33 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 498.6790771484375,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 64.0,
+                "y": 64.0,
+                "z": 64.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        }
+    ],
+    "guid": "625ad0c52fed4ebafa0b2f34d71e9b30",
+    "name": "TextRoot",
+    "parentGuid": "387362fb5dddbdd852badabb28aeef48",
+    "prefabName": ""
+}

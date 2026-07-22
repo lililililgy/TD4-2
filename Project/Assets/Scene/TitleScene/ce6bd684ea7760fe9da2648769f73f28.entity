@@ -1,5 +1,15 @@
 {
     "active": true,
+    "components": [
+        {
+            "postEffectHeight": -1,
+            "postEffectPivot": 0,
+            "postEffectStartX": 0,
+            "postEffectStartY": 0,
+            "postEffectWidth": -1,
+            "type": "ScreenPostEffectTag"
+        }
+    ],
     "guid": "ce6bd684ea7760fe9da2648769f73f28",
     "name": "MainCamera",
     "parentGuid": null,
