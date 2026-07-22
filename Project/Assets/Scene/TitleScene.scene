@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.10000000149011612,
+        0.25,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "ce6bd684ea7760fe9da2648769f73f28",
@@ -145,5 +151,6 @@
             "parentGuid": "5bd2f89d57005ed93ba262ec089b5c0d",
             "path": "./TitleScene/7a1c3e3dbe69f664fd42f4dadecdf70a.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }
