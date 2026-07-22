@@ -58,7 +58,7 @@ public class PlayerHPUI : MonoScript
 				if (child)
 				{
 					child.enable = true;
-					child.GetComponent<Transform>().position = new Vector3(x * 1.5f, -y * 1.5f, 0);
+					child.transform.position = new Vector3(x * 1.5f, -y * 1.5f, 0);
 				}
 			}
 		}
