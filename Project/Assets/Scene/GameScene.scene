@@ -1,11 +1,10 @@
 {
     "clearColor": [
-        0.1,
+        0.10000000149011612,
         0.25,
         0.5,
         1.0
     ],
-    "hasClearColor": true,
     "entities": [
         {
             "guid": "b2a7b199ab1291bba0ed6d4ad609b18f",
@@ -151,6 +150,17 @@
             "guid": "eae2499c15bbf78c70431b9ebc504bdb",
             "parentGuid": null,
             "path": "./GameScene/eae2499c15bbf78c70431b9ebc504bdb.entity"
+        },
+        {
+            "guid": "376cb5f2c5612f3a058ae38f46d5fe2c",
+            "parentGuid": null,
+            "path": "./GameScene/376cb5f2c5612f3a058ae38f46d5fe2c.entity"
+        },
+        {
+            "guid": "a6f2af6b6cf5e8f170d7a108d0ff9199",
+            "parentGuid": null,
+            "path": "./GameScene/a6f2af6b6cf5e8f170d7a108d0ff9199.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }
