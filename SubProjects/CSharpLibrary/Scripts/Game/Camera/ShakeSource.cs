@@ -25,6 +25,11 @@ public class ShakeSource : MonoScript {
     // 各軸で別のノイズ列を引くためのサンプル位置の差。近すぎると軸が揃って斜めにしか揺れない
     private const float kAxisSeparation = 37.7f;
 
+    // 揺れに使うノイズのオクターブ数。多いと値が0付近に集中し、
+    // 「振幅を上げてもほとんど動かないが、たまに大きく跳ねる」非線形な揺れになる。
+    // 2 なら -1〜1 をしっかり使い切るので、amplitude がほぼそのまま最大変位になる。
+    private const int kNoiseOctaves = 2;
+
     private float elapsedTime_;
     private float amplitudeScale_ = 1.0f;
 
@@ -102,9 +107,9 @@ public class ShakeSource : MonoScript {
         float scale = amplitudeScale_ * damping;
 
         // 時間軸に沿ってノイズを走査する。軸ごとに離れた行を引いて相関を切る
-        float x = FbmNoise.Fbm11(new Vector2(elapsedTime_ * frequencyX_, noiseSeed_));
-        float y = FbmNoise.Fbm11(new Vector2(elapsedTime_ * frequencyY_, noiseSeed_ + kAxisSeparation));
-        float z = FbmNoise.Fbm11(new Vector2(elapsedTime_ * frequencyZ_, noiseSeed_ + kAxisSeparation * 2.0f));
+        float x = FbmNoise.Fbm11(new Vector2(elapsedTime_ * frequencyX_, noiseSeed_), kNoiseOctaves);
+        float y = FbmNoise.Fbm11(new Vector2(elapsedTime_ * frequencyY_, noiseSeed_ + kAxisSeparation), kNoiseOctaves);
+        float z = FbmNoise.Fbm11(new Vector2(elapsedTime_ * frequencyZ_, noiseSeed_ + kAxisSeparation * 2.0f), kNoiseOctaves);
 
         return new Vector3(
             x * amplitudeX_ * scale,

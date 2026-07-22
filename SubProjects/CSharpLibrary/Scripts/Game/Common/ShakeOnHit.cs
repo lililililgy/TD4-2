@@ -12,45 +12,31 @@ public class ShakeOnHit : MonoScript {
     // 実際の揺れ幅はここから線形（ダメージ2倍なら揺れ幅2倍）に伸縮し、min/max で頭打ちにする。
     // プレイヤーの体当たりは速度でダメージが変わるため、代表値を入れておく。
     [SerializeField] private float referenceDamage_    = 50.0f;
-    [SerializeField] private float referenceAmplitude_ = 0.2f;
+    [SerializeField] private float referenceAmplitude_ = 900.0f;
 
     // 揺れ幅の下限・上限。弱い当たりを潰さず、強い一撃で画面が破綻しないようにする
-    [SerializeField] private float minAmplitude_ = 0.05f;
-    [SerializeField] private float maxAmplitude_ = 0.5f;
+    [SerializeField] private float minAmplitude_ = 500.0f;
+    [SerializeField] private float maxAmplitude_ = 1600.0f;
 
     // referenceDamage_ のときの継続時間(秒)
     [SerializeField] private float referenceDuration_ = 0.15f;
 
+    // 継続時間の下限・上限(秒)。durationScale_ で伸縮した結果をここで頭打ちにする
+    [SerializeField] private float minDuration_ = 0.1f;
+    [SerializeField] private float maxDuration_ = 0.3f;
+
     // 継続時間をダメージに追従させる度合い。0 なら常に referenceDuration_ で固定、
     // 1 なら揺れ幅と同じ比率で伸縮する（強い一撃ほど長く揺れる）
-    [SerializeField] private float durationScale_ = 0.5f;
+    [SerializeField] private float durationScale_ = 0.4f;
 
     // 揺れの速さ。ダメージでは変えない（大きいほど細かく震える）
-    [SerializeField] private float frequency_ = 25.0f;
+    [SerializeField] private float frequency_ = 28.0f;
 
     // 命中時に AttackCollision から呼ばれる。dealtDamage は会心倍率を掛けたあとの実ダメージ
     public void OnHit(float dealtDamage) {
-        if (dealtDamage <= 0.0f) {
-            return; // ダメージ0の当たりでは揺らさない
-        }
-
-        // ダメージ比。referenceDamage_ が未設定(0以下)なら比率を使わず基準値そのままにする
-        float ratio = referenceDamage_ > 0.0f ? dealtDamage / referenceDamage_ : 1.0f;
-
-        float amplitude = Mathf.Clamp(referenceAmplitude_ * ratio, minAmplitude_, maxAmplitude_);
-        if (amplitude <= 0.0f) {
-            return;
-        }
-
-        // 継続時間はクランプ後の揺れ幅に追従させる。
-        // 上限に張り付いたあとダメージだけ増えても伸び続ける、という事故を防ぐため
-        // ratio ではなく「クランプ済みの倍率」を使う。
-        float clampedRatio = referenceAmplitude_ > 0.0f ? amplitude / referenceAmplitude_ : 1.0f;
-        float duration = referenceDuration_ * Mathf.Lerp(1.0f, clampedRatio, durationScale_);
-        if (duration <= 0.0f) {
-            return;
-        }
-
-        MessageBus.Publish(new CameraShakeEvent(duration, amplitude, frequency_));
+        DamageShake.Publish(
+            dealtDamage,
+            referenceDamage_, referenceAmplitude_, minAmplitude_, maxAmplitude_,
+            referenceDuration_, minDuration_, maxDuration_, durationScale_, frequency_);
     }
 }

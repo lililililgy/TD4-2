@@ -44,13 +44,15 @@
                 "speed_": 512.0
             },
             "ShakeOnHit": {
-                "durationScale_": 0.5,
-                "frequency_": 25.0,
-                "maxAmplitude_": 0.5,
-                "minAmplitude_": 0.05000000074505806,
-                "referenceAmplitude_": 0.20000000298023224,
+                "durationScale_": 0.3,
+                "frequency_": 30.0,
+                "maxAmplitude_": 1400.0,
+                "maxDuration_": 0.25,
+                "minAmplitude_": 400.0,
+                "minDuration_": 0.08,
+                "referenceAmplitude_": 700.0,
                 "referenceDamage_": 256.0,
-                "referenceDuration_": 0.15000000596046448
+                "referenceDuration_": 0.12
             },
             "type": "Variables"
         },

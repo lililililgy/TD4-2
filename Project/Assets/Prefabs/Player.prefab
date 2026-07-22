@@ -98,7 +98,13 @@
         {
             "AttackCollision": {
                 "damage_": 0.0,
-                "destroyOnHit_": false
+                "destroyOnHit_": false,
+                "shakeAmplitude_": 3.0,
+                "shakeDuration_": 0.05000000074505806
+            },
+            "Critical": {
+                "criticalRate_": 0.0,
+                "threshold_": 0.0
             },
             "HP": {
                 "MAX_HP": 12,
@@ -107,6 +113,7 @@
                 "directlyDamageable_": false,
                 "disableAutoDestruction": false,
                 "disableAutoDestruction_": true,
+                "initialHp_": 3.0,
                 "isInvincible": false,
                 "isInvincible_": false,
                 "maxHp_": 12.0,
@@ -193,6 +200,7 @@
             },
             "PlayerLifeComponent": {
                 "lifeCount_": 0,
+                "lifePerLevelUp_": 1,
                 "maxLife_": 0
             },
             "PlayerMoveComponent": {
@@ -216,12 +224,12 @@
             "PlayerNormalState": {
                 "accel_": 512.0,
                 "canMove_": true,
-                "decelMaxSmoothSpeed_": 512.0,
+                "decelMaxSmoothSpeed_": 382.0,
                 "decelSmoothTime_": 0.10000000149011612,
                 "maxSpeed_": 322.0,
                 "minSpeed_": 32.0,
-                "rotateMaxSmoothSpeed_": 6.0,
-                "rotateSmoothTime_": 0.30000001192092896
+                "rotateMaxSmoothSpeed_": 3.0,
+                "rotateSmoothTime_": 0.6000000238418579
             },
             "PlayerShotComponent": {
                 "bulletSpawnOffset_": {
@@ -242,16 +250,29 @@
                 "maxRoe_": 12,
                 "roePrefabName_": "Roe"
             },
-            "TrailLeader": {},
-            "ShakeOnHit": {
-                "durationScale_": 0.5,
-                "frequency_": 25.0,
-                "maxAmplitude_": 0.5,
-                "minAmplitude_": 0.05000000074505806,
-                "referenceAmplitude_": 0.20000000298023224,
-                "referenceDamage_": 50.0,
-                "referenceDuration_": 0.15000000596046448
+            "ShakeOnDamaged": {
+                "durationScale_": 1.0,
+                "frequency_": 128.0,
+                "maxAmplitude_": 1200.0,
+                "maxDuration_": 0.4000000059604645,
+                "minAmplitude_": 1200.0,
+                "minDuration_": 0.4000000059604645,
+                "referenceAmplitude_": 1200.0,
+                "referenceDamage_": 1.0,
+                "referenceDuration_": 0.30000001192092896
             },
+            "ShakeOnHit": {
+                "durationScale_": 0.30000001192092896,
+                "frequency_": 96.0,
+                "maxAmplitude_": 1800.0,
+                "maxDuration_": 0.30000001192092896,
+                "minAmplitude_": 1000.0,
+                "minDuration_": 0.10000000149011612,
+                "referenceAmplitude_": 100.0,
+                "referenceDamage_": 1.0,
+                "referenceDuration_": 0.10000000149011612
+            },
+            "TrailLeader": {},
             "type": "Variables"
         },
         {
@@ -312,6 +333,10 @@
                 {
                     "enable": true,
                     "name": "ShakeOnHit"
+                },
+                {
+                    "enable": true,
+                    "name": "ShakeOnDamaged"
                 },
                 {
                     "enable": true,

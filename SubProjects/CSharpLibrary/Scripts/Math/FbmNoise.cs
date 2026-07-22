@@ -42,23 +42,39 @@ public static class FbmNoise {
              + (d - b) * u.x * u.y;
     }
 
-    // fractal brownian motion ノイズ。戻り値はおおよそ 0〜1
-    public static float Fbm(Vector2 st) {
-        const int kOctaves = 6;
+    // fractal brownian motion ノイズ。戻り値は 0〜1。
+    //
+    // octaves を増やすほど細かいディテールが乗るが、値は平均(0.5)に集中していく
+    // （各オクターブの平均が打ち消し合うため）。地形なら細かいほうがよいが、
+    // 揺れに使うと「ほとんど動かないが、たまに大きく跳ねる」非線形な挙動になる。
+    // カメラシェイクのように振幅をそのまま体感に対応させたい用途では 1〜2 を使うこと。
+    //
+    // 合計振幅で割って正規化しているので、octaves がいくつでもレンジは 0〜1 で揃う。
+    public static float Fbm(Vector2 st, int octaves) {
         float value = 0.0f;
         float amplitude = 0.5f;
+        float total = 0.0f;
 
-        for (int i = 0; i < kOctaves; i++) {
+        for (int i = 0; i < octaves; i++) {
             value += amplitude * Noise(st);
+            total += amplitude;
             st.x *= 2.0f;
             st.y *= 2.0f;
             amplitude *= 0.5f;
         }
-        return value;
+        return total > 0.0f ? value / total : 0.0f;
+    }
+
+    public static float Fbm(Vector2 st) {
+        return Fbm(st, 6);
     }
 
     // Fbm を -1〜1 に変換したもの。揺れなど正負が必要な用途向け
+    public static float Fbm11(Vector2 st, int octaves) {
+        return (Fbm(st, octaves) - 0.5f) * 2.0f;
+    }
+
     public static float Fbm11(Vector2 st) {
-        return (Fbm(st) - 0.5f) * 2.0f;
+        return Fbm11(st, 6);
     }
 }
