@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.10000000149011612,
+        0.25,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "10b2b5ff760c237ed0e697e75de598ca",
@@ -185,5 +191,6 @@
             "parentGuid": "a25dd8d1548e3658ebc291127c9b23f4",
             "path": "./GameClearScene/9980436e941ddf18766a4fcf93781c4a.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }

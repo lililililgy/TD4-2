@@ -125,6 +125,7 @@
                 }
             },
             "renderer": {
+                "alignment": 0,
                 "blendMode": 0,
                 "flipMode": 0,
                 "materialGuid": "eb4ae838078470d5b7f8739a9d4b995b",

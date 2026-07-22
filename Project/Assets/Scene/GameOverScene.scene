@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.10000000149011612,
+        0.25,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "5bc1a40a4cd20b1edc841d10f2c728d2",
@@ -135,5 +141,6 @@
             "parentGuid": "e305b04c152ed85000a47d7ef4df1a4e",
             "path": "./GameOverScene/e28104091a9aea0c13ac24aefb39845a.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }
