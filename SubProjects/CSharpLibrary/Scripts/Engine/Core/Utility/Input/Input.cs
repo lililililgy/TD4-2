@@ -42,6 +42,14 @@ static public class Input {
 		return output;
 	}
 
+	static public float GamepadLeftTrigger() {
+		return InternalGetGamepadLeftTrigger();
+	}
+
+	static public float GamepadRightTrigger() {
+		return InternalGetGamepadRightTrigger();
+	}
+
 	static public void SetGamepadVibration(float leftMotorSpeed, float rightMotorSpeed) {
 		InternalSetGamepadVibration(leftMotorSpeed, rightMotorSpeed);
 	}
@@ -74,6 +82,71 @@ static public class Input {
 			output.y /= length;
 		}
 		return output;
+	}
+
+	// ===================================================================
+	// 共通・一括入力判定
+	// ===================================================================
+
+	static private readonly KeyCode[] allKeyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
+
+	/// <summary>
+	/// キーボードのいずれかのキーが押されているか判定
+	/// </summary>
+	static public bool PressAnykey() {
+		for (int i = 0; i < allKeyCodes.Length; i++) {
+			if (PressKey(allKeyCodes[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// キーボードのいずれかのキーが押されているか判定（PressAnykeyのエイリアス）
+	/// </summary>
+	static public bool PressAnyKey() {
+		return PressAnykey();
+	}
+
+	/// <summary>
+	/// ゲームパッドのいずれかの入力（ボタン、スティック、トリガー）が行われているか判定
+	/// </summary>
+	static public bool PressAnyGamepad() {
+		// デジタルボタン判定
+		if (PressGamepad(Gamepad.DPadUp) ||
+			PressGamepad(Gamepad.DPadDown) ||
+			PressGamepad(Gamepad.DPadLeft) ||
+			PressGamepad(Gamepad.DPadRight) ||
+			PressGamepad(Gamepad.Start) ||
+			PressGamepad(Gamepad.Back) ||
+			PressGamepad(Gamepad.LeftThumb) ||
+			PressGamepad(Gamepad.RightThumb) ||
+			PressGamepad(Gamepad.LeftShoulder) ||
+			PressGamepad(Gamepad.RightShoulder) ||
+			PressGamepad(Gamepad.A) ||
+			PressGamepad(Gamepad.B) ||
+			PressGamepad(Gamepad.X) ||
+			PressGamepad(Gamepad.Y)) {
+			return true;
+		}
+
+		// スティック判定 (Left/Right)
+		Vector2 leftThumb = GamepadThumb(GamepadAxis.LeftThumb);
+		if (leftThumb.x != 0.0f || leftThumb.y != 0.0f) {
+			return true;
+		}
+		Vector2 rightThumb = GamepadThumb(GamepadAxis.RightThumb);
+		if (rightThumb.x != 0.0f || rightThumb.y != 0.0f) {
+			return true;
+		}
+
+		// 特殊入力：トリガー判定 (LT/RT)
+		if (GamepadLeftTrigger() > 0.0f || GamepadRightTrigger() > 0.0f) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// ===================================================================
@@ -135,6 +208,12 @@ static public class Input {
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalGetGamepadThumb(int axisIndex, out float x, out float y);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern float InternalGetGamepadLeftTrigger();
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern float InternalGetGamepadRightTrigger();
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static private extern void InternalSetGamepadVibration(float leftMotorSpeed, float rightMotorSpeed);

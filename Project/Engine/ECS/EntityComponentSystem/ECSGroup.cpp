@@ -194,3 +194,19 @@ void ECSGroup::SetDrawPaused(bool paused) {
 bool ECSGroup::IsDrawPaused() const {
 	return isDrawPaused_;
 }
+
+void ECSGroup::SetHasClearColor(bool hasClearColor) {
+	hasClearColor_ = hasClearColor;
+}
+
+void ECSGroup::SetClearColor(const Vector4& clearColor) {
+	clearColor_ = clearColor;
+}
+
+bool ECSGroup::HasClearColor() const {
+	return hasClearColor_;
+}
+
+const Vector4& ECSGroup::GetClearColor() const {
+	return clearColor_;
+}

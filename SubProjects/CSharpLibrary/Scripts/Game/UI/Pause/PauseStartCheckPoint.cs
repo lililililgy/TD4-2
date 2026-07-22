@@ -9,4 +9,8 @@ public class PauseStartCheckPoint : PauseCommon {
 	void OnDeselect() {
 		isSelect = false;
 	}
+
+	void OnSubmit() {
+		GameFlow.ResumeFromCheckPoint();
+	}
 }

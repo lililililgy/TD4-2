@@ -71,6 +71,9 @@
                     "z": 0.20000000298023224
                 },
                 "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -87,9 +90,23 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "9d9f8bb4d87d60f44c60e5a563040c63",
+    "guid": "38655a307450a26c9d4498197ce7bd05",
     "name": "KingGesoInkBullet",
     "parentGuid": null,
     "prefabName": "KingGesoInkBullet"

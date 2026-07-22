@@ -25,19 +25,22 @@
         {
             "KillCountObjective": {
                 "targetCount_": 1,
-                "targetEntityName_": "KingGeso"
+                "targetEntityName_": "KingJellyfish"
             },
             "PhaseSpawnActivator": {
                 "activePhases_": []
             },
             "SpawnOnPhaseBegan": {
+                "count_": 0,
                 "phaseName_": "BossBattlePhase_2",
                 "prefabName_": "KingJellyfish",
+                "spawnAroundEntityName_": "",
                 "spawnPos_": {
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
-                }
+                },
+                "spawnRadius_": 0.0
             },
             "type": "Variables"
         },

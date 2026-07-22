@@ -1,7 +1,16 @@
 {
     "active": true,
+    "components": [
+        {
+            "position": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "type": "Transform"
+        }
+    ],
     "guid": "8a4b75a99a9fad9d6e67c9dab898bea4",
     "name": "KeyboardUIRoot",
-    "parentGuid": null,
+    "parentGuid": "387362fb5dddbdd852badabb28aeef48",
     "prefabName": "KeyboardUIRoot"
 }

@@ -1,0 +1,86 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -683.6998901367188,
+                "y": -51.399993896484375,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 155.7999725341797,
+                "y": 35.29984664916992,
+                "z": 86.4998550415039
+            },
+            "type": "Transform"
+        },
+        {
+            "ObjectiveProgressForText": {
+                "finishedText_": "---",
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene"
+            },
+            "SpriteGauge": {
+                "onFirst_": true,
+                "sourceEntityName_": "GameController",
+                "sourceSceneName_": "GameScene",
+                "sourceScriptName_": "ObjectiveSystem",
+                "vertical_": false
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteGauge"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 0.686274528503418,
+                    "y": 0.5921568870544434,
+                    "z": 0.0
+                },
+                "baseTextureGuid": "e15a742c92ed072dbb9b12306aa7b4a4",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "c3991b800904fdd62a39c4814d284380",
+    "name": "ProgressUI_1",
+    "parentGuid": "4c123bd93950d3de425d84db5e344735",
+    "prefabName": ""
+}

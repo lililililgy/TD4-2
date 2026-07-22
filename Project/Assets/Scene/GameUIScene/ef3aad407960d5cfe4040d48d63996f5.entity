@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -683.6998901367188,
-                "y": -68.0,
+                "x": -683.9996948242188,
+                "y": -70.30001068115234,
                 "z": 0.0
             },
             "rotate": {
@@ -27,6 +27,13 @@
                 "finishedText_": "---",
                 "objectiveSystemEntityName_": "GameController",
                 "objectiveSystemSceneName_": "GameScene"
+            },
+            "SpriteGauge": {
+                "onFirst_": true,
+                "sourceEntityName_": "GameController",
+                "sourceSceneName_": "GameScene",
+                "sourceScriptName_": "ObjectiveSystem",
+                "vertical_": false
             },
             "type": "Variables"
         },
@@ -76,7 +83,7 @@
         }
     ],
     "guid": "ef3aad407960d5cfe4040d48d63996f5",
-    "name": "ProgressText",
-    "parentGuid": null,
+    "name": "ProgressUI",
+    "parentGuid": "4c123bd93950d3de425d84db5e344735",
     "prefabName": ""
 }

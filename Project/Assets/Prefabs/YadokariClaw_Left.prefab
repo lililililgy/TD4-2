@@ -53,21 +53,6 @@
             "type": "Variables"
         },
         {
-            "categoryBits": 8,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": true,
-            "maskBits": 4294967042,
-            "mass": 1.0,
-            "size": {
-                "x": 1.0,
-                "y": 1.0000001192092896
-            },
-            "state": "Dynamic",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
-        },
-        {
             "enable": 1,
             "isPixelPerfect": false,
             "material": {
@@ -99,6 +84,21 @@
             "type": "SpriteRenderer"
         },
         {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 4294967042,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0000001192092896
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        },
+        {
             "enable": 1,
             "scripts": [
                 {
@@ -119,9 +119,23 @@
                 }
             ],
             "type": "Script"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "03d3b0b31be6d6166a9797b71db4f1e0",
+    "guid": "2121ec58cb9315d6a1b6f2babbf63c22",
     "name": "YadokariClaw_Left",
     "parentGuid": null,
     "prefabName": "YadokariClaw_Left"

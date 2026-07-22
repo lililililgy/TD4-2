@@ -12,7 +12,7 @@ public class ClearRestart : BaseUI {
 	}
 
 	void OnSubmit() {
-		SceneManager.LoadScene("GameScene");
+		GameFlow.StartNewGame();
 	}
 
 }

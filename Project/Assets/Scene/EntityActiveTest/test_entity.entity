@@ -1,0 +1,47 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "type": "Transform"
+        },
+        {
+            "enable": 1,
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "type": "BoxCollider2D"
+        },
+        {
+            "enable": 1,
+            "type": "BoxCollider"
+        },
+        {
+            "enable": 1,
+            "type": "CircleCollider"
+        },
+        {
+            "enable": 1,
+            "type": "ParticleSystem2D"
+        },
+        {
+            "enable": 1,
+            "type": "ParticleSystem"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "EntityActiveTestScript"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "e0000000000000000000000000000002",
+    "name": "TestEntity",
+    "parentGuid": null,
+    "prefabName": ""
+}

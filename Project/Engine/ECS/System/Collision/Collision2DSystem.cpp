@@ -81,7 +81,7 @@ void Collision2DSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 	if(circleColliderArray) {
 		for(auto& circleCollider : circleColliderArray->GetUsedComponents()) {
-			if(circleCollider && circleCollider->enable) {
+			if(CheckComponentEnable(circleCollider)) {
 				colliders.push_back(circleCollider);
 			}
 		}
@@ -89,7 +89,7 @@ void Collision2DSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 	if(boxCollider2DArray) {
 		for(auto& boxCollider2D : boxCollider2DArray->GetUsedComponents()) {
-			if(boxCollider2D && boxCollider2D->enable) {
+			if(CheckComponentEnable(boxCollider2D)) {
 				colliders.push_back(boxCollider2D);
 			}
 		}

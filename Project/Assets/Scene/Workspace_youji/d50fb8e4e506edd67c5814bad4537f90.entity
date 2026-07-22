@@ -33,6 +33,14 @@
                 "keys": [],
                 "pads": []
             },
+            "StickColorChanger": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
             "type": "Variables"
         },
         {
@@ -71,7 +79,7 @@
             "scripts": [
                 {
                     "enable": true,
-                    "name": "KeyColorChanger"
+                    "name": "StickColorChanger"
                 }
             ],
             "type": "Script"

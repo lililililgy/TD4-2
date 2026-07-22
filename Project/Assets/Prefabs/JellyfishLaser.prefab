@@ -33,21 +33,6 @@
                     "type": "Variables"
                 },
                 {
-                    "categoryBits": 1,
-                    "enable": 1,
-                    "freezeY": false,
-                    "isTrigger": true,
-                    "maskBits": 2,
-                    "mass": 1.0,
-                    "size": {
-                        "x": 1.0,
-                        "y": 1.0
-                    },
-                    "state": "Dynamic",
-                    "type": "BoxCollider2D",
-                    "useOwnerScale": true
-                },
-                {
                     "enable": 1,
                     "isPixelPerfect": false,
                     "material": {
@@ -58,6 +43,9 @@
                             "z": 1.0
                         },
                         "baseTextureGuid": "adf2afa20a0f9015b7c2dfc0299e5d2e",
+                        "bloomIntensity": 1.0,
+                        "bloomRadius": 12.0,
+                        "bloomThreshold": 0.800000011920929,
                         "guid": "00000000000000000000000000000000",
                         "normalTextureGuid": "00000000000000000000000000000000",
                         "postEffectFlags": 0,
@@ -76,6 +64,21 @@
                     "type": "SpriteRenderer"
                 },
                 {
+                    "categoryBits": 1,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 2,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": true
+                },
+                {
                     "enable": 1,
                     "scripts": [
                         {
@@ -86,9 +89,9 @@
                     "type": "Script"
                 }
             ],
-            "guid": "9fc99e8a3a4bc9a189d5dc100787ae31",
+            "guid": "f9d32cd480bae2e5cf5d68f0d217fcb8",
             "name": "Laser",
-            "parentGuid": "0f23626149d254101fb06e6ef52329a5",
+            "parentGuid": "da7e495f4833e05e966511ada0bd3c81",
             "prefabName": ""
         }
     ],
@@ -138,6 +141,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "4f883331d0262d09420a9cc5a09df410",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -164,9 +170,23 @@
                 }
             ],
             "type": "Script"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "0f23626149d254101fb06e6ef52329a5",
+    "guid": "da7e495f4833e05e966511ada0bd3c81",
     "name": "JellyfishLaser",
     "parentGuid": null,
     "prefabName": "JellyfishLaser"

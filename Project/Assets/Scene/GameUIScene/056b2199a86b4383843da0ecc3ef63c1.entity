@@ -29,6 +29,8 @@
                 "objectiveSystemSceneName_": "GameScene"
             },
             "ShowOnPhase": {
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene",
                 "visiblePhases_": [
                     "BossBattlePhase_1"
                 ]
@@ -82,6 +84,6 @@
     ],
     "guid": "056b2199a86b4383843da0ecc3ef63c1",
     "name": "BossBattlePhase_3",
-    "parentGuid": null,
+    "parentGuid": "4c123bd93950d3de425d84db5e344735",
     "prefabName": ""
 }

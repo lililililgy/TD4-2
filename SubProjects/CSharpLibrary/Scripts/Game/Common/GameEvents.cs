@@ -33,6 +33,15 @@ public class PlayerDashedEvent
 {
 }
 
+// プレイヤーの残機（＝全卵数）が尽きた際に PlayerLifeComponent.Update() から発行される。
+// ゲームオーバー演出・シーン遷移など「プレイヤーが死んだら何かする」側が購読する。
+//
+// 生存→死亡のエッジでのみ発行されるため、残機0の間ずっと流れ続けることはない。
+// 産卵前の開始直後（一度も残機を持っていない状態）は死亡扱いにならないので発行されない。
+public class PlayerDeadEvent
+{
+}
+
 // ObjectiveSystem がフェーズに突入した際に発行される（各 Objective の BeginObjective() 後）。
 // フェーズごとの敵湧き切り替えやボス出現など、「そのフェーズの開始で何かする」側が購読する。
 //

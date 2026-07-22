@@ -12,12 +12,15 @@ public class JellyfishWeakPoint : MonoScript
 
     // ボスの参照
     private KingJellyfish kingJellyfish;
+    private Rigidbody2D rigidbody_;
 
     //=============================
     // 初期化
     //=============================
     public override void Initialize()
     {
+        rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        SetVelocity(Vector2.zero);
         ResolveKingJellyfish();
     }
 
@@ -38,6 +41,19 @@ public class JellyfishWeakPoint : MonoScript
         if (collider != null)
         {
             collider.enable = enabled ? 1 : 0;
+        }
+    }
+
+    public void SetVelocity(Vector2 velocity)
+    {
+        if (rigidbody_ == null)
+        {
+            rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        }
+
+        if (rigidbody_ != null)
+        {
+            rigidbody_.velocity = velocity;
         }
     }
 

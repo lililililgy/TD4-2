@@ -22,8 +22,8 @@ public class GameStart : MonoScript {
 	}
 
 	public void OnSubmit() {
-		/// ゲームを開始する
-		SceneManager.LoadScene("GameScene");
+		/// ゲームを最初から開始する
+		GameFlow.StartNewGame();
 	}
 
 	public override void Update() {

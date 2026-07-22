@@ -11,44 +11,9 @@
             "path": "./TitleScene/2c891b2f0db32ba4c941d9b4fd46afb2.entity"
         },
         {
-            "guid": "2df20770fd4143ef1b760ef6dcaba3a6",
+            "guid": "717fc69c31b232eedfcca51dd4b4327e",
             "parentGuid": null,
-            "path": "./TitleScene/2df20770fd4143ef1b760ef6dcaba3a6.entity"
-        },
-        {
-            "guid": "0a8746990723639928d2994e6405bfef",
-            "parentGuid": null,
-            "path": "./TitleScene/0a8746990723639928d2994e6405bfef.entity"
-        },
-        {
-            "guid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
-            "parentGuid": "2df20770fd4143ef1b760ef6dcaba3a6",
-            "path": "./TitleScene/d7ea2c0f9f4ecbe9053c755f9af5b335.entity"
-        },
-        {
-            "guid": "2fda8f73a6a1d6acbad97e7fe813d333",
-            "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
-            "path": "./TitleScene/2fda8f73a6a1d6acbad97e7fe813d333.entity"
-        },
-        {
-            "guid": "f888bb77a406a2873331d4da01e251dd",
-            "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
-            "path": "./TitleScene/f888bb77a406a2873331d4da01e251dd.entity"
-        },
-        {
-            "guid": "1f912cca31c2b47ac9910262e8660b26",
-            "parentGuid": "d7ea2c0f9f4ecbe9053c755f9af5b335",
-            "path": "./TitleScene/1f912cca31c2b47ac9910262e8660b26.entity"
-        },
-        {
-            "guid": "a3fd89de2fd48bd644a51d8751d5b999",
-            "parentGuid": "0a8746990723639928d2994e6405bfef",
-            "path": "./TitleScene/a3fd89de2fd48bd644a51d8751d5b999.entity"
-        },
-        {
-            "guid": "387f51ec4bc5393e1f00ebf4ee96d57d",
-            "parentGuid": "a3fd89de2fd48bd644a51d8751d5b999",
-            "path": "./TitleScene/387f51ec4bc5393e1f00ebf4ee96d57d.entity"
+            "path": "./TitleScene/717fc69c31b232eedfcca51dd4b4327e.entity"
         },
         {
             "guid": "410b0e1cd2fdfcd443e3a219daa2ae41",
@@ -164,6 +129,21 @@
             "guid": "0fd15870bf1c203c8460527f0ddb09a9",
             "parentGuid": "b82ef25627d3d464a44a651f25e717dc",
             "path": "./TitleScene/0fd15870bf1c203c8460527f0ddb09a9.entity"
+        },
+        {
+            "guid": "5bd2f89d57005ed93ba262ec089b5c0d",
+            "parentGuid": "717fc69c31b232eedfcca51dd4b4327e",
+            "path": "./TitleScene/5bd2f89d57005ed93ba262ec089b5c0d.entity"
+        },
+        {
+            "guid": "71ca9a0b4bebe31173d10f94522fe53b",
+            "parentGuid": "5bd2f89d57005ed93ba262ec089b5c0d",
+            "path": "./TitleScene/71ca9a0b4bebe31173d10f94522fe53b.entity"
+        },
+        {
+            "guid": "7a1c3e3dbe69f664fd42f4dadecdf70a",
+            "parentGuid": "5bd2f89d57005ed93ba262ec089b5c0d",
+            "path": "./TitleScene/7a1c3e3dbe69f664fd42f4dadecdf70a.entity"
         }
     ]
 }
