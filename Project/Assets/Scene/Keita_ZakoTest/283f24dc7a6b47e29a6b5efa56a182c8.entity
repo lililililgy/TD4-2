@@ -2,6 +2,10 @@
     "active": true,
     "components": [
         {
+            "ParticleOffset": {},
+            "type": "Variables"
+        },
+        {
             "material": {
                 "bloomIntensity": 1.0,
                 "bloomRadius": 12.0,

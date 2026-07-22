@@ -5,6 +5,7 @@
             "ChaseController": {
                 "chaseSpeed": 256.0
             },
+            "ParticleOffset": {},
             "SeaCow": {
                 "maxAnimationFps": 18.0,
                 "maxChaseSpeed": 339.0,

@@ -43,6 +43,13 @@
                 "isInvincible_": false,
                 "maxHp_": 20.0
             },
+            "ParticleOffset": {
+                "offset": {
+                    "x": -138.0,
+                    "y": -300.0,
+                    "z": 0.0
+                }
+            },
             "SpriteAnimation": {
                 "cols": 4,
                 "enable": true,
@@ -105,6 +112,10 @@
                 {
                     "enable": true,
                     "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "ParticleOffset"
                 }
             ],
             "type": "Script"

@@ -101,6 +101,10 @@
                 {
                     "enable": true,
                     "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "ParticleOffset"
                 }
             ],
             "type": "Script"

@@ -30,14 +30,21 @@ public class TatunoMousigo : MonoScript
     [SerializeField] private float moveShakeIntensity = 2.0f;
     [SerializeField] private float landShakeIntensity = 8.0f;
 
+    /* ----- パーティクル ----- */
+    // 歩行時・着地時に再生する土埃
+    [SerializeField] private string dustParticlePrefabName = "dustParticle";
+    [SerializeField] private float dustParticleLifeTime = 0.6f;
+
     private enum JumpState { None, Jumping }
 
     /* ----- 実行時状態 ----- */
     private Entity targetEntity_;
-    private SpriteRenderer spriteRenderer_;   
+    private SpriteRenderer spriteRenderer_;
     private TargetRangeDetector rangeDetector_;
     private CameraShake cameraShake_;
     private SpriteAnimation spriteAnimation_;
+    // 敵単位でパーティクルの発生位置を調整するオフセットスクリプト
+    private ParticleOffset particleOffset_;
 
     // 歩きアニメーションのフレーム範囲
     private int walkStartFrame = 0; // 停止ポーズ
@@ -70,6 +77,7 @@ public class TatunoMousigo : MonoScript
         spriteRenderer_ = entity.GetComponent<SpriteRenderer>();
         rangeDetector_ = entity.GetScript<TargetRangeDetector>();
         spriteAnimation_ = entity.GetScript<SpriteAnimation>();
+        particleOffset_ = entity.GetScript<ParticleOffset>();
 
         Entity cameraEntity = ecsGroup.FindEntity(cameraEntityName);
         cameraShake_ = cameraEntity != null ? cameraEntity.GetScript<CameraShake>() : null;
@@ -141,6 +149,7 @@ public class TatunoMousigo : MonoScript
         transform.position = pos;
 
         cameraShake_?.Shake(moveShakeIntensity);
+        SpawnDustParticle();
     }
 
  
@@ -254,7 +263,29 @@ public class TatunoMousigo : MonoScript
             jumpState_ = JumpState.None;
             jumpCooldownTimer_ = jumpCooldown;
             cameraShake_?.Shake(landShakeIntensity);
+            SpawnDustParticle();
         }
+    }
+
+    // 歩行・着地時の土埃エフェクトを足元に生成する
+    private void SpawnDustParticle()
+    {
+        if (String.IsNullOrEmpty(dustParticlePrefabName)) { return; }
+
+        Entity dust = ecsGroup.CreateEntity(dustParticlePrefabName);
+        if (!dust) { return; }
+
+        // TatunoMousigoはtransform.rotateを回転させず、UVのX反転(facingDir_)だけで左右を表現しているため、
+        // オフセットも回転ではなくfacingDir_でX成分をミラーさせる。
+        Vector3 offset = particleOffset_ != null ? particleOffset_.offset : Vector3.zero;
+        Vector3 pos = transform.position;
+        pos.x += offset.x * facingDir_;
+        pos.y = baseY_ + offset.y;
+        pos.z += offset.z;
+        dust.transform.position = pos;
+
+        TimedDestruction timedDestruction = dust.AddScript<TimedDestruction>();
+        timedDestruction.lifeTime = dustParticleLifeTime;
     }
 
     private bool ShouldJump()

@@ -14,6 +14,8 @@ public class TargetFacingFlip : MonoScript
     private Vector3 baseDir_ = Vector3.right;
     private bool isRight_ = true;
     public Vector3 FacingDirection => Matrix4x4.Transform(baseDir_, Matrix4x4.Rotate(transform.rotate));
+    // 現在UVが右向き(反転あり)かどうか。オフセットのミラーなど外部から参照するために公開する。
+    public bool IsFacingRight => isRight_;
 
     public override void Initialize()
     {

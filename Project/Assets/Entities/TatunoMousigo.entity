@@ -2,8 +2,11 @@
     "active": true,
     "components": [
         {
-            "TatunoMousigo": {
-                "moveSpeed": 220.0
+            "ParticleOffset": {
+                "offset": {
+                    "x": -138.0,
+                    "y": -300.0
+                }
             },
             "type": "Variables"
         }
