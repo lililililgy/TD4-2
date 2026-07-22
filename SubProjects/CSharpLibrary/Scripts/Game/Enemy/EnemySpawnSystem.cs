@@ -46,12 +46,16 @@ public class EnemySpawnSystem : MonoScript {
 
     [SerializeField] private string originName_ = "EnemySpawnOrigin";
     [SerializeField] private string heatMapEntityName_ = "EnemyHeatMap";
-    // スポーン範囲
-    [SerializeField] private Vector2 spawnAreaMin_ = default;
-    [SerializeField] private Vector2 spawnAreaMax_ = default;
-    // 除外範囲（スポーンしない範囲）
-    [SerializeField] private Vector2 exclusionAreaMin_ = default;
-    [SerializeField] private Vector2 exclusionAreaMax_ = default;
+    // スポーン範囲。画面の world half-extent(ScreenBounds) に対する倍率で表す
+    [SerializeField] private float spawnAreaScale_ = 1.30f;
+    // 除外範囲（スポーンしない範囲）。画面の world half-extent に対する倍率
+    [SerializeField] private float exclusionAreaScale_ = 1.00f;
+    // 除外矩形をさらに外側に広げるマージン(world単位)。敵の見た目半径ぶんの余裕が欲しい場合に使う。既定0で従来どおり。
+    [SerializeField] private float exclusionMargin_ = 0.0f;
+    // ズーム追従の基準にするカメラ Entity 名
+    [SerializeField] private string cameraName_ = "MainCamera";
+    // 敵数上限のズーム補正指数。1=線形、0=固定、2=面積比
+    [SerializeField] private float maxEnemyCountZoomExponent_ = 1.0f;
     // スポーン間隔
     [SerializeField] private float spawnInterval_ = 5.0f;
     private float spawnTimer_ = 0.0f;
@@ -85,11 +89,22 @@ public class EnemySpawnSystem : MonoScript {
     }
     private List<WeightedCell> spawnCellWeights_ = new List<WeightedCell>();
 
+    // CalculateSpawnCellWeights で求めた world 矩形。同一フレーム内で CalculateSpawnPos から参照する。
+    private Vector2 spawnLo_;
+    private Vector2 spawnHi_;
+    private Vector2 exclusionLo_;
+    private Vector2 exclusionHi_;
+    private bool hasExclusionArea_;
+
     // Biome（実行時にテーブルから構築する）
     private Biome defaultBiome_;
 
+    // カメラズームに追従した画面 world half-extent を提供する
+    private ScreenBounds screenBounds_;
+
     public override void Initialize() {
         defaultBiome_ = new Biome(defaultSpawnTable_);
+        screenBounds_ = new ScreenBounds(ecsGroup, cameraName_);
 
         biomeAreas_.Clear();
         foreach (var name in biomeNames_) {
@@ -118,7 +133,10 @@ public class EnemySpawnSystem : MonoScript {
 
         CalculateSpawnCellWeights(heatMap);
 
-        if (heatMap.GetEnemyCount() >= maxEnemyCount_) return;
+        // ズームに応じて敵数上限を線形補正する（指数1.0=線形、0=固定、2=面積比）。下限は1でクランプ。
+        int effectiveMax = (int)(maxEnemyCount_ * Math.Pow(screenBounds_.ZoomRatio(), maxEnemyCountZoomExponent_));
+        if (effectiveMax < 1) effectiveMax = 1;
+        if (heatMap.GetEnemyCount() >= effectiveMax) return;
 
         int spawnCount = 0;
         // スポーン間隔を超えた場合、スポーン処理を行う
@@ -189,10 +207,74 @@ public class EnemySpawnSystem : MonoScript {
         // 選ばれたセルの範囲内でランダムな座標を返す
         Vector2 cellSize = heatMap.GetCellSize();
         Vector2 cellMin = new Vector2(selectedCellId.x * cellSize.x, selectedCellId.y * cellSize.y);
-        return new Vector2(
+        Vector2 spawnPos = new Vector2(
             RandomUtil.RandomRange(cellMin.x, cellMin.x + cellSize.x),
             RandomUtil.RandomRange(cellMin.y, cellMin.y + cellSize.y)
         );
+
+        if (!hasExclusionArea_) {
+            return spawnPos;
+        }
+
+        // 境界セルは spawn/除外の両矩形をまたぐことがあるため、セル内一様サンプリングだけでは
+        // 除外矩形内の座標を返してしまうことがある。除外矩形外に出るまで再サンプリングして塞ぐ。
+        const int maxResampleCount = 8;
+        bool accepted = !IsInsideExclusion(spawnPos);
+        for (int i = 0; i < maxResampleCount && !accepted; i++) {
+            spawnPos = new Vector2(
+                RandomUtil.RandomRange(cellMin.x, cellMin.x + cellSize.x),
+                RandomUtil.RandomRange(cellMin.y, cellMin.y + cellSize.y)
+            );
+            accepted = !IsInsideExclusion(spawnPos);
+        }
+
+        if (!accepted) {
+            // 再サンプリングで避けられなかった場合、貫入量が最小の軸方向へ矩形外に押し出す。
+            // (押し出しのみだと境界線上にスポーンが集中して不自然な帯になるため再サンプリングを優先する)
+            spawnPos = PushOutOfExclusion(spawnPos);
+
+            // exclusionAreaScale_ >= spawnAreaScale_ の誤設定時の保険として spawn 矩形内にクランプする
+            spawnPos.x = Mathf.Clamp(spawnPos.x, spawnLo_.x, spawnHi_.x);
+            spawnPos.y = Mathf.Clamp(spawnPos.y, spawnLo_.y, spawnHi_.y);
+        }
+
+        return spawnPos;
+    }
+
+    // 座標が除外矩形(exclusionMargin_ 込み)の内側かどうか
+    private bool IsInsideExclusion(Vector2 pos) {
+        return pos.x > exclusionLo_.x && pos.x < exclusionHi_.x &&
+               pos.y > exclusionLo_.y && pos.y < exclusionHi_.y;
+    }
+
+    // 除外矩形内の座標を、貫入量(矩形の各辺までの距離)が最小の軸方向へ押し出す
+    private Vector2 PushOutOfExclusion(Vector2 pos) {
+        float distLeft = pos.x - exclusionLo_.x;
+        float distRight = exclusionHi_.x - pos.x;
+        float distBottom = pos.y - exclusionLo_.y;
+        float distTop = exclusionHi_.y - pos.y;
+
+        float minDist = distLeft;
+        Vector2 result = pos;
+        result.x = exclusionLo_.x;
+
+        if (distRight < minDist) {
+            minDist = distRight;
+            result = pos;
+            result.x = exclusionHi_.x;
+        }
+        if (distBottom < minDist) {
+            minDist = distBottom;
+            result = pos;
+            result.y = exclusionLo_.y;
+        }
+        if (distTop < minDist) {
+            minDist = distTop;
+            result = pos;
+            result.y = exclusionHi_.y;
+        }
+
+        return result;
     }
 
     private void SpawnEnemy(string enemyType, Vector2 spawnPos) {
@@ -211,17 +293,29 @@ public class EnemySpawnSystem : MonoScript {
             originePos = new Vector2(origineT.position.x, origineT.position.y);
         }
 
-        Vector2Int origineCell = heatMap.GetCellId(originePos);
+        // 画面の world half-extent(カメラズーム追従)に係数を掛けて half-extent を求め、
+        // origine 中心の world 矩形を直接作る。セル数への丸めを経由しないことで、
+        // ズーム/プレイヤー移動に対して連続的に境界が動くようにする。
+        Vector2 half = screenBounds_.HalfExtent();
+        Vector2 spawnHalf = half * spawnAreaScale_;
+        Vector2 exclusionHalf = half * exclusionAreaScale_;
+        Vector2 marginVec = new Vector2(exclusionMargin_, exclusionMargin_);
 
-        Vector2 spawnAreaSize = spawnAreaMax_ - spawnAreaMin_;
-        Vector2Int spawnAreaForCell = heatMap.GetCellId(spawnAreaSize);
-        Vector2Int ltCellId = new Vector2Int(origineCell.x - spawnAreaForCell.x / 2, origineCell.y - spawnAreaForCell.y / 2);
-        Vector2Int rbCellId = new Vector2Int(origineCell.x + spawnAreaForCell.x / 2, origineCell.y + spawnAreaForCell.y / 2);
+        spawnLo_ = originePos - spawnHalf;
+        spawnHi_ = originePos + spawnHalf;
 
-        Vector2 exclusionAreaSize = exclusionAreaMax_ - exclusionAreaMin_;
-        Vector2Int exclusionAreaForCell = heatMap.GetCellId(exclusionAreaSize);
-        Vector2Int exclusionLtCellId = new Vector2Int(origineCell.x - exclusionAreaForCell.x / 2, origineCell.y - exclusionAreaForCell.y / 2);
-        Vector2Int exclusionRbCellId = new Vector2Int(origineCell.x + exclusionAreaForCell.x / 2, origineCell.y + exclusionAreaForCell.y / 2);
+        // 除外範囲が未設定(サイズ0)なら除外そのものを行わない。
+        // 0 のまま矩形判定に入れると原点セルだけが不作為に除外されてしまうため。
+        hasExclusionArea_ = exclusionHalf.x > 0.0f && exclusionHalf.y > 0.0f;
+        exclusionLo_ = originePos - exclusionHalf - marginVec;
+        exclusionHi_ = originePos + exclusionHalf + marginVec;
+
+        // ループ範囲は world 角座標からセル ID を引いて求める。GetCellId が floor 化されているので、
+        // これで spawn 矩形に交差する全セルを漏れなく覆える。
+        Vector2Int ltCellId = heatMap.GetCellId(spawnLo_);
+        Vector2Int rbCellId = heatMap.GetCellId(spawnHi_);
+
+        Vector2 cellSize = heatMap.GetCellSize();
 
         // 2次元の畳み込みをそのまま行うと1セルあたり (2r+1)^2 回の参照が必要になるため、
         // カーネルを dx 方向 × dy 方向に分解できる形にし、横→縦の1次元畳み込み2回
@@ -242,14 +336,20 @@ public class EnemySpawnSystem : MonoScript {
 
         for (int x = ltCellId.x; x <= rbCellId.x; x++) {
             for (int y = ltCellId.y; y <= rbCellId.y; y++) {
-                // 除外範囲のセルをスキップする
-                for (int ex = exclusionLtCellId.x; ex <= exclusionRbCellId.x; ex++) {
-                    for (int ey = exclusionLtCellId.y; ey <= exclusionRbCellId.y; ey++) {
-                        if (x == ex && y == ey) {
-                            // 除外範囲内のセルはスキップ
-                            continue;
-                        }
-                    }
+                // セルの world 矩形
+                Vector2 cellMin = new Vector2(x * cellSize.x, y * cellSize.y);
+                Vector2 cellMax = cellMin + cellSize;
+
+                // spawn 矩形と交差しないセルはスキップする(floor 丸めで角に含まれた余剰セル)
+                bool outsideSpawn = cellMax.x <= spawnLo_.x || cellMin.x >= spawnHi_.x ||
+                                     cellMax.y <= spawnLo_.y || cellMin.y >= spawnHi_.y;
+                if (outsideSpawn) continue;
+
+                // 除外範囲に完全に内包されるセルだけをスキップする。またぐセルは候補に残す。
+                if (hasExclusionArea_ &&
+                    cellMin.x >= exclusionLo_.x && cellMax.x <= exclusionHi_.x &&
+                    cellMin.y >= exclusionLo_.y && cellMax.y <= exclusionHi_.y) {
+                    continue;
                 }
 
                 // 縦方向(y)の1次元畳み込み。横方向の結果を再利用する。

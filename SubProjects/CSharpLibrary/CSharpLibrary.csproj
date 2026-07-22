@@ -189,6 +189,7 @@
     <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariWeakPoint.cs" />
     <Compile Include="Scripts\Game\Bullet.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
+    <Compile Include="Scripts\Game\Camera\ScreenBounds.cs" />
     <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
     <Compile Include="Scripts\Game\Common\Attractor.cs" />
     <Compile Include="Scripts\Game\Common\ContinueState.cs" />
@@ -219,6 +220,7 @@
     <Compile Include="Scripts\Game\Enemy\EnemyMoveComponent.cs" />
     <Compile Include="Scripts\Game\Enemy\EnemySpawnSystem.cs" />
     <Compile Include="Scripts\Game\Enemy\PhaseSpawnActivator.cs" />
+    <Compile Include="Scripts\Game\Enemy\SpawnAreaFollower.cs" />
     <Compile Include="Scripts\Game\Enemy\SpawnEntry.cs" />
     <Compile Include="Scripts\Game\Experience\ExpDropper.cs" />
     <Compile Include="Scripts\Game\Experience\ExperiencePoint.cs" />
