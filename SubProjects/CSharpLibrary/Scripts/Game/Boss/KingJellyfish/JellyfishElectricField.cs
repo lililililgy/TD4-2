@@ -8,6 +8,11 @@ public class JellyfishElectricField : MonoScript
     private float elapsed_;
     private bool configured_;
     private bool activated_;
+    private string thunderboltParticlePrefabName_;
+    private int thunderboltParticleEmitCount_;
+    private float thunderboltParticleDuration_;
+    private float thunderboltParticleDestroyTime_;
+    private Entity thunderboltParticleEntity_;
 
     public override void Initialize()
     {
@@ -16,6 +21,8 @@ public class JellyfishElectricField : MonoScript
             elapsed_ = 0.0f;
             activated_ = false;
         }
+
+        thunderboltParticleEntity_ = null;
     }
 
     public override void Update()
@@ -31,6 +38,12 @@ public class JellyfishElectricField : MonoScript
             SetActive(true);
         }
 
+        if (thunderboltParticleEntity_ != null
+            && elapsed_ >= thunderboltParticleDestroyTime_)
+        {
+            DestroyThunderboltParticle();
+        }
+
         if (elapsed_ >= activationDelay + activeDuration)
         {
             entity.Destroy();
@@ -43,7 +56,10 @@ public class JellyfishElectricField : MonoScript
         float fieldDamage,
         float delay,
         float duration,
-        float depth)
+        float depth,
+        string thunderboltParticlePrefabName,
+        int thunderboltParticleEmitCount,
+        float thunderboltParticleDuration)
     {
         radius = fieldRadius > 0.0f ? fieldRadius : 1.0f;
         damage = fieldDamage;
@@ -52,6 +68,13 @@ public class JellyfishElectricField : MonoScript
         elapsed_ = 0.0f;
         configured_ = true;
         activated_ = false;
+        thunderboltParticlePrefabName_ = thunderboltParticlePrefabName;
+        thunderboltParticleEmitCount_ = thunderboltParticleEmitCount > 0
+            ? thunderboltParticleEmitCount
+            : 1;
+        thunderboltParticleDuration_ = thunderboltParticleDuration > 0.0f
+            ? thunderboltParticleDuration
+            : 1.0f;
 
         transform.position = new Vector3(position.x, position.y, depth);
         transform.scale = new Vector3(radius * 2.0f, radius * 2.0f, 1.0f);
@@ -69,6 +92,11 @@ public class JellyfishElectricField : MonoScript
     {
         activated_ = active;
 
+        if (active)
+        {
+            EmitThunderboltParticle();
+        }
+
         CircleCollider collider = entity.GetComponent<CircleCollider>();
         if (collider != null)
         {
@@ -82,5 +110,51 @@ public class JellyfishElectricField : MonoScript
                 ? new Vector4(0.3f, 0.85f, 1.0f, 0.9f)
                 : new Vector4(1.0f, 0.85f, 0.2f, 0.35f);
         }
+    }
+
+    public override void OnDestroy()
+    {
+        DestroyThunderboltParticle();
+    }
+
+    private void EmitThunderboltParticle()
+    {
+        if (string.IsNullOrEmpty(thunderboltParticlePrefabName_))
+        {
+            return;
+        }
+
+        DestroyThunderboltParticle();
+
+        Entity particleEntity = ecsGroup.CreateEntity(thunderboltParticlePrefabName_);
+        if (particleEntity == null)
+        {
+            return;
+        }
+
+        particleEntity.transform.position = transform.position;
+        particleEntity.transform.rotation = transform.rotation;
+
+        ParticleSystem2D particleSystem = particleEntity.GetComponent<ParticleSystem2D>();
+        if (particleSystem == null)
+        {
+            particleEntity.Destroy();
+            return;
+        }
+
+        thunderboltParticleEntity_ = particleEntity;
+        thunderboltParticleDestroyTime_ = elapsed_ + thunderboltParticleDuration_;
+        particleSystem.Emit(thunderboltParticleEmitCount_);
+    }
+
+    private void DestroyThunderboltParticle()
+    {
+        if (thunderboltParticleEntity_ == null)
+        {
+            return;
+        }
+
+        thunderboltParticleEntity_.Destroy();
+        thunderboltParticleEntity_ = null;
     }
 }
