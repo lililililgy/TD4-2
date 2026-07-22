@@ -1,0 +1,14 @@
+{
+    "entities": [
+        {
+            "guid": "d0000000000000000000000000000001",
+            "parentGuid": null,
+            "path": "./ListStructSerializeTest/main_camera.entity"
+        },
+        {
+            "guid": "d0000000000000000000000000000002",
+            "parentGuid": null,
+            "path": "./ListStructSerializeTest/test_entity.entity"
+        }
+    ]
+}
