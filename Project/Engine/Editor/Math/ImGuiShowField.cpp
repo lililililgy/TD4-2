@@ -617,6 +617,18 @@ void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& 
 								list[i] = std::make_shared<ONEngine::Variables::GenericObject>();
 								list[i]->typeName = mono_class_get_name(elemClass);
 							}
+							if (list[i]) {
+								void* iter = nullptr;
+								MonoClassField* f = nullptr;
+								while ((f = mono_class_get_fields(elemClass, &iter))) {
+									if (ShouldSerialize(f)) {
+										std::string fieldName = mono_field_get_name(f);
+										if (!list[i]->fields.contains(fieldName)) {
+											list[i]->fields[fieldName] = ONEngine::Variables::MonoObjectToVar(nullptr, mono_field_get_type(f));
+										}
+									}
+								}
+							}
 						}
 						if (ONEngine::GameEntity* entity = vars->GetOwner()) {
 							EditCommand::Execute<ModifyScriptVariableCommand>(entity, groupName, name, MONO_TYPE_GENERICINST, ToCommandVar(oldVal), ToCommandVar(group.Get(name)));
@@ -804,7 +816,7 @@ void CSGui::ListField::Draw(const std::string& scriptName, MonoObject* obj, Mono
 								if (!mono_class_is_valuetype(ek)) {
 									mono_runtime_object_init(item);
 								}
-								void* args[1] = { item };
+								void* args[1] = { mono_class_is_valuetype(ek) ? mono_object_unbox(item) : (void*)item };
 								mono_runtime_invoke(addMethod, listObj, args, &exc);
 							}
 						}
