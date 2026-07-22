@@ -44,6 +44,24 @@ bool ScreenPostEffectTag::GetPostEffectEnable(PostEffectType type) const {
 	return flags_.flags[static_cast<size_t>(type)];
 }
 
+bool ONEngine::InternalGetScreenPostEffectEnabled(uint64_t nativeHandle, int32_t type) {
+	ScreenPostEffectTag* tag = reinterpret_cast<ScreenPostEffectTag*>(nativeHandle);
+	if (!tag || type < 0 || type >= PostEffectType_Count) {
+		return false;
+	}
+
+	return tag->GetPostEffectEnable(static_cast<PostEffectType>(type));
+}
+
+void ONEngine::InternalSetScreenPostEffectEnabled(uint64_t nativeHandle, int32_t type, bool enabled) {
+	ScreenPostEffectTag* tag = reinterpret_cast<ScreenPostEffectTag*>(nativeHandle);
+	if (!tag || type < 0 || type >= PostEffectType_Count) {
+		return;
+	}
+
+	tag->SetPostEffectEnable(static_cast<PostEffectType>(type), enabled);
+}
+
 void ScreenPostEffectTag::SetFisheyeStrength(float strength) {
 	flags_.fisheyeStrength = strength;
 }

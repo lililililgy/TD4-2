@@ -1,5 +1,5 @@
 {
-    "active": false,
+    "active": true,
     "children": [
         {
             "active": true,
@@ -53,11 +53,25 @@
                     "state": "Static",
                     "type": "BoxCollider2D",
                     "useOwnerScale": true
+                },
+                {
+                    "enable": 1,
+                    "freezeX": false,
+                    "freezeY": false,
+                    "gravityScale": 1.0,
+                    "mass": 1.0,
+                    "restitution": 0.5,
+                    "type": "Rigidbody2D",
+                    "useGravity": false,
+                    "velocity": {
+                        "x": 0.0,
+                        "y": 0.0
+                    }
                 }
             ],
-            "guid": "fd699c02287ffb7593425d82e7c7add5",
+            "guid": "90d9adbd347df4438eaad55f0c4bcf15",
             "name": "JellyfishWeakPoint",
-            "parentGuid": "2a75a187cc14795397a4b907fc812b10",
+            "parentGuid": "6b9bf4c8f1d113060363484d62196b7a",
             "prefabName": "JellyfishWeakPoint"
         }
     ],
@@ -96,7 +110,12 @@
                 "damageInvincibilityDuration": 0.5,
                 "fixedAttackType": 0,
                 "idleDuration": 2.0,
+                "laserCameraShakeDuration": 0.3499999940395355,
+                "laserCameraShakeFrequency": 26.0,
+                "laserCameraShakeIntensity": 22.0,
+                "laserGrayscaleDuration": 0.3499999940395355,
                 "maxHp": 10,
+                "postEffectEntityName": "Background",
                 "randomizeAttackType": true,
                 "targetEntityName": "Player"
             },
@@ -210,21 +229,6 @@
             "type": "Script"
         },
         {
-            "categoryBits": 8,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 2,
-            "mass": 1.0,
-            "size": {
-                "x": 0.699999988079071,
-                "y": 0.7999999523162842
-            },
-            "state": "Static",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
-        },
-        {
             "enable": 1,
             "isPixelPerfect": false,
             "material": {
@@ -254,10 +258,39 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 2,
+            "mass": 1.0,
+            "size": {
+                "x": 0.699999988079071,
+                "y": 0.7999999523162842
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "2a75a187cc14795397a4b907fc812b10",
+    "guid": "6b9bf4c8f1d113060363484d62196b7a",
     "name": "KingJellyfish",
     "parentGuid": null,
-    "prefabName": ""
+    "prefabName": "KingJellyfish"
 }

@@ -31,7 +31,7 @@ namespace ONEngine::EngineConfig {
 	std::string testInputPath = "";
 	int testDuration = 180;
 	std::string testOutputPath = "./test_results.json";
-	bool waitDebug = true;
+	bool waitDebug = false;
 
 	void LoadConfig() {
 		std::string configPath = "./Assets/engine_config.json";

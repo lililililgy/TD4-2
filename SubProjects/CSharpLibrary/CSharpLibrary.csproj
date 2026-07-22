@@ -137,6 +137,7 @@
     <Compile Include="Scripts\Engine\ECS\Components\Compute\UILinkNavigationComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\DissolveMeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\MeshRenderer.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Renderer\ScreenPostEffectTag.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SkinMeshRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\SpriteRenderer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Renderer\TextRenderer.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Scripts\Game\Boss\KingJellyfish\KingJellyfishState.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokari.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariGiantClawAttackSettings.cs" />
+    <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariJumpDropAttackSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariShellBulletAttackSettings.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\KingYadokariState.cs" />
     <Compile Include="Scripts\Game\Boss\KingYadokari\YadokariClawState.cs" />
@@ -189,16 +191,22 @@
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
     <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
     <Compile Include="Scripts\Game\Common\Attractor.cs" />
+    <Compile Include="Scripts\Game\Common\ContinueState.cs" />
     <Compile Include="Scripts\Game\Common\Critical.cs" />
     <Compile Include="Scripts\Game\Common\DamagePoint.cs" />
     <Compile Include="Scripts\Game\Common\DamageRelay.cs" />
     <Compile Include="Scripts\Game\Common\GameEvents.cs" />
+    <Compile Include="Scripts\Game\Common\GameFlow.cs" />
     <Compile Include="Scripts\Game\Common\HP.cs" />
+    <Compile Include="Scripts\Game\Common\IGaugeSource.cs" />
+    <Compile Include="Scripts\Game\Common\InputUtil.cs" />
+    <Compile Include="Scripts\Game\Common\PhaseRequest.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
     <Compile Include="Scripts\Game\Common\ShowOnPhase.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnDestroy.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnPhaseBegan.cs" />
+    <Compile Include="Scripts\Game\Common\SpriteGauge.cs" />
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
     <Compile Include="Scripts\Game\Controller\AddSceneScript.cs" />
     <Compile Include="Scripts\Game\Controller\GameSceneController.cs" />
@@ -228,6 +236,7 @@
     <Compile Include="Scripts\Game\Objective\MoveObjective.cs" />
     <Compile Include="Scripts\Game\Objective\Objective.cs" />
     <Compile Include="Scripts\Game\Objective\ObjectiveSystem.cs" />
+    <Compile Include="Scripts\Game\Objective\PhaseSkipInput.cs" />
     <Compile Include="Scripts\Game\Objective\ShotObjective.cs" />
     <Compile Include="Scripts\Game\Objective\TutorialObjective.cs" />
     <Compile Include="Scripts\Game\Player\PlayerAttackComponent.cs" />
@@ -262,6 +271,7 @@
     <Compile Include="Scripts\Game\Test\OnDestroyTestScript.cs" />
     <Compile Include="Scripts\Game\Test\SerializeFieldVerificationScript.cs" />
     <Compile Include="Scripts\Game\UI\BaseUI.cs" />
+    <Compile Include="Scripts\Game\UI\Game\LastInputType.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearBackMainMenu.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearExitGame.cs" />
     <Compile Include="Scripts\Game\UI\GameClear\ClearRestart.cs" />

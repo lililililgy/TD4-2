@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class LevelingComponent : MonoScript
+public class LevelingComponent : MonoScript, IGaugeSource
 {
     [SerializeField] private int maxLevel_ = 0;
     [SerializeField] private float baseRequiredExp_ = 100f;
@@ -160,6 +160,12 @@ public class LevelingComponent : MonoScript
             return 0f;
         }
         return currentExp_ / requiredExp_;
+    }
+
+    // 経験値バー(SpriteGauge)が毎フレーム引く割合
+    public float GetGaugeRatio()
+    {
+        return GetExpProgress();
     }
 }
 

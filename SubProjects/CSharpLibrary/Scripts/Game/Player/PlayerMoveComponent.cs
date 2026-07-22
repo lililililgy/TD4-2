@@ -12,11 +12,13 @@ public class PlayerMoveComponent : MonoScript
 
     private Mover mover_;
     private MoveDirector director_;
+    private Rigidbody2D rigidbody_; // 速度の書き出し先。GetComponent は毎フレーム引かずここで持つ
 
     public override void Initialize()
     {
         mover_ = new Mover(paramReleaseSmoothTime_, paramReleaseMaxSmoothSpeed_);
         director_ = new MoveDirector();
+        rigidbody_ = entity.GetComponent<Rigidbody2D>();
     }
 
     public override void Update()
@@ -43,7 +45,12 @@ public class PlayerMoveComponent : MonoScript
             MessageBus.Publish(new PlayerMovingEvent());
         }
 
-        mover_.Move(transform, desiredDir, param);
+        if (rigidbody_ == null)
+        {
+            rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        }
+
+        mover_.Move(transform, rigidbody_, desiredDir, param);
     }
 
     public Mover MoverData

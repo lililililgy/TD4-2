@@ -5,6 +5,7 @@ public class TriggerColorChanger : MonoScript
 {
 
 	[SerializeField] private Vector4 color = Vector4.one;
+	[SerializeField] private List<Gamepad> pads = new List<Gamepad>();
 	Vector4 defaultColor = Vector4.one;
 
 	public override void Initialize()
@@ -14,6 +15,9 @@ public class TriggerColorChanger : MonoScript
 		{
 			defaultColor = renderer.color;
 		}
+
+		pads.Add(Gamepad.LeftShoulder);
+		pads.Add(Gamepad.RightShoulder);
 	}
 
 	public override void Update()
@@ -34,6 +38,25 @@ public class TriggerColorChanger : MonoScript
 
 	bool CheckInput()
 	{
+		if (Input.GamepadLeftTrigger() >= 0.2f)
+		{
+			return true;
+		}
+
+		if (Input.GamepadRightTrigger() >= 0.2f)
+		{
+			return true;
+		}
+
+
+		foreach (Gamepad pad in pads)
+		{
+			if (Input.PressGamepad(pad))
+			{
+				return true;
+			}
+		}
+
 		return false;
 	}
 }

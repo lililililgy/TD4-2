@@ -190,4 +190,7 @@ namespace ComponentDebug {
 void from_json(const nlohmann::json& j, ScreenPostEffectTag& c);
 void to_json(nlohmann::json& j, const ScreenPostEffectTag& c);
 
+bool InternalGetScreenPostEffectEnabled(uint64_t nativeHandle, int32_t type);
+void InternalSetScreenPostEffectEnabled(uint64_t nativeHandle, int32_t type, bool enabled);
+
 } /// ONEngine

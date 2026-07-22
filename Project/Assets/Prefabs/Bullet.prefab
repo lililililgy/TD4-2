@@ -16,16 +16,16 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 64.0,
-                "y": 64.0,
-                "z": 64.0
+                "x": 128.0,
+                "y": 128.0,
+                "z": 128.0
             },
             "type": "Transform"
         },
         {
             "Bullet": {
-                "lifeTime_": 5.0,
-                "speed_": 364.0
+                "lifeTime_": 20.0,
+                "speed_": 256.0
             },
             "type": "Variables"
         },
@@ -41,6 +41,7 @@
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -49,6 +50,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "5844975bd9e9e3bc2938f4137b3d4dcf",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -64,11 +68,10 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "741efcde7a59318b001308b96161f1e8",
+    "guid": "2b03edc01bfe3173f21cf1a2a0e7afa4",
     "name": "Bullet",
     "parentGuid": null,
     "prefabName": ""
