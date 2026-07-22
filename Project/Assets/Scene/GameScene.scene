@@ -160,6 +160,11 @@
             "guid": "a6f2af6b6cf5e8f170d7a108d0ff9199",
             "parentGuid": null,
             "path": "./GameScene/a6f2af6b6cf5e8f170d7a108d0ff9199.entity"
+        },
+        {
+            "guid": "9de9fa9927647387bdf58b1e767d6780",
+            "parentGuid": null,
+            "path": "./GameScene/9de9fa9927647387bdf58b1e767d6780.entity"
         }
     ],
     "hasClearColor": true

@@ -7,7 +7,7 @@ public class PlayerHPUI : MonoScript
 	Entity playerEntity = null;
 
 	int prevLives = 0;
-	int currentLives = 0;
+	int currentLives = 5;
 	[SerializeField] int maxLives = 12;
 
 	[SerializeField] int testValue = 20;
@@ -31,6 +31,7 @@ public class PlayerHPUI : MonoScript
 			if (hp)
 			{
 				maxLives = (int)hp.MaxHp;
+				currentLives = (int)hp.CurrentHp;
 			}
 		}
 
@@ -49,16 +50,35 @@ public class PlayerHPUI : MonoScript
 	/// </summary>
 	void InitialHPUI()
 	{
-		for (int x = 0; x < 6; x++)
+		for (int y = 0; y < 2; y++)
 		{
-			for (int y = 0; y < 2; y++)
+			for (int x = 0; x < 6; x++)
 			{
-				int index = x * 2 + y;
+				int index = y * 6 + x;
 				Entity child = entity.GetChild((uint)index);
 				if (child)
 				{
 					child.enable = true;
 					child.transform.position = new Vector3(x * 1.5f, -y * 1.5f, 0);
+					child.transform.scale = Vector3.one * 1.5f;
+
+					SpriteAnimation spriteAnimation = child.GetScript<SpriteAnimation>();
+					if (spriteAnimation)
+					{
+
+						/// 幼生として発射できるなら。
+						spriteAnimation.startFrame = 0;
+						spriteAnimation.endFrame = 2;
+
+						/// 発射は出来ないがHPとして換算できるなら。
+
+						/// 現在のHPを超えているなら、ひび割れ状態で表示する
+						if (index > currentLives - 1)
+						{
+							spriteAnimation.startFrame = 4;
+							spriteAnimation.endFrame = 4;
+						}
+					}
 				}
 			}
 		}

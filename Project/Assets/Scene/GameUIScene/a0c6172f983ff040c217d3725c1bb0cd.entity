@@ -5,29 +5,40 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 4.441429138183594,
-                "y": -1.3783740997314453,
-                "z": 0.0
+                "x": 0.0,
+                "y": 0.0,
+                "z": -6.900001049041748
             },
             "rotate": {
-                "w": 1.0,
+                "w": 0.0,
                 "x": 0.0,
-                "y": -0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
+                "x": 1.6229995489120483,
+                "y": 1.623000144958496,
+                "z": 1.623000144958496
             },
             "type": "Transform"
         },
         {
+            "SpriteAnimation": {
+                "cols": 5,
+                "endFrame": 0,
+                "fps": 3.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 5
+            },
             "type": "Variables"
         },
         {
             "enable": 1,
-            "isPixelPerfect": false,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -35,7 +46,7 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "00000000000000000000000000000000",
+                "baseTextureGuid": "d585534207663caba8b5eae5acb2c837",
                 "bloomIntensity": 1.0,
                 "bloomRadius": 12.0,
                 "bloomThreshold": 0.800000011920929,
@@ -49,16 +60,26 @@
                     },
                     "rotate": 0.0,
                     "scale": {
-                        "x": 1.0,
+                        "x": 0.20000000298023224,
                         "y": 1.0
                     }
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
         }
     ],
-    "guid": "90a3b4422df03ad1b4879e87c8d50fd6",
-    "name": "HPIcon_10",
+    "guid": "a0c6172f983ff040c217d3725c1bb0cd",
+    "name": "HPIcon_4",
     "parentGuid": "1e616a6daa9403752d43096ef518396a",
     "prefabName": ""
 }

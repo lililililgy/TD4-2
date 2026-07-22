@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.09999999403953552,
+        0.2290322184562683,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "5bc1a40a4cd20b1edc841d10f2c728d2",
@@ -134,6 +140,12 @@
             "guid": "e28104091a9aea0c13ac24aefb39845a",
             "parentGuid": "e305b04c152ed85000a47d7ef4df1a4e",
             "path": "./GameOverScene/e28104091a9aea0c13ac24aefb39845a.entity"
+        },
+        {
+            "guid": "e1e2597dcebe3424ad4efdf939cdf0c7",
+            "parentGuid": null,
+            "path": "./GameOverScene/e1e2597dcebe3424ad4efdf939cdf0c7.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }

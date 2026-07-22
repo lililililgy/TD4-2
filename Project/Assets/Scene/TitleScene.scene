@@ -150,6 +150,11 @@
             "guid": "7a1c3e3dbe69f664fd42f4dadecdf70a",
             "parentGuid": "5bd2f89d57005ed93ba262ec089b5c0d",
             "path": "./TitleScene/7a1c3e3dbe69f664fd42f4dadecdf70a.entity"
+        },
+        {
+            "guid": "705d71861fb49cc831474eeeefa71198",
+            "parentGuid": null,
+            "path": "./TitleScene/705d71861fb49cc831474eeeefa71198.entity"
         }
     ],
     "hasClearColor": true
