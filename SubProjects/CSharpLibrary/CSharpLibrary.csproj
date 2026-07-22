@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugType>portable</DebugType>
+    <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Project\Packages\Scripts\</OutputPath>
@@ -205,14 +205,17 @@
     <Compile Include="Scripts\Game\Common\Critical.cs" />
     <Compile Include="Scripts\Game\Common\DamagePoint.cs" />
     <Compile Include="Scripts\Game\Common\DamageRelay.cs" />
+    <Compile Include="Scripts\Game\Common\DamageShake.cs" />
     <Compile Include="Scripts\Game\Common\GameEvents.cs" />
     <Compile Include="Scripts\Game\Common\GameFlow.cs" />
     <Compile Include="Scripts\Game\Common\HP.cs" />
     <Compile Include="Scripts\Game\Common\IGaugeSource.cs" />
     <Compile Include="Scripts\Game\Common\InputUtil.cs" />
+    <Compile Include="Scripts\Game\Common\ParticleOffset.cs" />
     <Compile Include="Scripts\Game\Common\PhaseRequest.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
+    <Compile Include="Scripts\Game\Common\ShakeOnDamaged.cs" />
     <Compile Include="Scripts\Game\Common\ShakeOnHit.cs" />
     <Compile Include="Scripts\Game\Common\ShowOnPhase.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnDestroy.cs" />
@@ -239,6 +242,7 @@
     <Compile Include="Scripts\Game\Movement\MoveDirector.cs" />
     <Compile Include="Scripts\Game\Movement\MoveParam.cs" />
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
+    <Compile Include="Scripts\Game\Movement\RigidbodyMotion.cs" />
     <Compile Include="Scripts\Game\Movement\TrailFollower.cs" />
     <Compile Include="Scripts\Game\Movement\TrailLeader.cs" />
     <Compile Include="Scripts\Game\Objective\CountObjective.cs" />
@@ -277,6 +281,7 @@
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFish.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishAroundNeedle.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishNeedle.cs" />
+    <Compile Include="Scripts\Game\SmallFryEnemys\TatunoMousigo\TatunoMousigo.cs" />
     <Compile Include="Scripts\Game\Stage\MovementArea.cs" />
     <Compile Include="Scripts\Game\Stage\MovementAreaClamper.cs" />
     <Compile Include="Scripts\Game\Test\InheritSerializeFieldTestScript.cs" />

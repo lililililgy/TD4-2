@@ -35,6 +35,16 @@
             "useOwnerScale": true
         },
         {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
+            "DespawnTimer": {
+                "despawnTime_": 12.0
+            },
+            "ExpDropper": {
+                "dropExp": 26.0
+            },
             "HP": {
                 "currentHp_": 20.0,
                 "directlyDamageable_": true,
@@ -116,6 +126,18 @@
                 {
                     "enable": true,
                     "name": "ParticleOffset"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "ExpDropper"
+                },
+                {
+                    "enable": true,
+                    "name": "DespawnTimer"
                 }
             ],
             "type": "Script"
@@ -150,6 +172,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
     "guid": "353a89b82aa34b4bbdbaebd61ee7722e",

@@ -32,6 +32,21 @@
                     {
                         "__type": "SpawnEntry",
                         "enemyType": "MorayEelPot",
+                        "weight": 1.0
+                    },
+                    {
+                        "__type": "SpawnEntry",
+                        "enemyType": "TatunoMousigo",
+                        "weight": 1.0
+                    },
+                    {
+                        "__type": "SpawnEntry",
+                        "enemyType": "FlapjackOctopus",
+                        "weight": 4.0
+                    },
+                    {
+                        "__type": "SpawnEntry",
+                        "enemyType": "SeaCow",
                         "weight": 3.0
                     }
                 ]
