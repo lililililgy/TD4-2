@@ -95,6 +95,7 @@
                 "rateOverTime": 0.0
             },
             "enable": 1,
+            "inheritEmitterRotation": false,
             "main": {
                 "duration": 0.5,
                 "gravityModifier": 0.0,

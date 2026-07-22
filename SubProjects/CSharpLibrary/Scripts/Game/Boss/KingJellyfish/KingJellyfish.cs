@@ -56,6 +56,8 @@ public class KingJellyfish : MonoScript {
     private Entity laserEffect01Entity_;
     private Entity laserEffect02Entity_;
     private Entity laserEffect03Entity_;
+    private Entity chargeAttackEffect01Entity_;
+    private float chargeAttackEffectEmitElapsed_;
     private float grayscaleRemaining_;
     private bool grayscaleActive_;
     private bool grayscaleWasEnabled_;
@@ -290,6 +292,8 @@ public class KingJellyfish : MonoScript {
         movementDepth_ = transform.position.z;
         RotateTowardPosition(chargeTargetPosition_);
         SetWeakPointCollisionEnabled(false);
+        chargeAttackEffectEmitElapsed_ = 0.0f;
+        EmitChargeAttackParticle();
         return true;
     }
 
@@ -322,6 +326,7 @@ public class KingJellyfish : MonoScript {
             SetPlanePosition(chargeTargetPosition_);
             SetMovementVelocity(chargeRecoveryVelocity_);
             DeployChargeDamageField();
+            UpdateChargeAttackParticle();
             return true;
         }
 
@@ -333,6 +338,7 @@ public class KingJellyfish : MonoScript {
             SetMovementVelocity(chargeRecoveryVelocity_);
             RotateTowardPosition(chargeTargetPosition_);
             DeployChargeDamageField();
+            UpdateChargeAttackParticle();
             return true;
         }
 
@@ -342,6 +348,7 @@ public class KingJellyfish : MonoScript {
 
         // 移動中もターゲットの位置に向かって回転する
         RotateTowardPosition(chargeTargetPosition_);
+        UpdateChargeAttackParticle();
         return false;
     }
 
@@ -359,6 +366,7 @@ public class KingJellyfish : MonoScript {
 
         // 回復中もターゲットの位置に向かって回転する
         RotateTowardPosition(chargeTargetPosition_);
+        UpdateChargeAttackParticle();
     }
 
     internal void EndChargeAttackMovement() {
@@ -765,7 +773,8 @@ public class KingJellyfish : MonoScript {
 
 		// 8方向レーザー攻撃の演出対象を解決する
 		ResolveLaserPresentationTargets();
-		EmitLaserParticles();
+        // パーティクルを発生させる
+        EmitLaserParticles();
 
         // カメラの揺れを開始する
         if (followCamera_ != null) {
@@ -841,21 +850,44 @@ public class KingJellyfish : MonoScript {
     }
 
     private void EmitLaserParticles() {
-        EmitLaserParticle(
+        EmitParticleAtOwner(
             ref laserEffect01Entity_,
             laserEffect01EntityName,
             laserEffect01EmitCount);
-        EmitLaserParticle(
+        EmitParticleAtOwner(
             ref laserEffect02Entity_,
             laserEffect02EntityName,
             laserEffect02EmitCount);
-        EmitLaserParticle(
+        EmitParticleAtOwner(
             ref laserEffect03Entity_,
             laserEffect03EntityName,
             laserEffect03EmitCount);
     }
 
-    private void EmitLaserParticle(ref Entity effectEntity, string entityName, int emitCount) {
+    private void EmitChargeAttackParticle() {
+        EmitParticleAtOwner(
+            ref chargeAttackEffect01Entity_,
+            chargeSettings_.effect01EntityName,
+            chargeSettings_.effect01EmitCount);
+    }
+
+    private void UpdateChargeAttackParticle() {
+        float interval = chargeSettings_.effect01EmitInterval;
+        if (interval <= 0.0f) {
+            EmitChargeAttackParticle();
+            return;
+        }
+
+        chargeAttackEffectEmitElapsed_ += Time.deltaTime;
+        if (chargeAttackEffectEmitElapsed_ < interval) {
+            return;
+        }
+
+        chargeAttackEffectEmitElapsed_ %= interval;
+        EmitChargeAttackParticle();
+    }
+
+    private void EmitParticleAtOwner(ref Entity effectEntity, string entityName, int emitCount) {
         if (emitCount <= 0 || String.IsNullOrEmpty(entityName)) {
             return;
         }
@@ -869,7 +901,10 @@ public class KingJellyfish : MonoScript {
 
         effectEntity.enable = true;
         if (effectEntity.transform != null) {
+
+            // エフェクトの位置と回転をボスの位置に合わせる
             effectEntity.transform.position = transform.position;
+            effectEntity.transform.rotation = transform.rotation;
         }
 
         ParticleSystem2D particleSystem = effectEntity.GetComponent<ParticleSystem2D>();

@@ -27,6 +27,7 @@ using namespace ONEngine;
 
 /// std
 #include <chrono>
+#include <cmath>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -484,6 +485,53 @@ void GameFramework::Update() {
 				}
 			}
 		}
+
+		if (EngineConfig::testScene == "ParticleEmitterRotationTest") {
+			auto* ecsGroup = entityComponentSystem_->GetECSGroup("ParticleEmitterRotationTest");
+			ONEngine::Assert(ecsGroup != nullptr, "ecsGroup 'ParticleEmitterRotationTest' should not be null");
+			if (ecsGroup && (testFrameCount == 20 || testFrameCount == 22)) {
+				auto* psArray = ecsGroup->GetComponentArray<ParticleSystem2D>();
+				ONEngine::Assert(psArray != nullptr, "ParticleSystem2D array should exist");
+				if (psArray && !psArray->GetUsedComponents().empty()) {
+					auto* ps = psArray->GetUsedComponents().front();
+					ONEngine::Assert(ps != nullptr, "ParticleSystem2D component should exist");
+					if (ps) {
+						ONEngine::Assert(ps->inheritEmitterRotation, "ParticleSystem2D should inherit emitter rotation");
+						ONEngine::Assert(ps->aliveCount > 0, "Particles should be emitted before checking rotation");
+
+						auto* owner = ps->GetOwner();
+						ONEngine::Assert(owner != nullptr, "ParticleSystem2D owner should exist");
+						if (owner) {
+							const Matrix4x4& worldMat = owner->GetTransform()->matWorld;
+							const float expectedRotation = std::atan2(worldMat.m[0][1], worldMat.m[0][0]);
+							for (size_t i = 0; i < ps->aliveCount; ++i) {
+								const float angleDelta = std::remainder(
+									ps->particles[i].rotation - expectedRotation,
+									6.28318530717958647692f);
+								const std::string rotationError =
+									"Particle rotation should match emitter Z rotation. frame="
+									+ std::to_string(testFrameCount)
+									+ ", particle=" + std::to_string(ps->particles[i].rotation)
+									+ ", expected=" + std::to_string(expectedRotation)
+									+ ", delta=" + std::to_string(angleDelta);
+								ONEngine::Assert(
+									std::abs(angleDelta) < 0.001f,
+									rotationError.c_str());
+							}
+
+							if (testFrameCount == 20) {
+								Quaternion halfTurn = Quaternion::kIdentity;
+								halfTurn.z = 1.0f;
+								halfTurn.w = 0.0f;
+								owner->GetTransform()->SetRotate(halfTurn);
+								owner->UpdateTransform();
+							}
+						}
+					}
+				}
+			}
+		}
+
 		if (testFrameCount >= EngineConfig::testDuration) {
 			nlohmann::json results;
 			results["success"] = true;

@@ -58,6 +58,7 @@ namespace ONEngine {
         ParticleSystemRotationOverLifetime rotationOverLifetime;
         ParticleSystemRenderer renderer;
         ParticleSystemTextureSheetAnimation textureSheetAnimation;
+        bool inheritEmitterRotation = false;
 
         // --- CPU Simulation State ---
         std::vector<Particle2D> particles;

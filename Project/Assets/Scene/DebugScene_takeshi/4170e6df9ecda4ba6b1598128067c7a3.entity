@@ -10,8 +10,8 @@
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.0,
-                "x": 0.0,
+                "w": 0.9996573328971863,
+                "x": 0.026176949962973595,
                 "y": 0.0,
                 "z": 0.0
             },
@@ -76,12 +76,13 @@
                 "rateOverTime": 10.0
             },
             "enable": 1,
+            "inheritEmitterRotation": true,
             "main": {
                 "duration": 0.30000001192092896,
                 "gravityModifier": 0.0,
                 "looping": true,
                 "maxParticles": 1000,
-                "playOnAwake": true,
+                "playOnAwake": false,
                 "prewarm": false,
                 "simulationSpace": 1,
                 "startColor": {

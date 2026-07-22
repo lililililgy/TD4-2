@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 435.0592956542969,
-                "y": 831.8331298828125,
-                "z": 1.403064489364624
+                "x": 566.7591552734375,
+                "y": 837.9511108398438,
+                "z": 1.0
             },
             "type": "Transform"
         },
@@ -28,20 +28,20 @@
                 "destroyOnHit_": false
             },
             "JellyfishChargeDamageField": {
-                "damage": 20.0,
-                "duration": 0.6000000238418579,
-                "width": 180.0
+                "damage": 1.0,
+                "duration": 3.0,
+                "width": 300.0
             },
             "SpriteAnimation": {
-                "cols": 8,
-                "endFrame": 1,
-                "fps": 7.0,
+                "cols": 0,
+                "endFrame": 2,
+                "fps": 3.0,
                 "invertY": false,
                 "isLoop": true,
                 "isPlay": true,
-                "rows": 0,
+                "rows": 3,
                 "startFrame": 0,
-                "totalFrames": 1
+                "totalFrames": 3
             },
             "type": "Variables"
         },
@@ -55,24 +55,13 @@
                 {
                     "enable": true,
                     "name": "JellyfishChargeDamageField"
+                },
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
                 }
             ],
             "type": "Script"
-        },
-        {
-            "categoryBits": 8,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": true,
-            "maskBits": 4294967042,
-            "mass": 1.0,
-            "size": {
-                "x": 1.0,
-                "y": 1.0
-            },
-            "state": "Static",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
         },
         {
             "enable": 1,
@@ -104,9 +93,38 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 4294967042,
+            "mass": 1.0,
+            "size": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.0,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "3fc76bc55195c9458002449fbd62c40f",
+    "guid": "cc71383776918d3342179477adf8eba1",
     "name": "JellyfishChargeDamageField",
     "parentGuid": null,
     "prefabName": "JellyfishChargeDamageField"

@@ -71,6 +71,14 @@ namespace ONEngine {
         return a + (b - a) * t;
     }
 
+    static float ExtractRotationZ(const Matrix4x4& matrix) {
+        return std::atan2(matrix.m[0][1], matrix.m[0][0]);
+    }
+
+    static float ShortestAngleDelta(float current, float previous) {
+        return std::remainder(current - previous, std::numbers::pi_v<float> * 2.0f);
+    }
+
     // 2D shape evaluation (generates position & direction on the XY plane)
     static void EvaluateShape2D(const ParticleSystemShape& shape, Vector3& outPos, Vector3& outDir) {
         if (!shape.enabled) {
@@ -175,6 +183,10 @@ namespace ONEngine {
         particle.startSize = GetMinMaxFloat(ps->main.startSize);
         particle.size = particle.startSize;
         particle.rotation = GetMinMaxFloat(ps->main.startRotation);
+        if (ps->inheritEmitterRotation
+            && ps->renderer.alignment != ParticleSystemRenderer::RenderAlignment::Velocity) {
+            particle.rotation += ExtractRotationZ(emitMat);
+        }
         particle.randomValue = Random::Float(0.0f, 1.0f);
     }
 
@@ -275,6 +287,20 @@ namespace ONEngine {
 
         if (ps->burstCycleCounts.size() != ps->emission.bursts.size()) {
             ps->burstCycleCounts.resize(ps->emission.bursts.size(), 0);
+        }
+
+        if (ps->inheritEmitterRotation
+            && ps->renderer.alignment != ParticleSystemRenderer::RenderAlignment::Velocity
+            && ps->hasPreviousWorldMat) {
+            float currentRotation = ExtractRotationZ(transform->matWorld);
+            float previousRotation = ExtractRotationZ(ps->previousWorldMat);
+            float rotationDelta = ShortestAngleDelta(currentRotation, previousRotation);
+
+            if (std::abs(rotationDelta) > 0.000001f) {
+                for (size_t i = 0; i < ps->aliveCount; ++i) {
+                    ps->particles[i].rotation += rotationDelta;
+                }
+            }
         }
 
         EmitParticles2D(ps, transform, ps->ConsumePendingEmitCount(), false);

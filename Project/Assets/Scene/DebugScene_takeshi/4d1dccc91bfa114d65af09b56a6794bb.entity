@@ -112,6 +112,7 @@
                 "rateOverTime": 6.710000038146973
             },
             "enable": 1,
+            "inheritEmitterRotation": false,
             "main": {
                 "duration": 0.5,
                 "gravityModifier": 0.0,

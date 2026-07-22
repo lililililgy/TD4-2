@@ -2,6 +2,7 @@
     "active": false,
     "components": [
         {
+            "inheritEmitterRotation": false,
             "renderer": {
                 "alignment": 0
             },
