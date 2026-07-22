@@ -32,18 +32,18 @@ public class PlayerFollowCamera : MonoScript {
     }
 
     public override void Update() {
-        Vector3 followedPosition = transform.position - shakeOffset_;
         if (target_ != null) {
             Transform targetTransform = target_.GetComponent<Transform>();
             if (targetTransform != null) {
                 Vector3 desired = targetTransform.position + offset_;
-                followedPosition = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
-                    followedPosition, desired, ref smoothVel_, smoothTime_, Time.deltaTime, maxSmoothSpeed_);
+                basePosition_ = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
+                    basePosition_, desired, ref smoothVel_, smoothTime_, Time.deltaTime, maxSmoothSpeed_);
             }
         }
 
         UpdateShake();
-        transform.position = followedPosition + shakeOffset_;
+        Vector3 externalShake = shake_ != null ? shake_.Offset : Vector3.zero;
+        transform.position = basePosition_ + shakeOffset_ + externalShake;
     }
 
     public void Shake(float duration, float intensity, float frequency) {
@@ -75,12 +75,5 @@ public class PlayerFollowCamera : MonoScript {
             Mathf.Sin(shakePhase_) * amplitude,
             Mathf.Sin(shakePhase_ * 1.37f + 1.0f) * amplitude,
             0.0f);
-        // 対象の位置 ＋ オフセットへ滑らかに追従
-        Vector3 desired = targetTransform.position + offset_;
-        basePosition_ = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
-            basePosition_, desired, ref smoothVel_, smoothTime_, Time.deltaTime, maxSmoothSpeed_);
-
-        // 追従位置にシェイクのオフセットを上乗せして最終的な位置にする
-        transform.position = shake_ != null ? basePosition_ + shake_.Offset : basePosition_;
     }
 }
