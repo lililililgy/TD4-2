@@ -7,6 +7,14 @@
                 "z": -0.5571848750114441
             },
             "type": "Transform"
+        },
+        {
+            "material": {
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "ed0ce65e3b321cfd0f3b5f891116c113",

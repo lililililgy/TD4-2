@@ -4,16 +4,15 @@
         {
             "ParticleOffset": {
                 "offset": {
-                    "x": 106.0,
-                    "y": 24.0,
-                    "z": 0.0
+                    "x": -138.0,
+                    "y": -300.0
                 }
             },
             "type": "Variables"
         }
     ],
-    "guid": "2682034cd47ab1f5aed51870ad143c34",
-    "name": "MorayEel",
+    "guid": "353a89b82aa34b4bbdbaebd61ee7722e",
+    "name": "TatunoMousigo",
     "parentGuid": null,
-    "prefabName": "MorayEel"
+    "prefabName": "TatunoMousigo"
 }

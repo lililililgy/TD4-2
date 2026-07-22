@@ -58,6 +58,12 @@
                 "minAddScale_": 0.0,
                 "smoothing_": 0.9980000257492065
             },
+            "CameraShake": {
+                "offsetMaxSmoothSpeed": 100000.0,
+                "offsetSmoothTime": 0.029999999329447746,
+                "shakeCycles": 2,
+                "shakeDuration": 0.25
+            },
             "PlayerFollowCamera": {
                 "maxSmoothSpeed_": 72.0,
                 "offset_": {
@@ -73,6 +79,10 @@
         {
             "enable": 1,
             "scripts": [
+                {
+                    "enable": true,
+                    "name": "CameraShake"
+                },
                 {
                     "enable": true,
                     "name": "PlayerFollowCamera"

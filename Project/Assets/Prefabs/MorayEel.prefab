@@ -78,8 +78,12 @@
                 "spawnSpinCount": 3.0,
                 "startChaseDistance": 0.0
             },
-            "ZoomWeight": {
-                "weight_": 0.00800000037997961
+            "ParticleOffset": {
+                "offset": {
+                    "x": 106.0,
+                    "y": 24.0,
+                    "z": 0.0
+                }
             },
             "SmallFryChaseMove": {},
             "SpriteAnimation": {
@@ -147,7 +151,7 @@
                 },
                 {
                     "enable": true,
-                    "name": "ZoomWeight"
+                    "name": "ParticleOffset"
                 }
             ],
             "type": "Script"
@@ -184,7 +188,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "a02b80c98dd59bfa5d6814f211bd4dc1",
+    "guid": "2682034cd47ab1f5aed51870ad143c34",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

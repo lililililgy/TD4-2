@@ -5,20 +5,20 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -2032.0811767578125,
-                "y": -819.39013671875,
-                "z": 1.4156103134155273e-06
+                "x": -1500.0,
+                "y": -819.3900146484375,
+                "z": 0.0
             },
             "rotate": {
-                "w": 1.401298464324817e-45,
-                "x": -0.9018186926841736,
-                "y": -0.43211472034454346,
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "scale": {
-                "x": 128.14437866210938,
-                "y": 128.14437866210938,
-                "z": 128.14437866210938
+                "x": 598.400146484375,
+                "y": 598.400390625,
+                "z": 598.400390625
             },
             "type": "Transform"
         },
@@ -29,43 +29,35 @@
             "isTrigger": false,
             "maskBits": 7,
             "mass": 1.0,
-            "radius": 0.5,
+            "radius": 0.4000000059604645,
             "state": "Dynamic",
             "type": "CircleCollider",
             "useOwnerScale": true
         },
         {
-            "FlapjackOctopus": {
-                "chargeScaleAnimationTime": 0.5,
-                "chargeScaleRate": 0.800000011920929,
-                "chargeTime": 0.30000001192092896,
-                "chaseDrag": 1.5,
-                "chaseInterval": 0.4000000059604645,
-                "chasePower": 821.0,
-                "chaseScaleAnimationCount": 5,
-                "chaseScaleAnimationTime": 0.5,
-                "chaseScaleRate": 1.100000023841858,
-                "chaseTime": 0.5,
-                "enable": true,
-                "inertiaStopRatio": 0.10000000149011612,
-                "targetEntityName": "Player"
-            },
             "HP": {
-                "currentHp_": 11.214211463928223,
+                "currentHp_": 20.0,
                 "directlyDamageable_": true,
                 "disableAutoDestruction_": false,
                 "enable": true,
                 "isInvincible_": false,
                 "maxHp_": 20.0
             },
+            "ParticleOffset": {
+                "offset": {
+                    "x": -138.0,
+                    "y": -300.0,
+                    "z": 0.0
+                }
+            },
             "SpriteAnimation": {
                 "cols": 4,
                 "enable": true,
-                "endFrame": 1,
-                "fps": 6.0,
+                "endFrame": 2,
+                "fps": 8.0,
                 "invertY": false,
                 "isLoop": true,
-                "isPlay": true,
+                "isPlay": false,
                 "rows": 1,
                 "startFrame": 0,
                 "totalFrames": 0
@@ -78,8 +70,27 @@
                     "__type": "Action"
                 },
                 "enable": true,
-                "range": 800.0,
+                "range": 900.0,
                 "targetEntityName": "Player"
+            },
+            "TatunoMousigo": {
+                "baseYOffset": -476.0,
+                "cameraEntityName": "MainCamera",
+                "enable": true,
+                "jumpCooldown": 1.5,
+                "jumpDuration": 1.2999999523162842,
+                "jumpHeight": 296.0,
+                "jumpTriggerDistance": 170.0,
+                "jumpTriggerHeight": 24.0,
+                "landShakeIntensity": 413.0,
+                "moveShakeIntensity": 141.0,
+                "moveSpeed": 220.0,
+                "stepDistance": 124.0,
+                "stepFrame": 2,
+                "targetEntityName": "Player",
+                "turnDelay": 2.5,
+                "walkEndFrame": 2,
+                "walkStartFrame": 0
             },
             "type": "Variables"
         },
@@ -96,7 +107,7 @@
                 },
                 {
                     "enable": true,
-                    "name": "FlapjackOctopus"
+                    "name": "TatunoMousigo"
                 },
                 {
                     "enable": true,
@@ -119,13 +130,16 @@
                     "y": 1.0,
                     "z": 1.0
                 },
-                "baseTextureGuid": "bc43ebeecc01bf4f11a8b9876f74a526",
+                "baseTextureGuid": "7c8efc505fc1fac0441c7f7215f3a0d3",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
                 "uvTransform": {
                     "position": {
-                        "x": 0.25,
+                        "x": 0.0,
                         "y": 0.0
                     },
                     "rotate": 0.0,
@@ -138,8 +152,8 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "283f24dc7a6b47e29a6b5efa56a182c8",
-    "name": "FlapjackOctopus",
+    "guid": "353a89b82aa34b4bbdbaebd61ee7722e",
+    "name": "TatunoMousigo",
     "parentGuid": null,
-    "prefabName": "FlapjackOctopus"
+    "prefabName": "TatunoMousigo"
 }

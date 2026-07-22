@@ -34,6 +34,11 @@
             "guid": "283f24dc7a6b47e29a6b5efa56a182c8",
             "parentGuid": null,
             "path": "./Keita_ZakoTest/283f24dc7a6b47e29a6b5efa56a182c8.entity"
+        },
+        {
+            "guid": "353a89b82aa34b4bbdbaebd61ee7722e",
+            "parentGuid": null,
+            "path": "./Keita_ZakoTest/353a89b82aa34b4bbdbaebd61ee7722e.entity"
         }
     ]
 }
