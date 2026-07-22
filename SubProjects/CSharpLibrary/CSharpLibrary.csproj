@@ -196,6 +196,7 @@
     <Compile Include="Scripts\Game\Camera\DashZoomSource.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
     <Compile Include="Scripts\Game\Camera\ScreenBounds.cs" />
+    <Compile Include="Scripts\Game\Camera\ShakeSource.cs" />
     <Compile Include="Scripts\Game\Camera\ZoomEase.cs" />
     <Compile Include="Scripts\Game\Camera\ZoomWeight.cs" />
     <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
@@ -209,10 +210,10 @@
     <Compile Include="Scripts\Game\Common\HP.cs" />
     <Compile Include="Scripts\Game\Common\IGaugeSource.cs" />
     <Compile Include="Scripts\Game\Common\InputUtil.cs" />
-    <Compile Include="Scripts\Game\Common\ParticleOffset.cs" />
     <Compile Include="Scripts\Game\Common\PhaseRequest.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
+    <Compile Include="Scripts\Game\Common\ShakeOnHit.cs" />
     <Compile Include="Scripts\Game\Common\ShowOnPhase.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnDestroy.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnPhaseBegan.cs" />
@@ -276,7 +277,6 @@
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFish.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishAroundNeedle.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\SpikeFish\SpikeFishNeedle.cs" />
-    <Compile Include="Scripts\Game\SmallFryEnemys\TatunoMousigo\TatunoMousigo.cs" />
     <Compile Include="Scripts\Game\Stage\MovementArea.cs" />
     <Compile Include="Scripts\Game\Stage\MovementAreaClamper.cs" />
     <Compile Include="Scripts\Game\Test\InheritSerializeFieldTestScript.cs" />
@@ -306,6 +306,7 @@
     <Compile Include="Scripts\Game\UI\Title\ExitGame.cs" />
     <Compile Include="Scripts\Game\UI\Title\GameStart.cs" />
     <Compile Include="Scripts\Game\UI\Title\OpenOption.cs" />
+    <Compile Include="Scripts\Math\FbmNoise.cs" />
     <Compile Include="Scripts\Math\SmoothDamp.cs" />
     <Compile Include="Scripts\Test.cs" />
     <Compile Include="Scripts\Test\AddSceneTest.cs" />

@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 250.3000030517578,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
@@ -35,6 +35,10 @@
             "useOwnerScale": true
         },
         {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
             "ChaseAnimation": {
                 "chasePulseDuration": 0.5,
                 "chasePulseScale": 1.100000023841858,
@@ -152,6 +156,10 @@
                 {
                     "enable": true,
                     "name": "ParticleOffset"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
                 }
             ],
             "type": "Script"
@@ -188,7 +196,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "2682034cd47ab1f5aed51870ad143c34",
+    "guid": "0ac426703f0bbf9e18ef59efe998b9ec",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"
