@@ -261,6 +261,7 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 								hasAttr = true;
 							}
 							mono_custom_attrs_free(attrs);
+							attrs = nullptr;
 						}
 
 						if(hasAttr) {
@@ -281,7 +282,6 @@ void ComponentDebug::ScriptDebug(Script* _script) {
 								ShowFieldForVariables(var, script.scriptName, type, field, fieldName);
 							}
 						}
-						if(attrs) mono_custom_attrs_free(attrs);
 					}
 					currentClass = mono_class_get_parent(currentClass);
 				}

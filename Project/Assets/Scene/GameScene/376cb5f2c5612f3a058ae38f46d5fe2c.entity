@@ -1,0 +1,85 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -85782.6328125,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 130000.0,
+                "y": 65000.0,
+                "z": 130000.0
+            },
+            "type": "Transform"
+        },
+        {
+            "SpriteAnimation": {
+                "cols": 3,
+                "endFrame": 2,
+                "fps": 12.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 3
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "9b896dfa8a779a66ea1f577db21e64ce",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "376cb5f2c5612f3a058ae38f46d5fe2c",
+    "name": "Tortoise",
+    "parentGuid": null,
+    "prefabName": ""
+}

@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 4.369921684265137,
-                "y": 2.4508438110351563,
-                "z": 1.2899178266525269
+                "x": 2.450000047683716,
+                "y": 2.450000047683716,
+                "z": 0.7231934070587158
             },
             "type": "Transform"
         },
@@ -38,6 +38,7 @@
                     "MesopelagicZone",
                     "BathypelagicZone"
                 ],
+                "cameraName_": "MainCamera",
                 "convolutionRadius_": 4,
                 "defaultSpawnTable_": [
                     {
@@ -59,9 +60,12 @@
                     "x": -1725.43994140625,
                     "y": -967.6799926757813
                 },
+                "exclusionAreaScale_": 1.0,
+                "exclusionMargin_": 1.0,
                 "heatMapEntityName_": "Stage",
                 "heatWeightThreshold_": 3,
                 "isActive_": false,
+                "maxEnemyCountZoomExponent_": 1.2000000476837158,
                 "maxEnemyCount_": 12,
                 "maxSpawnCount_": 1,
                 "originName_": "Player",
@@ -73,11 +77,12 @@
                     "x": -2237.39990234375,
                     "y": -1254.83203125
                 },
+                "spawnAreaScale_": 1.2999999523162842,
                 "spawnInterval_": 1.0
             },
             "MovementAreaClamper": {
-                "existArea_": false,
-                "fixedCollisionBounds_": false,
+                "existArea_": true,
+                "fixedCollisionBounds_": true,
                 "fixedPos_": {
                     "x": 0.0,
                     "y": 0.0,
@@ -85,6 +90,11 @@
                 },
                 "movementAreaEntityName_": "Stage",
                 "radius_": 2237.39990234375
+            },
+            "SpawnAreaFollower": {
+                "areaScale_": 1.2999999523162842,
+                "cameraName_": "MainCamera",
+                "colliderBaseSize_": 1024.0
             },
             "TrailFollower": {
                 "chainName_": "System",
@@ -110,11 +120,15 @@
                 },
                 {
                     "enable": true,
-                    "name": "EnemySpawnSystem"
+                    "name": "SpawnAreaFollower"
                 },
                 {
                     "enable": true,
                     "name": "MovementAreaClamper"
+                },
+                {
+                    "enable": true,
+                    "name": "EnemySpawnSystem"
                 }
             ],
             "type": "Script"
@@ -128,7 +142,7 @@
             "mass": 1.0,
             "size": {
                 "x": 1024.0,
-                "y": 1024.0
+                "y": 1023.9995727539063
             },
             "state": "Dynamic",
             "type": "BoxCollider2D",

@@ -2,8 +2,6 @@ using System;
 
 public class RumbleTestScript : MonoScript
 {
-	private int frameCount_ = 0;
-
 	public override void Update()
 	{
 
