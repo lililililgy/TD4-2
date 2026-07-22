@@ -21,7 +21,7 @@
                 ]
             },
             "PhaseSkipInput": {
-                "holdSeconds_": 0.6,
+                "holdSeconds_": 0.6000000238418579,
                 "objectiveSystemEntityName_": "GameController",
                 "skipButtons_": [
                     32
