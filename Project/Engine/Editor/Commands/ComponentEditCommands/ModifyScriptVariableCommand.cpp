@@ -120,7 +120,7 @@ void ModifyScriptVariableCommand::ApplyValue(const VariantValue& value) {
                                     mono_runtime_object_init(item);
                                 }
                                 ONEngine::Variables::VarToMonoObject(item, ek, itemGen);
-                                void* args[1] = { item };
+                                void* args[1] = { mono_class_is_valuetype(ek) ? mono_object_unbox(item) : (void*)item };
                                 mono_runtime_invoke(add, list, args, nullptr);
                             }
                         }

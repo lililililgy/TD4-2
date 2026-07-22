@@ -397,6 +397,9 @@ std::shared_ptr<Variables::GenericObject> Variables::MonoObjectToGeneric(void* o
 	MonoClass* klass = mono_object_get_class((MonoObject*)obj);
 	gen->typeName = mono_class_get_name(klass);
 
+	bool isVal = mono_class_is_valuetype(klass);
+	void* pObj = isVal ? mono_object_unbox((MonoObject*)obj) : obj;
+
 	MonoClass* currentClass = klass;
 	while (currentClass) {
 		void* iter = nullptr;
@@ -405,7 +408,7 @@ std::shared_ptr<Variables::GenericObject> Variables::MonoObjectToGeneric(void* o
 			if (ShouldSerialize(field)) {
 				const char* name = mono_field_get_name(field);
 				MonoType* type = mono_field_get_type(field);
-				gen->fields[name] = MonoObjectToVar(mono_field_get_value_object(ONEngine::MonoScriptEngine::GetInstance().Domain(), field, (MonoObject*)obj), type);
+				gen->fields[name] = MonoObjectToVar(mono_field_get_value_object(ONEngine::MonoScriptEngine::GetInstance().Domain(), field, (MonoObject*)pObj), type);
 			}
 		}
 		currentClass = mono_class_get_parent(currentClass);
@@ -420,6 +423,9 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 
 	MonoDomain* domain = ONEngine::MonoScriptEngine::GetInstance().Domain();
 
+	bool isVal = mono_class_is_valuetype((MonoClass*)klass);
+	void* targetObj = isVal ? mono_object_unbox((MonoObject*)obj) : obj;
+
 	for (auto& [name, val] : gen->fields) {
 		MonoClassField* field = ONEngine::MonoScriptEngineUtils::FindFieldRecursive((MonoClass*)klass, name.c_str());
 		if (!field) continue;
@@ -427,15 +433,15 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 		std::visit([&](auto&& arg) {
 			using T = std::decay_t<decltype(arg)>;
 			if constexpr (std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, bool> || std::is_same_v<T, Vector2> || std::is_same_v<T, Vector3> || std::is_same_v<T, Vector4>) {
-				mono_field_set_value((MonoObject*)obj, field, (void*)&arg);
+				mono_field_set_value((MonoObject*)targetObj, field, (void*)&arg);
 			} else if constexpr (std::is_same_v<T, std::string>) {
 				MonoString* s = mono_string_new(domain, arg.c_str());
-				mono_field_set_value((MonoObject*)obj, field, s);
+				mono_field_set_value((MonoObject*)targetObj, field, s);
 			} else if constexpr (std::is_same_v<T, std::shared_ptr<Variables::GenericObject>>) {
-				MonoObject* child = mono_field_get_value_object(domain, field, (MonoObject*)obj);
+				MonoObject* child = mono_field_get_value_object(domain, field, (MonoObject*)targetObj);
 				if (child) VarToMonoObject(child, mono_object_get_class(child), val);
 			} else if constexpr (std::is_same_v<T, std::vector<int>> || std::is_same_v<T, std::vector<float>> || std::is_same_v<T, std::vector<bool>> || std::is_same_v<T, std::vector<std::string>> || std::is_same_v<T, std::vector<Vector3>>) {
-				MonoObject* list = mono_field_get_value_object(domain, field, (MonoObject*)obj);
+				MonoObject* list = mono_field_get_value_object(domain, field, (MonoObject*)targetObj);
 				if (list) {
 					MonoClass* lc = mono_object_get_class(list);
 					MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
@@ -478,7 +484,7 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 					}
 				}
 			} else if constexpr (std::is_same_v<T, std::vector<std::shared_ptr<Variables::GenericObject>>>) {
-				MonoObject* list = mono_field_get_value_object(domain, field, (MonoObject*)obj);
+				MonoObject* list = mono_field_get_value_object(domain, field, (MonoObject*)targetObj);
 				if (list) {
 					MonoClass* lc = mono_object_get_class(list);
 					MonoMethod* clear = mono_class_get_method_from_name(lc, "Clear", 0);
@@ -492,7 +498,7 @@ void Variables::VarToMonoObject(void* obj, void* klass, const Variables::Var& va
 							mono_runtime_object_init(item);
 						}
 						VarToMonoObject(item, ek, itemGen);
-						void* args[1] = { item };
+						void* args[1] = { mono_class_is_valuetype(ek) ? mono_object_unbox(item) : (void*)item };
 						mono_runtime_invoke(add, list, args, nullptr);
 					}
 				}

@@ -33,6 +33,12 @@ public class PlayerDashedEvent
 {
 }
 
+// プレイヤーがダッシュ状態から抜けた際に PlayerDashState.OnExit() から発行される。
+// PlayerDashedEvent と対になる。「ダッシュしている間だけ何かする」側が購読する。
+public class PlayerDashEndedEvent
+{
+}
+
 // プレイヤーの残機（＝全卵数）が尽きた際に PlayerLifeComponent.Update() から発行される。
 // ゲームオーバー演出・シーン遷移など「プレイヤーが死んだら何かする」側が購読する。
 //
