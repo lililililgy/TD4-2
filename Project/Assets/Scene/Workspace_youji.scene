@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.025089621543884277,
+        0.39068126678466797,
+        1.0,
+        1.0
+    ],
     "entities": [
         {
             "guid": "fd581a153a7de50c8be48309482102ac",
@@ -85,5 +91,6 @@
             "parentGuid": "5833a6909c39d75bd73c994d550d51c6",
             "path": "./Workspace_youji/b037b63d4149b7c18dbc6387c66c2205.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }
