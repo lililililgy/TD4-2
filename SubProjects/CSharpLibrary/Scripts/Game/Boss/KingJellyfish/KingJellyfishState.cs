@@ -101,6 +101,7 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         owner.EnsureSpriteOpaque();
         if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack)
         {
+            owner.EndChargeAttackMovement();
             owner.SetWeakPointCollisionEnabled(true);
         }
     }

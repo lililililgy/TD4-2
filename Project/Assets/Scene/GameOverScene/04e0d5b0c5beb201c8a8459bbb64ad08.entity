@@ -1,0 +1,21 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": -40.0
+            },
+            "type": "Transform"
+        },
+        {
+            "SpriteAnimation": {
+                "fps": 0.6000000238418579
+            },
+            "type": "Variables"
+        }
+    ],
+    "guid": "04e0d5b0c5beb201c8a8459bbb64ad08",
+    "name": "seaweed",
+    "parentGuid": "accd4b1315cc68fd07be1a6e876a0f56",
+    "prefabName": "seaweed"
+}

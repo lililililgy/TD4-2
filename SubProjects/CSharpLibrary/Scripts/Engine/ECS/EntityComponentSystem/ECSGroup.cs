@@ -250,6 +250,43 @@ public class ECSGroup {
 	}
 
 	/// <summary>
+	/// C++側がシーンを破棄する際に呼ぶ、C#側の保持を捨てるための関数。
+	///
+	/// C++の EntityCollection::RemoveEntity() はC#へ破棄を通知しないため、これを呼ばないと
+	/// entities_ に旧シーンのエンティティが残る。エンティティIDは使い回されるので、
+	/// 再読み込みで同じIDが割り当てられると AddEntity() が「既に居る」と判断して早期returnし、
+	/// 旧シーンのMonoScriptインスタンスが状態を保ったまま再利用され、Initialize()も呼ばれなくなる。
+	///
+	/// Entity.Destroy() は使ってはいけない。InternalDestroyEntity でC++へ呼び返してしまい、
+	/// 破棄処理中のネイティブ側へ再入するため。ここではC#側の後始末だけを行う。
+	/// </summary>
+	public void ClearEntitiesFromNative() {
+#if DEBUG
+		Debug.Log("ECSGroup.ClearEntitiesFromNative - Clearing group: " + groupName + ", EntityCount: "
+				  + entities_.Count);
+#endif
+
+		/// MessageBus の購読解除などを行わせる。
+		/// 1つが例外を投げても残りの後始末は続ける（取りこぼすと購読が残り続けるため）。
+		foreach (Entity entity in entities_.Values.ToArray()) {
+			foreach (MonoScript script in entity.GetScripts()) {
+				try {
+					script.OnDestroy();
+				} catch (Exception e) {
+					Debug.LogError("ECSGroup.ClearEntitiesFromNative - OnDestroy threw: " + e.Message);
+				}
+			}
+		}
+
+		entities_.Clear();
+		awakeList_.Clear();
+		initList_.Clear();
+
+		/// 古いComponentが残るとバッチ同期に載り続けるので一緒に捨てる
+		componentCollection.Clear();
+	}
+
+	/// <summary>
 	/// エンティティの探索
 	/// </summary>
 	public Entity FindEntity(string name) {

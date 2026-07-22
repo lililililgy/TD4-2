@@ -55,7 +55,13 @@ public class PlayerLifeComponent : MonoScript {
         if (lives > 0) {
             hadLife_ = true;
         }
+
+        // 生存→死亡のエッジで1回だけ発行する（残機0の間ずっと流し続けない）
+        bool wasAlive = isAlive_;
         isAlive_ = !hadLife_ || lives > 0;
+        if (wasAlive && !isAlive_) {
+            MessageBus.Publish(new PlayerDeadEvent());
+        }
     }
 
     // 現在の残機数（＝全卵数。未成熟の子たまごも含む）

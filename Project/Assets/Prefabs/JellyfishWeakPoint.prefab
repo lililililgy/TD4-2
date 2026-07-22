@@ -50,10 +50,24 @@
             "state": "Dynamic",
             "type": "BoxCollider2D",
             "useOwnerScale": true
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "fd699c02287ffb7593425d82e7c7add5",
+    "guid": "611feceba79d5e605995908916ede7ce",
     "name": "JellyfishWeakPoint",
-    "parentGuid": "2a75a187cc14795397a4b907fc812b10",
+    "parentGuid": null,
     "prefabName": "JellyfishWeakPoint"
 }

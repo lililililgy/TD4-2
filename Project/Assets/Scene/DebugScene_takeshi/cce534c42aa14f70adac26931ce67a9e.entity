@@ -1,5 +1,11 @@
 {
-    "active": true,
+    "active": false,
+    "components": [
+        {
+            "enable": 0,
+            "type": "BoxCollider2D"
+        }
+    ],
     "guid": "cce534c42aa14f70adac26931ce67a9e",
     "name": "KingYadokari",
     "parentGuid": null,

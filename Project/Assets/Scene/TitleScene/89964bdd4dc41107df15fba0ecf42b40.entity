@@ -3,12 +3,21 @@
     "components": [
         {
             "position": {
+                "y": -432.0999755859375,
                 "z": 2.0
             },
             "scale": {
-                "y": 90.0
+                "y": 128.0
             },
             "type": "Transform"
+        },
+        {
+            "material": {
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "89964bdd4dc41107df15fba0ecf42b40",

@@ -1,0 +1,502 @@
+{
+    "active": true,
+    "children": [
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 0.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 2.0,
+                        "y": 1.3333282470703125,
+                        "z": 0.020833253860473633
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "isPixelPerfect": true,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "efbec84b1b291b6d376ac5e71fc7f45e",
+                        "bloomIntensity": 1.0,
+                        "bloomRadius": 12.0,
+                        "bloomThreshold": 0.800000011920929,
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                }
+            ],
+            "guid": "1aecea4d9919829792f3ac84522b2d2e",
+            "name": "Frame",
+            "parentGuid": "a59bf647014bc3faab12978472ac8a8f",
+            "prefabName": ""
+        },
+        {
+            "active": true,
+            "children": [
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "matrixCalcFlags": 7,
+                            "position": {
+                                "x": 1.172999382019043,
+                                "y": 0.2589999735355377,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 0.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.6339999437332153,
+                                "y": 0.8169998526573181,
+                                "z": 0.08170001953840256
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "KeyColorChanger": {
+                                "color": {
+                                    "w": 1.0,
+                                    "x": 0.699999988079071,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "keys": [],
+                                "pads": [
+                                    4096
+                                ]
+                            },
+                            "type": "Variables"
+                        },
+                        {
+                            "enable": 1,
+                            "isPixelPerfect": true,
+                            "material": {
+                                "baseColor": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "baseTextureGuid": "1939d4e88b9a186e380cb5a7089266e6",
+                                "bloomIntensity": 1.0,
+                                "bloomRadius": 12.0,
+                                "bloomThreshold": 0.800000011920929,
+                                "guid": "00000000000000000000000000000000",
+                                "normalTextureGuid": "00000000000000000000000000000000",
+                                "postEffectFlags": 0,
+                                "uvTransform": {
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "rotate": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0
+                                    }
+                                }
+                            },
+                            "type": "SpriteRenderer"
+                        },
+                        {
+                            "enable": 1,
+                            "scripts": [
+                                {
+                                    "enable": true,
+                                    "name": "KeyColorChanger"
+                                }
+                            ],
+                            "type": "Script"
+                        }
+                    ],
+                    "guid": "fe5493c365353df5b3e77b84a83c1b3e",
+                    "name": "A",
+                    "parentGuid": "5833a6909c39d75bd73c994d550d51c6",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "matrixCalcFlags": 7,
+                            "position": {
+                                "x": -1.0,
+                                "y": 0.5269999504089355,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 0.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.6339999437332153,
+                                "y": 0.8169998526573181,
+                                "z": 0.08170001953840256
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "KeyColorChanger": {
+                                "color": {
+                                    "w": 1.0,
+                                    "x": 0.699999988079071,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "keys": [],
+                                "pads": []
+                            },
+                            "StickColorChanger": {
+                                "color": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                }
+                            },
+                            "type": "Variables"
+                        },
+                        {
+                            "enable": 1,
+                            "isPixelPerfect": true,
+                            "material": {
+                                "baseColor": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "baseTextureGuid": "c0a1ad0986b6dd846e479533dfcf9079",
+                                "bloomIntensity": 1.0,
+                                "bloomRadius": 12.0,
+                                "bloomThreshold": 0.800000011920929,
+                                "guid": "00000000000000000000000000000000",
+                                "normalTextureGuid": "00000000000000000000000000000000",
+                                "postEffectFlags": 0,
+                                "uvTransform": {
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "rotate": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0
+                                    }
+                                }
+                            },
+                            "type": "SpriteRenderer"
+                        },
+                        {
+                            "enable": 1,
+                            "scripts": [
+                                {
+                                    "enable": true,
+                                    "name": "StickColorChanger"
+                                }
+                            ],
+                            "type": "Script"
+                        }
+                    ],
+                    "guid": "d50fb8e4e506edd67c5814bad4537f90",
+                    "name": "Stick",
+                    "parentGuid": "5833a6909c39d75bd73c994d550d51c6",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "matrixCalcFlags": 7,
+                            "position": {
+                                "x": -1.2799999713897705,
+                                "y": 1.5199998617172241,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 0.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.6339999437332153,
+                                "y": 0.8169998526573181,
+                                "z": 0.08170001953840256
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "KeyColorChanger": {
+                                "color": {
+                                    "w": 1.0,
+                                    "x": 0.699999988079071,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "keys": [],
+                                "pads": [
+                                    256,
+                                    512
+                                ]
+                            },
+                            "TriggerColorChanger": {
+                                "color": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                }
+                            },
+                            "type": "Variables"
+                        },
+                        {
+                            "enable": 1,
+                            "isPixelPerfect": true,
+                            "material": {
+                                "baseColor": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "baseTextureGuid": "ac0260e2537fa7d9bcd5d28629ddda8d",
+                                "bloomIntensity": 1.0,
+                                "bloomRadius": 12.0,
+                                "bloomThreshold": 0.800000011920929,
+                                "guid": "00000000000000000000000000000000",
+                                "normalTextureGuid": "00000000000000000000000000000000",
+                                "postEffectFlags": 0,
+                                "uvTransform": {
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "rotate": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0
+                                    }
+                                }
+                            },
+                            "type": "SpriteRenderer"
+                        },
+                        {
+                            "enable": 1,
+                            "scripts": [
+                                {
+                                    "enable": true,
+                                    "name": "TriggerColorChanger"
+                                }
+                            ],
+                            "type": "Script"
+                        }
+                    ],
+                    "guid": "230464a9d3734b2e6628b53a7a65f3f5",
+                    "name": "ShoulderLeft",
+                    "parentGuid": "5833a6909c39d75bd73c994d550d51c6",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "matrixCalcFlags": 7,
+                            "position": {
+                                "x": 1.2819997072219849,
+                                "y": 1.5199998617172241,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 0.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.6339999437332153,
+                                "y": 0.8169998526573181,
+                                "z": 0.08170001953840256
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "KeyColorChanger": {
+                                "color": {
+                                    "w": 1.0,
+                                    "x": 0.699999988079071,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "keys": [],
+                                "pads": [
+                                    256,
+                                    512
+                                ]
+                            },
+                            "TriggerColorChanger": {
+                                "color": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                }
+                            },
+                            "type": "Variables"
+                        },
+                        {
+                            "enable": 1,
+                            "isPixelPerfect": true,
+                            "material": {
+                                "baseColor": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "baseTextureGuid": "1e1f184b47bdec2b962fddebcc528da7",
+                                "bloomIntensity": 1.0,
+                                "bloomRadius": 12.0,
+                                "bloomThreshold": 0.800000011920929,
+                                "guid": "00000000000000000000000000000000",
+                                "normalTextureGuid": "00000000000000000000000000000000",
+                                "postEffectFlags": 0,
+                                "uvTransform": {
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "rotate": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0
+                                    }
+                                }
+                            },
+                            "type": "SpriteRenderer"
+                        },
+                        {
+                            "enable": 1,
+                            "scripts": [
+                                {
+                                    "enable": true,
+                                    "name": "TriggerColorChanger"
+                                }
+                            ],
+                            "type": "Script"
+                        }
+                    ],
+                    "guid": "b037b63d4149b7c18dbc6387c66c2205",
+                    "name": "ShoulderRight",
+                    "parentGuid": "5833a6909c39d75bd73c994d550d51c6",
+                    "prefabName": ""
+                }
+            ],
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 0.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 0.2849999666213989,
+                        "y": 0.2850000858306885,
+                        "z": 0.2850000858306885
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "type": "Variables"
+                }
+            ],
+            "guid": "5833a6909c39d75bd73c994d550d51c6",
+            "name": "Buttons",
+            "parentGuid": "a59bf647014bc3faab12978472ac8a8f",
+            "prefabName": ""
+        }
+    ],
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 721.099853515625,
+                "y": -248.70016479492188,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 128.0,
+                "y": 128.0,
+                "z": 128.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        }
+    ],
+    "guid": "a59bf647014bc3faab12978472ac8a8f",
+    "name": "GamepadUIRoot",
+    "parentGuid": null,
+    "prefabName": ""
+}

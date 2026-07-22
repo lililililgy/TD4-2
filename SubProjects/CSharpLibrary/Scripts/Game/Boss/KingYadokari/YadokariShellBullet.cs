@@ -5,6 +5,7 @@ public enum YadokariShellBulletState {
 
 public class YadokariShellBullet : MonoScript {
     private KingYadokari owner_;
+    private Rigidbody2D rigidbody_;
     private Vector3 direction_ = Vector3.up;
     private float speed_;
     private float reflectedSpeed_;
@@ -18,6 +19,8 @@ public class YadokariShellBullet : MonoScript {
     private YadokariShellBulletState state_;
 
     public override void Initialize() {
+        rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        SetVelocity(Vector2.zero);
         if (configured_) {
             return;
         }
@@ -48,6 +51,7 @@ public class YadokariShellBullet : MonoScript {
         resolved_ = false;
         destroyRequested_ = false;
         state_ = YadokariShellBulletState.EnemyBullet;
+        UpdateVelocity();
         ApplyRotation();
         SetColor(new Vector4(1.0f, 0.3f, 0.15f, 1.0f));
     }
@@ -68,8 +72,8 @@ public class YadokariShellBullet : MonoScript {
             return;
         }
 
-        float currentSpeed = state_ == YadokariShellBulletState.Reflected ? reflectedSpeed_ : speed_;
-        transform.position += direction_ * currentSpeed * Time.deltaTime;
+        Vector2 velocity = UpdateVelocity();
+        transform.position += new Vector3(velocity.x, velocity.y, 0.0f) * Time.deltaTime;
         ApplyRotation();
     }
 
@@ -78,7 +82,7 @@ public class YadokariShellBullet : MonoScript {
             return;
         }
 
-        if (owner_ != null && collision.Id == owner_.entity.Id) {
+        if (IsOwnerEntity(collision)) {
             if (state_ == YadokariShellBulletState.Reflected) {
                 Resolve(true);
             }
@@ -101,6 +105,22 @@ public class YadokariShellBullet : MonoScript {
         Resolve(false);
     }
 
+    private bool IsOwnerEntity(Entity collision) {
+        if (owner_ == null || owner_.entity == null) {
+            return false;
+        }
+
+        Entity current = collision;
+        while (current != null) {
+            if (current.Id == owner_.entity.Id) {
+                return true;
+            }
+            current = current.parent;
+        }
+
+        return false;
+    }
+
     private void ReflectTowardOwner() {
         if (owner_ == null || owner_.entity == null || owner_.entity.transform == null) {
             Resolve(false);
@@ -116,6 +136,7 @@ public class YadokariShellBullet : MonoScript {
 
         direction_ = toOwner.Normalized();
         state_ = YadokariShellBulletState.Reflected;
+        UpdateVelocity();
         ApplyRotation();
         SetColor(new Vector4(0.2f, 1.0f, 1.0f, 1.0f));
     }
@@ -135,6 +156,7 @@ public class YadokariShellBullet : MonoScript {
 
         resolved_ = true;
         destroyRequested_ = true;
+        SetVelocity(Vector2.zero);
         if (owner_ != null) {
             owner_.NotifyBulletResolved(reflectedHit);
         }
@@ -143,6 +165,23 @@ public class YadokariShellBullet : MonoScript {
     private void ApplyRotation() {
         float angle = Mathf.Atan2(direction_.x, direction_.y);
         transform.rotation = Quaternion.MakeFromAxis(Vector3.back, angle);
+    }
+
+    private Vector2 UpdateVelocity() {
+        float currentSpeed = state_ == YadokariShellBulletState.Reflected ? reflectedSpeed_ : speed_;
+        Vector2 velocity = new Vector2(direction_.x, direction_.y) * currentSpeed;
+        SetVelocity(velocity);
+        return velocity;
+    }
+
+    private void SetVelocity(Vector2 velocity) {
+        if (rigidbody_ == null) {
+            rigidbody_ = entity.GetComponent<Rigidbody2D>();
+        }
+
+        if (rigidbody_ != null) {
+            rigidbody_.velocity = velocity;
+        }
     }
 
     private void SetColor(Vector4 color) {

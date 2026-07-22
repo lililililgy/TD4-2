@@ -33,13 +33,28 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 1.7869930267333984,
-                "y": 1.7869873046875,
-                "z": 1.7869873046875
+                "x": 1.5,
+                "y": 1.5,
+                "z": 1.5
             },
             "type": "Transform"
         },
         {
+            "ContactZoomSource": {
+                "easeType_": 0,
+                "maxAddScale_": 1.2000000476837158,
+                "minAddScale_": 0.0,
+                "smoothing_": 0.800000011920929
+            },
+            "DashZoomSource": {
+                "convergeSpeed_": 0.9900000095367432,
+                "dashingStrength_": 0.4000000059604645,
+                "easeType_": 0,
+                "enterStrength_": 1.0,
+                "maxAddScale_": 0.800000011920929,
+                "minAddScale_": 0.0,
+                "smoothing_": 0.9980000257492065
+            },
             "PlayerFollowCamera": {
                 "maxSmoothSpeed_": 72.0,
                 "offset_": {
@@ -58,9 +73,32 @@
                 {
                     "enable": true,
                     "name": "PlayerFollowCamera"
+                },
+                {
+                    "enable": true,
+                    "name": "ContactZoomSource"
+                },
+                {
+                    "enable": true,
+                    "name": "DashZoomSource"
                 }
             ],
             "type": "Script"
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 8,
+            "mass": 1.0,
+            "size": {
+                "x": 605.7000732421875,
+                "y": 605.6984252929688
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
         }
     ],
     "guid": "066cf8700e962fdd141e80666ddb8240",

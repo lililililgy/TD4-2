@@ -39,6 +39,11 @@ public class PlayerDashState : PlayerState {
         MessageBus.Publish(new PlayerDashedEvent());
     }
 
+    // ダッシュ状態から抜けた瞬間に通知する（ダッシュ中だけ効く演出の終了検知用）。
+    public override void OnExit() {
+        MessageBus.Publish(new PlayerDashEndedEvent());
+    }
+
     // 通常 → ダッシュ の遷移条件
     public bool WantsToStart() {
         PlayerInputComponent input = entity.GetScript<PlayerInputComponent>();

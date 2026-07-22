@@ -2,32 +2,15 @@
     "active": true,
     "components": [
         {
-            "enable": 1,
-            "matrixCalcFlags": 7,
             "position": {
-                "x": 721.099853515625,
-                "y": -248.70016479492188,
-                "z": 0.0
-            },
-            "rotate": {
-                "w": 0.0,
                 "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "scale": {
-                "x": 128.0,
-                "y": 128.0,
-                "z": 128.0
+                "y": 0.0
             },
             "type": "Transform"
-        },
-        {
-            "type": "Variables"
         }
     ],
     "guid": "a59bf647014bc3faab12978472ac8a8f",
     "name": "GamepadUIRoot",
-    "parentGuid": null,
-    "prefabName": ""
+    "parentGuid": "387362fb5dddbdd852badabb28aeef48",
+    "prefabName": "GamepadUIRoot"
 }

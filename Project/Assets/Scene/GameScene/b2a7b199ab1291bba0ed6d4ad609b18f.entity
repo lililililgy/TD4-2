@@ -20,6 +20,22 @@
                     "BossBattlePhase_3"
                 ]
             },
+            "PhaseSkipInput": {
+                "holdSeconds_": 0.6000000238418579,
+                "objectiveSystemEntityName_": "GameController",
+                "skipButtons_": [
+                    32
+                ],
+                "skipKeys_": [
+                    15
+                ],
+                "skipPhases_": [
+                    "TutorialPhase_Move",
+                    "TutorialPhase_Dash",
+                    "TutorialPhase_Enemy",
+                    "TutorialPhase_Shot"
+                ]
+            },
             "PhaseSpawnActivator": {
                 "activePhases_": [
                     "EnemyHuntPhase_1",
@@ -48,6 +64,10 @@
                 {
                     "enable": true,
                     "name": "PhaseSpawnActivator"
+                },
+                {
+                    "enable": true,
+                    "name": "PhaseSkipInput"
                 }
             ],
             "type": "Script"

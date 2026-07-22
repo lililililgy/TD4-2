@@ -55,9 +55,9 @@
                     "useOwnerScale": true
                 }
             ],
-            "guid": "47f7611b5b4ac502838916dffcf70e2d",
+            "guid": "10e1422482e9cb39d1c66b8a75c8b009",
             "name": "Collider",
-            "parentGuid": "619b46bd9b63819f892a38013d5d5740",
+            "parentGuid": "d99ad234d60c0adce9107a4a0c759cd3",
             "prefabName": ""
         },
         {
@@ -102,21 +102,6 @@
                     "type": "Script"
                 },
                 {
-                    "categoryBits": 8,
-                    "enable": 1,
-                    "freezeY": false,
-                    "isTrigger": true,
-                    "maskBits": 2,
-                    "mass": 1.0,
-                    "size": {
-                        "x": 300.0,
-                        "y": 300.00006103515625
-                    },
-                    "state": "Dynamic",
-                    "type": "BoxCollider2D",
-                    "useOwnerScale": false
-                },
-                {
                     "enable": 1,
                     "isPixelPerfect": false,
                     "material": {
@@ -127,6 +112,9 @@
                             "z": 1.0
                         },
                         "baseTextureGuid": "2b1b8b572356f6c42b296f1a5cd80124",
+                        "bloomIntensity": 1.0,
+                        "bloomRadius": 12.0,
+                        "bloomThreshold": 0.800000011920929,
                         "guid": "00000000000000000000000000000000",
                         "normalTextureGuid": "00000000000000000000000000000000",
                         "postEffectFlags": 0,
@@ -143,11 +131,26 @@
                         }
                     },
                     "type": "SpriteRenderer"
+                },
+                {
+                    "categoryBits": 8,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 2,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 300.0,
+                        "y": 300.00006103515625
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": false
                 }
             ],
-            "guid": "d22390f74a81c5e05310ad072ffabbca",
+            "guid": "d78ce2f38de4fe51eedd85430b25d92d",
             "name": "weakPoint",
-            "parentGuid": "619b46bd9b63819f892a38013d5d5740",
+            "parentGuid": "d99ad234d60c0adce9107a4a0c759cd3",
             "prefabName": ""
         }
     ],
@@ -214,6 +217,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "6992cc0e23463923b5e73e418fa99406",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -230,9 +236,23 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "619b46bd9b63819f892a38013d5d5740",
+    "guid": "d99ad234d60c0adce9107a4a0c759cd3",
     "name": "GesoHand",
     "parentGuid": null,
     "prefabName": "GesoHand"

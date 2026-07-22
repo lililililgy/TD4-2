@@ -3,26 +3,37 @@
     "components": [
         {
             "enable": 1,
-            "matrixCalcFlags": 7,
+            "matrixCalcFlags": 1,
             "position": {
-                "x": -583.8001708984375,
-                "y": -293.80010986328125,
-                "z": 0.0
+                "x": -52.9999885559082,
+                "y": 146.8000030517578,
+                "z": -0.10000000149011612
             },
             "rotate": {
-                "w": 0.0,
+                "w": 0.9995335936546326,
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": -0.030538510531187057
             },
             "scale": {
-                "x": 100.0,
-                "y": 200.0,
+                "x": -120.0,
+                "y": 300.0,
                 "z": 0.0
             },
             "type": "Transform"
         },
         {
+            "SpriteAnimation": {
+                "cols": 2,
+                "endFrame": 2,
+                "fps": 1.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": true,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 2
+            },
             "type": "Variables"
         },
         {
@@ -36,6 +47,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "f972705e35ed09b3006877e8f5e532fb",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -52,10 +66,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                }
+            ],
+            "type": "Script"
         }
     ],
     "guid": "410b0e1cd2fdfcd443e3a219daa2ae41",
     "name": "seaweed",
-    "parentGuid": null,
-    "prefabName": ""
+    "parentGuid": "89964bdd4dc41107df15fba0ecf42b40",
+    "prefabName": "seaweed"
 }

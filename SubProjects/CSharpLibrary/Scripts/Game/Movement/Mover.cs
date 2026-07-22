@@ -8,6 +8,12 @@ using System;
 // 入力の「解釈」（移動可否・正面固定走り・正面方向の記録など）はここでは行わない。
 // それらはドライバ側（例: PlayerMoveComponent + MoveDirector）で解決し、
 // 結果の方向だけを desiredDir として渡すこと。長さ0で停止（減速）扱い。
+//
+// 速度は Rigidbody2D にも書き出す（他システムから velocity を読めるようにするため）。
+// ただし position の更新は従来どおりこのクラスが行う。エンジンの Rigidbody2DUpdateSystem は
+// velocity への重力・軸固定の適用しかしておらず、位置の積分を行わないため、
+// Rigidbody2D に movement を委ねると何も動かなくなる。
+// Rigidbody2D 側で積分するようになったら、ここの transform.position 更新を外すこと。
 public class Mover {
 
     // paramRelease* : 移動パラメータ(accel/maxSpeed)を目標値へ下げるときの追従設定。
@@ -18,7 +24,8 @@ public class Mover {
     }
 
     // desiredDir: 進みたい最終的な方向（正規化不要。長さ0で停止扱い）。解釈はドライバ側で済ませる。
-    public void Move(Transform transform, Vector2 desiredDir, MoveParam param) {
+    // rigidbody: 速度の書き出し先。持たないエンティティ（多くの敵）は null でよい。
+    public void Move(Transform transform, Rigidbody2D rigidbody, Vector2 desiredDir, MoveParam param) {
         if (transform == null || param == null) {
             return;
         }
@@ -67,6 +74,12 @@ public class Mover {
         transform.rotate = Quaternion.MakeFromAxis(Vector3.back, cullRoll);
 
         transform.position += velocity_ * Time.deltaTime;
+
+        // 確定した速度を Rigidbody2D へ書き出す。setter が毎回 PushBatch() で native を叩くので、
+        // 途中経過は書かずにフレームの最後に1回だけ書く。
+        if (rigidbody != null) {
+            rigidbody.velocity = new Vector2(velocity_.x, velocity_.y);
+        }
     }
 
     // 現在速度（アニメや他システムが参照できるように公開）

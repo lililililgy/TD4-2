@@ -2,7 +2,7 @@ using System;
 
 // HP(体力)の管理だけに専念する汎用コンポーネント。
 // ダメージ・回復・死亡判定・(死亡時の)自動破棄のみを扱う。持続回復などの味付けは持たない。
-public class HP : MonoScript {
+public class HP : MonoScript, IGaugeSource {
     [SerializeField] private float maxHp_ = 100;
     [SerializeField] private float currentHp_ = 0;
     [SerializeField] private bool disableAutoDestruction_ = false; // true: 死亡しても自分で Destroy しない
@@ -60,6 +60,11 @@ public class HP : MonoScript {
 
     public float CurrentHpRatio() {
         return Mathf.Clamp01((float)currentHp_ / maxHp_);
+    }
+
+    // HPバー(SpriteGauge)が毎フレーム引く割合
+    public float GetGaugeRatio() {
+        return CurrentHpRatio();
     }
 
     public float MaxHp { get { return maxHp_; } set { maxHp_ = value; } }
