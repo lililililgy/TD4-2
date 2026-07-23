@@ -308,26 +308,26 @@
                 "volume_": 0.25
             },
             "ShakeOnDamaged": {
-                "durationScale_": 1.0,
-                "frequency_": 128.0,
-                "maxAmplitude_": 1200.0,
-                "maxDuration_": 0.4000000059604645,
-                "minAmplitude_": 1200.0,
-                "minDuration_": 0.4000000059604645,
-                "referenceAmplitude_": 1200.0,
-                "referenceDamage_": 1.0,
+                "durationScale_": 0.4000000059604645,
+                "frequency_": 24.0,
+                "maxAmplitude_": 300.0,
+                "maxDuration_": 0.35,
+                "minAmplitude_": 112.5,
+                "minDuration_": 0.15000000596046448,
+                "referenceAmplitude_": 300.0,
+                "referenceDamage_": 4.0,
                 "referenceDuration_": 0.30000001192092896
             },
             "ShakeOnHit": {
-                "durationScale_": 0.30000001192092896,
-                "frequency_": 96.0,
-                "maxAmplitude_": 1800.0,
-                "maxDuration_": 0.30000001192092896,
-                "minAmplitude_": 1000.0,
+                "durationScale_": 0.4000000059604645,
+                "frequency_": 28.0,
+                "maxAmplitude_": 140.0,
+                "maxDuration_": 0.25,
+                "minAmplitude_": 35.0,
                 "minDuration_": 0.10000000149011612,
-                "referenceAmplitude_": 100.0,
-                "referenceDamage_": 1.0,
-                "referenceDuration_": 0.10000000149011612
+                "referenceAmplitude_": 140.0,
+                "referenceDamage_": 50.0,
+                "referenceDuration_": 0.25
             },
             "TrailLeader": {},
             "type": "Variables"

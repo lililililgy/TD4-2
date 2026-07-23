@@ -31,20 +31,25 @@
                 "sePath_": "./Assets/Sounds/se/PlayerAttackSE.mp3"
             },
             "ShakeOnDamaged": {
-                "frequency_": 256.0,
-                "maxAmplitude_": 1000.0,
-                "maxDuration_": 1.0,
-                "minAmplitude_": 1000.0,
-                "minDuration_": 1.0,
-                "referenceDuration_": 1.0
+                "durationScale_": 0.4000000059604645,
+                "frequency_": 24.0,
+                "maxAmplitude_": 300.0,
+                "minAmplitude_": 112.5,
+                "referenceAmplitude_": 300.0,
+                "referenceDamage_": 4.0,
+                "maxDuration_": 0.35,
+                "minDuration_": 0.15000000596046448,
+                "referenceDuration_": 0.30000001192092896
             },
             "ShakeOnHit": {
                 "durationScale_": 0.4000000059604645,
-                "frequency_": 64.0,
-                "maxAmplitude_": 1600.0,
-                "maxDuration_": 0.6000000238418579,
-                "minDuration_": 0.30000001192092896,
-                "referenceDuration_": 0.07999999821186066
+                "frequency_": 28.0,
+                "maxAmplitude_": 140.0,
+                "minAmplitude_": 35.0,
+                "referenceAmplitude_": 140.0,
+                "maxDuration_": 0.25,
+                "minDuration_": 0.10000000149011612,
+                "referenceDuration_": 0.25
             },
             "type": "Variables"
         },

@@ -28,13 +28,13 @@
                 "targetEntityName_": "KingYadokari"
             },
             "SpawnOnPhaseBegan": {
-                "count_": 0,
+                "count_": 1,
                 "phaseName_": "BossBattlePhase_3",
                 "prefabName_": "KingYadokari",
                 "spawnAroundEntityName_": "",
                 "spawnPos_": {
                     "x": 0.0,
-                    "y": 0.0,
+                    "y": 400.0,
                     "z": 0.0
                 },
                 "spawnRadius_": 0.0

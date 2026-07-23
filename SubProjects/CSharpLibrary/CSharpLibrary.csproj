@@ -226,6 +226,8 @@
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
     <Compile Include="Scripts\Game\Common\SEOnHit.cs" />
     <Compile Include="Scripts\Game\Common\SEOneShot.cs" />
+    <Compile Include="Scripts\Game\Common\SEOneShot.cs" />
+    <Compile Include="Scripts\Game\Common\SEOnHit.cs" />
     <Compile Include="Scripts\Game\Common\ShakeOnDamaged.cs" />
     <Compile Include="Scripts\Game\Common\ShakeOnHit.cs" />
     <Compile Include="Scripts\Game\Common\ShakeSelfOnDamaged.cs" />
