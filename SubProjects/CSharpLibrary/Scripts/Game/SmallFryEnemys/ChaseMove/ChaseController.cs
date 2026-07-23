@@ -148,6 +148,11 @@ public class ChaseController : MonoScript
             waitTimer_ += Time.deltaTime;
         }
 
+        if (!transform || !targetEntity_.transform)
+        {
+            return;
+        }
+
         // 範囲内かつ待機時間経過で発見モーションへ
         Vector3 toTarget = targetEntity_.transform.position - transform.position;
         if (toTarget.Length() <= chaseDistance && (isFirstWait_ || waitTimer_ >= waitTime))
