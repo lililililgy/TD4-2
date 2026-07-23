@@ -73,38 +73,42 @@ public class ExpDropper : MonoScript
     /// </summary>
     private void GetSpawnArea(out Vector2 min, out Vector2 max)
     {
-        Vector2 scale = new Vector2(transform.scale.x, transform.scale.y);
+        Vector2 scale = transform != null ? new Vector2(transform.scale.x, transform.scale.y) : Vector2.one;
         Vector2 half = Vector2.zero;
 
-        BoxCollider2D boxCollider2D = entity.GetComponent<BoxCollider2D>();
+        BoxCollider2D boxCollider2D = entity != null ? entity.GetComponent<BoxCollider2D>() : null;
         if (boxCollider2D != null)
         {
             half = new Vector2(boxCollider2D.size.x * scale.x, boxCollider2D.size.y * scale.y) * 0.5f;
         }
         else
         {
-            CircleCollider circleCollider = entity.GetComponent<CircleCollider>();
+            CircleCollider circleCollider = entity != null ? entity.GetComponent<CircleCollider>() : null;
             if (circleCollider != null)
             {
                 half = new Vector2(circleCollider.radius * scale.x, circleCollider.radius * scale.y);
             }
         }
 
-        Vector2 center = new Vector2(transform.position.x, transform.position.y);
+        Vector2 center = transform != null ? new Vector2(transform.position.x, transform.position.y) : Vector2.zero;
         min = center - half;
         max = center + half;
     }
 
     private void SpawnOrbs(string prefabName, int count, Vector2 min, Vector2 max)
     {
+        if (ecsGroup == null) return;
         for (int i = 0; i < count; i++)
         {
             Entity created = ecsGroup.CreateEntity(prefabName);
-            created.transform.position = new Vector3(
-                RandomUtil.RandomRange(min.x, max.x),
-                RandomUtil.RandomRange(min.y, max.y),
-                0
-            );
+            if (created != null && created.transform != null)
+            {
+                created.transform.position = new Vector3(
+                    RandomUtil.RandomRange(min.x, max.x),
+                    RandomUtil.RandomRange(min.y, max.y),
+                    0
+                );
+            }
         }
     }
 }

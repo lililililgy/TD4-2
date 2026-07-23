@@ -8,15 +8,21 @@ public class SpawnOnDestroy : MonoScript
 
     public override void OnDestroy()
     {
-        if (spawnPrefabName == null)
+        if (spawnPrefabName == null || ecsGroup == null)
         {
             return;
         }
 
         // 敵の生成処理
         Entity spawnedEnemy = ecsGroup.CreateEntity(spawnPrefabName);
-        Transform enemyT = spawnedEnemy.GetComponent<Transform>();
-        enemyT.position = spawnPos;
+        if (spawnedEnemy != null)
+        {
+            Transform enemyT = spawnedEnemy.GetComponent<Transform>();
+            if (enemyT != null)
+            {
+                enemyT.position = spawnPos;
+            }
+        }
     }
 
 }

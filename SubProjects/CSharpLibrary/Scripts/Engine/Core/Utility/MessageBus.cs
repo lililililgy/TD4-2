@@ -38,7 +38,11 @@ public static class MessageBus {
 
         Action<T> handler = existing as Action<T>;
         if (handler != null) {
-            handler(message);
+            try {
+                handler(message);
+            } catch (Exception e) {
+                Debug.LogError("Error in MessageBus.Publish<" + typeof(T).Name + ">: " + e.Message);
+            }
         }
     }
 

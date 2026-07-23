@@ -247,7 +247,7 @@ void ScriptUpdateSystem::CallUpdateEcsGroup() {
 		/// 更新関数を呼び出す
 		MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
 		if(!ecsGroupObj) {
-			Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
+			Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_, LogCategory::ScriptEngine);
 			return;
 		}
 

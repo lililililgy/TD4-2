@@ -29,6 +29,20 @@ public class PlayerHPUI : MonoScript
 
 	public override void Update()
 	{
+		if (playerEntity == null)
+		{
+			ECSGroup gameScene = EntityComponentSystem.GetECSGroup("GameScene");
+			if (gameScene != null)
+			{
+				playerEntity = gameScene.FindEntity("Player");
+			}
+		}
+
+		if (playerEntity == null)
+		{
+			return;
+		}
+
 		PlayerLifeComponent playerLifeComponent = playerEntity.GetScript<PlayerLifeComponent>();
 		if (playerLifeComponent)
 		{
