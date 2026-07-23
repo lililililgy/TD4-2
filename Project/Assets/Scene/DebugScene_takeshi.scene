@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.10000000149011612,
+        0.25,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "4f6e72f15f5c2f71a13cb6e0b55a9248",
@@ -21,14 +27,9 @@
             "path": "./DebugScene_takeshi/cce534c42aa14f70adac26931ce67a9e.entity"
         },
         {
-            "guid": "fdd14a8c056d126471f6ed804cdec2c2",
+            "guid": "a73bc1c36af1c362cdfc76fc4208acf5",
             "parentGuid": null,
-            "path": "./DebugScene_takeshi/fdd14a8c056d126471f6ed804cdec2c2.entity"
-        },
-        {
-            "guid": "850fcbab879074c83a8e3260f9e89ddd",
-            "parentGuid": "fdd14a8c056d126471f6ed804cdec2c2",
-            "path": "./DebugScene_takeshi/850fcbab879074c83a8e3260f9e89ddd.entity"
+            "path": "./DebugScene_takeshi/a73bc1c36af1c362cdfc76fc4208acf5.entity"
         },
         {
             "guid": "82818925073f084ce1b68a1262fa2891",
@@ -159,6 +160,32 @@
             "guid": "4170e6df9ecda4ba6b1598128067c7a3",
             "parentGuid": null,
             "path": "./DebugScene_takeshi/4170e6df9ecda4ba6b1598128067c7a3.entity"
+        },
+        {
+            "guid": "7dbb4c38c4b1d8fe426ae93c845bd6f1",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/7dbb4c38c4b1d8fe426ae93c845bd6f1.entity"
+        },
+        {
+            "guid": "1e6fb33c524da90e2e58c10862c85375",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/1e6fb33c524da90e2e58c10862c85375.entity"
+        },
+        {
+            "guid": "326266eab2976fa1f46a4a9a10dfa561",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/326266eab2976fa1f46a4a9a10dfa561.entity"
+        },
+        {
+            "guid": "35c5cbcffb8890ef5033a724d3a1d64c",
+            "parentGuid": "a73bc1c36af1c362cdfc76fc4208acf5",
+            "path": "./DebugScene_takeshi/35c5cbcffb8890ef5033a724d3a1d64c.entity"
+        },
+        {
+            "guid": "666538332b35d814cfb6e53b55d2e44c",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/666538332b35d814cfb6e53b55d2e44c.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }

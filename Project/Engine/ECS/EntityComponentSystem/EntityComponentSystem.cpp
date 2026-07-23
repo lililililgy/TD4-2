@@ -291,6 +291,9 @@ void EntityComponentSystem::ReloadPrefab(const std::string& _prefabName) {
 /// ====================================================
 
 GameEntity* MonoInternalMethods::GetEntityById(int32_t _entityId, const std::string& _groupName) {
+	if (_entityId == 0) {
+		return nullptr;
+	}
 	ECSGroup* ecsGroup = gECS->GetECSGroup(_groupName);
 	if(ecsGroup) {
 		return ecsGroup->GetEntity(_entityId);

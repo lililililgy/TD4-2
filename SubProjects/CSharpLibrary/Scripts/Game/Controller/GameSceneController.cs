@@ -52,7 +52,7 @@ public class GameSceneController : MonoScript
 		if (CheckGameOver())
 		{
 			// ゲームオーバーシーンへ遷移
-			//SceneManager.LoadScene("GameOverScene");
+			SceneManager.LoadScene("GameOverScene");
 			return;
 		}
 

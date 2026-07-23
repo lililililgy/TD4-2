@@ -35,6 +35,7 @@
 #include "Engine/Core/Utility/Font/FontRasterizer.h"
 #include <mono/metadata/object.h>
 #include <mono/metadata/appdomain.h>
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/Core/Window/WindowManager.h"
 #include "Engine/Core/Utility/Tools/Log.h"
 
@@ -224,6 +225,8 @@ void ONEngine::AddComponentInternalCalls() {
 
 	/// particle system 2D
 	mono_add_internal_call("ParticleSystem2D::InternalEmit", (void*)InternalEmitParticleSystem2D);
+	mono_add_internal_call("ParticleSystem2D::InternalStop", (void*)InternalStopParticleSystem2D);
+	mono_add_internal_call("ParticleSystem2D::InternalSetBoxShape", (void*)InternalSetParticleSystem2DBoxShape);
 
 	/// screen post effect
 	mono_add_internal_call("ScreenPostEffectTag::InternalGetPostEffectEnabled", (void*)InternalGetScreenPostEffectEnabled);
@@ -262,6 +265,9 @@ void ONEngine::AddComponentInternalCalls() {
 
 	/// font rasterizer
 	mono_add_internal_call("FontRasterizer::Internal_GenerateTexture", (void*)InternalGenerateFontTexture);
+
+	/// particle system 2d
+	mono_add_internal_call("ParticleSystem2D::InternalEmit", (void*)ONEngine::InternalEmitParticleSystem2D);
 
 }
 

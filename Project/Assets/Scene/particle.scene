@@ -75,6 +75,11 @@
             "guid": "c269941dd384076626c4be0a6612f4c9",
             "parentGuid": null,
             "path": "./particle/c269941dd384076626c4be0a6612f4c9.entity"
+        },
+        {
+            "guid": "35f9b226f2593c624b7ee193ab043d49",
+            "parentGuid": null,
+            "path": "./particle/35f9b226f2593c624b7ee193ab043d49.entity"
         }
     ],
     "hasClearColor": true

@@ -1,0 +1,82 @@
+{
+    "active": false,
+    "components": [
+        {
+            "inheritEmitterRotation": false,
+            "main": {
+                "startSize3D": false,
+                "startSizeX": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSizeY": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSizeZ": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                }
+            },
+            "sizeOverLifetime": {
+                "separateAxes": false,
+                "x": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "y": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "z": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                }
+            },
+            "type": "ParticleSystem2D"
+        }
+    ],
+    "guid": "7dbb4c38c4b1d8fe426ae93c845bd6f1",
+    "name": "sparkParticle",
+    "parentGuid": null,
+    "prefabName": "sparkParticle"
+}

@@ -64,6 +64,7 @@
                 "rateOverTime": 10.0
             },
             "enable": 1,
+            "inheritEmitterRotation": false,
             "main": {
                 "duration": 5.0,
                 "gravityModifier": 0.0,
@@ -116,6 +117,25 @@
                     "max": 120.0,
                     "min": 100.0,
                     "state": 1
+                },
+                "startSize3D": false,
+                "startSizeX": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSizeY": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSizeZ": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
                 },
                 "startSpeed": {
                     "constant": 5.0,
@@ -191,6 +211,7 @@
             },
             "sizeOverLifetime": {
                 "enabled": true,
+                "separateAxes": false,
                 "size": {
                     "constant": 1.0,
                     "constantMax": 1.0,
@@ -218,6 +239,51 @@
                         "keys": []
                     },
                     "state": 2
+                },
+                "x": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "y": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "z": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
                 }
             },
             "textureSheetAnimation": {

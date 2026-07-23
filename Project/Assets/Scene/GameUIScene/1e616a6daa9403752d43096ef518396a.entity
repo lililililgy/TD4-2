@@ -25,7 +25,8 @@
         {
             "PlayerHPUI": {
                 "maxLives": 0,
-                "testValue": 20
+                "startLives": 3,
+                "testValue": 3
             },
             "type": "Variables"
         },

@@ -222,11 +222,11 @@ void ComponentDebug::TransformDebug(Transform* transform) {
 }
 
 void ComponentDebug::TransformDebug(const std::vector<Transform*>& transforms) {
-	if(transforms.empty()) {
-		return;
+	Transform* first = nullptr;
+	if (!transforms.empty()) {
+		first = transforms[0];
 	}
-
-	Transform* first = transforms[0];
+	if (!first) return;
 
 	// アニメーションなどで外部から回転が書き換えられていないかチェック
 	if (!(first->rotate == first->lastSyncedRotate)) {

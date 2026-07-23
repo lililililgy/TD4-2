@@ -10,4 +10,7 @@ public class KingGesoHomingAttackSettings : MonoScript
     [SerializeField] public float projectileLifeTime = 8.0f;      //弾の寿命
     [SerializeField] public float projectileDamage = 1.0f;        //弾のダメージ
     [SerializeField] public Vector2 spawnOffset = Vector2.zero;   //弾の生成位置のオフセット
+    [SerializeField] public string swimParticlePrefabName = "enemySwimParticle";
+    [SerializeField] public int swimParticleEmitCount = 1;
+    [SerializeField] public float swimParticleEmitInterval = 0.15f;
 }

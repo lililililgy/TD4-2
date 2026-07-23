@@ -119,22 +119,27 @@ public class Entity {
 
 
 	public void Destroy() {
+		if (entityId_ == 0) return;
+		int currentId = entityId_;
+		entityId_ = 0; // IDを即座に無効化して再起・二重呼び出しをガード
+
 		/// 子の情報もクリア
 		uint childCount = GetChildCount();
 		List<Entity> children = new List<Entity>();
 		for (uint i = 0; i < childCount; i++) {
 			Entity child = GetChild(i);
-			if (child) {
+			if (child != null && child.Id != 0) {
 				children.Add(child);
 			}
 		}
 		foreach (Entity child in children) {
-			Debug.LogInfo("Entity.Destroy - Destroying child entity ID: " + child.Id + " of parent entity ID: " + entityId_);
+			Debug.LogInfo("Entity.Destroy - Destroying child entity ID: " + child.Id + " of parent entity ID: " + currentId);
 			child.Destroy();
 		}
 
 		// アタッチされているすべてのスクリプトのOnDestroyを呼び出し
-		foreach (var script in scripts_.Values) {
+		var scriptsCopy = new List<MonoScript>(scripts_.Values);
+		foreach (var script in scriptsCopy) {
 			try {
 				if (script != null) {
 					script.OnDestroy();
@@ -145,12 +150,15 @@ public class Entity {
 		}
 
 		/// Entityを削除
-		ecsGroup_.DestroyEntity(entityId_);
-		entityId_ = 0; // IDを無効化
+		if (ecsGroup_ != null) {
+			ecsGroup_.DestroyEntity(currentId);
+		}
 		transform = null;
 
-		foreach (var comp in components_) {
-			ecsGroup_.componentCollection.RemoveComponent(comp.Value);
+		foreach (var comp in new List<Component>(components_.Values)) {
+			if (comp != null && ecsGroup_ != null && ecsGroup_.componentCollection != null) {
+				ecsGroup_.componentCollection.RemoveComponent(comp);
+			}
 		}
 
 		components_.Clear();
@@ -289,7 +297,7 @@ public class Entity {
 
 
 	public static implicit operator bool(Entity entity) {
-		return entity != null;
+		return entity != null && entity.entityId_ != 0;
 	}
 
 	/// ------------------------------------------

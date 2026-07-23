@@ -1,0 +1,107 @@
+.\Project\Engine\Asset\Assets\Mesh\Skinning.cpp:123: result.paletteSRVHandle.first = pSRVHeap->GetCPUDescriptorHandel(result.srvDescriptorIndex);
+.\Project\Engine\Asset\Assets\Mesh\Skinning.cpp:135: device->CreateShaderResourceView(result.paletteResource.Get(), &paletteSRVDesc, result.paletteSRVHandle.first);
+.\Project\Engine\Core\Utility\FileSystem\FileSystem.cpp:51: ReplaceAll(&file.first, "\\", "/");
+.\Project\Engine\ECS\Component\Array\ComponentArray.h:88: /// first: コンポーネントのID, second: インデックス
+.\Project\Engine\ECS\Component\Collection\ComponentCollection.cpp:38: auto it = arrayMap_.find(component.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:244: Animator* first = animators.empty() ? nullptr : animators[0];
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:245: if (!first) return;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:250: auto* owner = first->GetOwner();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:255: auto it = model->GetAnimationClips().find(first->GetDefaultClip());
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:259: ImGui::Text("Default Clip: %s (ID: %u)", defaultClipName.c_str(), first->GetDefaultClip());
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:268: AnimationLayer& layer = first->layers[i];
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:288: auto* owner = first->GetOwner();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider.cpp:55: if(currentCategoryBit == static_cast<uint32_t>(entries[i].first)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider.cpp:62: bc->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider.cpp:85: uint32_t bitValue = static_cast<uint32_t>(entry.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider2D.cpp:55: if(currentCategoryBit == static_cast<uint32_t>(entries[i].first)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider2D.cpp:62: bc->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider2D.cpp:85: uint32_t bitValue = static_cast<uint32_t>(entry.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\CircleCollider.cpp:58: if(currentCategoryBit == static_cast<uint32_t>(entries[i].first)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\CircleCollider.cpp:65: c->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\CircleCollider.cpp:88: uint32_t bitValue = static_cast<uint32_t>(entry.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\SphereCollider.cpp:58: if(currentCategoryBit == static_cast<uint32_t>(entries[i].first)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\SphereCollider.cpp:65: c->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\SphereCollider.cpp:88: uint32_t bitValue = static_cast<uint32_t>(entry.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:335: ImGui::DragFloat("first speed", &speed.first, 0.1f, 0.0f, FLT_MAX);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:340: ImGui::DragFloat3("first size", &size.first.x, 0.1f, 0.0f, FLT_MAX);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:345: ImGui::DragFloat3("first rotate", &rotate.first.x, 0.1f);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:350: ImGui::ColorEdit4("first color", &color.first.r);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:225: Transform* first = transforms.empty() ? nullptr : transforms[0];
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:226: if (!first) return;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:229: if (!(first->rotate == first->lastSyncedRotate)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:230: first->SyncEulerFromQuaternion();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:233: Vector3   pos = first->position;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:234: Vector3   euler = first->euler;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:235: Vector3   scale = first->scale;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:236: int       flags = first->matrixCalcFlags;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:255: Vector3 delta = pos - first->position;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:287: Vector3 delta = euler - first->euler;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:323: Vector3 delta = scale - first->scale;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:353: first->lastSyncedRotate = first->rotate;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\UI\UILinkNavigationComponent.cpp:189: std::string keyName = UILinkNavigationComponent::KeyCodeToString(pair.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\UI\UILinkNavigationComponent.cpp:215: std::string keyStr = UILinkNavigationComponent::KeyCodeToString(pair.first);
+.\Project\Engine\ECS\Entity\Collection\EntityCollection.cpp:299: prefabs_[file.second] = std::make_unique<EntityPrefab>(file.first);
+.\Project\Engine\ECS\Entity\Collection\EntityCollection.cpp:315: if (file.first.empty()) {
+.\Project\Engine\ECS\Entity\Collection\EntityCollection.cpp:321: prefabs_[file.second] = std::make_unique<EntityPrefab>(file.first);
+.\Project\Engine\ECS\Entity\Collection\EntityCollection.cpp:328: const std::string& actualPrefabName = itr->first;
+.\Project\Engine\ECS\Entity\Prefab\EntityPrefabCollection.cpp:20: prefabs_[file.second] = std::make_unique<EntityPrefab>(file.first);
+.\Project\Engine\ECS\Entity\Prefab\EntityPrefabCollection.cpp:30: if (file.first.empty()) {
+.\Project\Engine\ECS\Entity\Prefab\EntityPrefabCollection.cpp:36: prefabs_[file.second] = std::make_unique<EntityPrefab>(file.first);
+.\Project\Engine\ECS\System\CameraUpdate\CameraUpdateSystem.cpp:73: Vector3 start = Vector3(worldCorners[edge.first].x, worldCorners[edge.first].y, worldCorners[edge.first].z);
+.\Project\Engine\ECS\System\CameraUpdate\CameraUpdateSystem.cpp:80: Gizmo::DrawLine(line.first, line.second, Vector4(1.0f, 1.0f, 0.0f, 1.0f)); // 黄色
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:26: return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:38: pair.first->GetComponent<CircleCollider>(),
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:46: pair.first->GetComponent<CircleCollider>(),
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:54: pair.first->GetComponent<BoxCollider2D>(),
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:62: pair.first->GetComponent<BoxCollider2D>(),
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:85: return liveEntities.find(p.first) == liveEntities.end()
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:185: return (p.first == pair.first && p.second == pair.second)
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:186: || (p.first == pair.second && p.second == pair.first);
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:203: return (p.first == pair.first && p.second == pair.second)
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:204: || (p.first == pair.second && p.second == pair.first);
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:236: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:237: enterIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:242: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:317: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:318: stayIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:323: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:396: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:397: exitIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:402: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:25: return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:39: pair.first->GetComponent<SphereCollider>(),
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:47: pair.first->GetComponent<SphereCollider>(),
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:55: pair.first->GetComponent<BoxCollider>(),
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:63: pair.first->GetComponent<BoxCollider>(),
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:92: return liveEntities.find(p.first) == liveEntities.end()
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:207: return (p.first == pair.first && p.second == pair.second)
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:208: || (p.first == pair.second && p.second == pair.first);
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:225: return (p.first == pair.first && p.second == pair.second)
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:226: || (p.first == pair.second && p.second == pair.first);
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:259: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:260: enterIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:265: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:343: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:344: stayIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:349: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:426: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:427: exitIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:432: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:85: Random::Vec3(size.first, size.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:86: Random::Vec3(rotate.first, rotate.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:87: effect->emitShape_.GetEmitDirection(emitPos) * Random::Float(speed.first, speed.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:88: Random::Vec4(color.first, color.second)
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:120: Random::Vec3(size.first, size.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:121: Random::Vec3(rotate.first, rotate.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:122: effect->emitShape_.GetEmitDirection(emitPos) * Random::Float(speed.first, speed.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:123: Random::Vec4(color.first, color.second)
+.\Project\Engine\ECS\System\UI\UIHierarchySystem.cpp:263: const std::string& elemId = pair.first;
+.\Project\Engine\ECS\System\UI\UIInputNavigationSystem.cpp:323: int32_t keyCode = pair.first;
+.\Project\Engine\Editor\Views\Windows\Develop\AnimationEditorWindow.h:51: if (start) *start = &itemFrames[index].first;
+.\Project\Engine\Editor\Views\Windows\Develop\BehaviorTreeEditorWindow.cpp:275: uint32_t keyHash = it->first;
+.\Project\Engine\Editor\Views\Windows\Develop\BehaviorTreeEditorWindow.cpp:801: n["properties"] = json::object(); for (const auto& p : node.properties) n["properties"][p.first] = p.second;
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:450: auto compItr = comps.find(it->first);
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:574: ComponentType compType = componentUIBindings_.contains(itr->first) ? componentUIBindings_[itr->first].type : ComponentType::Compute;
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:596: DrawComponentInnerContent(comp, itr->first, comp->enable);
+.\Project\Engine\Editor\Views\Windows\Develop\UIEditorWindow.cpp:1462: std::string srcGuidStr = pair.first;
+.\Project\Engine\Script\MonoScriptEngine.cpp:1009: return pair.first;

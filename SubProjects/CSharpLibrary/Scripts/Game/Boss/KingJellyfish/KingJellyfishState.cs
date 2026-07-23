@@ -338,7 +338,7 @@ internal sealed class KingJellyfishDeadState : IKingJellyfishState
 {
     public void Enter(KingJellyfish owner)
     {
-        // 死亡時の処理
+        owner.BeginDeath();
     }
     public void Update(KingJellyfish owner)
     {
