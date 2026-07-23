@@ -125,6 +125,14 @@
                 "rumbleLeftMotor_": 12.5,
                 "rumbleRightMotor_": 0.8
             },
+            "DashParticle": {
+                "offset_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "particlePrefabName_": "playerDashParticle"
+            },
             "EffectOnHit": {
                 "depthOffset_": 0.0,
                 "effectPrefabName_": "PlayerHitEffect",
@@ -329,6 +337,10 @@
                 {
                     "enable": true,
                     "name": "PlayerDashState"
+                },
+                {
+                    "enable": true,
+                    "name": "DashParticle"
                 },
                 {
                     "enable": true,
