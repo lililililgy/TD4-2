@@ -76,6 +76,8 @@ public class TatunoMousigo : MonoScript
 
     public override void Initialize()
     {
+        if (transform == null) { return; }
+
         motion_.Attach(entity);
 
         // Entity,Component,Scriptの取得
@@ -99,6 +101,8 @@ public class TatunoMousigo : MonoScript
 
     public override void Update()
     {
+        if (transform == null) { return; }
+
         if (!TryFindTarget())
         {
             return;
@@ -119,7 +123,8 @@ public class TatunoMousigo : MonoScript
     private void UpdateDirection()
     {
         bool inRange = rangeDetector_ == null || rangeDetector_.IsInRange;
-        float toTargetX = inRange ? targetEntity_.transform.position.x - transform.position.x : 0.0f;
+        bool hasTargetTransform = targetEntity_ != null && targetEntity_.transform != null && transform != null;
+        float toTargetX = inRange && hasTargetTransform ? targetEntity_.transform.position.x - transform.position.x : 0.0f;
         int desiredDir = toTargetX > kDirEpsilon ? 1 : (toTargetX < -kDirEpsilon ? -1 : 0);
 
         if (desiredDir == 0)
@@ -149,7 +154,7 @@ public class TatunoMousigo : MonoScript
 
     private void OnWalkFrameChanged(int frame)
     {
-        if (frame != stepFrame || moveDir_ == 0)
+        if (frame != stepFrame || moveDir_ == 0 || transform == null)
         {
             return;
         }
@@ -282,10 +287,10 @@ public class TatunoMousigo : MonoScript
     // 歩行・着地時の土埃エフェクトを足元に生成する
     private void SpawnDustParticle()
     {
-        if (String.IsNullOrEmpty(dustParticlePrefabName)) { return; }
+        if (String.IsNullOrEmpty(dustParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity dust = ecsGroup.CreateEntity(dustParticlePrefabName);
-        if (!dust) { return; }
+        if (!dust || dust.transform == null) { return; }
 
         // TatunoMousigoはtransform.rotateを回転させず、UVのX反転(facingDir_)だけで左右を表現しているため、
         // オフセットも回転ではなくfacingDir_でX成分をミラーさせる。
@@ -308,6 +313,11 @@ public class TatunoMousigo : MonoScript
             return false;
         }
 
+        if (transform == null || targetEntity_ == null || targetEntity_.transform == null)
+        {
+            return false;
+        }
+
         Vector3 toTarget = targetEntity_.transform.position - transform.position;
         bool isClose = Mathf.Abs(toTarget.x) <= jumpTriggerDistance;
         bool isAbove = toTarget.y >= jumpTriggerHeight;
@@ -320,6 +330,8 @@ public class TatunoMousigo : MonoScript
 
     private void ApplyY()
     {
+        if (transform == null) { return; }
+
         Vector3 pos = transform.position;
         pos.y = baseY_ + jumpYOffset_;
         transform.position = pos;
@@ -329,6 +341,7 @@ public class TatunoMousigo : MonoScript
     {
         if (targetEntity_ == null)
         {
+            if (ecsGroup == null) { return false; }
             targetEntity_ = ecsGroup.FindEntity(targetEntityName);
         }
         return targetEntity_ != null;

@@ -45,7 +45,7 @@ public class ExpDropper : MonoScript
             return;
         }
 
-        Drop();
+        Drop(dropExp);
     }
 
     /// <summary>

@@ -16,6 +16,8 @@ public class SpikeFishNeedle : MonoScript
     // FireNeedle から発射方向を設定する
     public void SetDirection(Vector3 dir)
     {
+        if (transform == null) { return; }
+
         direction_    = dir.Normalized();
         currentSpeed_ = initialSpeed;
         float roll = Mathf.Atan2(direction_.x, direction_.y);
@@ -24,6 +26,8 @@ public class SpikeFishNeedle : MonoScript
 
     public override void Update()
     {
+        if (transform == null) { return; }
+
         currentSpeed_ = Math.Min(maxSpeed, currentSpeed_ + acceleration * Time.deltaTime);
         transform.position += direction_ * currentSpeed_ * Time.deltaTime;
 
