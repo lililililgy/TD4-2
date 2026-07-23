@@ -161,7 +161,7 @@
             },
             "ExpDropper": {
                 "damageDropExp": 0.0,
-                "dropExp": 32.0
+                "dropExp": 68.0
             },
             "FlashOnDamaged": {
                 "duration_": 0.08,

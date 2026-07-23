@@ -43,7 +43,7 @@
                 "despawnTime_": 12.0
             },
             "ExpDropper": {
-                "dropExp": 16.0
+                "dropExp": 68.0
             },
             "FlapjackOctopus": {
                 "chargeScaleAnimationTime": 0.5,

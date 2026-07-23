@@ -55,7 +55,7 @@
                 "despawnTime_": 12.0
             },
             "ExpDropper": {
-                "dropExp": 32.0
+                "dropExp": 68.0
             },
             "FlashOnDamaged": {
                 "duration_": 0.08,
