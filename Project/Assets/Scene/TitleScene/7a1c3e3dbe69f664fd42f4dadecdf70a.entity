@@ -88,6 +88,15 @@
             "type": "Script"
         },
         {
+            "enable": 1,
+            "links": {
+                "GamepadDPadUp": "71ca9a0b4bebe31173d10f94522fe53b",
+                "UpArrow": "71ca9a0b4bebe31173d10f94522fe53b",
+                "W": "71ca9a0b4bebe31173d10f94522fe53b"
+            },
+            "type": "UILinkNavigationComponent"
+        },
+        {
             "characterSpacing": 0,
             "color": {
                 "w": 1.0,
@@ -120,15 +129,6 @@
             "text": "シュウリョウ",
             "type": "TextRenderer",
             "verticalAlignment": 0
-        },
-        {
-            "enable": 1,
-            "links": {
-                "GamepadDPadUp": "71ca9a0b4bebe31173d10f94522fe53b",
-                "UpArrow": "71ca9a0b4bebe31173d10f94522fe53b",
-                "W": "71ca9a0b4bebe31173d10f94522fe53b"
-            },
-            "type": "UILinkNavigationComponent"
         }
     ],
     "guid": "7a1c3e3dbe69f664fd42f4dadecdf70a",

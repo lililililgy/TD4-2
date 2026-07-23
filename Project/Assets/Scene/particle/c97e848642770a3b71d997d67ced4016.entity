@@ -6,6 +6,12 @@
                 "w": 1.0
             },
             "type": "Transform"
+        },
+        {
+            "renderer": {
+                "alignment": 0
+            },
+            "type": "ParticleSystem2D"
         }
     ],
     "guid": "c97e848642770a3b71d997d67ced4016",

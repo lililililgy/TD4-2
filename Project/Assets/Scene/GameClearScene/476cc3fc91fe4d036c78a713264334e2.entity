@@ -3,7 +3,7 @@
     "components": [
         {
             "position": {
-                "z": 0.75
+                "z": -0.5
             },
             "type": "Transform"
         }

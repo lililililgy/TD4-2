@@ -1,5 +1,13 @@
 {
     "active": true,
+    "components": [
+        {
+            "renderer": {
+                "alignment": 0
+            },
+            "type": "ParticleSystem2D"
+        }
+    ],
     "guid": "55ac90d5904cffe0c4278f466fe29386",
     "name": "thunderboltParticle",
     "parentGuid": null,
