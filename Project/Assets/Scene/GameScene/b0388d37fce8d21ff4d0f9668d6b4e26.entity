@@ -12,6 +12,13 @@
                 "invincibleDuration_": 0.800000011920929
             },
             "HitStopSystem": {},
+            "PlayerDashState": {
+                "rotateMaxSmoothSpeed_": 4.0,
+                "rotateSmoothTime_": 16.0
+            },
+            "PlayerNormalState": {
+                "decelMaxSmoothSpeed_": 256.0
+            },
             "PlayerSE": {
                 "damagedSePath_": "./Assets/Sounds/se/PlayerDamagedSE.mp3",
                 "damagedVolume_": 0.4000000059604645,
