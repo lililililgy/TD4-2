@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 static public class EntityComponentSystem {
 
-	[System.Runtime.InteropServices.DllImport("ONEngine.exe", CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl)]
+	[System.Runtime.InteropServices.DllImport("__Internal", CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl)]
 	private static extern void Variables_RegisterSerializeField(string className, string fieldName);
 
 	static public void InitializeSerializeFieldCache() {
