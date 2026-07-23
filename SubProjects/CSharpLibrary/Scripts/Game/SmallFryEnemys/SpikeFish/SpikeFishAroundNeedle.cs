@@ -26,9 +26,7 @@ public class SpikeFishAroundNeedle : MonoScript
 
     public override void Initialize()
     {
-        if (transform == null) { return; }
-
-        baseScale_ = transform.scale;
+        baseScale_ = transform != null ? transform.scale : Vector3.one;
         spriteAnim_ = entity.GetScript<SpriteAnimation>();
         // スポーン時もスケール0→1でイージング
         BeginRecovery();

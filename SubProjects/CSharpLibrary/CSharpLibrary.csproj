@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Project\Packages\Scripts\</OutputPath>
@@ -152,6 +152,7 @@
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Game\Background\Cloud.cs" />
     <Compile Include="Scripts\Game\Background\CloudManager.cs" />
+    <Compile Include="Scripts\Game\Boss\BossDeathPresentation.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHandAttackCommand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoWeakPoint.cs" />
@@ -266,6 +267,7 @@
     <Compile Include="Scripts\Game\Objective\PhaseSkipInput.cs" />
     <Compile Include="Scripts\Game\Objective\ShotObjective.cs" />
     <Compile Include="Scripts\Game\Objective\TutorialObjective.cs" />
+    <Compile Include="Scripts\Game\Player\DashParticle.cs" />
     <Compile Include="Scripts\Game\Player\PlayerAttackComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerDashState.cs" />
     <Compile Include="Scripts\Game\Player\PlayerInputComponent.cs" />
@@ -338,6 +340,7 @@
     <Compile Include="Scripts\Test\HotReloadTestScript.cs" />
     <Compile Include="Scripts\Test\ListEnumSerializeTestScript.cs" />
     <Compile Include="Scripts\Test\ListStructSerializeTestScript.cs" />
+    <Compile Include="Scripts\Test\ParticleEmitCountTestScript.cs" />
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\PressAnyKeyGamepadTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />

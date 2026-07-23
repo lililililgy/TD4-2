@@ -76,8 +76,6 @@ public class TatunoMousigo : MonoScript
 
     public override void Initialize()
     {
-        if (transform == null) { return; }
-
         motion_.Attach(entity);
 
         // Entity,Component,Scriptの取得
@@ -90,7 +88,7 @@ public class TatunoMousigo : MonoScript
         Entity cameraEntity = ecsGroup.FindEntity(cameraEntityName);
         cameraShake_ = cameraEntity != null ? cameraEntity.GetScript<CameraShake>() : null;
 
-        baseY_ = transform.position.y + baseYOffset;
+        baseY_ = transform != null ? transform.position.y + baseYOffset : baseYOffset;
 
         // 着地フレームに乗ったタイミングで1歩進める
         if (spriteAnimation_ != null)
