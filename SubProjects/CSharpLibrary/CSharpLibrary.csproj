@@ -280,7 +280,6 @@
     <Compile Include="Scripts\Game\Player\PlayerStateComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerStateTransition.cs" />
     <Compile Include="Scripts\Game\Roe\PhaseClearRoeReward.cs" />
-    <Compile Include="Scripts\Game\Roe\PhaseRoeRescue.cs" />
     <Compile Include="Scripts\Game\Roe\RoeManager.cs" />
     <Compile Include="Scripts\Game\Roe\RoeStateComponent.cs" />
     <Compile Include="Scripts\Game\SmallFryEnemys\ChaseMove\ChaseAnimation.cs" />
