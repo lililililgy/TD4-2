@@ -32,12 +32,12 @@ public class DashParticle : MonoScript {
     }
 
     // 親子付けはしない。プレイヤーはスケールが大きく、付けるとパーティクルまで巨大化するため。
-    // 代わりに座標を毎フレーム追従させる（FlapjackOctopus の泳ぎパーティクルと同じ方針）。
+    // 代わりに座標と向きを毎フレーム追従させる（FlapjackOctopus の泳ぎパーティクルと同じ方針）。
     public override void Update() {
         if (!particleEntity_ || particleEntity_.transform == null || transform == null) {
             return;
         }
-        particleEntity_.transform.SetPositionImmediate(SpawnPosition());
+        FollowPlayer(particleEntity_.transform);
     }
 
     public override void OnDestroy() {
@@ -63,7 +63,7 @@ public class DashParticle : MonoScript {
             return;
         }
 
-        particle.transform.SetPositionImmediate(SpawnPosition());
+        FollowPlayer(particle.transform);
         particleEntity_ = particle;
     }
 
@@ -76,6 +76,23 @@ public class DashParticle : MonoScript {
             particleEntity_.Destroy();
         }
         particleEntity_ = null;
+    }
+
+    // パーティクル Entity をプレイヤーの位置と向きに合わせる。
+    //
+    // 向きを合わせるのが要点。プレハブ側は
+    //   ・main.simulationSpace = World  → 初速 = shape の射出方向をエミッタ行列で回したもの
+    //   ・velocityOverLifetime.space = Local → 毎フレームの加速をエミッタのワールド行列で回す
+    //   ・renderer.alignment = Velocity → 板ポリは速度方向に向く
+    // なので、エミッタ Entity の rotate さえプレイヤーと同じにすれば
+    // 射出方向・尾の伸びる向き・板ポリの向きが全部まとめてプレイヤーの向きに揃う。
+    // （プレハブのローカル -Y 方向へ流れる設定なので、結果としてプレイヤーの後方へ流れる）
+    //
+    // rotate は代入だけだとフレーム末尾のバッチ送信でしか native に届かず、
+    // 生成直後の1フレームぶんが未回転のまま射出されてしまうので Immediate で書く。
+    private void FollowPlayer(Transform particleTransform) {
+        particleTransform.SetPositionImmediate(SpawnPosition());
+        particleTransform.SetRotateImmediate(transform.rotate);
     }
 
     private Vector3 SpawnPosition() {

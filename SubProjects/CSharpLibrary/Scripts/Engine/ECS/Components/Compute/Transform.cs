@@ -59,6 +59,20 @@ public class Transform : Component {
 	}
 
 	/// <summary>
+	/// ネイティブへ即座に回転を書き込む。
+	/// rotate への代入は毎フレーム末尾の SendAllBatches でしか C++ に届かないため、
+	/// 生成直後のエンティティを即座に向かせたい場合はこちらを使う。
+	/// C++ 側でワールド行列の再計算と子への伝播まで行われる。
+	/// C# 側の rotate も同時に更新するので、あとから来るバッチ送信と食い違わない。
+	/// </summary>
+	public void SetRotateImmediate(Quaternion value) {
+		rotate = value;
+		if (nativeHandle != 0) {
+			InternalSetRotate(nativeHandle, value.x, value.y, value.z, value.w);
+		}
+	}
+
+	/// <summary>
 	/// ネイティブのワールド行列から現在のワールド座標を読む。
 	/// position は親基準のローカル、matrix はシーン読み込み時のスナップショットなので、
 	/// 実行中に正しいワールド座標が要るときはこれを使う。
@@ -82,4 +96,7 @@ public class Transform : Component {
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	static extern void InternalGetPosition(ulong nativeHandle, out float x, out float y, out float z);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetRotate(ulong nativeHandle, float x, float y, float z, float w);
 }
