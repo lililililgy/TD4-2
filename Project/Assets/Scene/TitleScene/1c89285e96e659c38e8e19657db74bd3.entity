@@ -2,6 +2,7 @@
     "active": true,
     "components": [
         {
+            "inheritEmitterRotation": false,
             "main": {
                 "startSize3D": false,
                 "startSizeX": {
