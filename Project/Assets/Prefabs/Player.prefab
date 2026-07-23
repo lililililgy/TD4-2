@@ -274,6 +274,15 @@
                 "rotateMaxSmoothSpeed_": 3.0,
                 "rotateSmoothTime_": 0.6000000238418579
             },
+            "PlayerSE": {
+                "damagedSePath_": "./Assets/Sounds/se/player-damaged.mp3",
+                "damagedVolume_": 0.25,
+                "dashSePath_": "./Assets/Sounds/se/player-dash.mp3",
+                "dashVolume_": 0.2,
+                "pitch_": 1.0,
+                "shotSePath_": "./Assets/Sounds/se/player-shot.mp3",
+                "shotVolume_": 0.2
+            },
             "PlayerShotComponent": {
                 "bulletSpawnOffset_": {
                     "x": 0.0,
@@ -344,6 +353,10 @@
                 {
                     "enable": true,
                     "name": "DashParticle"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerSE"
                 },
                 {
                     "enable": true,
@@ -456,6 +469,13 @@
                 "x": 0.0,
                 "y": 0.0
             }
+        },
+        {
+            "enable": 1,
+            "path": "",
+            "pitch": 1.0,
+            "type": "SEPlayer",
+            "volume": 1.0
         }
     ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",
