@@ -59,6 +59,7 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         recoveryElapsed = 0.0f;
         laserFired = false;
 
+        owner.PlayAttackTellSe();
         if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack)
         {
             owner.UpdateChargeTell();

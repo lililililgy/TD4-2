@@ -14,4 +14,7 @@ public class KingGesoInkBarrageSettings : MonoScript
     [SerializeField] public float bulletDamage = 8.0f;            //弾のダメージ
     [SerializeField] public float recoveryDuration = 0.6f;        //回復時間
     [SerializeField] public Vector2 spawnOffset = Vector2.zero;   //弾の生成位置のオフセット
+    [SerializeField] public string waveSePath = "./Assets/Sounds/se/boss/KingGeso_InkBullet.mp3";
+    [SerializeField] public float waveSeVolume = 1.0f;
+    [SerializeField] public float waveSePitch = 1.0f;
 }

@@ -333,6 +333,9 @@
                 "maxHp_": 200.0
             },
             "KingYadokari": {
+                "attackTellSePath": "./Assets/Sounds/se/boss/KingYadokari_voise.mp3",
+                "attackTellSePitch": 1.0,
+                "attackTellSeVolume": 1.0,
                 "enable": true,
                 "fixedAttackType": 0,
                 "getUpDuration": 1.0,
@@ -357,8 +360,14 @@
                 "chargeDuration": 0.800000011920929,
                 "damage": 3.0,
                 "enable": true,
+                "fallSePath": "./Assets/Sounds/se/boss/KingYadokari_JumpAttack.mp3",
+                "fallSePitch": 1.0,
+                "fallSeVolume": 1.0,
                 "fallSpeed": 2600.0,
                 "fallThroughDistance": 300.0,
+                "jumpSePath": "./Assets/Sounds/se/boss/KingYadokari_Jump.mp3",
+                "jumpSePitch": 1.0,
+                "jumpSeVolume": 1.0,
                 "jumpSpeed": 1600.0,
                 "offscreenOffset": 700.0,
                 "recoveryDuration": 0.800000011920929,
@@ -510,6 +519,13 @@
                 "x": 0.0,
                 "y": 0.0
             }
+        },
+        {
+            "enable": 1,
+            "path": "",
+            "pitch": 1.0,
+            "type": "SEPlayer",
+            "volume": 1.0
         }
     ],
     "guid": "cce534c42aa14f70adac26931ce67a9e",

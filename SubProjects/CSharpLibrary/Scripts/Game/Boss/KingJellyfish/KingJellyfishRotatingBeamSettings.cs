@@ -10,4 +10,7 @@ public class KingJellyfishRotatingBeamSettings : MonoScript
     [SerializeField] public float length = 1200.0f;
     [SerializeField] public float width = 60.0f;
     [SerializeField] public float damage = 10.0f;
+    [SerializeField] public string fireSePath = "./Assets/Sounds/se/boss/KingJellyfish_Laser.mp3";
+    [SerializeField] public float fireSeVolume = 1.0f;
+    [SerializeField] public float fireSePitch = 1.0f;
 }

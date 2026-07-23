@@ -13,4 +13,7 @@ public class KingJellyfishElectricFieldSettings : MonoScript
     [SerializeField] public string thunderboltParticlePrefabName = "thunderboltParticle";
     [SerializeField] public int thunderboltParticleEmitCount = 1;
     [SerializeField] public float thunderboltParticleDuration = 1.0f;
+    [SerializeField] public string deploySePath = "./Assets/Sounds/se/boss/KingJellyfish_elecField.mp3";
+    [SerializeField] public float deploySeVolume = 1.0f;
+    [SerializeField] public float deploySePitch = 1.0f;
 }

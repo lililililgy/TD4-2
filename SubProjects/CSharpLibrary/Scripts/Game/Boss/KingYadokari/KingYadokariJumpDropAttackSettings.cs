@@ -10,4 +10,10 @@ public class KingYadokariJumpDropAttackSettings : MonoScript {
     [SerializeField] public float fallThroughDistance = 300.0f;
     [SerializeField] public float recoveryDuration = 0.8f;
     [SerializeField] public float damage = 3.0f;
+    [SerializeField] public string jumpSePath = "./Assets/Sounds/se/boss/KingYadokari_Jump.mp3";
+    [SerializeField] public float jumpSeVolume = 1.0f;
+    [SerializeField] public float jumpSePitch = 1.0f;
+    [SerializeField] public string fallSePath = "./Assets/Sounds/se/boss/KingYadokari_JumpAttack.mp3";
+    [SerializeField] public float fallSeVolume = 1.0f;
+    [SerializeField] public float fallSePitch = 1.0f;
 }

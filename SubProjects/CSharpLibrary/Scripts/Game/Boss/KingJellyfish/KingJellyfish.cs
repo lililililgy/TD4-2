@@ -39,6 +39,9 @@ public class KingJellyfish : MonoScript {
     [SerializeField] public int laserEffect03EmitCount = 1;
     [SerializeField] public string attackTelegraphPrefabName = "JellyfishAttackTelegraph";
     [SerializeField] public float attackTelegraphAlpha = 0.3f;
+    [SerializeField] public string attackTellSePath = "./Assets/Sounds/se/boss/KingJellyfish_voise.mp3";
+    [SerializeField] public float attackTellSeVolume = 1.0f;
+    [SerializeField] public float attackTellSePitch = 1.0f;
 
     private HP hp_;
     private ExpDropper expDropper_;
@@ -585,6 +588,10 @@ public class KingJellyfish : MonoScript {
         RotateTowardPosition(next + arcMoveLastDirection_);
     }
 
+    internal void PlayAttackTellSe() {
+        SEOneShot.Play(entity, attackTellSePath, attackTellSeVolume, attackTellSePitch);
+    }
+
     //=============================
     // 8方向レーザー攻撃処理
     //=============================
@@ -709,6 +716,7 @@ public class KingJellyfish : MonoScript {
 
         Vector2 origin = ToPlane(transform.position);
         int count = LaserCount;
+        bool firedAny = false;
 
         // レーザーを全方向に発射する
         for (int i = 0; i < count; i++) {
@@ -722,6 +730,15 @@ public class KingJellyfish : MonoScript {
             }
 
             ConfigureLaserEntity(laser, origin, direction, LaserLength, LaserWidth, beamSettings_.damage, LaserFireDuration, 0.0f);
+            firedAny = true;
+        }
+
+        if (firedAny) {
+            SEOneShot.Play(
+                entity,
+                beamSettings_.fireSePath,
+                beamSettings_.fireSeVolume,
+                beamSettings_.fireSePitch);
         }
     }
 
@@ -739,6 +756,7 @@ public class KingJellyfish : MonoScript {
 
         Vector2 origin = ToPlane(transform.position);
         int count = RotatingLaserCount;
+        bool firedAny = false;
         for (int i = 0; i < count; i++) {
             float angle = Mathf.PI * 2.0f * i / count;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
@@ -756,6 +774,15 @@ public class KingJellyfish : MonoScript {
                 rotatingBeamSettings_.damage,
                 RotatingLaserDuration,
                 rotatingBeamSettings_.rotationSpeed);
+            firedAny = true;
+        }
+
+        if (firedAny) {
+            SEOneShot.Play(
+                entity,
+                rotatingBeamSettings_.fireSePath,
+                rotatingBeamSettings_.fireSeVolume,
+                rotatingBeamSettings_.fireSePitch);
         }
     }
 
@@ -773,6 +800,7 @@ public class KingJellyfish : MonoScript {
         Vector2 center = targetEntity_ != null && targetEntity_.transform != null
             ? ToPlane(targetEntity_.transform.position)
             : ToPlane(transform.position);
+        bool deployedAny = false;
 
         for (int i = 0; i < ElectricFieldCount; i++) {
             Vector2 position = center;
@@ -804,6 +832,15 @@ public class KingJellyfish : MonoScript {
                 electricFieldSettings_.thunderboltParticlePrefabName,
                 electricFieldSettings_.thunderboltParticleEmitCount,
                 electricFieldSettings_.thunderboltParticleDuration);
+            deployedAny = true;
+        }
+
+        if (deployedAny) {
+            SEOneShot.Play(
+                entity,
+                electricFieldSettings_.deploySePath,
+                electricFieldSettings_.deploySeVolume,
+                electricFieldSettings_.deploySePitch);
         }
     }
 

@@ -4,6 +4,9 @@ public class JellyfishElectricField : MonoScript
     [SerializeField] public float activationDelay = 1.0f;
     [SerializeField] public float activeDuration = 1.2f;
     [SerializeField] public float radius = 140.0f;
+    [SerializeField] public string activationSePath = "./Assets/Sounds/se/boss/KingJellyfish_electricField.mp3";
+    [SerializeField] public float activationSeVolume = 1.0f;
+    [SerializeField] public float activationSePitch = 1.0f;
 
     private float elapsed_;
     private bool configured_;
@@ -94,6 +97,7 @@ public class JellyfishElectricField : MonoScript
 
         if (active)
         {
+            SEOneShot.Play(entity, activationSePath, activationSeVolume, activationSePitch);
             EmitThunderboltParticle();
         }
 

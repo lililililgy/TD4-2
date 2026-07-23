@@ -48,6 +48,9 @@
                 "regenPerSecond": 0.0
             },
             "KingGeso": {
+                "attackTellSePath": "./Assets/Sounds/se/boss/KingGeso_voice.mp3",
+                "attackTellSePitch": 1.0,
+                "attackTellSeVolume": 1.0,
                 "cameraEntityName": "MainCamera",
                 "chargeEffectEmitCount": 1,
                 "chargeEffectEmitInterval": 0.20000000298023224,
@@ -70,6 +73,9 @@
             },
             "KingGesoHomingAttackSettings": {
                 "launchInterval": 1.0,
+                "launchSePath": "./Assets/Sounds/se/boss/KingGeso_homingBullet.mp3",
+                "launchSePitch": 1.0,
+                "launchSeVolume": 1.0,
                 "projectileCount": 3,
                 "projectileDamage": 1.0,
                 "projectileLifeTime": 8.0,
@@ -103,7 +109,10 @@
                 },
                 "tellDuration": 1.2000000476837158,
                 "waveCount": 7,
-                "waveInterval": 1.600000023841858
+                "waveInterval": 1.600000023841858,
+                "waveSePath": "./Assets/Sounds/se/boss/KingGeso_InkBullet.mp3",
+                "waveSePitch": 1.0,
+                "waveSeVolume": 1.0
             },
             "KingGesoMove": {
                 "followOffset": {
@@ -234,6 +243,13 @@
                 }
             ],
             "type": "Script"
+        },
+        {
+            "enable": 1,
+            "path": "",
+            "pitch": 1.0,
+            "type": "SEPlayer",
+            "volume": 1.0
         }
     ],
     "guid": "ef9cb081b1c1cd85474b7280c162abf3",

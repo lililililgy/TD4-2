@@ -9,4 +9,7 @@ public class KingJellyfishOmnidirectionalBeamSettings : MonoScript
     [SerializeField] public float width = 80.0f;
     [SerializeField] public float damage = 15.0f;
     [SerializeField] public int laserCount = 8;
+    [SerializeField] public string fireSePath = "./Assets/Sounds/se/boss/KingJellyfish_Laser.mp3";
+    [SerializeField] public float fireSeVolume = 1.0f;
+    [SerializeField] public float fireSePitch = 1.0f;
 }

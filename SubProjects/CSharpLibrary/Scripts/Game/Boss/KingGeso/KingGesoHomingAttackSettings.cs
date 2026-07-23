@@ -13,4 +13,7 @@ public class KingGesoHomingAttackSettings : MonoScript
     [SerializeField] public string swimParticlePrefabName = "enemySwimParticle";
     [SerializeField] public int swimParticleEmitCount = 1;
     [SerializeField] public float swimParticleEmitInterval = 0.15f;
+    [SerializeField] public string launchSePath = "./Assets/Sounds/se/boss/KingGeso_homingBullet.mp3";
+    [SerializeField] public float launchSeVolume = 1.0f;
+    [SerializeField] public float launchSePitch = 1.0f;
 }

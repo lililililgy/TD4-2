@@ -119,6 +119,9 @@
             "KingJellyfish": {
                 "attackTelegraphAlpha": 0.30000001192092896,
                 "attackTelegraphPrefabName": "JellyfishAttackTelegraph",
+                "attackTellSePath": "./Assets/Sounds/se/boss/KingJellyfish_voise.mp3",
+                "attackTellSePitch": 1.0,
+                "attackTellSeVolume": 1.0,
                 "cameraEntityName": "MainCamera",
                 "damageInvincibilityDuration": 0.5,
                 "damageReactionBlinkInterval": 0.05999999865889549,
@@ -165,6 +168,9 @@
             "KingJellyfishElectricFieldSettings": {
                 "activeDuration": 1.2000000476837158,
                 "damage": 1.0,
+                "deploySePath": "./Assets/Sounds/se/boss/KingJellyfish_elecField.mp3",
+                "deploySePitch": 1.0,
+                "deploySeVolume": 1.0,
                 "fieldCount": 4,
                 "fieldPrefabName": "JellyfishElectricField",
                 "radius": 140.0,
@@ -186,6 +192,9 @@
             },
             "KingJellyfishOmnidirectionalBeamSettings": {
                 "damage": 15.0,
+                "fireSePath": "./Assets/Sounds/se/boss/KingJellyfish_Laser.mp3",
+                "fireSePitch": 1.0,
+                "fireSeVolume": 1.0,
                 "fireDuration": 0.4000000059604645,
                 "laserCount": 8,
                 "laserPrefabName": "JellyfishLaser",
@@ -198,6 +207,9 @@
             "KingJellyfishRotatingBeamSettings": {
                 "damage": 1.0,
                 "duration": 4.0,
+                "fireSePath": "./Assets/Sounds/se/boss/KingJellyfish_Laser.mp3",
+                "fireSePitch": 1.0,
+                "fireSeVolume": 1.0,
                 "laserCount": 4,
                 "laserPrefabName": "JellyfishLaser",
                 "length": 1200.0,
@@ -332,6 +344,13 @@
                 "x": 0.0,
                 "y": 0.0
             }
+        },
+        {
+            "enable": 1,
+            "path": "",
+            "pitch": 1.0,
+            "type": "SEPlayer",
+            "volume": 1.0
         }
     ],
     "guid": "2a75a187cc14795397a4b907fc812b10",

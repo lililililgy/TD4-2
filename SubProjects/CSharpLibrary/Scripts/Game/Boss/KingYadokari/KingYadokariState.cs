@@ -16,6 +16,7 @@ internal sealed class KingYadokariIdleState : IKingYadokariState {
         elapsed_ += Time.deltaTime;
         if (elapsed_ >= owner.IdleDuration) {
             KingYadokariAttackTypeEnum attackType = owner.SelectAttackType();
+            owner.PlayAttackTellSe();
             if (attackType == KingYadokariAttackTypeEnum.ShellBullet) {
                 owner.ChangeState(new KingYadokariShellBulletAttackState());
                 return;
@@ -59,6 +60,7 @@ internal sealed class KingYadokariJumpDropAttackState : IKingYadokariState {
         if (phase_ == Phase.Charge) {
             chargeElapsed_ += Time.deltaTime;
             if (chargeElapsed_ >= owner.JumpDropChargeDuration) {
+                owner.PlayJumpSe();
                 phase_ = Phase.Jump;
             }
             return;

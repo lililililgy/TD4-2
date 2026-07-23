@@ -14,6 +14,9 @@ public class KingYadokari : MonoScript {
     [SerializeField] public float getUpDuration = 1.0f;
     [SerializeField] public bool randomizeAttackType = true;
     [SerializeField] public KingYadokariAttackTypeEnum fixedAttackType = KingYadokariAttackTypeEnum.GiantClaw;
+    [SerializeField] public string attackTellSePath = "./Assets/Sounds/se/boss/KingYadokari_voise.mp3";
+    [SerializeField] public float attackTellSeVolume = 1.0f;
+    [SerializeField] public float attackTellSePitch = 1.0f;
 
     private HP hp_;
     private ExpDropper expDropper_;
@@ -80,6 +83,10 @@ public class KingYadokari : MonoScript {
         if (state_ != null) {
             state_.Enter(this);
         }
+    }
+
+    internal void PlayAttackTellSe() {
+        SEOneShot.Play(entity, attackTellSePath, attackTellSeVolume, attackTellSePitch);
     }
 
     internal bool FireShellBullet() {
@@ -213,6 +220,14 @@ public class KingYadokari : MonoScript {
         return true;
     }
 
+    internal void PlayJumpSe() {
+        SEOneShot.Play(
+            entity,
+            jumpDropSettings_.jumpSePath,
+            jumpDropSettings_.jumpSeVolume,
+            jumpDropSettings_.jumpSePitch);
+    }
+
     internal bool UpdateJumpToOffscreen() {
         float destinationY = GetCameraCenterY()
             + NonNegative(jumpDropSettings_.screenHalfHeight)
@@ -255,6 +270,11 @@ public class KingYadokari : MonoScript {
         SetBodyVelocity(new Vector2(0.0f, -Positive(jumpDropSettings_.fallSpeed)));
         SetBodyAttackDamage(jumpDropSettings_.damage);
         SetVisualState(new Vector4(1.0f, 0.2f, 0.1f, 1.0f), standingRotation_);
+        SEOneShot.Play(
+            entity,
+            jumpDropSettings_.fallSePath,
+            jumpDropSettings_.fallSeVolume,
+            jumpDropSettings_.fallSePitch);
         return true;
     }
 

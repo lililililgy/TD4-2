@@ -36,6 +36,9 @@ public class KingGeso : MonoScript
     [SerializeField] public string chargeEffectEntityName = "Geso_ChargeEffect";
     [SerializeField] public int chargeEffectEmitCount = 1;
     [SerializeField] public float chargeEffectEmitInterval = 0.2f;
+    [SerializeField] public string attackTellSePath = "./Assets/Sounds/se/boss/KingGeso_voice.mp3";
+    [SerializeField] public float attackTellSeVolume = 1.0f;
+    [SerializeField] public float attackTellSePitch = 1.0f;
 
     private HP hp_;
     private ExpDropper expDropper_;
@@ -214,6 +217,7 @@ public class KingGeso : MonoScript
 
     internal void BeginAttackTell()
     {
+        SEOneShot.Play(entity, attackTellSePath, attackTellSeVolume, attackTellSePitch);
         chargeEffectEmitElapsed_ = 0.0f;
         EmitChargeEffect();
 
@@ -627,12 +631,30 @@ public class KingGeso : MonoScript
         homing.swimParticlePrefabName = homingSettings_.swimParticlePrefabName;
         homing.swimParticleEmitCount = homingSettings_.swimParticleEmitCount;
         homing.swimParticleEmitInterval = homingSettings_.swimParticleEmitInterval;
-        return homing.CommandLaunch(targetEntity_);
+        bool launched = homing.CommandLaunch(targetEntity_);
+        if (launched)
+        {
+            SEOneShot.Play(
+                entity,
+                homingSettings_.launchSePath,
+                homingSettings_.launchSeVolume,
+                homingSettings_.launchSePitch);
+        }
+        return launched;
     }
 
     //=============================================================
     // 墨弾の生成と発射
     //=============================================================
+    internal void PlayInkBulletWaveSe()
+    {
+        SEOneShot.Play(
+            entity,
+            inkSettings_.waveSePath,
+            inkSettings_.waveSeVolume,
+            inkSettings_.waveSePitch);
+    }
+
     internal bool FireInkBullet(Vector2 direction)
     {
         if (availableInkBullets_.Count == 0)

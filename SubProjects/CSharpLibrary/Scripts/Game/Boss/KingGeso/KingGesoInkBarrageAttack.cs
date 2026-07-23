@@ -43,12 +43,21 @@ internal sealed class KingGesoInkBarrageAttack : IKingGesoAttack
     {
         int bulletCount = owner.InkBulletCountPerWave;
         float angleStep = Mathf.PI * 2.0f / bulletCount;
+        bool firedAny = false;
 
         for (int i = 0; i < bulletCount; i++)
         {
             float angle = currentAngle_ + angleStep * i;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-            owner.FireInkBullet(direction);
+            if (owner.FireInkBullet(direction))
+            {
+                firedAny = true;
+            }
+        }
+
+        if (firedAny)
+        {
+            owner.PlayInkBulletWaveSe();
         }
 
         firedWaveCount_++;
