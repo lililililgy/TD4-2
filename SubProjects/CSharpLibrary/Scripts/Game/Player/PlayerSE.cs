@@ -3,10 +3,9 @@ using System;
 // プレイヤーの効果音(SE)。ダッシュした瞬間・たまごを発射した瞬間・ダメージを受けた瞬間の3つを鳴らす。
 // SEPlayer コンポーネントを持つプレイヤー Entity に付ける。
 //
-// 3種類を1つの SEPlayer で鳴らし分けるため、再生のたびに path を渡せる OneShotPlay を使う
-// （SEPlayer は Entity に1つしか持てず、Play() はコンポーネントに設定された path しか鳴らせない）。
-// path のクリップが読み込まれていなければ engine 側が黙って無視するので、
-// 音源ファイルを置くまでは単に鳴らないだけで、エラーにはならない。
+// 再生は SEOneShot 経由（1つの SEPlayer で複数種類を鳴らし分ける理由はそちらのコメント参照）。
+// なお「プレイヤーがダメージを与えた瞬間」の音はここではなく SEOnHit が鳴らす。
+// 命中の検知は攻撃側の AttackCollision が持っているため。
 //
 // ダッシュ・発射はイベントで拾う。どちらも「実際に成立した瞬間」にだけ発行されるので空振りしない
 // （ダッシュは PlayerDashState.OnEnter() の遷移確定時、発射は PlayerShotComponent が
@@ -80,17 +79,6 @@ public class PlayerSE : MonoScript {
     }
 
     private void Play(string path, float volume) {
-        if (String.IsNullOrEmpty(path) || !entity) {
-            return;
-        }
-
-        SEPlayer sePlayer = entity.GetComponent<SEPlayer>();
-        if (!sePlayer) {
-            return;
-        }
-
-        // OneShotPlay は engine 側のリクエストキューに積むだけなので、
-        // イベントのコールバック（＝他スクリプトの Update 中）から呼んでも問題ない。
-        sePlayer.OneShotPlay(volume, pitch_, path);
+        SEOneShot.Play(entity, path, volume, pitch_);
     }
 }

@@ -20,6 +20,9 @@
                 "shotSePath_": "./Assets/Sounds/se/PlayerShotSE.mp3",
                 "shotVolume_": 0.30000001192092896
             },
+            "SEOnHit": {
+                "sePath_": "./Assets/Sounds/se/PlayerAttackSE.mp3"
+            },
             "ShakeOnDamaged": {
                 "frequency_": 256.0,
                 "maxAmplitude_": 1000.0,

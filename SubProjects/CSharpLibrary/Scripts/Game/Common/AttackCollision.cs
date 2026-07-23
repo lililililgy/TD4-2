@@ -82,6 +82,13 @@ public class AttackCollision : MonoScript
             hitStop.OnHit(dealtDamage);
         }
 
+        // 命中音。SEOnHit が付いている攻撃だけ鳴る（鳴らす音の選択はあちらの責務）。
+        SEOnHit se = entity.GetScript<SEOnHit>();
+        if (se != null)
+        {
+            se.OnHit(dealtDamage);
+        }
+
         // ヒットエフェクト。EffectOnHit が付いている攻撃だけ衝突点にプレハブが出る。
         // engine から接触点は渡ってこないので、位置の計算はあちらの責務。
         // destroyOnHit_ で自分を消す前に呼ぶ（消えたあとでは衝突点を計算できない）。

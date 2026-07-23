@@ -302,6 +302,11 @@
                 "maxRoe_": 12,
                 "roePrefabName_": "Roe"
             },
+            "SEOnHit": {
+                "pitch_": 1.0,
+                "sePath_": "./Assets/Sounds/se/player-hit.mp3",
+                "volume_": 0.25
+            },
             "ShakeOnDamaged": {
                 "durationScale_": 1.0,
                 "frequency_": 128.0,
@@ -393,6 +398,10 @@
                 {
                     "enable": true,
                     "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "SEOnHit"
                 },
                 {
                     "enable": true,
