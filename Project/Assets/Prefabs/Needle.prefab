@@ -41,7 +41,7 @@
             },
             "SpikeFishNeedle": {
                 "acceleration": 1646.0,
-                "aliveTime": 0.699999988079071,
+                "aliveTime": 1.0,
                 "initialSpeed": 17.0,
                 "maxSpeed": 4889.0
             },
@@ -93,7 +93,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "96607359ca01201864e8316d6fd1f98f",
+    "guid": "884cab8cc2d464cec0175e5614ca8a2b",
     "name": "Needle",
     "parentGuid": null,
     "prefabName": "Needle"
