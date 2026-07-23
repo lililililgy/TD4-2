@@ -10,10 +10,10 @@ public class PlayerHPUI : MonoScript
 	int currentLives = 5;
 	[SerializeField] int startLives = 3;
 
-	[SerializeField] int testValue = 3;
-
 	public override void Initialize()
 	{
+		prevLives = startLives;
+		currentLives = startLives;
 
 		InitialHPUI(startLives);
 
@@ -25,22 +25,16 @@ public class PlayerHPUI : MonoScript
 		}
 
 		playerEntity = gameScene.FindEntity("Player");
-		if (playerEntity)
-		{
-			HP hp = playerEntity.GetScript<HP>();
-			if (hp)
-			{
-				// maxLives = (int)hp.MaxHp;
-				// currentLives = (int)hp.CurrentHp;
-			}
-		}
-
-
 	}
 
 	public override void Update()
 	{
-		UpdateLives(testValue);
+		PlayerLifeComponent playerLifeComponent = playerEntity.GetScript<PlayerLifeComponent>();
+		if (playerLifeComponent)
+		{
+			int lives = playerLifeComponent.RemainingLives();
+			UpdateLives(lives);
+		}
 	}
 
 
@@ -97,13 +91,13 @@ public class PlayerHPUI : MonoScript
 
 	void UpdateUI()
 	{
-		if (prevLives != currentLives || prevLives == -1)
+		if (prevLives != currentLives)
 		{
 			int diff = currentLives - prevLives;
 			if (diff > 0)
 			{
 				// 残機が増えた場合の処理
-				for (int i = currentLives - 1; i < currentLives + diff - 1; i++)
+				for (int i = prevLives; i < currentLives; i++)
 				{
 					// 残機が増えたときのUI更新処理をここに追加
 					Entity child = entity.GetChild((uint)i);
@@ -115,8 +109,6 @@ public class PlayerHPUI : MonoScript
 							/// 幼生として発射できるなら。
 							spriteAnimation.startFrame = 0;
 							spriteAnimation.endFrame = 2;
-
-							/// 発射は出来ないがHPとして換算できるなら。
 						}
 					}
 				}
@@ -124,7 +116,7 @@ public class PlayerHPUI : MonoScript
 			else if (diff < 0)
 			{
 				// 残機が減った場合の処理
-				for (int i = prevLives; i > currentLives; i--)
+				for (int i = currentLives; i < prevLives; i++)
 				{
 					// 残機が減ったときのUI更新処理をここに追加
 					Entity child = entity.GetChild((uint)i);
