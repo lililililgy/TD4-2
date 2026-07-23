@@ -106,6 +106,25 @@
                 "criticalRate_": 0.0,
                 "threshold_": 0.0
             },
+            "DamageFeedback": {
+                "blinkColor_": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.4,
+                    "z": 0.4
+                },
+                "blinkEntityNames_": [
+                    "Player_Body",
+                    "Player_Tentacle"
+                ],
+                "blinkInterval_": 0.08,
+                "hitstopDuration_": 0.12,
+                "hitstopTimeScale_": 0.15,
+                "invincibleDuration_": 1.0,
+                "rumbleDuration_": 0.25,
+                "rumbleLeftMotor_": 12.5,
+                "rumbleRightMotor_": 0.8
+            },
             "HP": {
                 "MAX_HP": 12,
                 "currentHp": 1,
@@ -337,6 +356,10 @@
                 {
                     "enable": true,
                     "name": "ShakeOnDamaged"
+                },
+                {
+                    "enable": true,
+                    "name": "DamageFeedback"
                 },
                 {
                     "enable": true,

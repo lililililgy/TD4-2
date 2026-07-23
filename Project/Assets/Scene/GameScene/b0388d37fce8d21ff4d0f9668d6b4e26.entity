@@ -2,6 +2,15 @@
     "active": true,
     "components": [
         {
+            "DamageFeedback": {
+                "blinkColor_": {
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "hitstopDuration_": 0.012000000104308128,
+                "hitstopTimeScale_": 0.10000000149011612,
+                "invincibleDuration_": 0.800000011920929
+            },
             "ShakeOnDamaged": {
                 "frequency_": 256.0,
                 "maxAmplitude_": 1000.0,
