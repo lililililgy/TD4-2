@@ -128,6 +128,7 @@
     <Compile Include="Scripts\Engine\ECS\Components\Compute\BoxCollider2D.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\CameraComponent.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\CircleCollider.cs" />
+    <Compile Include="Scripts\Engine\ECS\Components\Compute\ParticleSystem2D.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\Rigidbody2D.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\SEPlayer.cs" />
     <Compile Include="Scripts\Engine\ECS\Components\Compute\SphereCollider.cs" />
@@ -298,6 +299,7 @@
     <Compile Include="Scripts\Test\HotReloadTestScript.cs" />
     <Compile Include="Scripts\Test\ListEnumSerializeTestScript.cs" />
     <Compile Include="Scripts\Test\ListStructSerializeTestScript.cs" />
+    <Compile Include="Scripts\Test\ParticleEmitCountTestScript.cs" />
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\PressAnyKeyGamepadTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />

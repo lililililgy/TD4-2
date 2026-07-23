@@ -29,4 +29,24 @@ namespace ONEngine {
         isPaused_ = true;
     }
 
+    void ParticleSystem2D::Emit(int count) {
+        if (count <= 0) return;
+
+        const int requestCapacity = std::max(0, main.maxParticles - pendingEmitCount_);
+        pendingEmitCount_ += std::min(count, requestCapacity);
+    }
+
+    int ParticleSystem2D::ConsumePendingEmitCount() {
+        const int count = pendingEmitCount_;
+        pendingEmitCount_ = 0;
+        return count;
+    }
+
+    void InternalEmitParticleSystem2D(uint64_t nativeHandle, int32_t count) {
+        auto* particleSystem = reinterpret_cast<ParticleSystem2D*>(nativeHandle);
+        if (!particleSystem || count <= 0) return;
+
+        particleSystem->Emit(count);
+    }
+
 }
