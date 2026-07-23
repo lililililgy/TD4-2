@@ -1,0 +1,97 @@
+{
+    "active": true,
+    "components": [
+        {
+            "elementId": "restart-checkpoint",
+            "elementIndex": 2,
+            "enable": 1,
+            "groupId": "f677e517d0b345af2e8845fd5c7e14b1",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": -1.1979997158050537,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 2.0,
+                "y": 2.0,
+                "z": 2.0
+            },
+            "type": "Transform"
+        },
+        {
+            "GameOver_RestartCheckpoint": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "18ed45811a0c7ca55edceb4828936682",
+                "GamepadDPadDown": "18ed45811a0c7ca55edceb4828936682",
+                "GamepadDPadUp": "ff21fcfc6c80b5665348e90b0b34f1e1",
+                "S": "18ed45811a0c7ca55edceb4828936682",
+                "UpArrow": "ff21fcfc6c80b5665348e90b0b34f1e1",
+                "W": "ff21fcfc6c80b5665348e90b0b34f1e1"
+            },
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "outlineWidth": 4,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "チェックポイント カラ ハジメル",
+            "type": "TextRenderer",
+            "verticalAlignment": 0
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "GameOver_RestartCheckpoint"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "e44614dff237d793ff77eb069918e1b3",
+    "name": "Element_4",
+    "parentGuid": "f677e517d0b345af2e8845fd5c7e14b1",
+    "prefabName": ""
+}

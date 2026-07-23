@@ -1,0 +1,94 @@
+{
+    "active": true,
+    "components": [
+        {
+            "elementId": "exit-game",
+            "elementIndex": 3,
+            "enable": 1,
+            "groupId": "f677e517d0b345af2e8845fd5c7e14b1",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": -1.7999999523162842,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 2.0,
+                "y": 2.0,
+                "z": 2.0
+            },
+            "type": "Transform"
+        },
+        {
+            "ClearExitGame": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ClearExitGame"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "GamepadDPadUp": "e44614dff237d793ff77eb069918e1b3",
+                "UpArrow": "e44614dff237d793ff77eb069918e1b3",
+                "W": "e44614dff237d793ff77eb069918e1b3"
+            },
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "outlineWidth": 4,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "ゲーム ヲ オワル",
+            "type": "TextRenderer",
+            "verticalAlignment": 0
+        }
+    ],
+    "guid": "18ed45811a0c7ca55edceb4828936682",
+    "name": "exit-game",
+    "parentGuid": "f677e517d0b345af2e8845fd5c7e14b1",
+    "prefabName": ""
+}

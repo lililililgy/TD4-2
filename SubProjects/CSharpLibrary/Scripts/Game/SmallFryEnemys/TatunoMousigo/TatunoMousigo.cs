@@ -58,6 +58,7 @@ public class TatunoMousigo : MonoScript
 
     // 通常時に維持するY座標
     private float baseY_ = 0.0f;
+    private bool  baseYCaptured_ = false;
 
     // 横移動
     private int moveDir_ = 0;
@@ -88,7 +89,7 @@ public class TatunoMousigo : MonoScript
         Entity cameraEntity = ecsGroup.FindEntity(cameraEntityName);
         cameraShake_ = cameraEntity != null ? cameraEntity.GetScript<CameraShake>() : null;
 
-        baseY_ = transform != null ? transform.position.y + baseYOffset : baseYOffset;
+        TryCaptureBaseY();
 
         // 着地フレームに乗ったタイミングで1歩進める
         if (spriteAnimation_ != null)
@@ -97,9 +98,20 @@ public class TatunoMousigo : MonoScript
         }
     }
 
+    // Initialize時点ではtransformがまだ準備できていないことがあるため、
+    // 準備できるまで毎フレーム再試行する(でないとbaseY_が0焼き付いてしまう)。
+    private void TryCaptureBaseY()
+    {
+        if (baseYCaptured_ || transform == null) { return; }
+        baseY_ = transform.position.y + baseYOffset;
+        baseYCaptured_ = true;
+    }
+
     public override void Update()
     {
         if (transform == null) { return; }
+
+        TryCaptureBaseY();
 
         if (!TryFindTarget())
         {
