@@ -11,6 +11,7 @@
             "emission": {
                 "rateOverTime": 0.5
             },
+            "inheritEmitterRotation": false,
             "main": {
                 "startSize3D": false,
                 "startSizeX": {

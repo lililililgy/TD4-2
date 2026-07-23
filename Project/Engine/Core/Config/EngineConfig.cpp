@@ -1,4 +1,4 @@
-﻿#include "EngineConfig.h"
+#include "EngineConfig.h"
 #include <fstream>
 #include <filesystem>
 #include <nlohmann/json.hpp>
@@ -25,6 +25,7 @@ namespace ONEngine::EngineConfig {
 	bool isFullscreen = false;
 	bool enableVSync = true;
 	bool ignoreCSharpLog = false;
+	bool enableReleaseLogFile = true;
 
 	bool isTestMode = false;
 	std::string testScene = "";

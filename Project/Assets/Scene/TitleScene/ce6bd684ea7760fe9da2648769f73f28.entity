@@ -2,16 +2,74 @@
     "active": true,
     "components": [
         {
-            "postEffectHeight": -1,
-            "postEffectPivot": 0,
-            "postEffectStartX": 0,
-            "postEffectStartY": 0,
-            "postEffectWidth": -1,
-            "type": "ScreenPostEffectTag"
+            "absorptionCoefficients": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "causticsIntensity": 0.6010000109672546,
+            "causticsScale": 0.18000000715255737,
+            "causticsSpeed": 0.12800000607967377,
+            "colorFilter": [
+                0.21541346609592438,
+                0.713412344455719,
+                0.939068078994751
+            ],
+            "contrast": 1.8070000410079956,
+            "distortionStrength": 0.0017999999690800905,
+            "fogColor": [
+                0.20518749952316284,
+                0.732096254825592,
+                0.8673834800720215
+            ],
+            "fogDensity": 0.023499999195337296,
+            "lightDirection": [
+                0.20000000298023224,
+                -1.0,
+                -0.22599999606609344
+            ],
+            "lightShaftsIntensity": 0.7519999742507935,
+            "postEffects": [
+                {
+                    "enabled": false,
+                    "type": 0
+                },
+                {
+                    "enabled": false,
+                    "type": 1
+                },
+                {
+                    "enabled": true,
+                    "type": 2
+                },
+                {
+                    "enabled": true,
+                    "type": 3
+                },
+                {
+                    "enabled": true,
+                    "type": 4
+                },
+                {
+                    "enabled": true,
+                    "type": 5
+                },
+                {
+                    "enabled": true,
+                    "type": 6
+                },
+                {
+                    "enabled": false,
+                    "type": 7
+                }
+            ],
+            "saturation": 1.0520000457763672,
+            "type": "ScreenPostEffectTag",
+            "vignetteStrength": 0.550000011920929
         }
     ],
     "guid": "ce6bd684ea7760fe9da2648769f73f28",
-    "name": "MainCamera",
+    "name": "TitleCamera",
     "parentGuid": null,
-    "prefabName": "MainCamera"
+    "prefabName": "TitleCamera"
 }

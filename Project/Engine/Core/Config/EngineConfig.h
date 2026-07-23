@@ -18,6 +18,7 @@ extern int windowHeight;
 extern bool isFullscreen;
 extern bool enableVSync;
 extern bool ignoreCSharpLog;
+extern bool enableReleaseLogFile;
 
 // Test Mode settings
 extern bool isTestMode;
