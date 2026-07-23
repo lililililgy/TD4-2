@@ -27,8 +27,12 @@ public class TatunoMousigo : MonoScript
 
     /* ----- カメラシェイク ----- */
     [SerializeField] private string cameraEntityName = "MainCamera";
+    // 振幅はワールド単位なので数百オーダーになる(プレハブ側で設定)
     [SerializeField] private float moveShakeIntensity = 2.0f;
     [SerializeField] private float landShakeIntensity = 8.0f;
+    [SerializeField] private float moveShakeDuration  = 0.12f;
+    [SerializeField] private float landShakeDuration  = 0.25f;
+    [SerializeField] private float shakeFrequency     = 28.0f;
 
     /* ----- パーティクル ----- */
     // 歩行時・着地時に再生する土埃
@@ -45,6 +49,7 @@ public class TatunoMousigo : MonoScript
     private SpriteAnimation spriteAnimation_;
     // 敵単位でパーティクルの発生位置を調整するオフセットスクリプト
     private ParticleOffset particleOffset_;
+    private RigidbodyMotion motion_ = new RigidbodyMotion(6.0f);
 
     // 歩きアニメーションのフレーム範囲
     private int walkStartFrame = 0; // 停止ポーズ
@@ -71,6 +76,7 @@ public class TatunoMousigo : MonoScript
 
     public override void Initialize()
     {
+        motion_.Attach(entity);
 
         // Entity,Component,Scriptの取得
         targetEntity_ = ecsGroup.FindEntity(targetEntityName);
@@ -100,6 +106,10 @@ public class TatunoMousigo : MonoScript
 
         UpdateJump();
         UpdateDirection();
+
+        // 横方向だけ Rigidbody2D 経由で連続移動する。Y はこの後 ApplyY() が baseY_ に固定する。
+        motion_.Apply(transform, new Vector3(moveDir_ * moveSpeed, 0.0f, 0.0f));
+
         UpdateWalkAnimation();
         ApplyY();
         UpdateTurnUV();
@@ -144,11 +154,7 @@ public class TatunoMousigo : MonoScript
             return;
         }
 
-        Vector3 pos = transform.position;
-        pos.x += moveDir_ * stepDistance;
-        transform.position = pos;
-
-        cameraShake_?.Shake(moveShakeIntensity);
+        cameraShake_?.Shake(moveShakeDuration, moveShakeIntensity, shakeFrequency);
         SpawnDustParticle();
     }
 
@@ -262,7 +268,7 @@ public class TatunoMousigo : MonoScript
             jumpYOffset_ = 0.0f;
             jumpState_ = JumpState.None;
             jumpCooldownTimer_ = jumpCooldown;
-            cameraShake_?.Shake(landShakeIntensity);
+            cameraShake_?.Shake(landShakeDuration, landShakeIntensity, shakeFrequency);
             SpawnDustParticle();
         }
     }

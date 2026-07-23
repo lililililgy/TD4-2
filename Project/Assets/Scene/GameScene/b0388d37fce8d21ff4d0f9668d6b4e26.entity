@@ -19,6 +19,11 @@
                 "referenceDuration_": 0.07999999821186066
             },
             "type": "Variables"
+        },
+        {
+            "mass": 0.009999999776482582,
+            "restitution": 100.0,
+            "type": "Rigidbody2D"
         }
     ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",

@@ -58,9 +58,11 @@ public class FlapjackOctopus : MonoScript
     private Action stateUpdateAction_;
     // 状態ごとの突入処理
     private Dictionary<State, Action> enterActions_;
+    private RigidbodyMotion motion_ = new RigidbodyMotion(6.0f);
 
     public override void Initialize()
     {
+        motion_.Attach(entity);
 
         // 初期スケールを保持しておく
         initialScale_ = transform.scale;
@@ -323,8 +325,6 @@ public class FlapjackOctopus : MonoScript
     // 水の抵抗を受けて速度が指数関数的に減衰していく慣性移動
     private void ApplyInertiaMovement()
     {
-        if (velocity_.LengthSq() <= 0.0001f) { return; }
-
         // 水の抵抗による速度減衰
         float drag = chaseDrag;
         if (drag <= 0.0001f)
@@ -334,7 +334,7 @@ public class FlapjackOctopus : MonoScript
 
         // 減衰計算: v = v0 * exp(-drag * dt)
         velocity_ *= (float)Math.Exp(-drag * Time.deltaTime);
-        transform.position += velocity_ * Time.deltaTime;
+        motion_.Apply(transform, velocity_);
     }
 
     private void UpdateChaseScalePulse()
