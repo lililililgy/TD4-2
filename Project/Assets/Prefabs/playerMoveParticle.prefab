@@ -48,7 +48,7 @@
                                 "color": {
                                     "a": 1.0,
                                     "b": 1.0,
-                                    "g": 0.8172042369842529,
+                                    "g": 0.8172049522399902,
                                     "r": 0.0
                                 },
                                 "inTangent": 0.0,
@@ -59,8 +59,8 @@
                                 "color": {
                                     "a": 1.0,
                                     "b": 1.0,
-                                    "g": 0.32258057594299316,
-                                    "r": 0.0
+                                    "g": 0.5726675987243652,
+                                    "r": 0.36917561292648315
                                 },
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
@@ -84,7 +84,7 @@
                 "bursts": [],
                 "enabled": true,
                 "rateOverDistance": 0.0,
-                "rateOverTime": 32.0
+                "rateOverTime": 16.0
             },
             "enable": 1,
             "main": {
@@ -123,10 +123,10 @@
                     "state": 0
                 },
                 "startLifetime": {
-                    "constant": 1.5,
+                    "constant": 5.400000095367432,
                     "max": 2.0,
                     "min": 1.0,
-                    "state": 1
+                    "state": 0
                 },
                 "startRotation": {
                     "constant": 0.0,
@@ -274,13 +274,19 @@
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 0.0,
-                                "value": 1.0
+                                "value": 0.5299999713897705
                             },
                             {
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 0.3499999940395355,
-                                "value": 5.480000019073486
+                                "value": 4.019999980926514
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.5,
+                                "value": 5.400000095367432
                             }
                         ]
                     },
@@ -365,12 +371,12 @@
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 0.0,
-                                "value": 200.0
+                                "value": 75.0
                             },
                             {
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
-                                "time": 0.3400000035762787,
+                                "time": 0.3499999940395355,
                                 "value": 1.0
                             }
                         ]
@@ -381,7 +387,7 @@
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 0.0,
-                                "value": -200.0
+                                "value": -75.0
                             },
                             {
                                 "inTangent": 0.0,
@@ -403,13 +409,13 @@
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 0.0,
-                                "value": -400.0
+                                "value": -150.0
                             },
                             {
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 1.0,
-                                "value": -200.0
+                                "value": -75.0
                             }
                         ]
                     },
@@ -439,8 +445,8 @@
             }
         }
     ],
-    "guid": "c269941dd384076626c4be0a6612f4c9",
-    "name": "playerDashParticle",
+    "guid": "3c4dba81374cbf80c114912176550ff1",
+    "name": "playerMoveParticle",
     "parentGuid": null,
-    "prefabName": "playerDashParticle"
+    "prefabName": "playerMoveParticle"
 }
