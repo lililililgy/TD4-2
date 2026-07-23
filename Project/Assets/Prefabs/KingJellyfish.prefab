@@ -69,9 +69,9 @@
                     }
                 }
             ],
-            "guid": "fd699c02287ffb7593425d82e7c7add5",
+            "guid": "830949512e41ef66f18120ed50d33650",
             "name": "JellyfishWeakPoint",
-            "parentGuid": "2a75a187cc14795397a4b907fc812b10",
+            "parentGuid": "06f024afdf13ab91fc4c5fc975f2c749",
             "prefabName": "JellyfishWeakPoint"
         }
     ],
@@ -80,15 +80,15 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": 2000.0,
-                "y": -151.79234313964844,
+                "x": 0.0,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
-                "w": 0.09438684582710266,
-                "x": -0.0,
-                "y": -0.0,
-                "z": 0.9955356121063232
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
             },
             "scale": {
                 "x": 1214.999267578125,
@@ -334,7 +334,7 @@
             }
         }
     ],
-    "guid": "2a75a187cc14795397a4b907fc812b10",
+    "guid": "06f024afdf13ab91fc4c5fc975f2c749",
     "name": "KingJellyfish",
     "parentGuid": null,
     "prefabName": "KingJellyfish"

@@ -28,13 +28,16 @@
                 "targetEntityName_": "KingGeso"
             },
             "SpawnOnPhaseBegan": {
+                "count_": 1,
                 "phaseName_": "BossBattlePhase_1",
                 "prefabName_": "KingGeso",
+                "spawnAroundEntityName_": "",
                 "spawnPos_": {
                     "x": 0.0,
-                    "y": 0.0,
+                    "y": 400.0,
                     "z": 0.0
-                }
+                },
+                "spawnRadius_": 0.0
             },
             "type": "Variables"
         },
