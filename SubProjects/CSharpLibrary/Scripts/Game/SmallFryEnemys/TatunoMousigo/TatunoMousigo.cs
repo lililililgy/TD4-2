@@ -76,8 +76,6 @@ public class TatunoMousigo : MonoScript
 
     public override void Initialize()
     {
-        if (transform == null) { return; }
-
         motion_.Attach(entity);
 
         // Entity,Component,Scriptの取得

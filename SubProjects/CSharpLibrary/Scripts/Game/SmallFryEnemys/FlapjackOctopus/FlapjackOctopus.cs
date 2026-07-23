@@ -62,8 +62,6 @@ public class FlapjackOctopus : MonoScript
 
     public override void Initialize()
     {
-        if (transform == null) { return; }
-
         motion_.Attach(entity);
 
         // 初期スケールを保持しておく
