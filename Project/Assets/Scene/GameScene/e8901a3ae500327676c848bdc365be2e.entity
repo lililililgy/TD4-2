@@ -24,7 +24,7 @@
         },
         {
             "KillCountObjective": {
-                "targetCount_": 100,
+                "targetCount_": 10,
                 "targetEntityName_": ""
             },
             "SpawnOnDestroy": {

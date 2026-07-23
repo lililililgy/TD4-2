@@ -92,6 +92,36 @@ public class RoeManager : MonoScript
         return roe_.Count;
     }
 
+    // 発射できる状態か（成熟卵があり、かつ最後の1卵ではない）。TryConsumeMature() が成功する条件そのもの。
+    public bool CanShoot()
+    {
+        return EggCount() > 1 && MatureCount() > 0;
+    }
+
+    // 卵数が count 個に満たなければ、足りないぶんだけ幼生たまご(未成熟の卵)を与える。
+    // 実際に増えた数を返す（HP 上限で頭打ちになる／既に足りていれば 0）。
+    //
+    // 卵数の真実は HP なので、判断も HP で行う。roe_ の実体は次の Update の
+    // SyncEggsToHp が追いつかせるため、生成直後の卵はまだ roe_ に居ない（EggCount() は1フレーム遅れる）。
+    // 生えたばかりの卵は未成熟なので、増えるのは必ず幼生たまご。
+    public int EnsureEggCount(int count)
+    {
+        if (hp_ == null)
+        {
+            return 0;
+        }
+
+        int current = (int)hp_.CurrentHp;
+        if (current >= count)
+        {
+            return 0;
+        }
+
+        // SetHp は MaxHp でクランプする。※ Heal ではなく SetHp なのは TryConsumeMature と同じ理由
+        hp_.SetHp(count);
+        return (int)hp_.CurrentHp - current;
+    }
+
     // ---- 状態遷移（発射） ----
 
     // 成熟卵(弾)を1つ隊列から外して返す（発射用）。無ければ null。破棄は呼び出し側に任せる。
