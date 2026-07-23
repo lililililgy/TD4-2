@@ -86,9 +86,9 @@
                     "type": "SpriteRenderer"
                 }
             ],
-            "guid": "3818a1876c69e26e0da17c7fee7c43c4",
+            "guid": "ed0ce65e3b321cfd0f3b5f891116c113",
             "name": "SpikeFishAroundNeedle",
-            "parentGuid": "0564814838f82f93c537857714b58de2",
+            "parentGuid": "0ddfefefe7891522f08877c724fc53a4",
             "prefabName": "SpikeFishAroundNeedle"
         }
     ],
@@ -160,6 +160,7 @@
                 "despawnTime_": 12.0
             },
             "ExpDropper": {
+                "damageDropExp": 0.0,
                 "dropExp": 32.0
             },
             "FlashOnDamaged": {
@@ -193,7 +194,7 @@
             },
             "SpikeFishAttack": {
                 "attackDuration": 0.800000011920929,
-                "needleNum": 16
+                "needleNum": 7
             },
             "SpriteAnimation": {
                 "cols": 4,
@@ -319,7 +320,7 @@
             }
         }
     ],
-    "guid": "0564814838f82f93c537857714b58de2",
+    "guid": "0ddfefefe7891522f08877c724fc53a4",
     "name": "SpikeFish",
     "parentGuid": null,
     "prefabName": "SpikeFish"
