@@ -274,6 +274,7 @@
     <Compile Include="Scripts\Game\Player\PlayerLifeComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerMoveComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerNormalState.cs" />
+    <Compile Include="Scripts\Game\Player\PlayerSE.cs" />
     <Compile Include="Scripts\Game\Player\PlayerShotComponent.cs" />
     <Compile Include="Scripts\Game\Player\PlayerState.cs" />
     <Compile Include="Scripts\Game\Player\PlayerStateComponent.cs" />

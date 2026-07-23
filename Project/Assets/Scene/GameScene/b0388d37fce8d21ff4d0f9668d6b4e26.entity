@@ -12,6 +12,17 @@
                 "invincibleDuration_": 0.800000011920929
             },
             "HitStopSystem": {},
+            "PlayerSE": {
+                "damagedSePath_": "./Assets/Sounds/se/PlayerDamagedSE.mp3",
+                "damagedVolume_": 0.4000000059604645,
+                "dashSePath_": "./Assets/Sounds/se/PlayerDashSE.mp3",
+                "dashVolume_": 0.30000001192092896,
+                "shotSePath_": "./Assets/Sounds/se/PlayerShotSE.mp3",
+                "shotVolume_": 0.30000001192092896
+            },
+            "SEOnHit": {
+                "sePath_": "./Assets/Sounds/se/PlayerAttackSE.mp3"
+            },
             "ShakeOnDamaged": {
                 "frequency_": 256.0,
                 "maxAmplitude_": 1000.0,
