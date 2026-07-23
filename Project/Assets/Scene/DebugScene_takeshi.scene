@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.10000000149011612,
+        0.25,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "4f6e72f15f5c2f71a13cb6e0b55a9248",
@@ -159,6 +165,12 @@
             "guid": "4170e6df9ecda4ba6b1598128067c7a3",
             "parentGuid": null,
             "path": "./DebugScene_takeshi/4170e6df9ecda4ba6b1598128067c7a3.entity"
+        },
+        {
+            "guid": "7dbb4c38c4b1d8fe426ae93c845bd6f1",
+            "parentGuid": null,
+            "path": "./DebugScene_takeshi/7dbb4c38c4b1d8fe426ae93c845bd6f1.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }

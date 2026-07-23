@@ -496,7 +496,15 @@ public class KingJellyfish : MonoScript {
 
         JellyfishChargeDamageField damageFieldScript = damageField.GetScript<JellyfishChargeDamageField>();
         if (damageFieldScript != null) {
-            damageFieldScript.Configure(start, end, ChargeDamageFieldWidth, chargeSettings_.damage, ChargeDamageFieldDuration, transform.position.z);
+            damageFieldScript.Configure(
+                start,
+                end,
+                ChargeDamageFieldWidth,
+                chargeSettings_.damage,
+                ChargeDamageFieldDuration,
+                transform.position.z,
+                chargeSettings_.sparkParticlePrefabName,
+                chargeSettings_.sparkParticleEmitCount);
         }
 
         AttackCollision attackCollision = damageField.GetScript<AttackCollision>();

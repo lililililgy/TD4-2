@@ -203,6 +203,7 @@
     <Compile Include="Scripts\Game\Common\Attractor.cs" />
     <Compile Include="Scripts\Game\Common\ContinueState.cs" />
     <Compile Include="Scripts\Game\Common\Critical.cs" />
+    <Compile Include="Scripts\Game\Common\DamageShake.cs" />
     <Compile Include="Scripts\Game\Common\DamagePoint.cs" />
     <Compile Include="Scripts\Game\Common\DamageRelay.cs" />
     <Compile Include="Scripts\Game\Common\GameEvents.cs" />
@@ -210,9 +211,11 @@
     <Compile Include="Scripts\Game\Common\HP.cs" />
     <Compile Include="Scripts\Game\Common\IGaugeSource.cs" />
     <Compile Include="Scripts\Game\Common\InputUtil.cs" />
+    <Compile Include="Scripts\Game\Common\ParticleOffset.cs" />
     <Compile Include="Scripts\Game\Common\PhaseRequest.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
+    <Compile Include="Scripts\Game\Common\ShakeOnDamaged.cs" />
     <Compile Include="Scripts\Game\Common\ShakeOnHit.cs" />
     <Compile Include="Scripts\Game\Common\ShowOnPhase.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnDestroy.cs" />
