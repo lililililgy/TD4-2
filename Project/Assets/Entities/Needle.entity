@@ -1,6 +1,14 @@
 {
     "active": true,
-    "guid": "64bfe4bdece16e15cb082123f16c4775",
+    "components": [
+        {
+            "SpikeFishNeedle": {
+                "aliveTime": 0.699999988079071
+            },
+            "type": "Variables"
+        }
+    ],
+    "guid": "96607359ca01201864e8316d6fd1f98f",
     "name": "Needle",
     "parentGuid": null,
     "prefabName": "Needle"
