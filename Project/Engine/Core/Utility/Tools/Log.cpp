@@ -17,6 +17,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/null_sink.h>
 
 /// engine
 #include "Engine/Core/Config/EngineConfig.h"
@@ -86,26 +87,43 @@ void Console::Initialize() {
 	/// 非同期スレッドプール
 	spdlog::init_thread_pool(8192, 1);
 
-	/// ログ出力先(日付入り)
-#ifdef DEBUG_MODE
-	const std::string logDir = "../Generated/Log/";
-#else 
-	const std::string logDir = "./Log/";
+	bool enableFileLog = true;
+#ifndef DEBUG_MODE
+	enableFileLog = EngineConfig::enableReleaseLogFile;
 #endif
-	const std::string fileName = "engine" + GetCurrentDateTimeString() + ".log";
-	auto sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
-		logDir + fileName, 10 * 1024 * 1024, 3);
 
-	auto logger = std::make_shared<spdlog::async_logger>(
-		"engine", sink,
-		spdlog::thread_pool(),
-		spdlog::async_overflow_policy::discard_new // v1.16.0の場合
-	);
+	if (enableFileLog) {
+		/// ログ出力先(日付入り)
+#ifdef DEBUG_MODE
+		const std::string logDir = "../Generated/Log/";
+#else 
+		const std::string logDir = "./Log/";
+#endif
+		const std::string fileName = "engine" + GetCurrentDateTimeString() + ".log";
+		auto sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
+			logDir + fileName, 10 * 1024 * 1024, 3);
 
-	spdlog::set_default_logger(logger);
-	spdlog::set_pattern("[%H:%M:%S.%e] [%l] %v");
+		auto logger = std::make_shared<spdlog::async_logger>(
+			"engine", sink,
+			spdlog::thread_pool(),
+			spdlog::async_overflow_policy::discard_new // v1.16.0の場合
+		);
 
-	spdlog::info("Logger initialized.");
+		spdlog::set_default_logger(logger);
+		spdlog::set_pattern("[%H:%M:%S.%e] [%l] %v");
+
+		spdlog::info("Logger initialized.");
+	} else {
+		auto sink = std::make_shared<spdlog::sinks::null_sink_mt>();
+
+		auto logger = std::make_shared<spdlog::async_logger>(
+			"engine", sink,
+			spdlog::thread_pool(),
+			spdlog::async_overflow_policy::discard_new
+		);
+
+		spdlog::set_default_logger(logger);
+	}
 
 	initialized = true;
 }

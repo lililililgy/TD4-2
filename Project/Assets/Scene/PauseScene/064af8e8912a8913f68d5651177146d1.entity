@@ -23,8 +23,8 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 15.0,
-                "y": 1.0,
+                "x": 4.0,
+                "y": 4.0,
                 "z": 1.0
             },
             "type": "Transform"
@@ -51,7 +51,7 @@
             "type": "Variables"
         },
         {
-            "enable": 1,
+            "enable": 0,
             "isPixelPerfect": true,
             "material": {
                 "baseColor": {
@@ -61,6 +61,9 @@
                     "z": 0.2037486881017685
                 },
                 "baseTextureGuid": "3c667a9c8898c994979a53fc3a2e4da8",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -77,6 +80,40 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "outlineWidth": 12,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "ゲーム ヲ オワル",
+            "type": "TextRenderer",
+            "verticalAlignment": 0
         },
         {
             "enable": 1,

@@ -15,24 +15,23 @@ public class AttackCollision : MonoScript {
             return; // 自分自身は無視
         }
 
+        // 会心(クリティカル)補正。Critical を持っていれば、攻撃者の向きと相手への角度差に
+        // 応じた倍率を取得してダメージに掛ける。持っていなければ等倍。
         Critical critical = entity.GetScript<Critical>();
         float multiplier = critical != null ? critical.DamageMultiplierAgainst(collision) : 1.0f;
+        float dealtDamage = damage_ * multiplier;
 
         GesoWeakPoint weakPoint = collision.GetScript<GesoWeakPoint>();
         if (weakPoint != null) {
-            weakPoint.Damage(damage_ * multiplier);
-            if (destroyOnHit_) {
-                entity.Destroy();
-            }
+            weakPoint.Damage(dealtDamage);
+            OnDamageDealt(dealtDamage);
             return;
         }
 
         YadokariWeakPoint yadokariWeakPoint = collision.GetScript<YadokariWeakPoint>();
         if (yadokariWeakPoint != null) {
-            yadokariWeakPoint.Damage(damage_ * multiplier);
-            if (destroyOnHit_) {
-                entity.Destroy();
-            }
+            yadokariWeakPoint.Damage(dealtDamage);
+            OnDamageDealt(dealtDamage);
             return;
         }
 
@@ -49,9 +48,21 @@ public class AttackCollision : MonoScript {
             return;
         }
 
-        // 会心(クリティカル)補正。Critical を持っていれば、攻撃者の向きと相手への角度差に
-        // 応じた倍率を取得してダメージに掛ける。持っていなければ等倍。
-        hp.TakeDamage(damage_ * multiplier);
+        hp.TakeDamage(dealtDamage);
+
+        OnDamageDealt(dealtDamage);
+    }
+
+    // ダメージが実際に通ったときの共通後処理。
+    // 空振り（HP を持たない相手・無敵中の弾き）では呼ばれないので、当たった瞬間だけ演出が出る。
+    private void OnDamageDealt(float dealtDamage) {
+        // 命中演出。ShakeOnHit が付いている攻撃だけカメラが揺れる。
+        // 揺れ幅の決定はあちらの責務なので、ここは実ダメージを渡すだけ。
+        // 破棄より先に呼ぶ（Publish は同期呼び出しなので、この場で演出まで走る）。
+        ShakeOnHit shake = entity.GetScript<ShakeOnHit>();
+        if (shake != null) {
+            shake.OnHit(dealtDamage);
+        }
 
         if (destroyOnHit_) {
             entity.Destroy();

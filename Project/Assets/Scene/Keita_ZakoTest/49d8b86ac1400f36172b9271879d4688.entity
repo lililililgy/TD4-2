@@ -14,7 +14,10 @@
         },
         {
             "material": {
-                "baseTextureGuid": "1e73117556377963597bd35043846a53"
+                "baseTextureGuid": "1e73117556377963597bd35043846a53",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
             },
             "type": "SpriteRenderer"
         }

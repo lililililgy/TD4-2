@@ -54,9 +54,10 @@ void ONEngine::GameECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Asse
 	ecs->AddSystem<Rigidbody2DUpdateSystem>();
 	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);
 	ecs->AddSystem<EffectUpdateSystem>();
+	// C#や移動Systemが変更した座標を、ParticleのEmitが参照するmatWorldへ反映する。
+	ecs->AddSystem<TransformUpdateSystem>();
 	ecs->AddSystem<ParticleSystemUpdateSystem>();
 	ecs->AddSystem<ParticleSystem2DUpdateSystem>();
-	ecs->AddSystem<TransformUpdateSystem>();
 
 	/// 衝突判定に使うsystem
 	ecs->AddSystem<TerrainCollision>();
@@ -96,9 +97,10 @@ void ONEngine::DebugECSGroupAddSystemFunction(ECSGroup* ecs, DxManager* dxm, Ass
 	ecs->AddSystem<Rigidbody2DUpdateSystem>();
 	ecs->AddSystem<AudioPlaybackSystem>(assetCollection);
 	ecs->AddSystem<EffectUpdateSystem>();
+	// C#や移動Systemが変更した座標を、ParticleのEmitが参照するmatWorldへ反映する。
+	ecs->AddSystem<TransformUpdateSystem>();
 	ecs->AddSystem<ParticleSystemUpdateSystem>();
 	ecs->AddSystem<ParticleSystem2DUpdateSystem>();
-	ecs->AddSystem<TransformUpdateSystem>();
 	ecs->AddSystem<ShadowCasterUpdateSystem>();
 
 	/// 衝突判定に使うsystem

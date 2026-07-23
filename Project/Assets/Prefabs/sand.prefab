@@ -5,8 +5,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -615.5999145507813,
-                "y": -420.4000549316406,
+                "x": -626.4996948242188,
+                "y": -420.0,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0523359589278698
             },
             "scale": {
-                "x": 640.0,
-                "y": 80.0,
-                "z": 6.299999713897705
+                "x": 768.0,
+                "y": 192.0,
+                "z": 4.031982421875
             },
             "type": "Transform"
         },
@@ -36,6 +36,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "7307678cadf152ea606981d76f7043e6",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -54,7 +57,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "89964bdd4dc41107df15fba0ecf42b40",
+    "guid": "476cc3fc91fe4d036c78a713264334e2",
     "name": "sand",
     "parentGuid": null,
     "prefabName": ""

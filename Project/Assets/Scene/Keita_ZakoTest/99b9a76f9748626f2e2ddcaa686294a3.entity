@@ -10,6 +10,14 @@
                 "y": 230.41744995117188
             },
             "type": "Transform"
+        },
+        {
+            "material": {
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929
+            },
+            "type": "SpriteRenderer"
         }
     ],
     "guid": "99b9a76f9748626f2e2ddcaa686294a3",

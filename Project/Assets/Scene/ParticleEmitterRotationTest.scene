@@ -1,0 +1,14 @@
+{
+    "entities": [
+        {
+            "guid": "a17fdabd0f57a6816b342502204e6f34",
+            "parentGuid": null,
+            "path": "./ParticleEmitterRotationTest/camera.entity"
+        },
+        {
+            "guid": "b77caa8aab1259afe123ad3b73d83ded",
+            "parentGuid": null,
+            "path": "./ParticleEmitterRotationTest/particle.entity"
+        }
+    ]
+}

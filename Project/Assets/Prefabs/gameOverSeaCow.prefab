@@ -1,0 +1,571 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -1000.0,
+                "y": 250.0,
+                "z": 100.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "colorOverLifetime": {
+                "color": {
+                    "gradient": {
+                        "alphaKeys": [],
+                        "colorKeys": [
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.0,
+                                    "g": 0.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.05000000074505806
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.10000000149011612
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.0,
+                                    "g": 0.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.15000000596046448
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.20000000298023224
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.25
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.0,
+                                    "g": 0.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.30000001192092896
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.3499999940395355
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.0,
+                                    "g": 0.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.4000000059604645
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.44999998807907104
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.0,
+                                    "g": 0.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.5
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.550000011920929
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.0,
+                                    "g": 0.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.6000000238418579
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.6499999761581421
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.0,
+                                    "g": 0.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.699999988079071
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.75
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.0,
+                                    "g": 0.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.800000011920929
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.8500000238418579
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 0.0,
+                                    "g": 0.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.8999999761581421
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 1.0,
+                                    "r": 1.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.949999988079071
+                            }
+                        ]
+                    },
+                    "gradientMax": {
+                        "alphaKeys": [],
+                        "colorKeys": []
+                    },
+                    "gradientMin": {
+                        "alphaKeys": [],
+                        "colorKeys": []
+                    },
+                    "state": 0
+                },
+                "enabled": true
+            },
+            "emission": {
+                "bursts": [],
+                "enabled": true,
+                "rateOverDistance": 0.0,
+                "rateOverTime": 1.0
+            },
+            "enable": 1,
+            "main": {
+                "duration": 5.0,
+                "gravityModifier": 0.0,
+                "looping": true,
+                "maxParticles": 1000,
+                "playOnAwake": true,
+                "prewarm": false,
+                "simulationSpace": 1,
+                "startColor": {
+                    "constant": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "max": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "min": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "state": 0
+                },
+                "startDelay": {
+                    "constant": 3.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startLifetime": {
+                    "constant": 7.0,
+                    "max": 9.0,
+                    "min": 7.0,
+                    "state": 1
+                },
+                "startRotation": {
+                    "constant": 0.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSize": {
+                    "constant": 150.0,
+                    "max": 120.0,
+                    "min": 100.0,
+                    "state": 1
+                },
+                "startSpeed": {
+                    "constant": 5.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                }
+            },
+            "renderer": {
+                "alignment": 1,
+                "blendMode": 0,
+                "flipMode": 0,
+                "materialGuid": "02c7b482bfda24d85fe7936db880e60b",
+                "meshGuid": "",
+                "renderMode": 0
+            },
+            "rotationOverLifetime": {
+                "angularVelocity": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "enabled": false
+            },
+            "shape": {
+                "angle": 25.0,
+                "arc": 360.0,
+                "boxScale": {
+                    "x": 1.0,
+                    "y": 300.0,
+                    "z": 1.0
+                },
+                "enabled": true,
+                "radius": 0.0,
+                "radiusThickness": 1.0,
+                "type": 3
+            },
+            "sizeOverLifetime": {
+                "enabled": false,
+                "size": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 0.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.10000000149011612,
+                                "value": 1.0
+                            }
+                        ]
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 2
+                }
+            },
+            "textureSheetAnimation": {
+                "enabled": true,
+                "fps": 12.0,
+                "tilesX": 2,
+                "tilesY": 1
+            },
+            "type": "ParticleSystem2D",
+            "velocityOverLifetime": {
+                "enabled": true,
+                "space": 0,
+                "speedModifier": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "x": {
+                    "constant": 0.30000001192092896,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 400.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.27550724148750305,
+                                "value": 340.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.3855072557926178,
+                                "value": 320.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.5155072212219238,
+                                "value": 290.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.7055072784423828,
+                                "value": 320.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.8255072236061096,
+                                "value": 380.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.9855072498321533,
+                                "value": 400.0
+                            }
+                        ]
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 0.15000000596046448
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 0.7799999713897705
+                            }
+                        ]
+                    },
+                    "state": 2
+                },
+                "y": {
+                    "constant": 1.0,
+                    "constantMax": 2.0,
+                    "constantMin": 1.0,
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 100.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.2759999930858612,
+                                "value": -200.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.515999972820282,
+                                "value": 75.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.7409999966621399,
+                                "value": -150.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.8999999761581421,
+                                "value": 200.0
+                            }
+                        ]
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 1.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 1.0
+                            }
+                        ]
+                    },
+                    "state": 2
+                },
+                "z": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                }
+            }
+        }
+    ],
+    "guid": "1b2482062f6287ab0a74be4ffd2db4d7",
+    "name": "gameOverSeaCow",
+    "parentGuid": null,
+    "prefabName": "gameOverSeaCow"
+}

@@ -1156,6 +1156,7 @@ void ONEngine::ParticleSystem2DDebug(ParticleSystem2D* ps) {
 
 		Editor::ImMathf::InputEnum<ParticleSystemRenderer::BlendMode>("Blend Mode", &ps->renderer.blendMode);
 		Editor::ImMathf::InputEnum<FlipMode>("Flip Mode", &ps->renderer.flipMode);
+		ImGui::Checkbox("Inherit Emitter Rotation", &ps->inheritEmitterRotation);
 		DrawAssetGuidField("Material", ps->renderer.materialGuid, Asset::AssetType::Material);
 		DrawAssetGuidField("Mesh", ps->renderer.meshGuid, Asset::AssetType::Mesh);
 	}

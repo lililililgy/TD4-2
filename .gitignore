@@ -27,6 +27,9 @@ Project/ONEngine.vcxproj.user
 # other files
 Project/Packages/Config/
 
+# セーブデータ(コンティニュー地点)。実行時に生成されるユーザー固有のファイル
+Project/SaveData/
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 

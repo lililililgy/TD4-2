@@ -8,22 +8,49 @@ using System;
 // 入力の「解釈」（移動可否・正面固定走り・正面方向の記録など）はここでは行わない。
 // それらはドライバ側（例: PlayerMoveComponent + MoveDirector）で解決し、
 // 結果の方向だけを desiredDir として渡すこと。長さ0で停止（減速）扱い。
-public class Mover {
+//
+// 速度は Rigidbody2D にも書き出す（他システムから velocity を読めるようにするため）。
+// ただし position の更新は従来どおりこのクラスが行う。エンジンの Rigidbody2DUpdateSystem は
+// velocity への重力・軸固定の適用しかしておらず、位置の積分を行わないため、
+// Rigidbody2D に movement を委ねると何も動かなくなる。
+// Rigidbody2D 側で積分するようになったら、ここの transform.position 更新を外すこと。
+public class Mover
+{
 
     // paramRelease* : 移動パラメータ(accel/maxSpeed)を目標値へ下げるときの追従設定。
     //   上がる時は即時（一瞬の加速）、下がる時はこの平滑化で徐々に（ダッシュの尾）。
-    public Mover(float paramReleaseSmoothTime, float paramReleaseMaxSmoothSpeed) {
+    public Mover(float paramReleaseSmoothTime, float paramReleaseMaxSmoothSpeed)
+    {
         paramReleaseSmoothTime_ = paramReleaseSmoothTime;
         paramReleaseMaxSmoothSpeed_ = paramReleaseMaxSmoothSpeed;
     }
 
     // desiredDir: 進みたい最終的な方向（正規化不要。長さ0で停止扱い）。解釈はドライバ側で済ませる。
-    public void Move(Transform transform, Vector2 desiredDir, MoveParam param) {
-        if (transform == null || param == null) {
+    // rigidbody: 速度の書き出し先。持たないエンティティ（多くの敵）は null でよい。
+    public void Move(Transform transform, Rigidbody2D rigidbody, Vector2 desiredDir, MoveParam param)
+    {
+        if (transform == null || param == null)
+        {
             return;
         }
 
         const float kThresholdSpeed = 0.01f;
+
+        // 衝突反射の取り込み。エンジン(C++)は敵などとぶつかると Rigidbody2D.velocity を
+        // 撃力で書き換えて逆同期してくる。前フレームに自分が書き出した値との差分が
+        // 「エンジンが加えた反射分」なので、それを external_ として取り出し、
+        // 操舵速度(velocity_)とは別枠で減衰させながら位置に足し込む。
+        // velocity_ 自体には混ぜない（混ぜると旋回や最大速度クランプが反射で暴れるため）。
+        if (rigidbody != null)
+        {
+            Vector2 now = rigidbody.velocity;
+            external_ += new Vector3(now.x - lastWritten_.x, now.y - lastWritten_.y, 0.0f);
+        }
+        external_ *= (float)Math.Exp(-kExternalDamp * Time.deltaTime);
+        if (external_.LengthSq() < kThresholdSpeed)
+        {
+            external_ = Vector3.zero;
+        }
 
         // 現在の状態の移動パラメーター = 目標値（next）。current を next へアニメーション：
         //   上がる時は即時、下がる時は SmoothDamp（徐々に減速）。
@@ -31,23 +58,32 @@ public class Mover {
         currentAccel_ = AnimateParam(currentAccel_, param.accel_, ref accelSmoothVel_);
 
         // 減衰
-        if (desiredDir.LengthSq() <= kThresholdSpeed) {
-            if (velocity_.LengthSq() < kThresholdSpeed) {
+        if (desiredDir.LengthSq() <= kThresholdSpeed)
+        {
+            if (velocity_.LengthSq() < kThresholdSpeed)
+            {
                 velocity_ = Vector3.zero;
-            } else {
+            }
+            else
+            {
                 velocity_ = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
                     velocity_, Vector3.zero, ref currentDecelSmoothSpeed_, param.decelSmoothTime_, Time.deltaTime, param.decelMaxSmoothSpeed_);
             }
-        } else {
+        }
+        else
+        {
             // 入力（スティック）から「目標角度」を求める。角度は +Y 軸から +X 側へ測る（描画の cullRoll と同じ規約）。
             float targetHeading = Mathf.Atan2(desiredDir.x, desiredDir.y);
 
             // 「現在の向き」を「目標角度」へ、フレームごとに一定角速度で回す（角度補間）。
             // 反対を向いた時でも velocity を 0 にせず、旋回しながら推進し続ける。
-            if (!headingInitialized_) {
+            if (!headingInitialized_)
+            {
                 heading_ = targetHeading; // 初回入力はその方向にスナップ（0 からの空回りを防ぐ）
                 headingInitialized_ = true;
-            } else {
+            }
+            else
+            {
                 float diff = WrapPi(targetHeading - heading_);           // 最短回転方向の角度差
                 float maxStep = param.rotateMaxSmoothSpeed_ * Time.deltaTime; // このフレームで回せる最大角(rad)
                 heading_ = WrapPi(heading_ + Mathf.Clamp(diff, -maxStep, maxStep));
@@ -57,7 +93,8 @@ public class Mover {
             Vector3 headingDir = new Vector3(Mathf.Sin(heading_), Mathf.Cos(heading_), 0.0f);
             velocity_ += headingDir * (currentAccel_ * Time.deltaTime);
 
-            if (velocity_.LengthSq() > currentMaxSpeed_ * currentMaxSpeed_) {
+            if (velocity_.LengthSq() > currentMaxSpeed_ * currentMaxSpeed_)
+            {
                 velocity_ = velocity_.Normalized() * currentMaxSpeed_;
             }
         }
@@ -66,15 +103,29 @@ public class Mover {
         float cullRoll = headingInitialized_ ? heading_ : Mathf.Atan2(velocity_.x, velocity_.y);
         transform.rotate = Quaternion.MakeFromAxis(Vector3.back, cullRoll);
 
-        transform.position += velocity_ * Time.deltaTime;
+        // 操舵速度に反射分を足した実速度で位置を積分する。
+        Vector3 applied = velocity_ + external_;
+        transform.position += applied * Time.deltaTime;
+
+        // 確定した速度を Rigidbody2D へ書き出す。setter が毎回 PushBatch() で native を叩くので、
+        // 途中経過は書かずにフレームの最後に1回だけ書く。
+        // 反射分も含めて書き出し、その値を lastWritten_ に控える。次フレーム、エンジンが
+        // これをさらに書き換えていたら、その差分だけが新たな反射として拾える。
+        if (rigidbody != null)
+        {
+            lastWritten_ = new Vector2(applied.x, applied.y);
+            rigidbody.velocity = lastWritten_;
+        }
     }
 
     // 現在速度（アニメや他システムが参照できるように公開）
     public Vector3 Velocity { get { return velocity_; } }
 
     // current を next へ追従。上がる時は即時、下がる時は SmoothDamp。
-    private float AnimateParam(float current, float next, ref float smoothVel) {
-        if (next >= current) {
+    private float AnimateParam(float current, float next, ref float smoothVel)
+    {
+        if (next >= current)
+        {
             smoothVel = 0.0f;
             return next;
         }
@@ -83,16 +134,24 @@ public class Mover {
     }
 
     // 角度差を (-PI, PI] に正規化（最短回転方向を選ぶ）。
-    private static float WrapPi(float angle) {
+    private static float WrapPi(float angle)
+    {
         float twoPi = 2.0f * Mathf.PI;
         while (angle > Mathf.PI) angle -= twoPi;
         while (angle < -Mathf.PI) angle += twoPi;
         return angle;
     }
 
+    // 衝突反射の減衰の強さ(1/秒)。大きいほど弾かれた勢いが早く収まる。
+    private const float kExternalDamp = 1.0f;
+
     // 実行時の状態
     private Vector3 velocity_ = Vector3.zero;
     private Vector3 currentDecelSmoothSpeed_ = Vector3.zero;
+
+    // エンジンが衝突で加えた反射分（操舵とは別枠で減衰させる）と、前フレームに書き出した速度。
+    private Vector3 external_ = Vector3.zero;
+    private Vector2 lastWritten_ = new Vector2(0.0f, 0.0f);
 
     // 現在の向き（rad）。+Y 軸から +X 側へ測る。一定角速度で目標角度へ旋回する。
     private float heading_ = 0.0f;

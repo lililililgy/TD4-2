@@ -14,10 +14,14 @@ using System;
 // （Entity の scripts_ が型名をキーにした Dictionary のため）。
 // 1フェーズで違うプレハブを混ぜたい場合は、マーカーエンティティを複数用意する。
 //
-// PhaseBeganEvent の購読は Initialize() で行っている。ObjectiveSystem.Initialize() が
-// 最初の PhaseBeganEvent を発行するため、phaseName_ に「先頭のフェーズ」を指定した場合だけは
-// 購読が間に合わず取りこぼしうる（Entity.GetScripts() は Dictionary 列挙で順序が保証されない）。
-// 先頭フェーズでスポーンさせたくなったら、ShowOnPhase のように pull 型へ寄せること。
+// PhaseBeganEvent の購読は必ず Awake() で行うこと。ObjectiveSystem.Initialize() が
+// 最初の PhaseBeganEvent を発行するため、Initialize() で購読するとエンティティの並び順次第で
+// 初回を取りこぼす（Entity.GetScripts() は Dictionary 列挙で順序が保証されない）。
+// ECSGroup.UpdateEntities() は CallAwake() で全エンティティを回してから CallInitialize() へ進むので、
+// Awake() で購読していれば発行順に関係なく間に合う。
+//
+// これは「先頭フェーズを指定した場合だけ」の問題ではない。コンティニューで途中のフェーズから
+// 再開すると、そのフェーズが最初の PhaseBeganEvent になるため、どのフェーズでも起こりうる。
 //
 // 生成をイベントハンドラ内で直接行わず Update() まで遅らせているのも意図的。
 // PhaseBeganEvent は Initialize 中にも飛ぶが、ECSGroup.UpdateEntities() は
@@ -49,7 +53,7 @@ public class SpawnOnPhaseBegan : MonoScript
     private bool pendingSpawn_ = false;
     private bool subscribed_ = false;
 
-    public override void Initialize()
+    public override void Awake()
     {
         if (!subscribed_)
         {

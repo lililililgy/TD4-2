@@ -67,6 +67,8 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         {
             owner.UpdateLaserTell(attackType);
         }
+
+        owner.ShowAttackTelegraph(attackType);
     }
 
     public void Update(KingJellyfish owner)
@@ -98,9 +100,11 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
 
     public void Exit(KingJellyfish owner)
     {
+        owner.HideAttackTelegraph();
         owner.EnsureSpriteOpaque();
         if (attackType == KingJellyfishAttackTypeEnum.ChargeAttack)
         {
+            owner.EndChargeAttackMovement();
             owner.SetWeakPointCollisionEnabled(true);
         }
     }
@@ -199,21 +203,33 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
         owner.ChangeState(new KingJellyfishIdleState());
     }
 
+    //==========================================
+    // キングクラゲの電撃フィールド攻撃状態の更新処理
+    //==========================================
     private void UpdateElectricField(KingJellyfish owner)
     {
         if (elapsed < owner.ElectricFieldTellDuration)
         {
+            // 電撃フィールド攻撃の準備中
             owner.UpdateLaserTell(KingJellyfishAttackTypeEnum.ElectricField);
+        }
+        else
+        {
+            owner.HideAttackTelegraph();
         }
 
         if (!laserFired)
         {
+            // 電撃フィールドの展開
             owner.DeployElectricFields();
             laserFired = true;
         }
 
+        // 電撃フィールド攻撃の最終発動時間を計算
         float finalActivationTime = owner.ElectricFieldTellDuration
             + owner.ElectricFieldSpawnInterval * (owner.ElectricFieldCount - 1);
+
+        // 電撃フィールド攻撃の終了時間を計算
         float attackEndTime = finalActivationTime
             + owner.ElectricFieldActiveDuration
             + owner.ElectricFieldRecoveryDuration;
@@ -223,9 +239,13 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
             return;
         }
 
+        // 攻撃終了後の処理
         FinishAttack(owner);
     }
 
+    //==========================================
+    // キングクラゲの回転ビーム攻撃状態の更新処理
+    //==========================================
     private void UpdateRotatingLaser(KingJellyfish owner)
     {
         float tellEndTime = owner.RotatingLaserTellDuration;
@@ -235,12 +255,14 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
 
         if (elapsed < tellEndTime)
         {
+            // 回転ビーム攻撃の準備中
             owner.UpdateLaserTell(KingJellyfishAttackTypeEnum.RotatingBeam);
             return;
         }
 
         if (!laserFired)
         {
+            // 回転ビームの発射
             owner.FireRotatingLasers();
             laserFired = true;
         }
@@ -250,6 +272,7 @@ internal sealed class KingJellyfishAttackState : IKingJellyfishState
             return;
         }
 
+        // 攻撃終了後の処理
         FinishAttack(owner);
     }
 

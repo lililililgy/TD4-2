@@ -2,13 +2,17 @@
     "active": true,
     "components": [
         {
-            "SpriteAnimation": {
-                "fps": 6.0
+            "ParticleOffset": {
+                "offset": {
+                    "x": 106.0,
+                    "y": 24.0,
+                    "z": 0.0
+                }
             },
             "type": "Variables"
         }
     ],
-    "guid": "4e0b8e4f1f437c26508da2185bec44b8",
+    "guid": "2682034cd47ab1f5aed51870ad143c34",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

@@ -35,8 +35,22 @@
             "useOwnerScale": true
         },
         {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
             "DespawnTimer": {
                 "despawnTime_": 12.0
+            },
+            "ExpDropper": {
+                "dropExp": 24.0
+            },
+            "HP": {
+                "currentHp_": 20.0,
+                "directlyDamageable_": true,
+                "disableAutoDestruction_": false,
+                "isInvincible_": false,
+                "maxHp_": 20.0
             },
             "MorayEelMovement": {
                 "chargeSpeed": 0.0,
@@ -76,6 +90,18 @@
                 {
                     "enable": true,
                     "name": "DespawnTimer"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "ExpDropper"
                 }
             ],
             "type": "Script"
@@ -107,6 +133,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
     "guid": "8dce3926b5eaa7e3c27a9eeaa399d6d2",

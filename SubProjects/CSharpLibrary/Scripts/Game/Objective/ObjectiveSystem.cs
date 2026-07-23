@@ -16,7 +16,7 @@ using System.Collections.Generic;
 //
 // 常に「今アクティブな Objective」を保持し、UI はここを見て表示する想定。
 // シーン遷移そのものは GameSceneController の責務。ここでは目標達成判定とフェーズ送りだけを行う。
-public class ObjectiveSystem : MonoScript {
+public class ObjectiveSystem : MonoScript, IGaugeSource {
 
     // フェーズ列（フェーズエンティティ名の並び）。ここを書き換えるだけで進行順を自由に変えられる。
     // チュートリアルを飛ばしたい場合は Phase_Tutorial の項目を消せばよい。
@@ -35,10 +35,24 @@ public class ObjectiveSystem : MonoScript {
     private List<Objective> activeObjectives_ = new List<Objective>();
 
     public override void Initialize() {
-        JumpToPhase(0);
+        JumpToPhase(ResolveStartIndex());
+    }
+
+    // 開始フェーズを決める。既定は先頭で、GameFlow.ResumeFromCheckPoint() 経由などで
+    // フェーズ要求が出ている時だけそこから始める。
+    // 要求が無い／要求されたフェーズ名が現在の列に見つからない場合（フェーズをリネーム・削除した、
+    // セーブが古い等）も先頭に倒す。番号ではなく名前で引き直すのはこのため。
+    private int ResolveStartIndex() {
+        // 要求はワンショット。次に普通に GameScene を読んだ時は先頭から始まる。
+        int index = IndexOfPhase(PhaseRequest.Consume());
+        return index >= 0 ? index : 0;
     }
 
     public override void Update() {
+        // プレイ中に出されたフェーズ要求（チュートリアルスキップ等）に追従する。
+        // 進行終了後でも受け付けたいので finished_ の判定より先に引く。
+        ConsumePhaseRequest();
+
         if (finished_) return;
 
         // フェーズエンティティが未生成だった場合の遅延解決
@@ -57,15 +71,61 @@ public class ObjectiveSystem : MonoScript {
         get { return activeObjectives_; }
     }
 
+    // 現在のフェーズの進捗(0.0〜1.0)。ProgressUI のゲージ(SpriteGauge)が毎フレーム引く。
+    // 目標の具象型は見ずに Objective.Progress() だけを使うので、
+    // 目標の種類が増えてもここは変わらない（ObjectiveProgressForText と同じ方針）。
+    //
+    // 1フェーズに複数の目標(AND条件)が積まれている場合は平均を取る。
+    // 最小値ではなく平均なのは、片方だけ進んでいる間バーが一切動かないと
+    // 進んでいないように見えるため。全部 1.0 にならないと 1.0 にならない点は変わらない。
+    public float PhaseProgress {
+        get {
+            // 全フェーズ終了。バーは満タンのままにする（テキスト側は finishedText_ に切り替わる）
+            if (finished_) return 1.0f;
+
+            // フェーズエンティティの解決待ち。まだ目標が動き出していないので 0
+            if (activeObjectives_.Count == 0) return 0.0f;
+
+            float total = 0.0f;
+            int count = 0;
+            foreach (var objective in activeObjectives_) {
+                if (objective == null) continue;
+
+                total += Mathf.Clamp01(objective.Progress());
+                count++;
+            }
+
+            return count > 0 ? total / count : 0.0f;
+        }
+    }
+
+    // 進捗ゲージ(SpriteGauge)が毎フレーム引く割合
+    public float GetGaugeRatio() {
+        return PhaseProgress;
+    }
+
     // 現在のフェーズエンティティ名。範囲外（未設定・進行終了など）なら ""
     public string CurrentPhaseName {
-        get {
-            if (phaseSequence_ == null ||
-                currentIndex_ < 0 || currentIndex_ >= phaseSequence_.Count) {
-                return "";
-            }
-            return phaseSequence_[currentIndex_];
-        }
+        get { return PhaseNameAt(currentIndex_); }
+    }
+
+    // フェーズ列の長さ
+    public int PhaseCount {
+        get { return phaseSequence_ != null ? phaseSequence_.Count : 0; }
+    }
+
+    // index 番目のフェーズ名。範囲外なら ""
+    public string PhaseNameAt(int index) {
+        if (phaseSequence_ == null || index < 0 || index >= phaseSequence_.Count) return "";
+        return phaseSequence_[index];
+    }
+
+    // フェーズ列上の位置を名前で引く。見つからなければ -1。
+    // 「この先どこまで飛ばすか」を外から決める側（PhaseSkipInput 等）がフェーズ列を
+    // 直接持たずに済むよう、名前⇔位置の変換はここに集約する。
+    public int IndexOfPhase(string phaseName) {
+        if (phaseSequence_ == null || string.IsNullOrEmpty(phaseName)) return -1;
+        return phaseSequence_.IndexOf(phaseName);
     }
 
     // 現在のフェーズ列上の位置（0始まり）
@@ -105,10 +165,31 @@ public class ObjectiveSystem : MonoScript {
         TryResolvePhaseEntity();
     }
 
+    // 名前でフェーズへ飛ぶ。列に無い名前なら何もせず false を返す。
+    // 範囲外を進行終了に倒す JumpToPhase(int) と違い、こちらは知らない名前を無視する
+    // （プレイ中の要求で、名前の打ち間違い1つがクリア扱いになるのを防ぐ）。
+    public bool JumpToPhase(string phaseName) {
+        int index = IndexOfPhase(phaseName);
+        if (index < 0) return false;
+
+        JumpToPhase(index);
+        return true;
+    }
+
     // 現在のフェーズを打ち切って次へ進める（達成を待たないスキップにも使える）。
     // 末尾を超えた index は JumpToPhase 側の範囲外処理で進行終了（finished_ = true）になる。
     public void AdvancePhase() {
         JumpToPhase(currentIndex_ + 1);
+    }
+
+    // 出ているフェーズ要求を1つ引いて、その名前のフェーズへ飛ぶ。
+    // 要求が無ければ何もしない。飛んだ先で ContinueState.Save() が走るため、
+    // スキップした結果もそのままコンティニュー地点になる。
+    private void ConsumePhaseRequest() {
+        string requestedPhaseName = PhaseRequest.Consume();
+        if (string.IsNullOrEmpty(requestedPhaseName)) return;
+
+        JumpToPhase(requestedPhaseName);
     }
 
     private bool IsPhaseCompleted() {
@@ -140,6 +221,11 @@ public class ObjectiveSystem : MonoScript {
         // 目標の BeginObjective() を済ませてから通知する。
         // これで購読側は「目標が動き出した状態」を前提にしてよい。
         phaseBegan_ = true;
+
+        // 突入したフェーズをコンティニュー地点として記録する。
+        // ここは「フェーズが実際に始まった瞬間」なので、チェックポイントの定義そのものになる。
+        ContinueState.Save(CurrentPhaseName);
+
         MessageBus.Publish(new PhaseBeganEvent(CurrentPhaseName));
     }
 

@@ -1,0 +1,42 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "loop": true,
+            "path": "./Assets/Sounds/bgm/game-bgm.mp3",
+            "pitch": 1.0,
+            "playOnAwake": true,
+            "type": "BGMPlayer",
+            "volume": 0.009999999776482582
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        }
+    ],
+    "guid": "9de9fa9927647387bdf58b1e767d6780",
+    "name": "BGMPlayer",
+    "parentGuid": null,
+    "prefabName": ""
+}

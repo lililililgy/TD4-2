@@ -1,4 +1,4 @@
-﻿#include <winsock2.h>
+#include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
@@ -561,6 +561,7 @@ void MonoScriptEngine::RegisterFunctions() {
 		if(ecsGroupClass) {
 			getComponentCollectionField_ = MonoScriptEngineUtils::FindFieldRecursive(ecsGroupClass, "componentCollection");
 			addEntityMethod_ = mono_class_get_method_from_name(ecsGroupClass, "AddEntity", 1);
+			clearEntitiesFromNativeMethod_ = mono_class_get_method_from_name(ecsGroupClass, "ClearEntitiesFromNative", 0);
 		}
 
 		// class Entity
@@ -893,6 +894,29 @@ MonoObject* MonoScriptEngine::GetMonoBehaviorFromCS(const std::string& ecsGroupN
 	}
 
 	return result;
+}
+
+void MonoScriptEngine::ClearEntitiesFromNativeCS(const std::string& groupName) {
+	/// 起動時のシーン読み込みなど、mono初期化前にも呼ばれる。
+	/// image_ は nullptr 初期化されていないので domain_ を先に見ること。
+	/// clearEntitiesFromNativeMethod_ も初期化後にしか入らないため、ここで揃えて弾く。
+	if(!domain_ || !clearEntitiesFromNativeMethod_) {
+		return;
+	}
+
+	mono_thread_attach(domain_);
+
+	/// まだC#側にグループが作られていない場合は何もしなくてよい
+	MonoObject* ecsGroupObj = GetEcsGroupObject(groupName);
+	if(!ecsGroupObj) {
+		return;
+	}
+
+	MonoObject* exc = nullptr;
+	MonoScriptEngineUtils::SafeInvoke(clearEntitiesFromNativeMethod_, ecsGroupObj, nullptr, &exc);
+	if(exc) {
+		MonoScriptEngineUtils::HandleException(exc);
+	}
 }
 
 MonoObject* MonoScriptEngine::GetEcsGroupObject(const std::string& groupName) {
@@ -1364,19 +1388,32 @@ void ONEngine::MonoScriptEngineUtils::HandleException(MonoObject* exc) {
 	if(!exc) return;
 
 	MonoClass* excClass = mono_object_get_class(exc);
-	MonoMethod* toStringMethod = mono_class_get_method_from_name(excClass, "ToString", 0);
+	if(!excClass) return;
 
-	MonoObject* excStr = MonoScriptEngineUtils::SafeInvoke(toStringMethod, exc, nullptr, nullptr);
-	char* err = mono_string_to_utf8((MonoString*)excStr);
-	if(err) {
+	MonoMethod* toStringMethod = MonoScriptEngineUtils::FindMethodInClassOrParents(excClass, "ToString", 0);
+	if(!toStringMethod) {
+		const char* className = mono_class_get_name(excClass);
+		Console::LogError("[C# Exception] Exception of type " + std::string(className ? className : "Unknown") + " occurred (ToString method not found).", LogCategory::ScriptEngine);
+		return;
+	}
 
+	MonoObject* innerExc = nullptr;
+	MonoObject* excStr = MonoScriptEngineUtils::SafeInvoke(toStringMethod, exc, nullptr, &innerExc);
+	if(excStr) {
+		char* err = mono_string_to_utf8((MonoString*)excStr);
+		if(err) {
+			Console::LogError("----------------------------------------------------------------", LogCategory::ScriptEngine);
+			Console::LogError("[C# Exception] An unhandled exception occurred in the scripting engine:", LogCategory::ScriptEngine);
+			Console::LogError(err, LogCategory::ScriptEngine);
+			Console::LogError("----------------------------------------------------------------", LogCategory::ScriptEngine);
 
-		Console::LogError("----------------------------------------------------------------", LogCategory::ScriptEngine);
-		Console::LogError("[C# Exception] An unhandled exception occurred in the scripting engine:", LogCategory::ScriptEngine);
-		Console::LogError(err, LogCategory::ScriptEngine);
-		Console::LogError("----------------------------------------------------------------", LogCategory::ScriptEngine);
-
-		mono_free(err);
+			mono_free(err);
+		} else {
+			Console::LogError("[C# Exception] Failed to convert exception string to UTF-8.", LogCategory::ScriptEngine);
+		}
+	} else {
+		const char* className = mono_class_get_name(excClass);
+		Console::LogError("[C# Exception] Exception of type " + std::string(className ? className : "Unknown") + " occurred (ToString failed).", LogCategory::ScriptEngine);
 	}
 }
 

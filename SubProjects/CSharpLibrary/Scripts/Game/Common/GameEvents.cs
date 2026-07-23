@@ -33,6 +33,40 @@ public class PlayerDashedEvent
 {
 }
 
+// プレイヤーがダッシュ状態から抜けた際に PlayerDashState.OnExit() から発行される。
+// PlayerDashedEvent と対になる。「ダッシュしている間だけ何かする」側が購読する。
+public class PlayerDashEndedEvent
+{
+}
+
+// プレイヤーの残機（＝全卵数）が尽きた際に PlayerLifeComponent.Update() から発行される。
+// ゲームオーバー演出・シーン遷移など「プレイヤーが死んだら何かする」側が購読する。
+//
+// 生存→死亡のエッジでのみ発行されるため、残機0の間ずっと流れ続けることはない。
+// 産卵前の開始直後（一度も残機を持っていない状態）は死亡扱いにならないので発行されない。
+public class PlayerDeadEvent
+{
+}
+
+// カメラを揺らしてほしい側が発行する。CameraShake が購読してワンショットを流す。
+// 攻撃のヒット（AttackCollision）だけでなく、爆発や着地などの演出からも発行してよい。
+//
+// 発行側はカメラ Entity を探さずに済み、カメラが居ないシーンでは誰も購読していないので
+// 単に無視される（MessageBus.Publish は購読者ゼロなら何もしない）。
+public class CameraShakeEvent
+{
+    public CameraShakeEvent(float duration, float amplitude, float frequency)
+    {
+        this.duration = duration;
+        this.amplitude = amplitude;
+        this.frequency = frequency;
+    }
+
+    public readonly float duration;   // 揺れの継続時間(秒)
+    public readonly float amplitude;  // 揺れ幅
+    public readonly float frequency;  // 揺れの速さ
+}
+
 // ObjectiveSystem がフェーズに突入した際に発行される（各 Objective の BeginObjective() 後）。
 // フェーズごとの敵湧き切り替えやボス出現など、「そのフェーズの開始で何かする」側が購読する。
 //

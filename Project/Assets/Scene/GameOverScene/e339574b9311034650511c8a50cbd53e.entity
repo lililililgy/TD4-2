@@ -1,0 +1,15 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "z": -0.10000000149011612
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "e339574b9311034650511c8a50cbd53e",
+    "name": "spikeFishParticle",
+    "parentGuid": null,
+    "prefabName": "spikeFishParticle"
+}

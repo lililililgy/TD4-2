@@ -47,9 +47,12 @@ public class ChaseController : MonoScript
     private Entity  targetEntity_   = null;
     private Action  updateAction_   = null;
     private bool    isPaused_       = false;
+    private RigidbodyMotion motion_ = new RigidbodyMotion(6.0f);
 
     public override void Initialize()
     {
+        motion_.Attach(entity);
+
         // 自動開始フラグが立っていればチェイス開始
         if (autoStart)
         {
@@ -59,15 +62,27 @@ public class ChaseController : MonoScript
 
     public override void Update()
     {
-        // 攻撃中などは移動・状態タイマーごと停止する
+        // Idle(まだ StartChase されていない)の間は移動を触らない。
+        // MorayEel は出現演出中 MorayEelSpawnMove 側が Rigidbody2D を握るため、
+        // ここで書くと二重に velocity を書いて奪い合いになる。
+        if (updateAction_ == null) { return; }
+
+        // 攻撃中などは移動・状態タイマーごと停止する。
+        // ただし停止中も衝突で押される必要があるので Apply は通す。
         if (isPaused_)
         {
             velocity_ = Vector3.zero;
-            return;
+        }
+        else
+        {
+            updateAction_.Invoke();
         }
 
-        // 現在の状態 Action を実行
-        updateAction_?.Invoke();
+        // 位置の積分と Rigidbody2D への書き出しはここに一本化する。
+        // Discovery は velocity_ を「向きを決めるため」だけに使う状態なので移動させない
+        // (Wait/Rush 到達時の停止は velocity_ 自体が 0 なのでここでは分岐しなくてよい)。
+        bool canMove = CurrentState == State.Chase || CurrentState == State.Rush;
+        motion_.Apply(transform, canMove ? velocity_ : Vector3.zero);
     }
 
     // 追跡を一時停止/再開させる
@@ -133,6 +148,11 @@ public class ChaseController : MonoScript
             waitTimer_ += Time.deltaTime;
         }
 
+        if (!transform || !targetEntity_.transform)
+        {
+            return;
+        }
+
         // 範囲内かつ待機時間経過で発見モーションへ
         Vector3 toTarget = targetEntity_.transform.position - transform.position;
         if (toTarget.Length() <= chaseDistance && (isFirstWait_ || waitTimer_ >= waitTime))
@@ -189,7 +209,6 @@ public class ChaseController : MonoScript
 
         // ターゲットへ向かって移動
         CalcVelocityToTarget();
-        transform.position += velocity_ * Time.deltaTime;
         TryFaceVelocity();
     }
 
@@ -199,7 +218,6 @@ public class ChaseController : MonoScript
         if (TickChaseTimer()) { return; }
 
         // 方向固定で直進
-        transform.position += velocity_ * Time.deltaTime;
         TryFaceVelocity();
     }
 

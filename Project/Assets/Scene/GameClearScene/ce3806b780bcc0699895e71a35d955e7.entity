@@ -2,6 +2,11 @@
     "active": true,
     "components": [
         {
+            "main": {
+                "startDelay": {
+                    "constant": 2.0
+                }
+            },
             "renderer": {
                 "alignment": 0
             },

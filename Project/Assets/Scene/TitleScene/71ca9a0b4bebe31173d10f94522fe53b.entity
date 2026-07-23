@@ -1,0 +1,138 @@
+{
+    "active": true,
+    "components": [
+        {
+            "elementId": "start",
+            "elementIndex": 0,
+            "enable": 1,
+            "groupId": "5bd2f89d57005ed93ba262ec089b5c0d",
+            "type": "UIElementComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 4.0
+            },
+            "type": "Transform"
+        },
+        {
+            "GameStart": {
+                "maxScale": {
+                    "x": 5.0,
+                    "y": 5.0,
+                    "z": 5.0
+                },
+                "maxTime": 0.10000000149011612,
+                "minScale": {
+                    "x": 4.0,
+                    "y": 4.0,
+                    "z": 4.0
+                }
+            },
+            "UITest1": {},
+            "type": "Variables"
+        },
+        {
+            "enable": 0,
+            "isPixelPerfect": true,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "00000000000000000000000000000000",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "GameStart"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "7a1c3e3dbe69f664fd42f4dadecdf70a",
+                "GamepadDPadDown": "7a1c3e3dbe69f664fd42f4dadecdf70a",
+                "S": "7a1c3e3dbe69f664fd42f4dadecdf70a"
+            },
+            "type": "UILinkNavigationComponent"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.8924731016159058,
+                "y": 0.1311519593000412,
+                "z": 0.1311519593000412
+            },
+            "outlineWidth": 8,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "スタート",
+            "type": "TextRenderer",
+            "verticalAlignment": 0
+        }
+    ],
+    "guid": "71ca9a0b4bebe31173d10f94522fe53b",
+    "name": "Element_1",
+    "parentGuid": "5bd2f89d57005ed93ba262ec089b5c0d",
+    "prefabName": ""
+}

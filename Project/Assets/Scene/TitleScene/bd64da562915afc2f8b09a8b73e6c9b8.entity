@@ -5,7 +5,7 @@
             "enable": 1,
             "matrixCalcFlags": 3,
             "position": {
-                "x": 111.6999740600586,
+                "x": 122.59996032714844,
                 "y": 96.10002136230469,
                 "z": 0.20000000298023224
             },
@@ -36,6 +36,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "2cc334c35ea7cd5db977a12d1a6bd267",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,

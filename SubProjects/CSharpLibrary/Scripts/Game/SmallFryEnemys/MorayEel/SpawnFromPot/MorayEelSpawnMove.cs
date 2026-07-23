@@ -22,9 +22,12 @@ public class MorayEelSpawnMove : MonoScript
     private SmallFryChaseMove chaseMove_;
     // 目標角度
     private Quaternion targetRotation_;
+    private RigidbodyMotion motion_ = new RigidbodyMotion(6.0f);
 
     public override void Initialize()
     {
+        motion_.Attach(entity);
+
         // 追いかけMoveスクリプトを取得
         chaseMove_ = entity.GetScript<SmallFryChaseMove>();
 
@@ -58,7 +61,7 @@ public class MorayEelSpawnMove : MonoScript
         velocity_ = velocity_.Normalized() * speed;
 
         // 位置の適応
-        transform.position += velocity_ * Time.deltaTime;
+        motion_.Apply(transform, velocity_);
 
         // -------------登場時の回転演出
         // tの計算

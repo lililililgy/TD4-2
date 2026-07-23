@@ -1,0 +1,195 @@
+{
+    "active": true,
+    "components": [
+        {
+            "cameraType": 1,
+            "enable": 1,
+            "farClip": 1000.0,
+            "fogColor": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "fogEnd": 10000.0,
+            "fogStart": 8.407790785948902e-45,
+            "fovY": 0.699999988079071,
+            "isDrawFrustum": false,
+            "isMainCamera": true,
+            "nearClip": 0.10000000149011612,
+            "type": "CameraComponent"
+        },
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.4156103134155273e-06
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 0.8970003724098206,
+                "y": 0.8970004916191101,
+                "z": 0.8970004916191101
+            },
+            "type": "Transform"
+        },
+        {
+            "CameraShake": {
+                "shakeScale_": 1.0
+            },
+            "ContactZoomSource": {
+                "easeType_": 0,
+                "maxAddScale_": 1.2000000476837158,
+                "minAddScale_": 0.0,
+                "smoothing_": 0.800000011920929
+            },
+            "DashZoomSource": {
+                "convergeSpeed_": 0.9900000095367432,
+                "dashingStrength_": 0.4000000059604645,
+                "easeType_": 0,
+                "enterStrength_": 1.0,
+                "maxAddScale_": 0.800000011920929,
+                "minAddScale_": 0.0,
+                "smoothing_": 0.9980000257492065
+            },
+            "PlayerFollowCamera": {
+                "maxSmoothSpeed_": 72.0,
+                "offset_": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "smoothTime_": 20.899999618530273,
+                "targetName_": "Player"
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "CameraShake"
+                },
+                {
+                    "enable": true,
+                    "name": "PlayerFollowCamera"
+                },
+                {
+                    "enable": true,
+                    "name": "ContactZoomSource"
+                },
+                {
+                    "enable": true,
+                    "name": "DashZoomSource"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "absorptionCoefficients": [
+                1.0,
+                0.30000001192092896,
+                0.0
+            ],
+            "causticsIntensity": 1.5,
+            "causticsScale": 0.5,
+            "causticsSpeed": 1.0,
+            "colorFilter": [
+                0.4000000059604645,
+                0.800000011920929,
+                1.0
+            ],
+            "contrast": 1.100000023841858,
+            "distortionFrequency": 10.0,
+            "distortionSpeed": 1.0,
+            "distortionStrength": 0.014999999664723873,
+            "enable": 1,
+            "fisheyeScale": 0.8209999799728394,
+            "fisheyeStrength": 0.210999995470047,
+            "fogColor": [
+                0.0,
+                0.30000001192092896,
+                0.6000000238418579
+            ],
+            "fogDensity": 0.05000000074505806,
+            "fogWaterSurfaceY": 0.0,
+            "id": 0,
+            "lightDirection": [
+                0.20000000298023224,
+                -0.8999999761581421,
+                0.30000001192092896
+            ],
+            "lightShaftsIntensity": 1.5,
+            "pixelSizeX": 8.0,
+            "pixelSizeY": 8.0,
+            "postEffectHeight": -1,
+            "postEffectPivot": 0,
+            "postEffectStartX": 0,
+            "postEffectStartY": 0,
+            "postEffectWidth": -1,
+            "postEffects": [
+                {
+                    "enabled": false,
+                    "type": 0
+                },
+                {
+                    "enabled": false,
+                    "type": 1
+                },
+                {
+                    "enabled": true,
+                    "type": 2
+                },
+                {
+                    "enabled": false,
+                    "type": 3
+                },
+                {
+                    "enabled": false,
+                    "type": 4
+                },
+                {
+                    "enabled": false,
+                    "type": 5
+                },
+                {
+                    "enabled": false,
+                    "type": 6
+                },
+                {
+                    "enabled": false,
+                    "type": 7
+                }
+            ],
+            "saturation": 0.8999999761581421,
+            "type": "ScreenPostEffectTag",
+            "vignetteStrength": 1.5
+        },
+        {
+            "categoryBits": 1,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 8,
+            "mass": 1.0,
+            "size": {
+                "x": 605.7000732421875,
+                "y": 605.6984252929688
+            },
+            "state": "Dynamic",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
+        }
+    ],
+    "guid": "ce6bd684ea7760fe9da2648769f73f28",
+    "name": "TitleCamera",
+    "parentGuid": null,
+    "prefabName": "MainCamera"
+}

@@ -2,6 +2,7 @@ using System;
 
 // プレイヤー（指定名の Entity）を追従するカメラ。カメラ用 Entity に付ける。
 // シーン内の対象 Entity は ecsGroup.FindEntity(名前) で取得する。
+// 揺れは CameraShake / ShakeSource が担当する。
 public class PlayerFollowCamera : MonoScript {
 
     [SerializeField] private string  targetName_     = "Player";
@@ -27,7 +28,6 @@ public class PlayerFollowCamera : MonoScript {
             return;
         }
 
-        // 対象の位置 ＋ オフセットへ滑らかに追従
         Vector3 desired = targetTransform.position + offset_;
         transform.position = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
             transform.position, desired, ref smoothVel_, smoothTime_, Time.deltaTime, maxSmoothSpeed_);

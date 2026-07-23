@@ -5,7 +5,7 @@ public class SpikeFishAroundNeedle : MonoScript
     /* ----- パラメータ ----- */
     [SerializeField] private float coolTime        = 3.0f;   // 発射後に0→1へイージングする時間
     [SerializeField] private float popInDuration   = 0.3f;   // coolTime終了直前、ポップインにかける秒数
-    [SerializeField] private float maxAngularSpeed = 720.0f; // 発射直前の最大回転速度 (deg/s)
+    [SerializeField] private float maxAngularSpeed = 720.0f; // 発射直前の最大回転速度
 
     // この倍率を baseScale に掛けて適用する
     public float ScaleMult { get; private set; } = 0.0f;

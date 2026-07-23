@@ -1,0 +1,195 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -1500.0,
+                "y": -819.3900146484375,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 598.400146484375,
+                "y": 598.400390625,
+                "z": 598.400390625
+            },
+            "type": "Transform"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 7,
+            "mass": 1.0,
+            "radius": 0.4000000059604645,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
+            "DespawnTimer": {
+                "despawnTime_": 12.0
+            },
+            "ExpDropper": {
+                "dropExp": 26.0
+            },
+            "HP": {
+                "currentHp_": 20.0,
+                "directlyDamageable_": true,
+                "disableAutoDestruction_": false,
+                "enable": true,
+                "isInvincible_": false,
+                "maxHp_": 20.0
+            },
+            "ParticleOffset": {
+                "offset": {
+                    "x": -138.0,
+                    "y": -300.0,
+                    "z": 0.0
+                }
+            },
+            "SpriteAnimation": {
+                "cols": 4,
+                "enable": true,
+                "endFrame": 2,
+                "fps": 8.0,
+                "invertY": false,
+                "isLoop": true,
+                "isPlay": false,
+                "rows": 1,
+                "startFrame": 0,
+                "totalFrames": 0
+            },
+            "TargetRangeDetector": {
+                "OnEnter": {
+                    "__type": "Action"
+                },
+                "OnExit": {
+                    "__type": "Action"
+                },
+                "enable": true,
+                "range": 900.0,
+                "targetEntityName": "Player"
+            },
+            "TatunoMousigo": {
+                "baseYOffset": -476.0,
+                "cameraEntityName": "MainCamera",
+                "enable": true,
+                "jumpCooldown": 1.5,
+                "jumpDuration": 1.2999999523162842,
+                "jumpHeight": 296.0,
+                "jumpTriggerDistance": 170.0,
+                "jumpTriggerHeight": 24.0,
+                "landShakeIntensity": 413.0,
+                "moveShakeIntensity": 141.0,
+                "moveSpeed": 220.0,
+                "stepDistance": 124.0,
+                "stepFrame": 2,
+                "targetEntityName": "Player",
+                "turnDelay": 2.5,
+                "walkEndFrame": 2,
+                "walkStartFrame": 0
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "SpriteAnimation"
+                },
+                {
+                    "enable": true,
+                    "name": "TargetRangeDetector"
+                },
+                {
+                    "enable": true,
+                    "name": "TatunoMousigo"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "ParticleOffset"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "ExpDropper"
+                },
+                {
+                    "enable": true,
+                    "name": "DespawnTimer"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": true,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "7c8efc505fc1fac0441c7f7215f3a0d3",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 0.25,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        }
+    ],
+    "guid": "353a89b82aa34b4bbdbaebd61ee7722e",
+    "name": "TatunoMousigo",
+    "parentGuid": null,
+    "prefabName": "TatunoMousigo"
+}

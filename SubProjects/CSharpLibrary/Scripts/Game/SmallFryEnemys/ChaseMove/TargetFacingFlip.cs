@@ -14,6 +14,8 @@ public class TargetFacingFlip : MonoScript
     private Vector3 baseDir_ = Vector3.right;
     private bool isRight_ = true;
     public Vector3 FacingDirection => Matrix4x4.Transform(baseDir_, Matrix4x4.Rotate(transform.rotate));
+    // 現在UVが右向き(反転あり)かどうか。オフセットのミラーなど外部から参照するために公開する。
+    public bool IsFacingRight => isRight_;
 
     public override void Initialize()
     {
@@ -44,7 +46,7 @@ public class TargetFacingFlip : MonoScript
         float angle = Mathf.Atan2(dir.y, dir.x) - Mathf.Atan2(baseDir_.y, baseDir_.x);
         angle = WrapPi(angle);
 
-        // ±maxTiltAngleDeg にクランプする(これ以上はUV反転側で表現するため)
+        // ±maxTiltAngleDeg にクランプする
         float maxTiltRad = maxTiltAngleDeg * Mathf.PI / 180.0f;
         float clampedAngle = Mathf.Clamp(angle, -maxTiltRad, maxTiltRad);
 
@@ -59,7 +61,7 @@ public class TargetFacingFlip : MonoScript
 
         UVTransform uv = spriteRenderer_.uvTransform;
 
-        // 既に反転済みの値であっても崩れないよう、一旦「反転前(正のスケール)」の基準値に戻す
+        // 既に反転済みの値であっても崩れないよう、反転前の基準値に戻す
         float baseScaleX = Mathf.Abs(uv.scale.x);
         float basePositionX = uv.scale.x >= 0.0f ? uv.position.x : uv.position.x - baseScaleX;
 

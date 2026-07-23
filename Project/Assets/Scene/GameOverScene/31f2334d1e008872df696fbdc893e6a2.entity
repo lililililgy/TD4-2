@@ -2,6 +2,12 @@
     "active": true,
     "components": [
         {
+            "position": {
+                "z": -0.5
+            },
+            "type": "Transform"
+        },
+        {
             "emission": {
                 "rateOverTime": 0.5
             },

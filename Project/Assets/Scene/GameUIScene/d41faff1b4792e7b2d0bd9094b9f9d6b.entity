@@ -1,0 +1,16 @@
+{
+    "active": true,
+    "components": [
+        {
+            "position": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "type": "Transform"
+        }
+    ],
+    "guid": "d41faff1b4792e7b2d0bd9094b9f9d6b",
+    "name": "GamepadUIRoot",
+    "parentGuid": "2ab12f1ced60133ef97244b42f97dfd0",
+    "prefabName": "GamepadUIRoot"
+}

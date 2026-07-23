@@ -19,6 +19,7 @@ using namespace ONEngine;
 #include "Engine/ECS/EntityComponentSystem/EntityComponentSystem.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Camera/CameraComponent.h"
 #include "Engine/ECS/System/Audio/AudioPlaybackSystem.h"
+#include "Engine/Script/MonoScriptEngine.h"
 
 
 namespace {
@@ -76,6 +77,15 @@ void SceneManager::Initialize(Asset::AssetCollection* assetCollection) {
 }
 
 void SceneManager::Update() {
+	/// 保留中のアンロード処理を実行
+	if (!pendingUnloadScenes_.empty()) {
+		std::vector<std::string> unloads = std::move(pendingUnloadScenes_);
+		pendingUnloadScenes_.clear();
+		for (const auto& sceneName : unloads) {
+			DoUnloadScene(sceneName);
+		}
+	}
+
 	/// 次のシーンが設定されていたらシーンを切り替える
 	if (nextScene_.size()) {
 		MoveNextToCurrentScene(false);
@@ -216,10 +226,22 @@ void SceneManager::SetDirty(bool isDirty) {
 }
 
 void SceneManager::UnloadScene(const std::string& sceneName) {
+	// スクリプトのコールバック実行中に即時アンロードしてUse-After-Freeが発生するのを防ぐため、
+	// アンロード処理は次フレームのUpdate()まで遅延させる。
+	if (std::find(pendingUnloadScenes_.begin(), pendingUnloadScenes_.end(), sceneName) == pendingUnloadScenes_.end()) {
+		pendingUnloadScenes_.push_back(sceneName);
+	}
+}
+
+void SceneManager::DoUnloadScene(const std::string& sceneName) {
 	pEcs_->GetDxManager()->GetDxCommand()->WaitForGpuComplete();
 
 	ECSGroup* group = pEcs_->GetECSGroup(sceneName);
 	if (group) {
+		if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+			audioSys->StopAllAudio();
+		}
+		MonoScriptEngine::GetInstance().ClearEntitiesFromNativeCS(sceneName);
 		group->RemoveEntityAll();
 	}
 
@@ -244,11 +266,17 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 	ECSGroup* prevSceneGroup = pEcs_->GetCurrentGroup();
 	if (!isNextSceneAdditive_) {
 		// Clear all active scenes
+		// NOTE: C++のエンティティ破棄はC#へ通知されないため、先にC#側の保持を捨てさせる。
+		// これを省くと entities_ に旧シーンのエンティティが残り、IDが使い回された際に
+		// ECSGroup.AddEntity() が早期returnして、旧シーンのMonoScriptインスタンスが
+		// 状態を保ったまま再利用される（Initialize()も呼ばれない）。
+		// ネイティブ側がまだ生きているうちに呼ぶことで、OnDestroy() から安全に参照できる。
 		if (pEcs_->GetActiveGroupNames().empty()) {
 			if (prevSceneGroup) {
 				if (auto* audioSys = prevSceneGroup->GetSystem<AudioPlaybackSystem>()) {
 					audioSys->StopAllAudio();
 				}
+				MonoScriptEngine::GetInstance().ClearEntitiesFromNativeCS(prevSceneGroup->GetGroupName());
 				prevSceneGroup->RemoveEntityAll();
 			}
 		} else {
@@ -257,6 +285,7 @@ void SceneManager::MoveNextToCurrentScene(bool isTemporary) {
 					if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
 						audioSys->StopAllAudio();
 					}
+					MonoScriptEngine::GetInstance().ClearEntitiesFromNativeCS(activeName);
 					group->RemoveEntityAll();
 				}
 			}

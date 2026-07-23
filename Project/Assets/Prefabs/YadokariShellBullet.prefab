@@ -78,9 +78,23 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "e24c9870a94bcd111d96faf71b8b5daf",
+    "guid": "7361931be196d178348cdf2ff51c96ea",
     "name": "YadokariShellBullet",
     "parentGuid": null,
     "prefabName": "YadokariShellBullet"

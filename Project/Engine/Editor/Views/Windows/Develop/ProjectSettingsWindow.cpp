@@ -162,6 +162,13 @@ void ProjectSettingsWindow::ShowImGui() {
 		ONEngine::Console::Log(std::string("ProjectSettings: VSync ") + (enableVSync ? "Enabled" : "Disabled"));
 	}
 
+	bool enableReleaseLogFile = ONEngine::EngineConfig::enableReleaseLogFile;
+	if (ImGui::Checkbox("Enable Release Log File", &enableReleaseLogFile)) {
+		ONEngine::EngineConfig::enableReleaseLogFile = enableReleaseLogFile;
+		ONEngine::EngineConfig::SaveConfig();
+		ONEngine::Console::Log(std::string("ProjectSettings: Release Log File ") + (enableReleaseLogFile ? "Enabled" : "Disabled"));
+	}
+
 	ImGui::Spacing();
 
 	bool ignoreCSharpLog = ONEngine::EngineConfig::ignoreCSharpLog;

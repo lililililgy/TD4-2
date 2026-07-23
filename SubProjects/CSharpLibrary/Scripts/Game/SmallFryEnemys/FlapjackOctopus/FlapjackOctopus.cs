@@ -22,6 +22,12 @@ public class FlapjackOctopus : MonoScript
 
     [SerializeField] private string targetEntityName = "Player";
 
+    /* ----- パーティクル ----- */
+    // 常時再生する泳ぎの泡
+    [SerializeField] private string swimParticlePrefabName = "surfaceOctopusParticle";
+    // 蹴伸びする度に確実に生成するバーストの寿命
+    [SerializeField] private float chaseBurstParticleLifeTime = 1.5f;
+
     private enum State { Wait, Charge, Chase }
 
     // アニメーションフレーム番号
@@ -31,6 +37,10 @@ public class FlapjackOctopus : MonoScript
     private const int ChaseFrame = 3; // 4番目
 
     /* ----- 実行時状態 ----- */
+    // 親の巨大スケールを継承させないよう、親子付けせず座標だけ追従させる泳ぎの泡
+    private Entity swimParticleEntity_;
+    // 敵単位でパーティクルの発生位置を調整するオフセットスクリプト
+    private ParticleOffset particleOffset_;
     private State state_ = State.Wait;
     // ターゲットEntity
     private Entity targetEntity_;
@@ -48,15 +58,18 @@ public class FlapjackOctopus : MonoScript
     private Action stateUpdateAction_;
     // 状態ごとの突入処理
     private Dictionary<State, Action> enterActions_;
+    private RigidbodyMotion motion_ = new RigidbodyMotion(6.0f);
 
     public override void Initialize()
     {
+        motion_.Attach(entity);
 
         // 初期スケールを保持しておく
         initialScale_ = transform.scale;
         // スクリプト取得
         spriteAnimation_ = entity.GetScript<SpriteAnimation>();
         rangeDetector_ = entity.GetScript<TargetRangeDetector>();
+        particleOffset_ = entity.GetScript<ParticleOffset>();
 
         // 状態ごとの突入処理を登録
         enterActions_ = new Dictionary<State, Action>
@@ -68,10 +81,68 @@ public class FlapjackOctopus : MonoScript
 
         // 初期状態は待機
         TransitionTo(State.Wait);
+
+        // 常時再生する泳ぎの泡を子エンティティとして生成する
+        SpawnSwimParticle();
+    }
+
+    // 常時再生する泳ぎの泡を生成する
+    private void SpawnSwimParticle()
+    {
+        if (String.IsNullOrEmpty(swimParticlePrefabName)) { return; }
+
+        Entity swimParticle = ecsGroup.CreateEntity(swimParticlePrefabName);
+        if (!swimParticle) { return; }
+
+        // FlapjackOctopusはスケールが極端に大きいため、親子付けすると泡もつられて巨大化し画面外に出てしまう。
+        // そのため親子付けはせず、座標だけを毎フレーム追従させる。
+        swimParticle.transform.position = transform.position + GetParticleOffset();
+        swimParticleEntity_ = swimParticle;
+    }
+
+    // 泳ぎの泡の座標をこの敵の現在位置に追従させる
+    private void SyncSwimParticlePosition()
+    {
+        if (!swimParticleEntity_) { return; }
+        swimParticleEntity_.transform.position = transform.position + GetParticleOffset();
+    }
+
+    // ParticleOffsetスクリプトが付いていればそのオフセットを現在の向きで回転させて返す(無ければゼロ)。
+    // FlapjackOctopusはFaceTarget()でtransform.rotateを実際に回転させているため、そのままオフセットに回転を掛ける。
+    private Vector3 GetParticleOffset()
+    {
+        if (particleOffset_ == null) { return Vector3.zero; }
+        return transform.rotate * particleOffset_.offset;
+    }
+
+    public override void OnDestroy()
+    {
+        if (swimParticleEntity_)
+        {
+            swimParticleEntity_.Destroy();
+            swimParticleEntity_ = null;
+        }
+    }
+
+    // 蹴伸びする度に独立したバーストエンティティを生成して、常駐の泡とは別に確実に発生させる
+    private void SpawnChaseBurstParticle()
+    {
+        if (String.IsNullOrEmpty(swimParticlePrefabName)) { return; }
+
+        Entity burst = ecsGroup.CreateEntity(swimParticlePrefabName);
+        if (!burst) { return; }
+
+        burst.transform.position = transform.position + GetParticleOffset();
+
+        TimedDestruction timedDestruction = burst.AddScript<TimedDestruction>();
+        timedDestruction.lifeTime = chaseBurstParticleLifeTime;
     }
 
     public override void Update()
     {
+        // 親子付けしていない泳ぎの泡の座標を追従させる
+        SyncSwimParticlePosition();
+
         // ターゲット未検出なら何もしない
         if (!TryFindTarget()) { return; }
 
@@ -128,6 +199,9 @@ public class FlapjackOctopus : MonoScript
         SetStaticFrame(ChaseFrame);
         // 蹴伸びSteteの更新処理に切り替える
         stateUpdateAction_ = UpdateChase;
+
+        // 蹴伸びする度に確実にバブルを弾けさせる
+        SpawnChaseBurstParticle();
     }
 
     ///-----------------------------------------------------------------------------
@@ -251,8 +325,6 @@ public class FlapjackOctopus : MonoScript
     // 水の抵抗を受けて速度が指数関数的に減衰していく慣性移動
     private void ApplyInertiaMovement()
     {
-        if (velocity_.LengthSq() <= 0.0001f) { return; }
-
         // 水の抵抗による速度減衰
         float drag = chaseDrag;
         if (drag <= 0.0001f)
@@ -262,7 +334,7 @@ public class FlapjackOctopus : MonoScript
 
         // 減衰計算: v = v0 * exp(-drag * dt)
         velocity_ *= (float)Math.Exp(-drag * Time.deltaTime);
-        transform.position += velocity_ * Time.deltaTime;
+        motion_.Apply(transform, velocity_);
     }
 
     private void UpdateChaseScalePulse()

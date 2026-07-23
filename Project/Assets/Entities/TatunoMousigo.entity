@@ -1,0 +1,18 @@
+{
+    "active": true,
+    "components": [
+        {
+            "ParticleOffset": {
+                "offset": {
+                    "x": -138.0,
+                    "y": -300.0
+                }
+            },
+            "type": "Variables"
+        }
+    ],
+    "guid": "353a89b82aa34b4bbdbaebd61ee7722e",
+    "name": "TatunoMousigo",
+    "parentGuid": null,
+    "prefabName": "TatunoMousigo"
+}

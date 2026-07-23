@@ -27,6 +27,7 @@ using namespace ONEngine;
 
 /// std
 #include <chrono>
+#include <cmath>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -88,11 +89,11 @@ void GameFramework::Initialize(const GameFrameworkConfig& startSetting) {
 	/// 初期化にかかる時間の計測開始
 	auto startTime = std::chrono::high_resolution_clock::now();
 
-	/// ログ出力の初期化
-	Console::Initialize();
-
 	/// エンジン設定のロード
 	EngineConfig::LoadConfig();
+
+	/// ログ出力の初期化
+	Console::Initialize();
 
 	CreateSubsystems();
 	InitializeCore(startSetting);

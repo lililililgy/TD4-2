@@ -1,0 +1,48 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": -913.739990234375,
+                "y": 470.0,
+                "z": -4.90000057220459
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": -0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 32.0,
+                "y": 32.0,
+                "z": 32.0
+            },
+            "type": "Transform"
+        },
+        {
+            "PlayerHPUI": {
+                "maxLives": 0,
+                "startLives": 3,
+                "testValue": 3
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "PlayerHPUI"
+                }
+            ],
+            "type": "Script"
+        }
+    ],
+    "guid": "1e616a6daa9403752d43096ef518396a",
+    "name": "PlayerHPUI",
+    "parentGuid": null,
+    "prefabName": ""
+}

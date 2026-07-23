@@ -25,8 +25,7 @@ public class SpikeFish : MonoScript
         initialScale_ = transform.scale;
         animationAction_ = Wait;
 
-        // 0→1の連番を向きに関係なく常時ループ再生する(左向きの時はUV反転で表現するので、
-        // 向きが変わっても再生を止めたりリセットしたりしない)
+
         if (spriteAnimation_ != null)
         {
             spriteAnimation_.startFrame = 0;

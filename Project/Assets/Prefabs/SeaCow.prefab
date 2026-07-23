@@ -35,6 +35,10 @@
             "useOwnerScale": true
         },
         {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
             "ChaseController": {
                 "autoStart": true,
                 "chaseDistance": 656.0,
@@ -46,6 +50,12 @@
                 "stopAtRushDistance": false,
                 "targetEntityName": "Player",
                 "waitTime": 1.5
+            },
+            "DespawnTimer": {
+                "despawnTime_": 12.0
+            },
+            "ExpDropper": {
+                "dropExp": 32.0
             },
             "HP": {
                 "currentHp_": 25.0,
@@ -119,6 +129,22 @@
                 {
                     "enable": true,
                     "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "ParticleOffset"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "ExpDropper"
+                },
+                {
+                    "enable": true,
+                    "name": "DespawnTimer"
                 }
             ],
             "type": "Script"
@@ -150,6 +176,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
     "guid": "a90c95a9be33cee0c1f0fa7d835a7a73",

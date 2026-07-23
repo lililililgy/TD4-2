@@ -29,6 +29,8 @@
                 "objectiveSystemSceneName_": "GameScene"
             },
             "ShowOnPhase": {
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene",
                 "visiblePhases_": [
                     "TutorialPhase_Dash"
                 ]
@@ -75,13 +77,13 @@
                 "x": 2.0,
                 "y": -2.0
             },
-            "text": "ダッシュ してみよう",
+            "text": "カソク してみよう",
             "type": "TextRenderer",
             "verticalAlignment": 1
         }
     ],
     "guid": "a64b9714fe015c3fef706424d9259104",
     "name": "DashTutorial",
-    "parentGuid": null,
+    "parentGuid": "4c123bd93950d3de425d84db5e344735",
     "prefabName": ""
 }
