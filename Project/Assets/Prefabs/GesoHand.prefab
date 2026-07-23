@@ -8,7 +8,7 @@
                     "enable": 1,
                     "matrixCalcFlags": 7,
                     "position": {
-                        "x": 0.0,
+                        "x": 0.10000037401914597,
                         "y": 0.0,
                         "z": 0.0
                     },
@@ -44,7 +44,7 @@
                     "enable": 1,
                     "freezeY": false,
                     "isTrigger": true,
-                    "maskBits": 4294967042,
+                    "maskBits": 4294967046,
                     "mass": 1.0,
                     "size": {
                         "x": 1.0,
@@ -55,9 +55,9 @@
                     "useOwnerScale": true
                 }
             ],
-            "guid": "10e1422482e9cb39d1c66b8a75c8b009",
+            "guid": "b4362fb5708fa7181bddb77d22fc22fa",
             "name": "Collider",
-            "parentGuid": "d99ad234d60c0adce9107a4a0c759cd3",
+            "parentGuid": "f897233a45c888e1ff40d5fd73574a8e",
             "prefabName": ""
         },
         {
@@ -67,7 +67,7 @@
                     "enable": 1,
                     "matrixCalcFlags": 3,
                     "position": {
-                        "x": 0.0,
+                        "x": 0.3000001311302185,
                         "y": 1.4901161193847656e-08,
                         "z": 0.0
                     },
@@ -102,6 +102,21 @@
                     "type": "Script"
                 },
                 {
+                    "categoryBits": 8,
+                    "enable": 1,
+                    "freezeY": false,
+                    "isTrigger": true,
+                    "maskBits": 6,
+                    "mass": 1.0,
+                    "size": {
+                        "x": 300.0,
+                        "y": 300.00006103515625
+                    },
+                    "state": "Dynamic",
+                    "type": "BoxCollider2D",
+                    "useOwnerScale": false
+                },
+                {
                     "enable": 1,
                     "isPixelPerfect": false,
                     "material": {
@@ -131,26 +146,11 @@
                         }
                     },
                     "type": "SpriteRenderer"
-                },
-                {
-                    "categoryBits": 8,
-                    "enable": 1,
-                    "freezeY": false,
-                    "isTrigger": true,
-                    "maskBits": 2,
-                    "mass": 1.0,
-                    "size": {
-                        "x": 300.0,
-                        "y": 300.00006103515625
-                    },
-                    "state": "Dynamic",
-                    "type": "BoxCollider2D",
-                    "useOwnerScale": false
                 }
             ],
-            "guid": "d78ce2f38de4fe51eedd85430b25d92d",
+            "guid": "ba7ccebe84c6d38f2164a40591d9ebcc",
             "name": "weakPoint",
-            "parentGuid": "d99ad234d60c0adce9107a4a0c759cd3",
+            "parentGuid": "f897233a45c888e1ff40d5fd73574a8e",
             "prefabName": ""
         }
     ],
@@ -252,7 +252,7 @@
             }
         }
     ],
-    "guid": "d99ad234d60c0adce9107a4a0c759cd3",
+    "guid": "f897233a45c888e1ff40d5fd73574a8e",
     "name": "GesoHand",
     "parentGuid": null,
     "prefabName": "GesoHand"
