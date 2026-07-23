@@ -10,6 +10,7 @@
 #include "../Interface/ECSISystem.h"
 #include "Engine/Core/Utility/Utility.h"
 #include "Engine/ECS/Component/Components/ComputeComponents/Collision/ICollider.h"
+#include "Engine/ECS/System/Collision/CollisionSystem.h"
 
 namespace ONEngine {
 
@@ -45,8 +46,6 @@ private:
 	/// private : objects
 	/// =======================================
 
-	using CollisionPair = std::pair<class GameEntity*, class GameEntity*>;
-
 	std::deque<CollisionPair> collidedPairs_;
 
 	/// ----- call back ----- ///
@@ -55,7 +54,7 @@ private:
 	std::deque<CollisionPair> exitPairs_;  /// 衝突が終了したペア
 
 	/// collision check 
-	using CollisionCheckFunc = std::function<bool(const CollisionPair&, CollisionInfo*)>;
+	using CollisionCheckFunc = std::function<bool(class GameEntity*, class GameEntity*, CollisionInfo*)>;
 	std::unordered_map<std::string, CollisionCheckFunc> collisionCheckMap_;
 
 };

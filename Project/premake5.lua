@@ -38,11 +38,13 @@ project "DirectXTex"
     -- ※共通設定が自動適用されるため、ここでの cppdialect 等の記述は不要です
 
     filter "configurations:Debug"
+         flags { "NoRuntimeChecks" }
          runtime "Debug"
          symbols "On"
          staticruntime "On"
 
     filter "configurations:Development"
+        flags { "NoRuntimeChecks" }
         runtime "Release" -- 開発用ビルドだがランタイムはRelease
         symbols "On"
         editandcontinue "Off"
@@ -78,11 +80,13 @@ project "ImGui"
     }
 
     filter "configurations:Debug"
+         flags { "NoRuntimeChecks" }
          runtime "Debug"
          symbols "On"
          staticruntime "On"
 
     filter "configurations:Development"
+        flags { "NoRuntimeChecks" }
         runtime "Release"
         symbols "On"
         editandcontinue "Off"
@@ -144,6 +148,7 @@ project "ONEngine"
 
     -- Debug Configuration
     filter "configurations:Debug"
+        flags { "NoRuntimeChecks" }
         runtime "Debug"
         symbols "On"
         optimize "Off"
@@ -179,6 +184,7 @@ project "ONEngine"
 
     -- Development Configuration
     filter "configurations:Development"
+        flags { "NoRuntimeChecks" }
         runtime "Release"
         symbols "Full"
         optimize "Speed"
