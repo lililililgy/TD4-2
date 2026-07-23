@@ -62,12 +62,10 @@ public class FlapjackOctopus : MonoScript
 
     public override void Initialize()
     {
-        if (transform == null) { return; }
-
         motion_.Attach(entity);
 
         // 初期スケールを保持しておく
-        initialScale_ = transform.scale;
+        initialScale_ = transform != null ? transform.scale : Vector3.one;
         // スクリプト取得
         spriteAnimation_ = entity.GetScript<SpriteAnimation>();
         rangeDetector_ = entity.GetScript<TargetRangeDetector>();

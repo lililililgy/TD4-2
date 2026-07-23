@@ -32,11 +32,9 @@ public class MorayEelPot : MonoScript
 
     public override void Initialize()
     {
-        if (transform == null) { return; }
-
         fireTimer_        = 0.0f;
         angleZ_           = 0.0f;
-        baseScale_        = transform.scale;
+        baseScale_        = transform != null ? transform.scale : Vector3.one;
         fireScalePhase_   = FireScalePhase.IDLE;
         fireScaleElapsed_ = 0.0f;
 
