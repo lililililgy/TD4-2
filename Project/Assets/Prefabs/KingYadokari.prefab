@@ -57,7 +57,7 @@
                 },
                 {
                     "categoryBits": 8,
-                    "enable": 1,
+                    "enable": 0,
                     "freezeY": false,
                     "isTrigger": true,
                     "maskBits": 4294967042,
@@ -230,7 +230,7 @@
                 },
                 {
                     "categoryBits": 8,
-                    "enable": 1,
+                    "enable": 0,
                     "freezeY": false,
                     "isTrigger": true,
                     "maskBits": 4294967042,
@@ -316,8 +316,8 @@
             "BossDeathPresentation": {
                 "deathEffectEmitCount": 1,
                 "deathEffectEntityName": "King_DeadEffect01",
-                "fadeDuration": 0.8,
-                "whiteDuration": 0.2
+                "fadeDuration": 0.800000011920929,
+                "whiteDuration": 0.20000000298023224
             },
             "ExpDropper": {
                 "damageDropExp": 1.0,
@@ -328,6 +328,7 @@
                 "directlyDamageable_": false,
                 "disableAutoDestruction_": true,
                 "enable": true,
+                "initialHp_": 200.0,
                 "isInvincible_": false,
                 "maxHp_": 200.0
             },
@@ -395,22 +396,10 @@
                 "enable": true,
                 "ownerEntityName_": "KingYadokari"
             },
-            "type": "Variables"
-        },
-        {
-            "categoryBits": 8,
-            "enable": 1,
-            "freezeY": false,
-            "isTrigger": false,
-            "maskBits": 18,
-            "mass": 1.0,
-            "size": {
-                "x": 0.800000011920929,
-                "y": 0.800000011920929
+            "ZoomWeight": {
+                "weight_": 1.2000000476837158
             },
-            "state": "Static",
-            "type": "BoxCollider2D",
-            "useOwnerScale": true
+            "type": "Variables"
         },
         {
             "enable": 1,
@@ -442,6 +431,21 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "categoryBits": 8,
+            "enable": 0,
+            "freezeY": false,
+            "isTrigger": false,
+            "maskBits": 18,
+            "mass": 1.0,
+            "size": {
+                "x": 0.800000011920929,
+                "y": 0.800000011920929
+            },
+            "state": "Static",
+            "type": "BoxCollider2D",
+            "useOwnerScale": true
         },
         {
             "enable": 1,
@@ -485,6 +489,10 @@
                 {
                     "enable": true,
                     "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "ZoomWeight"
                 }
             ],
             "type": "Script"

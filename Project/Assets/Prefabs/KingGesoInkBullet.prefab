@@ -45,13 +45,13 @@
                 "speed": 220.0
             },
             "SpriteAnimation": {
-                "cols": 1,
+                "cols": 3,
                 "endFrame": 2,
                 "fps": 2.0,
                 "invertY": false,
                 "isLoop": true,
                 "isPlay": true,
-                "rows": 3,
+                "rows": 1,
                 "startFrame": 0,
                 "totalFrames": 3
             },
@@ -121,7 +121,7 @@
             }
         }
     ],
-    "guid": "57c511bf2bad9cab89e483ce66700605",
+    "guid": "c83446a22fb09e3bc4f045978028e53d",
     "name": "KingGesoInkBullet",
     "parentGuid": null,
     "prefabName": "KingGesoInkBullet"

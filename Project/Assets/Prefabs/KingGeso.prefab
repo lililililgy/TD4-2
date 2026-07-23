@@ -30,21 +30,21 @@
                 "whiteDuration": 0.20000000298023224
             },
             "ExpDropper": {
-                "damageDropExp": 1.0,
-                "dropExp": 0.0
+                "damageDropExp": 200.0,
+                "dropExp": 200.0
             },
             "HP": {
                 "MAX_HP": 10,
                 "currentHp": 10,
-                "currentHp_": 300.0,
+                "currentHp_": 200.0,
                 "directlyDamageable_": true,
                 "disableAutoDestruction": true,
                 "disableAutoDestruction_": true,
                 "enable": true,
-                "initialHp_": 300.0,
+                "initialHp_": 200.0,
                 "isInvincible": false,
                 "isInvincible_": false,
-                "maxHp_": 300.0,
+                "maxHp_": 200.0,
                 "regenPerSecond": 0.0
             },
             "KingGeso": {
@@ -57,15 +57,15 @@
                 "fixedAttackType": 0,
                 "gesoPrefabName": "GesoHand",
                 "gesoSpawnOffset": {
-                    "x": -1280.5,
+                    "x": -1148.5,
                     "y": 183.40072631835938
                 },
                 "idleDuration": 2.0,
                 "maxHp": 1000,
                 "randomizeAttackType": true,
                 "screenEdgeMargin": 0.699999988079071,
-                "screenHalfHeight": 720.0,
-                "screenHalfWidth": 1280.0,
+                "screenHalfHeight": 1020.0,
+                "screenHalfWidth": 1580.0,
                 "targetEntityName": "Player"
             },
             "KingGesoHomingAttackSettings": {
@@ -92,7 +92,7 @@
                 "bulletDamage": 1.0,
                 "bulletLifeTime": 7.0,
                 "bulletPrefabName": "KingGesoInkBullet",
-                "bulletSpeed": 250.0,
+                "bulletSpeed": 350.0,
                 "poolSize": 0,
                 "recoveryDuration": 0.6000000238418579,
                 "reverseHalfway": true,
@@ -127,7 +127,7 @@
             },
             "KingGesoWaveThrustSettings": {
                 "attackDuration": 13.0,
-                "damage": 20.0,
+                "damage": 1.0,
                 "gesoCount": 6,
                 "gesoLifeTime": 5.0,
                 "moveDuration": 10.0,
@@ -135,7 +135,7 @@
                 "rotationSpeed": 8.0,
                 "selectionWeight": 1.0,
                 "spawnInterval": 2.0,
-                "tellDuration": 0.800000011920929
+                "tellDuration": 1.0
             },
             "SpriteAnimation": {
                 "cols": 3,
@@ -150,7 +150,7 @@
                 "totalFrames": 3
             },
             "ZoomWeight": {
-                "weight_": 1.0
+                "weight_": 1.2000000476837158
             },
             "type": "Variables"
         },
