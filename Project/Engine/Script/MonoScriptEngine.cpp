@@ -304,9 +304,33 @@ MonoAssembly* LoadAssemblyWithSymbols(MonoDomain* domain, const std::string& dll
 	return mono_domain_assembly_open(domain, dllPath.c_str());
 }
 
+std::wstring GetShortPathW(const std::filesystem::path& path) {
+	std::filesystem::path absPath = std::filesystem::absolute(path);
+	std::wstring wpath = absPath.wstring();
+	DWORD length = GetShortPathNameW(wpath.c_str(), NULL, 0);
+	if (length > 0) {
+		std::vector<wchar_t> buffer(length);
+		if (GetShortPathNameW(wpath.c_str(), buffer.data(), length) > 0) {
+			return std::wstring(buffer.data());
+		}
+	}
+	return wpath;
+}
+
 std::string GetUtf8Path(const std::filesystem::path& path) {
 	std::filesystem::path absPath = std::filesystem::absolute(path);
 	std::wstring wpath = absPath.wstring();
+
+	// 8.3 DOS ショートパス取得を優先試行 (全角日本語やスペースをASCII短縮パスに変換)
+	DWORD length = GetShortPathNameW(wpath.c_str(), NULL, 0);
+	if (length > 0) {
+		std::vector<wchar_t> buffer(length);
+		if (GetShortPathNameW(wpath.c_str(), buffer.data(), length) > 0) {
+			std::wstring shortW(buffer.data());
+			return std::string(shortW.begin(), shortW.end());
+		}
+	}
+
 	int len = WideCharToMultiByte(CP_UTF8, 0, wpath.c_str(), -1, nullptr, 0, nullptr, nullptr);
 	if(len > 0) {
 		std::string utf8Path(len - 1, '\0');
@@ -339,8 +363,8 @@ void MonoScriptEngine::Initialize() {
 	}
 
 	// PATH 設定 (OSレベルA/W & CRTレベルA/W) - staticにしてメモリを永続化
-	static std::string monoBinA = std::filesystem::absolute("Packages/mono/bin").string();
-	static std::wstring monoBinW = std::filesystem::absolute("Packages/mono/bin").wstring();
+	static std::string monoBinA = GetUtf8Path("Packages/mono/bin");
+	static std::wstring monoBinW = GetShortPathW("Packages/mono/bin");
 
 	// 既存の PATH を取得し、なければ C:\Windows\System32 をデフォルトにする
 	char pathBuf[32767];
@@ -364,8 +388,8 @@ void MonoScriptEngine::Initialize() {
 	_wputenv(pathEnvW.c_str());
 
 	// MONO_PATH 設定 (OSレベルA/W & CRTレベルA/W) - staticにしてメモリを永続化
-	static std::string monoLibA = std::filesystem::absolute("Packages/mono/lib/4.5").string();
-	static std::wstring monoLibW = std::filesystem::absolute("Packages/mono/lib/4.5").wstring();
+	static std::string monoLibA = GetUtf8Path("Packages/mono/lib/4.5");
+	static std::wstring monoLibW = GetShortPathW("Packages/mono/lib/4.5");
 	static std::string monoPathEnvA = "MONO_PATH=" + monoLibA;
 	static std::wstring monoPathEnvW = L"MONO_PATH=" + monoLibW;
 	SetEnvironmentVariableA("MONO_PATH", monoLibA.c_str());
