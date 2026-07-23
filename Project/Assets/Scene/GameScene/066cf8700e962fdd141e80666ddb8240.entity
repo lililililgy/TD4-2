@@ -1,5 +1,13 @@
 {
     "active": true,
+    "components": [
+        {
+            "CameraShake": {
+                "shakeScale_": 0.800000011920929
+            },
+            "type": "Variables"
+        }
+    ],
     "guid": "066cf8700e962fdd141e80666ddb8240",
     "name": "MainCamera",
     "parentGuid": null,
