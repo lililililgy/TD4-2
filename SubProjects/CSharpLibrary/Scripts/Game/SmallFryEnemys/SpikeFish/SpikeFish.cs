@@ -20,9 +20,9 @@ public class SpikeFish : MonoScript
     {
         spriteRenderer_ = entity.GetComponent<SpriteRenderer>();
         spriteAnimation_ = entity.GetScript<SpriteAnimation>();
-        Entity playerEntity = ecsGroup.FindEntity("Player");
-        targetTransform_ = playerEntity.GetComponent<Transform>();
-        initialScale_ = transform.scale;
+        Entity playerEntity = ecsGroup != null ? ecsGroup.FindEntity("Player") : null;
+        targetTransform_ = playerEntity != null ? playerEntity.GetComponent<Transform>() : null;
+        initialScale_ = transform != null ? transform.scale : Vector3.one;
         animationAction_ = Wait;
 
 
@@ -37,6 +37,8 @@ public class SpikeFish : MonoScript
 
     public override void Update()
     {
+        if (transform == null || targetTransform_ == null) { return; }
+
         Vector3 toTarget = targetTransform_.position - transform.position;
 
         // ベクトルの長さが0以下の場合は処理を終了

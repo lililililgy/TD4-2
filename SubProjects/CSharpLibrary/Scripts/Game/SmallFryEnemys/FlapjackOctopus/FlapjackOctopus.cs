@@ -62,6 +62,8 @@ public class FlapjackOctopus : MonoScript
 
     public override void Initialize()
     {
+        if (transform == null) { return; }
+
         motion_.Attach(entity);
 
         // 初期スケールを保持しておく
@@ -89,10 +91,10 @@ public class FlapjackOctopus : MonoScript
     // 常時再生する泳ぎの泡を生成する
     private void SpawnSwimParticle()
     {
-        if (String.IsNullOrEmpty(swimParticlePrefabName)) { return; }
+        if (String.IsNullOrEmpty(swimParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity swimParticle = ecsGroup.CreateEntity(swimParticlePrefabName);
-        if (!swimParticle) { return; }
+        if (!swimParticle || swimParticle.transform == null) { return; }
 
         // FlapjackOctopusはスケールが極端に大きいため、親子付けすると泡もつられて巨大化し画面外に出てしまう。
         // そのため親子付けはせず、座標だけを毎フレーム追従させる。
@@ -103,7 +105,7 @@ public class FlapjackOctopus : MonoScript
     // 泳ぎの泡の座標をこの敵の現在位置に追従させる
     private void SyncSwimParticlePosition()
     {
-        if (!swimParticleEntity_) { return; }
+        if (!swimParticleEntity_ || swimParticleEntity_.transform == null || transform == null) { return; }
         swimParticleEntity_.transform.position = transform.position + GetParticleOffset();
     }
 
@@ -111,7 +113,7 @@ public class FlapjackOctopus : MonoScript
     // FlapjackOctopusはFaceTarget()でtransform.rotateを実際に回転させているため、そのままオフセットに回転を掛ける。
     private Vector3 GetParticleOffset()
     {
-        if (particleOffset_ == null) { return Vector3.zero; }
+        if (particleOffset_ == null || transform == null) { return Vector3.zero; }
         return transform.rotate * particleOffset_.offset;
     }
 
@@ -127,10 +129,10 @@ public class FlapjackOctopus : MonoScript
     // 蹴伸びする度に独立したバーストエンティティを生成して、常駐の泡とは別に確実に発生させる
     private void SpawnChaseBurstParticle()
     {
-        if (String.IsNullOrEmpty(swimParticlePrefabName)) { return; }
+        if (String.IsNullOrEmpty(swimParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity burst = ecsGroup.CreateEntity(swimParticlePrefabName);
-        if (!burst) { return; }
+        if (!burst || burst.transform == null) { return; }
 
         burst.transform.position = transform.position + GetParticleOffset();
 
@@ -140,6 +142,8 @@ public class FlapjackOctopus : MonoScript
 
     public override void Update()
     {
+        if (transform == null) { return; }
+
         // 親子付けしていない泳ぎの泡の座標を追従させる
         SyncSwimParticlePosition();
 
@@ -381,6 +385,8 @@ public class FlapjackOctopus : MonoScript
     // プレイヤー方向へ緩やかに向きを合わせる
     private void FaceTarget()
     {
+        if (transform == null || targetEntity_ == null || targetEntity_.transform == null) { return; }
+
         Vector3 toTarget = targetEntity_.transform.position - transform.position;
         if (toTarget.LengthSq() <= 0.0001f) { return; }
 

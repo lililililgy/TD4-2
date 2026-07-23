@@ -32,6 +32,8 @@ public class MorayEelPot : MonoScript
 
     public override void Initialize()
     {
+        if (transform == null) { return; }
+
         fireTimer_        = 0.0f;
         angleZ_           = 0.0f;
         baseScale_        = transform.scale;
@@ -49,12 +51,11 @@ public class MorayEelPot : MonoScript
 
     public override void Update()
     {
+        if (transform == null) { return; }
+
         // ツボを Z 軸回転させる
         angleZ_ += rotateZSpeed * Time.deltaTime;
-        if (transform)
-        {
-            transform.rotate = Quaternion.FromEuler(new Vector3(0.0f, 0.0f, angleZ_));
-        }
+        transform.rotate = Quaternion.FromEuler(new Vector3(0.0f, 0.0f, angleZ_));
 
         // 発射時スケーリング演出
         UpdateFireScaleAnimation();
@@ -146,8 +147,10 @@ public class MorayEelPot : MonoScript
 
     private void FireMorayEel()
     {
+        if (transform == null || ecsGroup == null) { return; }
+
         Entity eel = ecsGroup.CreateEntity(morayEelPrefabName);
-        if (!eel) { return; }
+        if (!eel || eel.transform == null) { return; }
 
         // ツボと同じ位置・向きから発射する
         eel.transform.position = transform.position;

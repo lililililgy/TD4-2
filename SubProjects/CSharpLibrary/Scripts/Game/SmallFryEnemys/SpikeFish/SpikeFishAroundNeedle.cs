@@ -26,6 +26,8 @@ public class SpikeFishAroundNeedle : MonoScript
 
     public override void Initialize()
     {
+        if (transform == null) { return; }
+
         baseScale_ = transform.scale;
         spriteAnim_ = entity.GetScript<SpriteAnimation>();
         // スポーン時もスケール0→1でイージング
@@ -47,6 +49,8 @@ public class SpikeFishAroundNeedle : MonoScript
 
     public override void Update()
     {
+        if (transform == null) { return; }
+
         if (isCharging_) { UpdateCharging(); }
         if (isRecovering_) { UpdateRecovery(); }
     }
@@ -63,6 +67,8 @@ public class SpikeFishAroundNeedle : MonoScript
     // SpikeFishAttack からチャージ完了時に呼ぶ
     public void FireNeedle(int fireNeedleNum)
     {
+        if (transform == null || ecsGroup == null) { return; }
+
         isCharging_ = false;
         angularVel_ = 0.0f;
 
@@ -73,7 +79,7 @@ public class SpikeFishAroundNeedle : MonoScript
         {
             // NeedleEntityを生成する
             Entity needle = ecsGroup.CreateEntity(needleName_);
-            if (needle == null) { 
+            if (needle == null || needle.transform == null) {
                 continue;
             }
 
@@ -142,6 +148,7 @@ public class SpikeFishAroundNeedle : MonoScript
 
     private void ApplyScale()
     {
+        if (transform == null) { return; }
         transform.scale = baseScale_ * ScaleMult;
     }
 }
