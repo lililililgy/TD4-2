@@ -125,6 +125,11 @@
                 "rumbleLeftMotor_": 12.5,
                 "rumbleRightMotor_": 0.8
             },
+            "EffectOnHit": {
+                "depthOffset_": 0.0,
+                "effectPrefabName_": "PlayerHitEffect",
+                "lifeTime_": 0.3
+            },
             "HP": {
                 "MAX_HP": 12,
                 "currentHp": 1,
@@ -137,6 +142,14 @@
                 "isInvincible_": false,
                 "maxHp_": 12.0,
                 "regenPerSecond": 0.0
+            },
+            "HitStopOnHit": {
+                "durationScale_": 0.6,
+                "maxDuration_": 0.14,
+                "minDuration_": 0.03,
+                "referenceDamage_": 50.0,
+                "referenceDuration_": 0.07,
+                "timeScale_": 0.05
             },
             "LevelingComponent": {
                 "baseRequiredExp_": 100.0,
@@ -352,6 +365,18 @@
                 {
                     "enable": true,
                     "name": "ShakeOnHit"
+                },
+                {
+                    "enable": true,
+                    "name": "HitStopOnHit"
+                },
+                {
+                    "enable": true,
+                    "name": "EffectOnHit"
+                },
+                {
+                    "enable": true,
+                    "name": "HitStopSystem"
                 },
                 {
                     "enable": true,

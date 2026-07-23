@@ -25,6 +25,21 @@ struct CollisionInfo {
 /// ///////////////////////////////////////////////////
 /// 衝突判定の計算を行い、コールバック関数を呼び出すシステム
 /// ///////////////////////////////////////////////////
+struct CollisionEntityPair {
+	int32_t first = 0;
+	int32_t second = 0;
+
+	CollisionEntityPair() = default;
+	CollisionEntityPair(int32_t f, int32_t s) : first(f), second(s) {}
+
+	bool operator==(const CollisionEntityPair& other) const {
+		return (first == other.first && second == other.second)
+			|| (first == other.second && second == other.first);
+	}
+};
+
+using CollisionPair = CollisionEntityPair;
+
 class CollisionSystem : public ECSISystem {
 public:
 	/// =======================================
@@ -57,8 +72,6 @@ private:
 	/// private : objects
 	/// =======================================
 
-	using CollisionPair = std::pair<class GameEntity*, class GameEntity*>;
-
 	std::deque<CollisionPair> collidedPairs_;
 
 	/// ----- call back ----- ///
@@ -68,7 +81,7 @@ private:
 
 
 	/// collision check 
-	using CollisionCheckFunc = std::function<bool(const CollisionPair&, CollisionInfo*)>;
+	using CollisionCheckFunc = std::function<bool(class GameEntity*, class GameEntity*, CollisionInfo*)>;
 	std::unordered_map<std::string, CollisionCheckFunc> collisionCheckMap_;
 
 };

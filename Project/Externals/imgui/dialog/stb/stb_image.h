@@ -6509,7 +6509,7 @@ static stbi_uc *stbi__process_gif_raster(stbi__context *s, stbi__gif *g)
 {
    stbi_uc lzw_cs;
    stbi__int32 len, init_code;
-   stbi__uint32 first;
+   stbi__uint32 first = 0;
    stbi__int32 codesize, codemask, avail, oldcode, bits, valid_bits, clear;
    stbi__gif_lzw *p;
 

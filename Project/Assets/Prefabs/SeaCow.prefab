@@ -57,6 +57,16 @@
             "ExpDropper": {
                 "dropExp": 32.0
             },
+            "FlashOnDamaged": {
+                "duration_": 0.08,
+                "fadeOut_": true,
+                "flashColor_": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
             "HP": {
                 "currentHp_": 25.0,
                 "directlyDamageable_": true,
@@ -87,6 +97,11 @@
                     "z": 1.0
                 },
                 "rampUpEaseTime": 3.0
+            },
+            "ShakeSelfOnDamaged": {
+                "amplitude_": 24.0,
+                "duration_": 0.12,
+                "frequency_": 35.0
             },
             "SpriteAnimation": {
                 "cols": 2,
@@ -145,6 +160,14 @@
                 {
                     "enable": true,
                     "name": "DespawnTimer"
+                },
+                {
+                    "enable": true,
+                    "name": "FlashOnDamaged"
+                },
+                {
+                    "enable": true,
+                    "name": "ShakeSelfOnDamaged"
                 }
             ],
             "type": "Script"

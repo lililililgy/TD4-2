@@ -11,23 +11,26 @@ static class ComponentBatchManager {
 	private static Dictionary<Type, ComponentBatchAllocator> allocators = new Dictionary<Type, ComponentBatchAllocator>();
 
 	public static void Initialize() {
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(Transform.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Transform.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(MeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(MeshRenderer.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(DissolveMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(DissolveMeshRenderer.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SpriteRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SpriteRenderer.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(TextRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(TextRenderer.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(CameraComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CameraComponent.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(UIGroupComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIGroupComponent.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(UIElementComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIElementComponent.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BoxCollider2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider2D.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(Rigidbody2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Rigidbody2D.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BGMPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BGMPlayer.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SEPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SEPlayer.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(BoxCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(CircleCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CircleCollider.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SphereCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SphereCollider.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(ONEngine.AnimationPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(ONEngine.AnimationPlayer.BatchData))}");
-		System.Console.WriteLine($"[JIT_DEBUG] C# sizeof(SkinMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SkinMeshRenderer.BatchData))}");
+		converters.Clear();
+		allocators.Clear();
+
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(Transform.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Transform.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(MeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(MeshRenderer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(DissolveMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(DissolveMeshRenderer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(SpriteRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SpriteRenderer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(TextRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(TextRenderer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(CameraComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CameraComponent.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(UIGroupComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIGroupComponent.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(UIElementComponent.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(UIElementComponent.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(BoxCollider2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider2D.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(Rigidbody2D.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(Rigidbody2D.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(BGMPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BGMPlayer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(SEPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SEPlayer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(BoxCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(BoxCollider.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(CircleCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(CircleCollider.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(SphereCollider.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SphereCollider.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(ONEngine.AnimationPlayer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(ONEngine.AnimationPlayer.BatchData))}");
+		Debug.LogInfo($"[JIT_DEBUG] C# sizeof(SkinMeshRenderer.BatchData) = {System.Runtime.InteropServices.Marshal.SizeOf(typeof(SkinMeshRenderer.BatchData))}");
 
 		// --- Rigidbody2D の登録 ---
 		RegisterConverter<Rigidbody2D, Rigidbody2D.BatchData>((ComponentArray<Rigidbody2D> array) => {

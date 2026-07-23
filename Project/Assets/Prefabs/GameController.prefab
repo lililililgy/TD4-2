@@ -39,6 +39,10 @@
                 {
                     "enable": true,
                     "name": "GameSceneController"
+                },
+                {
+                    "enable": true,
+                    "name": "HitStopSystem"
                 }
             ],
             "type": "Script"
