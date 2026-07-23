@@ -100,6 +100,10 @@ private:
 	/// @param isTemporary 一時的なシーンかどうか
 	void MoveNextToCurrentScene(bool isTemporary);
 
+	/// @brief 実際にシーンのアンロード処理を行う
+	/// @param sceneName アンロードするシーン名
+	void DoUnloadScene(const std::string& sceneName);
+
 
 private:
 	/// ===================================================
@@ -113,6 +117,8 @@ private:
 	std::string currentScene_;
 	std::string nextScene_;
 	bool isNextSceneAdditive_ = false;
+
+	std::vector<std::string> pendingUnloadScenes_;
 
 	bool isDirty_ = false;
 

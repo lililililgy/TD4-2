@@ -1,5 +1,5 @@
 {
-    "active": false,
+    "active": true,
     "components": [
         {
             "enable": 1,
@@ -23,21 +23,35 @@
             "type": "Transform"
         },
         {
+            "BossDeathPresentation": {
+                "deathEffectEmitCount": 1,
+                "deathEffectEntityName": "King_DeadEffect01",
+                "fadeDuration": 0.800000011920929,
+                "whiteDuration": 0.20000000298023224
+            },
+            "ExpDropper": {
+                "damageDropExp": 1.0,
+                "dropExp": 0.0
+            },
             "HP": {
                 "MAX_HP": 10,
                 "currentHp": 10,
-                "currentHp_": 960.9000244140625,
+                "currentHp_": 300.0,
                 "directlyDamageable_": true,
-                "disableAutoDestruction": false,
-                "disableAutoDestruction_": false,
+                "disableAutoDestruction": true,
+                "disableAutoDestruction_": true,
                 "enable": true,
+                "initialHp_": 300.0,
                 "isInvincible": false,
                 "isInvincible_": false,
-                "maxHp_": 1000.0,
+                "maxHp_": 300.0,
                 "regenPerSecond": 0.0
             },
             "KingGeso": {
                 "cameraEntityName": "MainCamera",
+                "chargeEffectEmitCount": 1,
+                "chargeEffectEmitInterval": 0.20000000298023224,
+                "chargeEffectEntityName": "Geso_ChargeEffect",
                 "cooldownDuration": 1.0,
                 "enable": true,
                 "fixedAttackType": 0,
@@ -66,6 +80,9 @@
                     "x": 50.0,
                     "y": 50.0
                 },
+                "swimParticleEmitCount": 1,
+                "swimParticleEmitInterval": 0.15000000596046448,
+                "swimParticlePrefabName": "enemySwimParticle",
                 "tellDuration": 0.800000011920929,
                 "turnSpeed": 0.5
             },
@@ -131,6 +148,9 @@
                 "rows": 1,
                 "startFrame": 0,
                 "totalFrames": 3
+            },
+            "ZoomWeight": {
+                "weight_": 1.0
             },
             "type": "Variables"
         },
@@ -198,7 +218,19 @@
                 },
                 {
                     "enable": true,
+                    "name": "ExpDropper"
+                },
+                {
+                    "enable": true,
+                    "name": "BossDeathPresentation"
+                },
+                {
+                    "enable": true,
                     "name": "SpriteAnimation"
+                },
+                {
+                    "enable": true,
+                    "name": "ZoomWeight"
                 }
             ],
             "type": "Script"

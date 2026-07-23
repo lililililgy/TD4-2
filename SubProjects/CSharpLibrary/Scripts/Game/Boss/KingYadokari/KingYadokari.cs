@@ -16,6 +16,7 @@ public class KingYadokari : MonoScript {
     [SerializeField] public KingYadokariAttackTypeEnum fixedAttackType = KingYadokariAttackTypeEnum.GiantClaw;
 
     private HP hp_;
+    private ExpDropper expDropper_;
     private Entity targetEntity_;
     private IKingYadokariState state_;
     private KingYadokariGiantClawAttackSettings giantClawSettings_;
@@ -34,6 +35,7 @@ public class KingYadokari : MonoScript {
 
     public override void Initialize() {
         hp_ = entity.GetScript<HP>();
+        expDropper_ = entity.GetScript<ExpDropper>();
         if (hp_ != null) {
             hp_.IsDirectlyDamageable = false;
         }
@@ -57,6 +59,13 @@ public class KingYadokari : MonoScript {
     }
 
     public override void Update() {
+        if (hp_ != null && hp_.IsDead) {
+            if (!(state_ is KingYadokariDeadState)) {
+                ChangeState(new KingYadokariDeadState());
+            }
+            return;
+        }
+
         if (state_ != null) {
             state_.Update(this);
         }
@@ -285,7 +294,18 @@ public class KingYadokari : MonoScript {
             return;
         }
 
+        float hpBeforeDamage = hp_.CurrentHp;
         hp_.TakeDamage(damage);
+        if (hp_.CurrentHp >= hpBeforeDamage) {
+            return;
+        }
+
+        if (expDropper_ == null) {
+            expDropper_ = entity.GetScript<ExpDropper>();
+        }
+        if (expDropper_ != null) {
+            expDropper_.DropOnDamage();
+        }
     }
 
     internal void BeginAttackTell() {
@@ -311,6 +331,16 @@ public class KingYadokari : MonoScript {
     internal void FinishGetUp() {
         isKnockedDown_ = false;
         SetVisualState(new Vector4(1.0f, 1.0f, 1.0f, 1.0f), standingRotation_);
+    }
+
+    internal void BeginDeath() {
+        isKnockedDown_ = false;
+        StopBodyMovement();
+        SetBodyAttackDamage(0.0f);
+        if (activeGiantClaw_ != null) {
+            activeGiantClaw_.CommandReturn();
+            activeGiantClaw_ = null;
+        }
     }
 
     internal void RestoreNormalVisual() {

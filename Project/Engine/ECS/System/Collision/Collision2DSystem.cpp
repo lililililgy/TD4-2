@@ -4,6 +4,7 @@ using namespace ONEngine;
 
 /// std
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <algorithm>
 
@@ -71,6 +72,21 @@ void Collision2DSystem::RuntimeUpdate(ECSGroup* ecs) {
 	enterPairs_.clear();
 	stayPairs_.clear();
 	exitPairs_.clear();
+
+	/// 破棄済みエンティティを参照するペアを collidedPairs_ から除去する
+	{
+		std::unordered_set<GameEntity*> liveEntities;
+		for (const auto& e : ecs->GetEntities()) {
+			liveEntities.insert(e.get());
+		}
+		collidedPairs_.erase(
+			std::remove_if(collidedPairs_.begin(), collidedPairs_.end(),
+				[&liveEntities](const CollisionPair& p) {
+					return liveEntities.find(p.first) == liveEntities.end()
+						|| liveEntities.find(p.second) == liveEntities.end();
+				}),
+			collidedPairs_.end());
+	}
 
 	/// 全てのコライダーを取得
 	ComponentArray<CircleCollider>* circleColliderArray = ecs->GetComponentArray<CircleCollider>();

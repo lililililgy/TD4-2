@@ -5,6 +5,11 @@ using System;
 public class HP : MonoScript, IGaugeSource {
     [SerializeField] private float maxHp_ = 100;
     [SerializeField] private float currentHp_ = 0;
+    // 開始時の HP。0 以上ならこの値から始まる（負なら maxHp_ から始まる＝従来動作）。
+    // 「上限は高いが手持ちは少ない状態で始める」（例: プレイヤーの残機）を表現するためのもの。
+    // 他スクリプトの Initialize から SetHp() で上書きする方式だと、
+    // HP と書き込む側どちらの Initialize が先に走るかで結果が変わるため、ここで持つ。
+    [SerializeField] private float initialHp_ = -1.0f;
     [SerializeField] private bool disableAutoDestruction_ = false; // true: 死亡しても自分で Destroy しない
     [SerializeField] private bool isInvincible_ = false; // true: 無敵状態（ダメージを受けない）
     [SerializeField] private bool directlyDamageable_ = true; // false: 直接被弾では削れない（中継=DamageRelay 経由のみ。共有ライフの本体/頭向け）
@@ -12,8 +17,15 @@ public class HP : MonoScript, IGaugeSource {
     private bool isDead_ = false;
     private float lastCurrentHp_ = 0;
 
+    // TakeDamage() で実際に削れた量の累計。被弾演出はこの差分を自分の Update で取る。
+    // 「今フレーム被弾した」フラグ方式にすると、フラグを落とすタイミングと
+    // 読む側の実行順で取りこぼすため、累計値を公開して差分で判定させる。
+    // ※ CurrentHp の減少では代用できない。プレイヤーの HP は残機(=卵数)と同期されており、
+    //   発射で卵を消費したときにも減るため、被弾と区別が付かない。
+    private float totalDamageTaken_ = 0.0f;
+
     public override void Initialize() {
-        currentHp_ = maxHp_;
+        currentHp_ = initialHp_ >= 0.0f ? Mathf.Clamp(initialHp_, 0, maxHp_) : maxHp_;
         lastCurrentHp_ = currentHp_;
         isDead_ = false;
     }
@@ -32,11 +44,16 @@ public class HP : MonoScript, IGaugeSource {
     public void TakeDamage(float damage) {
         if (isDead_ || isInvincible_) return;
 
+        float beforeHp = currentHp_;
+
         currentHp_ -= damage;
         if (currentHp_ <= 0) {
             currentHp_ = 0;
             isDead_ = true;
         }
+
+        // オーバーキル分は数えず、実際に削れた量だけを積む
+        totalDamageTaken_ += beforeHp - currentHp_;
     }
 
     public void Heal(int healAmount) {
@@ -73,4 +90,7 @@ public class HP : MonoScript, IGaugeSource {
     public bool IsInvincible { get { return isInvincible_; } set { isInvincible_ = value; } }
     public bool DisableAutoDestruction { get { return disableAutoDestruction_; } set { disableAutoDestruction_ = value; } }
     public bool IsDirectlyDamageable { get { return directlyDamageable_; } set { directlyDamageable_ = value; } }
+
+    // TakeDamage() で削れた量の累計（単調増加）。前回値との差分で「被弾した量」を取る
+    public float TotalDamageTaken { get { return totalDamageTaken_; } }
 }

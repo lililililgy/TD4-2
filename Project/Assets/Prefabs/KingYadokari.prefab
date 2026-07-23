@@ -313,10 +313,20 @@
                 "damage_": 0.0,
                 "destroyOnHit_": false
             },
+            "BossDeathPresentation": {
+                "deathEffectEmitCount": 1,
+                "deathEffectEntityName": "King_DeadEffect01",
+                "fadeDuration": 0.8,
+                "whiteDuration": 0.2
+            },
+            "ExpDropper": {
+                "damageDropExp": 1.0,
+                "dropExp": 0.0
+            },
             "HP": {
                 "currentHp_": 200.0,
                 "directlyDamageable_": false,
-                "disableAutoDestruction_": false,
+                "disableAutoDestruction_": true,
                 "enable": true,
                 "isInvincible_": false,
                 "maxHp_": 200.0
@@ -459,6 +469,14 @@
                 {
                     "enable": true,
                     "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "ExpDropper"
+                },
+                {
+                    "enable": true,
+                    "name": "BossDeathPresentation"
                 },
                 {
                     "enable": true,

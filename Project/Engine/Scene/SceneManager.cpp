@@ -77,6 +77,15 @@ void SceneManager::Initialize(Asset::AssetCollection* assetCollection) {
 }
 
 void SceneManager::Update() {
+	/// 保留中のアンロード処理を実行
+	if (!pendingUnloadScenes_.empty()) {
+		std::vector<std::string> unloads = std::move(pendingUnloadScenes_);
+		pendingUnloadScenes_.clear();
+		for (const auto& sceneName : unloads) {
+			DoUnloadScene(sceneName);
+		}
+	}
+
 	/// 次のシーンが設定されていたらシーンを切り替える
 	if (nextScene_.size()) {
 		MoveNextToCurrentScene(false);
@@ -217,10 +226,22 @@ void SceneManager::SetDirty(bool isDirty) {
 }
 
 void SceneManager::UnloadScene(const std::string& sceneName) {
+	// スクリプトのコールバック実行中に即時アンロードしてUse-After-Freeが発生するのを防ぐため、
+	// アンロード処理は次フレームのUpdate()まで遅延させる。
+	if (std::find(pendingUnloadScenes_.begin(), pendingUnloadScenes_.end(), sceneName) == pendingUnloadScenes_.end()) {
+		pendingUnloadScenes_.push_back(sceneName);
+	}
+}
+
+void SceneManager::DoUnloadScene(const std::string& sceneName) {
 	pEcs_->GetDxManager()->GetDxCommand()->WaitForGpuComplete();
 
 	ECSGroup* group = pEcs_->GetECSGroup(sceneName);
 	if (group) {
+		if (auto* audioSys = group->GetSystem<AudioPlaybackSystem>()) {
+			audioSys->StopAllAudio();
+		}
+		MonoScriptEngine::GetInstance().ClearEntitiesFromNativeCS(sceneName);
 		group->RemoveEntityAll();
 	}
 

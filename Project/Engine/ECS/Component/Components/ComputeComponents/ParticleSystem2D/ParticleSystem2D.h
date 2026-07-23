@@ -37,6 +37,7 @@ namespace ONEngine {
         void Clear();
         void Pause();
         void Emit(int count);
+        void SetBoxShape(const Vector3& boxScale);
         int ConsumePendingEmitCount();
 
         void UpdateTime(float dt) { playbackTime_ += dt; }
@@ -81,5 +82,7 @@ namespace ONEngine {
     };
 
     void InternalEmitParticleSystem2D(uint64_t nativeHandle, int32_t count);
+    void InternalStopParticleSystem2D(uint64_t nativeHandle);
+    void InternalSetParticleSystem2DBoxShape(uint64_t nativeHandle, float x, float y, float z);
 
 }

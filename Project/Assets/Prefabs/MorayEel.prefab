@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": 0.0,
-                "y": 250.3000030517578,
+                "y": 0.0,
                 "z": 0.0
             },
             "rotate": {
@@ -35,6 +35,10 @@
             "useOwnerScale": true
         },
         {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
             "ChaseAnimation": {
                 "chasePulseDuration": 0.5,
                 "chasePulseScale": 1.100000023841858,
@@ -56,10 +60,10 @@
                 "waitTime": 0.800000011920929
             },
             "DespawnTimer": {
-                "despawnTime_": 1270.0
+                "despawnTime_": 12.0
             },
             "ExpDropper": {
-                "dropExp": 128.0
+                "dropExp": 12.0
             },
             "HP": {
                 "currentHp_": 30.0,
@@ -152,6 +156,10 @@
                 {
                     "enable": true,
                     "name": "ParticleOffset"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
                 }
             ],
             "type": "Script"
@@ -186,9 +194,23 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "2682034cd47ab1f5aed51870ad143c34",
+    "guid": "0ac426703f0bbf9e18ef59efe998b9ec",
     "name": "MorayEel",
     "parentGuid": null,
     "prefabName": "MorayEel"

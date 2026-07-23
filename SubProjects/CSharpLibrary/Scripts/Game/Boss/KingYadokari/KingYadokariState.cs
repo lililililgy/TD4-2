@@ -241,3 +241,15 @@ internal sealed class KingYadokariGetUpState : IKingYadokariState {
     public void Exit(KingYadokari owner) {
     }
 }
+
+internal sealed class KingYadokariDeadState : IKingYadokariState {
+    public void Enter(KingYadokari owner) {
+        owner.BeginDeath();
+    }
+
+    public void Update(KingYadokari owner) {
+    }
+
+    public void Exit(KingYadokari owner) {
+    }
+}

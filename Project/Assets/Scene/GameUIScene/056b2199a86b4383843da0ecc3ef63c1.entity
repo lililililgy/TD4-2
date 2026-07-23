@@ -32,7 +32,7 @@
                 "objectiveSystemEntityName_": "GameController",
                 "objectiveSystemSceneName_": "GameScene",
                 "visiblePhases_": [
-                    "BossBattlePhase_1"
+                    "BossBattlePhase_3"
                 ]
             },
             "type": "Variables"

@@ -1,0 +1,446 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        },
+        {
+            "colorOverLifetime": {
+                "color": {
+                    "gradient": {
+                        "alphaKeys": [
+                            {
+                                "alpha": 1.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0
+                            },
+                            {
+                                "alpha": 0.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.6000000238418579
+                            }
+                        ],
+                        "colorKeys": [
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 0.8172042369842529,
+                                    "r": 0.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0
+                            },
+                            {
+                                "color": {
+                                    "a": 1.0,
+                                    "b": 1.0,
+                                    "g": 0.32258057594299316,
+                                    "r": 0.0
+                                },
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.28999999165534973
+                            }
+                        ]
+                    },
+                    "gradientMax": {
+                        "alphaKeys": [],
+                        "colorKeys": []
+                    },
+                    "gradientMin": {
+                        "alphaKeys": [],
+                        "colorKeys": []
+                    },
+                    "state": 0
+                },
+                "enabled": true
+            },
+            "emission": {
+                "bursts": [],
+                "enabled": true,
+                "rateOverDistance": 0.0,
+                "rateOverTime": 32.0
+            },
+            "enable": 1,
+            "main": {
+                "duration": 5.0,
+                "gravityModifier": 0.0,
+                "looping": true,
+                "maxParticles": 1000,
+                "playOnAwake": true,
+                "prewarm": false,
+                "simulationSpace": 1,
+                "startColor": {
+                    "constant": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "max": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "min": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "state": 0
+                },
+                "startDelay": {
+                    "constant": 0.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startLifetime": {
+                    "constant": 1.5,
+                    "max": 2.0,
+                    "min": 1.0,
+                    "state": 1
+                },
+                "startRotation": {
+                    "constant": 0.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSize": {
+                    "constant": 57.29999923706055,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSize3D": true,
+                "startSizeX": {
+                    "constant": 3.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSizeY": {
+                    "constant": 50.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSizeZ": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSpeed": {
+                    "constant": 5.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                }
+            },
+            "renderer": {
+                "alignment": 1,
+                "blendMode": 1,
+                "flipMode": 0,
+                "materialGuid": "b47db62333738d5fe6b52467d029081e",
+                "meshGuid": "",
+                "renderMode": 0
+            },
+            "rotationOverLifetime": {
+                "angularVelocity": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "enabled": false
+            },
+            "shape": {
+                "angle": 25.0,
+                "arc": 360.0,
+                "boxScale": {
+                    "x": 20.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "enabled": true,
+                "radius": 0.0,
+                "radiusThickness": 1.0,
+                "type": 0
+            },
+            "sizeOverLifetime": {
+                "enabled": true,
+                "separateAxes": true,
+                "size": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 2.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 1.0
+                            }
+                        ]
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 2
+                },
+                "x": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 2.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 0.30000001192092896
+                            }
+                        ]
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 2
+                },
+                "y": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 1.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.3499999940395355,
+                                "value": 5.480000019073486
+                            }
+                        ]
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 2
+                },
+                "z": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                }
+            },
+            "textureSheetAnimation": {
+                "enabled": false,
+                "fps": 12.0,
+                "tilesX": 1,
+                "tilesY": 1
+            },
+            "type": "ParticleSystem2D",
+            "velocityOverLifetime": {
+                "enabled": true,
+                "space": 0,
+                "speedModifier": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "x": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 50.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 1.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": 1.0
+                            }
+                        ]
+                    },
+                    "curveMax": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": 200.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.3400000035762787,
+                                "value": 1.0
+                            }
+                        ]
+                    },
+                    "curveMin": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": -200.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.3499999940395355,
+                                "value": -1.0
+                            }
+                        ]
+                    },
+                    "state": 3
+                },
+                "y": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": [
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0,
+                                "value": -400.0
+                            },
+                            {
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0,
+                                "value": -200.0
+                            }
+                        ]
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 2
+                },
+                "z": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                }
+            }
+        }
+    ],
+    "guid": "c269941dd384076626c4be0a6612f4c9",
+    "name": "playerDashParticle",
+    "parentGuid": null,
+    "prefabName": "playerDashParticle"
+}

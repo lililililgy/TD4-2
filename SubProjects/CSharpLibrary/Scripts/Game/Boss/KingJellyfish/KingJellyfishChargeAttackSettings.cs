@@ -11,6 +11,8 @@ public class KingJellyfishChargeAttackSettings : MonoScript
     [SerializeField] public string damageFieldPrefabName = "JellyfishChargeDamageField";
     [SerializeField] public float damageFieldWidth = 180.0f;
     [SerializeField] public float damageFieldDuration = 0.6f;
+    [SerializeField] public string sparkParticlePrefabName = "sparkParticle";
+    [SerializeField] public int sparkParticleEmitCount = 30;
     [SerializeField] public string effect01EntityName = "Jellyfish_ChargeAttackEffect01";
     [SerializeField] public int effect01EmitCount = 1;
     [SerializeField] public float effect01EmitInterval = 0.05f;

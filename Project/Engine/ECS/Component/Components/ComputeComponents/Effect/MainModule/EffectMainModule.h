@@ -31,7 +31,7 @@ public:
 		ConstantData() = default;
 		ConstantData(const T& data) : constant(data) {}
 
-		T constant;
+		T constant{};
 	};
 
 	/// @brief 2つの定数データ
@@ -41,7 +41,7 @@ public:
 		TwoConstantData(const std::pair<T, T>& data) : constant(data) {}
 		TwoConstantData(const T& data1, const T& data2) : constant(std::make_pair(data1, data2)) {}
 
-		std::pair<T, T> constant;
+		std::pair<T, T> constant{};
 	};
 
 	/// @brief 値の型

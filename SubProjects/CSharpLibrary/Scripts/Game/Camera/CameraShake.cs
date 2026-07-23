@@ -1,56 +1,148 @@
 using System;
+using System.Collections.Generic;
 
+// シェイクの計算方法
+public enum ShakeSourceType {
+    Noise,
+}
 
+// 同じ Entity に付いた ShakeSource を集めて合成し、カメラの transform へ反映する。
+// カメラ用 Entity にアタッチする。
+//
+// 揺れの発生方法は3通り:
+//   1. ShakeSource を同じ Entity に付けて、そちらの StartShake() を呼ぶ
+//   2. CameraShake.Shake(duration, amplitude, frequency) でワンショットを流し込む
+//   3. MessageBus に CameraShakeEvent を Publish する（攻撃のヒット演出などはこれ）
+//
+// 毎フレーム「前回加算した分を引いてから今回分を足す」ため、
+// 他のスクリプト（追従・ズーム等）が同じ transform.position を触っていても実行順に依存しない。
 public class CameraShake : MonoScript {
 
-    [SerializeField] private int   shakeCycles          = 2;      // 上下に揺れる回数(1〜2往復想定)
-    [SerializeField] private float shakeDuration         = 0.25f;  // 揺れが収まるまでの時間
-    [SerializeField] private float offsetSmoothTime       = 0.03f; // 目標オフセットへ追従させる時間(0でスナップ)
-    [SerializeField] private float offsetMaxSmoothSpeed   = 100000.0f;
+    // 全 ShakeSource にかかる倍率。0 にすると揺れを一括で切れる
+    [SerializeField] private float shakeScale_ = 1.0f;
 
-    private bool    isShaking_     = false;
-    private float   shakeTimer_    = 0.0f;
-    private float   intensity_     = 0.0f;
+    // アタッチされている ShakeSource
+    private List<ShakeSource> sources_ = new List<ShakeSource>();
+    // Shake() で作った実行時専用の Source（Entity には付いていない）
+    private List<ShakeSource> runtimeSources_ = new List<ShakeSource>();
 
-    private Vector3 currentOffset_ = Vector3.zero;
-    private Vector3 smoothVel_     = Vector3.zero;
+    // 前フレームに transform へ加算したオフセット
+    private Vector3 appliedOffset_ = Vector3.zero;
+    private bool    hasAppliedOffset_;
 
-    // 追従先がこの Offset を自身の位置に加算する
-    public Vector3 Offset {
-        get { return currentOffset_; }
+    private float noiseSeedCounter_;
+
+    // Unsubscribe に同じデリゲートを渡す必要があるので、生成したものを保持しておく
+    private Action<CameraShakeEvent> shakeEventHandler_;
+
+    public override void Awake() {
+        shakeEventHandler_ = OnCameraShakeEvent;
+        MessageBus.Subscribe(shakeEventHandler_);
+    }
+
+    public override void Initialize() {
+        RefreshSources();
+    }
+
+    // アタッチされている ShakeSource を集め直す。実行時に追加した場合に呼ぶ
+    public void RefreshSources() {
+        sources_.Clear();
+        if (entity == null) {
+            return;
+        }
+        foreach (MonoScript script in entity.GetScripts()) {
+            ShakeSource source = script as ShakeSource;
+            if (source != null) {
+                sources_.Add(source);
+            }
+        }
     }
 
     public override void Update() {
-        Vector3 targetOffset = Vector3.zero;
+        // 前フレームの揺れを打ち消してから、今フレームの揺れを乗せ直す
+        RemoveAppliedOffset();
 
-        if (isShaking_) {
-            shakeTimer_ += Time.deltaTime;
-            float t = Mathf.Clamp01(shakeTimer_ / shakeDuration);
+        float deltaTime = Time.deltaTime;
 
-            // 時間経過で振幅が収まっていく減衰カーブ
-            float envelope = 1.0f - Ease.In.Quad(t);
-            // 指定回数だけ上下に揺れるサイン波
-            float wave = Mathf.Sin(t * shakeCycles * Mathf.PI * 2.0f);
-            targetOffset = new Vector3(0.0f, wave * intensity_ * envelope, 0.0f);
+        Vector3 total = Vector3.zero;
+        total = total + Accumulate(sources_, deltaTime);
+        total = total + Accumulate(runtimeSources_, deltaTime);
 
-            if (t >= 1.0f) {
-                isShaking_ = false;
-            }
-        }
+        // 終わったワンショットは溜め込まずに捨てる
+        runtimeSources_.RemoveAll(source => !source.isActive);
 
-        // 位置がパッと切り替わらないよう、目標オフセットへ滑らかに追従させる
-        currentOffset_ = SpringDamper.SmoothDamp<Vector3, Vector3DampTraits>(
-            currentOffset_, targetOffset, ref smoothVel_, offsetSmoothTime, Time.deltaTime, offsetMaxSmoothSpeed);
-    }
-
-    // intensity: 揺れの強さ(縦方向の振幅)。0以下は無視する。
-    public void Shake(float intensity) {
-        if (intensity <= 0.0f) {
+        total = total * shakeScale_;
+        if (total.x == 0.0f && total.y == 0.0f && total.z == 0.0f) {
             return;
         }
 
-        intensity_  = intensity;
-        shakeTimer_ = 0.0f;
-        isShaking_  = true;
+        appliedOffset_     = total;
+        hasAppliedOffset_  = true;
+        transform.position = transform.position + appliedOffset_;
+    }
+
+    public override void OnDestroy() {
+        // 破棄後も配信が残らないよう、必ず購読を外す
+        if (shakeEventHandler_ != null) {
+            MessageBus.Unsubscribe(shakeEventHandler_);
+            shakeEventHandler_ = null;
+        }
+        RemoveAppliedOffset();
+    }
+
+    private void OnCameraShakeEvent(CameraShakeEvent e) {
+        Shake(e.duration, e.amplitude, e.frequency);
+    }
+
+    // その場限りの揺れを1回流す。ShakeSource を用意しない呼び出し向け
+    public void Shake(float duration, float amplitude, float frequency) {
+        if (duration <= 0.0f || amplitude <= 0.0f) {
+            return;
+        }
+
+        ShakeSource source = new ShakeSource();
+        source.Setup(
+            ShakeSourceType.Noise,
+            duration,
+            amplitude,
+            frequency > 0.0f ? frequency : 1.0f,
+            noiseSeedCounter_);
+        source.StartShake();
+        runtimeSources_.Add(source);
+
+        // ワンショットが重なったときに同じ揺れ方にならないよう、毎回パターンをずらす
+        noiseSeedCounter_ += 13.1f;
+    }
+
+    // 実行中の揺れを全て止める
+    public void StopAll() {
+        foreach (ShakeSource source in sources_) {
+            source.StopShake();
+        }
+        runtimeSources_.Clear();
+    }
+
+    private Vector3 Accumulate(List<ShakeSource> sources, float deltaTime) {
+        Vector3 total = Vector3.zero;
+        foreach (ShakeSource source in sources) {
+            if (!source.enable) {
+                continue;
+            }
+            // 持続時間を過ぎた Source はこのフレームぶんを加算しない
+            if (!source.AdvanceTime(deltaTime)) {
+                continue;
+            }
+            total = total + source.Evaluate();
+        }
+        return total;
+    }
+
+    private void RemoveAppliedOffset() {
+        if (!hasAppliedOffset_) {
+            return;
+        }
+        transform.position = transform.position - appliedOffset_;
+        appliedOffset_    = Vector3.zero;
+        hasAppliedOffset_ = false;
     }
 }

@@ -41,6 +41,7 @@ public class KingJellyfish : MonoScript {
     [SerializeField] public float attackTelegraphAlpha = 0.3f;
 
     private HP hp_;
+    private ExpDropper expDropper_;
     private IKingJellyfishState state_;
     private Entity targetEntity_;
     private Entity cameraEntity_;
@@ -88,6 +89,7 @@ public class KingJellyfish : MonoScript {
     //=============================
     public override void Initialize() {
         hp_ = entity.GetScript<HP>();
+        expDropper_ = entity.GetScript<ExpDropper>();
 
         moveSettings_ = GetOrAddSettings<KingJellyfishMoveSettings>();
         chargeSettings_ = GetOrAddSettings<KingJellyfishChargeAttackSettings>();
@@ -124,6 +126,13 @@ public class KingJellyfish : MonoScript {
     // 更新
     //=============================
     public override void Update() {
+        if (hp_ != null && hp_.IsDead) {
+            if (!(state_ is KingJellyfishDeadState)) {
+                ChangeState(new KingJellyfishDeadState());
+            }
+            return;
+        }
+
         RestoreDamageReactionColor();
         // 攻撃リクエストの処理
         UpdateDamageInvincibility();
@@ -168,6 +177,12 @@ public class KingJellyfish : MonoScript {
         float hpBeforeDamage = hp_.CurrentHp;
         hp_.TakeDamage(damage);
         if (hp_.CurrentHp < hpBeforeDamage) {
+            if (expDropper_ == null) {
+                expDropper_ = entity.GetScript<ExpDropper>();
+            }
+            if (expDropper_ != null) {
+                expDropper_.DropOnDamage();
+            }
             damageInvincibilityRemaining_ = NonNegative(damageInvincibilityDuration);
             BeginDamageReaction();
         }
@@ -182,6 +197,16 @@ public class KingJellyfish : MonoScript {
         if (damageInvincibilityRemaining_ < 0.0f) {
             damageInvincibilityRemaining_ = 0.0f;
         }
+    }
+
+    internal void BeginDeath() {
+        damageReactionRemaining_ = 0.0f;
+        damageReactionElapsed_ = 0.0f;
+        RestoreDamageReactionColor();
+        HideAttackTelegraph();
+        EndChargeAttackMovement();
+        SetWeakPointCollisionEnabled(false);
+        EndLaserGrayscale();
     }
 
     private void BeginDamageReaction() {
@@ -496,7 +521,15 @@ public class KingJellyfish : MonoScript {
 
         JellyfishChargeDamageField damageFieldScript = damageField.GetScript<JellyfishChargeDamageField>();
         if (damageFieldScript != null) {
-            damageFieldScript.Configure(start, end, ChargeDamageFieldWidth, chargeSettings_.damage, ChargeDamageFieldDuration, transform.position.z);
+            damageFieldScript.Configure(
+                start,
+                end,
+                ChargeDamageFieldWidth,
+                chargeSettings_.damage,
+                ChargeDamageFieldDuration,
+                transform.position.z,
+                chargeSettings_.sparkParticlePrefabName,
+                chargeSettings_.sparkParticleEmitCount);
         }
 
         AttackCollision attackCollision = damageField.GetScript<AttackCollision>();
@@ -857,13 +890,11 @@ public class KingJellyfish : MonoScript {
         // パーティクルを発生させる
         EmitLaserParticles();
 
-        // カメラの揺れを開始する
-        if (followCamera_ != null) {
-            followCamera_.Shake(
-                NonNegative(laserCameraShakeDuration),
-                NonNegative(laserCameraShakeIntensity),
-                NonNegative(laserCameraShakeFrequency));
-        }
+        // カメラの揺れを開始する（CameraShake が購読している）
+        MessageBus.Publish(new CameraShakeEvent(
+            NonNegative(laserCameraShakeDuration),
+            NonNegative(laserCameraShakeIntensity),
+            NonNegative(laserCameraShakeFrequency)));
 
 
         // 画面をグレースケールにする

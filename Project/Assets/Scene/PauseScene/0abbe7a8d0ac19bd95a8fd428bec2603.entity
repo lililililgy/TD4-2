@@ -82,18 +82,6 @@
             "type": "SpriteRenderer"
         },
         {
-            "enable": 1,
-            "links": {
-                "DownArrow": "064af8e8912a8913f68d5651177146d1",
-                "GamepadDPadDown": "064af8e8912a8913f68d5651177146d1",
-                "GamepadDPadUp": "8820e517ebe0c5a3b20230d236c64665",
-                "S": "064af8e8912a8913f68d5651177146d1",
-                "UpArrow": "8820e517ebe0c5a3b20230d236c64665",
-                "W": "8820e517ebe0c5a3b20230d236c64665"
-            },
-            "type": "UILinkNavigationComponent"
-        },
-        {
             "characterSpacing": 0,
             "color": {
                 "w": 1.0,
@@ -126,6 +114,18 @@
             "text": "タイトル ニ モドル",
             "type": "TextRenderer",
             "verticalAlignment": 0
+        },
+        {
+            "enable": 1,
+            "links": {
+                "DownArrow": "064af8e8912a8913f68d5651177146d1",
+                "GamepadDPadDown": "064af8e8912a8913f68d5651177146d1",
+                "GamepadDPadUp": "8820e517ebe0c5a3b20230d236c64665",
+                "S": "064af8e8912a8913f68d5651177146d1",
+                "UpArrow": "8820e517ebe0c5a3b20230d236c64665",
+                "W": "8820e517ebe0c5a3b20230d236c64665"
+            },
+            "type": "UILinkNavigationComponent"
         },
         {
             "enable": 1,

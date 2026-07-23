@@ -98,7 +98,32 @@
         {
             "AttackCollision": {
                 "damage_": 0.0,
-                "destroyOnHit_": false
+                "destroyOnHit_": false,
+                "shakeAmplitude_": 3.0,
+                "shakeDuration_": 0.05000000074505806
+            },
+            "Critical": {
+                "criticalRate_": 0.0,
+                "threshold_": 0.0
+            },
+            "DamageFeedback": {
+                "blinkColor_": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.4,
+                    "z": 0.4
+                },
+                "blinkEntityNames_": [
+                    "Player_Body",
+                    "Player_Tentacle"
+                ],
+                "blinkInterval_": 0.08,
+                "hitstopDuration_": 0.12,
+                "hitstopTimeScale_": 0.15,
+                "invincibleDuration_": 1.0,
+                "rumbleDuration_": 0.25,
+                "rumbleLeftMotor_": 12.5,
+                "rumbleRightMotor_": 0.8
             },
             "HP": {
                 "MAX_HP": 12,
@@ -107,6 +132,7 @@
                 "directlyDamageable_": false,
                 "disableAutoDestruction": false,
                 "disableAutoDestruction_": true,
+                "initialHp_": 3.0,
                 "isInvincible": false,
                 "isInvincible_": false,
                 "maxHp_": 12.0,
@@ -193,6 +219,7 @@
             },
             "PlayerLifeComponent": {
                 "lifeCount_": 0,
+                "lifePerLevelUp_": 1,
                 "maxLife_": 0
             },
             "PlayerMoveComponent": {
@@ -216,12 +243,12 @@
             "PlayerNormalState": {
                 "accel_": 512.0,
                 "canMove_": true,
-                "decelMaxSmoothSpeed_": 512.0,
+                "decelMaxSmoothSpeed_": 382.0,
                 "decelSmoothTime_": 0.10000000149011612,
                 "maxSpeed_": 322.0,
                 "minSpeed_": 32.0,
-                "rotateMaxSmoothSpeed_": 6.0,
-                "rotateSmoothTime_": 0.30000001192092896
+                "rotateMaxSmoothSpeed_": 3.0,
+                "rotateSmoothTime_": 0.6000000238418579
             },
             "PlayerShotComponent": {
                 "bulletSpawnOffset_": {
@@ -241,6 +268,28 @@
                 "maxBrood_": 12,
                 "maxRoe_": 12,
                 "roePrefabName_": "Roe"
+            },
+            "ShakeOnDamaged": {
+                "durationScale_": 1.0,
+                "frequency_": 128.0,
+                "maxAmplitude_": 1200.0,
+                "maxDuration_": 0.4000000059604645,
+                "minAmplitude_": 1200.0,
+                "minDuration_": 0.4000000059604645,
+                "referenceAmplitude_": 1200.0,
+                "referenceDamage_": 1.0,
+                "referenceDuration_": 0.30000001192092896
+            },
+            "ShakeOnHit": {
+                "durationScale_": 0.30000001192092896,
+                "frequency_": 96.0,
+                "maxAmplitude_": 1800.0,
+                "maxDuration_": 0.30000001192092896,
+                "minAmplitude_": 1000.0,
+                "minDuration_": 0.10000000149011612,
+                "referenceAmplitude_": 100.0,
+                "referenceDamage_": 1.0,
+                "referenceDuration_": 0.10000000149011612
             },
             "TrailLeader": {},
             "type": "Variables"
@@ -299,6 +348,18 @@
                 {
                     "enable": true,
                     "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "ShakeOnHit"
+                },
+                {
+                    "enable": true,
+                    "name": "ShakeOnDamaged"
+                },
+                {
+                    "enable": true,
+                    "name": "DamageFeedback"
                 },
                 {
                     "enable": true,

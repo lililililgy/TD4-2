@@ -48,6 +48,25 @@ public class PlayerDeadEvent
 {
 }
 
+// カメラを揺らしてほしい側が発行する。CameraShake が購読してワンショットを流す。
+// 攻撃のヒット（AttackCollision）だけでなく、爆発や着地などの演出からも発行してよい。
+//
+// 発行側はカメラ Entity を探さずに済み、カメラが居ないシーンでは誰も購読していないので
+// 単に無視される（MessageBus.Publish は購読者ゼロなら何もしない）。
+public class CameraShakeEvent
+{
+    public CameraShakeEvent(float duration, float amplitude, float frequency)
+    {
+        this.duration = duration;
+        this.amplitude = amplitude;
+        this.frequency = frequency;
+    }
+
+    public readonly float duration;   // 揺れの継続時間(秒)
+    public readonly float amplitude;  // 揺れ幅
+    public readonly float frequency;  // 揺れの速さ
+}
+
 // ObjectiveSystem がフェーズに突入した際に発行される（各 Objective の BeginObjective() 後）。
 // フェーズごとの敵湧き切り替えやボス出現など、「そのフェーズの開始で何かする」側が購読する。
 //

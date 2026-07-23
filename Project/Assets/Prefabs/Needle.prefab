@@ -23,6 +23,10 @@
             "type": "Transform"
         },
         {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
             "SpikeFishNeedle": {
                 "acceleration": 1646.0,
                 "aliveTime": 3.0,
@@ -37,12 +41,17 @@
                 {
                     "enable": true,
                     "name": "SpikeFishNeedle"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
                 }
             ],
             "type": "Script"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -66,8 +75,19 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
+        },
+        {
+            "categoryBits": 16,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 2,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
         }
     ],
     "guid": "bbe0fc158d50a4a113c86e420d6e4b6c",

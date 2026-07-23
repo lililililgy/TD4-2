@@ -151,6 +151,7 @@
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Game\Background\Cloud.cs" />
     <Compile Include="Scripts\Game\Background\CloudManager.cs" />
+    <Compile Include="Scripts\Game\Boss\BossDeathPresentation.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHandAttackCommand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoWeakPoint.cs" />
@@ -196,14 +197,21 @@
     <Compile Include="Scripts\Game\Camera\DashZoomSource.cs" />
     <Compile Include="Scripts\Game\Camera\PlayerFollowCamera.cs" />
     <Compile Include="Scripts\Game\Camera\ScreenBounds.cs" />
+    <Compile Include="Scripts\Game\Camera\ShakeSource.cs" />
     <Compile Include="Scripts\Game\Camera\ZoomEase.cs" />
     <Compile Include="Scripts\Game\Camera\ZoomWeight.cs" />
     <Compile Include="Scripts\Game\Common\AttackCollision.cs" />
     <Compile Include="Scripts\Game\Common\Attractor.cs" />
     <Compile Include="Scripts\Game\Common\ContinueState.cs" />
     <Compile Include="Scripts\Game\Common\Critical.cs" />
+<<<<<<< HEAD
+    <Compile Include="Scripts\Game\Common\DamageFeedback.cs" />
+=======
+    <Compile Include="Scripts\Game\Common\DamageShake.cs" />
+>>>>>>> Enemy/Boss/Daiouika
     <Compile Include="Scripts\Game\Common\DamagePoint.cs" />
     <Compile Include="Scripts\Game\Common\DamageRelay.cs" />
+    <Compile Include="Scripts\Game\Common\DamageShake.cs" />
     <Compile Include="Scripts\Game\Common\GameEvents.cs" />
     <Compile Include="Scripts\Game\Common\GameFlow.cs" />
     <Compile Include="Scripts\Game\Common\HP.cs" />
@@ -213,10 +221,13 @@
     <Compile Include="Scripts\Game\Common\PhaseRequest.cs" />
     <Compile Include="Scripts\Game\Common\RandomUtil.cs" />
     <Compile Include="Scripts\Game\Common\ResponseCurve.cs" />
+    <Compile Include="Scripts\Game\Common\ShakeOnDamaged.cs" />
+    <Compile Include="Scripts\Game\Common\ShakeOnHit.cs" />
     <Compile Include="Scripts\Game\Common\ShowOnPhase.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnDestroy.cs" />
     <Compile Include="Scripts\Game\Common\SpawnOnPhaseBegan.cs" />
     <Compile Include="Scripts\Game\Common\SpriteGauge.cs" />
+    <Compile Include="Scripts\Game\Common\SpriteInputFeedback.cs" />
     <Compile Include="Scripts\Game\Common\TimedDestruction.cs" />
     <Compile Include="Scripts\Game\Controller\AddSceneScript.cs" />
     <Compile Include="Scripts\Game\Controller\GameSceneController.cs" />
@@ -238,6 +249,7 @@
     <Compile Include="Scripts\Game\Movement\MoveDirector.cs" />
     <Compile Include="Scripts\Game\Movement\MoveParam.cs" />
     <Compile Include="Scripts\Game\Movement\Mover.cs" />
+    <Compile Include="Scripts\Game\Movement\RigidbodyMotion.cs" />
     <Compile Include="Scripts\Game\Movement\TrailFollower.cs" />
     <Compile Include="Scripts\Game\Movement\TrailLeader.cs" />
     <Compile Include="Scripts\Game\Objective\CountObjective.cs" />
@@ -306,6 +318,7 @@
     <Compile Include="Scripts\Game\UI\Title\ExitGame.cs" />
     <Compile Include="Scripts\Game\UI\Title\GameStart.cs" />
     <Compile Include="Scripts\Game\UI\Title\OpenOption.cs" />
+    <Compile Include="Scripts\Math\FbmNoise.cs" />
     <Compile Include="Scripts\Math\SmoothDamp.cs" />
     <Compile Include="Scripts\Test.cs" />
     <Compile Include="Scripts\Test\AddSceneTest.cs" />
@@ -321,6 +334,7 @@
     <Compile Include="Scripts\Test\HotReloadTestScript.cs" />
     <Compile Include="Scripts\Test\ListEnumSerializeTestScript.cs" />
     <Compile Include="Scripts\Test\ListStructSerializeTestScript.cs" />
+    <Compile Include="Scripts\Test\ParticleEmitCountTestScript.cs" />
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\PressAnyKeyGamepadTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />

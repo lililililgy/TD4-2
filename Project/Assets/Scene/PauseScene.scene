@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.10000000149011612,
+        0.25,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "7559438ab40ee6ebe6da76843d53f737",
@@ -45,5 +51,6 @@
             "parentGuid": null,
             "path": "./PauseScene/d06066957d1d9e8f28b61b1a6634b924.entity"
         }
-    ]
+    ],
+    "hasClearColor": false
 }

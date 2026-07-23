@@ -1,4 +1,4 @@
-﻿#include <winsock2.h>
+#include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 #include "MonoScriptEngine.h"
 #include "InternalCalls/AddInternalMethods.h"
@@ -1388,19 +1388,32 @@ void ONEngine::MonoScriptEngineUtils::HandleException(MonoObject* exc) {
 	if(!exc) return;
 
 	MonoClass* excClass = mono_object_get_class(exc);
-	MonoMethod* toStringMethod = mono_class_get_method_from_name(excClass, "ToString", 0);
+	if(!excClass) return;
 
-	MonoObject* excStr = MonoScriptEngineUtils::SafeInvoke(toStringMethod, exc, nullptr, nullptr);
-	char* err = mono_string_to_utf8((MonoString*)excStr);
-	if(err) {
+	MonoMethod* toStringMethod = MonoScriptEngineUtils::FindMethodInClassOrParents(excClass, "ToString", 0);
+	if(!toStringMethod) {
+		const char* className = mono_class_get_name(excClass);
+		Console::LogError("[C# Exception] Exception of type " + std::string(className ? className : "Unknown") + " occurred (ToString method not found).", LogCategory::ScriptEngine);
+		return;
+	}
 
+	MonoObject* innerExc = nullptr;
+	MonoObject* excStr = MonoScriptEngineUtils::SafeInvoke(toStringMethod, exc, nullptr, &innerExc);
+	if(excStr) {
+		char* err = mono_string_to_utf8((MonoString*)excStr);
+		if(err) {
+			Console::LogError("----------------------------------------------------------------", LogCategory::ScriptEngine);
+			Console::LogError("[C# Exception] An unhandled exception occurred in the scripting engine:", LogCategory::ScriptEngine);
+			Console::LogError(err, LogCategory::ScriptEngine);
+			Console::LogError("----------------------------------------------------------------", LogCategory::ScriptEngine);
 
-		Console::LogError("----------------------------------------------------------------", LogCategory::ScriptEngine);
-		Console::LogError("[C# Exception] An unhandled exception occurred in the scripting engine:", LogCategory::ScriptEngine);
-		Console::LogError(err, LogCategory::ScriptEngine);
-		Console::LogError("----------------------------------------------------------------", LogCategory::ScriptEngine);
-
-		mono_free(err);
+			mono_free(err);
+		} else {
+			Console::LogError("[C# Exception] Failed to convert exception string to UTF-8.", LogCategory::ScriptEngine);
+		}
+	} else {
+		const char* className = mono_class_get_name(excClass);
+		Console::LogError("[C# Exception] Exception of type " + std::string(className ? className : "Unknown") + " occurred (ToString failed).", LogCategory::ScriptEngine);
 	}
 }
 
