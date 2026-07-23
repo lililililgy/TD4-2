@@ -1,0 +1,269 @@
+{
+    "active": true,
+    "children": [
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 0.9999619126319885,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.008726535364985466
+                    },
+                    "scale": {
+                        "x": 32.0,
+                        "y": 128.0,
+                        "z": 32.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "TransformTween": {
+                        "animatePosition_": false,
+                        "animateRotation_": true,
+                        "animateScale_": true,
+                        "delay_": 0.0,
+                        "duration_": 0.18000000715255737,
+                        "ease_": 24,
+                        "fromPosition_": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "fromRotation_": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "fromScale_": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "loop_": 0,
+                        "playOnInitialize_": true,
+                        "relative_": true,
+                        "replayOnResume_": false,
+                        "toPosition_": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "toRotation_": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 236.0
+                        },
+                        "toScale_": {
+                            "x": 3.0,
+                            "y": 3.0,
+                            "z": 1.0
+                        },
+                        "useUnscaledTime_": false
+                    },
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "isPixelPerfect": false,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "17a2a2318403823c91c2a3d0e34128e9",
+                        "bloomIntensity": 1.0,
+                        "bloomRadius": 12.0,
+                        "bloomThreshold": 0.800000011920929,
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                },
+                {
+                    "enable": 1,
+                    "scripts": [
+                        {
+                            "enable": true,
+                            "name": "TransformTween"
+                        }
+                    ],
+                    "type": "Script"
+                }
+            ],
+            "guid": "20db8a4f0cef0e08418128453383fd86",
+            "name": "HitEffect1",
+            "parentGuid": "2c0e0f8ec2769313e7881cbee0778729",
+            "prefabName": "HitEffect1"
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 0.9999619126319885,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.008726535364985466
+                    },
+                    "scale": {
+                        "x": 64.0,
+                        "y": 64.0,
+                        "z": 64.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "TransformTween": {
+                        "animatePosition_": false,
+                        "animateRotation_": true,
+                        "animateScale_": true,
+                        "delay_": 0.0,
+                        "duration_": 0.18000000715255737,
+                        "ease_": 24,
+                        "fromPosition_": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "fromRotation_": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "fromScale_": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "loop_": 0,
+                        "playOnInitialize_": true,
+                        "relative_": true,
+                        "replayOnResume_": false,
+                        "toPosition_": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "toRotation_": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 236.0
+                        },
+                        "toScale_": {
+                            "x": 4.0,
+                            "y": 4.0,
+                            "z": 1.0
+                        },
+                        "useUnscaledTime_": false
+                    },
+                    "type": "Variables"
+                },
+                {
+                    "enable": 1,
+                    "isPixelPerfect": false,
+                    "material": {
+                        "baseColor": {
+                            "w": 1.0,
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "baseTextureGuid": "efde51463b1d42969fcbebc3c3face45",
+                        "bloomIntensity": 1.0,
+                        "bloomRadius": 12.0,
+                        "bloomThreshold": 0.800000011920929,
+                        "guid": "00000000000000000000000000000000",
+                        "normalTextureGuid": "00000000000000000000000000000000",
+                        "postEffectFlags": 0,
+                        "uvTransform": {
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "rotate": 0.0,
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0
+                            }
+                        }
+                    },
+                    "type": "SpriteRenderer"
+                },
+                {
+                    "enable": 1,
+                    "scripts": [
+                        {
+                            "enable": true,
+                            "name": "TransformTween"
+                        }
+                    ],
+                    "type": "Script"
+                }
+            ],
+            "guid": "0fd2b2ff3ee750852cbab7f913901df5",
+            "name": "HitEffect2",
+            "parentGuid": "2c0e0f8ec2769313e7881cbee0778729",
+            "prefabName": "HitEffect2"
+        }
+    ],
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        }
+    ],
+    "guid": "2c0e0f8ec2769313e7881cbee0778729",
+    "name": "PlayerHitEffect",
+    "parentGuid": null,
+    "prefabName": ""
+}

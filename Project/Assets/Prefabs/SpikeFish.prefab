@@ -162,12 +162,27 @@
             "ExpDropper": {
                 "dropExp": 32.0
             },
+            "FlashOnDamaged": {
+                "duration_": 0.08,
+                "fadeOut_": true,
+                "flashColor_": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
             "HP": {
                 "currentHp_": 20.0,
                 "directlyDamageable_": true,
                 "disableAutoDestruction_": false,
                 "isInvincible_": false,
                 "maxHp_": 20.0
+            },
+            "ShakeSelfOnDamaged": {
+                "amplitude_": 24.0,
+                "duration_": 0.12,
+                "frequency_": 35.0
             },
             "SmallFryChaseMove": {},
             "SpikeFish": {
@@ -246,6 +261,14 @@
                 {
                     "enable": true,
                     "name": "DespawnTimer"
+                },
+                {
+                    "enable": true,
+                    "name": "FlashOnDamaged"
+                },
+                {
+                    "enable": true,
+                    "name": "ShakeSelfOnDamaged"
                 }
             ],
             "type": "Script"

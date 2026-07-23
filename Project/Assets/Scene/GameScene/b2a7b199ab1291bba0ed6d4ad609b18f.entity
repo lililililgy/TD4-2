@@ -6,6 +6,7 @@
                 "isAddRequested": true,
                 "sceneName": "GameUIScene"
             },
+            "HitStopSystem": {},
             "ObjectiveSystem": {
                 "phaseSequence_": [
                     "TutorialPhase_Move",
@@ -52,6 +53,10 @@
                 {
                     "enable": true,
                     "name": "GameSceneController"
+                },
+                {
+                    "enable": true,
+                    "name": "HitStopSystem"
                 },
                 {
                     "enable": true,

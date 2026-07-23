@@ -24,14 +24,14 @@ public class AttackCollision : MonoScript {
         GesoWeakPoint weakPoint = collision.GetScript<GesoWeakPoint>();
         if (weakPoint != null) {
             weakPoint.Damage(dealtDamage);
-            OnDamageDealt(dealtDamage);
+            OnDamageDealt(collision, dealtDamage);
             return;
         }
 
         YadokariWeakPoint yadokariWeakPoint = collision.GetScript<YadokariWeakPoint>();
         if (yadokariWeakPoint != null) {
             yadokariWeakPoint.Damage(dealtDamage);
-            OnDamageDealt(dealtDamage);
+            OnDamageDealt(collision, dealtDamage);
             return;
         }
 
@@ -50,18 +50,34 @@ public class AttackCollision : MonoScript {
 
         hp.TakeDamage(dealtDamage);
 
-        OnDamageDealt(dealtDamage);
+        OnDamageDealt(collision, dealtDamage);
     }
 
     // ダメージが実際に通ったときの共通後処理。
     // 空振り（HP を持たない相手・無敵中の弾き）では呼ばれないので、当たった瞬間だけ演出が出る。
-    private void OnDamageDealt(float dealtDamage) {
+    // target はダメージが通った相手。衝突点を必要とする演出（EffectOnHit）が使う。
+    private void OnDamageDealt(Entity target, float dealtDamage) {
         // 命中演出。ShakeOnHit が付いている攻撃だけカメラが揺れる。
         // 揺れ幅の決定はあちらの責務なので、ここは実ダメージを渡すだけ。
         // 破棄より先に呼ぶ（Publish は同期呼び出しなので、この場で演出まで走る）。
         ShakeOnHit shake = entity.GetScript<ShakeOnHit>();
         if (shake != null) {
             shake.OnHit(dealtDamage);
+        }
+
+        // ヒットストップ。こちらも HitStopOnHit が付いている攻撃だけ止まる。
+        // 止め時間の決定はあちらの責務で、ここは実ダメージを渡すだけ。
+        HitStopOnHit hitStop = entity.GetScript<HitStopOnHit>();
+        if (hitStop != null) {
+            hitStop.OnHit(dealtDamage);
+        }
+
+        // ヒットエフェクト。EffectOnHit が付いている攻撃だけ衝突点にプレハブが出る。
+        // engine から接触点は渡ってこないので、位置の計算はあちらの責務。
+        // destroyOnHit_ で自分を消す前に呼ぶ（消えたあとでは衝突点を計算できない）。
+        EffectOnHit effect = entity.GetScript<EffectOnHit>();
+        if (effect != null) {
+            effect.OnHit(target);
         }
 
         if (destroyOnHit_) {
