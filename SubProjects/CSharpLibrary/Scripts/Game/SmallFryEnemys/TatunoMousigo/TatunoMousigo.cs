@@ -154,6 +154,11 @@ public class TatunoMousigo : MonoScript
             return;
         }
 
+        Vector3 pos = transform.position;
+        pos.x += moveDir_ * stepDistance;
+        transform.position = pos;
+
+        //cameraShake_?.Shake(moveShakeIntensity);
         cameraShake_?.Shake(moveShakeDuration, moveShakeIntensity, shakeFrequency);
         SpawnDustParticle();
     }
@@ -268,6 +273,7 @@ public class TatunoMousigo : MonoScript
             jumpYOffset_ = 0.0f;
             jumpState_ = JumpState.None;
             jumpCooldownTimer_ = jumpCooldown;
+            //cameraShake_?.Shake(landShakeIntensity);
             cameraShake_?.Shake(landShakeDuration, landShakeIntensity, shakeFrequency);
             SpawnDustParticle();
         }

@@ -24,9 +24,6 @@
                     "state": 0
                 }
             },
-            "renderer": {
-                "alignment": 0
-            },
             "sizeOverLifetime": {
                 "separateAxes": false,
                 "x": {
@@ -78,8 +75,8 @@
             "type": "ParticleSystem2D"
         }
     ],
-    "guid": "a14b65d9d20c40aad48d5b087c9b6d5b",
-    "name": "InkBulletParticle",
+    "guid": "7dbb4c38c4b1d8fe426ae93c845bd6f1",
+    "name": "sparkParticle",
     "parentGuid": null,
-    "prefabName": "InkBulletParticle"
+    "prefabName": "sparkParticle"
 }

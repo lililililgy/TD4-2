@@ -1,5 +1,5 @@
 {
-    "active": false,
+    "active": true,
     "components": [
         {
             "enable": 1,
@@ -29,7 +29,26 @@
             "colorOverLifetime": {
                 "color": {
                     "gradient": {
-                        "alphaKeys": [],
+                        "alphaKeys": [
+                            {
+                                "alpha": 0.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.0
+                            },
+                            {
+                                "alpha": 1.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 0.8999999761581421
+                            },
+                            {
+                                "alpha": 0.0,
+                                "inTangent": 0.0,
+                                "outTangent": 0.0,
+                                "time": 1.0
+                            }
+                        ],
                         "colorKeys": []
                     },
                     "gradientMax": {
@@ -42,18 +61,18 @@
                     },
                     "state": 0
                 },
-                "enabled": false
+                "enabled": true
             },
             "emission": {
                 "bursts": [],
                 "enabled": true,
                 "rateOverDistance": 0.0,
-                "rateOverTime": 10.0
+                "rateOverTime": 5.0
             },
             "enable": 1,
             "inheritEmitterRotation": false,
             "main": {
-                "duration": 1.2000000476837158,
+                "duration": 1.0,
                 "gravityModifier": 0.0,
                 "looping": true,
                 "maxParticles": 1000,
@@ -82,13 +101,13 @@
                     "state": 0
                 },
                 "startDelay": {
-                    "constant": 1.0,
+                    "constant": 0.0,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
                 },
                 "startLifetime": {
-                    "constant": 1.0,
+                    "constant": 0.5,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
@@ -100,7 +119,7 @@
                     "state": 0
                 },
                 "startSize": {
-                    "constant": 3000.0,
+                    "constant": 1200.0,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
@@ -125,7 +144,7 @@
                     "state": 0
                 },
                 "startSpeed": {
-                    "constant": 0.0,
+                    "constant": 5.0,
                     "max": 1.0,
                     "min": 0.0,
                     "state": 0
@@ -135,7 +154,7 @@
                 "alignment": 0,
                 "blendMode": 1,
                 "flipMode": 0,
-                "materialGuid": "fc6dcc363615ad74407b61ec6be2dbeb",
+                "materialGuid": "b643b0f38253da6d4cebeb0161487884",
                 "meshGuid": "",
                 "renderMode": 0
             },
@@ -145,20 +164,7 @@
                     "constantMax": 1.0,
                     "constantMin": 0.0,
                     "curve": {
-                        "keys": [
-                            {
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 0.0,
-                                "value": 400.0
-                            },
-                            {
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 1.0,
-                                "value": 100.0
-                            }
-                        ]
+                        "keys": []
                     },
                     "curveMax": {
                         "keys": []
@@ -166,9 +172,9 @@
                     "curveMin": {
                         "keys": []
                     },
-                    "state": 2
+                    "state": 0
                 },
-                "enabled": true
+                "enabled": false
             },
             "shape": {
                 "angle": 25.0,
@@ -196,13 +202,7 @@
                                 "inTangent": 0.0,
                                 "outTangent": 0.0,
                                 "time": 0.0,
-                                "value": 0.0
-                            },
-                            {
-                                "inTangent": 0.0,
-                                "outTangent": 0.0,
-                                "time": 0.5,
-                                "value": 0.33000001311302185
+                                "value": 1.0
                             },
                             {
                                 "inTangent": 0.0,
@@ -339,8 +339,8 @@
             }
         }
     ],
-    "guid": "351c853213de36d23f775678447a1075",
-    "name": "Jellyfish_LaserEffect03",
+    "guid": "1e6fb33c524da90e2e58c10862c85375",
+    "name": "Geso_ChargeEffect",
     "parentGuid": null,
     "prefabName": ""
 }

@@ -33,8 +33,12 @@ public class KingGeso : MonoScript
     [SerializeField] public bool randomizeAttackType = true;
     /// ランダム選択しない場合に使う攻撃タイプ
     [SerializeField] public KingGesoAttackType fixedAttackType = KingGesoAttackType.WaveThrust;
+    [SerializeField] public string chargeEffectEntityName = "Geso_ChargeEffect";
+    [SerializeField] public int chargeEffectEmitCount = 1;
+    [SerializeField] public float chargeEffectEmitInterval = 0.2f;
 
     private HP hp_;
+    private ExpDropper expDropper_;
     private IKingGesoState state_;
     private Entity targetEntity_;
     private Entity cameraEntity_;
@@ -50,6 +54,8 @@ public class KingGeso : MonoScript
     private readonly HashSet<Entity> activeInkBullets_ = new HashSet<Entity>();
     private Vector4 attackTellOriginalColor_;
     private bool attackTellActive_;
+    private Entity chargeEffectEntity_;
+    private float chargeEffectEmitElapsed_;
 
 
     //=============================================================
@@ -66,6 +72,7 @@ public class KingGeso : MonoScript
 
         hp_.MaxHp = maxHp;
         hp_.Initialize();
+        expDropper_ = entity.GetScript<ExpDropper>();
 
         waveSettings_ = entity.GetScript<KingGesoWaveThrustSettings>();
         if (waveSettings_ == null) waveSettings_ = entity.AddScript<KingGesoWaveThrustSettings>();
@@ -85,6 +92,8 @@ public class KingGeso : MonoScript
         activeGesos_.Clear();
         attackRequested_ = false;
         damageStateRequested_ = false;
+        chargeEffectEntity_ = null;
+        chargeEffectEmitElapsed_ = 0.0f;
         ChangeState(new KingGesoIdleState());
     }
 
@@ -141,12 +150,26 @@ public class KingGeso : MonoScript
     //=============================================================
     public void TakeDamage(float damage)
     {
-        if (hp_ == null)
+        if (hp_ == null || damage <= 0.0f)
         {
             return;
         }
 
+        float hpBeforeDamage = hp_.CurrentHp;
         hp_.TakeDamage(damage);
+        if (hp_.CurrentHp >= hpBeforeDamage)
+        {
+            return;
+        }
+
+        if (expDropper_ == null)
+        {
+            expDropper_ = entity.GetScript<ExpDropper>();
+        }
+        if (expDropper_ != null)
+        {
+            expDropper_.DropOnDamage();
+        }
 
         if(hp_.IsDead == false)
         {
@@ -191,6 +214,9 @@ public class KingGeso : MonoScript
 
     internal void BeginAttackTell()
     {
+        chargeEffectEmitElapsed_ = 0.0f;
+        EmitChargeEffect();
+
         SpriteRenderer renderer = entity.GetComponent<SpriteRenderer>();
         if (renderer == null)
         {
@@ -203,6 +229,8 @@ public class KingGeso : MonoScript
 
     internal void UpdateAttackTell(KingGesoAttackType attackType)
     {
+        UpdateChargeEffect();
+
         if (!attackTellActive_)
         {
             return;
@@ -226,6 +254,7 @@ public class KingGeso : MonoScript
 
     internal void EndAttackTell()
     {
+        chargeEffectEmitElapsed_ = 0.0f;
         if (!attackTellActive_)
         {
             return;
@@ -237,6 +266,54 @@ public class KingGeso : MonoScript
             renderer.color = attackTellOriginalColor_;
         }
         attackTellActive_ = false;
+    }
+
+    private void UpdateChargeEffect()
+    {
+        float interval = NonNegative(chargeEffectEmitInterval);
+        if (interval <= 0.0f)
+        {
+            return;
+        }
+
+        chargeEffectEmitElapsed_ += Time.deltaTime;
+        if (chargeEffectEmitElapsed_ < interval)
+        {
+            return;
+        }
+
+        chargeEffectEmitElapsed_ %= interval;
+        EmitChargeEffect();
+    }
+
+    private void EmitChargeEffect()
+    {
+        if (chargeEffectEmitCount <= 0 || String.IsNullOrEmpty(chargeEffectEntityName))
+        {
+            return;
+        }
+
+        if (chargeEffectEntity_ == null || chargeEffectEntity_.Id == 0)
+        {
+            chargeEffectEntity_ = ecsGroup.FindEntity(chargeEffectEntityName);
+        }
+        if (chargeEffectEntity_ == null)
+        {
+            return;
+        }
+
+        chargeEffectEntity_.enable = true;
+        if (chargeEffectEntity_.transform != null)
+        {
+            chargeEffectEntity_.transform.position = transform.position;
+            chargeEffectEntity_.transform.rotation = transform.rotation;
+        }
+
+        ParticleSystem2D particleSystem = chargeEffectEntity_.GetComponent<ParticleSystem2D>();
+        if (particleSystem != null)
+        {
+            particleSystem.Emit(chargeEffectEmitCount);
+        }
     }
 
     private static Vector4 GetAttackTellColor(KingGesoAttackType attackType)
@@ -547,6 +624,9 @@ public class KingGeso : MonoScript
         homing.turnSpeed = homingSettings_.turnSpeed;
         homing.lifeTime = homingSettings_.projectileLifeTime;
         homing.damage = homingSettings_.projectileDamage;
+        homing.swimParticlePrefabName = homingSettings_.swimParticlePrefabName;
+        homing.swimParticleEmitCount = homingSettings_.swimParticleEmitCount;
+        homing.swimParticleEmitInterval = homingSettings_.swimParticleEmitInterval;
         return homing.CommandLaunch(targetEntity_);
     }
 

@@ -225,6 +225,8 @@ void ONEngine::AddComponentInternalCalls() {
 
 	/// particle system 2D
 	mono_add_internal_call("ParticleSystem2D::InternalEmit", (void*)InternalEmitParticleSystem2D);
+	mono_add_internal_call("ParticleSystem2D::InternalStop", (void*)InternalStopParticleSystem2D);
+	mono_add_internal_call("ParticleSystem2D::InternalSetBoxShape", (void*)InternalSetParticleSystem2DBoxShape);
 
 	/// screen post effect
 	mono_add_internal_call("ScreenPostEffectTag::InternalGetPostEffectEnabled", (void*)InternalGetScreenPostEffectEnabled);

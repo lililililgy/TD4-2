@@ -151,6 +151,7 @@
     <Compile Include="Scripts\Engine\Scene\SceneManager.cs" />
     <Compile Include="Scripts\Game\Background\Cloud.cs" />
     <Compile Include="Scripts\Game\Background\CloudManager.cs" />
+    <Compile Include="Scripts\Game\Boss\BossDeathPresentation.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoHandAttackCommand.cs" />
     <Compile Include="Scripts\Game\Boss\KingGeso\GesoWeakPoint.cs" />
@@ -203,7 +204,11 @@
     <Compile Include="Scripts\Game\Common\Attractor.cs" />
     <Compile Include="Scripts\Game\Common\ContinueState.cs" />
     <Compile Include="Scripts\Game\Common\Critical.cs" />
+<<<<<<< HEAD
     <Compile Include="Scripts\Game\Common\DamageFeedback.cs" />
+=======
+    <Compile Include="Scripts\Game\Common\DamageShake.cs" />
+>>>>>>> Enemy/Boss/Daiouika
     <Compile Include="Scripts\Game\Common\DamagePoint.cs" />
     <Compile Include="Scripts\Game\Common\DamageRelay.cs" />
     <Compile Include="Scripts\Game\Common\DamageShake.cs" />

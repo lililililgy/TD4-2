@@ -9,6 +9,7 @@ public class JellyfishChargeDamageField : MonoScript
     [SerializeField] public float width = 180.0f;
 
     private float elapsed_;
+    private Entity sparkParticleEntity_;
 
     public override void Initialize()
     {
@@ -27,7 +28,15 @@ public class JellyfishChargeDamageField : MonoScript
     //============================================================
     // フィールドの範囲設定
     //============================================================
-    public void Configure(Vector2 start, Vector2 end, float fieldWidth, float fieldDamage, float fieldDuration, float depth)
+    public void Configure(
+        Vector2 start,
+        Vector2 end,
+        float fieldWidth,
+        float fieldDamage,
+        float fieldDuration,
+        float depth,
+        string sparkParticlePrefabName,
+        int sparkParticleEmitCount)
     {
         Vector2 move = end - start;
         float length = move.Length();
@@ -56,5 +65,67 @@ public class JellyfishChargeDamageField : MonoScript
         {
             attackCollision.Damage = damage;
         }
+
+        DeploySparkParticle(
+            sparkParticlePrefabName,
+            sparkParticleEmitCount,
+            new Vector3(width, length, 1.0f));
+    }
+
+    public override void OnDestroy()
+    {
+        DestroySparkParticle();
+    }
+
+    private void DeploySparkParticle(string prefabName, int emitCount, Vector3 fieldSize)
+    {
+        DestroySparkParticle();
+
+        if (string.IsNullOrEmpty(prefabName))
+        {
+            return;
+        }
+
+        Entity particleEntity = ecsGroup.CreateEntity(prefabName);
+        if (particleEntity == null)
+        {
+            return;
+        }
+
+        particleEntity.transform.position = transform.position;
+        particleEntity.transform.rotation = transform.rotation;
+        particleEntity.transform.scale = Vector3.one;
+
+        ParticleSystem2D particleSystem = particleEntity.GetComponent<ParticleSystem2D>();
+        if (particleSystem == null)
+        {
+            particleEntity.Destroy();
+            return;
+        }
+
+        sparkParticleEntity_ = particleEntity;
+        particleSystem.SetBoxShape(fieldSize);
+
+        if (emitCount > 0)
+        {
+            particleSystem.Emit(emitCount);
+        }
+    }
+
+    private void DestroySparkParticle()
+    {
+        if (sparkParticleEntity_ == null)
+        {
+            return;
+        }
+
+        ParticleSystem2D particleSystem = sparkParticleEntity_.GetComponent<ParticleSystem2D>();
+        if (particleSystem != null)
+        {
+            particleSystem.Stop();
+        }
+
+        sparkParticleEntity_.Destroy();
+        sparkParticleEntity_ = null;
     }
 }

@@ -18,6 +18,8 @@ public class ExpDropper : MonoScript
 
     /// ドロップする ExperiencePoint の量
     [SerializeField] private float dropExp = 0.0f;
+    /// ダメージを受けたときにドロップする ExperiencePoint の量
+    [SerializeField] private float damageDropExp = 0.0f;
 
     // 破棄理由の判別に使う。OnDestroy 時に native を引き直さずに済むよう Initialize で持つ。
     private HP hp_;
@@ -47,16 +49,31 @@ public class ExpDropper : MonoScript
     }
 
     /// <summary>
-    /// 保持している ExperiencePoint の分だけ ExpOrb をばらまく
+    /// ダメージを受けたときの ExperiencePoint をドロップする
     /// </summary>
-    private void Drop()
+    public void DropOnDamage()
     {
+        Drop(damageDropExp);
+    }
+
+    /// <summary>
+    /// 指定された ExperiencePoint の分だけ ExpOrb をばらまく
+    /// </summary>
+    private void Drop(float exp)
+    {
+        if (exp <= 0.0f)
+        {
+            return;
+        }
+
+        float remainingExp = exp;
+
         // 大きいオーブから優先的に割り当てる整数個数の分解（例: exp=235 → large 2, medium 3, small 5）
-        int largeCount = (int)(dropExp / kLargeOrbExp);
-        dropExp -= largeCount * kLargeOrbExp;
-        int mediumCount = (int)(dropExp / kMediumOrbExp);
-        dropExp -= mediumCount * kMediumOrbExp;
-        int smallCount = (int)dropExp; // kSmallOrbExp == 1 なので端数がそのまま個数になる
+        int largeCount = (int)(remainingExp / kLargeOrbExp);
+        remainingExp -= largeCount * kLargeOrbExp;
+        int mediumCount = (int)(remainingExp / kMediumOrbExp);
+        remainingExp -= mediumCount * kMediumOrbExp;
+        int smallCount = (int)(remainingExp / kSmallOrbExp);
 
         Vector2 min, max;
         GetSpawnArea(out min, out max);
@@ -101,14 +118,15 @@ public class ExpDropper : MonoScript
         for (int i = 0; i < count; i++)
         {
             Entity created = ecsGroup.CreateEntity(prefabName);
-            if (created != null && created.transform != null)
+            if (created == null || created.transform == null)
             {
-                created.transform.position = new Vector3(
-                    RandomUtil.RandomRange(min.x, max.x),
-                    RandomUtil.RandomRange(min.y, max.y),
-                    0
-                );
+                continue;
             }
+            created.transform.position = new Vector3(
+                RandomUtil.RandomRange(min.x, max.x),
+                RandomUtil.RandomRange(min.y, max.y),
+                0
+            );
         }
     }
 }
