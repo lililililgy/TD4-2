@@ -28,6 +28,9 @@ EntityCollection::EntityCollection(ECSGroup* ecsGroup, DxManager* dxm)
 	pDxDevice_ = pDxManager_->GetDxDevice();
 	entities_.reserve(256);
 
+	initEntityIDs_.nextId = 1;
+	runtimeEntityIDs_.nextId = -1;
+
 	LoadPrefabAll();
 }
 
@@ -218,8 +221,11 @@ int32_t EntityCollection::NewEntityID(bool isRuntime) {
 			runtimeEntityIDs_.removedIds.pop_front();
 			runtimeEntityIDs_.usedIds.push_back(resultId);
 		} else {
-			// なければ新しいIDを生成
-			resultId = static_cast<int32_t>(runtimeEntityIDs_.usedIds.size() + 1) * -1;
+			// なければ新しいIDを生成 (単調減少でユニークなIDを発行)
+			if (runtimeEntityIDs_.nextId == 0) {
+				runtimeEntityIDs_.nextId = -1;
+			}
+			resultId = runtimeEntityIDs_.nextId--;
 			runtimeEntityIDs_.usedIds.push_back(resultId);
 		}
 
@@ -232,7 +238,11 @@ int32_t EntityCollection::NewEntityID(bool isRuntime) {
 			initEntityIDs_.removedIds.pop_front();
 			initEntityIDs_.usedIds.push_back(resultId);
 		} else {
-			resultId = static_cast<int32_t>(initEntityIDs_.usedIds.size()) + 1;
+			// なければ新しいIDを生成 (単調増加でユニークなIDを発行)
+			if (initEntityIDs_.nextId == 0) {
+				initEntityIDs_.nextId = 1;
+			}
+			resultId = initEntityIDs_.nextId++;
 			initEntityIDs_.usedIds.push_back(resultId);
 		}
 	}

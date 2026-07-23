@@ -1,4 +1,4 @@
-#include "ECSGroup.h"
+﻿#include "ECSGroup.h"
 
 using namespace ONEngine;
 
@@ -6,6 +6,7 @@ using namespace ONEngine;
 #include "AddECSComponentFactoryFunction.h"
 #include "Engine/ECS/System/ParticleSystemUpdateSystem/ParticleSystemUpdateSystem.h"
 #include "Engine/ECS/System/ParticleSystem2DUpdateSystem/ParticleSystem2DUpdateSystem.h"
+#include "Engine/Script/MonoScriptEngine.h"
 
 ECSGroup::ECSGroup(DxManager* dxm) {
 	/// インスタンスの生成
@@ -58,6 +59,7 @@ void ECSGroup::RemoveEntity(GameEntity* entity, bool deleteChildren) {
 		return;
 	}
 
+	MonoScriptEngine::GetInstance().RemoveEntityFromNativeCS(groupName_, entity->GetId());
 	entityCollection_->RemoveEntity(entity, deleteChildren);
 }
 

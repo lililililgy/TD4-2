@@ -1,0 +1,802 @@
+.\Project\Engine\Asset\Assets\Mesh\Skinning.cpp:123: result.paletteSRVHandle.first = pSRVHeap->GetCPUDescriptorHandel(result.srvDescriptorIndex);
+.\Project\Engine\Asset\Assets\Mesh\Skinning.cpp:135: device->CreateShaderResourceView(result.paletteResource.Get(), &paletteSRVDesc, result.paletteSRVHandle.first);
+.\Project\Engine\Core\Utility\FileSystem\FileSystem.cpp:51: ReplaceAll(&file.first, "\\", "/");
+.\Project\Engine\ECS\Component\Array\ComponentArray.h:88: /// first: コンポーネントのID, second: インデックス
+.\Project\Engine\ECS\Component\Collection\ComponentCollection.cpp:38: auto it = arrayMap_.find(component.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:244: Animator* first = animators.empty() ? nullptr : animators[0];
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:245: if (!first) return;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:250: auto* owner = first->GetOwner();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:255: auto it = model->GetAnimationClips().find(first->GetDefaultClip());
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:259: ImGui::Text("Default Clip: %s (ID: %u)", defaultClipName.c_str(), first->GetDefaultClip());
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:268: AnimationLayer& layer = first->layers[i];
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animator\Animator.cpp:288: auto* owner = first->GetOwner();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider.cpp:55: if(currentCategoryBit == static_cast<uint32_t>(entries[i].first)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider.cpp:62: bc->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider.cpp:85: uint32_t bitValue = static_cast<uint32_t>(entry.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider2D.cpp:55: if(currentCategoryBit == static_cast<uint32_t>(entries[i].first)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider2D.cpp:62: bc->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\BoxCollider2D.cpp:85: uint32_t bitValue = static_cast<uint32_t>(entry.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\CircleCollider.cpp:58: if(currentCategoryBit == static_cast<uint32_t>(entries[i].first)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\CircleCollider.cpp:65: c->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\CircleCollider.cpp:88: uint32_t bitValue = static_cast<uint32_t>(entry.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\SphereCollider.cpp:58: if(currentCategoryBit == static_cast<uint32_t>(entries[i].first)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\SphereCollider.cpp:65: c->SetCategoryBits(static_cast<uint32_t>(entries[categoryIdx].first));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Collision\SphereCollider.cpp:88: uint32_t bitValue = static_cast<uint32_t>(entry.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:335: ImGui::DragFloat("first speed", &speed.first, 0.1f, 0.0f, FLT_MAX);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:340: ImGui::DragFloat3("first size", &size.first.x, 0.1f, 0.0f, FLT_MAX);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:345: ImGui::DragFloat3("first rotate", &rotate.first.x, 0.1f);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:350: ImGui::ColorEdit4("first color", &color.first.r);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:225: Transform* first = transforms.empty() ? nullptr : transforms[0];
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:226: if (!first) return;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:229: if (!(first->rotate == first->lastSyncedRotate)) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:230: first->SyncEulerFromQuaternion();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:233: Vector3   pos = first->position;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:234: Vector3   euler = first->euler;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:235: Vector3   scale = first->scale;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:236: int       flags = first->matrixCalcFlags;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:255: Vector3 delta = pos - first->position;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:287: Vector3 delta = euler - first->euler;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:323: Vector3 delta = scale - first->scale;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:353: first->lastSyncedRotate = first->rotate;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\UI\UILinkNavigationComponent.cpp:189: std::string keyName = UILinkNavigationComponent::KeyCodeToString(pair.first);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\UI\UILinkNavigationComponent.cpp:215: std::string keyStr = UILinkNavigationComponent::KeyCodeToString(pair.first);
+.\Project\Engine\ECS\Entity\Collection\EntityCollection.cpp:299: prefabs_[file.second] = std::make_unique<EntityPrefab>(file.first);
+.\Project\Engine\ECS\Entity\Collection\EntityCollection.cpp:315: if (file.first.empty()) {
+.\Project\Engine\ECS\Entity\Collection\EntityCollection.cpp:321: prefabs_[file.second] = std::make_unique<EntityPrefab>(file.first);
+.\Project\Engine\ECS\Entity\Collection\EntityCollection.cpp:328: const std::string& actualPrefabName = itr->first;
+.\Project\Engine\ECS\Entity\Prefab\EntityPrefabCollection.cpp:20: prefabs_[file.second] = std::make_unique<EntityPrefab>(file.first);
+.\Project\Engine\ECS\Entity\Prefab\EntityPrefabCollection.cpp:30: if (file.first.empty()) {
+.\Project\Engine\ECS\Entity\Prefab\EntityPrefabCollection.cpp:36: prefabs_[file.second] = std::make_unique<EntityPrefab>(file.first);
+.\Project\Engine\ECS\System\CameraUpdate\CameraUpdateSystem.cpp:73: Vector3 start = Vector3(worldCorners[edge.first].x, worldCorners[edge.first].y, worldCorners[edge.first].z);
+.\Project\Engine\ECS\System\CameraUpdate\CameraUpdateSystem.cpp:80: Gizmo::DrawLine(line.first, line.second, Vector4(1.0f, 1.0f, 0.0f, 1.0f)); // 黄色
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:26: return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:38: pair.first->GetComponent<CircleCollider>(),
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:46: pair.first->GetComponent<CircleCollider>(),
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:54: pair.first->GetComponent<BoxCollider2D>(),
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:62: pair.first->GetComponent<BoxCollider2D>(),
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:85: return liveEntities.find(p.first) == liveEntities.end()
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:185: return (p.first == pair.first && p.second == pair.second)
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:186: || (p.first == pair.second && p.second == pair.first);
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:203: return (p.first == pair.first && p.second == pair.second)
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:204: || (p.first == pair.second && p.second == pair.first);
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:236: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:237: enterIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:242: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:317: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:318: stayIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:323: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:396: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:397: exitIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:402: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:25: return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:39: pair.first->GetComponent<SphereCollider>(),
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:47: pair.first->GetComponent<SphereCollider>(),
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:55: pair.first->GetComponent<BoxCollider>(),
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:63: pair.first->GetComponent<BoxCollider>(),
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:92: return liveEntities.find(p.first) == liveEntities.end()
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:207: return (p.first == pair.first && p.second == pair.second)
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:208: || (p.first == pair.second && p.second == pair.first);
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:225: return (p.first == pair.first && p.second == pair.second)
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:226: || (p.first == pair.second && p.second == pair.first);
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:259: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:260: enterIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:265: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:343: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:344: stayIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:349: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:426: if (pair.first && pair.second) {
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:427: exitIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:432: int32_t idA = idPair.first;
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:85: Random::Vec3(size.first, size.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:86: Random::Vec3(rotate.first, rotate.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:87: effect->emitShape_.GetEmitDirection(emitPos) * Random::Float(speed.first, speed.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:88: Random::Vec4(color.first, color.second)
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:120: Random::Vec3(size.first, size.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:121: Random::Vec3(rotate.first, rotate.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:122: effect->emitShape_.GetEmitDirection(emitPos) * Random::Float(speed.first, speed.second),
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:123: Random::Vec4(color.first, color.second)
+.\Project\Engine\ECS\System\UI\UIHierarchySystem.cpp:263: const std::string& elemId = pair.first;
+.\Project\Engine\ECS\System\UI\UIInputNavigationSystem.cpp:323: int32_t keyCode = pair.first;
+.\Project\Engine\Editor\Views\Windows\Develop\AnimationEditorWindow.h:51: if (start) *start = &itemFrames[index].first;
+.\Project\Engine\Editor\Views\Windows\Develop\BehaviorTreeEditorWindow.cpp:275: uint32_t keyHash = it->first;
+.\Project\Engine\Editor\Views\Windows\Develop\BehaviorTreeEditorWindow.cpp:801: n["properties"] = json::object(); for (const auto& p : node.properties) n["properties"][p.first] = p.second;
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:450: auto compItr = comps.find(it->first);
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:574: ComponentType compType = componentUIBindings_.contains(itr->first) ? componentUIBindings_[itr->first].type : ComponentType::Compute;
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:596: DrawComponentInnerContent(comp, itr->first, comp->enable);
+.\Project\Engine\Editor\Views\Windows\Develop\UIEditorWindow.cpp:1462: std::string srcGuidStr = pair.first;
+.\Project\Engine\Script\MonoScriptEngine.cpp:1009: return pair.first;
+.\Project\Externals\assimp\include\assimp\anim.h:306: /** Defines how the animation behaves before the first
+.\Project\Externals\assimp\include\assimp\BaseImporter.h:100: * structure, possibly searching the first bytes of the file for magic
+.\Project\Externals\assimp\include\assimp\BlobIOSystem.h:164: // 1.5 and phi are very heap-friendly growth factors (the first
+.\Project\Externals\assimp\include\assimp\BlobIOSystem.h:236: if (blobby.first == magicName) {
+.\Project\Externals\assimp\include\assimp\BlobIOSystem.h:238: master->name.Set(hasBaseName ? blobby.first : "");
+.\Project\Externals\assimp\include\assimp\BlobIOSystem.h:259: cur->name.Set(blobby.first);
+.\Project\Externals\assimp\include\assimp\BlobIOSystem.h:262: const std::string::size_type s = blobby.first.find_first_of('.');
+.\Project\Externals\assimp\include\assimp\BlobIOSystem.h:263: cur->name.Set(s == std::string::npos ? blobby.first : blobby.first.substr(s + 1));
+.\Project\Externals\assimp\include\assimp\BlobIOSystem.h:302: // can't reliably say that the first must be the master
+.\Project\Externals\assimp\include\assimp\cexport.h:208: * indicates the first (and primary) blob,
+.\Project\Externals\assimp\include\assimp\cimport.h:182: *   scene first in order to fine-tune your post-processing setup,
+.\Project\Externals\assimp\include\assimp\cimport.h:186: *   and passes the file to the first matching loader. If this loader is unable to
+.\Project\Externals\assimp\include\assimp\cimport.h:214: *   scene first in order to fine-tune your post-processing setup,
+.\Project\Externals\assimp\include\assimp\cimport.h:218: *   and passes the file to the first matching loader. If this loader is unable to
+.\Project\Externals\assimp\include\assimp\cimport.h:246: * scene first to fine-tune your post-processing setup.
+.\Project\Externals\assimp\include\assimp\config.h:532: *    in the source file or take only the first.
+.\Project\Externals\assimp\include\assimp\config.h:678: * By default this is the first frame.
+.\Project\Externals\assimp\include\assimp\config.h:865: * <tt>IMPORT_MD3_SHADER_SRC/model_name.shader</tt> first, <tt>IMPORT_MD3_SHADER_SRC/file_name.shader</tt>
+.\Project\Externals\assimp\include\assimp\config.h:909: * is given in frames, '0' is the first frame. By default, if this property
+.\Project\Externals\assimp\include\assimp\defs.h:66: * first lines of the corresponding unit.
+.\Project\Externals\assimp\include\assimp\Importer.hpp:408: *   scene first in order to fine-tune your post-processing setup,
+.\Project\Externals\assimp\include\assimp\Importer.hpp:437: *   scene first in order to fine-tune your post-processing setup,
+.\Project\Externals\assimp\include\assimp\Importer.hpp:442: *   the first matching loader. If this loader is unable to completely
+.\Project\Externals\assimp\include\assimp\Importer.hpp:469: *  the imported scene first to fine-tune your post-processing setup.
+.\Project\Externals\assimp\include\assimp\material.h:1489: * example reads the #AI_MATKEY_UVTRANSFORM property of the first diffuse texture)
+.\Project\Externals\assimp\include\assimp\material.h:1522: * example reads the #AI_MATKEY_SHININESS_STRENGTH property of the first diffuse texture)
+.\Project\Externals\assimp\include\assimp\mesh.h:433: * should be considered as a triangle fan. This is identified by looking at the first vertex index.
+.\Project\Externals\assimp\include\assimp\ParsingUtils.h:244: // Find first "non-delimiter".
+.\Project\Externals\assimp\include\assimp\postprocess.h:227: * they will be brought together, but the first meshes's part of
+.\Project\Externals\assimp\include\assimp\postprocess.h:450: *  with references to the first mesh.
+.\Project\Externals\assimp\include\assimp\scene.h:326: * The array is mNumCameras in size. The first camera in the
+.\Project\Externals\assimp\include\assimp\scene.h:411: return GetEmbeddedTextureAndIndex(filename).first;
+.\Project\Externals\assimp\include\assimp\SceneCombiner.h:237: *  material index is always the material index of the first mesh.
+.\Project\Externals\assimp\include\assimp\SceneCombiner.h:263: *  of a property present in different materials, the first occurrence
+.\Project\Externals\assimp\include\assimp\SceneCombiner.h:313: *    a duplicate. Otherwise elem[n] links scene n to its first occurrence.
+.\Project\Externals\assimp\include\assimp\SceneCombiner.h:332: *  Only the first hierarchy layer is copied. All pointer members of
+.\Project\Externals\assimp\include\assimp\SmallVector.h:106: /// @brief  Returns a pointer to the first item.
+.\Project\Externals\assimp\include\assimp\SmallVector.h:107: /// @return The first item as a pointer.
+.\Project\Externals\assimp\include\assimp\SmallVector.h:118: /// @brief  Returns a const pointer to the first item.
+.\Project\Externals\assimp\include\assimp\SmallVector.h:119: /// @return The first item as a const pointer.
+.\Project\Externals\assimp\include\assimp\SpatialSort.h:74: * @param pPositions Pointer to the first position vector of the array.
+.\Project\Externals\assimp\include\assimp\SpatialSort.h:88: * @param pPositions Pointer to the first position vector of the array.
+.\Project\Externals\assimp\include\assimp\StringUtils.h:125: ///	@param	begin   The first character of the string.
+.\Project\Externals\DirectX-Headers\include\directx\d3d12shader.h:270: UINT                        FirstInRegister;    // The first input register for this parameter.
+.\Project\Externals\DirectX-Headers\include\directx\d3d12shader.h:271: UINT                        FirstInComponent;   // The first input register component for this parameter.
+.\Project\Externals\DirectX-Headers\include\directx\d3d12shader.h:272: UINT                        FirstOutRegister;   // The first output register for this parameter.
+.\Project\Externals\DirectX-Headers\include\directx\d3d12shader.h:273: UINT                        FirstOutComponent;  // The first output register component for this parameter.
+.\Project\Externals\DirectX-Headers\include\directx\D3D12TokenizedProgramFormat.hpp:36: //   with scalar and 4-vector data types as first class citizens, but
+.\Project\Externals\DirectX-Headers\include\directx\D3D12TokenizedProgramFormat.hpp:732: //             D3D10_SB_OPERAND_INDEX_REPRESENTATION for first operand index
+.\Project\Externals\DirectX-Headers\include\directx\D3D12TokenizedProgramFormat.hpp:1662: //     D3D10_SB_OPERAND_INDEX_DIMENSION_2D, where the first index specifies
+.\Project\Externals\DirectX-Headers\include\directx\d3dx12_check_feature_support.h:349: // The default parameter is 0, or the first availabe graphics device node
+.\Project\Externals\DirectX-Headers\include\directx\d3dx12_pipeline_state_stream.h:1346: pCallbacks->ErrorBadInputParameter(1); // first parameter issue
+.\Project\Externals\DirectX-Headers\src\d3dx12_property_format_table.cpp:1126: // begins immediately after the first.  The only formats with HeightAlignment other than 1 are planar or block compressed, and
+.\Project\Externals\DirectX-Headers\test\feature_check_test.cpp:150: // The first section shows how to use the API's of the new FeautreSupport class
+.\Project\Externals\DirectXTex\BC6HBC7.cpp:1828: // Bubble up the first uItems items
+.\Project\Externals\DirectXTex\BC6HBC7.cpp:2833: // Bubble up the first uItems items
+.\Project\Externals\DirectXTex\d3dx12.h:3764: pCallbacks->ErrorBadInputParameter(1); // first parameter issue
+.\Project\Externals\DirectXTex\d3dx12.h:5140: // The default parameter is 0, or the first availabe graphics device node
+.\Project\Externals\DirectXTex\DirectXTex.h:268: // Loads all images in a multi-frame file, converting/resizing to match the first frame as needed, defaults to 0th frame otherwise
+.\Project\Externals\DirectXTex\DirectXTexHDR.cpp:122: // Process first part of header
+.\Project\Externals\DirectXTex\DirectXTexHDR.cpp:652: // Read the first part of the file to find the header
+.\Project\Externals\DirectXTex\DirectXTexNormalMaps.cpp:120: // Read first scanline row into 'row1'
+.\Project\Externals\DirectXTex\DirectXTexNormalMaps.cpp:127: // Mirror first row
+.\Project\Externals\DirectXTex\DirectXTexNormalMaps.cpp:161: // Use first row of source image (Wrap V)
+.\Project\Externals\imgui\imgui.cpp:24: // For first-time users having issues compiling/linking/running/loading fonts:
+.\Project\Externals\imgui\imgui.cpp:403: // - If your engine doesn't support scissoring yet, you may ignore this at first. You will get some small glitches
+.\Project\Externals\imgui\imgui.cpp:477: - 2024/06/21 (1.90.9) - io: ClearInputKeys() (first exposed in 1.89.8) doesn't clear mouse data, newly added ClearInputMouse() does.
+.\Project\Externals\imgui\imgui.cpp:716: - 2020/04/23 (1.77) - removed unnecessary ID (first arg) of ImFontAtlas::AddCustomRectRegular().
+.\Project\Externals\imgui\imgui.cpp:758: - 2019/02/14 (1.68) - made it illegal/assert when io.DisplayTime == 0.0f (with an exception for the first frame). If for some reason your time step calculation gives you a zero value, replace it with an arbitrarily small value!
+.\Project\Externals\imgui\imgui.cpp:1310: TouchExtraPadding           = ImVec2(0,0);      // Expand reactive bounding box for touch-based system where touch position is not accurate enough. Unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. So don't grow this too much!
+.\Project\Externals\imgui\imgui.cpp:2031: // Find end-of-line. Return pointer will point to either first \n, either str_end.
+.\Project\Externals\imgui\imgui.cpp:2392: // One byte is consumed in case of invalid first byte of in_text.
+.\Project\Externals\imgui\imgui.cpp:2888: // Add zero-terminator the first time
+.\Project\Externals\imgui\imgui.cpp:2916: int len = ImFormatStringV(NULL, 0, fmt, args);         // FIXME-OPT: could do a first pass write attempt, likely successful on first pass.
+.\Project\Externals\imgui\imgui.cpp:2923: // Add zero-terminator the first time
+.\Project\Externals\imgui\imgui.cpp:3120: // Step 0: Let you process the first element (regardless of it being visible or not, so we can measure the element height)
+.\Project\Externals\imgui\imgui.cpp:3127: // Submit the first item (or range) so we can measure its height (generally the first range is 0..1)
+.\Project\Externals\imgui\imgui.cpp:3134: calc_clipping = true;   // If on the first step with known item height, calculate clipping.
+.\Project\Externals\imgui\imgui.cpp:3137: // Step 1: Let the clipper infer height from first range
+.\Project\Externals\imgui\imgui.cpp:4908: // If mouse was first clicked outside of ImGui bounds we also cancel out hovering.
+.\Project\Externals\imgui\imgui.cpp:4909: // FIXME: For patterns of drag and drop across OS windows, we may need to rework/remove this test (first committed 311c0ca9 on 2015/02)
+.\Project\Externals\imgui\imgui.cpp:4979: // Load settings on first frame, save settings when modified (after a delay)
+.\Project\Externals\imgui\imgui.cpp:5095: g.HoverItemDelayTimer = g.HoverItemDelayClearTimer = 0.0f; // May want a decaying timer, in which case need to clamp at max first, based on max of caller last requested timer.
+.\Project\Externals\imgui\imgui.cpp:5178: // Closing the focused window restore focus to the first active root window in descending z-order
+.\Project\Externals\imgui\imgui.cpp:5432: // Draw dimming behind modal or a begin stack child, whichever comes first in draw order.
+.\Project\Externals\imgui\imgui.cpp:6039: // Process navigation-in immediately so NavInit can run on first frame
+.\Project\Externals\imgui\imgui.cpp:6173: window->DC.CursorStartPos = window->DC.CursorMaxPos = window->DC.IdealMaxPos = window->Pos; // So first call to CalcWindowContentSizes() doesn't return crazy values
+.\Project\Externals\imgui\imgui.cpp:6192: // Create window the first time
+.\Project\Externals\imgui\imgui.cpp:6906: // Collapse button (submitting first so it gets priority when choosing a navigation init fallback)
+.\Project\Externals\imgui\imgui.cpp:7045: return popup_window;                                        // Place window right below first block modal
+.\Project\Externals\imgui\imgui.cpp:7147: // Parent window is latched only on the first call to Begin() of the frame, so further append-calls can be done from a different window stack
+.\Project\Externals\imgui\imgui.cpp:7212: // May be processed on the next frame if this is our first frame and we are measuring size
+.\Project\Externals\imgui\imgui.cpp:7427: // Auto-fit may only grow window during the first few frames
+.\Project\Externals\imgui\imgui.cpp:10274: // In the rare situation where FindBestWheelingWindow() had to defer first frame of wheeling due to ambiguous main axis, reinject it now.
+.\Project\Externals\imgui\imgui.cpp:10807: IM_ASSERT(0 && "Please set DockingEnable before the first call to NewFrame()! Otherwise you will lose your .ini settings!");
+.\Project\Externals\imgui\imgui.cpp:10809: IM_ASSERT(0 && "Please set ViewportsEnable before the first call to NewFrame()! Otherwise you will lose your .ini settings!");
+.\Project\Externals\imgui\imgui.cpp:11523: window->DC.CurrLineTextBaseOffset = ImMax(window->DC.PrevLineTextBaseOffset, group_data.BackupCurrLineTextBaseOffset); // FIXME: Incorrect, we should grab the base offset from the *first line* of the group but it is hard to obtain now.
+.\Project\Externals\imgui\imgui.cpp:12026: // When reopening a popup we first refocus its parent, otherwise if its parent is itself a popup it would get closed by ClosePopupsOverWindow().
+.\Project\Externals\imgui\imgui.cpp:12354: // (Always first try the direction we used on the last frame, if any)
+.\Project\Externals\imgui\imgui.cpp:12746: // Even if 'ImGuiItemFlags_NoNavDefaultFocus' is on (typically collapse/close button) we record the first ResultId so they can be used as a fallback
+.\Project\Externals\imgui\imgui.cpp:12806: // - Case 1: no nav/active id:    set result to first eligible item, stop storing.
+.\Project\Externals\imgui\imgui.cpp:12808: // - Case 3: tab forward wrap:    set result to first eligible item (preemptively), on ref id set counter, on next frame if counter hasn't elapsed store result. // FIXME-TABBING: Could be done as a next-frame forwarded request
+.\Project\Externals\imgui\imgui.cpp:13132: // Process navigation init request (select first/default focus)
+.\Project\Externals\imgui\imgui.cpp:13295: // Apply result from previous navigation init request (will typically select the first item, unless SetItemDefaultFocus() has been called)
+.\Project\Externals\imgui\imgui.cpp:13420: float pad_y = ImMin(inner_rect_rel.GetHeight(), window->CalcFontSize() * 0.5f); // Terrible approximation for the intent of starting navigation from first fully visible item
+.\Project\Externals\imgui\imgui.cpp:13504: // PageUp/PageDown behavior first jumps to the bottom/top mostly visible item, _otherwise_ use the result from the previous/next page.
+.\Project\Externals\imgui\imgui.cpp:13902: // Visuals only appears after a brief time after pressing TAB the first time, so that a fast CTRL+TAB doesn't add visual noise
+.\Project\Externals\imgui\imgui.cpp:14710: // Load settings on first frame (if not explicitly loaded manually before)
+.\Project\Externals\imgui\imgui.cpp:14845: *type_end = 0; // Overwrite first ']'
+.\Project\Externals\imgui\imgui.cpp:15287: // Update Minimized status (we need it first in order to decide if we'll apply Pos/Size of the main viewport)
+.\Project\Externals\imgui\imgui.cpp:15588: // We need to extend the fullscreen clip rect so the OverlayDrawList clip is correct for that the first frame
+.\Project\Externals\imgui\imgui.cpp:15595: // This is so we can select an appropriate font size on the first frame of our window lifetime
+.\Project\Externals\imgui\imgui.cpp:15889: // New windows that appears directly in a new viewport won't always have a size on their first frame
+.\Project\Externals\imgui\imgui.cpp:16011: // FIXME-OPT: We could test the last monitor used for that viewport first, and early
+.\Project\Externals\imgui\imgui.cpp:16021: // This is necessary for tooltips which always resize down to zero at first.
+.\Project\Externals\imgui\imgui.cpp:16483: // Generate an ID for the new node (the exact ID value doesn't matter as long as it is not already used) and add the first window.
+.\Project\Externals\imgui\imgui.cpp:16640: // Rebind all windows to nodes (they can also lazily rebind but we'll have a visible glitch during the first frame)
+.\Project\Externals\imgui\imgui.cpp:17050: // In particular it is important we init the viewport from the first window so we don't create two viewports and drop one.
+.\Project\Externals\imgui\imgui.cpp:17078: // Update this without waiting for the next time we Begin() in the window, so our host window will have the proper title bar color on its first frame.
+.\Project\Externals\imgui\imgui.cpp:17399: // Copy the window class from of our first window so it can be used for proper dock filtering.
+.\Project\Externals\imgui\imgui.cpp:17502: // This is important for first-time (no ini settings restored) single window when io.ConfigDockingAlwaysTabBar is enabled,
+.\Project\Externals\imgui\imgui.cpp:18623: // (Depth-first, Pre-Order)
+.\Project\Externals\imgui\imgui.cpp:18656: // 1) The first 0..WindowMinSize[axis]*2 are allocated evenly to both windows.
+.\Project\Externals\imgui\imgui.cpp:18910: // Policy: Find central node or latest focused node. We first move back to our root node.
+.\Project\Externals\imgui\imgui.cpp:19017: // This can happen if the node was first created manually with DockBuilderAddNode() but _without_ the ImGuiDockNodeFlags_Dockspace.
+.\Project\Externals\imgui\imgui.cpp:19553: // so we're forcing a Pos/Size update from the first ancestor that is already visible (often it will be the root node).
+.\Project\Externals\imgui\imgui.cpp:19554: // If we don't do this, the window will be assigned a zero-size on its first frame, which won't ideally warm up the layout.
+.\Project\Externals\imgui\imgui.cpp:19648: // FIXME-DOCK: replace ->HostWindow NULL compare with something more explicit (~was initially intended as a first frame test)
+.\Project\Externals\imgui\imgui.cpp:19774: // FIXME-20181220: We should not have to test for IsLeafNode() here but we have another bug to fix first.
+.\Project\Externals\imgui\imgui.cpp:22155: if (info->Desc[0] != 0) // PushOverrideID() is often used to avoid hashing twice, which would lead to 2 calls to DebugHookIdInfo(). We prioritize the first one.
+.\Project\Externals\imgui\imgui.h:25: // For first-time users having issues compiling/linking/running/loading fonts:
+.\Project\Externals\imgui\imgui.h:364: //   Some information such as 'flags' or 'p_open' will only be considered by the first call to Begin().
+.\Project\Externals\imgui\imgui.h:432: // - Any change of Scroll will be applied at the beginning of next frame in the first call to Begin().
+.\Project\Externals\imgui\imgui.h:587: //   the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &myvector.x
+.\Project\Externals\imgui\imgui.h:650: // - You can pass the address of a first float element out of a contiguous structure, e.g. &myvector.x
+.\Project\Externals\imgui\imgui.h:809: //    - IMPORTANT: Comparatively to the old Columns() API, we need to call TableNextColumn() for the first column!
+.\Project\Externals\imgui\imgui.h:818: IMGUI_API void          TableNextRow(ImGuiTableRowFlags row_flags = 0, float min_row_height = 0.0f); // append into the first cell of a new row.
+.\Project\Externals\imgui\imgui.h:819: IMGUI_API bool          TableNextColumn();                                  // append into the next column (or first column of next row if currently in last column). Return true when column is visible.
+.\Project\Externals\imgui\imgui.h:839: //   changed since last call, or the first time. Make sure to set 'SpecsDirty = false' after sorting,
+.\Project\Externals\imgui\imgui.h:964: IMGUI_API ImDrawList*   GetBackgroundDrawList(ImGuiViewport* viewport = NULL);              // get background draw list for the given viewport or viewport associated to the current window. this draw list will be the first rendering one. Useful to quickly draw shapes/text behind dear imgui contents.
+.\Project\Externals\imgui\imgui.h:1055: IMGUI_API void          LoadIniSettingsFromDisk(const char* ini_filename);                  // call after CreateContext() and before the first call to NewFrame(). NewFrame() automatically calls LoadIniSettingsFromDisk(io.IniFilename).
+.\Project\Externals\imgui\imgui.h:1056: IMGUI_API void          LoadIniSettingsFromMemory(const char* ini_data, size_t ini_size=0); // call after CreateContext() and before the first call to NewFrame() to provide .ini data from your own data source.
+.\Project\Externals\imgui\imgui.h:1202: ImGuiInputTextFlags_AutoSelectAll       = 1 << 12,  // Select entire text when first taking mouse focus
+.\Project\Externals\imgui\imgui.h:1250: //   we need to treat small flags values as a mouse button index, so we encode the mouse button in the first few bits of the flags.
+.\Project\Externals\imgui\imgui.h:1929: ImGuiCond_Once          = 1 << 1,   // Set the variable once per runtime session (only the first call will succeed)
+.\Project\Externals\imgui\imgui.h:1931: ImGuiCond_Appearing     = 1 << 3,   // Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
+.\Project\Externals\imgui\imgui.h:2031: ImGuiTableColumnFlags_PreferSortAscending   = 1 << 14,  // Make the initial sort direction Ascending when first sorting on this column (default).
+.\Project\Externals\imgui\imgui.h:2032: ImGuiTableColumnFlags_PreferSortDescending  = 1 << 15,  // Make the initial sort direction Descending when first sorting on this column.
+.\Project\Externals\imgui\imgui.h:2076: // When 'SpecsDirty == true' you can sort your data. It will be true with sorting specs have changed since last call, or the first time.
+.\Project\Externals\imgui\imgui.h:2232: ImVec2      TouchExtraPadding;          // Expand reactive bounding box for touch-based system where touch position is not accurate enough. Unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. So don't grow this too much!
+.\Project\Externals\imgui\imgui.h:2494: int         KeyMap[ImGuiKey_COUNT];             // [LEGACY] Input: map of indices into the KeysDown[512] entries array which represent your "native" keyboard state. The first 512 are now unused and should be kept zero. Legacy backend will write into KeyMap[] using ImGuiKey_ indices which are always >512.
+.\Project\Externals\imgui\imgui.h:2737: // (Dear ImGui already clip items based on their bounds but: it needs to first layout the item to do so, and generally
+.\Project\Externals\imgui\imgui.h:2747: // - Clipper lets you process the first element (DisplayStart = 0, DisplayEnd = 1) regardless of it being visible or not.
+.\Project\Externals\imgui\imgui.h:2749: // - Clipper can measure the height of the first element
+.\Project\Externals\imgui\imgui.h:2750: // - Clipper calculate the actual range of elements to display based on the current clipping rectangle, position the cursor before the first visible element.
+.\Project\Externals\imgui\imgui.h:2759: float           ItemsHeight;        // [Internal] Height of item after a first step and item submission can calculate it
+.\Project\Externals\imgui\imgui.h:2765: // items_height: Use -1.0f to be calculated automatically on first step. Otherwise pass in the distance between your items, typically GetTextLineHeightWithSpacing() or GetFrameHeightWithSpacing().
+.\Project\Externals\imgui\imgui.h:2772: // Call IncludeItemByIndex() or IncludeItemsByIndex() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
+.\Project\Externals\imgui\imgui.h:2934: ImGuiSelectionUserData      RangeSrcItem;   //  ms:w  app:r     /                // (If using clipper) Begin: Source item (often the first selected item) must never be clipped: use clipper.IncludeItemByIndex() to ensure it is submitted.
+.\Project\Externals\imgui\imgui.h:3245: // - This API shouldn't have been in ImDrawList in the first place!
+.\Project\Externals\imgui\imgui.h:3331: ImWchar         EllipsisChar;           // -1       // Explicitly specify unicode codepoint of ellipsis character. When fonts are being merged first specified ellipsis will be used.
+.\Project\Externals\imgui\imgui.h:3581: ImGuiViewportFlags_NoAutoMerge              = 1 << 9,   // Platform Window: Avoid merging this window into another host window. This can only be set via ImGuiWindowClass viewport flags override (because we need to now ahead if we are going to create a viewport in the first place!).
+.\Project\Externals\imgui\imgui.h:3618: bool                PlatformWindowCreated;  // Platform window has been created (Platform_CreateWindow() has been called). This is false during the first frame where a viewport is being created.
+.\Project\Externals\imgui\imgui.h:3901: // RENAMED ImGuiKeyModFlags -> ImGuiModFlags in 1.88 (from April 2022). Exceptionally commented out ahead of obscolescence schedule to reduce confusion and because they were not meant to be used in the first place.
+.\Project\Externals\imgui\ImGuizmo.cpp:498: // calculate pairs for first 8 elements (cofactors)
+.\Project\Externals\imgui\ImGuizmo.cpp:513: // calculate first 8 elements (cofactors)
+.\Project\Externals\imgui\imgui_demo.cpp:406: if (demo_data.ShowAppDockSpace)         { ShowExampleAppDockSpace(&demo_data.ShowAppDockSpace); } // Important: Process the Docking app first, as explicit DockSpace() nodes needs to be submitted early (read comments near the DockSpace function)
+.\Project\Externals\imgui\imgui_demo.cpp:1770: // Toggle casing of first character
+.\Project\Externals\imgui\imgui_demo.cpp:1798: "Here we toggle the casing of the first character on every edit + count edits.");
+.\Project\Externals\imgui\imgui_demo.cpp:2025: // Tip: If your float aren't contiguous but part of a structure, you can pass a pointer to your first float
+.\Project\Externals\imgui\imgui_demo.cpp:2999: // If focused item is selected: land on first unselected item after focused item.
+.\Project\Externals\imgui\imgui_demo.cpp:4825: // This may be a bit confusing at first but it should quickly make sense. Follow on the examples below.
+.\Project\Externals\imgui\imgui_demo.cpp:5913: ImGui::TableSetupColumn("Line #", ImGuiTableColumnFlags_NoHide); // Make the first column not hideable to match our use of TableSetupScrollFreeze()
+.\Project\Externals\imgui\imgui_demo.cpp:5978: // Create a first table just to show all the options/flags we want to make visible in our example!
+.\Project\Externals\imgui\imgui_demo.cpp:6367: // The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
+.\Project\Externals\imgui\imgui_demo.cpp:6613: // Context Menus: first example
+.\Project\Externals\imgui\imgui_demo.cpp:6864: //ImGui::SetNextItemOpen(true, ImGuiCond_Once); // FIXME-TABLE: Enabling this results in initial clipped first pass on table which tend to affect column sizing
+.\Project\Externals\imgui\imgui_demo.cpp:6974: ImGui::Combo("items_type (first column)", &contents_type, contents_type_names, IM_ARRAYSIZE(contents_type_names));
+.\Project\Externals\imgui\imgui_demo.cpp:7066: // For the demo purpose we can select among different type of items submitted in the first column
+.\Project\Externals\imgui\imgui_demo.cpp:8485: // to only process visible items. The clipper will automatically measure the height of your first item and then
+.\Project\Externals\imgui\imgui_demo.cpp:8590: int first = History.Size - 10;
+.\Project\Externals\imgui\imgui_demo.cpp:8591: for (int i = first > 0 ? first : 0; i < History.Size; i++)
+.\Project\Externals\imgui\imgui_demo.cpp:9608: // Add first and second point
+.\Project\Externals\imgui\imgui_demo.cpp:9687: ImGui::Text("Blue shape is drawn first: appears in back");
+.\Project\Externals\imgui\imgui_demo.cpp:9696: ImGui::Text("Blue shape is drawn first, into channel 1: appears in front");
+.\Project\Externals\imgui\imgui_draw.cpp:768: // The first <points_count> items are normals at each line point, then after that there are either 2 or 4 temp points for each line point
+.\Project\Externals\imgui\imgui_draw.cpp:799: // If line is not closed, the first and last points need to be generated differently as there are no normals to blend
+.\Project\Externals\imgui\imgui_draw.cpp:809: // This takes points n and n+1 and writes into n+1, with the first point in a closed line being generated from the final one (as n+1 wraps)
+.\Project\Externals\imgui\imgui_draw.cpp:812: for (int i1 = 0; i1 < count; i1++) // i1 is the first point of the line segment
+.\Project\Externals\imgui\imgui_draw.cpp:890: // If line is not closed, the first and last points need to be generated differently as there are no normals to blend
+.\Project\Externals\imgui\imgui_draw.cpp:905: // This takes points n and n+1 and writes into n+1, with the first point in a closed line being generated from the final one (as n+1 wraps)
+.\Project\Externals\imgui\imgui_draw.cpp:908: for (int i1 = 0; i1 < count; i1++) // i1 is the first point of the line segment
+.\Project\Externals\imgui\imgui_draw.cpp:1105: // distribute first step range evenly between them by reducing first step size.
+.\Project\Externals\imgui\imgui_draw.cpp:1215: // Determine first and last sample in lookup table that belong to the arc.
+.\Project\Externals\imgui\imgui_draw.cpp:1791: // (this would require first building reflexes to bail to convex if empty, without even building nodes)
+.\Project\Externals\imgui\imgui_draw.cpp:1860: // Return first triangle available, mimicking the behavior of convex fill.
+.\Project\Externals\imgui\imgui_draw.cpp:2116: // Merge previous channel last draw command with current channel first draw command if matching.
+.\Project\Externals\imgui\imgui_draw.cpp:2515: IM_ASSERT(Fonts.Size > 0 && "Cannot use MergeMode for the first font"); // When using MergeMode make sure that a font has already been added before. You can use ImGui::GetIO().Fonts->AddFontDefault() to add the default imgui font.
+.\Project\Externals\imgui\imgui_draw.cpp:2748: stbrp_rect*         Rects;              // Rectangle to pack. We first fill in their size and the packer will give us their position.
+.\Project\Externals\imgui\imgui_draw.cpp:2941: // Pack our extra data rectangles first, so it will be on the upper-left corner of our texture (UV will have small values).
+.\Project\Externals\imgui\imgui_draw.cpp:4046: // Fast-forward to first visible line
+.\Project\Externals\imgui\imgui_draw.cpp:4054: // FIXME-OPT: This is not optimal as do first do a search for \n before calling CalcWordWrapPositionA().
+.\Project\Externals\imgui\imgui_impl_dx12.cpp:846: // If you are new to dear imgui or creating a new binding for dear imgui, it is recommended that you completely ignore this section first..
+.\Project\Externals\imgui\imgui_impl_win32.cpp:184: // Update monitor a first time during init
+.\Project\Externals\imgui\imgui_impl_win32.cpp:296: // Left & right Shift keys: when both are pressed together, Windows tend to not generate the WM_KEYUP event for the first released one.
+.\Project\Externals\imgui\imgui_impl_win32.cpp:1013: // If you are new to dear imgui or creating a new binding for dear imgui, it is recommended that you completely ignore this section first..
+.\Project\Externals\imgui\imgui_internal.h:374: IMGUI_API const char*   ImStrchrRange(const char* str_begin, const char* str_end, char c);  // Find first occurrence of 'c' in string range.
+.\Project\Externals\imgui\imgui_internal.h:378: IMGUI_API const char*   ImStrSkipBlank(const char* str);                                    // Find first non-blank character.
+.\Project\Externals\imgui\imgui_internal.h:705: // We store the chunk size first, and align the final size on 4 bytes boundaries.
+.\Project\Externals\imgui\imgui_internal.h:1454: ImGuiKeyRoutingIndex            Index[ImGuiKey_NamedKey_COUNT]; // Index of first entry in Entries[]
+.\Project\Externals\imgui\imgui_internal.h:1656: ImS8                    SingleCharSize;     // Length in bytes of first letter codepoint (1 for ascii, 2-4 for UTF-8). If (SearchBufferLen==RepeatCharSize) only 1 letter has been input.
+.\Project\Externals\imgui\imgui_internal.h:2343: bool                    NavInitRequest;                     // Init request for appearing window to select first item
+.\Project\Externals\imgui\imgui_internal.h:2345: ImGuiNavItemData        NavInitResult;                      // Init request result (first item of the window, or one for which SetItemDefaultFocus() was called)
+.\Project\Externals\imgui\imgui_internal.h:2924: ImGuiWindow*            RootWindow;                         // Point to ourself or first ancestor that is not a child window. Doesn't cross through popups/dock nodes.
+.\Project\Externals\imgui\imgui_internal.h:2925: ImGuiWindow*            RootWindowPopupTree;                // Point to ourself or first ancestor that is not a child window. Cross through popups parent<>child.
+.\Project\Externals\imgui\imgui_internal.h:2926: ImGuiWindow*            RootWindowDockTree;                 // Point to ourself or first ancestor that is not a child window. Cross through dock nodes.
+.\Project\Externals\imgui\imgui_internal.h:2927: ImGuiWindow*            RootWindowForTitleBarHighlight;     // Point to ourself or first ancestor which will display TitleBgActive color when this window is active.
+.\Project\Externals\imgui\imgui_internal.h:2928: ImGuiWindow*            RootWindowForNav;                   // Point to ourself or first ancestor which doesn't have the NavFlattened flag.
+.\Project\Externals\imgui\imgui_internal.h:3090: ImGuiTableColumnIdx     PrevEnabledColumn;              // Index of prev enabled/visible column within Columns[], -1 if first enabled/visible column
+.\Project\Externals\imgui\imgui_internal.h:3150: float                       LastTopHeadersRowHeight;    // Height of first consecutive header rows from last frame (FIXME: this is used assuming consecutive headers are in same frozen set)
+.\Project\Externals\imgui\imgui_internal.h:3253: bool                        IsLayoutLocked;             // Set by TableUpdateLayout() which is called when beginning the first row.
+.\Project\Externals\imgui\imgui_internal.h:3257: bool                        IsUsingHeaders;             // Set when the first row had the ImGuiTableRowFlags_Headers flag.
+.\Project\Externals\imgui\imgui_tables.cpp:40: //    | TableBeginInitMemory()                  - first time table is used
+.\Project\Externals\imgui\imgui_tables.cpp:137: //   - using mixed policies with ScrollX does not make much sense, as using Stretch columns with ScrollX does not make much sense in the first place!
+.\Project\Externals\imgui\imgui_tables.cpp:168: //   In many situations, you may skip submitting contents for every column but one (e.g. the first one).
+.\Project\Externals\imgui\imgui_tables.cpp:621: // At this point the ->NameOffset field of each column will be invalid until TableUpdateLayout() or the first call to TableSetupColumn()
+.\Project\Externals\imgui\imgui_tables.cpp:665: // (We process this in the TableBegin() of the first instance of each table)
+.\Project\Externals\imgui\imgui_tables.cpp:785: // Runs on the first call to TableNextRow(), to give a chance for TableSetupColumn() and other TableSetupXXXXX() functions to be called first.
+.\Project\Externals\imgui\imgui_tables.cpp:786: // FIXME-TABLE: Our width (and therefore our WorkRect) will be minimal in the first frame for _WidthAuto columns.
+.\Project\Externals\imgui\imgui_tables.cpp:898: // the column fitting having to wait until the first visible frame of the child container (may or not be a good thing). Also see #6510.
+.\Project\Externals\imgui\imgui_tables.cpp:932: // large height (= first frame scrollbar display very off + clipper would skip lots of items).
+.\Project\Externals\imgui\imgui_tables.cpp:1556: IM_ASSERT(table->IsLayoutLocked == false && "Need to call call TableSetupColumn() before first row!");
+.\Project\Externals\imgui\imgui_tables.cpp:1630: IM_ASSERT(table->IsLayoutLocked == false && "Need to call TableSetupColumn() before first row!");
+.\Project\Externals\imgui\imgui_tables.cpp:1699: // - Request will be applied during next layout, which happens on the first call to TableNextRow() after BeginTable().
+.\Project\Externals\imgui\imgui_tables.cpp:1843: // [Public] Starts into the first cell of a new row
+.\Project\Externals\imgui\imgui_tables.cpp:1893: window->DC.PrevLineSize = window->DC.CurrLineSize = ImVec2(0.0f, 0.0f); // This allows users to call SameLine() to share LineSize between columns, and to call it from first column too.
+.\Project\Externals\imgui\imgui_tables.cpp:1991: cell_bg_rect.Min.x = ImMax(cell_bg_rect.Min.x, column->ClipRect.Min.x);     // So that first column after frozen one gets clipped when scrolling
+.\Project\Externals\imgui\imgui_tables.cpp:2193: // FIXME-TABLE: Here we propagate text baseline from the last line of the cell.. instead of the first one.
+.\Project\Externals\imgui\imgui_tables.cpp:2795: // changed since last call, or the first time. Make sure to set 'SpecsDirty = false' after sorting,
+.\Project\Externals\imgui\imgui_tables.cpp:2831: // - If the PreferSortDescending flag is set, we will default to a Descending direction on the first click.
+.\Project\Externals\imgui\imgui_tables.cpp:3250: IM_ASSERT(table->CurrentRow == -1 && "Must be first row");
+.\Project\Externals\imgui\imgui_tables.cpp:3264: // Calculate our base metrics and set angled headers data _before_ the first call to TableNextRow()
+.\Project\Externals\imgui\imgui_tables.cpp:3293: // Draw background and labels in first pass, then all borders.
+.\Project\Externals\imgui\imgui_tables.cpp:4257: // Set state for first column
+.\Project\Externals\imgui\imgui_widgets.cpp:949: // - We handle absolute seeking (when first clicking outside the grab) and relative manipulation (afterward or when clicking inside the grab)
+.\Project\Externals\imgui\imgui_widgets.cpp:1756: // Shrink excess width from a set of item, by removing width from the larger items first.
+.\Project\Externals\imgui\imgui_widgets.cpp:3564: // On the first frame, g.TempInputTextId == 0, then on subsequent frames it becomes == id.
+.\Project\Externals\imgui\imgui_widgets.cpp:3565: // We clear ActiveID on the first frame to allow the InputText() taking it back.
+.\Project\Externals\imgui\imgui_widgets.cpp:7126: // - This can be used to implement a special search mode on first character.
+.\Project\Externals\imgui\imgui_widgets.cpp:7128: // - SingleCharMode is always set for first input character, because it usually leads to a "next".
+.\Project\Externals\imgui\imgui_widgets.cpp:7191: if (first_match_idx == -1 && nav_item_idx == -1) // Return first match immediately if we don't have a nav_item_idx value.
+.\Project\Externals\imgui\imgui_widgets.cpp:7193: if (first_match_idx == -1)                       // Record first match for wrapping.
+.\Project\Externals\imgui\imgui_widgets.cpp:7417: // When a table, pull HostClipRect, which allows us to predict ClipRect before first row/layout is performed. (#7970)
+.\Project\Externals\imgui\imgui_widgets.cpp:7432: //    allowing a first press to clear selection THEN the second press to leave child window and return to parent.
+.\Project\Externals\imgui\imgui_widgets.cpp:8699: // Previously this worked between popup and a first child menu because the first child menu always had the _ChildWindow flag,
+.\Project\Externals\imgui\imgui_widgets.cpp:8700: // making hovering on parent popup possible while first child menu was focused - but this was generally a bug with other side effects.
+.\Project\Externals\imgui\imgui_widgets.cpp:8701: // Instead we don't treat Popup specifically (in order to consistently support menu features in them), maybe the first child menu of a Popup
+.\Project\Externals\imgui\imgui_widgets.cpp:8702: // doesn't have the _ChildWindow flag, and we rely on this IsRootOfOpenMenuSet() check to allow hovering between root window/popup and first child menu.
+.\Project\Externals\imgui\imgui_widgets.cpp:8725: // The first menu in a hierarchy isn't so hovering doesn't get across (otherwise e.g. resizing borders with ImGuiButtonFlags_FlattenChildren would react), but top-most BeginMenu() will bypass that limitation.
+.\Project\Externals\imgui\imgui_widgets.cpp:8882: // Don't reopen/recycle same menu level in the same frame if it is a different menu ID, first close the other menu and yield for a frame.
+.\Project\Externals\imgui\imgui_widgets.cpp:9183: tab_bar->WantLayout = true; // Layout will be done on the first call to ItemTab()
+.\Project\Externals\imgui\imgui_widgets.cpp:9254: // This is called only once a frame before by the first call to ItemTab()
+.\Project\Externals\imgui\imgui_widgets.cpp:9583: tab_flags |= ImGuiTabItemFlags_NoCloseButton;       // Set _NoCloseButton immediately because it will be used for first-frame width calculation.
+.\Project\Externals\imgui\imgui_widgets.cpp:9796: // (even if first/last item is a button, return it so we can update the scroll)
+.\Project\Externals\imgui\imgui_widgets.cpp:10016: // On the very first frame of a tab bar we let first tab contents be visible to minimize appearing glitches
+.\Project\Externals\imgui\imstb_rectpack.h:291: static int stbrp__skyline_find_min_y(stbrp_context *c, stbrp_node *first, int x0, int width, int *pwaste)
+.\Project\Externals\imgui\imstb_rectpack.h:293: stbrp_node *node = first;
+.\Project\Externals\imgui\imstb_rectpack.h:299: STBRP_ASSERT(first->x <= x0);
+.\Project\Externals\imgui\imstb_rectpack.h:321: // the first time through, visited_width might be reduced
+.\Project\Externals\imgui\imstb_rectpack.h:379: // can only use it if it first vertically
+.\Project\Externals\imgui\imstb_rectpack.h:414: // find first node that's admissible
+.\Project\Externals\imgui\imstb_textedit.h:524: int first_char, length; // first char of row, and length
+.\Project\Externals\imgui\imstb_textedit.h:525: int prev_first;  // first char of previous row
+.\Project\Externals\imgui\imstb_textedit.h:535: int i=0, first;
+.\Project\Externals\imgui\imstb_textedit.h:567: find->first_char = first = i;
+.\Project\Externals\imgui\imstb_textedit.h:574: for (i=0; first+i < n; i = IMSTB_TEXTEDIT_GETNEXTCHARINDEX(str, first + i) - first)
+.\Project\Externals\imgui\imstb_textedit.h:575: find->x += STB_TEXTEDIT_GETWIDTH(str, first, i);
+.\Project\Externals\imgui\imstb_textedit.h:628: // move cursor to first character of selection
+.\Project\Externals\imgui\imstb_textedit.h:1187: // now move all the redo records towards the end of the buffer; the first one is at 'redo_point'
+.\Project\Externals\imgui\imstb_truetype.h:215: //    Set the current point where the first character will appear. The
+.\Project\Externals\imgui\imstb_truetype.h:216: //    first character could extend left of the current point; this is font
+.\Project\Externals\imgui\imstb_truetype.h:219: //    left-side-bearing of the first character to be displayed and set
+.\Project\Externals\imgui\imstb_truetype.h:543: // if return is positive, the first unused row of the bitmap
+.\Project\Externals\imgui\imstb_truetype.h:570: // Query the font vertical metrics without having to create a font first.
+.\Project\Externals\imgui\imstb_truetype.h:627: int first_unicode_codepoint_in_range;  // if non-zero, then the chars are continuous, and this is the first codepoint
+.\Project\Externals\imgui\imstb_truetype.h:896: // width and height and positioning info for it first.
+.\Project\Externals\imgui\imstb_truetype.h:1023: //             You have to have called stbtt_InitFont() first.
+.\Project\Externals\imgui\imstb_truetype.h:1038: // returns 1/0 whether the first string interpreted as utf8 is identical to
+.\Project\Externals\imgui\imstb_truetype.h:1372: // since most people won't use this, find this table the first time it's needed
+.\Project\Externals\imgui\imstb_truetype.h:1432: // but we just use the first one.
+.\Project\Externals\imgui\imstb_truetype.h:1513: stbtt_uint32 first = ttUSHORT(data + index_map + 6);
+.\Project\Externals\imgui\imstb_truetype.h:1515: if ((stbtt_uint32) unicode_codepoint >= first && (stbtt_uint32) unicode_codepoint < first+count)
+.\Project\Externals\imgui\imstb_truetype.h:1516: return ttUSHORT(data + index_map + 10 + (unicode_codepoint - first)*2);
+.\Project\Externals\imgui\imstb_truetype.h:1713: // in first pass, we load uninterpreted data into the allocated array
+.\Project\Externals\imgui\imstb_truetype.h:1719: // first load flags
+.\Project\Externals\imgui\imstb_truetype.h:2326: // we only look at the first table. it must be 'horizontal' and format 0.
+.\Project\Externals\imgui\imstb_truetype.h:2342: // we only look at the first table. it must be 'horizontal' and format 0.
+.\Project\Externals\imgui\imstb_truetype.h:2370: // we only look at the first table. it must be 'horizontal' and format 0.
+.\Project\Externals\imgui\imstb_truetype.h:3210: // in second pixel, area covered by line segment found in first pixel
+.\Project\Externals\imgui\imstb_truetype.h:3213: // from the line segment within it. the THIRD pixel will get the first
+.\Project\Externals\imgui\imstb_truetype.h:3557: if (!points) return; // during first pass, it's unallocated
+.\Project\Externals\imgui\imstb_truetype.h:5030: //                        first vertex of shape can be off-curve (FreeSans)
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:507: path_name.first = a;
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:674: path_name.first = a;
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1165: 0) a filter must have 2 chars mini and the first must be a .
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1354: if ((_flag.first & IGFD_FileStyleByTypeDir && _flag.first & IGFD_FileStyleByTypeLink && vFileInfos->fileType.isDir() && vFileInfos->fileType.isSymLink()) ||
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1355: (_flag.first & IGFD_FileStyleByTypeFile && _flag.first & IGFD_FileStyleByTypeLink && vFileInfos->fileType.isFile() && vFileInfos->fileType.isSymLink()) ||
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1356: (_flag.first & IGFD_FileStyleByTypeLink && vFileInfos->fileType.isSymLink()) || (_flag.first & IGFD_FileStyleByTypeDir && vFileInfos->fileType.isDir()) ||
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1357: (_flag.first & IGFD_FileStyleByTypeFile && vFileInfos->fileType.isFile())) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1358: if (_file.first.empty()) {  // for all links
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1360: } else if (_file.first.find("((") != std::string::npos && std::regex_search(vFileInfos->fileNameExt,
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1361: std::regex(_file.first))) {  // for links who are equal to style criteria
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1363: } else if (_file.first == vFileInfos->fileNameExt) {  // for links who are equal to style criteria
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1368: if (_flag.first & IGFD_FileStyleByExtention) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1369: if (_file.first.find("((") != std::string::npos && std::regex_search(vFileInfos->fileExtLevels[0], std::regex(_file.first))) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1371: } else if (vFileInfos->SearchForExt(_file.first, false)) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1376: if (_flag.first & IGFD_FileStyleByFullName) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1377: if (_file.first.find("((") != std::string::npos && std::regex_search(vFileInfos->fileNameExt, std::regex(_file.first))) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1379: } else if (_file.first == vFileInfos->fileNameExt) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1384: if (_flag.first & IGFD_FileStyleByContainedInFullName) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1385: if (_file.first.find("((") != std::string::npos && std::regex_search(vFileInfos->fileNameExt, std::regex(_file.first))) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1387: } else if (vFileInfos->fileNameExt.find(_file.first) != std::string::npos) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1432: if (vCriteria.find(_file.first) != std::string::npos) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1452: if (_flag.first & vFlags) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1453: if (_flag.first & IGFD_FileStyleByContainedInFullName) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1455: for (const auto& _file : m_FilesStyle.at(_flag.first)) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1456: if (vCriteria.find(_file.first) != std::string::npos) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1466: if (m_FilesStyle.at(_flag.first).find(vCriteria) != m_FilesStyle.at(_flag.first).end()) {  // found
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1467: *vOutColor = m_FilesStyle[_flag.first][vCriteria]->color;
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1468: if (vOutIcon) *vOutIcon = m_FilesStyle[_flag.first][vCriteria]->icon;
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1469: if (vOutFont) *vOutFont = m_FilesStyle[_flag.first][vCriteria]->font;
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1584: m_SelectedFilter = *m_ParsedFilters.begin();  // we take the first filter
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1637: return fileNameExt_optimized.find(vTag) != std::string::npos ||  // first try without case and accents
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1778: if (a->fileType != b->fileType) return (a->fileType < b->fileType);    // directories first
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1814: if (a->fileType != b->fileType) return (a->fileType < b->fileType);  // directory in first
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1834: if (a->fileType != b->fileType) return (a->fileType < b->fileType);  // directory in first
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1854: if (a->fileType != b->fileType) return (a->fileType < b->fileType);  // directory in first
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:1880: if (a->fileType != b->fileType) return (a->fileType.isDir());  // directory in first
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:2049: info->fileNameExt           = drive.first;
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:2050: info->fileNameExt_optimized = Utils::LowerCaseString(drive.first);
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:2812: // get the first file in the list
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:3016: devices_ptr->AddPlace(device.first + " " + device.second, device.first + IGFD::Utils::GetPathSeparator(), false);
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:3129: res += "###" + group.first + "###";
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:4800: if (!s.first.empty()) {
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:4801: size_t siz     = s.first.size() + 1U;
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:4804: strncpy(pair->fileName, s.first.c_str(), siz);
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.cpp:4806: strncpy_s(pair->fileName, siz, s.first.c_str(), siz);
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:156: 0) a filter must have 2 chars mini and the first must be a .
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:555: You can also jump to a point in the file list by pressing the corresponding key of the first filename character.
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:663: * .gif (tested sucessfully_ but not animation just first frame)
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:670: * the first is a callback who will be called by ImGuiFileDialog for create the backend texture
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:963: - in case of a collection of filter. the default filter will be the first.
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:1078: You must add a group first, then add a place to it :
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:1081: // you must add a group first, specifu display order, and say :
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:1598: const std::string& getFirstFilter() const;                                    // get the first filter
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:1652: void SetDefaultFilterIfNotDefined();  // define the first filter if no filter is selected
+.\Project\Externals\imgui\dialog\ImGuiFileDialog.h:2057: size_t displayOrder                          = 0U;     // the display order will be usedf first, then alphanumeric
+.\Project\Externals\imgui\dialog\ImGuiFileDialogConfig.h:144: // #define placesBookmarksDisplayOrder 0  // to the first
+.\Project\Externals\imgui\dialog\dirent\dirent.h:433: /* Open directory stream and retrieve the first entry */
+.\Project\Externals\imgui\dialog\dirent\dirent.h:567: * Rewind directory stream such that _wreaddir() returns the very first
+.\Project\Externals\imgui\dialog\dirent\dirent.h:585: /* Get first directory entry (internal) */
+.\Project\Externals\imgui\dialog\dirent\dirent.h:593: /* Open directory and retrieve the first entry */
+.\Project\Externals\imgui\dialog\dirent\dirent.h:919: /* Allocate first pointer table or enlarge existing table */
+.\Project\Externals\imgui\dialog\stb\stb_image.h:151: // with each pixel consisting of N interleaved 8-bit components; the first
+.\Project\Externals\imgui\dialog\stb\stb_image.h:205: // Some secondary priorities arise directly from the first two, some of which
+.\Project\Externals\imgui\dialog\stb\stb_image.h:486: // flip the image vertically, so the first pixel in the output array is the bottom left
+.\Project\Externals\imgui\dialog\stb\stb_image.h:2203: // first scan for DC coefficient, must be first
+.\Project\Externals\imgui\dialog\stb\stb_image.h:2427: // no fast case since the first 1D IDCT spread components out
+.\Project\Externals\imgui\dialog\stb\stb_image.h:2429: // constants scaled things up by 1<<12, plus we had 1<<2 from first
+.\Project\Externals\imgui\dialog\stb\stb_image.h:2774: // 17. so do a non-rounding shift of 16 first then follow
+.\Project\Externals\imgui\dialog\stb\stb_image.h:3459: // "next" is current row shifted left by 1 pixel, with first pixel
+.\Project\Externals\imgui\dialog\stb\stb_image.h:3499: // "next" is current row shifted left by 1 pixel, with first pixel
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4511: // synthetic filters used for first scanline to avoid needing a dummy row of 0s
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4581: // if first row, use special filter that doesn't sample previous row
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4584: // handle first byte explicitly
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4599: cur[img_n] = 255; // first pixel
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4605: cur[filter_bytes]   = 255; // first pixel top byte
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4606: cur[filter_bytes+1] = 255; // first pixel bottom byte
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4946: int first=1,k,interlace=0, color=0, is_iphone=0;
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4966: if (!first) return stbi__err("multiple IHDR","Corrupt PNG");
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4967: first = 0;
+.\Project\Externals\imgui\dialog\stb\stb_image.h:4996: if (first) return stbi__err("first not IHDR", "Corrupt PNG");
+.\Project\Externals\imgui\dialog\stb\stb_image.h:5010: if (first) return stbi__err("first not IHDR", "Corrupt PNG");
+.\Project\Externals\imgui\dialog\stb\stb_image.h:5033: if (first) return stbi__err("first not IHDR", "Corrupt PNG");
+.\Project\Externals\imgui\dialog\stb\stb_image.h:5054: if (first) return stbi__err("first not IHDR", "Corrupt PNG");
+.\Project\Externals\imgui\dialog\stb\stb_image.h:5096: if (first) return stbi__err("first not IHDR", "Corrupt PNG");
+.\Project\Externals\imgui\dialog\stb\stb_image.h:5590: stbi__skip(s,4);       // skip index of first colormap entry and number of entries
+.\Project\Externals\imgui\dialog\stb\stb_image.h:5649: stbi__skip(s,4);       // skip index of first colormap entry and number of entries
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6374: stbi_uc first;
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6512: stbi__uint32 first;
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6519: first = 1;
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6526: g->codes[init_code].first = (stbi_uc) init_code;
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6555: first = 0;
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6562: if (first) {
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6573: p->first = g->codes[oldcode].first;
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6574: p->suffix = (code == avail) ? p->first : g->codes[code].first;
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6603: // on first frame, any non-written pixels get the background colour (non-transparent)
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6617: // background colour is only used for pixels that are not rendered first frame, after that "background"
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6692: g->step = 8 * g->line_size; // first interlaced spacing
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6710: // if this was the first frame,
+.\Project\Externals\imgui\dialog\stb\stb_image.h:6713: // if first frame, any pixel not drawn to gets the background color
+.\Project\Externals\imgui\dialog\stb\stb_image.h:7718: first released version
+.\Project\Externals\imgui\dialog\stb\stb_image_resize.h:169: 0.90 (2014-09-17) first released version
+.\Project\Externals\imgui-node-editor\crude_json.cpp:249: bool first = true;
+.\Project\Externals\imgui-node-editor\crude_json.cpp:252: if (!first) { context.out << ','; context.write_newline(); } else first = false;
+.\Project\Externals\imgui-node-editor\crude_json.cpp:254: context.out << '\"' << entry.first << "\":";
+.\Project\Externals\imgui-node-editor\crude_json.cpp:266: if (!first)
+.\Project\Externals\imgui-node-editor\crude_json.cpp:277: bool first = true;
+.\Project\Externals\imgui-node-editor\crude_json.cpp:280: if (!first) { context.out << ','; context.write_newline(); } else first = false;
+.\Project\Externals\imgui-node-editor\crude_json.cpp:291: if (!first)
+.\Project\Externals\imgui-node-editor\imgui_bezier_math.inl:609: cacheIt = cache.emplace(t, split_length).first;
+.\Project\Externals\imgui-node-editor\imgui_canvas.h:86: // same way ImGui do. To avoid `missing widgets` artifacts first
+.\Project\Externals\imgui-node-editor\imgui_node_editor.cpp:417: // hull, jump the next segment and reset the first-point
+.\Project\Externals\imgui-node-editor\imgui_node_editor.cpp:848: // Corners first, they may overlap other regions.
+.\Project\Externals\imgui-node-editor\imgui_node_editor.cpp:2100: auto first = container.cbegin();
+.\Project\Externals\imgui-node-editor\imgui_node_editor.cpp:2102: auto it    = std::lower_bound(first, last, key);
+.\Project\Externals\imgui-node-editor\imgui_node_editor.cpp:2890: auto id = deserializeObjectId(node.first.c_str()).AsNodeId();
+.\Project\Externals\magic_enum\magic_enum.hpp:525: if constexpr (custom.first == customize::detail::customize_tag::custom_tag) {
+.\Project\Externals\magic_enum\magic_enum.hpp:529: } else if constexpr (custom.first == customize::detail::customize_tag::invalid_tag) {
+.\Project\Externals\magic_enum\magic_enum.hpp:531: } else if constexpr (custom.first == customize::detail::customize_tag::default_tag) {
+.\Project\Externals\magic_enum\magic_enum.hpp:649: if constexpr (custom.first == customize::detail::customize_tag::custom_tag) {
+.\Project\Externals\magic_enum\magic_enum.hpp:653: } else if constexpr (custom.first == customize::detail::customize_tag::invalid_tag) {
+.\Project\Externals\magic_enum\magic_enum.hpp:655: } else if constexpr (custom.first == customize::detail::customize_tag::default_tag) {
+.\Project\Externals\magic_enum\magic_enum.hpp:688: if constexpr (custom.first == customize::detail::customize_tag::custom_tag) {
+.\Project\Externals\magic_enum\magic_enum.hpp:692: } else if constexpr (custom.first == customize::detail::customize_tag::default_tag) {
+.\Project\Externals\magic_enum\magic_enum.hpp:1061: auto first = values.begin() + static_cast<std::ptrdiff_t>(Page);
+.\Project\Externals\magic_enum\magic_enum.hpp:1063: while (first != last) {
+.\Project\Externals\magic_enum\magic_enum.hpp:1064: *fill++ = hash_v<Hash>(*first++);
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:105: constexpr ForwardIt lower_bound(ForwardIt first, ForwardIt last, E&& e, Cmp&& comp = {}) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:106: auto count = std::distance(first, last);
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:107: for (auto it = first; count > 0;) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:111: first = ++it;
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:117: return first;
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:122: const auto first = lower_bound(begin, end, e, comp);
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:123: return std::pair{first, lower_bound(std::make_reverse_iterator(end), std::make_reverse_iterator(first), e, [&comp](auto&& lhs, auto&& rhs) { return comp(rhs, lhs); }).base()};
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:165: [[nodiscard]] static constexpr const E* begin() noexcept { return indices.first.data(); }
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:167: [[nodiscard]] static constexpr const E* end() noexcept { return indices.first.data() + indices.first.size(); }
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:169: [[nodiscard]] static constexpr const E* it(std::size_t i) noexcept { return indices.first.data() + i; }
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:249: Iterator first;
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:269: : parent(other.parent), first(other.first), last(other.last), current(other.current), getter(other.getter), predicate(other.predicate) {}
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:272: : parent(p), first(std::move(begin)), last(std::move(end)), current(std::move(curr)), getter{std::move(get)}, predicate{std::move(pred)} {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:273: if (current == first && !predicate(parent, current)) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:298: } while (current != first && !predicate(parent, current));
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:870: constexpr set(InputIt first, InputIt last) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:871: while (first != last) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:872: insert(*first++);
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:949: constexpr iterator insert(const_iterator, const value_type& value) noexcept { return insert(value).first; }
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:954: constexpr void insert(InputIt first, InputIt last) noexcept {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:955: while (first != last) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:956: insert(*first++);
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:973: return emplace(std::forward<Args>(args)...).first;
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:981: constexpr iterator erase(const_iterator first, const_iterator last) noexcept {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:982: while ((first = erase(first)) != last) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:984: return first;
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1000: for (auto [first, last] = detail::equal_range(index_type::begin(), index_type::end(), x, key_compare{}); first != last;) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1001: c += erase(*first++);
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1017: for (auto [first, last] = detail::equal_range(index_type::begin(), index_type::end(), x, key_compare{}); first != last; ++first) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1018: c += count(*first);
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1032: for (auto [first, last] = detail::equal_range(index_type::begin(), index_type::end(), x, key_compare{}); first != last; ++first) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1033: if (a.test(*first)) {
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1034: return find(*first);
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1064: auto [first, last] = detail::equal_range(index_type::begin(), index_type::end(), x, key_compare{});
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1065: return first != last ? lower_bound(*first) : end();
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1077: auto [first, last] = detail::equal_range(index_type::begin(), index_type::end(), x, key_compare{});
+.\Project\Externals\magic_enum\magic_enum_containers.hpp:1078: return first != last ? upper_bound(*std::prev(last)) : end();
+.\Project\Externals\mono\metadata\assembly.h:97: * The hook are invoked from last hooked to first. If any of them returns
+.\Project\Externals\mono\metadata\profiler-events.h:7: * To #include this file, #define the following macros first:
+.\Project\Externals\nlohmann\json.hpp:2576: return ej_pair.first == e;                                                          \
+.\Project\Externals\nlohmann\json.hpp:2590: e = ((it != std::end(m)) ? it : std::begin(m))->first;                                  \
+.\Project\Externals\nlohmann\json.hpp:2975: for (auto pos = s.find(f);                // find first occurrence of f
+.\Project\Externals\nlohmann\json.hpp:4425: tokens.emplace_back(element.first.c_str());
+.\Project\Externals\nlohmann\json.hpp:4503: @note For an input with n bytes, 1 is the index of the first character and
+.\Project\Externals\nlohmann\json.hpp:4950: return value_type(p.first, p.second.template get<typename ConstructibleObjectType::mapped_type>());
+.\Project\Externals\nlohmann\json.hpp:5768: j = { p.first, p.second };
+.\Project\Externals\nlohmann\json.hpp:6222: std::istream flags; any input errors (e.g., EOF) will be detected by the first
+.\Project\Externals\nlohmann\json.hpp:6285: iterator_input_adapter(IteratorType first, IteratorType last)
+.\Project\Externals\nlohmann\json.hpp:6286: : current(std::move(first)), end(std::move(last))
+.\Project\Externals\nlohmann\json.hpp:6489: static adapter_type create(IteratorType first, IteratorType last)
+.\Project\Externals\nlohmann\json.hpp:6491: return adapter_type(std::move(first), std::move(last));
+.\Project\Externals\nlohmann\json.hpp:6513: static adapter_type create(IteratorType first, IteratorType last)
+.\Project\Externals\nlohmann\json.hpp:6515: return adapter_type(base_adapter_type(std::move(first), std::move(last)));
+.\Project\Externals\nlohmann\json.hpp:6521: typename iterator_input_adapter_factory<IteratorType>::adapter_type input_adapter(IteratorType first, IteratorType last)
+.\Project\Externals\nlohmann\json.hpp:6524: return factory_type::create(first, last);
+.\Project\Externals\nlohmann\json.hpp:6620: span_input_adapter(IteratorType first, IteratorType last)
+.\Project\Externals\nlohmann\json.hpp:6621: : ia(input_adapter(first, last)) {}
+.\Project\Externals\nlohmann\json.hpp:8622: // try to parse integers first and fall back to floats
+.\Project\Externals\nlohmann\json.hpp:8866: // the first character is not the beginning of the BOM; unget it to
+.\Project\Externals\nlohmann\json.hpp:10047: This function first reads starting bytes to determine the expected
+.\Project\Externals\nlohmann\json.hpp:10143: This function first reads starting bytes to determine the expected
+.\Project\Externals\nlohmann\json.hpp:10714: This function first reads starting bytes to determine the expected
+.\Project\Externals\nlohmann\json.hpp:10797: This function first reads starting bytes to determine the expected
+.\Project\Externals\nlohmann\json.hpp:11099: if (size_and_type.first != npos)
+.\Project\Externals\nlohmann\json.hpp:11105: for (std::size_t i = 0; i < size_and_type.first; ++i)
+.\Project\Externals\nlohmann\json.hpp:11117: for (std::size_t i = 0; i < size_and_type.first; ++i)
+.\Project\Externals\nlohmann\json.hpp:11378: result.first = npos; // size
+.\Project\Externals\nlohmann\json.hpp:11412: const bool is_error = get_ubjson_size_value(result.first, is_ndarray);
+.\Project\Externals\nlohmann\json.hpp:11427: const bool is_error = get_ubjson_size_value(result.first, is_ndarray);
+.\Project\Externals\nlohmann\json.hpp:11637: if (input_format == input_format_t::bjdata && size_and_type.first != npos && (size_and_type.second & (1 << 8)) != 0)
+.\Project\Externals\nlohmann\json.hpp:11642: return p.first < t;
+.\Project\Externals\nlohmann\json.hpp:11645: if (JSON_HEDLEY_UNLIKELY(it == bjd_types_map.end() || it->first != size_and_type.second))
+.\Project\Externals\nlohmann\json.hpp:11664: if (JSON_HEDLEY_UNLIKELY(!sax->key(key) || !sax->start_array(size_and_type.first) ))
+.\Project\Externals\nlohmann\json.hpp:11669: for (std::size_t i = 0; i < size_and_type.first; ++i)
+.\Project\Externals\nlohmann\json.hpp:11680: if (size_and_type.first != npos)
+.\Project\Externals\nlohmann\json.hpp:11682: if (JSON_HEDLEY_UNLIKELY(!sax->start_array(size_and_type.first)))
+.\Project\Externals\nlohmann\json.hpp:11691: for (std::size_t i = 0; i < size_and_type.first; ++i)
+.\Project\Externals\nlohmann\json.hpp:11702: for (std::size_t i = 0; i < size_and_type.first; ++i)
+.\Project\Externals\nlohmann\json.hpp:11743: if (input_format == input_format_t::bjdata && size_and_type.first != npos && (size_and_type.second & (1 << 8)) != 0)
+.\Project\Externals\nlohmann\json.hpp:11751: if (size_and_type.first != npos)
+.\Project\Externals\nlohmann\json.hpp:11753: if (JSON_HEDLEY_UNLIKELY(!sax->start_object(size_and_type.first)))
+.\Project\Externals\nlohmann\json.hpp:11760: for (std::size_t i = 0; i < size_and_type.first; ++i)
+.\Project\Externals\nlohmann\json.hpp:11775: for (std::size_t i = 0; i < size_and_type.first; ++i)
+.\Project\Externals\nlohmann\json.hpp:12247: // read first token
+.\Project\Externals\nlohmann\json.hpp:12571: // new value, we need to evaluate the new state first.
+.\Project\Externals\nlohmann\json.hpp:12625: // new value, we need to evaluate the new state first.
+.\Project\Externals\nlohmann\json.hpp:13062: @brief set the iterator to the first value
+.\Project\Externals\nlohmann\json.hpp:13596: return m_it.object_iterator->first;
+.\Project\Externals\nlohmann\json.hpp:14417: // first char should be between '1' and '9'
+.\Project\Externals\nlohmann\json.hpp:14491: // search for the first slash after the first character
+.\Project\Externals\nlohmann\json.hpp:14493: // set the beginning of the first reference token
+.\Project\Externals\nlohmann\json.hpp:14577: flatten(detail::concat(reference_string, '/', detail::escape(element.first)), element.second, result);
+.\Project\Externals\nlohmann\json.hpp:14633: json_pointer(element.first).get_and_create(result) = element.second;
+.\Project\Externals\nlohmann\json.hpp:15180: // The conversions below encode the sign in the first
+.\Project\Externals\nlohmann\json.hpp:15437: write_cbor(el.first);
+.\Project\Externals\nlohmann\json.hpp:15759: write_msgpack(el.first);
+.\Project\Externals\nlohmann\json.hpp:15969: write_number_with_ubjson_prefix(el.first.size(), true, use_bjdata);
+.\Project\Externals\nlohmann\json.hpp:15971: reinterpret_cast<const CharType*>(el.first.c_str()),
+.\Project\Externals\nlohmann\json.hpp:15972: el.first.size());
+.\Project\Externals\nlohmann\json.hpp:16303: return result += calc_bson_element_size(el.first, el.second);
+.\Project\Externals\nlohmann\json.hpp:16319: write_bson_element(el.first, el.second);
+.\Project\Externals\nlohmann\json.hpp:17960: @brief generates a decimal representation of the floating-point number value in [first, last).
+.\Project\Externals\nlohmann\json.hpp:17972: char* to_chars(char* first, const char* last, FloatType value)
+.\Project\Externals\nlohmann\json.hpp:17981: *first++ = '-';
+.\Project\Externals\nlohmann\json.hpp:17990: *first++ = '0';
+.\Project\Externals\nlohmann\json.hpp:17992: *first++ = '.';
+.\Project\Externals\nlohmann\json.hpp:17993: *first++ = '0';
+.\Project\Externals\nlohmann\json.hpp:17994: return first;
+.\Project\Externals\nlohmann\json.hpp:18000: JSON_ASSERT(last - first >= std::numeric_limits<FloatType>::max_digits10);
+.\Project\Externals\nlohmann\json.hpp:18008: dtoa_impl::grisu2(first, len, decimal_exponent, value);
+.\Project\Externals\nlohmann\json.hpp:18017: JSON_ASSERT(last - first >= kMaxExp + 2);
+.\Project\Externals\nlohmann\json.hpp:18018: JSON_ASSERT(last - first >= 2 + (-kMinExp - 1) + std::numeric_limits<FloatType>::max_digits10);
+.\Project\Externals\nlohmann\json.hpp:18019: JSON_ASSERT(last - first >= std::numeric_limits<FloatType>::max_digits10 + 6);
+.\Project\Externals\nlohmann\json.hpp:18021: return dtoa_impl::format_buffer(first, len, decimal_exponent, kMinExp, kMaxExp);
+.\Project\Externals\nlohmann\json.hpp:18142: // first n-1 elements
+.\Project\Externals\nlohmann\json.hpp:18148: dump_escaped(i->first, ensure_ascii);
+.\Project\Externals\nlohmann\json.hpp:18159: dump_escaped(i->first, ensure_ascii);
+.\Project\Externals\nlohmann\json.hpp:18171: // first n-1 elements
+.\Project\Externals\nlohmann\json.hpp:18176: dump_escaped(i->first, ensure_ascii);
+.\Project\Externals\nlohmann\json.hpp:18186: dump_escaped(i->first, ensure_ascii);
+.\Project\Externals\nlohmann\json.hpp:18215: // first n-1 elements
+.\Project\Externals\nlohmann\json.hpp:18237: // first n-1 elements
+.\Project\Externals\nlohmann\json.hpp:18527: // in case we saw this character the first time, we
+.\Project\Externals\nlohmann\json.hpp:19053: ordered_map(It first, It last, const Allocator& alloc = Allocator())
+.\Project\Externals\nlohmann\json.hpp:19054: : Container{first, last, alloc} {}
+.\Project\Externals\nlohmann\json.hpp:19062: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19077: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19088: return emplace(key, T{}).first->second;
+.\Project\Externals\nlohmann\json.hpp:19095: return emplace(std::forward<KeyType>(key), T{}).first->second;
+.\Project\Externals\nlohmann\json.hpp:19114: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19129: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19142: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19157: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19170: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19191: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19211: iterator erase(iterator first, iterator last)
+.\Project\Externals\nlohmann\json.hpp:19213: if (first == last)
+.\Project\Externals\nlohmann\json.hpp:19215: return first;
+.\Project\Externals\nlohmann\json.hpp:19218: const auto elements_affected = std::distance(first, last);
+.\Project\Externals\nlohmann\json.hpp:19219: const auto offset = std::distance(Container::begin(), first);
+.\Project\Externals\nlohmann\json.hpp:19225: // to first. We will need this later.
+.\Project\Externals\nlohmann\json.hpp:19229: //             first    last
+.\Project\Externals\nlohmann\json.hpp:19232: // We start at first and re-construct (viz. copy) the elements from
+.\Project\Externals\nlohmann\json.hpp:19233: // the back of the vector. Example for first iteration:
+.\Project\Externals\nlohmann\json.hpp:19241: for (auto it = first; std::next(it, elements_affected) != Container::end(); ++it)
+.\Project\Externals\nlohmann\json.hpp:19249: //             first    last
+.\Project\Externals\nlohmann\json.hpp:19256: //             first    last
+.\Project\Externals\nlohmann\json.hpp:19258: // first is now pointing past the last deleted element, but we cannot
+.\Project\Externals\nlohmann\json.hpp:19268: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19282: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19294: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19308: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19320: if (m_compare(it->first, key))
+.\Project\Externals\nlohmann\json.hpp:19330: return emplace(value.first, std::move(value.second));
+.\Project\Externals\nlohmann\json.hpp:19337: if (m_compare(it->first, value.first))
+.\Project\Externals\nlohmann\json.hpp:19351: void insert(InputIt first, InputIt last)
+.\Project\Externals\nlohmann\json.hpp:19353: for (auto it = first; it != last; ++it)
+.\Project\Externals\nlohmann\json.hpp:20208: // check if each element is an array with two elements whose first
+.\Project\Externals\nlohmann\json.hpp:20334: basic_json(InputIT first, InputIT last)
+.\Project\Externals\nlohmann\json.hpp:20336: JSON_ASSERT(first.m_object != nullptr);
+.\Project\Externals\nlohmann\json.hpp:20340: if (JSON_HEDLEY_UNLIKELY(first.m_object != last.m_object))
+.\Project\Externals\nlohmann\json.hpp:20345: // copy type from first iterator
+.\Project\Externals\nlohmann\json.hpp:20346: m_data.m_type = first.m_object->m_data.m_type;
+.\Project\Externals\nlohmann\json.hpp:20357: if (JSON_HEDLEY_UNLIKELY(!first.m_it.primitive_iterator.is_begin()
+.\Project\Externals\nlohmann\json.hpp:20360: JSON_THROW(invalid_iterator::create(204, "iterators out of range", first.m_object));
+.\Project\Externals\nlohmann\json.hpp:20378: m_data.m_value.number_integer = first.m_object->m_data.m_value.number_integer;
+.\Project\Externals\nlohmann\json.hpp:20384: m_data.m_value.number_unsigned = first.m_object->m_data.m_value.number_unsigned;
+.\Project\Externals\nlohmann\json.hpp:20390: m_data.m_value.number_float = first.m_object->m_data.m_value.number_float;
+.\Project\Externals\nlohmann\json.hpp:20396: m_data.m_value.boolean = first.m_object->m_data.m_value.boolean;
+.\Project\Externals\nlohmann\json.hpp:20402: m_data.m_value = *first.m_object->m_data.m_value.string;
+.\Project\Externals\nlohmann\json.hpp:20408: m_data.m_value.object = create<object_t>(first.m_it.object_iterator,
+.\Project\Externals\nlohmann\json.hpp:20415: m_data.m_value.array = create<array_t>(first.m_it.array_iterator,
+.\Project\Externals\nlohmann\json.hpp:20422: m_data.m_value = *first.m_object->m_data.m_value.binary;
+.\Project\Externals\nlohmann\json.hpp:20429: JSON_THROW(invalid_iterator::create(206, detail::concat("cannot construct with iterators from ", first.m_object->type_name()), first.m_object));
+.\Project\Externals\nlohmann\json.hpp:21435: return set_parent(result.first->second);
+.\Project\Externals\nlohmann\json.hpp:21488: return set_parent(result.first->second);
+.\Project\Externals\nlohmann\json.hpp:21694: /// @brief access the first element
+.\Project\Externals\nlohmann\json.hpp:21701: /// @brief access the first element
+.\Project\Externals\nlohmann\json.hpp:21801: IteratorType erase(IteratorType first, IteratorType last)
+.\Project\Externals\nlohmann\json.hpp:21804: if (JSON_HEDLEY_UNLIKELY(this != first.m_object || this != last.m_object))
+.\Project\Externals\nlohmann\json.hpp:21820: if (JSON_HEDLEY_LIKELY(!first.m_it.primitive_iterator.is_begin()
+.\Project\Externals\nlohmann\json.hpp:21848: result.m_it.object_iterator = m_data.m_value.object->erase(first.m_it.object_iterator,
+.\Project\Externals\nlohmann\json.hpp:21855: result.m_it.array_iterator = m_data.m_value.array->erase(first.m_it.array_iterator,
+.\Project\Externals\nlohmann\json.hpp:22068: /// @brief returns an iterator to the first element
+.\Project\Externals\nlohmann\json.hpp:22077: /// @brief returns an iterator to the first element
+.\Project\Externals\nlohmann\json.hpp:22084: /// @brief returns a const iterator to the first element
+.\Project\Externals\nlohmann\json.hpp:22153: /// @brief returns a const reverse iterator to one before the first
+.\Project\Externals\nlohmann\json.hpp:22473: set_parent(res.first->second);
+.\Project\Externals\nlohmann\json.hpp:22554: set_parent(res.first->second);
+.\Project\Externals\nlohmann\json.hpp:22558: it.m_it.object_iterator = res.first;
+.\Project\Externals\nlohmann\json.hpp:22634: iterator insert(const_iterator pos, const_iterator first, const_iterator last)
+.\Project\Externals\nlohmann\json.hpp:22649: if (JSON_HEDLEY_UNLIKELY(first.m_object != last.m_object))
+.\Project\Externals\nlohmann\json.hpp:22654: if (JSON_HEDLEY_UNLIKELY(first.m_object == this))
+.\Project\Externals\nlohmann\json.hpp:22660: return insert_iterator(pos, first.m_it.array_iterator, last.m_it.array_iterator);
+.\Project\Externals\nlohmann\json.hpp:22685: void insert(const_iterator first, const_iterator last)
+.\Project\Externals\nlohmann\json.hpp:22694: if (JSON_HEDLEY_UNLIKELY(first.m_object != last.m_object))
+.\Project\Externals\nlohmann\json.hpp:22700: if (JSON_HEDLEY_UNLIKELY(!first.m_object->is_object()))
+.\Project\Externals\nlohmann\json.hpp:22702: JSON_THROW(invalid_iterator::create(202, "iterators first and last must point to objects", this));
+.\Project\Externals\nlohmann\json.hpp:22705: m_data.m_value.object->insert(first.m_it.object_iterator, last.m_it.object_iterator);
+.\Project\Externals\nlohmann\json.hpp:22717: void update(const_iterator first, const_iterator last, bool merge_objects = false)
+.\Project\Externals\nlohmann\json.hpp:22733: if (JSON_HEDLEY_UNLIKELY(first.m_object != last.m_object))
+.\Project\Externals\nlohmann\json.hpp:22739: if (JSON_HEDLEY_UNLIKELY(!first.m_object->is_object()))
+.\Project\Externals\nlohmann\json.hpp:22741: JSON_THROW(type_error::create(312, detail::concat("cannot use update() with ", first.m_object->type_name()), first.m_object));
+.\Project\Externals\nlohmann\json.hpp:22744: for (auto it = first; it != last; ++it)
+.\Project\Externals\nlohmann\json.hpp:23331: static basic_json parse(IteratorType first,
+.\Project\Externals\nlohmann\json.hpp:23338: parser(detail::input_adapter(std::move(first), std::move(last)), cb, allow_exceptions, ignore_comments).parse(true, result);
+.\Project\Externals\nlohmann\json.hpp:23366: static bool accept(IteratorType first, IteratorType last,
+.\Project\Externals\nlohmann\json.hpp:23369: return parser(detail::input_adapter(std::move(first), std::move(last)), nullptr, false, ignore_comments).accept(true);
+.\Project\Externals\nlohmann\json.hpp:23399: static bool sax_parse(IteratorType first, IteratorType last, SAX* sax,
+.\Project\Externals\nlohmann\json.hpp:23404: auto ia = detail::input_adapter(std::move(first), std::move(last));
+.\Project\Externals\nlohmann\json.hpp:23680: static basic_json from_cbor(IteratorType first, IteratorType last,
+.\Project\Externals\nlohmann\json.hpp:23687: auto ia = detail::input_adapter(std::move(first), std::move(last));
+.\Project\Externals\nlohmann\json.hpp:23737: static basic_json from_msgpack(IteratorType first, IteratorType last,
+.\Project\Externals\nlohmann\json.hpp:23743: auto ia = detail::input_adapter(std::move(first), std::move(last));
+.\Project\Externals\nlohmann\json.hpp:23791: static basic_json from_ubjson(IteratorType first, IteratorType last,
+.\Project\Externals\nlohmann\json.hpp:23797: auto ia = detail::input_adapter(std::move(first), std::move(last));
+.\Project\Externals\nlohmann\json.hpp:23845: static basic_json from_bjdata(IteratorType first, IteratorType last,
+.\Project\Externals\nlohmann\json.hpp:23851: auto ia = detail::input_adapter(std::move(first), std::move(last));
+.\Project\Externals\nlohmann\json.hpp:23875: static basic_json from_bson(IteratorType first, IteratorType last,
+.\Project\Externals\nlohmann\json.hpp:23881: auto ia = detail::input_adapter(std::move(first), std::move(last));
+.\Project\Externals\nlohmann\json.hpp:24308: // first pass: traverse common elements
+.\Project\Externals\nlohmann\json.hpp:24352: // first pass: traverse this object's elements
+.\Project\Externals\spdlog\pattern_formatter-inl.h:817: const auto &key = pair.first;
+.\Project\Externals\spdlog\pattern_formatter-inl.h:966: cloned_custom_formatters[it.first] = it.second->clone();
+.\Project\Externals\spdlog\cfg\helpers-inl.h:68: rv[kv.first] = kv.second;
+.\Project\Externals\spdlog\cfg\helpers-inl.h:84: const auto &logger_name = name_level.first;
+.\Project\Externals\spdlog\details\periodic_worker.h:11: //    to finish first).
+.\Project\Externals\spdlog\details\registry-inl.h:232: auto logger_entry = log_levels_.find(logger.first);
+.\Project\Externals\spdlog\fmt\bin_to_hex.h:175: // put first byte without delimiter in front of it
+.\Project\Externals\spdlog\fmt\bundled\base.h:977: // Integer types should go first,
+.\Project\Externals\spdlog\fmt\bundled\base.h:1310: // that the range is non-empty and the first character is a digit.
+.\Project\Externals\spdlog\fmt\bundled\chrono.h:483: // Cannot use std::chrono::system_clock::to_time_t since this would first
+.\Project\Externals\spdlog\fmt\bundled\compile.h:65: constexpr auto first(const T& value, const Tail&...) -> const T& {
+.\Project\Externals\spdlog\fmt\bundled\compile.h:72: // Returns a reference to the argument at index N from [first, rest...].
+.\Project\Externals\spdlog\fmt\bundled\compile.h:74: constexpr auto get([[maybe_unused]] const T& first,
+.\Project\Externals\spdlog\fmt\bundled\compile.h:78: return first;
+.\Project\Externals\spdlog\fmt\bundled\compile.h:481: const auto& first = detail::first(args...);
+.\Project\Externals\spdlog\fmt\bundled\compile.h:483: remove_cvref_t<decltype(first)>>::value) {
+.\Project\Externals\spdlog\fmt\bundled\compile.h:484: return fmt::to_string(first.value);
+.\Project\Externals\spdlog\fmt\bundled\compile.h:486: return fmt::to_string(first);
+.\Project\Externals\spdlog\fmt\bundled\format-inl.h:1398: bool first = true;
+.\Project\Externals\spdlog\fmt\bundled\format-inl.h:1401: if (first) {
+.\Project\Externals\spdlog\fmt\bundled\format-inl.h:1403: first = false;
+.\Project\Externals\spdlog\fmt\bundled\format.h:772: * types with the first `SIZE` elements stored in the object itself. Most
+.\Project\Externals\spdlog\fmt\bundled\format.h:2579: // Insert a decimal point after the first digit and add an exponent.
+.\Project\Externals\spdlog\fmt\bundled\format.h:3196: // Compute the first several nonzero decimal significand digits.
+.\Project\Externals\spdlog\fmt\bundled\format.h:3197: // We call the number we get the first segment.
+.\Project\Externals\spdlog\fmt\bundled\format.h:3210: // The first segment can have 18 ~ 19 digits.
+.\Project\Externals\spdlog\fmt\bundled\format.h:3224: // Use Dragon4 only when there might be not enough digits in the first
+.\Project\Externals\spdlog\fmt\bundled\format.h:3249: // When precision > 0, we divide the first segment into three
+.\Project\Externals\spdlog\fmt\bundled\format.h:3267: // Print a 9-digits subsegment, either the first or the second.
+.\Project\Externals\spdlog\fmt\bundled\format.h:3306: // Print first subsegment.
+.\Project\Externals\spdlog\fmt\bundled\format.h:3309: // Perform rounding if the first subsegment is the last subsegment to
+.\Project\Externals\spdlog\fmt\bundled\format.h:3547: // Insert a decimal point after the first digit and add an exponent.
+.\Project\Externals\spdlog\fmt\bundled\os.h:294: // Makes fd be the copy of this file descriptor, closing fd first if
+.\Project\Externals\spdlog\fmt\bundled\os.h:298: // Makes fd be the copy of this file descriptor, closing fd first if
+.\Project\Externals\spdlog\fmt\bundled\printf.h:54: FMT_CONSTEXPR auto find(Ptr first, Ptr last, T value, Ptr& out) -> bool {
+.\Project\Externals\spdlog\fmt\bundled\printf.h:55: for (out = first; out != last; ++out) {
+.\Project\Externals\spdlog\fmt\bundled\printf.h:62: inline auto find<false, char>(const char* first, const char* last, char value,
+.\Project\Externals\spdlog\fmt\bundled\printf.h:65: static_cast<const char*>(memchr(first, value, to_unsigned(last - first)));
+.\Project\Externals\spdlog\sinks\qt_sinks.h:192: // remove first blocks if number of blocks exceeds max_lines
+.\Project\Externals\spdlog\sinks\tcp_sink.h:36: bool lazy_connect = false;  // if true connect on first log call instead of on construction
+.\SubProjects\CSharpLibrary\Scripts\Engine\MonoScript.cs:41: Debug.LogError("MonoBehavior.transform - Entity is not initialized. Please call InternalInitialize first.");
+.\SubProjects\CSharpLibrary\Scripts\Game\Boss\KingGeso\KingGeso.cs:379: Entity first = SpawnGesoAtPosition(center + firstOffset);
+.\SubProjects\CSharpLibrary\Scripts\Game\Boss\KingGeso\KingGeso.cs:382: if (first == null || second == null)
+.\SubProjects\CSharpLibrary\Scripts\Game\Boss\KingGeso\KingGeso.cs:384: DestroyActiveGeso(first);
+.\SubProjects\CSharpLibrary\Scripts\Game\Boss\KingGeso\KingGeso.cs:389: spawnedGesos.Add(first);

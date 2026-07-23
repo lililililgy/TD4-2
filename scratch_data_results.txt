@@ -1,0 +1,1142 @@
+.\Project\Engine\Asset\Assets\IAssetLoader.h:47: std::optional<T> Load(const std::string& /*filepath*/, Meta<typename T::MetaData> /*meta*/) {}
+.\Project\Engine\Asset\Assets\IAssetLoader.h:52: std::optional<T> Reload(const std::string& /*filepath*/, T* /*src*/, Meta<typename T::MetaData> /*meta*/) {}
+.\Project\Engine\Asset\Assets\IAssetLoader.h:57: Meta<typename T::MetaData> GetMetaData(const std::string& /*filepath*/) { return {}; }
+.\Project\Engine\Asset\Assets\Animation\AnimationClip.h:39: struct MetaData {
+.\Project\Engine\Asset\Assets\Animation\AnimationClipLoader.cpp:12: std::optional<AnimationClip> AssetLoader<AnimationClip>::Load(const std::string& filepath, typename Meta<AnimationClip::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Animation\AnimationClipLoader.cpp:76: std::optional<AnimationClip> AssetLoader<AnimationClip>::Reload(const std::string& filepath, AnimationClip* /*src*/, typename Meta<AnimationClip::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Animation\AnimationClipLoader.cpp:80: Meta<typename AnimationClip::MetaData> AssetLoader<AnimationClip>::GetMetaData(const std::string& filepath) {
+.\Project\Engine\Asset\Assets\Animation\AnimationClipLoader.cpp:83: return { base, AnimationClip::MetaData{} };
+.\Project\Engine\Asset\Assets\Animation\AnimationClipLoader.h:21: std::optional<AnimationClip> Load(const std::string& filepath, typename Meta<AnimationClip::MetaData> meta);
+.\Project\Engine\Asset\Assets\Animation\AnimationClipLoader.h:24: std::optional<AnimationClip> Reload(const std::string& filepath, AnimationClip* src, typename Meta<AnimationClip::MetaData> meta);
+.\Project\Engine\Asset\Assets\Animation\AnimationClipLoader.h:26: /// @brief MetaDataの取得を行う
+.\Project\Engine\Asset\Assets\Animation\AnimationClipLoader.h:27: Meta<typename AnimationClip::MetaData> GetMetaData(const std::string& filepath);
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.cpp:11: SoundDataUnload(&soundData_);
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.cpp:17: HRESULT result = audio->CreateSourceVoice(&sourceVoice, &soundData_.wfex);
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.cpp:22: const AudioStructs::SoundData& AudioClip::GetSoundData() {
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.cpp:23: return soundData_;
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.cpp:26: void SoundDataUnload(AudioStructs::SoundData* soundData) {
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.cpp:28: soundData->buffer.clear();
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.cpp:29: soundData->wfex = {};
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.h:43: struct SoundData {
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.h:58: struct MetaData {
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.h:75: const AudioStructs::SoundData& GetSoundData();
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.h:82: AudioStructs::SoundData soundData_;
+.\Project\Engine\Asset\Assets\AudioClip\AudioClip.h:87: void SoundDataUnload(AudioStructs::SoundData* soundData);
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:25: std::optional<AudioClip> AssetLoader<AudioClip>::Load(const std::string& filepath, Meta<AudioClip::MetaData> meta) {
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:78: AudioStructs::SoundData soundData{};
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:79: soundData.wfex = *waveFormat;
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:109: BYTE* pData = nullptr;
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:113: pBuffer->Lock(&pData, &maxLength, &currentLength);
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:115: soundData.buffer.insert(soundData.buffer.end(), pData, pData + currentLength);
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:124: audioClip.soundData_ = std::move(soundData);
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:131: std::optional<AudioClip> AssetLoader<AudioClip>::Reload(const std::string& filepath, AudioClip* /*src*/, Meta<AudioClip::MetaData> meta) {
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:136: Meta<AudioClip::MetaData> AssetLoader<AudioClip>::GetMetaData(const std::string& filepath) {
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:137: Meta<AudioClip::MetaData> res{};
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.cpp:157: AudioClip::MetaData data;
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.h:19: std::optional<AudioClip> Load(const std::string& filepath, Meta<typename AudioClip::MetaData> meta);
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.h:20: std::optional<AudioClip> Reload(const std::string& filepath, AudioClip* src = nullptr, Meta<typename AudioClip::MetaData> meta = {});
+.\Project\Engine\Asset\Assets\AudioClip\AudioClipLoader.h:22: Meta<typename AudioClip::MetaData> GetMetaData(const std::string& filepath);
+.\Project\Engine\Asset\Assets\Font\FontAsset.h:12: struct MetaData {
+.\Project\Engine\Asset\Assets\Font\FontAsset.h:21: std::vector<uint8_t> fontData;
+.\Project\Engine\Asset\Assets\Font\FontAssetLoader.h:17: std::optional<FontAsset> Load(const std::string& filepath, Meta<typename FontAsset::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Font\FontAssetLoader.h:28: fontAsset.fontData.resize(size);
+.\Project\Engine\Asset\Assets\Font\FontAssetLoader.h:29: if (file.read(reinterpret_cast<char*>(fontAsset.fontData.data()), size)) {
+.\Project\Engine\Asset\Assets\Font\FontAssetLoader.h:39: std::optional<FontAsset> Reload(const std::string& filepath, FontAsset* src, Meta<typename FontAsset::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Font\FontAssetLoader.h:42: src->fontData = std::move(fontOpt->fontData);
+.\Project\Engine\Asset\Assets\Font\FontAssetLoader.h:49: Meta<typename FontAsset::MetaData> GetMetaData(const std::string& filepath) {
+.\Project\Engine\Asset\Assets\Font\FontAssetLoader.h:50: Meta<typename FontAsset::MetaData> res{};
+.\Project\Engine\Asset\Assets\Material\Material.h:10: #include "Engine/Graphics/Buffer/Data/UVTransform.h"
+.\Project\Engine\Asset\Assets\Material\Material.h:42: struct MetaData {
+.\Project\Engine\Asset\Assets\Material\MaterialLoader.cpp:13: std::optional<Material> AssetLoader<Material>::Load(const std::string& filepath, Meta<Material::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Material\MaterialLoader.cpp:43: std::optional<Material> AssetLoader<Material>::Reload(const std::string& filepath, Material* /*src*/, Meta<Material::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Material\MaterialLoader.cpp:49: Meta<Material::MetaData> AssetLoader<Material>::GetMetaData(const std::string& filepath) {
+.\Project\Engine\Asset\Assets\Material\MaterialLoader.cpp:50: Meta<Material::MetaData> res{};
+.\Project\Engine\Asset\Assets\Material\MaterialLoader.cpp:70: Material::MetaData data;
+.\Project\Engine\Asset\Assets\Material\MaterialLoader.h:24: std::optional<Material> Load(const std::string& filepath, Meta<typename Material::MetaData> meta);
+.\Project\Engine\Asset\Assets\Material\MaterialLoader.h:31: std::optional<Material> Reload(const std::string& filepath, Material* src = nullptr, Meta<typename Material::MetaData> meta = {});
+.\Project\Engine\Asset\Assets\Material\MaterialLoader.h:33: Meta<typename Material::MetaData> GetMetaData(const std::string& filepath);
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:45: void MemcpyVertexData();
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:56: Vertex*                  mappingVertexData_;
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:102: const size_t kVertexDataSize = sizeof(Vertex);
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:105: vertexBuffer_.CreateResource(dxDevice, kVertexDataSize * vertices_.size());
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:107: vbv_.SizeInBytes = static_cast<UINT>(kVertexDataSize * vertices_.size());
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:108: vbv_.StrideInBytes = static_cast<UINT>(kVertexDataSize);
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:125: vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingVertexData_));
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:126: std::memcpy(mappingVertexData_, vertices_.data(), sizeof(Vertex) * vertices_.size());
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:132: uint32_t* mappingData = nullptr;
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:133: indexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData));
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:134: std::memcpy(mappingData, indices_.data(), sizeof(uint32_t) * indices_.size());
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:138: void Mesh<Vertex>::MemcpyVertexData() {
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:140: if(mappingVertexData_) {
+.\Project\Engine\Asset\Assets\Mesh\Mesh.h:141: std::memcpy(mappingVertexData_, vertices_.data(), sizeof(Vertex) * vertices_.size());
+.\Project\Engine\Asset\Assets\Mesh\Model.cpp:54: const std::vector<std::unordered_map<uint32_t, JointWeightData>>& Model::GetMeshJointWeightData() const {
+.\Project\Engine\Asset\Assets\Mesh\Model.cpp:55: return meshJointWeightData_;
+.\Project\Engine\Asset\Assets\Mesh\Model.cpp:58: std::vector<std::unordered_map<uint32_t, JointWeightData>>& Model::GetMeshJointWeightData() {
+.\Project\Engine\Asset\Assets\Mesh\Model.cpp:59: return meshJointWeightData_;
+.\Project\Engine\Asset\Assets\Mesh\Model.h:23: struct MetaData {
+.\Project\Engine\Asset\Assets\Mesh\Model.h:60: std::vector<std::unordered_map<uint32_t, JointWeightData>> meshJointWeightData_;
+.\Project\Engine\Asset\Assets\Mesh\Model.h:90: /// @brief アニメーションのJointWeightDataを取得 (メッシュごとのリスト)
+.\Project\Engine\Asset\Assets\Mesh\Model.h:91: const std::vector<std::unordered_map<uint32_t, JointWeightData>>& GetMeshJointWeightData() const;
+.\Project\Engine\Asset\Assets\Mesh\Model.h:92: std::vector<std::unordered_map<uint32_t, JointWeightData>>& GetMeshJointWeightData();
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:25: std::optional<Model> AssetLoader<Model>::Load(const std::string& filepath, Meta<Model::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:61: model.GetMeshJointWeightData().resize(scene->mNumMeshes);
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:103: JointWeightData& jointWeightData = model.GetMeshJointWeightData()[meshIndex][jointNameHash];
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:117: jointWeightData.matBindPoseInverse = matBindPose.Inverse();
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:122: jointWeightData.vertexWeights.push_back(
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:138: std::unique_ptr<Model::ModelMesh> meshData = std::make_unique<Model::ModelMesh>();
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:139: meshData->SetVertices(vertices);
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:140: meshData->SetIndices(indices);
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:143: meshData->CreateBuffer(pDxManager_->GetDxDevice());
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:145: model.AddMesh(std::move(meshData));
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:154: std::optional<Model> AssetLoader<Model>::Reload(const std::string& filepath, Model* /*src*/, Meta<Model::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:160: Meta<Model::MetaData> AssetLoader<Model>::GetMetaData(const std::string& filepath) {
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:161: Meta<Model::MetaData> res{};
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.cpp:181: Model::MetaData data;
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.h:27: std::optional<Model> Load(const std::string& filepath, typename Meta<Model::MetaData> meta);
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.h:34: std::optional<Model> Reload(const std::string& filepath, Model* src = nullptr, typename Meta<Model::MetaData> meta = {});
+.\Project\Engine\Asset\Assets\Mesh\ModelLoader.h:37: Meta<typename Model::MetaData> GetMetaData(const std::string& filepath);
+.\Project\Engine\Asset\Assets\Mesh\Skinning.cpp:174: const auto& jointWeights = model->GetMeshJointWeightData()[meshIndex];
+.\Project\Engine\Asset\Assets\Mesh\Skinning.cpp:176: for (const auto& [jointHash, weightData] : jointWeights) {
+.\Project\Engine\Asset\Assets\Mesh\Skinning.cpp:181: result.matBindPoseInverseArray[skeletonJointIndex] = weightData.matBindPoseInverse;
+.\Project\Engine\Asset\Assets\Mesh\Skinning.cpp:183: for (const auto& vertexWeight : weightData.vertexWeights) {
+.\Project\Engine\Asset\Assets\Mesh\Skinning.h:57: struct VertexWeightData {
+.\Project\Engine\Asset\Assets\Mesh\Skinning.h:63: struct JointWeightData {
+.\Project\Engine\Asset\Assets\Mesh\Skinning.h:65: std::vector<VertexWeightData> vertexWeights;
+.\Project\Engine\Asset\Assets\Mesh\Skinning.h:95: std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSRVHandle;
+.\Project\Engine\Asset\Assets\Shader\Shader.h:54: struct MetaData {
+.\Project\Engine\Asset\Assets\Shader\ShaderLoader.cpp:16: std::optional<Shader> AssetLoader<Shader>::Load(const std::string& filepath, Meta<Shader::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Shader\ShaderLoader.cpp:28: std::optional<Shader> AssetLoader<Shader>::Reload(const std::string& filepath, Shader* /*src*/, Meta<Shader::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Shader\ShaderLoader.cpp:33: Meta<Shader::MetaData> AssetLoader<Shader>::GetMetaData(const std::string& filepath) {
+.\Project\Engine\Asset\Assets\Shader\ShaderLoader.cpp:34: Meta<Shader::MetaData> res{};
+.\Project\Engine\Asset\Assets\Shader\ShaderLoader.cpp:54: Shader::MetaData data{};
+.\Project\Engine\Asset\Assets\Shader\ShaderLoader.h:25: std::optional<Shader> Load(const std::string& filepath, typename Meta<Shader::MetaData> meta);
+.\Project\Engine\Asset\Assets\Shader\ShaderLoader.h:26: std::optional<Shader> Reload(const std::string& filepath, Shader* src, typename Meta<Shader::MetaData> meta);
+.\Project\Engine\Asset\Assets\Shader\ShaderLoader.h:27: Meta<typename Shader::MetaData> GetMetaData(const std::string& filepath);
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:282: void* mappedData = nullptr;
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:283: readbackTexture_.Get()->Map(0, &range, &mappedData);
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:291: image.pixels = reinterpret_cast<uint8_t*>(mappedData);
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:654: std::vector<uint8_t> pixelData(slicePitch);
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:658: pixelData[index + 0] = 255; // R
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:659: pixelData[index + 1] = 255; // G
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:660: pixelData[index + 2] = 255; // B
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:661: pixelData[index + 3] = 255; // A
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:672: std::memcpy(img->pixels, pixelData.data(), slicePitch);
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:782: D3D12_SUBRESOURCE_DATA textureData = {};
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:783: textureData.pData = pixels;
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:784: textureData.RowPitch = static_cast<LONG_PTR>(width * 4);
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:785: textureData.SlicePitch = textureData.RowPitch * height;
+.\Project\Engine\Asset\Assets\Texture\Texture.cpp:788: UpdateSubresources(cmdList, dxResource_.Get(), uploadResource.Get(), 0, 0, 1, &textureData);
+.\Project\Engine\Asset\Assets\Texture\Texture.h:60: struct MetaData {
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:38: std::optional<Texture> AssetLoader<Texture>::Load(const std::string& filepath, Meta<Texture::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:61: std::optional<Texture> AssetLoader<Texture>::Reload(const std::string& filepath, Texture* src, Meta<Texture::MetaData> meta) {
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:84: Meta<Texture::MetaData> AssetLoader<Texture>::GetMetaData(const std::string& filepath) {
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:85: Meta<Texture::MetaData> res{};
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:105: Texture::MetaData data;
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:143: intermediateResource = UploadTextureData(texture.dxResource_.Get(), scratchImage);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:151: intermediateResource = UploadTextureData(texture.dxResource_.Get(), scratchImage);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:231: intermediateResource = UploadTextureData(texture.dxResource_.Get(), scratchImage);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:236: intermediateResource = UploadTextureData(texture.dxResource_.Get(), scratchImage);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:297: intermediateResource = UploadTextureData(texture.dxResource_.Get(), scratchImage);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:302: intermediateResource = UploadTextureData(texture.dxResource_.Get(), scratchImage);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:371: intermediateResource = UploadTextureData(texture.dxResource_.Get(), scratchImage);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:376: intermediateResource = UploadTextureData(texture.dxResource_.Get(), scratchImage);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.cpp:524: DxResource AssetLoader<Texture>::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipScratchImage) {
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.h:36: std::optional<Texture> Load(const std::string& filepath, typename Meta<Texture::MetaData> meta);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.h:41: std::optional<Texture> Reload(const std::string& filepath, Texture* src, typename Meta<Texture::MetaData> meta);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.h:43: /// @brief MetaDataの取得を行う
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.h:46: Meta<typename Texture::MetaData> GetMetaData(const std::string& filepath);
+.\Project\Engine\Asset\Assets\Texture\TextureLoader.h:111: DxResource UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipScratchImage);
+.\Project\Engine\Asset\Collection\AssetBundle.h:44: Meta<T::MetaData> meta = loader->GetMetaData(filepath);
+.\Project\Engine\Asset\Collection\AssetBundle.h:57: Meta<T::MetaData> meta = loader->GetMetaData(filepath);
+.\Project\Engine\Asset\Collection\AssetBundle.h:70: Meta<T::MetaData> meta = loader->GetMetaData(filepath);
+.\Project\Engine\Asset\Meta\MetaFile.cpp:158: nlohmann::json jData;
+.\Project\Engine\Asset\Meta\MetaFile.cpp:160: jData["shaderStage"] = "Vertex";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:161: jData["entryPoint"] = "main";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:162: jData["profile"] = "vs_6_0";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:164: jData["format"] = "RGBA8_UNORM";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:165: jData["colorSpace"] = "Linear";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:167: jData["scale"] = 1.0f;
+.\Project\Engine\Asset\Meta\MetaFile.cpp:169: jData["duration"] = 0.0f;
+.\Project\Engine\Asset\Meta\MetaFile.cpp:171: jData["useShader"] = "";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:172: jData["albedoColor"] = {1.0f, 1.0f, 1.0f, 1.0f};
+.\Project\Engine\Asset\Meta\MetaFile.cpp:173: jData["albedoTextureGuid"] = Guid::kInvalid.ToString();
+.\Project\Engine\Asset\Meta\MetaFile.cpp:174: jData["normalTextureGuid"] = Guid::kInvalid.ToString();
+.\Project\Engine\Asset\Meta\MetaFile.cpp:177: SaveMetaToFile(filepath, metaBase, jData);
+.\Project\Engine\Asset\Meta\MetaFile.cpp:194: nlohmann::json jData;
+.\Project\Engine\Asset\Meta\MetaFile.cpp:196: jData["shaderStage"] = "Vertex";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:197: jData["entryPoint"] = "main";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:198: jData["profile"] = "vs_6_0";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:200: jData["format"] = "RGBA8_UNORM";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:201: jData["colorSpace"] = "Linear";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:203: jData["scale"] = 1.0f;
+.\Project\Engine\Asset\Meta\MetaFile.cpp:205: jData["duration"] = 0.0f;
+.\Project\Engine\Asset\Meta\MetaFile.cpp:207: jData["useShader"] = "";
+.\Project\Engine\Asset\Meta\MetaFile.cpp:208: jData["albedoColor"] = {1.0f, 1.0f, 1.0f, 1.0f};
+.\Project\Engine\Asset\Meta\MetaFile.cpp:209: jData["albedoTextureGuid"] = Guid::kInvalid.ToString();
+.\Project\Engine\Asset\Meta\MetaFile.cpp:210: jData["normalTextureGuid"] = Guid::kInvalid.ToString();
+.\Project\Engine\Asset\Meta\MetaFile.cpp:213: SaveMetaToFile(filepath, metaBase, jData);
+.\Project\Engine\Asset\Meta\MetaFile.cpp:225: void SaveMetaToFile(const std::string& filepath, const MetaBase& metaBase, const nlohmann::json& jMetaData) {
+.\Project\Engine\Asset\Meta\MetaFile.cpp:233: for (auto it = jMetaData.begin(); it != jMetaData.end(); ++it) {
+.\Project\Engine\Asset\Meta\MetaFile.h:88: /// @param jMetaData アセット固有のメタデータ（JSON形式）
+.\Project\Engine\Asset\Meta\MetaFile.h:89: void SaveMetaToFile(const std::string& filepath, const MetaBase& metaBase, const nlohmann::json& jMetaData);
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:13: /// SRV Texture用のHeapData初期化
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:14: srvTextureHeapData_.usedIndex = 0;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:15: srvTextureHeapData_.startIndex = 0;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:16: srvTextureHeapData_.heapSize = textureHeapSize;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:18: /// UAV Texture用のHeapData初期化
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:19: uavTextureHeapData_.usedIndex = 0;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:20: uavTextureHeapData_.startIndex = textureHeapSize;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:21: uavTextureHeapData_.heapSize = textureHeapSize;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:23: /// Buffer用のHeapData初期化
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:24: bufferHeapData_.usedIndex = 0;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:25: bufferHeapData_.startIndex = textureHeapSize * 2;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:26: bufferHeapData_.heapSize = bufferHeapSize;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:44: if (srvTextureHeapData_.spaceIndex.size() > 0) {
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:45: uint32_t index = srvTextureHeapData_.spaceIndex.front();
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:46: srvTextureHeapData_.spaceIndex.pop_front();
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:51: if (srvTextureHeapData_.usedIndex >= srvTextureHeapData_.heapSize) {
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:57: uint32_t index = srvTextureHeapData_.usedIndex + srvTextureHeapData_.startIndex;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:58: ++srvTextureHeapData_.usedIndex;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:66: if (uavTextureHeapData_.spaceIndex.size() > 0) {
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:67: uint32_t index = uavTextureHeapData_.spaceIndex.front();
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:68: uavTextureHeapData_.spaceIndex.pop_front();
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:73: if (uavTextureHeapData_.usedIndex >= uavTextureHeapData_.heapSize) {
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:78: uint32_t index = uavTextureHeapData_.usedIndex + uavTextureHeapData_.startIndex;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:79: ++uavTextureHeapData_.usedIndex;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:87: if (bufferHeapData_.spaceIndex.size() > 0) {
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:88: uint32_t index = bufferHeapData_.spaceIndex.front();
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:89: bufferHeapData_.spaceIndex.pop_front();
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:94: if (bufferHeapData_.usedIndex >= bufferHeapData_.heapSize) {
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:99: uint32_t index = bufferHeapData_.usedIndex + bufferHeapData_.startIndex;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:100: ++bufferHeapData_.usedIndex;
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:107: gpuHandle.ptr += (descriptorSize_ * srvTextureHeapData_.startIndex);
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:113: cpuHandle.ptr += (descriptorSize_ * srvTextureHeapData_.startIndex);
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:119: gpuHandle.ptr += (descriptorSize_ * uavTextureHeapData_.startIndex);
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:125: cpuHandle.ptr += (descriptorSize_ * uavTextureHeapData_.startIndex);
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:131: gpuHandle.ptr += (descriptorSize_ * bufferHeapData_.startIndex);
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.cpp:137: cpuHandle.ptr += (descriptorSize_ * bufferHeapData_.startIndex);
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.h:13: struct HeapData {
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.h:78: HeapData srvTextureHeapData_; /// SRVのTexture用
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.h:79: HeapData uavTextureHeapData_; /// UAVのTexture用
+.\Project\Engine\Core\DirectX12\DescriptorHeap\DxSRVHeap.h:80: HeapData bufferHeapData_;
+.\Project\Engine\Core\DirectX12\GPUTimeStamp\GPUTimeStamp.cpp:73: pDxCommand_->GetCommandList()->ResolveQueryData(
+.\Project\Engine\Core\DirectX12\Resource\DxResource.cpp:275: HRESULT hr = object->GetPrivateData(WKPDID_D3DDebugObjectNameW, &size, nullptr);
+.\Project\Engine\Core\DirectX12\Resource\DxResource.cpp:282: hr = object->GetPrivateData(WKPDID_D3DDebugObjectNameW, &size, name.data());
+.\Project\Engine\Core\Event\FrameEventQueue.cpp:6: #include "GameEventData.h"
+.\Project\Engine\Core\Event\GameEventData.cpp:1: #include "GameEventData.h"
+.\Project\Engine\Core\Utility\FileSystem\FileSystem.h:13: using File = std::pair<std::string, std::string>;
+.\Project\Engine\Core\Utility\Font\FontAtlas.cpp:33: fontData_.resize(size);
+.\Project\Engine\Core\Utility\Font\FontAtlas.cpp:34: if (!file.read(reinterpret_cast<char*>(fontData_.data()), size)) {
+.\Project\Engine\Core\Utility\Font\FontAtlas.cpp:40: if (!stbtt_InitFont(&fontInfo_, fontData_.data(), 0)) {
+.\Project\Engine\Core\Utility\Font\FontAtlas.cpp:68: const GlyphData* FontAtlas::GetGlyph(uint32_t codepoint) {
+.\Project\Engine\Core\Utility\Font\FontAtlas.cpp:75: GlyphData newData;
+.\Project\Engine\Core\Utility\Font\FontAtlas.cpp:76: if (AddGlyphToAtlas(codepoint, newData)) {
+.\Project\Engine\Core\Utility\Font\FontAtlas.cpp:77: glyphs_[codepoint] = newData;
+.\Project\Engine\Core\Utility\Font\FontAtlas.cpp:112: bool FontAtlas::AddGlyphToAtlas(uint32_t codepoint, GlyphData& outGlyph) {
+.\Project\Engine\Core\Utility\Font\FontAtlas.h:12: struct GlyphData {
+.\Project\Engine\Core\Utility\Font\FontAtlas.h:44: std::vector<uint8_t> fontData_; // TTFファイルのバイナリデータを維持
+.\Project\Engine\Core\Utility\Font\FontAtlas.h:46: std::unordered_map<uint32_t, GlyphData> glyphs_;
+.\Project\Engine\Core\Utility\Font\FontAtlas.h:57: const GlyphData* GetGlyph(uint32_t codepoint);
+.\Project\Engine\Core\Utility\Font\FontAtlas.h:69: bool AddGlyphToAtlas(uint32_t codepoint, GlyphData& outGlyph);
+.\Project\Engine\Core\Utility\Font\FontRasterizer.cpp:94: if (!stbtt_InitFont(&font, fontAsset->fontData.data(), 0)) {
+.\Project\Engine\Core\Utility\Input\Gamepad.cpp:22: hr = gamepadDevice_->SetDataFormat(&c_dfDIKeyboard); ///< 標準形式
+.\Project\Engine\Core\Utility\Input\Keyboard.cpp:24: hr = keyboard_->SetDataFormat(&c_dfDIKeyboard); ///< 標準形式
+.\Project\Engine\Core\Utility\Input\Mouse.cpp:35: hr = mouse_->SetDataFormat(&c_dfDIMouse2); ///< 標準形式
+.\Project\Engine\Core\Utility\Time\CPUTimeStamp.cpp:11: timeStampData_[static_cast<size_t>(id)].beginTime = nowTime;
+.\Project\Engine\Core\Utility\Time\CPUTimeStamp.cpp:17: timeStampData_[static_cast<size_t>(id)].endTime = nowTime;
+.\Project\Engine\Core\Utility\Time\CPUTimeStamp.cpp:22: uint64_t time = timeStampData_[idx].endTime - timeStampData_[idx].beginTime;
+.\Project\Engine\Core\Utility\Time\CPUTimeStamp.h:18: timeStampData_.resize(static_cast<size_t>(CPUTimeStampID::Count));
+.\Project\Engine\Core\Utility\Time\CPUTimeStamp.h:48: struct TimeStampData {
+.\Project\Engine\Core\Utility\Time\CPUTimeStamp.h:53: std::vector<TimeStampData> timeStampData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:20: sphereData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:21: cubeData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:23: wireSphereData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:24: wireCubeData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:25: lineData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:27: sphere2DData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:28: cube2DData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:30: wireSphere2DData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:31: wireCube2DData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:32: line2DData_.reserve(maxInstanceCount_);
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:40: std::vector<Gizmo::SphereData> sphereData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:41: std::vector<Gizmo::CubeData>   cubeData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:44: std::vector<Gizmo::SphereData> wireSphereData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:45: std::vector<Gizmo::CubeData>   wireCubeData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:46: std::vector<Gizmo::LineData>   lineData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:49: std::vector<Gizmo::SphereData> sphere2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:50: std::vector<Gizmo::CubeData>   cube2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:53: std::vector<Gizmo::SphereData> wireSphere2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:54: std::vector<Gizmo::CubeData>   wireCube2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:55: std::vector<Gizmo::LineData>   line2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:73: const std::vector<Gizmo::SphereData>& Gizmo::GetSphereData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:74: return gGizmoSystem->sphereData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:77: const std::vector<Gizmo::SphereData>& Gizmo::GetWireSphereData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:78: return gGizmoSystem->wireSphereData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:81: const std::vector<Gizmo::CubeData>& Gizmo::GetCubeData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:82: return gGizmoSystem->cubeData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:85: const std::vector<Gizmo::CubeData>& Gizmo::GetWireCubeData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:86: return gGizmoSystem->wireCubeData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:89: const std::vector<Gizmo::LineData>& Gizmo::GetLineData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:90: return gGizmoSystem->lineData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:93: const std::vector<Gizmo::SphereData>& Gizmo::GetSphere2DData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:94: return gGizmoSystem->sphere2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:97: const std::vector<Gizmo::SphereData>& Gizmo::GetWireSphere2DData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:98: return gGizmoSystem->wireSphere2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:101: const std::vector<Gizmo::CubeData>& Gizmo::GetCube2DData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:102: return gGizmoSystem->cube2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:105: const std::vector<Gizmo::CubeData>& Gizmo::GetWireCube2DData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:106: return gGizmoSystem->wireCube2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:109: const std::vector<Gizmo::LineData>& Gizmo::GetLine2DData() {
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:110: return gGizmoSystem->line2DData_;
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:114: gGizmoSystem->sphereData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:115: gGizmoSystem->cubeData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:116: gGizmoSystem->wireSphereData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:117: gGizmoSystem->wireCubeData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:118: gGizmoSystem->lineData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:120: gGizmoSystem->sphere2DData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:121: gGizmoSystem->cube2DData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:122: gGizmoSystem->wireSphere2DData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:123: gGizmoSystem->wireCube2DData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:124: gGizmoSystem->line2DData_.clear();
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:131: gGizmoSystem->sphereData_.push_back({ position, radius, color });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:135: gGizmoSystem->wireSphereData_.push_back({ position, radius, color });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:139: gGizmoSystem->cubeData_.push_back({ position, size, rotate, color });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:143: gGizmoSystem->wireCubeData_.push_back({ position, size, rotate, color });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:148: gGizmoSystem->lineData_.push_back({ startPosition, endPosition, color, thickness });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:153: gGizmoSystem->lineData_.push_back({ position, position + direction, color, thickness });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:157: gGizmoSystem->sphere2DData_.push_back({ position, radius, color });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:161: gGizmoSystem->wireSphere2DData_.push_back({ position, radius, color });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:165: gGizmoSystem->cube2DData_.push_back({ position, size, rotate, color });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:169: gGizmoSystem->wireCube2DData_.push_back({ position, size, rotate, color });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:174: gGizmoSystem->line2DData_.push_back({ startPosition, endPosition, color, thickness });
+.\Project\Engine\Core\Utility\Tools\Gizmo.cpp:179: gGizmoSystem->line2DData_.push_back({ position, position + direction, color, thickness });
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:22: struct SphereData {
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:28: struct CubeData {
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:35: struct LineData {
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:55: static const std::vector<SphereData>& GetSphereData();
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:56: static const std::vector<SphereData>& GetWireSphereData();
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:57: static const std::vector<CubeData>& GetCubeData();
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:58: static const std::vector<CubeData>& GetWireCubeData();
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:59: static const std::vector<LineData>& GetLineData();
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:61: static const std::vector<SphereData>& GetSphere2DData();
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:62: static const std::vector<SphereData>& GetWireSphere2DData();
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:63: static const std::vector<CubeData>& GetCube2DData();
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:64: static const std::vector<CubeData>& GetWireCube2DData();
+.\Project\Engine\Core\Utility\Tools\Gizmo.h:65: static const std::vector<LineData>& GetLine2DData();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Agent\AgentIntentComponent.h:36: struct BatchData {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animation\AnimationPlayer.cpp:324: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animation\AnimationPlayer.cpp:325: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Animation\AnimationPlayer.cpp:326: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Audio\BGMPlayer.cpp:87: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Audio\BGMPlayer.cpp:88: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Audio\BGMPlayer.cpp:89: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Audio\SEPlayer.cpp:91: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Audio\SEPlayer.cpp:92: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Audio\SEPlayer.cpp:93: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Camera\CameraComponent.cpp:98: if(ImGui::Button("Copy Frustum Data to Clipboard")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Camera\CameraComponent.cpp:261: viewProjection_.SetMappedData(ViewProjection(matView_ * matProjection_, matView_, matProjection_));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Camera\CameraComponent.cpp:263: cameraPosBuffer_.SetMappedData(cameraPos);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Camera\CameraComponent.cpp:264: cBufferFogParams_.SetMappedData(fogParams_);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Camera\CameraComponent.cpp:309: viewProjection_.SetMappedData(ViewProjection(
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Camera\CameraComponent.cpp:315: cameraPosBuffer_.SetMappedData(cameraPos);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Camera\CameraComponent.cpp:318: cBufferFogParams_.SetMappedData(FogParams{});
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Camera\CameraComponent.cpp:382: return viewProjection_.GetMappingData();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Camera\CameraComponent.h:9: #include "Engine/Graphics/Buffer/Data/ViewProjection.h"
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:96: distanceEmitData_.emitDistance = interval;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:97: distanceEmitData_.emitInterval = interval;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:101: void Effect::SetEmitTypeDistance(const DistanceEmitData& data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:102: distanceEmitData_ = data;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:105: void Effect::SetEmitTypeTime(const TimeEmitData& data, size_t emitInstanceCount) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:107: timeEmitData_ = data;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:111: void Effect::SetEmitTypeTime(const TimeEmitData& data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:112: timeEmitData_ = data;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:140: mainModule_.SetSizeStartData(size);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:144: mainModule_.SetSizeStartData(std::make_pair(size1, size2));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:148: mainModule_.SetRotateStartData(rotate);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:152: mainModule_.SetRotateStartData(std::make_pair(rotate1, rotate2));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:156: mainModule_.SetColorStartData(color);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:160: mainModule_.SetColorStartData(std::make_pair(color1, color2));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:164: mainModule_.SetSpeedStartData(speed);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:168: mainModule_.SetSpeedStartData(std::make_pair(speed1, speed2));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:230: const Effect::DistanceEmitData& Effect::GetDistanceEmitData() const {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:231: return distanceEmitData_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:234: const Effect::TimeEmitData& Effect::GetTimeEmitData() const {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:235: return timeEmitData_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:261: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:264: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:265: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:291: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:294: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:295: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:329: std::pair<float, float> speed = mainModule->GetSpeedStartData();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:330: std::pair<Vector3, Vector3> size = mainModule->GetSizeStartData();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:331: std::pair<Vector3, Vector3> rotate = mainModule->GetRotateStartData();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:332: std::pair<Color, Color> color = mainModule->GetColorStartData();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:355: mainModule->SetSpeedStartData(speed);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:356: mainModule->SetSizeStartData(size);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:357: mainModule->SetRotateStartData(rotate);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.cpp:358: mainModule->SetColorStartData(color);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.h:55: struct DistanceEmitData final {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.h:66: struct TimeEmitData final {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.h:111: DistanceEmitData distanceEmitData_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.h:112: TimeEmitData timeEmitData_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.h:148: void SetEmitTypeDistance(const DistanceEmitData& data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.h:152: void SetEmitTypeTime(const TimeEmitData& data, size_t emitInstanceCount);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.h:153: void SetEmitTypeTime(const TimeEmitData& data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.h:227: const DistanceEmitData& GetDistanceEmitData() const;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\Effect.h:228: const TimeEmitData& GetTimeEmitData() const;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:30: struct ConstantData {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:31: ConstantData() = default;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:32: ConstantData(const T& data) : constant(data) {}
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:39: struct TwoConstantData {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:40: TwoConstantData() = default;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:41: TwoConstantData(const std::pair<T, T>& data) : constant(data) {}
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:42: TwoConstantData(const T& data1, const T& data2) : constant(std::make_pair(data1, data2)) {}
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:44: std::pair<T, T> constant{};
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:49: using Value = std::variant<ConstantData<T>, TwoConstantData<T>>;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:56: std::pair<T, T> GetValue(const Value<T>& value) const {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:57: return std::visit([](auto&& arg) -> std::pair<T, T> {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:59: if constexpr (std::is_same_v<ArgType, ConstantData<T>>) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:61: } else if constexpr (std::is_same_v<ArgType, TwoConstantData<T>>) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:87: Value<float> speedStartData_;    ///< 開始速度のデータ
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:88: Value<Vector3> sizeStartData_;   ///< 開始サイズのデータ
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:89: Value<Vector3> rotateStartData_; ///< 開始回転のデータ
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:90: Value<Color> colorStartData_;    ///< 開始色のデータ
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:109: void SetSpeedStartData(const ConstantData<float>& data) { speedStartData_ = data; }
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:110: void SetSpeedStartData(const TwoConstantData<float>& data) { speedStartData_ = data; }
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:112: void SetSizeStartData(const ConstantData<Vector3>& data) { sizeStartData_ = data; }
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:113: void SetSizeStartData(const TwoConstantData<Vector3>& data) { sizeStartData_ = data; }
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:115: void SetRotateStartData(const ConstantData<Vector3>& data) { rotateStartData_ = data; }
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:116: void SetRotateStartData(const TwoConstantData<Vector3>& data) { rotateStartData_ = data; }
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:118: void SetColorStartData(const ConstantData<Color>& data) { colorStartData_ = data; }
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:119: void SetColorStartData(const TwoConstantData<Color>& data) { colorStartData_ = data; }
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:124: std::pair<float, float> GetSpeedStartData() const {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:125: return GetValue(speedStartData_);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:128: std::pair<Vector3, Vector3> GetSizeStartData() const {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:129: return GetValue(sizeStartData_);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:132: std::pair<Vector3, Vector3> GetRotateStartData() const {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:133: return GetValue(rotateStartData_);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:136: std::pair<Color, Color> GetColorStartData() const {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Effect\MainModule\EffectMainModule.h:137: return GetValue(colorStartData_);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\ParticleSystem\ParticleSystem.h:4: #include "ParticleSystemData.h"
+.\Project\Engine\ECS\Component\Components\ComputeComponents\ParticleSystem2D\ParticleSystem2D.h:4: #include "../ParticleSystem/ParticleSystemData.h"
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:21: bool Script::ScriptData::GetEnable(GameEntity* _entity) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:43: void Script::ScriptData::SetEnable(GameEntity* _entity, bool _enable) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:81: ScriptData newScriptData;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:82: newScriptData.scriptName = _scriptName;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:85: scriptIndexMap_[_scriptName] = scriptDataList_.size();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:86: scriptDataList_.push_back(std::move(newScriptData));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:112: scriptDataList_.erase(scriptDataList_.begin() + index);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:116: if(_index < scriptDataList_.size()) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:117: return scriptDataList_[_index].scriptName;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:121: return scriptDataList_[0].scriptName;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:126: for(auto& script : scriptDataList_) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:133: const std::vector<Script::ScriptData>& Script::GetScriptDataList() const {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:134: return scriptDataList_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:137: std::vector<Script::ScriptData>& Script::GetScriptDataList() {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:138: return scriptDataList_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:141: Script::ScriptData* Script::GetScriptData(const std::string& _scriptName) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:142: for(auto& data : scriptDataList_) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:148: Console::LogError("Script::GetScriptData - Script " + _scriptName + " not found in GetScriptData.");
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:154: for(auto& script : scriptDataList_) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:169: for(auto& script : scriptDataList_) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:193: std::vector<Script::ScriptData>& scriptList = _script->GetScriptDataList();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:312: ImGui::SetDragDropPayload("ScriptData", &i, sizeof(int)); // i番目のインデックスを送る
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:319: if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ScriptData")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:320: int srcIndex = *(const int*)payload->Data;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:324: auto& list = _script->GetScriptDataList();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:328: auto& list = _script->GetScriptDataList();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:356: if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:357: if(payload->Data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:358: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:400: Script::ScriptData* scriptData = _s.GetScriptData(scriptName);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:401: if(scriptData) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:403: scriptData->enable = data.at("enable").get<int>();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:418: for(auto& scriptData : _s.GetScriptDataList()) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:420: { "enable", scriptData.enable },
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.cpp:421: { "name", scriptData.scriptName }
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.h:27: struct ScriptData {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.h:71: const std::vector<ScriptData>& GetScriptDataList() const;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.h:72: std::vector<ScriptData>& GetScriptDataList();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.h:73: ScriptData* GetScriptData(const std::string& scriptName);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Script\Script.h:92: std::vector<ScriptData> scriptDataList_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\ShadowCaster\ShadowCaster.h:12: #include "Engine/Graphics/Buffer/Data/ViewProjection.h"
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Terrain.cpp:188: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Terrain.cpp:189: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Terrain.cpp:190: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Terrain.cpp:370: GPUMaterial Terrain::GetMaterialData() {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Terrain.h:124: GPUMaterial GetMaterialData();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\TerrainCollider.cpp:116: TerrainVertex* gpuData = nullptr;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\TerrainCollider.cpp:117: dxReadbackBuffer.Get()->Map(0, nullptr, reinterpret_cast<void**>(&gpuData));
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\TerrainCollider.cpp:127: row.push_back(gpuData[z * width + x]);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.cpp:59: IComponent* component = *(IComponent**)payload->Data;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.cpp:109: void GrassField::SetupRenderingData(Asset::AssetCollection* assetCollection) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.cpp:134: materialBuffer_.SetMappedData(gpuMaterial);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.cpp:142: uint32_t mappedData = i * oneDrawInstanceCount;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.cpp:143: startIndexBuffer_.SetMappedData(i, mappedData);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.cpp:169: StructuredBuffer<GrassData>& GrassField::GetRwGrassInstanceBuffer() {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.h:14: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.h:41: struct GrassData {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.h:87: void SetupRenderingData(Asset::AssetCollection* assetCollection);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.h:100: StructuredBuffer<GrassData> rwGrassInstanceBuffer_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\Grass\GrassField.h:120: StructuredBuffer<GrassData>& GetRwGrassInstanceBuffer();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\River\River.cpp:253: void River::SetBufferData() {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\River\River.cpp:255: controlPointBuf_.SetMappedData(i, controlPoints_[i]);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\River\River.cpp:261: paramBuf_.SetMappedData({
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\River\River.cpp:269: void River::SetMaterialData(int32_t entityId, int32_t texIndex) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\River\River.cpp:270: materialBuffer_.SetMappedData({
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\River\River.h:13: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\River\River.h:89: void SetBufferData();
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\River\River.h:92: /// @brief MaterialDataをセットする
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Terrain\River\River.h:95: void SetMaterialData(int32_t entityId, int32_t texIndex);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:267: std::vector<Editor::ModifyTransformCommand::Data> data;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:303: std::vector<Editor::ModifyTransformCommand::Data> data;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.cpp:335: std::vector<Editor::ModifyTransformCommand::Data> data;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Transform\Transform.h:42: struct BufferData final {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\UI\UIElementComponent.h:33: struct BatchData {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\UI\UIGroupComponent.h:36: struct BatchData {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Variables\Variables.cpp:640: for (const auto& data : script->GetScriptDataList()) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Variables\Variables.cpp:671: for (const auto& data : script->GetScriptDataList()) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\Variables\Variables.cpp:708: for (const auto& data : script->GetScriptDataList()) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:152: if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:153: if(payload->Data) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:154: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:286: vt->cBufferEditInfo_.SetMappedData({ uint32_t(radius), strength, uint32_t(vt->materialId_) });
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:528: sBufferChunks_.SetMappedData(i, GPUData::Chunk{ static_cast<uint32_t>(texture->GetSRVDescriptorIndex()) });
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:531: sBufferChunks_.SetMappedData(i, GPUData::Chunk{ static_cast<uint32_t>(frontTex->GetSRVDescriptorIndex()) });
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:541: cBufferTerrainInfo_.SetMappedData(GPUData::VoxelTerrainInfo{ terrainOrigin, 0, textureSize_, 0, chunkSize_, 0, chunkCountXZ_, maxChunkCount_, isoLevel_ });
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:545: cBufferLODInfo_.SetMappedData(lodInfo_);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:554: cBufferUsedTextureIds_.SetMappedData(usedTextureIds_);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:561: sBufferChunks_.SetMappedData(i, GPUData::Chunk{ static_cast<uint32_t>(texture->GetSRVDescriptorIndex()) });
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:564: sBufferChunks_.SetMappedData(i, GPUData::Chunk{ static_cast<uint32_t>(frontTex->GetSRVDescriptorIndex()) });
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:613: cBufferMaterial_.SetMappedData(
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:636: cBufferCliffMaterial_.SetMappedData(
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:658: cBufferTerrainInfo_.SetMappedData(
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:659: GPUData::VoxelTerrainInfo{
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:688: void VoxelTerrain::SetupEditorBuffers(ID3D12GraphicsCommandList* cmdList, const std::array<UINT, 5> rootParamIndices, const GPUData::InputInfo& inputInfo) {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:690: cBufferInputInfo_.SetMappedData(inputInfo);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:698: cBufferBitMask_.SetMappedData(editBitMask_);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:703: sBufferEditorChunks_.SetMappedData(i, GPUData::Chunk{ static_cast<uint32_t>(chunks_[i].uavTexture.GetUAVDescriptorIndex()) });
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:838: return cBufferEditInfo_.GetMappingData().brushRadius;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.cpp:845: return cBufferEditInfo_.GetMappingData().strength;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:15: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:86: namespace GPUData {
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:252: void SetupEditorBuffers(ID3D12GraphicsCommandList* cmdList, const std::array<UINT, 5> rootParamIndices, const GPUData::InputInfo& inputInfo);
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:290: ConstantBuffer<GPUData::VoxelTerrainInfo> cBufferTerrainInfo_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:291: StructuredBuffer<GPUData::Chunk>          sBufferChunks_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:292: StructuredBuffer<GPUData::Chunk>          sBufferEditorChunks_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:293: ConstantBuffer<GPUData::LODInfo>          cBufferLODInfo_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:296: ConstantBuffer<GPUData::UsedTextureIds>   cBufferUsedTextureIds_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:306: GPUData::LODInfo lodInfo_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:307: GPUData::UsedTextureIds usedTextureIds_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:311: ConstantBuffer<GPUData::InputInfo> cBufferInputInfo_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:312: ConstantBuffer<GPUData::EditInfo>  cBufferEditInfo_;
+.\Project\Engine\ECS\Component\Components\ComputeComponents\VoxelTerrain\VoxelTerrain.h:321: ConstantBuffer<GPUData::MarchingCube> cBufferMarchingCubeInfo_;
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\CustomMeshRenderer.cpp:22: mesh_.MemcpyVertexData();
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\CustomMeshRenderer.h:10: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\DissolveMeshRenderer.cpp:36: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\DissolveMeshRenderer.cpp:37: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\DissolveMeshRenderer.cpp:38: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\DissolveMeshRenderer.cpp:86: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\DissolveMeshRenderer.cpp:87: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\DissolveMeshRenderer.cpp:88: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\DissolveMeshRenderer.h:10: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.cpp:31: void MeshRenderer::SetupRenderData(Asset::AssetCollection* assetCollection) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.cpp:199: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.cpp:200: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.cpp:201: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.cpp:262: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.cpp:265: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.cpp:266: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.h:11: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.h:12: #include "Engine/Graphics/Buffer/Data/UVTransform.h"
+.\Project\Engine\ECS\Component\Components\RendererComponents\Mesh\MeshRenderer.h:64: void SetupRenderData(Asset::AssetCollection* assetCollection);
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.cpp:9: renderingData_.vertices.reserve(32);
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.cpp:18: if (renderingData_.vertices.size() < lineCount_ * 2 + 2) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.cpp:19: renderingData_.vertices.resize(lineCount_ * 2 + 2);
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.cpp:22: renderingData_.vertices[lineCount_ * 2 + 0].position = { start.x, start.y, 0.0f, 1.0f };
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.cpp:23: renderingData_.vertices[lineCount_ * 2 + 1].position = { end.x,   end.y,   0.0f, 1.0f };
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.cpp:25: renderingData_.vertices[lineCount_ * 2 + 0].color = color;
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.cpp:26: renderingData_.vertices[lineCount_ * 2 + 1].color = color;
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.h:35: Line2DRenderingPipeline::RenderingData renderingData_;
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.h:43: const Line2DRenderingPipeline::RenderingData& GetRenderingData() const { return renderingData_; }
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line2DRenderer.h:44: Line2DRenderingPipeline::RenderingData* GetRenderingDataPtr() { return &renderingData_; }
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line3DRenderer.h:35: std::vector<Line3DRenderingPipeline::VertexData> vertices_;
+.\Project\Engine\ECS\Component\Components\RendererComponents\Primitive\Line3DRenderer.h:43: const std::vector<Line3DRenderingPipeline::VertexData>& GetVertices() const { return vertices_; }
+.\Project\Engine\ECS\Component\Components\RendererComponents\SkinMesh\SkinMeshRenderer.cpp:254: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\SkinMesh\SkinMeshRenderer.cpp:257: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\SkinMesh\SkinMeshRenderer.cpp:258: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\RendererComponents\SkinMesh\SkinMeshRenderer.cpp:305: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\SkinMesh\SkinMeshRenderer.cpp:308: if (payload->Data) {
+.\Project\Engine\ECS\Component\Components\RendererComponents\SkinMesh\SkinMeshRenderer.cpp:309: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\ECS\Component\Components\RendererComponents\Sprite\SpriteRenderer.h:11: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\ECS\Component\Components\RendererComponents\Sprite\SpriteRenderer.h:15: #include "Engine/Graphics/Buffer/Data/UVTransform.h"
+.\Project\Engine\ECS\Component\Components\RendererComponents\Text\TextRenderer.cpp:269: std::vector<const GlyphData*> glyphs;
+.\Project\Engine\ECS\Component\Components\RendererComponents\Text\TextRenderer.cpp:289: const GlyphData* glyph = atlas->GetGlyph(cp);
+.\Project\Engine\ECS\Component\Components\RendererComponents\Text\TextRenderer.cpp:346: const GlyphData* glyph = glyphs[line.startGlyphIdx + gIdx];
+.\Project\Engine\ECS\Component\Components\RendererComponents\Text\TextRenderer.h:11: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\ECS\Component\Components\RendererComponents\Text\TextRenderer.h:15: #include "Engine/Graphics/Buffer/Data/UVTransform.h"
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:35: #include "Engine/Graphics/Buffer/Data/UVTransform.h"
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:293: auto* data = static_cast<AgentIntentComponent::BatchData*>(element);
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:341: auto* data = static_cast<UIGroupComponent::BatchData*>(element);
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:357: auto* data = static_cast<UIElementComponent::BatchData*>(element);
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:460: auto* data = static_cast<AgentIntentComponent::BatchData*>(element);
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:522: auto* data = static_cast<UIGroupComponent::BatchData*>(element);
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:536: auto* data = static_cast<UIElementComponent::BatchData*>(element);
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:829: if (className == "AgentIntentComponent") return sizeof(AgentIntentComponent::BatchData);
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:832: if (className == "UIGroupComponent") return sizeof(UIGroupComponent::BatchData);
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:833: if (className == "UIElementComponent") return sizeof(UIElementComponent::BatchData);
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:882: Register(mono_class_from_name(monoImage, "", "AgentIntentComponent"), ApplyAgentIntent, FetchAgentIntent, sizeof(AgentIntentComponent::BatchData));
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:885: Register(mono_class_from_name(monoImage, "", "UIGroupComponent"), ApplyUIGroup, FetchUIGroup, sizeof(UIGroupComponent::BatchData));
+.\Project\Engine\ECS\EntityComponentSystem\ComponentApplyFunc.cpp:886: Register(mono_class_from_name(monoImage, "", "UIElementComponent"), ApplyUIElement, FetchUIElement, sizeof(UIElementComponent::BatchData));
+.\Project\Engine\ECS\EntityComponentSystem\ECSGroup.h:116: Editor::EntityDataInputCommand componentInputCommand_;
+.\Project\Engine\ECS\EntityComponentSystem\EntityComponentSystem.cpp:470: Script::ScriptData* data = script->GetScriptData(scriptName);
+.\Project\Engine\ECS\System\AI\AISystem.cpp:30: std::vector<AgentIntentComponent::BatchData> batchData(usedComponents.size(), { 0 });
+.\Project\Engine\ECS\System\AI\AISystem.cpp:32: batchData[i].compId = usedComponents[i]->id;
+.\Project\Engine\ECS\System\AI\AISystem.cpp:35: // 2. Call C# to let it fill the batchData buffer
+.\Project\Engine\ECS\System\AI\AISystem.cpp:36: MonoScriptEngine::GetInstance().UpdateAiIntents(batchData.data(), static_cast<int>(batchData.size()), Time::DeltaTime(), ecs->GetGroupName());
+.\Project\Engine\ECS\System\AI\AISystem.cpp:42: if (usedComponents[i]->id == batchData[i].compId) {
+.\Project\Engine\ECS\System\AI\AISystem.cpp:43: usedComponents[i]->desiredMoveDirection = batchData[i].desiredMoveDirection;
+.\Project\Engine\ECS\System\AI\AISystem.cpp:44: usedComponents[i]->desiredRotation = batchData[i].desiredRotation;
+.\Project\Engine\ECS\System\AI\AISystem.cpp:45: usedComponents[i]->rotationSpeed = batchData[i].rotationSpeed;
+.\Project\Engine\ECS\System\AI\AISystem.cpp:46: usedComponents[i]->useDesiredRotation = (batchData[i].useDesiredRotation != 0);
+.\Project\Engine\ECS\System\AI\AISystem.cpp:47: usedComponents[i]->isAttacking = (batchData[i].isAttacking != 0);
+.\Project\Engine\ECS\System\AI\AISystem.cpp:48: usedComponents[i]->targetEntityId = batchData[i].targetEntityId;
+.\Project\Engine\ECS\System\Audio\AudioPlaybackSystem.cpp:365: const Asset::AudioStructs::SoundData& soundData = bgm->pAudioClip_->GetSoundData();
+.\Project\Engine\ECS\System\Audio\AudioPlaybackSystem.cpp:367: buffer.pAudioData = soundData.buffer.data();
+.\Project\Engine\ECS\System\Audio\AudioPlaybackSystem.cpp:368: buffer.AudioBytes = static_cast<UINT32>(soundData.buffer.size());
+.\Project\Engine\ECS\System\Audio\AudioPlaybackSystem.cpp:406: const Asset::AudioStructs::SoundData& soundData = se->pAudioClip_->GetSoundData();
+.\Project\Engine\ECS\System\Audio\AudioPlaybackSystem.cpp:408: buffer.pAudioData = soundData.buffer.data();
+.\Project\Engine\ECS\System\Audio\AudioPlaybackSystem.cpp:409: buffer.AudioBytes = static_cast<UINT32>(soundData.buffer.size());
+.\Project\Engine\ECS\System\Audio\AudioPlaybackSystem.cpp:429: const Asset::AudioStructs::SoundData& soundData = audioClip->GetSoundData();
+.\Project\Engine\ECS\System\Audio\AudioPlaybackSystem.cpp:431: buffer.pAudioData = soundData.buffer.data();
+.\Project\Engine\ECS\System\Audio\AudioPlaybackSystem.cpp:432: buffer.AudioBytes = static_cast<UINT32>(soundData.buffer.size());
+.\Project\Engine\ECS\System\CameraUpdate\CameraUpdateSystem.cpp:63: const std::array<std::pair<int, int>, kEdgeCount> edges = { {
+.\Project\Engine\ECS\System\CameraUpdate\CameraUpdateSystem.cpp:69: using Line = std::pair<Vector3, Vector3>;
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:24: struct hash<std::pair<int, int>> {
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:25: std::size_t operator()(const std::pair<int, int>& p) const {
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:120: using EntityIdPair = std::pair<int, int>;
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:233: std::vector<std::pair<int32_t, int32_t>> enterIds;
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:268: auto& data = scriptComponent->GetScriptDataList();
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:314: std::vector<std::pair<int32_t, int32_t>> stayIds;
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:349: auto& data = scriptComponent->GetScriptDataList();
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:393: std::vector<std::pair<int32_t, int32_t>> exitIds;
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.cpp:428: auto& data = scriptComponent->GetScriptDataList();
+.\Project\Engine\ECS\System\Collision\Collision2DSystem.h:48: using CollisionPair = std::pair<class GameEntity*, class GameEntity*>;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:23: struct hash<std::pair<int, int>> {
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:24: std::size_t operator()(const std::pair<int, int>& p) const {
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:130: using EntityIdPair = std::pair<int, int>;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:256: std::vector<std::pair<int32_t, int32_t>> enterIds;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:291: auto& data = scriptComponent->GetScriptDataList();
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:340: std::vector<std::pair<int32_t, int32_t>> stayIds;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:375: auto& data = scriptComponent->GetScriptDataList();
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:423: std::vector<std::pair<int32_t, int32_t>> exitIds;
+.\Project\Engine\ECS\System\Collision\CollisionSystem.cpp:458: auto& data = scriptComponent->GetScriptDataList();
+.\Project\Engine\ECS\System\Collision\CollisionSystem.h:60: using CollisionPair = std::pair<class GameEntity*, class GameEntity*>;
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:63: Effect::DistanceEmitData& data = effect->distanceEmitData_;
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:77: std::pair<Vector3, Vector3> size = effect->mainModule_.GetValue<Vector3>(effect->mainModule_.sizeStartData_);
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:78: std::pair<Vector3, Vector3> rotate = effect->mainModule_.GetValue<Vector3>(effect->mainModule_.rotateStartData_);
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:79: std::pair<Color, Color> color = effect->mainModule_.GetValue<Color>(effect->mainModule_.colorStartData_);
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:80: std::pair<float, float> speed = effect->mainModule_.GetValue<float>(effect->mainModule_.speedStartData_);
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:103: Effect::TimeEmitData& data = effect->timeEmitData_;
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:112: std::pair<Vector3, Vector3> size = effect->mainModule_.GetValue<Vector3>(effect->mainModule_.sizeStartData_);
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:113: std::pair<Vector3, Vector3> rotate = effect->mainModule_.GetValue<Vector3>(effect->mainModule_.rotateStartData_);
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:114: std::pair<Color, Color> color = effect->mainModule_.GetValue<Color>(effect->mainModule_.colorStartData_);
+.\Project\Engine\ECS\System\EffectUpdateSystem\EffectUpdateSystem.cpp:115: std::pair<float, float> speed = effect->mainModule_.GetValue<float>(effect->mainModule_.speedStartData_);
+.\Project\Engine\ECS\System\ScriptUpdateSystem\ScriptUpdateSystem.cpp:52: for (auto& data : script->GetScriptDataList()) {
+.\Project\Engine\ECS\System\ScriptUpdateSystem\ScriptUpdateSystem.cpp:97: for (auto& data : script->GetScriptDataList()) {
+.\Project\Engine\ECS\System\ScriptUpdateSystem\ScriptUpdateSystem.cpp:189: auto scriptDataListCopy = script->GetScriptDataList();
+.\Project\Engine\ECS\System\ScriptUpdateSystem\ScriptUpdateSystem.cpp:190: for(size_t i = 0; i < scriptDataListCopy.size(); ++i) {
+.\Project\Engine\ECS\System\ScriptUpdateSystem\ScriptUpdateSystem.cpp:191: auto& data = scriptDataListCopy[i];
+.\Project\Engine\ECS\System\ScriptUpdateSystem\ScriptUpdateSystem.cpp:200: if (currentScript && i < currentScript->GetScriptDataList().size()) {
+.\Project\Engine\ECS\System\ScriptUpdateSystem\ScriptUpdateSystem.cpp:201: currentScript->GetScriptDataList()[i].isAdded = true;
+.\Project\Engine\ECS\System\UI\UIHierarchySystem.cpp:180: for (auto& data : script->GetScriptDataList()) {
+.\Project\Engine\ECS\System\UI\UIHierarchySystem.cpp:191: for (auto& data : groupScript->GetScriptDataList()) {
+.\Project\Engine\Editor\Clipboard\Clipboard.h:14: class IClipboardData {
+.\Project\Engine\Editor\Clipboard\Clipboard.h:19: virtual ~IClipboardData() = default;
+.\Project\Engine\Editor\Clipboard\Clipboard.h:21: virtual std::unique_ptr<IClipboardData> Clone() const = 0;
+.\Project\Engine\Editor\Clipboard\Clipboard.h:28: class ClipboardData : public IClipboardData {
+.\Project\Engine\Editor\Clipboard\Clipboard.h:34: ClipboardData(const T& data) {
+.\Project\Engine\Editor\Clipboard\Clipboard.h:35: jsonData = data;
+.\Project\Engine\Editor\Clipboard\Clipboard.h:44: std::unique_ptr<IClipboardData> Clone() const override {
+.\Project\Engine\Editor\Clipboard\Clipboard.h:45: T v = jsonData.get<T>();
+.\Project\Engine\Editor\Clipboard\Clipboard.h:46: return std::make_unique<ClipboardData<T>>(v);
+.\Project\Engine\Editor\Clipboard\Clipboard.h:50: value = jsonData.get<T>();
+.\Project\Engine\Editor\Clipboard\Clipboard.h:59: nlohmann::json jsonData;
+.\Project\Engine\Editor\Clipboard\Clipboard.h:74: data_ = std::make_unique<ClipboardData<T>>(value);
+.\Project\Engine\Editor\Clipboard\Clipboard.h:81: ClipboardData<T>* typedData = static_cast<ClipboardData<T>*>(data_.get());
+.\Project\Engine\Editor\Clipboard\Clipboard.h:82: return typedData->GetValue();
+.\Project\Engine\Editor\Clipboard\Clipboard.h:88: bool HasData() const {
+.\Project\Engine\Editor\Clipboard\Clipboard.h:93: const std::type_info& GetDataType() const {
+.\Project\Engine\Editor\Clipboard\Clipboard.h:105: std::unique_ptr<IClipboardData> data_;
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.cpp:26: EntityDataOutputCommand::EntityDataOutputCommand(GameEntity* entity) {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.cpp:31: EDITOR_STATE EntityDataOutputCommand::Execute() {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.cpp:50: EDITOR_STATE EntityDataOutputCommand::Undo() {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.cpp:59: EntityDataInputCommand::EntityDataInputCommand(GameEntity* entity) : pEntity_(entity) {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.cpp:63: EDITOR_STATE EntityDataInputCommand::Execute() {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.cpp:84: EDITOR_STATE EntityDataInputCommand::Undo() {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.cpp:88: void EntityDataInputCommand::SetEntity(GameEntity* entity) {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.h:27: class EntityDataOutputCommand : public IEditCommand {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.h:29: EntityDataOutputCommand(ONEngine::GameEntity* entity);
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.h:30: ~EntityDataOutputCommand() override = default;
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.h:44: class EntityDataInputCommand : public IEditCommand {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.h:46: EntityDataInputCommand() = default;
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.h:47: EntityDataInputCommand(ONEngine::GameEntity* entity);
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentEditCommands.h:48: ~EntityDataInputCommand() override = default;
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:249: e.SetEmitTypeDistance(j.at("distanceEmitData").get<Effect::DistanceEmitData>());
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:250: e.SetEmitTypeTime(j.at("timeEmitData").get<Effect::TimeEmitData>());
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:266: { "distanceEmitData", e.GetDistanceEmitData() },
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:267: { "timeEmitData", e.GetTimeEmitData() },
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:274: void ONEngine::from_json(const nlohmann::json& j, Effect::DistanceEmitData& e) {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:279: void ONEngine::to_json(nlohmann::json& j, const Effect::DistanceEmitData& e) {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:286: void ONEngine::from_json(const nlohmann::json& j, Effect::TimeEmitData& e) {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:291: void ONEngine::to_json(nlohmann::json& j, const Effect::TimeEmitData& e) {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:300: e.SetSpeedStartData(j.at("startSpeed").get<std::pair<float, float>>());
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:301: e.SetSizeStartData(j.at("startSize").get<std::pair<Vector3, Vector3>>());
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:302: e.SetRotateStartData(j.at("startRotate").get<std::pair<Vector3, Vector3>>());
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:303: e.SetColorStartData(j.at("startColor").get<std::pair<Color, Color>>());
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:310: { "startSpeed", e.GetSpeedStartData() },
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:311: { "startSize", e.GetSizeStartData() },
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:312: { "startRotate", e.GetRotateStartData() },
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.cpp:313: { "startColor", e.GetColorStartData() },
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.h:64: void from_json(const nlohmann::json& j, Effect::DistanceEmitData& e);
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.h:65: void to_json(nlohmann::json& j, const Effect::DistanceEmitData& e);
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.h:66: void from_json(const nlohmann::json& j, Effect::TimeEmitData& e);
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ComponentJsonConverter.h:67: void to_json(nlohmann::json& j, const Effect::TimeEmitData& e);
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ModifyTransformCommand.h:19: struct Data {
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ModifyTransformCommand.h:25: ModifyTransformCommand(Target target, const std::vector<Data>& data)
+.\Project\Engine\Editor\Commands\ComponentEditCommands\ModifyTransformCommand.h:65: std::vector<Data> data_;
+.\Project\Engine\Editor\Commands\WorldEditorCommands\WorldEditorCommands.cpp:414: EditCommand::SetClipboardData(entityJson_);
+.\Project\Engine\Editor\Commands\WorldEditorCommands\WorldEditorCommands.cpp:417: nlohmann::json* copiedEntity = EditCommand::GetClipboardData<nlohmann::json>();
+.\Project\Engine\Editor\Commands\WorldEditorCommands\WorldEditorCommands.cpp:439: nlohmann::json* copiedEntity = EditCommand::GetClipboardData<nlohmann::json>();
+.\Project\Engine\Editor\EditorCompute\GameEntityPicking\GameEntityPickingPipeline.cpp:69: cbufPickingParams_.SetMappedData({ mousePosNorm });
+.\Project\Engine\Editor\EditorCompute\GameEntityPicking\GameEntityPickingPipeline.cpp:96: ReadbackPickingData(dxCommand, out);
+.\Project\Engine\Editor\EditorCompute\GameEntityPicking\GameEntityPickingPipeline.cpp:117: void Editor::GameEntityPickingPipeline::ReadbackPickingData(ONEngine::DxCommand* dxCommand, Picking& outPickingData) {
+.\Project\Engine\Editor\EditorCompute\GameEntityPicking\GameEntityPickingPipeline.cpp:163: void* mappedData = nullptr;
+.\Project\Engine\Editor\EditorCompute\GameEntityPicking\GameEntityPickingPipeline.cpp:165: hr = readbackBuffer->Map(0, &readRange, &mappedData);
+.\Project\Engine\Editor\EditorCompute\GameEntityPicking\GameEntityPickingPipeline.cpp:168: memcpy(&outPickingData, mappedData, sizeof(Picking));
+.\Project\Engine\Editor\EditorCompute\GameEntityPicking\GameEntityPickingPipeline.h:45: void ReadbackPickingData(ONEngine::DxCommand* dxCommand, Picking& outPickingData);
+.\Project\Engine\Editor\EditorCompute\Grass\GrassArrangementPipeline.cpp:65: usedTexIdBuffer_.SetMappedData(UsedTextureIDs{ grassArrangementTexId, terrainVertexTexId });
+.\Project\Engine\Editor\EditorCompute\River\RiverMeshGeneratePipeline.cpp:78: river->SetBufferData();
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.cpp:1: #include "TerrainDataOutput.h"
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.cpp:12: TerrainDataOutput::TerrainDataOutput() {}
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.cpp:13: TerrainDataOutput::~TerrainDataOutput() {}
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.cpp:15: void TerrainDataOutput::Initialize(ONEngine::ShaderCompiler* shaderCompiler, ONEngine::DxManager* dxm) {
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.cpp:22: shader.CompileShader(L"./Packages/Shader/Editor/TerrainDataOutput.cs.hlsl", L"cs_6_6", ONEngine::Shader::Type::cs);
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.cpp:48: void TerrainDataOutput::Execute(ONEngine::EntityComponentSystem* ecs, ONEngine::DxCommand* dxCommand, ONEngine::Asset::AssetCollection* /*assetCollection*/) {
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.cpp:77: terrainSize_.SetMappedData({ width, height });
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.h:16: class TerrainDataOutput : public IEditorCompute {
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.h:30: TerrainDataOutput();
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainDataOutput.h:31: ~TerrainDataOutput() override;
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainVertexCreator.cpp:93: terrainSize_.SetMappedData(TerrainSize{ width, depth });
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainVertexEditorCompute.cpp:87: terrainInfo_.SetMappedData(TerrainInfo{ pTerrain->GetOwner()->GetId() });
+.\Project\Engine\Editor\EditorCompute\TerrainEditor\TerrainVertexEditorCompute.cpp:96: inputInfo_.SetMappedData(
+.\Project\Engine\Editor\EditorCompute\VoxelTerrainEditor\VoxelTerrainEditorComputePipeline.cpp:146: ONEngine::GPUData::InputInfo inputInfo{};
+.\Project\Engine\Editor\EditorCompute\VoxelTerrainEditor\VoxelTerrainEditorComputePipeline.cpp:294: cBufferMouseUV_.SetMappedData(mouseUV);
+.\Project\Engine\Editor\Manager\EditCommand.h:37: static void SetClipboardData(const T& data) {
+.\Project\Engine\Editor\Manager\EditCommand.h:42: static T* GetClipboardData() {
+.\Project\Engine\Editor\Manager\EditorManager.cpp:15: #include "Engine/Editor/EditorCompute/TerrainEditor/TerrainDataOutput.h"
+.\Project\Engine\Editor\Manager\EditorManager.cpp:68: //AddEditorCompute(dxm, sc, std::make_unique<TerrainDataOutput>());
+.\Project\Engine\Editor\Manager\ImGuiManager.cpp:760: ImGui_ImplDX12_RenderDrawData(
+.\Project\Engine\Editor\Manager\ImGuiManager.cpp:761: ImGui::GetDrawData(),
+.\Project\Engine\Editor\Math\AssetDebugger.cpp:11: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\Editor\Math\AssetDebugger.cpp:59: if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\Editor\Math\AssetDebugger.cpp:60: if(payload->Data) {
+.\Project\Engine\Editor\Math\AssetDebugger.cpp:61: AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
+.\Project\Engine\Editor\Math\AssetDebugger.cpp:80: if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\Editor\Math\AssetDebugger.cpp:81: if(payload->Data) {
+.\Project\Engine\Editor\Math\AssetDebugger.cpp:82: AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:601: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:602: AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:723: if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:724: AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:770: struct CallbackUserData { std::string* text; };
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:771: auto callback = [](ImGuiInputTextCallbackData* data) -> int {
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:773: auto* user = static_cast<CallbackUserData*>(data->UserData);
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:779: CallbackUserData userData = { text };
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:780: return ImGui::InputText(label, text->data(), text->capacity() + 1, flags, callback, &userData);
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:786: struct CallbackUserData { std::string* text; };
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:787: auto callback = [](ImGuiInputTextCallbackData* data) -> int {
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:789: auto* user = static_cast<CallbackUserData*>(data->UserData);
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:795: CallbackUserData userData = { text };
+.\Project\Engine\Editor\Math\ImGuiMath.cpp:796: return ImGui::InputTextWithHint(label, hint, text->data(), text->capacity() + 1, flags, callback, &userData);
+.\Project\Engine\Editor\Math\ImGuiMath.h:14: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\Editor\Math\DragDrop\DragDrop.cpp:33: ImGui::SetDragDropPayload("AssetData", &assetPtr, sizeof(AssetPayload*));
+.\Project\Engine\Editor\Math\DragDrop\DragDrop.cpp:42: if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\Editor\Math\DragDrop\DragDrop.cpp:44: if(payload->Data) {
+.\Project\Engine\Editor\Math\DragDrop\DragDrop.cpp:45: result = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:18: struct MetaReflection<ONEngine::Asset::Texture::MetaData> {
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:20: using T = ONEngine::Asset::Texture::MetaData;
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:33: struct MetaReflection<ONEngine::Asset::Model::MetaData> {
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:35: using T = ONEngine::Asset::Model::MetaData;
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:47: struct MetaReflection<ONEngine::Asset::Material::MetaData> {
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:49: using T = ONEngine::Asset::Material::MetaData;
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:64: struct MetaReflection<ONEngine::Asset::Shader::MetaData> {
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:66: using T = ONEngine::Asset::Shader::MetaData;
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:80: struct MetaReflection<ONEngine::Asset::AudioClip::MetaData> {
+.\Project\Engine\Editor\Math\MetaData\AssetMetaReflection.h:82: using T = ONEngine::Asset::AudioClip::MetaData;
+.\Project\Engine\Editor\Views\EditorViewCollection.cpp:21: #include "Engine/Core/Event/GameEventData.h"
+.\Project\Engine\Editor\Views\Windows\Develop\AnimationEditorWindow.h:21: std::vector<std::pair<int, int>> itemFrames;
+.\Project\Engine\Editor\Views\Windows\Develop\GameEventEditorWindow.h:4: #include "Engine/Core/Event/GameEventData.h"
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:127: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:128: const AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:221: config.userFileAttributes = [](IGFD::FileInfos* infos, IGFD::UserDatas /*userDatas*/) -> bool {
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:308: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("EntityData")) {
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:309: ONEngine::GameEntity** srcEntityPtr = static_cast<ONEngine::GameEntity**>(payload->Data);
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:412: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("EntityData")) {
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:413: ONEngine::GameEntity** srcEntityPtr = static_cast<ONEngine::GameEntity**>(payload->Data);
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:647: if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("EntityData")) {
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:648: ONEngine::GameEntity** srcEntityPtr = static_cast<ONEngine::GameEntity**>(payload->Data);
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:656: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:657: const AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:671: ImGui::SetDragDropPayload("EntityData", entityPtr, sizeof(ONEngine::GameEntity**));
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:676: if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("EntityData")) {
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:677: ONEngine::GameEntity** srcEntityPtr = static_cast<ONEngine::GameEntity**>(payload->Data);
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:689: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\Editor\Views\Windows\Develop\HierarchyWindow.cpp:690: const AssetPayload* assetPayload = *static_cast<AssetPayload**>(payload->Data);
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:27: #include "Engine/Editor/Math/MetaData/AssetMetaReflection.h"
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:186: if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("AssetData")) {
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:187: if (payload->Data) {
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:188: Editor::AssetPayload* assetPayload = *static_cast<Editor::AssetPayload**>(payload->Data);
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:343: pEditorManager_->ExecuteCommand<EntityDataOutputCommand>(entity);
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:347: pEditorManager_->ExecuteCommand<EntityDataInputCommand>(entity);
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:832: static ONEngine::Asset::Texture::MetaData meta{};
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:837: static ONEngine::Asset::AudioClip::MetaData meta{};
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:842: static ONEngine::Asset::Material::MetaData meta{};
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:847: static ONEngine::Asset::Shader::MetaData meta{};
+.\Project\Engine\Editor\Views\Windows\Develop\InspectorWindow.cpp:852: static ONEngine::Asset::Model::MetaData meta{};
+.\Project\Engine\Editor\Views\Windows\Develop\ProjectWindow.cpp:728: ImGui::SetDragDropPayload("AssetData", &assetPtr, sizeof(AssetPayload*));
+.\Project\Engine\Editor\Views\Windows\Develop\UIEditorWindow.cpp:1545: std::vector<std::pair<GameEntity*, json>> entityLoads;
+.\Project\Engine\Graphics\Buffer\ByteAddressBuffer.cpp:47: bufferResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappedData_));
+.\Project\Engine\Graphics\Buffer\ByteAddressBuffer.cpp:48: mappedDataArray_ = { mappedData_, bufferSize_ };
+.\Project\Engine\Graphics\Buffer\ByteAddressBuffer.cpp:51: void ByteAddressBuffer::SetMappedData(size_t index, uint32_t value) {
+.\Project\Engine\Graphics\Buffer\ByteAddressBuffer.cpp:53: mappedDataArray_[index] = value;
+.\Project\Engine\Graphics\Buffer\ByteAddressBuffer.h:37: void SetMappedData(size_t index, uint32_t value);
+.\Project\Engine\Graphics\Buffer\ByteAddressBuffer.h:54: uint32_t*                   mappedData_;
+.\Project\Engine\Graphics\Buffer\ByteAddressBuffer.h:55: std::span<uint32_t>         mappedDataArray_;
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:20: ConstantBuffer() : mappingData_(nullptr) {}
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:43: T* mappingData_;
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:51: /// @brief mappingDataの設定
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:52: /// @param mappingData 設定するデータ
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:53: void SetMappedData(const T& mappingData);
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:55: /// @brief mappingDataの取得
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:57: const T& GetMappingData() const { return *mappingData_; }
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:70: mappingData_ = nullptr;
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:71: constantBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:72: SetMappedData(T{}); ///< 0クリア
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:86: inline void ConstantBuffer<T>::SetMappedData(const T& mappingData) {
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:87: if (mappingData_) {
+.\Project\Engine\Graphics\Buffer\ConstantBuffer.h:88: *mappingData_ = mappingData;
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:99: void SetMappedData(size_t index, const T& setValue);
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:100: const T& GetMappedData(size_t index) const;
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:125: T* mappedData_;
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:126: std::span<T>                mappedDataArray_;
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:208: bufferResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappedData_));
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:209: mappedDataArray_ = { mappedData_, bufferSize_ };
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:517: inline void StructuredBuffer<T>::SetMappedData(size_t index, const T& setValue) {
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:519: mappedDataArray_[index] = setValue;
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:523: inline const T& StructuredBuffer<T>::GetMappedData(size_t index) const {
+.\Project\Engine\Graphics\Buffer\StructuredBuffer.h:524: return mappedDataArray_[index];
+.\Project\Engine\Graphics\Buffer\VertexBuffer.h:59: T* mappingData_ = nullptr;
+.\Project\Engine\Graphics\Buffer\VertexBuffer.h:105: resource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
+.\Project\Engine\Graphics\Buffer\VertexBuffer.h:106: std::memcpy(mappingData_, vertices_.data(), sizeof(T) * vertices_.size());
+.\Project\Engine\Graphics\Buffer\VertexBuffer.h:182: if(mappingData_) {
+.\Project\Engine\Graphics\Buffer\VertexBuffer.h:183: mappingData_[index] = vertex;
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:67: lightCountBufferData_ = std::make_unique<ConstantBuffer<LightCountBufferData>>();
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:68: lightCountBufferData_->Create(dxm->GetDxDevice());
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:70: cameraBufferData_ = std::make_unique<ConstantBuffer<CameraBufferData>>();
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:71: cameraBufferData_->Create(dxm->GetDxDevice());
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:74: directionalLightBuffer_ = std::make_unique<StructuredBuffer<DirectionalLightBufferData>>();
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:77: pointLightBuffer_ = std::make_unique<StructuredBuffer<PointLightBufferData>>();
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:80: spotLightBuffer_ = std::make_unique<StructuredBuffer<SpotLightBufferData>>();
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:107: LightCountBufferData countData = {
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:113: lightCountBufferData_->SetMappedData(countData);
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:114: lightCountBufferData_->BindForComputeCommandList(command, 0);
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:117: directionalLightBuffer_->SetMappedData(i, {
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:127: pointLightBuffer_->SetMappedData(i, {
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:138: spotLightBuffer_->SetMappedData(i, {
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:154: cameraBufferData_->SetMappedData({ Math::ConvertToVector4(entity->GetPosition(), 1.0f) });
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.cpp:158: cameraBufferData_->BindForComputeCommandList(command, 1);
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:26: struct DirectionalLightBufferData final {
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:33: struct PointLightBufferData final {
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:41: struct SpotLightBufferData final {
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:52: struct LightCountBufferData final {
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:59: struct CameraBufferData final {
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:91: std::unique_ptr<ConstantBuffer<LightCountBufferData>> lightCountBufferData_;
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:92: std::unique_ptr<StructuredBuffer<DirectionalLightBufferData>> directionalLightBuffer_;
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:93: std::unique_ptr<StructuredBuffer<PointLightBufferData>> pointLightBuffer_;
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:94: std::unique_ptr<StructuredBuffer<SpotLightBufferData>> spotLightBuffer_;
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\Light\PostProcessLighting.h:95: std::unique_ptr<ConstantBuffer<CameraBufferData>> cameraBufferData_;
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\TerrainBrush\PostProcessTerrainBrush.cpp:93: brushBuffer_.SetMappedData(
+.\Project\Engine\Graphics\Pipelines\PostProcess\PerObject\VoxelTerrainBrush\PostProcessVoxelTerrainBrush.cpp:111: brushBuffer_.SetMappedData(
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\Fisheye\PostProcessFisheye.cpp:65: constantBuffer_.SetMappedData(FisheyeParams{
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\Fog\PostProcessFog.cpp:70: mainCamera->GetFogParamsBuffer().SetMappedData(fogParams);
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\Grayscale\PostProcessGrayscale.cpp:62: constantBuffer_.SetMappedData(GrayscaleParams{
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\Pixelate\PostProcessPixelate.cpp:63: constantBuffer_.SetMappedData(PixelateParams{
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\RadialBlur\PostProcessRadialBlur.cpp:64: constantBuffer_.SetMappedData(RadialBlurParams{
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\Shadow\PostProcessShadowApply.cpp:54: shadowParamBuffer_.SetMappedData(ShadowParameter{
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\Shadow\PostProcessShadowApply.cpp:129: shadowParamBuffer_.SetMappedData(shadowParams);
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\WaterCausticsLightShafts\PostProcessWaterCausticsLightShafts.cpp:131: paramsBuffer_.SetMappedData(params);
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\WaterColorGrading\PostProcessWaterColorGrading.cpp:128: paramsBuffer_.SetMappedData(params);
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\WaterDepthFogVignette\PostProcessWaterDepthFogVignette.cpp:131: paramsBuffer_.SetMappedData(params);
+.\Project\Engine\Graphics\Pipelines\PostProcess\Screen\WaterDistortion\PostProcessWaterDistortion.cpp:96: paramsBuffer_.SetMappedData(params);
+.\Project\Engine\Graphics\Pipelines\Render\Effect\EffectRenderingPipeline.cpp:152: materialBuffer_.SetMappedData(
+.\Project\Engine\Graphics\Pipelines\Render\Effect\EffectRenderingPipeline.cpp:159: textureIdBuffer_.SetMappedData(
+.\Project\Engine\Graphics\Pipelines\Render\Effect\EffectRenderingPipeline.cpp:165: transformBuffer_.SetMappedData(
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:58: vertexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(VertexData) * maxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:59: vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:62: vbv_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * maxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:63: vbv_.StrideInBytes = static_cast<UINT>(sizeof(VertexData));
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:73: const std::vector<Gizmo::SphereData>& wireSphere2D = Gizmo::GetWireSphere2DData();
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:74: const std::vector<Gizmo::CubeData>& wireCube2D = Gizmo::GetWireCube2DData();
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:75: const std::vector<Gizmo::LineData>& line2D = Gizmo::GetLine2DData();
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:82: std::vector<VertexData> passVertices;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:101: VertexData v[4];
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:129: std::memcpy(mappingData_, passVertices.data(), sizeof(VertexData) * passVertices.size());
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.cpp:137: vbv.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * passVertices.size());
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.h:34: GizmoPrimitive::VertexData* mappingData_;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo2DRenderingPipeline.h:35: std::vector<GizmoPrimitive::VertexData> vertices_;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:58: vertexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(VertexData) * maxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:59: vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:62: vbv_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * maxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:63: vbv_.StrideInBytes = static_cast<UINT>(sizeof(VertexData));
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:73: const std::vector<Gizmo::SphereData>& wireSphere3D = Gizmo::GetWireSphereData();
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:74: const std::vector<Gizmo::CubeData>& wireCube3D = Gizmo::GetWireCubeData();
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:75: const std::vector<Gizmo::LineData>& line3D = Gizmo::GetLineData();
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:82: std::vector<VertexData> passVertices;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:101: VertexData v[4];
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:129: std::memcpy(mappingData_, passVertices.data(), sizeof(VertexData) * passVertices.size());
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.cpp:137: vbv.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * passVertices.size());
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.h:35: GizmoPrimitive::VertexData* mappingData_;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\Gizmo3DRenderingPipeline.h:36: std::vector<GizmoPrimitive::VertexData> vertices_;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:12: void AddThickLineSegment(std::vector<VertexData>& out, const Vector3& v0, const Vector3& v1, const Vector4& color, float thickness) {
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:22: VertexData v[4];
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:45: std::vector<VertexData> ONEngine::GetSphereVertices(const Vector3& center, float radius, const Vector4& color, float thickness, size_t segment, bool is2D) {
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:47: std::vector<VertexData> outVertices;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:70: std::vector<VertexData> ONEngine::GetCubeVertices(const Vector3& center, const Vector3& size, const Quaternion& rotate, const Vector4& color, float thickness, bool is2D) {
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:72: std::vector<VertexData> outVertices;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:129: std::vector<GizmoPrimitive::VertexData> ONEngine::GetRectVertices(const Matrix4x4& matWorld, const Vector4& color, float thickness, const Vector2& rectSize) {
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:130: std::vector<GizmoPrimitive::VertexData> outVertices;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:150: std::vector<VertexData> ONEngine::GetLineVertices(const Vector3& v0, const Vector3& v1, const Vector4& color, float thickness) {
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.cpp:151: std::vector<VertexData> outVertices;
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.h:16: struct VertexData {
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.h:32: std::vector<GizmoPrimitive::VertexData> GetSphereVertices(const Vector3& center, float radius, const Vector4& color, float thickness = 1.0f, size_t segment = 24, bool is2D = false);
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.h:41: std::vector<GizmoPrimitive::VertexData> GetCubeVertices(const Vector3& center, const Vector3& size, const Quaternion& rotate, const Vector4& color, float thickness = 1.0f, bool is2D = false);
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.h:49: std::vector<GizmoPrimitive::VertexData> GetRectVertices(const Matrix4x4& matWorld, const Vector4& color, float thickness = 1.0f, const Vector2& rectSize = Vector2::One);
+.\Project\Engine\Graphics\Pipelines\Render\Gizmo\GizmoPrimitiveVertices.h:57: std::vector<GizmoPrimitive::VertexData> GetLineVertices(const Vector3& v0, const Vector3& v1, const Vector4& color, float thickness = 1.0f);
+.\Project\Engine\Graphics\Pipelines\Render\Grass\GrassRenderingPipeline.cpp:136: grass->SetupRenderingData(pAssetCollection_);
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\DissolveMeshRenderingPipeline.cpp:122: sbufMaterials_.SetMappedData(transformIndex, gpuMat);
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\DissolveMeshRenderingPipeline.cpp:123: sbufTextureIds_.SetMappedData(transformIndex, gpuMat.baseTextureId);
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\DissolveMeshRenderingPipeline.cpp:124: sbufTransforms_.SetMappedData(
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\DissolveMeshRenderingPipeline.cpp:127: sbufDissolveParams_.SetMappedData(
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\DissolveMeshRenderingPipeline.h:9: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\MeshRenderingPipeline.cpp:185: renderer->SetupRenderData(pAssetCollection_);
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\MeshRenderingPipeline.cpp:192: materialBuffer->SetMappedData(
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\MeshRenderingPipeline.cpp:197: textureIdBuffer->SetMappedData(
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\MeshRenderingPipeline.cpp:203: transformBuffer->SetMappedData(
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\MeshRenderingPipeline.h:15: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\MeshRenderingPipeline.h:46: struct RenderingData final {
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.cpp:56: pipeline_->AddDescriptorRange(0, 1, D3D12_DESCRIPTOR_RANGE_TYPE_SRV);    /// Range 0: InstanceData (t0)
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.cpp:60: pipeline_->AddDescriptorTable(D3D12_SHADER_VISIBILITY_ALL, 0);    /// 2: InstanceData
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.cpp:83: instanceDataBuffer_.Create(static_cast<uint32_t>(kMaxInstances), dxm->GetDxDevice(), dxm->GetDxSRVHeap());
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.cpp:84: instanceDataCPU_.resize(kMaxInstances);
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.cpp:117: SkinMeshInstanceData data;
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.cpp:127: instanceDataBuffer_.SetMappedData(instanceCount, data);
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.cpp:140: /// InstanceData Buffer Bind
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.cpp:141: instanceDataBuffer_.SRVBindForGraphicsCommandList(cmdList, InstanceDataSRV);
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.h:13: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.h:37: struct SkinMeshInstanceData {
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.h:45: InstanceDataSRV,       ///< 全インスタンスデータのSRV (t0)
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.h:71: StructuredBuffer<SkinMeshInstanceData> instanceDataBuffer_;
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshRenderingPipeline.h:72: std::vector<SkinMeshInstanceData> instanceDataCPU_;
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshSkeletonRenderingPipeline.cpp:62: vertexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(VertexData) * maxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshSkeletonRenderingPipeline.cpp:63: vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshSkeletonRenderingPipeline.cpp:66: vbv_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * maxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshSkeletonRenderingPipeline.cpp:67: vbv_.StrideInBytes = static_cast<UINT>(sizeof(VertexData));
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshSkeletonRenderingPipeline.cpp:139: std::memcpy(mappingData_, vertices_.data(), sizeof(VertexData) * vertices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshSkeletonRenderingPipeline.h:35: GizmoPrimitive::VertexData* mappingData_;
+.\Project\Engine\Graphics\Pipelines\Render\Mesh\SkinMeshSkeletonRenderingPipeline.h:36: std::vector<GizmoPrimitive::VertexData> vertices_;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:52: pipeline->Add32BitConstant(D3D12_SHADER_VISIBILITY_VERTEX, 2, sizeof(PerSystemData) / 4); // per system data (b2)
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:73: cameraDataBuffer_.Create(dxm->GetDxDevice());
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:101: CameraData camData;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:102: camData.billboardMatrix = matBillboard;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:103: camData.cameraPosition = camera->GetOwner()->GetTransform()->GetMatWorld().ExtractTranslation();
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:104: camData.padding = 0.0f;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:106: cameraDataBuffer_.SetMappedData(camData);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:118: cameraDataBuffer_.BindForGraphicsCommandList(cmdList, CBV_CAMERA_DATA);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:130: PerSystemData perSystemData{};
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:131: perSystemData.emitterWorldMatrix = ps->GetOwner()->GetTransform()->matWorld;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:132: perSystemData.renderMode = static_cast<uint32_t>(ps->renderer.renderMode);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:133: perSystemData.renderAlignment = static_cast<uint32_t>(ps->renderer.alignment);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:134: perSystemData.speedScale = ps->renderer.speedScale;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:135: perSystemData.lengthScale = ps->renderer.lengthScale;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:136: perSystemData.instanceOffset = static_cast<uint32_t>(globalParticleIndex);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:148: cameraDataBuffer_.BindForGraphicsCommandList(cmdList, CBV_CAMERA_DATA);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:156: cmdList->SetGraphicsRoot32BitConstants(ROOT_PER_SYSTEM, sizeof(PerSystemData) / 4, &perSystemData, 0);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:203: particleBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), ps->particles[i]);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:204: materialBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), Vector4::One);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:205: textureIdBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), texSrvIndex);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:238: PerSystemData perSystemData{};
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:239: perSystemData.emitterWorldMatrix = gps.finalWorldMat;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:240: perSystemData.renderMode = static_cast<uint32_t>(gps.renderer.renderMode);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:241: perSystemData.renderAlignment = static_cast<uint32_t>(gps.renderer.alignment);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:242: perSystemData.speedScale = gps.renderer.speedScale;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:243: perSystemData.lengthScale = gps.renderer.lengthScale;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:244: perSystemData.instanceOffset = static_cast<uint32_t>(globalParticleIndex);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:256: cameraDataBuffer_.BindForGraphicsCommandList(cmdList, CBV_CAMERA_DATA);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:264: cmdList->SetGraphicsRoot32BitConstants(ROOT_PER_SYSTEM, sizeof(PerSystemData) / 4, &perSystemData, 0);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:311: particleBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), gps.particles[i]);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:312: materialBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), Vector4::One);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.cpp:313: textureIdBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), texSrvIndex);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.h:24: struct CameraData {
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.h:30: struct alignas(16) PerSystemData {
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem\ParticleSystemRenderingPipeline.h:61: ConstantBuffer<CameraData> cameraDataBuffer_;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:54: pipeline->Add32BitConstant(D3D12_SHADER_VISIBILITY_VERTEX, 2, sizeof(PerSystemData) / 4); // per system data (b2)
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:75: cameraDataBuffer_.Create(dxm->GetDxDevice());
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:98: CameraData camData{};
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:99: camData.billboardMatrix = Matrix4x4::kIdentity;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:100: camData.cameraPosition = camera->GetOwner()->GetTransform()->GetMatWorld().ExtractTranslation();
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:101: camData.padding = 0.0f;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:102: cameraDataBuffer_.SetMappedData(camData);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:113: cameraDataBuffer_.BindForGraphicsCommandList(cmdList, CBV_CAMERA_DATA);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:121: struct SortingData {
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:127: std::vector<SortingData> sortedSystems;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:148: std::sort(sortedSystems.begin(), sortedSystems.end(), [](const SortingData& a, const SortingData& b) {
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:152: for (auto& sortedData : sortedSystems) {
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:157: const Particle2D* particlesData = nullptr;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:159: if (sortedData.isGhost) {
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:160: const GhostParticleSystem2D* gps = sortedData.gps;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:165: particlesData = gps->particles.data();
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:167: ParticleSystem2D* ps = sortedData.ps;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:172: particlesData = ps->particles.data();
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:176: PerSystemData perSystemData{};
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:177: perSystemData.emitterWorldMatrix = worldMat;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:178: perSystemData.renderMode = static_cast<uint32_t>(renderer.renderMode);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:179: perSystemData.renderAlignment = static_cast<uint32_t>(renderer.alignment);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:180: perSystemData.speedScale = renderer.speedScale;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:181: perSystemData.lengthScale = renderer.lengthScale;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:182: perSystemData.instanceOffset = static_cast<uint32_t>(globalParticleIndex);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:183: perSystemData.flipMode = static_cast<uint32_t>(renderer.flipMode);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:184: perSystemData.textureSheetEnabled = textureSheetAnimation.enabled ? 1u : 0u;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:185: perSystemData.tilesX = static_cast<uint32_t>(textureSheetAnimation.tilesX);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:186: perSystemData.tilesY = static_cast<uint32_t>(textureSheetAnimation.tilesY);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:187: perSystemData.fps = textureSheetAnimation.fps;
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:198: cameraDataBuffer_.BindForGraphicsCommandList(cmdList, CBV_CAMERA_DATA);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:206: cmdList->SetGraphicsRoot32BitConstants(ROOT_PER_SYSTEM, sizeof(PerSystemData) / 4, &perSystemData, 0);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:251: particleBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), particlesData[i]);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:252: materialBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), Vector4::One);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.cpp:253: textureIdBuffer_.SetMappedData(static_cast<uint32_t>(globalParticleIndex), texSrvIndex);
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.h:24: struct CameraData {
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.h:32: struct alignas(16) PerSystemData {
+.\Project\Engine\Graphics\Pipelines\Render\ParticleSystem2D\ParticleSystem2DRenderingPipeline.h:69: ConstantBuffer<CameraData> cameraDataBuffer_;
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:59: vertexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(VertexData) * kMaxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:60: vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:63: vbv_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * kMaxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:64: vbv_.StrideInBytes = static_cast<UINT>(sizeof(VertexData));
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:78: renderingDataList_.push_back(lineRenderer->GetRenderingDataPtr());
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:83: if (renderingDataList_.empty()) {
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:88: for (RenderingData* renderingData : renderingDataList_) {
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:89: vertices_.insert(vertices_.end(), renderingData->vertices.begin(), renderingData->vertices.end());
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:98: std::memcpy(mappingData_, vertices_.data(), sizeof(VertexData) * vertices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.cpp:118: renderingDataList_.clear();
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.h:23: struct VertexData {
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.h:28: struct RenderingData final {
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.h:29: std::vector<VertexData> vertices;
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.h:58: VertexData* mappingData_ = nullptr;
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.h:59: std::vector<VertexData>     vertices_;
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line2DRenderingPipeline.h:61: std::list<RenderingData*>   renderingDataList_;
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.cpp:47: vertexBuffer_.CreateResource(dxm->GetDxDevice(), sizeof(VertexData) * kMaxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.cpp:48: vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.cpp:51: vbv_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * kMaxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.cpp:52: vbv_.StrideInBytes = static_cast<UINT>(sizeof(VertexData));
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.cpp:80: std::memcpy(mappingData_, vertices_.data(), sizeof(VertexData) * vertices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.h:20: struct VertexData {
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.h:25: struct RenderingData {
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.h:26: std::vector<VertexData> vertices;
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.h:57: VertexData* mappingData_;
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.h:58: std::vector<VertexData>     vertices_;
+.\Project\Engine\Graphics\Pipelines\Render\Primitive\Line3DRenderingPipeline.h:60: std::list<RenderingData*>   renderingDataList_;
+.\Project\Engine\Graphics\Pipelines\Render\River\RiverRenderingPipeline.cpp:95: river->SetMaterialData(terrain->GetOwner()->GetId(), static_cast<int32_t>(pAssetCollection_->GetTextureIndex("./Packages/Textures/Terrain/River.png")));
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:80: const size_t kVertexDataSize = sizeof(VSInput);
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:83: vertexBuffer_.CreateResource(dxm->GetDxDevice(), kVertexDataSize * vertices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:86: vbv_.SizeInBytes = static_cast<UINT>(kVertexDataSize * vertices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:87: vbv_.StrideInBytes = static_cast<UINT>(kVertexDataSize);
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:90: VSInput* mappingVertexData = nullptr;
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:91: vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingVertexData));
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:92: std::memcpy(mappingVertexData, vertices_.data(), sizeof(VSInput) * vertices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:103: uint32_t* mappingData = nullptr;
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:104: indexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData));
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:105: std::memcpy(mappingData, indices_.data(), sizeof(uint32_t) * indices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:137: texIndex_.SetMappedData(texIndex);
+.\Project\Engine\Graphics\Pipelines\Render\Skybox\SkyboxRenderingPipeline.cpp:138: transformMatrix_.SetMappedData(skybox->GetOwner()->GetTransform()->GetMatWorld());
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:87: const size_t kVertexDataSize = sizeof(VertexData);
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:90: vertexBuffer_.CreateResource(dxm->GetDxDevice(), kVertexDataSize * vertices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:93: vbv_.SizeInBytes = static_cast<UINT>(kVertexDataSize * vertices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:94: vbv_.StrideInBytes = static_cast<UINT>(kVertexDataSize);
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:105: VertexData* vertexData = nullptr;
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:106: vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:107: memcpy(vertexData, vertices_.data(), kVertexDataSize * vertices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:109: uint32_t* indexData = nullptr;
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:110: indexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:111: memcpy(indexData, indices_.data(), sizeof(uint32_t) * indices_.size());
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:131: struct RenderingData {
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:136: std::vector<RenderingData> renderingDataList;
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:137: renderingDataList.reserve(spriteRendererArray->GetUsedComponents().size());
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:155: renderingDataList.push_back({
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:164: std::sort(renderingDataList.begin(), renderingDataList.end(), [](const RenderingData& a, const RenderingData& b) {
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:174: for (const auto& data : renderingDataList) {
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:176: materialsBuffer->SetMappedData(transformIndex, data.renderer->GetGpuMaterial());
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.cpp:177: transformsBuffer->SetMappedData(transformIndex, data.matWorld);
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.h:16: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.h:35: struct VertexData {
+.\Project\Engine\Graphics\Pipelines\Render\Sprite\SpriteRenderingPipeline.h:82: std::vector<VertexData>           vertices_;
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:107: instanceDataAppendBuffer_.CreateAppendBuffer(maxInstanceCount, dxm->GetDxDevice(), dxm->GetDxCommand(), dxm->GetDxSRVHeap());
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:115: dataBuffer_.SetMappedData(2000);
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:118: maxInstanceCountBuffer_.SetMappedData(drawInstanceCount_);
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:158: instanceDataAppendBuffer_.AppendBindForComputeCommandList(cmdList, ARR_INSNTANCE_DATA); // UAV_INSTANCE_DATA
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:175: const uint32_t size = static_cast<uint32_t>(dataBuffer_.GetMappingData());
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:183: D3D12_RESOURCE_BARRIER uavBarrier = CD3DX12_RESOURCE_BARRIER::UAV(instanceDataAppendBuffer_.GetResource().Get());
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:185: instanceDataAppendBuffer_.GetCounterResource().CreateBarrier(D3D12_RESOURCE_STATE_COPY_SOURCE, dxCommand);
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:193: instanceCount_ = instanceDataAppendBuffer_.ReadCounter(dxCommand);
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:195: instanceDataAppendBuffer_.ResetCounter(dxCommand); // カウンターをリセット
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:205: maxInstanceCountBuffer_.SetMappedData(instanceCount_);
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:211: instanceDataAppendBuffer_.SRVBindForComputeCommandList(cmdList, CULL_SRV_INSNTANCE_DATA); // SRV_INSTANCE_DATA
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:298: instanceDataAppendBuffer_.SRVBindForGraphicsCommandList(cmdList, GP_SRV_INSNTANCE_DATA); // GP_SRV_INSNTANCE_DATA
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.cpp:307: textureIdBuffer_.SetMappedData({ static_cast<uint32_t>(texId) });
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.h:58: struct InstanceData {
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainProceduralRenderingPipeline.h:95: StructuredBuffer<InstanceData> instanceDataAppendBuffer_;
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainRenderingPipeline.cpp:120: transformBuffer_.SetMappedData(matWorld);
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainRenderingPipeline.cpp:122: materialBuffer_.SetMappedData(0, pTerrain_->GetMaterialData());
+.\Project\Engine\Graphics\Pipelines\Render\Terrain\TerrainRenderingPipeline.h:11: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:22: if (vertexBuffer_.Get() && mappingData_) {
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:70: const size_t kVertexDataSize = sizeof(VertexData);
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:72: vertexBuffer_.CreateResource(dxm->GetDxDevice(), kVertexDataSize * maxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:74: vbv_.SizeInBytes = static_cast<UINT>(kVertexDataSize * maxVertexNum_);
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:75: vbv_.StrideInBytes = static_cast<UINT>(kVertexDataSize);
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:77: vertexBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&mappingData_));
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:103: if (!pDxManager_ || !mappingData_) {
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:114: struct RenderingData {
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:121: std::vector<RenderingData> renderingDataList;
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:122: renderingDataList.reserve(textRendererArray->GetUsedComponents().size() * 2);
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:145: renderingDataList.push_back({
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:155: renderingDataList.push_back({
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:166: std::sort(renderingDataList.begin(), renderingDataList.end(), [](const RenderingData& a, const RenderingData& b) {
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:181: for (const auto& data : renderingDataList) {
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:193: materialsBuffer->SetMappedData(materialIndex, data.gpuMaterial);
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:197: VertexData& destVertex = mappingData_[totalVertexCount];
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.cpp:276: vbv.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * totalVertexCount);
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.h:15: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.h:25: struct VertexData {
+.\Project\Engine\Graphics\Pipelines\Render\Text\TextRenderingPipeline.h:56: VertexData*                       mappingData_ = nullptr;
+.\Project\Engine\Graphics\Pipelines\Render\VoxelTerrain\VoxelTerrainBrushPreviewRenderingPipeline.cpp:68: cBufferBrushInfo_.SetMappedData(BrushInfo{ Vector2(0.0f, 0.0f), 5, 0.5f });
+.\Project\Engine\Graphics\Pipelines\Render\VoxelTerrain\VoxelTerrainBrushPreviewRenderingPipeline.cpp:94: cBufferBrushInfo_.SetMappedData({
+.\Project\Engine\Graphics\Pipelines\Render\VoxelTerrain\VoxelTerrainRenderingPipeline.cpp:61: cBufPos.SetMappedData(Vector4(180.0f, 465.0f, 182.0f, 1.0f));
+.\Project\Engine\Graphics\Pipelines\Render\VoxelTerrain\VoxelTerrainRenderingPipeline.h:11: #include "Engine/Graphics/Buffer/Data/GPUMaterial.h"
+.\Project\Engine\Graphics\Pipelines\Render\VoxelTerrain\VoxelTerrainTransvoxelRenderingPipeline.cpp:92: cBufPos.SetMappedData(Vector4(180.0f, 465.0f, 182.0f, 1.0f));
+.\Project\Engine\Graphics\Pipelines\Render\VoxelTerrain\VoxelTerrainVertexCreatePipeline.cpp:88: vt->cBufferMarchingCubeInfo_.SetMappedData(
+.\Project\Engine\Script\MonoScriptEngine.cpp:122: WSADATA wsaData;
+.\Project\Engine\Script\MonoScriptEngine.cpp:123: if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+.\Project\Engine\Script\MonoScriptEngine.cpp:570: fetchInitialDataMethod_ = mono_class_get_method_from_name(entityClass, "FetchInitialData", 0);
+.\Project\Engine\Script\MonoScriptEngine.h:181: MonoMethod* fetchInitialDataMethod_ = nullptr;
+.\Project\Engine\Script\InternalCalls\AddInternalMethods.cpp:59: ONEngine::Gizmo::LineData* sample = (ONEngine::Gizmo::LineData*)mono_array_addr(batch, ONEngine::Gizmo::LineData, 0);
+.\Project\Engine\Script\InternalCalls\AddInternalMethods.cpp:72: ONEngine::Gizmo::LineData* data = (ONEngine::Gizmo::LineData*)mono_array_addr(batch, ONEngine::Gizmo::LineData, i);
