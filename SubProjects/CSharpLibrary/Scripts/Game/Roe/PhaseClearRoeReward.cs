@@ -1,27 +1,22 @@
 using System;
 
-// フェーズ開始時に「たまごを撃てない」状態なら、幼生たまご(未成熟の卵)を与えて詰みを防ぐ救済。
+// フェーズをクリアするたびに、成熟済みのたまご(＝すぐ撃てる弾)を1つ与える。
 // RoeManager と同じエンティティ（＝プレイヤー）に付ける。
 //
-// 詰みが起きるのは卵が1個しか残っていないとき。RoeManager.TryConsumeMature() は
-// 発射での即ゲームオーバーを防ぐため最後の1卵を撃たせないので、成熟卵を持っていても発射できず、
-// 「射撃せよ」系の目標(ShotObjective)が永久に達成できなくなる。
-// 幼生たまごを1つ足して2個にすれば、手持ちの成熟卵をそのまま撃てるようになる。
+// 卵は経験値でしか育たないので、敵が湧かないフェーズでは待っても弾が増えない。
+// 進むたびに必ず1発ぶん増やすことで、「撃て」系の目標(ShotObjective)で弾が無くて詰むのを防ぐ。
 //
-// 卵が minEggCount_ 個以上あるのに撃てない場合（成熟卵が0）は何もしない。
-// この状態は経験値で卵が育てば解消するし、幼生たまごを足しても撃てるようにはならないため。
+// 「クリアした」の検出は、次のフェーズが始まったこと（CurrentPhaseName の変化）で行う。
+// シーン開始・コンティニュー時の最初のフェーズは前のフェーズが無いので付与しない。
+// スキップ(PhaseSkipInput)や JumpToPhase での移動も「進んだ」とみなして付与する
+// （チュートリアルを飛ばした人が弾無しで本編に入らないようにするため）。
 //
 // PhaseBeganEvent は購読せず、Update() で ObjectiveSystem を毎フレーム引く（pull 型）。
 // ObjectiveSystem は別エンティティ(GameController)にいて、その Initialize() が最初の
 // PhaseBeganEvent を発行するため、購読方式ではエンティティの並び順次第で最初のフェーズを
-// 取りこぼしうる。毎フレーム引けば取りこぼしようがなく、JumpToPhase による任意フェーズ移動
-// （チュートリアルスキップ・コンティニュー）にも追従する。
-public class PhaseRoeRescue : MonoScript
+// 取りこぼしうる。毎フレーム引けば取りこぼしようがない。
+public class PhaseClearRoeReward : MonoScript
 {
-
-    // フェーズ開始時に最低限そろえる卵の数。TryConsumeMature() が最後の1卵を残すため、
-    // 発射できるようにするには2個必要。
-    [SerializeField] private int minEggCount_ = 2;
 
     // ObjectiveSystem が付いているエンティティ名。空文字なら自分と同じエンティティを見る。
     [SerializeField] private string objectiveSystemEntityName_ = "GameController";
@@ -29,8 +24,8 @@ public class PhaseRoeRescue : MonoScript
     private RoeManager roeManager_;
     private ObjectiveSystem objectiveSystem_;
 
-    // 最後に救済判定を行ったフェーズ名。これが変わった瞬間が「フェーズ開始時」。
-    // 空文字始まりなので、最初に始まったフェーズもちゃんと1回判定される。
+    // 最後に観測したフェーズ名。これが変わった＝前のフェーズを終えて次が始まった。
+    // 空文字始まりなので、最初に始まったフェーズは「前のフェーズ無し」として付与されない。
     private string lastPhaseName_ = "";
 
     public override void Initialize()
@@ -50,18 +45,20 @@ public class PhaseRoeRescue : MonoScript
         }
 
         // IsPhaseBegan を見るのは、フェーズエンティティの解決待ち中
-        // （目標がまだ動き出していない状態）で数えないため。
+        // （目標がまだ動き出していない状態）を「始まった」と誤認しないため。
         if (!objectiveSystem_.IsPhaseBegan) return;
 
         string phaseName = objectiveSystem_.CurrentPhaseName;
         if (phaseName == lastPhaseName_) return;
 
+        bool hadPreviousPhase = !string.IsNullOrEmpty(lastPhaseName_);
         lastPhaseName_ = phaseName;
-        RescueIfCannotShoot();
+        if (!hadPreviousPhase) return;
+
+        GrantReward();
     }
 
-    // 撃てないなら幼生たまごを足す。撃てるならそのまま。
-    private void RescueIfCannotShoot()
+    private void GrantReward()
     {
         if (roeManager_ == null)
         {
@@ -69,9 +66,7 @@ public class PhaseRoeRescue : MonoScript
             if (roeManager_ == null) return;
         }
 
-        if (roeManager_.CanShoot()) return;
-
-        roeManager_.EnsureEggCount(minEggCount_);
+        roeManager_.GrantMatureEgg();
     }
 
     private ObjectiveSystem ResolveObjectiveSystem()

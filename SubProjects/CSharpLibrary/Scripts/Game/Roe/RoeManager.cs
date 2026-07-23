@@ -21,6 +21,7 @@ public class RoeManager : MonoScript
     private readonly List<Entity> roe_ = new List<Entity>();
     private HP hp_;
     private float lastDistributedPlayerExp_ = 0f; // 前フレームまでに卵へ分配済みのプレイヤー累計経験値
+    private int pendingMatureGrants_ = 0; // 成熟させる予約の残り（卵の実体が生えてから消化する）
 
     public override void Initialize()
     {
@@ -39,6 +40,9 @@ public class RoeManager : MonoScript
         // 隊列順(リスト順)を各卵の TrailFollower に push する。
         // 生成直後でスクリプト未生成の卵も、次フレーム以降にここで順番が入る。
         PushOrders();
+
+        // 付与予約された成熟卵を、実体が生えてスクリプトが付いてから成熟させる
+        ResolveMatureGrants();
 
         LevelingComponent levelingComponent = entity.GetScript<LevelingComponent>();
 
@@ -92,34 +96,101 @@ public class RoeManager : MonoScript
         return roe_.Count;
     }
 
-    // 発射できる状態か（成熟卵があり、かつ最後の1卵ではない）。TryConsumeMature() が成功する条件そのもの。
-    public bool CanShoot()
+    // ---- 付与（フェーズクリア報酬など） ----
+
+    // 成熟済みの卵（＝すぐ撃てる弾）を1つ与える。
+    //
+    // その場では HP を1増やすだけで、卵の実体は次の Update の SyncEggsToHp が生やす。
+    // 生えたばかりの卵はまだスクリプトインスタンスが無く成熟させられないので、
+    // 「成熟させる」ぶんは予約(pendingMatureGrants_)として持ち越し、生え揃ってから消化する。
+    //
+    // 卵数が上限(MaxHp)で増やせない場合は数はそのままで、手持ちの未成熟卵を1つ成熟させる。
+    public void GrantMatureEgg()
     {
-        return EggCount() > 1 && MatureCount() > 0;
+        // 死亡済み（＝ゲームオーバー）を報酬で生き返らせない
+        if (hp_ == null || hp_.IsDead)
+        {
+            return;
+        }
+
+        if (hp_.CurrentHp < hp_.MaxHp)
+        {
+            // ※ Heal ではなく SetHp なのは TryConsumeMature と同じ理由（被弾演出を出さないため）
+            hp_.SetHp(hp_.CurrentHp + 1);
+        }
+
+        pendingMatureGrants_++;
     }
 
-    // 卵数が count 個に満たなければ、足りないぶんだけ幼生たまご(未成熟の卵)を与える。
-    // 実際に増えた数を返す（HP 上限で頭打ちになる／既に足りていれば 0）。
-    //
-    // 卵数の真実は HP なので、判断も HP で行う。roe_ の実体は次の Update の
-    // SyncEggsToHp が追いつかせるため、生成直後の卵はまだ roe_ に居ない（EggCount() は1フレーム遅れる）。
-    // 生えたばかりの卵は未成熟なので、増えるのは必ず幼生たまご。
-    public int EnsureEggCount(int count)
+    // ---- 内部 ----
+
+    // 付与予約された成熟卵を、卵の実体が生え揃ってから消化する。
+    private void ResolveMatureGrants()
     {
-        if (hp_ == null)
+        if (pendingMatureGrants_ <= 0)
         {
-            return 0;
+            return;
         }
 
-        int current = (int)hp_.CurrentHp;
-        if (current >= count)
+        // 予約したぶんの卵が生えてスクリプトが付くまで待つ（それまで成熟判定を正しく数えられない）
+        if (!IsRoeReady())
         {
-            return 0;
+            return;
         }
 
-        // SetHp は MaxHp でクランプする。※ Heal ではなく SetHp なのは TryConsumeMature と同じ理由
-        hp_.SetHp(count);
-        return (int)hp_.CurrentHp - current;
+        while (pendingMatureGrants_ > 0 && MatureOneEgg())
+        {
+            pendingMatureGrants_--;
+        }
+
+        // 未成熟の卵が尽きた＝全部成熟済み。もう与えるものが無いので残りの予約は捨てる
+        pendingMatureGrants_ = 0;
+    }
+
+    // 卵の増減が HP に追いつき、かつ全ての卵のスクリプトが取れる状態か。
+    // 生成した卵はその場ではスクリプトインスタンスが無く MatureCount() に数えられない。
+    private bool IsRoeReady()
+    {
+        if (hp_ == null || roe_.Count != (int)hp_.CurrentHp)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < roe_.Count; i++)
+        {
+            if (GetState(roe_[i]) == null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 未成熟の卵を1つ成熟させる。成功で true（未成熟の卵が無ければ false）。
+    // IsMature を直接立てず経験値でレベルアップさせるのは、RoeStateComponent が自分の Update で
+    // 成熟（見た目・アニメ再生）まで面倒を見る通常の経路にそのまま乗せるため。
+    // 成熟は次フレームの LevelingComponent.Update まで反映されないので、
+    // 「経験値は足りているがまだ IsMature が立っていない」卵は成熟済み扱いで飛ばす（二重付与の防止）。
+    private bool MatureOneEgg()
+    {
+        for (int i = 0; i < roe_.Count; i++)
+        {
+            RoeStateComponent state = GetState(roe_[i]);
+            if (state == null || state.IsMature)
+            {
+                continue;
+            }
+
+            LevelingComponent leveling = roe_[i].GetScript<LevelingComponent>();
+            if (leveling == null || leveling.CurrentExp >= leveling.RequiredExp)
+            {
+                continue;
+            }
+
+            leveling.AddExperience(leveling.RequiredExp - leveling.CurrentExp);
+            return true;
+        }
+        return false;
     }
 
     // ---- 状態遷移（発射） ----
@@ -148,8 +219,6 @@ public class RoeManager : MonoScript
         }
         return e;
     }
-
-    // ---- 内部 ----
 
     // 卵の数を HP.CurrentHp に合わせる。多ければ末尾から破棄し、足りなければ生成する。
     private void SyncEggsToHp()

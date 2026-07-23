@@ -176,8 +176,7 @@
                 "movementAreaEntityName_": "Stage",
                 "radius_": 33.0
             },
-            "PhaseRoeRescue": {
-                "minEggCount_": 2,
+            "PhaseClearRoeReward": {
                 "objectiveSystemEntityName_": "GameController"
             },
             "PlayerAttackComponent": {
@@ -360,7 +359,7 @@
                 },
                 {
                     "enable": true,
-                    "name": "PhaseRoeRescue"
+                    "name": "PhaseClearRoeReward"
                 },
                 {
                     "enable": true,
