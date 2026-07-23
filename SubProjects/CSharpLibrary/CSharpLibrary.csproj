@@ -202,11 +202,6 @@
     <Compile Include="Scripts\Game\Common\Attractor.cs" />
     <Compile Include="Scripts\Game\Common\ContinueState.cs" />
     <Compile Include="Scripts\Game\Common\Critical.cs" />
-<<<<<<< HEAD
-    <Compile Include="Scripts\Game\Common\DamageFeedback.cs" />
-=======
-    <Compile Include="Scripts\Game\Common\DamageShake.cs" />
->>>>>>> Enemy/Boss/Daiouika
     <Compile Include="Scripts\Game\Common\DamagePoint.cs" />
     <Compile Include="Scripts\Game\Common\DamageRelay.cs" />
     <Compile Include="Scripts\Game\Common\GameEvents.cs" />
