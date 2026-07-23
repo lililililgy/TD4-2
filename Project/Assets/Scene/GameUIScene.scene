@@ -295,6 +295,21 @@
             "guid": "0b4431f784da641fddea5f9f0bcf173a",
             "parentGuid": "1e616a6daa9403752d43096ef518396a",
             "path": "./GameUIScene/0b4431f784da641fddea5f9f0bcf173a.entity"
+        },
+        {
+            "guid": "f169fbe6d1820e7e7d1e95b0c38c3a8e",
+            "parentGuid": "8eb6618475ba5605395d00bb35e82896",
+            "path": "./GameUIScene/f169fbe6d1820e7e7d1e95b0c38c3a8e.entity"
+        },
+        {
+            "guid": "91e29a93563fa2d84aadb19de3ac3edb",
+            "parentGuid": "4c123bd93950d3de425d84db5e344735",
+            "path": "./GameUIScene/91e29a93563fa2d84aadb19de3ac3edb.entity"
+        },
+        {
+            "guid": "97ee25681a18213ce9fbf94536a13b13",
+            "parentGuid": "8eb6618475ba5605395d00bb35e82896",
+            "path": "./GameUIScene/97ee25681a18213ce9fbf94536a13b13.entity"
         }
     ],
     "hasClearColor": false

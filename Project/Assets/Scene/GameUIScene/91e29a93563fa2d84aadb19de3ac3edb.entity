@@ -6,7 +6,7 @@
             "matrixCalcFlags": 7,
             "position": {
                 "x": -777.2998657226563,
-                "y": 32.0,
+                "y": -219.9000244140625,
                 "z": 0.0
             },
             "rotate": {
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 132.0,
-                "y": 131.99990844726563,
-                "z": 131.99990844726563
+                "x": 138.199951171875,
+                "y": 138.19981384277344,
+                "z": 138.19981384277344
             },
             "type": "Transform"
         },
@@ -32,7 +32,10 @@
                 "objectiveSystemEntityName_": "GameController",
                 "objectiveSystemSceneName_": "GameScene",
                 "visiblePhases_": [
-                    "BossBattlePhase_2"
+                    "TutorialPhase_Move",
+                    "TutorialPhase_Dash",
+                    "TutorialPhase_Enemy",
+                    "TutorialPhase_Shot"
                 ]
             },
             "type": "Variables"
@@ -77,13 +80,13 @@
                 "x": 2.0,
                 "y": -2.0
             },
-            "text": "ダイオウクラゲ があらわれた",
+            "text": "     で\n\nチュートリアルをスキップ",
             "type": "TextRenderer",
             "verticalAlignment": 1
         }
     ],
-    "guid": "1872ebc9c214da8d35e27b0c8d5a4ab1",
-    "name": "BossBattlePhase_2",
+    "guid": "91e29a93563fa2d84aadb19de3ac3edb",
+    "name": "TutorialSkipUI",
     "parentGuid": "4c123bd93950d3de425d84db5e344735",
     "prefabName": ""
 }

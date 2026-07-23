@@ -1,0 +1,156 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "ObjectiveProgressForText": {
+                "finishedText_": "---",
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene"
+            },
+            "ShowOnPhase": {
+                "objectiveSystemEntityName_": "GameController",
+                "objectiveSystemSceneName_": "GameScene",
+                "visiblePhases_": [
+                    "TutorialPhase_Move",
+                    "TutorialPhase_Dash",
+                    "TutorialPhase_Enemy",
+                    "TutorialPhase_Shot"
+                ]
+            },
+            "SpriteInputFeedback": {
+                "attackTime_": 0.15000000596046448,
+                "buttons_": [],
+                "cols_": 0,
+                "duration_": 0.4000000059604645,
+                "enableColor_": true,
+                "enableScale_": true,
+                "enableUv_": false,
+                "invertY_": false,
+                "keys_": [
+                    15
+                ],
+                "normalFrame_": 0,
+                "pressedColor_": {
+                    "w": 1.0,
+                    "x": 0.30000001192092896,
+                    "y": 0.30000001192092896,
+                    "z": 0.30000001192092896
+                },
+                "pressedFrame_": 0,
+                "pressedScale_": {
+                    "x": 0.8600000143051147,
+                    "y": 0.8600000143051147,
+                    "z": 1.0
+                },
+                "releaseTime_": 0.6000000238418579,
+                "rows_": 0,
+                "useUnscaledTime_": true
+            },
+            "type": "Variables"
+        },
+        {
+            "enable": 1,
+            "scripts": [
+                {
+                    "enable": true,
+                    "name": "ShowOnPhase"
+                },
+                {
+                    "enable": true,
+                    "name": "SpriteInputFeedback"
+                }
+            ],
+            "type": "Script"
+        },
+        {
+            "characterSpacing": 0,
+            "color": {
+                "w": 1.0,
+                "x": 0.2759856581687927,
+                "y": 0.2759856581687927,
+                "z": 0.2759856581687927
+            },
+            "enable": 1,
+            "fontPath": "./Assets/Fonts/x8y12pxTheStrongGamer.ttf",
+            "fontSize": 128,
+            "horizontalAlignment": 1,
+            "lineSpacing": 1.0,
+            "outlineColor": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "outlineWidth": 0,
+            "shadowColor": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "shadowOffset": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "text": "Tab",
+            "type": "TextRenderer",
+            "verticalAlignment": 1
+        },
+        {
+            "enable": 1,
+            "isPixelPerfect": false,
+            "material": {
+                "baseColor": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "baseTextureGuid": "41cc38b8f0507ce94c632206249dc0fa",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
+                "guid": "00000000000000000000000000000000",
+                "normalTextureGuid": "00000000000000000000000000000000",
+                "postEffectFlags": 0,
+                "uvTransform": {
+                    "position": {
+                        "x": 0.0,
+                        "y": 2.1700000762939453
+                    },
+                    "rotate": 0.0,
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    }
+                }
+            },
+            "type": "SpriteRenderer"
+        }
+    ],
+    "guid": "f169fbe6d1820e7e7d1e95b0c38c3a8e",
+    "name": "TutorialSkipButtonUI_1",
+    "parentGuid": "8eb6618475ba5605395d00bb35e82896",
+    "prefabName": ""
+}
