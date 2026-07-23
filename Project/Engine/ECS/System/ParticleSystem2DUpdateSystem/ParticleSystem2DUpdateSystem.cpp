@@ -154,6 +154,14 @@ namespace ONEngine {
         }
     }
 
+    static float ExtractRotationZ(const Matrix4x4& matrix) {
+        return std::atan2(matrix.m[0][1], matrix.m[0][0]);
+    }
+
+    static float ShortestAngleDelta(float current, float previous) {
+        return std::remainder(current - previous, std::numbers::pi_v<float> * 2.0f);
+    }
+
     static void InitializeParticle2D(
         ParticleSystem2D* ps,
         Particle2D& particle,
@@ -319,54 +327,8 @@ namespace ONEngine {
             int emitCount = static_cast<int>(ps->emitAccumulator);
             ps->emitAccumulator -= static_cast<float>(emitCount);
 
-            for (int i = 0; i < emitCount; ++i) {
-                if (ps->aliveCount >= ps->particles.size()) break;
-
-                Particle2D& p = ps->particles[ps->aliveCount++];
-                Vector3 shapePos, shapeDir;
-                EvaluateShape2D(ps->shape, shapePos, shapeDir);
-
-                Matrix4x4 currentMat = transform->matWorld;
-                Matrix4x4 emitMat = currentMat;
-                if (ps->hasPreviousWorldMat) {
-                    float t_emit = (float)i / (float)(emitCount > 1 ? emitCount - 1 : 1);
-                    Vector3 prevPos(ps->previousWorldMat.m[3][0], ps->previousWorldMat.m[3][1], ps->previousWorldMat.m[3][2]);
-                    Vector3 currPos(currentMat.m[3][0], currentMat.m[3][1], currentMat.m[3][2]);
-                    Vector3 lerpedPos = Vector3Lerp(prevPos, currPos, t_emit);
-                    emitMat.m[3][0] = lerpedPos.x;
-                    emitMat.m[3][1] = lerpedPos.y;
-                    emitMat.m[3][2] = lerpedPos.z;
-                }
-
-                if (ps->main.simulationSpace == SimulationSpace::World) {
-                    p.position = Matrix4x4::Transform(shapePos, emitMat);
-                    p.velocity = Matrix4x4::TransformNormal(shapeDir, emitMat).Normalize() * GetMinMaxFloat(ps->main.startSpeed);
-                    p.simulationSpace = 0; // World
-                } else {
-                    p.position = shapePos;
-                    p.velocity = shapeDir * GetMinMaxFloat(ps->main.startSpeed);
-                    p.simulationSpace = 1; // Local
-                }
-
-                // Force 2D alignment (Z = 0)
-                p.position.z = 0.0f;
-                p.velocity.z = 0.0f;
-
-                p.baseVelocity = p.velocity;
-                p.startLifetime = GetMinMaxFloat(ps->main.startLifetime);
-                p.remainingLifetime = p.startLifetime;
-                p.startColor = GetMinMaxColor(ps->main.startColor);
-                p.color = p.startColor;
-                if (ps->main.startSize3D) {
-                    p.startSize.x = GetMinMaxFloat(ps->main.startSizeX);
-                    p.startSize.y = GetMinMaxFloat(ps->main.startSizeY);
-                } else {
-                    float s = GetMinMaxFloat(ps->main.startSize);
-                    p.startSize = Vector2(s, s);
-                }
-                p.size = p.startSize;
-                p.rotation = GetMinMaxFloat(ps->main.startRotation);
-                p.randomValue = Random::Float(0.0f, 1.0f);
+            if (emitCount > 0) {
+                EmitParticles2D(ps, transform, emitCount, true);
             }
             EmitParticles2D(ps, transform, emitCount, true);
 

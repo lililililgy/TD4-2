@@ -1,0 +1,45 @@
+{
+    "active": true,
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "emission": {
+                "enabled": false,
+                "rateOverTime": 0.0
+            },
+            "main": {
+                "duration": 5.0,
+                "looping": true,
+                "maxParticles": 100
+            },
+            "type": "ParticleSystem2D"
+        },
+        {
+            "type": "ParticleEmitCountTestScript"
+        }
+    ],
+    "guid": "66666666777788889999000000000000",
+    "name": "ParticleSystem2DTest",
+    "parentGuid": null,
+    "prefabName": ""
+}

@@ -329,6 +329,7 @@
     <Compile Include="Scripts\Test\HotReloadTestScript.cs" />
     <Compile Include="Scripts\Test\ListEnumSerializeTestScript.cs" />
     <Compile Include="Scripts\Test\ListStructSerializeTestScript.cs" />
+    <Compile Include="Scripts\Test\ParticleEmitCountTestScript.cs" />
     <Compile Include="Scripts\Test\PostEffectTestScript.cs" />
     <Compile Include="Scripts\Test\PressAnyKeyGamepadTestScript.cs" />
     <Compile Include="Scripts\Test\ProfileTest.cs" />
