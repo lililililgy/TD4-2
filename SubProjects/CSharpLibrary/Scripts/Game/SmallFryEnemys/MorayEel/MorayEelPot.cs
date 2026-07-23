@@ -23,21 +23,29 @@ public class MorayEelPot : MonoScript
     private float   fireTimer_ = 0.0f; // 発射間隔の計測
     private float   angleZ_    = 0.0f; // 現在のZ回転角
     private Vector3 baseScale_;
+    private bool    baseScaleCaptured_ = false;
 
     private enum FireScalePhase { IDLE, SHRINK, EXPAND, RETURN }
     private FireScalePhase fireScalePhase_   = FireScalePhase.IDLE;
     private float          fireScaleElapsed_ = 0.0f;
 
-    private Action[] fireScaleActions_;
+    private Action[] fireScaleActions_ = null;
 
     public override void Initialize()
     {
         fireTimer_        = 0.0f;
         angleZ_           = 0.0f;
-        baseScale_        = transform != null ? transform.scale : Vector3.one;
         fireScalePhase_   = FireScalePhase.IDLE;
         fireScaleElapsed_ = 0.0f;
+        TryCaptureBaseScale();
+        EnsureFireScaleActions();
+    }
 
+    // Initialize()より先にUpdate()が呼ばれるケースがあるため、
+    // どちらから来ても確実にfireScaleActions_が用意された状態にする。
+    private void EnsureFireScaleActions()
+    {
+        if (fireScaleActions_ != null) { return; }
         fireScaleActions_ = new Action[]
         {
             null,          // IDLE
@@ -47,9 +55,19 @@ public class MorayEelPot : MonoScript
         };
     }
 
+    private void TryCaptureBaseScale()
+    {
+        if (baseScaleCaptured_ || transform == null) { return; }
+        baseScale_ = transform.scale;
+        baseScaleCaptured_ = true;
+    }
+
     public override void Update()
     {
         if (transform == null) { return; }
+
+        TryCaptureBaseScale();
+        EnsureFireScaleActions();
 
         // ツボを Z 軸回転させる
         angleZ_ += rotateZSpeed * Time.deltaTime;

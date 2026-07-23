@@ -3,12 +3,12 @@
     "components": [
         {
             "SpikeFishNeedle": {
-                "aliveTime": 0.699999988079071
+                "aliveTime": 1.0
             },
             "type": "Variables"
         }
     ],
-    "guid": "96607359ca01201864e8316d6fd1f98f",
+    "guid": "884cab8cc2d464cec0175e5614ca8a2b",
     "name": "Needle",
     "parentGuid": null,
     "prefabName": "Needle"

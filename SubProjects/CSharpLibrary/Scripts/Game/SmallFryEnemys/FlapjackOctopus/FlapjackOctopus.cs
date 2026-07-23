@@ -49,6 +49,7 @@ public class FlapjackOctopus : MonoScript
     private TargetRangeDetector rangeDetector_;
     // 初期スケール、速度
     private Vector3 initialScale_;
+    private bool    initialScaleCaptured_ = false;
     private Vector3 velocity_ = Vector3.zero;
     // 状態遷移タイマー
     private float stateTimer_ = 0.0f;
@@ -65,7 +66,7 @@ public class FlapjackOctopus : MonoScript
         motion_.Attach(entity);
 
         // 初期スケールを保持しておく
-        initialScale_ = transform != null ? transform.scale : Vector3.one;
+        TryCaptureInitialScale();
         // スクリプト取得
         spriteAnimation_ = entity.GetScript<SpriteAnimation>();
         rangeDetector_ = entity.GetScript<TargetRangeDetector>();
@@ -138,9 +139,20 @@ public class FlapjackOctopus : MonoScript
         timedDestruction.lifeTime = chaseBurstParticleLifeTime;
     }
 
+    // Initialize時点ではtransformがまだ準備できていないことがあるため、
+    // 準備できるまで毎フレーム再試行する(でないとinitialScale_がVector3.oneのまま焼き付いてしまう)。
+    private void TryCaptureInitialScale()
+    {
+        if (initialScaleCaptured_ || transform == null) { return; }
+        initialScale_ = transform.scale;
+        initialScaleCaptured_ = true;
+    }
+
     public override void Update()
     {
         if (transform == null) { return; }
+
+        TryCaptureInitialScale();
 
         // 親子付けしていない泳ぎの泡の座標を追従させる
         SyncSwimParticlePosition();
