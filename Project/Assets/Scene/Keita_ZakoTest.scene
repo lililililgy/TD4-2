@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.10000000149011612,
+        0.25,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "2bb21ccbfbde4082830210d36ae5a2a5",
@@ -40,5 +46,6 @@
             "parentGuid": null,
             "path": "./Keita_ZakoTest/353a89b82aa34b4bbdbaebd61ee7722e.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }
