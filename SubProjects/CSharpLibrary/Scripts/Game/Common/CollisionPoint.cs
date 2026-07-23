@@ -94,19 +94,16 @@ public static class CollisionPoint {
         return center + axisX * localX + axisY * localY;
     }
 
-    // 座標。transform.matrix（ワールド行列）はシーン読み込み時にしか C# へ同期されない
-    // （ComponentBatchManager.ReceiveAllBatches の呼び出し元が SyncInitialComponentsToCS だけ）ので
-    // 実行中は使えない。毎フレーム更新されるのは C# 側が書いている position のほう。
-    //
-    // そのため親を持つ Entity ではローカル座標になる。このプロジェクトのコライダーは
-    // すべてルート Entity に付いている（ローカル＝ワールド）ので実害はないが、
-    // 子 Entity にコライダーを付ける構成が出てきたらここを直す必要がある。
+    // ワールド座標。transform.position は親基準のローカル、transform.matrix は
+    // シーン読み込み時のスナップショット（ReceiveAllBatches の呼び出し元が
+    // SyncInitialComponentsToCS だけ）なので、どちらも実行中のワールド座標には使えない。
+    // Transform.GetWorldPosition() はネイティブのワールド行列を直接読む。
     private static Vector3 Position(Entity entity) {
         Transform transform = entity.GetComponent<Transform>();
         if (transform == null) {
             return Vector3.zero;
         }
-        return transform.position;
+        return transform.GetWorldPosition();
     }
 
     private static Vector3 Scale(Entity entity) {

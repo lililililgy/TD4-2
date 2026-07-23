@@ -43,4 +43,43 @@ public class Transform : Component {
 		this.scale = batch[0].scale;
 		this.matrix = batch[0].matrix;
 	}
+
+	/// <summary>
+	/// ネイティブへ即座に座標を書き込む。
+	/// position への代入は毎フレーム末尾の SendAllBatches でしか C++ に届かないため、
+	/// 生成直後のエンティティを即座に配置したい場合はこちらを使う。
+	/// C++ 側でワールド行列の再計算と子への伝播まで行われる。
+	/// C# 側の position も同時に更新するので、あとから来るバッチ送信と食い違わない。
+	/// </summary>
+	public void SetPositionImmediate(Vector3 value) {
+		position = value;
+		if (nativeHandle != 0) {
+			InternalSetPosition(nativeHandle, value.x, value.y, value.z);
+		}
+	}
+
+	/// <summary>
+	/// ネイティブのワールド行列から現在のワールド座標を読む。
+	/// position は親基準のローカル、matrix はシーン読み込み時のスナップショットなので、
+	/// 実行中に正しいワールド座標が要るときはこれを使う。
+	/// </summary>
+	public Vector3 GetWorldPosition() {
+		if (nativeHandle == 0) {
+			return position;
+		}
+
+		float x, y, z;
+		InternalGetPosition(nativeHandle, out x, out y, out z);
+		return new Vector3(x, y, z);
+	}
+
+	/// =================================
+	/// internal methods
+	/// =================================
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalSetPosition(ulong nativeHandle, float x, float y, float z);
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	static extern void InternalGetPosition(ulong nativeHandle, out float x, out float y, out float z);
 }

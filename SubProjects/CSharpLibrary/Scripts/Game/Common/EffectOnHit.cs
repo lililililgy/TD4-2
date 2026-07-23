@@ -31,8 +31,10 @@ public class EffectOnHit : MonoScript {
             return;
         }
 
+        // position への代入だけだと反映がフレーム末尾のバッチ送信任せになるので、
+        // ネイティブへ直接書いて即座に配置する
         Vector3 point = SpawnPosition(target);
-        effect.transform.position = point;
+        effect.transform.SetPositionImmediate(point);
 
         // TODO: 位置ズレ調査用の一時ログ。原因が分かったら消す
         Debug.LogWarning("[EffectOnHit]"
@@ -40,7 +42,7 @@ public class EffectOnHit : MonoScript {
             + " target=" + Vector3.ToSimpleString(target.transform.position)
             + " point="  + Vector3.ToSimpleString(point)
             + " effect=" + effect.name + "(id " + effect.Id + ")"
-            + " written=" + Vector3.ToSimpleString(effect.transform.position));
+            + " readback=" + Vector3.ToSimpleString(effect.transform.GetWorldPosition()));
 
         // プレハブが既に寿命を持っているなら二重に付けない（Destroy が二度走るのを避ける）
         if (lifeTime_ > 0.0f && effect.GetScript<TimedDestruction>() == null) {

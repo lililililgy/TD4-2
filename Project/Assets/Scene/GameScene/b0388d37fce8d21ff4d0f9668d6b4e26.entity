@@ -31,8 +31,8 @@
             "type": "Variables"
         },
         {
-            "mass": 0.009999999776482582,
-            "restitution": 100.0,
+            "mass": 0.10000000149011612,
+            "restitution": 30.0,
             "type": "Rigidbody2D"
         }
     ],

@@ -5,13 +5,16 @@
 //
 // ダメージを動的に変えたい場合（例: プレイヤー速度依存）は、外部のスクリプトが
 // Damage プロパティを書き換える。速度→ダメージの算出はそちら側の責務とする。
-public class AttackCollision : MonoScript {
+public class AttackCollision : MonoScript
+{
 
-    [SerializeField] private float damage_       = 10;    // 与えるダメージ
-    [SerializeField] private bool  destroyOnHit_ = false; // 命中したら自分を破棄する（弾向け）
+    [SerializeField] private float damage_ = 10;    // 与えるダメージ
+    [SerializeField] private bool destroyOnHit_ = false; // 命中したら自分を破棄する（弾向け）
 
-    public override void OnCollisionEnter(Entity collision) {
-        if (collision == null || collision.Id == entity.Id) {
+    public override void OnCollisionEnter(Entity collision)
+    {
+        if (collision == null || collision.Id == entity.Id)
+        {
             return; // 自分自身は無視
         }
 
@@ -22,14 +25,16 @@ public class AttackCollision : MonoScript {
         float dealtDamage = damage_ * multiplier;
 
         GesoWeakPoint weakPoint = collision.GetScript<GesoWeakPoint>();
-        if (weakPoint != null) {
+        if (weakPoint != null)
+        {
             weakPoint.Damage(dealtDamage);
             OnDamageDealt(collision, dealtDamage);
             return;
         }
 
         YadokariWeakPoint yadokariWeakPoint = collision.GetScript<YadokariWeakPoint>();
-        if (yadokariWeakPoint != null) {
+        if (yadokariWeakPoint != null)
+        {
             yadokariWeakPoint.Damage(dealtDamage);
             OnDamageDealt(collision, dealtDamage);
             return;
@@ -39,12 +44,14 @@ public class AttackCollision : MonoScript {
         // 持っていなければ従来通り相手の HP を直接削る（敵など）。
         DamageRelay relay = collision.GetScript<DamageRelay>();
         HP hp = relay != null ? relay.OwnerHp : collision.GetScript<HP>();
-        if (hp == null) {
+        if (hp == null)
+        {
             return; // ダメージを送れる相手が居ない
         }
 
         // 中継経由でない直接被弾で、directlyDamageable_=false の HP(=共有ライフの本体/頭)は無視。
-        if (relay == null && !hp.IsDirectlyDamageable) {
+        if (relay == null && !hp.IsDirectlyDamageable)
+        {
             return;
         }
 
@@ -56,19 +63,22 @@ public class AttackCollision : MonoScript {
     // ダメージが実際に通ったときの共通後処理。
     // 空振り（HP を持たない相手・無敵中の弾き）では呼ばれないので、当たった瞬間だけ演出が出る。
     // target はダメージが通った相手。衝突点を必要とする演出（EffectOnHit）が使う。
-    private void OnDamageDealt(Entity target, float dealtDamage) {
+    private void OnDamageDealt(Entity target, float dealtDamage)
+    {
         // 命中演出。ShakeOnHit が付いている攻撃だけカメラが揺れる。
         // 揺れ幅の決定はあちらの責務なので、ここは実ダメージを渡すだけ。
         // 破棄より先に呼ぶ（Publish は同期呼び出しなので、この場で演出まで走る）。
         ShakeOnHit shake = entity.GetScript<ShakeOnHit>();
-        if (shake != null) {
+        if (shake != null)
+        {
             shake.OnHit(dealtDamage);
         }
 
         // ヒットストップ。こちらも HitStopOnHit が付いている攻撃だけ止まる。
         // 止め時間の決定はあちらの責務で、ここは実ダメージを渡すだけ。
         HitStopOnHit hitStop = entity.GetScript<HitStopOnHit>();
-        if (hitStop != null) {
+        if (hitStop != null)
+        {
             hitStop.OnHit(dealtDamage);
         }
 
@@ -76,16 +86,19 @@ public class AttackCollision : MonoScript {
         // engine から接触点は渡ってこないので、位置の計算はあちらの責務。
         // destroyOnHit_ で自分を消す前に呼ぶ（消えたあとでは衝突点を計算できない）。
         EffectOnHit effect = entity.GetScript<EffectOnHit>();
-        if (effect != null) {
+        if (effect != null)
+        {
             effect.OnHit(target);
         }
 
-        if (destroyOnHit_) {
+        if (destroyOnHit_)
+        {
             entity.Destroy();
         }
     }
 
-    public float Damage {
+    public float Damage
+    {
         get { return damage_; }
         set { damage_ = value; }
     }
