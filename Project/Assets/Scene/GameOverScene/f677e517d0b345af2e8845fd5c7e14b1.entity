@@ -7,7 +7,7 @@
             "position": {
                 "x": 0.0,
                 "y": 0.0,
-                "z": 0.0
+                "z": -7.0
             },
             "rotate": {
                 "w": 1.0,
@@ -16,9 +16,9 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 512.0,
-                "y": 64.0,
-                "z": 0.5
+                "x": 128.0,
+                "y": 128.0,
+                "z": 1.0
             },
             "type": "Transform"
         },
@@ -30,7 +30,7 @@
                 "Escape",
                 "GamepadB"
             ],
-            "currentSelected": "095b46a52e2f97d25a0bfc8b505380e8",
+            "currentSelected": "65a491989ee384a190cda3254c7ebb17",
             "enable": 1,
             "isFocused": true,
             "isVisible": true,
@@ -43,8 +43,8 @@
             "type": "UIGroupComponent"
         }
     ],
-    "guid": "fe7717145a0734ae5c8d141d1587f32e",
+    "guid": "f677e517d0b345af2e8845fd5c7e14b1",
     "name": "Group_0",
-    "parentGuid": "37056e09c6868f9a014d766c7ea2d95a",
+    "parentGuid": "6a7bd67836e315ba423e8db2f9f2332d",
     "prefabName": ""
 }

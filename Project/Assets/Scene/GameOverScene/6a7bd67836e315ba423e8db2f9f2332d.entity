@@ -7,7 +7,7 @@
             "position": {
                 "x": 0.0,
                 "y": 0.0,
-                "z": -100.0
+                "z": 0.0
             },
             "rotate": {
                 "w": 1.0,
@@ -26,8 +26,8 @@
             "type": "Variables"
         }
     ],
-    "guid": "37056e09c6868f9a014d766c7ea2d95a",
-    "name": "GameClearUI",
+    "guid": "6a7bd67836e315ba423e8db2f9f2332d",
+    "name": "GameOverUI",
     "parentGuid": null,
     "prefabName": ""
 }
