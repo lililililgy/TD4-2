@@ -176,6 +176,10 @@
                 "movementAreaEntityName_": "Stage",
                 "radius_": 33.0
             },
+            "PhaseRoeRescue": {
+                "minEggCount_": 2,
+                "objectiveSystemEntityName_": "GameController"
+            },
             "PlayerAttackComponent": {
                 "damageCurve_": [
                     {
@@ -353,6 +357,10 @@
                 {
                     "enable": true,
                     "name": "RoeManager"
+                },
+                {
+                    "enable": true,
+                    "name": "PhaseRoeRescue"
                 },
                 {
                     "enable": true,
