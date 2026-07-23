@@ -4,7 +4,8 @@ using System.Collections.Generic;
 //   1. 一定時間の無敵(i-frame)。連続ヒットで一気に溶けるのを防ぐ。
 //   2. 無敵中はスプライトを点滅させる(点滅色は指定可能)。
 //   3. コントローラーの振動(ラムブル)。
-//   4. Time.timeScale を一定時間下げるヒットストップ。
+//   4. ヒットストップ（減速）。減速そのものは共有の HitStop に要求するだけで、
+//      timeScale はここでは触らない（攻撃ヒット側の要求と衝突させないため）。
 //
 // 見た目の本体は頭・胴体・触手で別 Entity に分かれている(親子関係なし。ライフは頭の HP が1つだけ持ち、
 // 胴体/触手は DamageRelay で頭を参照する構成)。点滅は頭が1本のタイマーで全パーツをまとめて駆動する。
@@ -35,6 +36,7 @@ public class DamageFeedback : MonoScript {
     };
 
     // --- ヒットストップ ---
+    // 実際の減速・解除は HitStop が行う。ここは「どれだけ止めてほしいか」を持つだけ。
     [SerializeField] private float hitstopTimeScale_ = 0.15f; // この倍率まで一時的に減速
     [SerializeField] private float hitstopDuration_  = 0.12f; // 減速を保つ秒数(実時間)
 
@@ -55,8 +57,6 @@ public class DamageFeedback : MonoScript {
     private bool  invincibleActive_ = false;
     private float invincibleTimer_  = 0.0f; // 無敵開始からの経過(実時間)
 
-    private bool  hitstopActive_ = false;
-    private float hitstopTimer_  = 0.0f;    // ヒットストップ開始からの経過(実時間)
 
     public override void Initialize() {
         hp_ = entity.GetScript<HP>();
@@ -111,15 +111,6 @@ public class DamageFeedback : MonoScript {
                 RestoreColors(); // 点滅を確実に元へ戻す
             }
         }
-
-        // ヒットストップの進行(解除で元の等速へ戻す)
-        if (hitstopActive_) {
-            hitstopTimer_ += dt;
-            if (hitstopTimer_ >= hitstopDuration_) {
-                Time.timeScale = 1.0f;
-                hitstopActive_ = false;
-            }
-        }
     }
 
     private void TriggerFeedback() {
@@ -128,10 +119,8 @@ public class DamageFeedback : MonoScript {
         invincibleActive_ = true;
         invincibleTimer_  = 0.0f;
 
-        // ヒットストップ
-        Time.timeScale = hitstopTimeScale_;
-        hitstopActive_ = true;
-        hitstopTimer_  = 0.0f;
+        // ヒットストップ（解除は HitStop 側が実時間で行う）
+        HitStop.Request(hitstopTimeScale_, hitstopDuration_);
 
         // 振動
         Input.PlayGamepadVibration(rumbleLeftMotor_, rumbleRightMotor_, rumbleDuration_);
@@ -159,12 +148,4 @@ public class DamageFeedback : MonoScript {
         }
     }
 
-    public override void OnDestroy() {
-        // ヒットストップ中にプレイヤーが破棄されると Update が止まり、
-        // timeScale が下がったままゲーム全体が減速する。破棄時に必ず戻す。
-        if (hitstopActive_) {
-            Time.timeScale = 1.0f;
-            hitstopActive_ = false;
-        }
-    }
 }
