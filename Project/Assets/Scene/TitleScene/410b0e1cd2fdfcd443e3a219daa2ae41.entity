@@ -1,5 +1,14 @@
 {
     "active": true,
+    "components": [
+        {
+            "position": {
+                "x": -35.29998779296875,
+                "y": 165.50001525878906
+            },
+            "type": "Transform"
+        }
+    ],
     "guid": "410b0e1cd2fdfcd443e3a219daa2ae41",
     "name": "seaweed",
     "parentGuid": "89964bdd4dc41107df15fba0ecf42b40",

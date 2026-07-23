@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +10,7 @@ public class EmitKillEventOnDestroy : MonoScript
 {
     public override void OnDestroy()
     {
+        if (entity == null) return;
         HP hp = entity.GetScript<HP>();
         if (hp != null && hp.IsDead)
         {

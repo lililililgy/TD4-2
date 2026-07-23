@@ -56,6 +56,7 @@
                 },
                 {
                     "enable": 1,
+                    "isPixelPerfect": true,
                     "material": {
                         "baseColor": {
                             "w": 1.0,
@@ -64,6 +65,9 @@
                             "z": 1.0
                         },
                         "baseTextureGuid": "5697b7219ab5220641dc1f97f180b3f3",
+                        "bloomIntensity": 1.0,
+                        "bloomRadius": 12.0,
+                        "bloomThreshold": 0.800000011920929,
                         "guid": "00000000000000000000000000000000",
                         "normalTextureGuid": "00000000000000000000000000000000",
                         "postEffectFlags": 0,
@@ -79,13 +83,12 @@
                             }
                         }
                     },
-                    "isPixelPerfect": true,
                     "type": "SpriteRenderer"
                 }
             ],
-            "guid": "5ed32ed7307d42dc28638d9b966c3688",
+            "guid": "ed0ce65e3b321cfd0f3b5f891116c113",
             "name": "SpikeFishAroundNeedle",
-            "parentGuid": "3eb5bbb9ffa22394fd0ca6deba14bbe1",
+            "parentGuid": "0ddfefefe7891522f08877c724fc53a4",
             "prefabName": "SpikeFishAroundNeedle"
         }
     ],
@@ -94,8 +97,8 @@
             "enable": 1,
             "matrixCalcFlags": 7,
             "position": {
-                "x": -1072.5771484375,
-                "y": -816.9142456054688,
+                "x": 0.0,
+                "y": 0.0,
                 "z": 1.4156103134155273e-06
             },
             "rotate": {
@@ -124,6 +127,10 @@
             "useOwnerScale": true
         },
         {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
             "ChaseController": {
                 "OnChaseStart": {
                     "__type": ""
@@ -149,6 +156,35 @@
                 "targetEntityName": "Player",
                 "waitTime": 0.0
             },
+            "DespawnTimer": {
+                "despawnTime_": 12.0
+            },
+            "ExpDropper": {
+                "damageDropExp": 0.0,
+                "dropExp": 32.0
+            },
+            "FlashOnDamaged": {
+                "duration_": 0.08,
+                "fadeOut_": true,
+                "flashColor_": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "HP": {
+                "currentHp_": 20.0,
+                "directlyDamageable_": true,
+                "disableAutoDestruction_": false,
+                "isInvincible_": false,
+                "maxHp_": 20.0
+            },
+            "ShakeSelfOnDamaged": {
+                "amplitude_": 24.0,
+                "duration_": 0.12,
+                "frequency_": 35.0
+            },
             "SmallFryChaseMove": {},
             "SpikeFish": {
                 "baseRotationOffsetDeg": 90.0,
@@ -158,7 +194,7 @@
             },
             "SpikeFishAttack": {
                 "attackDuration": 0.800000011920929,
-                "needleNum": 16
+                "needleNum": 7
             },
             "SpriteAnimation": {
                 "cols": 4,
@@ -210,12 +246,37 @@
                 {
                     "enable": true,
                     "name": "SpikeFish"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "HP"
+                },
+                {
+                    "enable": true,
+                    "name": "ExpDropper"
+                },
+                {
+                    "enable": true,
+                    "name": "DespawnTimer"
+                },
+                {
+                    "enable": true,
+                    "name": "FlashOnDamaged"
+                },
+                {
+                    "enable": true,
+                    "name": "ShakeSelfOnDamaged"
                 }
             ],
             "type": "Script"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -224,6 +285,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "42abbd61b0729f258766ad5a5a961ef2",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -239,11 +303,24 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
-    "guid": "3eb5bbb9ffa22394fd0ca6deba14bbe1",
+    "guid": "0ddfefefe7891522f08877c724fc53a4",
     "name": "SpikeFish",
     "parentGuid": null,
     "prefabName": "SpikeFish"

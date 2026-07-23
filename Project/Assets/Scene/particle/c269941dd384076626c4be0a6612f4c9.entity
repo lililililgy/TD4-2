@@ -1,0 +1,13 @@
+{
+    "active": true,
+    "components": [
+        {
+            "inheritEmitterRotation": false,
+            "type": "ParticleSystem2D"
+        }
+    ],
+    "guid": "c269941dd384076626c4be0a6612f4c9",
+    "name": "playerDashParticle",
+    "parentGuid": null,
+    "prefabName": "playerDashParticle"
+}

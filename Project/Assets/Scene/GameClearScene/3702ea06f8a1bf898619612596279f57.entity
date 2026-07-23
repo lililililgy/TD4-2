@@ -2,6 +2,17 @@
     "active": true,
     "components": [
         {
+            "position": {
+                "z": -3.0
+            },
+            "type": "Transform"
+        },
+        {
+            "main": {
+                "startDelay": {
+                    "constant": 2.0
+                }
+            },
             "renderer": {
                 "alignment": 0
             },

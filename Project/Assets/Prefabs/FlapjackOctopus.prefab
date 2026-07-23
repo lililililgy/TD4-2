@@ -35,6 +35,16 @@
             "useOwnerScale": true
         },
         {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
+            "DespawnTimer": {
+                "despawnTime_": 12.0
+            },
+            "ExpDropper": {
+                "dropExp": 16.0
+            },
             "FlapjackOctopus": {
                 "chargeScaleAnimationTime": 0.5,
                 "chargeScaleRate": 0.800000011920929,
@@ -50,6 +60,16 @@
                 "inertiaStopRatio": 0.10000000149011612,
                 "targetEntityName": "Player"
             },
+            "FlashOnDamaged": {
+                "duration_": 0.08,
+                "fadeOut_": true,
+                "flashColor_": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
             "HP": {
                 "currentHp_": 11.214211463928223,
                 "directlyDamageable_": true,
@@ -57,6 +77,11 @@
                 "enable": true,
                 "isInvincible_": false,
                 "maxHp_": 20.0
+            },
+            "ShakeSelfOnDamaged": {
+                "amplitude_": 24.0,
+                "duration_": 0.12,
+                "frequency_": 35.0
             },
             "SpriteAnimation": {
                 "cols": 4,
@@ -105,6 +130,26 @@
                 {
                     "enable": true,
                     "name": "ParticleOffset"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
+                },
+                {
+                    "enable": true,
+                    "name": "ExpDropper"
+                },
+                {
+                    "enable": true,
+                    "name": "DespawnTimer"
+                },
+                {
+                    "enable": true,
+                    "name": "FlashOnDamaged"
+                },
+                {
+                    "enable": true,
+                    "name": "ShakeSelfOnDamaged"
                 }
             ],
             "type": "Script"
@@ -136,6 +181,20 @@
                 }
             },
             "type": "SpriteRenderer"
+        },
+        {
+            "enable": 1,
+            "freezeX": false,
+            "freezeY": false,
+            "gravityScale": 1.0,
+            "mass": 1.0,
+            "restitution": 0.5,
+            "type": "Rigidbody2D",
+            "useGravity": false,
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0
+            }
         }
     ],
     "guid": "283f24dc7a6b47e29a6b5efa56a182c8",

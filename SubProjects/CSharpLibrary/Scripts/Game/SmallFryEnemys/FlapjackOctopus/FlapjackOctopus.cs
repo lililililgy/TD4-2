@@ -49,6 +49,7 @@ public class FlapjackOctopus : MonoScript
     private TargetRangeDetector rangeDetector_;
     // 初期スケール、速度
     private Vector3 initialScale_;
+    private bool    initialScaleCaptured_ = false;
     private Vector3 velocity_ = Vector3.zero;
     // 状態遷移タイマー
     private float stateTimer_ = 0.0f;
@@ -58,12 +59,14 @@ public class FlapjackOctopus : MonoScript
     private Action stateUpdateAction_;
     // 状態ごとの突入処理
     private Dictionary<State, Action> enterActions_;
+    private RigidbodyMotion motion_ = new RigidbodyMotion(6.0f);
 
     public override void Initialize()
     {
+        motion_.Attach(entity);
 
         // 初期スケールを保持しておく
-        initialScale_ = transform.scale;
+        TryCaptureInitialScale();
         // スクリプト取得
         spriteAnimation_ = entity.GetScript<SpriteAnimation>();
         rangeDetector_ = entity.GetScript<TargetRangeDetector>();
@@ -87,10 +90,10 @@ public class FlapjackOctopus : MonoScript
     // 常時再生する泳ぎの泡を生成する
     private void SpawnSwimParticle()
     {
-        if (String.IsNullOrEmpty(swimParticlePrefabName)) { return; }
+        if (String.IsNullOrEmpty(swimParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity swimParticle = ecsGroup.CreateEntity(swimParticlePrefabName);
-        if (!swimParticle) { return; }
+        if (!swimParticle || swimParticle.transform == null) { return; }
 
         // FlapjackOctopusはスケールが極端に大きいため、親子付けすると泡もつられて巨大化し画面外に出てしまう。
         // そのため親子付けはせず、座標だけを毎フレーム追従させる。
@@ -101,7 +104,7 @@ public class FlapjackOctopus : MonoScript
     // 泳ぎの泡の座標をこの敵の現在位置に追従させる
     private void SyncSwimParticlePosition()
     {
-        if (!swimParticleEntity_) { return; }
+        if (!swimParticleEntity_ || swimParticleEntity_.transform == null || transform == null) { return; }
         swimParticleEntity_.transform.position = transform.position + GetParticleOffset();
     }
 
@@ -109,7 +112,7 @@ public class FlapjackOctopus : MonoScript
     // FlapjackOctopusはFaceTarget()でtransform.rotateを実際に回転させているため、そのままオフセットに回転を掛ける。
     private Vector3 GetParticleOffset()
     {
-        if (particleOffset_ == null) { return Vector3.zero; }
+        if (particleOffset_ == null || transform == null) { return Vector3.zero; }
         return transform.rotate * particleOffset_.offset;
     }
 
@@ -125,10 +128,10 @@ public class FlapjackOctopus : MonoScript
     // 蹴伸びする度に独立したバーストエンティティを生成して、常駐の泡とは別に確実に発生させる
     private void SpawnChaseBurstParticle()
     {
-        if (String.IsNullOrEmpty(swimParticlePrefabName)) { return; }
+        if (String.IsNullOrEmpty(swimParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity burst = ecsGroup.CreateEntity(swimParticlePrefabName);
-        if (!burst) { return; }
+        if (!burst || burst.transform == null) { return; }
 
         burst.transform.position = transform.position + GetParticleOffset();
 
@@ -136,8 +139,21 @@ public class FlapjackOctopus : MonoScript
         timedDestruction.lifeTime = chaseBurstParticleLifeTime;
     }
 
+    // Initialize時点ではtransformがまだ準備できていないことがあるため、
+    // 準備できるまで毎フレーム再試行する(でないとinitialScale_がVector3.oneのまま焼き付いてしまう)。
+    private void TryCaptureInitialScale()
+    {
+        if (initialScaleCaptured_ || transform == null) { return; }
+        initialScale_ = transform.scale;
+        initialScaleCaptured_ = true;
+    }
+
     public override void Update()
     {
+        if (transform == null) { return; }
+
+        TryCaptureInitialScale();
+
         // 親子付けしていない泳ぎの泡の座標を追従させる
         SyncSwimParticlePosition();
 
@@ -323,8 +339,6 @@ public class FlapjackOctopus : MonoScript
     // 水の抵抗を受けて速度が指数関数的に減衰していく慣性移動
     private void ApplyInertiaMovement()
     {
-        if (velocity_.LengthSq() <= 0.0001f) { return; }
-
         // 水の抵抗による速度減衰
         float drag = chaseDrag;
         if (drag <= 0.0001f)
@@ -334,7 +348,7 @@ public class FlapjackOctopus : MonoScript
 
         // 減衰計算: v = v0 * exp(-drag * dt)
         velocity_ *= (float)Math.Exp(-drag * Time.deltaTime);
-        transform.position += velocity_ * Time.deltaTime;
+        motion_.Apply(transform, velocity_);
     }
 
     private void UpdateChaseScalePulse()
@@ -381,6 +395,8 @@ public class FlapjackOctopus : MonoScript
     // プレイヤー方向へ緩やかに向きを合わせる
     private void FaceTarget()
     {
+        if (transform == null || targetEntity_ == null || targetEntity_.transform == null) { return; }
+
         Vector3 toTarget = targetEntity_.transform.position - transform.position;
         if (toTarget.LengthSq() <= 0.0001f) { return; }
 

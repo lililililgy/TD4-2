@@ -13,6 +13,7 @@ public class SpikeFish : MonoScript
     private Action animationAction_;
     private float animationTimer_;
     private Vector3 initialScale_;
+    private bool initialScaleCaptured_ = false;
     private bool isExpandEnded_ = false;
 
 
@@ -20,9 +21,9 @@ public class SpikeFish : MonoScript
     {
         spriteRenderer_ = entity.GetComponent<SpriteRenderer>();
         spriteAnimation_ = entity.GetScript<SpriteAnimation>();
-        Entity playerEntity = ecsGroup.FindEntity("Player");
-        targetTransform_ = playerEntity.GetComponent<Transform>();
-        initialScale_ = transform.scale;
+        Entity playerEntity = ecsGroup != null ? ecsGroup.FindEntity("Player") : null;
+        targetTransform_ = playerEntity != null ? playerEntity.GetComponent<Transform>() : null;
+        TryCaptureInitialScale();
         animationAction_ = Wait;
 
 
@@ -35,8 +36,21 @@ public class SpikeFish : MonoScript
         }
     }
 
+    // Initialize時点ではtransformがまだ準備できていないことがあるため、
+    // 準備できるまで毎フレーム再試行する(でないとinitialScale_がVector3.oneのまま焼き付いてしまう)。
+    private void TryCaptureInitialScale()
+    {
+        if (initialScaleCaptured_ || transform == null) { return; }
+        initialScale_ = transform.scale;
+        initialScaleCaptured_ = true;
+    }
+
     public override void Update()
     {
+        if (transform == null || targetTransform_ == null) { return; }
+
+        TryCaptureInitialScale();
+
         Vector3 toTarget = targetTransform_.position - transform.position;
 
         // ベクトルの長さが0以下の場合は処理を終了

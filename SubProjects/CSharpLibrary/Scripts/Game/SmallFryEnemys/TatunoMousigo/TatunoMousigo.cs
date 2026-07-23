@@ -27,8 +27,12 @@ public class TatunoMousigo : MonoScript
 
     /* ----- カメラシェイク ----- */
     [SerializeField] private string cameraEntityName = "MainCamera";
+    // 振幅はワールド単位なので数百オーダーになる(プレハブ側で設定)
     [SerializeField] private float moveShakeIntensity = 2.0f;
     [SerializeField] private float landShakeIntensity = 8.0f;
+    [SerializeField] private float moveShakeDuration  = 0.12f;
+    [SerializeField] private float landShakeDuration  = 0.25f;
+    [SerializeField] private float shakeFrequency     = 28.0f;
 
     /* ----- パーティクル ----- */
     // 歩行時・着地時に再生する土埃
@@ -45,6 +49,7 @@ public class TatunoMousigo : MonoScript
     private SpriteAnimation spriteAnimation_;
     // 敵単位でパーティクルの発生位置を調整するオフセットスクリプト
     private ParticleOffset particleOffset_;
+    private RigidbodyMotion motion_ = new RigidbodyMotion(6.0f);
 
     // 歩きアニメーションのフレーム範囲
     private int walkStartFrame = 0; // 停止ポーズ
@@ -53,6 +58,7 @@ public class TatunoMousigo : MonoScript
 
     // 通常時に維持するY座標
     private float baseY_ = 0.0f;
+    private bool  baseYCaptured_ = false;
 
     // 横移動
     private int moveDir_ = 0;
@@ -71,6 +77,7 @@ public class TatunoMousigo : MonoScript
 
     public override void Initialize()
     {
+        motion_.Attach(entity);
 
         // Entity,Component,Scriptの取得
         targetEntity_ = ecsGroup.FindEntity(targetEntityName);
@@ -82,7 +89,7 @@ public class TatunoMousigo : MonoScript
         Entity cameraEntity = ecsGroup.FindEntity(cameraEntityName);
         cameraShake_ = cameraEntity != null ? cameraEntity.GetScript<CameraShake>() : null;
 
-        baseY_ = transform.position.y + baseYOffset;
+        TryCaptureBaseY();
 
         // 着地フレームに乗ったタイミングで1歩進める
         if (spriteAnimation_ != null)
@@ -91,8 +98,21 @@ public class TatunoMousigo : MonoScript
         }
     }
 
+    // Initialize時点ではtransformがまだ準備できていないことがあるため、
+    // 準備できるまで毎フレーム再試行する(でないとbaseY_が0焼き付いてしまう)。
+    private void TryCaptureBaseY()
+    {
+        if (baseYCaptured_ || transform == null) { return; }
+        baseY_ = transform.position.y + baseYOffset;
+        baseYCaptured_ = true;
+    }
+
     public override void Update()
     {
+        if (transform == null) { return; }
+
+        TryCaptureBaseY();
+
         if (!TryFindTarget())
         {
             return;
@@ -100,6 +120,10 @@ public class TatunoMousigo : MonoScript
 
         UpdateJump();
         UpdateDirection();
+
+        // 横方向だけ Rigidbody2D 経由で連続移動する。Y はこの後 ApplyY() が baseY_ に固定する。
+        motion_.Apply(transform, new Vector3(moveDir_ * moveSpeed, 0.0f, 0.0f));
+
         UpdateWalkAnimation();
         ApplyY();
         UpdateTurnUV();
@@ -109,7 +133,8 @@ public class TatunoMousigo : MonoScript
     private void UpdateDirection()
     {
         bool inRange = rangeDetector_ == null || rangeDetector_.IsInRange;
-        float toTargetX = inRange ? targetEntity_.transform.position.x - transform.position.x : 0.0f;
+        bool hasTargetTransform = targetEntity_ != null && targetEntity_.transform != null && transform != null;
+        float toTargetX = inRange && hasTargetTransform ? targetEntity_.transform.position.x - transform.position.x : 0.0f;
         int desiredDir = toTargetX > kDirEpsilon ? 1 : (toTargetX < -kDirEpsilon ? -1 : 0);
 
         if (desiredDir == 0)
@@ -139,7 +164,7 @@ public class TatunoMousigo : MonoScript
 
     private void OnWalkFrameChanged(int frame)
     {
-        if (frame != stepFrame || moveDir_ == 0)
+        if (frame != stepFrame || moveDir_ == 0 || transform == null)
         {
             return;
         }
@@ -149,6 +174,7 @@ public class TatunoMousigo : MonoScript
         transform.position = pos;
 
         //cameraShake_?.Shake(moveShakeIntensity);
+        cameraShake_?.Shake(moveShakeDuration, moveShakeIntensity, shakeFrequency);
         SpawnDustParticle();
     }
 
@@ -263,6 +289,7 @@ public class TatunoMousigo : MonoScript
             jumpState_ = JumpState.None;
             jumpCooldownTimer_ = jumpCooldown;
             //cameraShake_?.Shake(landShakeIntensity);
+            cameraShake_?.Shake(landShakeDuration, landShakeIntensity, shakeFrequency);
             SpawnDustParticle();
         }
     }
@@ -270,10 +297,10 @@ public class TatunoMousigo : MonoScript
     // 歩行・着地時の土埃エフェクトを足元に生成する
     private void SpawnDustParticle()
     {
-        if (String.IsNullOrEmpty(dustParticlePrefabName)) { return; }
+        if (String.IsNullOrEmpty(dustParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity dust = ecsGroup.CreateEntity(dustParticlePrefabName);
-        if (!dust) { return; }
+        if (!dust || dust.transform == null) { return; }
 
         // TatunoMousigoはtransform.rotateを回転させず、UVのX反転(facingDir_)だけで左右を表現しているため、
         // オフセットも回転ではなくfacingDir_でX成分をミラーさせる。
@@ -296,6 +323,11 @@ public class TatunoMousigo : MonoScript
             return false;
         }
 
+        if (transform == null || targetEntity_ == null || targetEntity_.transform == null)
+        {
+            return false;
+        }
+
         Vector3 toTarget = targetEntity_.transform.position - transform.position;
         bool isClose = Mathf.Abs(toTarget.x) <= jumpTriggerDistance;
         bool isAbove = toTarget.y >= jumpTriggerHeight;
@@ -308,6 +340,8 @@ public class TatunoMousigo : MonoScript
 
     private void ApplyY()
     {
+        if (transform == null) { return; }
+
         Vector3 pos = transform.position;
         pos.y = baseY_ + jumpYOffset_;
         transform.position = pos;
@@ -317,6 +351,7 @@ public class TatunoMousigo : MonoScript
     {
         if (targetEntity_ == null)
         {
+            if (ecsGroup == null) { return false; }
             targetEntity_ = ecsGroup.FindEntity(targetEntityName);
         }
         return targetEntity_ != null;

@@ -2,6 +2,34 @@
     "active": true,
     "components": [
         {
+            "DamageFeedback": {
+                "blinkColor_": {
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "hitstopDuration_": 0.012000000104308128,
+                "hitstopTimeScale_": 0.10000000149011612,
+                "invincibleDuration_": 0.800000011920929
+            },
+            "HitStopSystem": {},
+            "PlayerDashState": {
+                "rotateMaxSmoothSpeed_": 4.0,
+                "rotateSmoothTime_": 16.0
+            },
+            "PlayerNormalState": {
+                "decelMaxSmoothSpeed_": 256.0
+            },
+            "PlayerSE": {
+                "damagedSePath_": "./Assets/Sounds/se/PlayerDamagedSE.mp3",
+                "damagedVolume_": 0.4000000059604645,
+                "dashSePath_": "./Assets/Sounds/se/PlayerDashSE.mp3",
+                "dashVolume_": 0.30000001192092896,
+                "shotSePath_": "./Assets/Sounds/se/PlayerShotSE.mp3",
+                "shotVolume_": 0.30000001192092896
+            },
+            "SEOnHit": {
+                "sePath_": "./Assets/Sounds/se/PlayerAttackSE.mp3"
+            },
             "ShakeOnDamaged": {
                 "frequency_": 256.0,
                 "maxAmplitude_": 1000.0,
@@ -19,6 +47,11 @@
                 "referenceDuration_": 0.07999999821186066
             },
             "type": "Variables"
+        },
+        {
+            "mass": 0.10000000149011612,
+            "restitution": 30.0,
+            "type": "Rigidbody2D"
         }
     ],
     "guid": "b0388d37fce8d21ff4d0f9668d6b4e26",

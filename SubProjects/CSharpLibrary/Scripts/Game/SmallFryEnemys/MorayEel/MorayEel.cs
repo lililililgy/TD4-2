@@ -16,6 +16,8 @@ public class MorayEel : MonoScript {
     private ParticleOffset particleOffset_;
 
     public override void Initialize() {
+        if (entity == null) return;
+
         // スクリプト・コンポーネント取得
         hp_ = entity.GetScript<HP>();
         chaseController_ = entity.GetScript<ChaseController>();
@@ -28,6 +30,7 @@ public class MorayEel : MonoScript {
     }
 
     public override void Update() {
+        if (transform == null) return;
 
         // 親子付けしていない泳ぎの泡の座標を追従させる
         SyncSwimParticlePosition();
@@ -37,9 +40,6 @@ public class MorayEel : MonoScript {
             return;
         }
 
-        // プレイヤー座標を直接見るのではなく、実際の進行方向(速度)を向く。
-        // プレイヤー座標を直接見て向きを決めると、プレイヤーが反対側に回り込んだ瞬間に
-        // UV反転が急に切り替わって不自然に見えるため。速度が無い(≒Wait中)は向きを変えない。
         Vector3 velocity = chaseController_ != null ? chaseController_.Velocity : Vector3.zero;
         if (velocity.LengthSq() > 0.0001f) {
             facingFlip_?.FaceDirection(velocity.Normalized());
@@ -60,9 +60,7 @@ public class MorayEel : MonoScript {
     }
 
     private void AnimationStop() {
-        // isPlayが既にfalseならここで何もしない。
-        // SetFrame()はSpriteAnimation側でUVTransformを常に正のscaleで丸ごと上書きするため、
-        // 毎フレーム呼ぶとTargetFacingFlipが設定したUV反転(負のscale)を毎回潰してしまう。
+       
         if (spriteAnimation_ == null || !spriteAnimation_.isPlay) { return; }
         spriteAnimation_.isPlay = false;
     }
@@ -81,27 +79,25 @@ public class MorayEel : MonoScript {
 
     // 常時再生する泳ぎの泡を生成する
     private void SpawnSwimParticle() {
-        if (string.IsNullOrEmpty(swimParticlePrefabName)) { return; }
+        if (string.IsNullOrEmpty(swimParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity swimParticle = ecsGroup.CreateEntity(swimParticlePrefabName);
-        if (!swimParticle) { return; }
+        if (!swimParticle || swimParticle.transform == null) { return; }
 
-        // 敵のスケールを継承すると泡もつられて拡大縮小し画面外に出てしまうため、
-        // 親子付けはせず座標だけを毎フレーム追従させる。
+       
         swimParticle.transform.position = transform.position + GetParticleOffset();
         swimParticleEntity_ = swimParticle;
     }
 
     // 泳ぎの泡の座標をこの敵の現在位置に追従させる
     private void SyncSwimParticlePosition() {
-        if (!swimParticleEntity_) { return; }
+        if (!swimParticleEntity_ || transform == null || swimParticleEntity_.transform == null) { return; }
         swimParticleEntity_.transform.position = transform.position + GetParticleOffset();
     }
 
-    // ParticleOffsetスクリプトが付いていればそのオフセットを、無ければゼロを返す。
-    // TargetFacingFlipはUVのX反転で左右(ミラー)を表現しつつ、transform.rotateで泳ぎの傾きも付けている。
-    // そのためオフセットはまずUV反転に合わせてX成分をミラーし、その後に現在の傾き(transform.rotate)を掛ける。
+   
     private Vector3 GetParticleOffset() {
+        if (transform == null) { return Vector3.zero; }
         if (particleOffset_ == null) { return Vector3.zero; }
 
         Vector3 offset = particleOffset_.offset;

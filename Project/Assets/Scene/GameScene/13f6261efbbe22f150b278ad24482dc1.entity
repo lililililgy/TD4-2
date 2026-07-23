@@ -32,7 +32,17 @@
                     {
                         "__type": "SpawnEntry",
                         "enemyType": "MorayEelPot",
+                        "weight": 2.0
+                    },
+                    {
+                        "__type": "SpawnEntry",
+                        "enemyType": "MorayEel",
                         "weight": 6.0
+                    },
+                    {
+                        "__type": "SpawnEntry",
+                        "enemyType": "SpikeFish",
+                        "weight": 4.0
                     }
                 ]
             },

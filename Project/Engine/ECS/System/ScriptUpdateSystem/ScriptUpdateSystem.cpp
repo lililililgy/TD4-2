@@ -1,4 +1,4 @@
-#include "ScriptUpdateSystem.h"
+﻿#include "ScriptUpdateSystem.h"
 
 using namespace ONEngine;
 
@@ -19,9 +19,11 @@ using namespace ONEngine;
 #include "Engine/Core/Utility/Time/CPUTimeStamp.h"
 
 ScriptUpdateSystem::ScriptUpdateSystem(ECSGroup* ecs) {
-	ecsGroupName_ = ecs->GetGroupName();
+	if (ecs) {
+		ecsGroupName_ = ecs->GetGroupName();
+	}
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
-	MakeScriptMethod(monoEngine.Image(), ecs->GetGroupName());
+	MakeScriptMethod(monoEngine.Image(), ecsGroupName_);
 	lastReloadCounter_ = monoEngine.GetDomainReloadCounter();
 }
 
@@ -215,6 +217,11 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 
 			Console::Log("[MonoDbg] AddEntityToScript - Instantiating and adding script: " + data.scriptName + " to Entity ID: " + std::to_string(entityId), LogCategory::ScriptEngine);
 
+			if (!addScriptMethod_) {
+				Console::LogError("[MonoDbg] addScriptMethod_ is null for script: " + data.scriptName, LogCategory::ScriptEngine);
+				continue;
+			}
+
 			void* addScriptArgs[3];
 			addScriptArgs[0] = &entityId;
 			addScriptArgs[1] = scriptInstance;
@@ -243,11 +250,14 @@ bool ScriptUpdateSystem::AddEntityToScript(GameEntity* entity) {
 }
 
 void ScriptUpdateSystem::CallUpdateEcsGroup() {
-	if(updateEntitiesMethod_) {
+	if (ecsGroupName_.empty()) {
+		return;
+	}
+	if (updateEntitiesMethod_) {
 		/// 更新関数を呼び出す
 		MonoObject* ecsGroupObj = MonoScriptEngine::GetInstance().GetEcsGroupObject(ecsGroupName_);
 		if(!ecsGroupObj) {
-			Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_);
+			Console::LogError("Failed to get ecsGroupObj for group: " + ecsGroupName_, LogCategory::ScriptEngine);
 			return;
 		}
 
@@ -262,6 +272,14 @@ void ScriptUpdateSystem::CallUpdateEcsGroup() {
 
 
 void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& ecsGroupName) {
+	monoClass_ = nullptr;
+	updateEntitiesMethod_ = nullptr;
+	addEntityMethod_ = nullptr;
+	addScriptMethod_ = nullptr;
+
+	if (ecsGroupName.empty() || !image) {
+		return;
+	}
 
 	/// --------------------------------------------------------------------------------
 	/// EntityComponentSystemの関数から新規にグループを追加する
@@ -275,11 +293,15 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 
 	/// EntityComponentSystemのAddECSGroup関数を取得
 	MonoMethod* addGroupMethod = MonoScriptEngineUtils::FindMethodInClassOrParents(ecsClass, "AddECSGroup", 1);
+	if (!addGroupMethod) {
+		Console::LogError("Failed to find method: AddECSGroup");
+		return;
+	}
 
 	/// 関数の引数
 	MonoScriptEngine& monoEngine = MonoScriptEngine::GetInstance();
 	void* args[1];
-	args[0] = mono_string_new(monoEngine.Domain(), ecsGroupName.c_str());; /// ECSのGroup名
+	args[0] = mono_string_new(monoEngine.Domain(), ecsGroupName.c_str());
 
 	/// 関数を呼び出す
 	MonoObject* exc = nullptr;
@@ -291,10 +313,6 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 
 	if (!ecsGroup) {
 		Console::LogError("Failed to add or retrieve C# ECSGroup: " + ecsGroupName);
-		monoClass_ = nullptr;
-		updateEntitiesMethod_ = nullptr;
-		addEntityMethod_ = nullptr;
-		addScriptMethod_ = nullptr;
 		return;
 	}
 
@@ -315,7 +333,6 @@ void ScriptUpdateSystem::MakeScriptMethod(MonoImage* image, const std::string& e
 	updateEntitiesMethod_ = mono_class_get_method_from_name(monoClass_, "UpdateEntities", 0);
 	addEntityMethod_ = mono_class_get_method_from_name(monoClass_, "AddEntity", 1);
 	addScriptMethod_ = mono_class_get_method_from_name(monoClass_, "AddScript", 3);
-
 }
 
 void ScriptUpdateSystem::ReleaseGCHandle() {

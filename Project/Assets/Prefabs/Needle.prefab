@@ -16,16 +16,32 @@
                 "z": 0.0
             },
             "scale": {
-                "x": 64.0,
-                "y": 64.0,
-                "z": 64.0
+                "x": 112.39994049072266,
+                "y": 112.39997863769531,
+                "z": 112.39997863769531
             },
             "type": "Transform"
         },
         {
+            "categoryBits": 16,
+            "enable": 1,
+            "freezeY": false,
+            "isTrigger": true,
+            "maskBits": 2,
+            "mass": 1.0,
+            "radius": 0.5,
+            "state": "Dynamic",
+            "type": "CircleCollider",
+            "useOwnerScale": true
+        },
+        {
+            "AttackCollision": {
+                "damage_": 1.0,
+                "destroyOnHit_": false
+            },
             "SpikeFishNeedle": {
                 "acceleration": 1646.0,
-                "aliveTime": 3.0,
+                "aliveTime": 1.0,
                 "initialSpeed": 17.0,
                 "maxSpeed": 4889.0
             },
@@ -37,12 +53,17 @@
                 {
                     "enable": true,
                     "name": "SpikeFishNeedle"
+                },
+                {
+                    "enable": true,
+                    "name": "AttackCollision"
                 }
             ],
             "type": "Script"
         },
         {
             "enable": 1,
+            "isPixelPerfect": true,
             "material": {
                 "baseColor": {
                     "w": 1.0,
@@ -51,6 +72,9 @@
                     "z": 1.0
                 },
                 "baseTextureGuid": "b8c21351bb3241d42752a073a2b20b7d",
+                "bloomIntensity": 1.0,
+                "bloomRadius": 12.0,
+                "bloomThreshold": 0.800000011920929,
                 "guid": "00000000000000000000000000000000",
                 "normalTextureGuid": "00000000000000000000000000000000",
                 "postEffectFlags": 0,
@@ -66,11 +90,10 @@
                     }
                 }
             },
-            "isPixelPerfect": true,
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "bbe0fc158d50a4a113c86e420d6e4b6c",
+    "guid": "884cab8cc2d464cec0175e5614ca8a2b",
     "name": "Needle",
     "parentGuid": null,
     "prefabName": "Needle"

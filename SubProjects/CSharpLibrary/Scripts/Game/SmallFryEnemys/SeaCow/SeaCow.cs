@@ -149,7 +149,10 @@ public class SeaCow : MonoScript
         isPulsing_ = false;
         pulseTimer_ = 0.0f;
         swellMultiplier_ = 1.0f;
-        transform.scale = initialScale_;
+        if (transform != null)
+        {
+            transform.scale = initialScale_;
+        }
 
         // 通常色から始める
         if (spriteRenderer_ != null)
@@ -261,10 +264,10 @@ public class SeaCow : MonoScript
     // 常時再生する泳ぎの泡を生成する
     private void SpawnSwimParticle()
     {
-        if (String.IsNullOrEmpty(swimParticlePrefabName)) { return; }
+        if (String.IsNullOrEmpty(swimParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity swimParticle = ecsGroup.CreateEntity(swimParticlePrefabName);
-        if (!swimParticle) { return; }
+        if (!swimParticle || swimParticle.transform == null) { return; }
 
         // SeaCowはスケールが極端に大きいため、親子付けすると泡もつられて巨大化し画面外に出てしまう。
         // そのため親子付けはせず、座標だけを毎フレーム追従させる。
@@ -275,7 +278,7 @@ public class SeaCow : MonoScript
     // 泳ぎの泡の座標をこの敵の現在位置に追従させる
     private void SyncSwimParticlePosition()
     {
-        if (!swimParticleEntity_) { return; }
+        if (!swimParticleEntity_ || swimParticleEntity_.transform == null || transform == null) { return; }
         swimParticleEntity_.transform.position = transform.position + GetParticleOffset();
     }
 
@@ -284,7 +287,7 @@ public class SeaCow : MonoScript
     // そのためオフセットはまずUV反転に合わせてX成分をミラーし、その後に現在の傾き(transform.rotate)を掛ける。
     private Vector3 GetParticleOffset()
     {
-        if (particleOffset_ == null) { return Vector3.zero; }
+        if (particleOffset_ == null || transform == null) { return Vector3.zero; }
 
         Vector3 offset = particleOffset_.offset;
         bool isFacingRight = facingFlip_ == null || facingFlip_.IsFacingRight;
@@ -304,10 +307,10 @@ public class SeaCow : MonoScript
     // 自爆時の爆発エフェクトを現在位置に生成する
     private void SpawnExplosionParticle()
     {
-        if (String.IsNullOrEmpty(explosionParticlePrefabName)) { return; }
+        if (String.IsNullOrEmpty(explosionParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity explosion = ecsGroup.CreateEntity(explosionParticlePrefabName);
-        if (!explosion) { return; }
+        if (!explosion || explosion.transform == null) { return; }
 
         explosion.transform.position = transform.position + GetParticleOffset();
 

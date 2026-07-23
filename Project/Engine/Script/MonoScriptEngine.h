@@ -96,6 +96,9 @@ public:
 	/// @param groupName 対象のECSGroup名
 	void ClearEntitiesFromNativeCS(const std::string& groupName);
 
+	/// @brief 個別エンティティ破棄時に、C#側の保持を解除させる関数
+	void RemoveEntityFromNativeCS(const std::string& groupName, int32_t entityId);
+
 	/// C#側のEntityを取得
 	MonoObject* GetEntityFromCS(const std::string& ecsGroupName, int32_t entityId);
 	MonoObject* GetMonoBehaviorFromCS(const std::string& ecsGroupName, int32_t entityId, const std::string& behaviorName);
@@ -178,6 +181,7 @@ private:
 	MonoMethod* clearEcsGroupMethod_ = nullptr;
 	MonoMethod* addEntityMethod_ = nullptr;
 	MonoMethod* clearEntitiesFromNativeMethod_ = nullptr;
+	MonoMethod* removeEntityFromNativeMethod_ = nullptr;
 	MonoMethod* fetchInitialDataMethod_ = nullptr;
 	MonoClassField* getComponentCollectionField_ = nullptr;
 	MonoMethod* updateAiIntentsMethod_ = nullptr;

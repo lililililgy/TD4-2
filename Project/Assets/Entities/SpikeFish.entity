@@ -2,8 +2,11 @@
     "active": true,
     "components": [
         {
+            "ExpDropper": {
+                "damageDropExp": 0.0
+            },
             "SpikeFishAttack": {
-                "needleNum": 16
+                "needleNum": 7
             },
             "type": "Variables"
         }

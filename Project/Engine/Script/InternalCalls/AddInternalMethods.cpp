@@ -35,6 +35,7 @@
 #include "Engine/Core/Utility/Font/FontRasterizer.h"
 #include <mono/metadata/object.h>
 #include <mono/metadata/appdomain.h>
+#include "Engine/ECS/Component/Components/ComputeComponents/ParticleSystem2D/ParticleSystem2D.h"
 #include "Engine/Core/Window/WindowManager.h"
 #include "Engine/Core/Utility/Tools/Log.h"
 
@@ -264,6 +265,9 @@ void ONEngine::AddComponentInternalCalls() {
 
 	/// font rasterizer
 	mono_add_internal_call("FontRasterizer::Internal_GenerateTexture", (void*)InternalGenerateFontTexture);
+
+	/// particle system 2d
+	mono_add_internal_call("ParticleSystem2D::InternalEmit", (void*)ONEngine::InternalEmitParticleSystem2D);
 
 }
 

@@ -1,4 +1,10 @@
 {
+    "clearColor": [
+        0.10000000149011612,
+        0.25,
+        0.5,
+        1.0
+    ],
     "entities": [
         {
             "guid": "8a7fdabd0f57a6816b342502204e6f34",
@@ -64,6 +70,17 @@
             "guid": "d58f3de2fd5b1c48dd68be61bb1db8fb",
             "parentGuid": null,
             "path": "./particle/d58f3de2fd5b1c48dd68be61bb1db8fb.entity"
+        },
+        {
+            "guid": "c269941dd384076626c4be0a6612f4c9",
+            "parentGuid": null,
+            "path": "./particle/c269941dd384076626c4be0a6612f4c9.entity"
+        },
+        {
+            "guid": "35f9b226f2593c624b7ee193ab043d49",
+            "parentGuid": null,
+            "path": "./particle/35f9b226f2593c624b7ee193ab043d49.entity"
         }
-    ]
+    ],
+    "hasClearColor": true
 }

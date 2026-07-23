@@ -1,1 +1,416 @@
-{"prefabName":"GameOverUI"}
+{
+    "active": true,
+    "children": [
+        {
+            "active": true,
+            "children": [
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "matrixCalcFlags": 7,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 2.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "ClearBackMainMenu": {},
+                            "type": "Variables"
+                        },
+                        {
+                            "enable": 1,
+                            "isPixelPerfect": false,
+                            "material": {
+                                "baseColor": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "baseTextureGuid": "b5c31d0e7e1f27c822e4250c516d66b8",
+                                "guid": "00000000000000000000000000000000",
+                                "normalTextureGuid": "00000000000000000000000000000000",
+                                "postEffectFlags": 0,
+                                "uvTransform": {
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "rotate": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0
+                                    }
+                                }
+                            },
+                            "type": "SpriteRenderer"
+                        },
+                        {
+                            "enable": 1,
+                            "scripts": [
+                                {
+                                    "enable": true,
+                                    "name": "ClearBackMainMenu"
+                                }
+                            ],
+                            "type": "Script"
+                        },
+                        {
+                            "elementId": "main-menu",
+                            "elementIndex": 0,
+                            "enable": 1,
+                            "groupId": "f02b20a697856bb4da0100284f7b8abc",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {
+                                "DownArrow": "26e337168d8013be71d8f7de96183017",
+                                "GamepadDPadDown": "26e337168d8013be71d8f7de96183017",
+                                "S": "26e337168d8013be71d8f7de96183017"
+                            },
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 82.0,
+                        "y": 421.0
+                    },
+                    "guid": "144348269ff7d13c44777c5384d92cde",
+                    "name": "main-menu",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "matrixCalcFlags": 7,
+                            "position": {
+                                "x": 0.0,
+                                "y": -1.5,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "ClearRestart": {},
+                            "type": "Variables"
+                        },
+                        {
+                            "enable": 1,
+                            "isPixelPerfect": false,
+                            "material": {
+                                "baseColor": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "baseTextureGuid": "9bed8ed4bfb77d3c6f620141c7c49acb",
+                                "guid": "00000000000000000000000000000000",
+                                "normalTextureGuid": "00000000000000000000000000000000",
+                                "postEffectFlags": 0,
+                                "uvTransform": {
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "rotate": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0
+                                    }
+                                }
+                            },
+                            "type": "SpriteRenderer"
+                        },
+                        {
+                            "enable": 1,
+                            "scripts": [
+                                {
+                                    "enable": true,
+                                    "name": "ClearRestart"
+                                }
+                            ],
+                            "type": "Script"
+                        },
+                        {
+                            "elementId": "restart",
+                            "elementIndex": 1,
+                            "enable": 1,
+                            "groupId": "f02b20a697856bb4da0100284f7b8abc",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {
+                                "DownArrow": "f62ca60dc6f1e81059f7d75759a0e254",
+                                "GamepadDPadDown": "f62ca60dc6f1e81059f7d75759a0e254",
+                                "GamepadDPadUp": "144348269ff7d13c44777c5384d92cde",
+                                "S": "f62ca60dc6f1e81059f7d75759a0e254",
+                                "UpArrow": "144348269ff7d13c44777c5384d92cde",
+                                "W": "144348269ff7d13c44777c5384d92cde"
+                            },
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 370.0,
+                        "y": 421.0
+                    },
+                    "guid": "26e337168d8013be71d8f7de96183017",
+                    "name": "restart",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "matrixCalcFlags": 7,
+                            "position": {
+                                "x": 0.0,
+                                "y": -3.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 2.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "ClearExitGame": {},
+                            "type": "Variables"
+                        },
+                        {
+                            "enable": 1,
+                            "isPixelPerfect": false,
+                            "material": {
+                                "baseColor": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "baseTextureGuid": "3c667a9c8898c994979a53fc3a2e4da8",
+                                "guid": "00000000000000000000000000000000",
+                                "normalTextureGuid": "00000000000000000000000000000000",
+                                "postEffectFlags": 0,
+                                "uvTransform": {
+                                    "position": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "rotate": 0.0,
+                                    "scale": {
+                                        "x": 1.0,
+                                        "y": 1.0
+                                    }
+                                }
+                            },
+                            "type": "SpriteRenderer"
+                        },
+                        {
+                            "enable": 1,
+                            "scripts": [
+                                {
+                                    "enable": true,
+                                    "name": "ClearExitGame"
+                                }
+                            ],
+                            "type": "Script"
+                        },
+                        {
+                            "elementId": "exit-game",
+                            "elementIndex": 3,
+                            "enable": 1,
+                            "groupId": "f02b20a697856bb4da0100284f7b8abc",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {
+                                "GamepadDPadUp": "f62ca60dc6f1e81059f7d75759a0e254",
+                                "UpArrow": "f62ca60dc6f1e81059f7d75759a0e254",
+                                "W": "f62ca60dc6f1e81059f7d75759a0e254"
+                            },
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 954.0,
+                        "y": 410.0
+                    },
+                    "guid": "b483b8102fc5179da2061600894c08d0",
+                    "name": "exit-game",
+                    "prefabName": ""
+                },
+                {
+                    "active": true,
+                    "components": [
+                        {
+                            "enable": 1,
+                            "position": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "rotate": {
+                                "w": 1.0,
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                            },
+                            "type": "Transform"
+                        },
+                        {
+                            "elementId": "restart-checkpoint",
+                            "elementIndex": 2,
+                            "enable": 1,
+                            "groupId": "f02b20a697856bb4da0100284f7b8abc",
+                            "type": "UIElementComponent"
+                        },
+                        {
+                            "enable": 1,
+                            "links": {
+                                "DownArrow": "b483b8102fc5179da2061600894c08d0",
+                                "GamepadDPadDown": "b483b8102fc5179da2061600894c08d0",
+                                "GamepadDPadUp": "26e337168d8013be71d8f7de96183017",
+                                "S": "b483b8102fc5179da2061600894c08d0",
+                                "UpArrow": "26e337168d8013be71d8f7de96183017",
+                                "W": "26e337168d8013be71d8f7de96183017"
+                            },
+                            "type": "UILinkNavigationComponent"
+                        }
+                    ],
+                    "editorPosition": {
+                        "x": 650.0,
+                        "y": 469.0
+                    },
+                    "guid": "f62ca60dc6f1e81059f7d75759a0e254",
+                    "name": "Element_4",
+                    "prefabName": ""
+                }
+            ],
+            "components": [
+                {
+                    "enable": 1,
+                    "matrixCalcFlags": 7,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotate": {
+                        "w": 1.0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 512.0,
+                        "y": 64.0,
+                        "z": 0.5
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "type": "Variables"
+                },
+                {
+                    "cancelKeys": [
+                        "Escape",
+                        "GamepadB"
+                    ],
+                    "currentSelected": "",
+                    "enable": 1,
+                    "isFocused": true,
+                    "isVisible": true,
+                    "parentGroup": "",
+                    "submitKeys": [
+                        "Return",
+                        "Space",
+                        "GamepadA"
+                    ],
+                    "type": "UIGroupComponent"
+                }
+            ],
+            "editorPosition": {
+                "x": 100.0,
+                "y": 100.0
+            },
+            "guid": "f02b20a697856bb4da0100284f7b8abc",
+            "name": "Group_0",
+            "prefabName": ""
+        }
+    ],
+    "components": [
+        {
+            "enable": 1,
+            "matrixCalcFlags": 7,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotate": {
+                "w": 1.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "type": "Variables"
+        }
+    ],
+    "guid": "14aaee80344ce88189660c6de1597ac0",
+    "name": "GameOverUI",
+    "prefabName": ""
+}

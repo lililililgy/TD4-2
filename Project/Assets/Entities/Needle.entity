@@ -3,13 +3,12 @@
     "components": [
         {
             "SpikeFishNeedle": {
-                "acceleration": 1646.0,
-                "maxSpeed": 4889.0
+                "aliveTime": 1.0
             },
             "type": "Variables"
         }
     ],
-    "guid": "bbe0fc158d50a4a113c86e420d6e4b6c",
+    "guid": "884cab8cc2d464cec0175e5614ca8a2b",
     "name": "Needle",
     "parentGuid": null,
     "prefabName": "Needle"

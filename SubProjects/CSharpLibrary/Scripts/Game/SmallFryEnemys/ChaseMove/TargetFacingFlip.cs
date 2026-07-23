@@ -13,19 +13,23 @@ public class TargetFacingFlip : MonoScript
     // 反転後の絵の正面方向移動方向の計算などに使う。
     private Vector3 baseDir_ = Vector3.right;
     private bool isRight_ = true;
-    public Vector3 FacingDirection => Matrix4x4.Transform(baseDir_, Matrix4x4.Rotate(transform.rotate));
+    public Vector3 FacingDirection => transform != null ? Matrix4x4.Transform(baseDir_, Matrix4x4.Rotate(transform.rotate)) : baseDir_;
     // 現在UVが右向き(反転あり)かどうか。オフセットのミラーなど外部から参照するために公開する。
     public bool IsFacingRight => isRight_;
 
     public override void Initialize()
     {
-        spriteRenderer_ = entity.GetComponent<SpriteRenderer>();
+        if (entity != null)
+        {
+            spriteRenderer_ = entity.GetComponent<SpriteRenderer>();
+        }
     }
 
     // 指定した方向へ向きを合わせる
  
     public void FaceDirection(Vector3 dir, bool immediate = false)
     {
+        if (transform == null) { return; }
         if (dir.LengthSq() <= 0.0001f) { return; }
         dir = dir.Normalized();
 

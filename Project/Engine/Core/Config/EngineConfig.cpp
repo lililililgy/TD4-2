@@ -25,13 +25,14 @@ namespace ONEngine::EngineConfig {
 	bool isFullscreen = false;
 	bool enableVSync = true;
 	bool ignoreCSharpLog = false;
+	bool enableReleaseLogFile = true;
 
 	bool isTestMode = false;
 	std::string testScene = "";
 	std::string testInputPath = "";
 	int testDuration = 180;
 	std::string testOutputPath = "./test_results.json";
-	bool waitDebug = false;
+	bool waitDebug = true;
 
 	void LoadConfig() {
 		std::string configPath = "./Assets/engine_config.json";

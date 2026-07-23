@@ -16,6 +16,7 @@ public class SpikeFishAroundNeedle : MonoScript
     /* ----- 実行時状態 ----- */
     private const string needleName_ = "Needle";
     private Vector3 baseScale_;
+    private bool    baseScaleCaptured_ = false;
     private float   currentAngle_ = 0.0f;  // rad, チャージ中に加算される
     private float   angularVel_   = 0.0f;  // rad/s
     private float   chargeAccel_  = 0.0f;  // rad/s²
@@ -26,10 +27,19 @@ public class SpikeFishAroundNeedle : MonoScript
 
     public override void Initialize()
     {
-        baseScale_ = transform.scale;
+        TryCaptureBaseScale();
         spriteAnim_ = entity.GetScript<SpriteAnimation>();
         // スポーン時もスケール0→1でイージング
         BeginRecovery();
+    }
+
+    // Initialize時点ではtransformがまだ準備できていないことがあるため、
+    // 準備できるまで毎フレーム再試行する(でないとbaseScale_がVector3.oneのまま焼き付いてしまう)。
+    private void TryCaptureBaseScale()
+    {
+        if (baseScaleCaptured_ || transform == null) { return; }
+        baseScale_ = transform.scale;
+        baseScaleCaptured_ = true;
     }
 
     // SpikeFishAttack から発射直前に呼ぶ
@@ -47,6 +57,10 @@ public class SpikeFishAroundNeedle : MonoScript
 
     public override void Update()
     {
+        if (transform == null) { return; }
+
+        TryCaptureBaseScale();
+
         if (isCharging_) { UpdateCharging(); }
         if (isRecovering_) { UpdateRecovery(); }
     }
@@ -63,6 +77,8 @@ public class SpikeFishAroundNeedle : MonoScript
     // SpikeFishAttack からチャージ完了時に呼ぶ
     public void FireNeedle(int fireNeedleNum)
     {
+        if (transform == null || ecsGroup == null) { return; }
+
         isCharging_ = false;
         angularVel_ = 0.0f;
 
@@ -73,7 +89,7 @@ public class SpikeFishAroundNeedle : MonoScript
         {
             // NeedleEntityを生成する
             Entity needle = ecsGroup.CreateEntity(needleName_);
-            if (needle == null) { 
+            if (needle == null || needle.transform == null) {
                 continue;
             }
 
@@ -142,6 +158,7 @@ public class SpikeFishAroundNeedle : MonoScript
 
     private void ApplyScale()
     {
+        if (transform == null) { return; }
         transform.scale = baseScale_ * ScaleMult;
     }
 }

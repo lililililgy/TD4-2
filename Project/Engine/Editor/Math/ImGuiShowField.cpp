@@ -206,6 +206,14 @@ void CSGui::ShowField(const std::string& scriptName, int type, MonoObject* obj, 
 
 void CSGui::ShowFieldForVariables(ONEngine::Variables* vars, const std::string& groupName, int type, MonoClassField* field, const char* name) {
 	if(!vars) return;
+
+	/// enum のフィールドは mono_type_get_type が MONO_TYPE_VALUETYPE を返すため、ここで振り直す。
+	/// これが無いと下の VALUETYPE 分岐(Vector2/3/4 とカスタム構造体)のどれにも該当せず、項目が描画されない。
+	if(type == MONO_TYPE_VALUETYPE) {
+		MonoClass* enumCheckClass = mono_class_from_mono_type(mono_field_get_type(field));
+		if(enumCheckClass && mono_class_is_enum(enumCheckClass)) type = MONO_TYPE_ENUM;
+	}
+
 	if(!vars->HasGroup(groupName)) vars->AddGroup(groupName);
 	auto& group = const_cast<ONEngine::Variables::Group&>(vars->GetGroup(groupName));
 

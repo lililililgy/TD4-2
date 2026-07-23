@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +10,7 @@ public class ProfileTest : MonoScript {
 	[SerializeField] List<int> values = new List<int>();
 
 	public override void Update() {
+
 		//MeshRenderer renderer = entity.GetComponent<MeshRenderer>();
 		//renderer.color = new Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 

@@ -1,0 +1,14 @@
+{
+    "entities": [
+        {
+            "guid": "11111111222233334444555555555555",
+            "parentGuid": null,
+            "path": "./ParticleEmitCountTest/camera.entity"
+        },
+        {
+            "guid": "66666666777788889999000000000000",
+            "parentGuid": null,
+            "path": "./ParticleEmitCountTest/particle.entity"
+        }
+    ]
+}

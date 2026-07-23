@@ -32,7 +32,7 @@
                     {
                         "__type": "SpawnEntry",
                         "enemyType": "MorayEelPot",
-                        "weight": 3.0
+                        "weight": 1.0
                     },
                     {
                         "__type": "SpawnEntry",
@@ -41,8 +41,8 @@
                     },
                     {
                         "__type": "SpawnEntry",
-                        "enemyType": "MorayEelPot",
-                        "weight": 2.0
+                        "enemyType": "SpikeFish",
+                        "weight": 3.0
                     }
                 ]
             },

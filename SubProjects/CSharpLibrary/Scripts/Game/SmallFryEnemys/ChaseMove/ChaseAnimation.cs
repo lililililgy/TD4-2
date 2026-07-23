@@ -20,22 +20,29 @@ public class ChaseAnimation : MonoScript
 
     public override void Initialize()
     {
+        if (entity == null || transform == null) return;
+
         // ChaseController 取得・初期スケール保存
         chase_        = entity.GetScript<ChaseController>();
         initialScale_ = transform.scale;
 
-        // 発見演出の長さを ChaseController に伝える
-        chase_.DiscoveryDuration = discoveryDuration;
+        if (chase_ != null)
+        {
+            // 発見演出の長さを ChaseController に伝える
+            chase_.DiscoveryDuration = discoveryDuration;
 
-        // 状態遷移時にタイマーをリセット
-        chase_.OnWaitStart      += () => { pulseTimer_ = 0.0f; transform.scale = initialScale_; };
-        chase_.OnDiscoveryStart += () => { animTimer_  = 0.0f; transform.scale = initialScale_; };
-        chase_.OnChaseStart     += () => { pulseTimer_ = 0.0f; };
-        chase_.OnRushStart      += () => { pulseTimer_ = 0.0f; };
+            // 状態遷移時にタイマーをリセット
+            chase_.OnWaitStart      += () => { pulseTimer_ = 0.0f; if (transform != null) transform.scale = initialScale_; };
+            chase_.OnDiscoveryStart += () => { animTimer_  = 0.0f; if (transform != null) transform.scale = initialScale_; };
+            chase_.OnChaseStart     += () => { pulseTimer_ = 0.0f; };
+            chase_.OnRushStart      += () => { pulseTimer_ = 0.0f; };
+        }
     }
 
     public override void Update()
     {
+        if (chase_ == null || transform == null) return;
+
         // 状態に応じたアニメーションを再生
         switch (chase_.CurrentState)
         {
@@ -54,6 +61,8 @@ public class ChaseAnimation : MonoScript
 
     private void UpdateDiscovery()
     {
+        if (transform == null || discoveryDuration <= 0.0f) return;
+
         // タイマー更新
         animTimer_ += Time.deltaTime;
         float halfTime = discoveryDuration * 0.5f;
@@ -84,6 +93,8 @@ public class ChaseAnimation : MonoScript
 
     private void UpdatePulse(float maxScale, float duration)
     {
+        if (transform == null || duration <= 0.0f) return;
+
         // タイマー更新・ループ正規化
         pulseTimer_ += Time.deltaTime;
         float t = (pulseTimer_ % duration) / duration;

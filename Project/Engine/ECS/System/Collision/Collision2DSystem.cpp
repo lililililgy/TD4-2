@@ -4,6 +4,7 @@ using namespace ONEngine;
 
 /// std
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <algorithm>
 
@@ -32,34 +33,34 @@ Collision2DSystem::Collision2DSystem() {
 	std::string box2DCompName = typeid(BoxCollider2D).name();
 
 	/// 関数の登録をする
-	collisionCheckMap_[circleCompName + "Vs" + circleCompName] = [](const CollisionPair& pair, CollisionInfo* info) -> bool {
+	collisionCheckMap_[circleCompName + "Vs" + circleCompName] = [](GameEntity* a, GameEntity* b, CollisionInfo* info) -> bool {
 		return CheckMethod2D::CollisionCheckCircleVsCircle(
-			pair.first->GetComponent<CircleCollider>(),
-			pair.second->GetComponent<CircleCollider>(),
+			a->GetComponent<CircleCollider>(),
+			b->GetComponent<CircleCollider>(),
 			info
 		);
 	};
 
-	collisionCheckMap_[circleCompName + "Vs" + box2DCompName] = [](const CollisionPair& pair, CollisionInfo* info) -> bool {
+	collisionCheckMap_[circleCompName + "Vs" + box2DCompName] = [](GameEntity* a, GameEntity* b, CollisionInfo* info) -> bool {
 		return CheckMethod2D::CollisionCheckCircleVsBox2D(
-			pair.first->GetComponent<CircleCollider>(),
-			pair.second->GetComponent<BoxCollider2D>(),
+			a->GetComponent<CircleCollider>(),
+			b->GetComponent<BoxCollider2D>(),
 			info
 		);
 	};
 
-	collisionCheckMap_[box2DCompName + "Vs" + circleCompName] = [](const CollisionPair& pair, CollisionInfo* info) -> bool {
+	collisionCheckMap_[box2DCompName + "Vs" + circleCompName] = [](GameEntity* a, GameEntity* b, CollisionInfo* info) -> bool {
 		return CheckMethod2D::CollisionCheckBox2DVsCircle(
-			pair.first->GetComponent<BoxCollider2D>(),
-			pair.second->GetComponent<CircleCollider>(),
+			a->GetComponent<BoxCollider2D>(),
+			b->GetComponent<CircleCollider>(),
 			info
 		);
 	};
 
-	collisionCheckMap_[box2DCompName + "Vs" + box2DCompName] = [](const CollisionPair& pair, CollisionInfo* info) -> bool {
+	collisionCheckMap_[box2DCompName + "Vs" + box2DCompName] = [](GameEntity* a, GameEntity* b, CollisionInfo* info) -> bool {
 		return CheckMethod2D::CollisionCheckBox2DVsBox2D(
-			pair.first->GetComponent<BoxCollider2D>(),
-			pair.second->GetComponent<BoxCollider2D>(),
+			a->GetComponent<BoxCollider2D>(),
+			b->GetComponent<BoxCollider2D>(),
 			info
 		);
 	};
@@ -71,6 +72,17 @@ void Collision2DSystem::RuntimeUpdate(ECSGroup* ecs) {
 	enterPairs_.clear();
 	stayPairs_.clear();
 	exitPairs_.clear();
+
+	/// 破棄済みエンティティを参照するペアを collidedPairs_ から除去する
+	{
+		collidedPairs_.erase(
+			std::remove_if(collidedPairs_.begin(), collidedPairs_.end(),
+				[ecs](const CollisionPair& p) {
+					return ecs->GetEntity(p.first) == nullptr
+						|| ecs->GetEntity(p.second) == nullptr;
+				}),
+			collidedPairs_.end());
+	}
 
 	/// 全てのコライダーを取得
 	ComponentArray<CircleCollider>* circleColliderArray = ecs->GetComponentArray<CircleCollider>();
@@ -144,7 +156,7 @@ void Collision2DSystem::RuntimeUpdate(ECSGroup* ecs) {
 			++collisionFrameMap[pairKey];
 
 			/// 衝突計算の関数を取得
-			CollisionPair pair(a->GetOwner(), b->GetOwner());
+			CollisionPair pair(a->GetOwner()->GetId(), b->GetOwner()->GetId());
 			auto collisionCheckItr = collisionCheckMap_.find(collisionType);
 			if(collisionCheckItr == collisionCheckMap_.end()) {
 				continue;
@@ -152,7 +164,7 @@ void Collision2DSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 			/// 衝突計算を行う
 			CollisionInfo info;
-			bool isCollided = collisionCheckItr->second(pair, &info);
+			bool isCollided = collisionCheckItr->second(a->GetOwner(), b->GetOwner(), &info);
 			if(isCollided) {
 
 				/// 押し戻しを行う (どちらかがTriggerならスキップ)
@@ -166,8 +178,7 @@ void Collision2DSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 				/// collidedPairs_にペアがすでに存在しているかチェック
 				auto collisionPairItr = std::find_if(collidedPairs_.begin(), collidedPairs_.end(), [&pair](const CollisionPair& p) {
-					return (p.first == pair.first && p.second == pair.second)
-						|| (p.first == pair.second && p.second == pair.first);
+					return p == pair;
 				});
 
 				if(collisionPairItr != collidedPairs_.end()) {
@@ -184,8 +195,7 @@ void Collision2DSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 				/// collisionPairs_からペアを削除
 				auto collisionPairItr = std::find_if(collidedPairs_.begin(), collidedPairs_.end(), [&pair](const CollisionPair& p) {
-					return (p.first == pair.first && p.second == pair.second)
-						|| (p.first == pair.second && p.second == pair.first);
+					return p == pair;
 				});
 
 				/// 削除するペアがあった場合は exitPairs_ に追加
@@ -217,8 +227,8 @@ void Collision2DSystem::CallEnterFunc(const std::string& ecsGroupName) {
 	std::vector<std::pair<int32_t, int32_t>> enterIds;
 	enterIds.reserve(enterPairs_.size());
 	for (auto& pair : enterPairs_) {
-		if (pair.first && pair.second) {
-			enterIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+		if (pair.first != 0 && pair.second != 0) {
+			enterIds.push_back({ pair.first, pair.second });
 		}
 	}
 
@@ -267,20 +277,22 @@ void Collision2DSystem::CallEnterFunc(const std::string& ecsGroupName) {
 
 				MonoObject* exc = nullptr;
 
-				void* params[1];
-				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
-
+				MonoObject* targetEntityCS = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
 				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, checkSelf->GetId(), script.scriptName);
-				mono_runtime_invoke(script.collisionEventMethods2D[0], monoBehavior, params, &exc);
 
-				Console::Log("Collision Enter 2D Event Invoked");
+				if (monoBehavior && targetEntityCS) {
+					void* params[1] = { targetEntityCS };
+					MonoScriptEngineUtils::SafeInvoke(script.collisionEventMethods2D[0], monoBehavior, params, &exc);
 
-				if(exc) {
-					MonoString* monoStr = mono_object_to_string(exc, nullptr);
-					if(monoStr) {
-						char* message = mono_string_to_utf8(monoStr);
-						Console::Log(std::string("Mono Exception: ") + message);
-						mono_free(message);
+					Console::Log("Collision Enter 2D Event Invoked");
+
+					if(exc) {
+						MonoString* monoStr = mono_object_to_string(exc, nullptr);
+						if(monoStr) {
+							char* message = mono_string_to_utf8(monoStr);
+							Console::Log(std::string("Mono Exception: ") + message);
+							mono_free(message);
+						}
 					}
 				}
 			}
@@ -298,8 +310,8 @@ void Collision2DSystem::CallStayFunc(const std::string& ecsGroupName) {
 	std::vector<std::pair<int32_t, int32_t>> stayIds;
 	stayIds.reserve(stayPairs_.size());
 	for (auto& pair : stayPairs_) {
-		if (pair.first && pair.second) {
-			stayIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+		if (pair.first != 0 && pair.second != 0) {
+			stayIds.push_back({ pair.first, pair.second });
 		}
 	}
 
@@ -348,18 +360,20 @@ void Collision2DSystem::CallStayFunc(const std::string& ecsGroupName) {
 
 				MonoObject* exc = nullptr;
 
-				void* params[1];
-				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
-
+				MonoObject* targetEntityCS = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
 				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, checkSelf->GetId(), script.scriptName);
-				mono_runtime_invoke(script.collisionEventMethods2D[1], monoBehavior, params, &exc);
 
-				if(exc) {
-					MonoString* monoStr = mono_object_to_string(exc, nullptr);
-					if(monoStr) {
-						char* message = mono_string_to_utf8(monoStr);
-						Console::Log(std::string("Mono Exception: ") + message);
-						mono_free(message);
+				if (monoBehavior && targetEntityCS) {
+					void* params[1] = { targetEntityCS };
+					MonoScriptEngineUtils::SafeInvoke(script.collisionEventMethods2D[1], monoBehavior, params, &exc);
+
+					if(exc) {
+						MonoString* monoStr = mono_object_to_string(exc, nullptr);
+						if(monoStr) {
+							char* message = mono_string_to_utf8(monoStr);
+							Console::Log(std::string("Mono Exception: ") + message);
+							mono_free(message);
+						}
 					}
 				}
 			}
@@ -377,8 +391,8 @@ void Collision2DSystem::CallExitFunc(const std::string& ecsGroupName) {
 	std::vector<std::pair<int32_t, int32_t>> exitIds;
 	exitIds.reserve(exitPairs_.size());
 	for (auto& pair : exitPairs_) {
-		if (pair.first && pair.second) {
-			exitIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+		if (pair.first != 0 && pair.second != 0) {
+			exitIds.push_back({ pair.first, pair.second });
 		}
 	}
 
@@ -427,20 +441,22 @@ void Collision2DSystem::CallExitFunc(const std::string& ecsGroupName) {
 
 				MonoObject* exc = nullptr;
 
-				void* params[1];
-				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
-
+				MonoObject* targetEntityCS = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
 				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, checkSelf->GetId(), script.scriptName);
-				mono_runtime_invoke(script.collisionEventMethods2D[2], monoBehavior, params, &exc);
 
-				Console::Log("Collision Exit 2D Event Invoked");
+				if (monoBehavior && targetEntityCS) {
+					void* params[1] = { targetEntityCS };
+					MonoScriptEngineUtils::SafeInvoke(script.collisionEventMethods2D[2], monoBehavior, params, &exc);
 
-				if(exc) {
-					MonoString* monoStr = mono_object_to_string(exc, nullptr);
-					if(monoStr) {
-						char* message = mono_string_to_utf8(monoStr);
-						Console::Log(std::string("Mono Exception: ") + message);
-						mono_free(message);
+					Console::Log("Collision Exit 2D Event Invoked");
+
+					if(exc) {
+						MonoString* monoStr = mono_object_to_string(exc, nullptr);
+						if(monoStr) {
+							char* message = mono_string_to_utf8(monoStr);
+							Console::Log(std::string("Mono Exception: ") + message);
+							mono_free(message);
+						}
 					}
 				}
 			}

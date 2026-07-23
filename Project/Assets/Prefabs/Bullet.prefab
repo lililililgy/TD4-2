@@ -36,23 +36,23 @@
         },
         {
             "AttackCollision": {
-                "damage_": 256.0,
+                "damage_": 128.0,
                 "destroyOnHit_": false
             },
             "Bullet": {
                 "lifeTime_": 20.0,
-                "speed_": 512.0
+                "speed_": 1024.0
             },
             "ShakeOnHit": {
-                "durationScale_": 0.3,
+                "durationScale_": 0.30000001192092896,
                 "frequency_": 30.0,
                 "maxAmplitude_": 1400.0,
                 "maxDuration_": 0.25,
                 "minAmplitude_": 400.0,
-                "minDuration_": 0.08,
+                "minDuration_": 0.07999999821186066,
                 "referenceAmplitude_": 700.0,
                 "referenceDamage_": 256.0,
-                "referenceDuration_": 0.12
+                "referenceDuration_": 0.11999999731779099
             },
             "type": "Variables"
         },
@@ -106,7 +106,7 @@
             "type": "SpriteRenderer"
         }
     ],
-    "guid": "cb16e6dd3b50b5275d2a3883a63e5353",
+    "guid": "c1501936f388e58c9c77dc876d88e1d5",
     "name": "Bullet",
     "parentGuid": null,
     "prefabName": ""

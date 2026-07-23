@@ -92,7 +92,7 @@
                 "gravityModifier": -8.0,
                 "looping": true,
                 "maxParticles": 1000,
-                "playOnAwake": false,
+                "playOnAwake": true,
                 "prewarm": false,
                 "simulationSpace": 1,
                 "startColor": {

@@ -34,34 +34,34 @@ CollisionSystem::CollisionSystem() {
 	std::string boxCompName = typeid(BoxCollider).name();
 
 	/// 関数の登録をする
-	collisionCheckMap_[sphereCompName + "Vs" + sphereCompName] = [](const CollisionPair& pair, CollisionInfo* info) -> bool {
+	collisionCheckMap_[sphereCompName + "Vs" + sphereCompName] = [](GameEntity* a, GameEntity* b, CollisionInfo* info) -> bool {
 		return CheckMethod::CollisionCheckSphereVsSphere(
-			pair.first->GetComponent<SphereCollider>(),
-			pair.second->GetComponent<SphereCollider>(),
+			a->GetComponent<SphereCollider>(),
+			b->GetComponent<SphereCollider>(),
 			info
 		);
 	};
 
-	collisionCheckMap_[sphereCompName + "Vs" + boxCompName] = [](const CollisionPair& pair, CollisionInfo* info) -> bool {
+	collisionCheckMap_[sphereCompName + "Vs" + boxCompName] = [](GameEntity* a, GameEntity* b, CollisionInfo* info) -> bool {
 		return CheckMethod::CollisionCheckSphereVsBox(
-			pair.first->GetComponent<SphereCollider>(),
-			pair.second->GetComponent<BoxCollider>(),
+			a->GetComponent<SphereCollider>(),
+			b->GetComponent<BoxCollider>(),
 			info
 		);
 	};
 
-	collisionCheckMap_[boxCompName + "Vs" + sphereCompName] = [](const CollisionPair& pair, CollisionInfo* info) -> bool {
+	collisionCheckMap_[boxCompName + "Vs" + sphereCompName] = [](GameEntity* a, GameEntity* b, CollisionInfo* info) -> bool {
 		return CheckMethod::CollisionCheckBoxVsSphere(
-			pair.first->GetComponent<BoxCollider>(),
-			pair.second->GetComponent<SphereCollider>(),
+			a->GetComponent<BoxCollider>(),
+			b->GetComponent<SphereCollider>(),
 			info
 		);
 	};
 
-	collisionCheckMap_[boxCompName + "Vs" + boxCompName] = [](const CollisionPair& pair, CollisionInfo* info) -> bool {
+	collisionCheckMap_[boxCompName + "Vs" + boxCompName] = [](GameEntity* a, GameEntity* b, CollisionInfo* info) -> bool {
 		return CheckMethod::CollisionCheckBoxVsBox(
-			pair.first->GetComponent<BoxCollider>(),
-			pair.second->GetComponent<BoxCollider>(),
+			a->GetComponent<BoxCollider>(),
+			b->GetComponent<BoxCollider>(),
 			info
 		);
 	};
@@ -77,20 +77,12 @@ void CollisionSystem::RuntimeUpdate(ECSGroup* ecs) {
 	exitPairs_.clear();
 
 	/// 破棄済みエンティティを参照するペアを collidedPairs_ から除去する。
-	/// collidedPairs_ は GameEntity* の生ポインタを保持しており、Entity.Destroy() で
-	/// GameEntity が即時解放されるとダングリングになる。残したまま次の衝突パスへ進むと
-	/// exitPairs_ 経由で CallExitFunc が解放済みメモリを参照し use-after-free で落ちる。
-	/// 「生存中のエンティティ集合」に居ないペアだけを落とす（分離しただけの生存ペアは Exit を正しく発火させる）。
 	{
-		std::unordered_set<GameEntity*> liveEntities;
-		for (const auto& e : ecs->GetEntities()) {
-			liveEntities.insert(e.get());
-		}
 		collidedPairs_.erase(
 			std::remove_if(collidedPairs_.begin(), collidedPairs_.end(),
-				[&liveEntities](const CollisionPair& p) {
-					return liveEntities.find(p.first) == liveEntities.end()
-						|| liveEntities.find(p.second) == liveEntities.end();
+				[ecs](const CollisionPair& p) {
+					return ecs->GetEntity(p.first) == nullptr
+						|| ecs->GetEntity(p.second) == nullptr;
 				}),
 			collidedPairs_.end());
 	}
@@ -181,7 +173,7 @@ void CollisionSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 
 			/// 衝突計算の関数を取得
-			CollisionPair pair(a->GetOwner(), b->GetOwner());
+			CollisionPair pair(a->GetOwner()->GetId(), b->GetOwner()->GetId());
 			auto collisionCheckItr = collisionCheckMap_.find(collisionType);
 			if(collisionCheckItr == collisionCheckMap_.end()) {
 				continue;
@@ -189,7 +181,7 @@ void CollisionSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 			/// 衝突計算を行う
 			CollisionInfo info;
-			bool isCollided = collisionCheckItr->second(pair, &info);
+			bool isCollided = collisionCheckItr->second(a->GetOwner(), b->GetOwner(), &info);
 			if(isCollided) {
 
 				/// 押し戻しを行う (どちらかがTriggerならスキップ)
@@ -204,8 +196,7 @@ void CollisionSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 				/// collidedPairs_にペアがすでに存在しているかチェック
 				auto collisionPairItr = std::find_if(collidedPairs_.begin(), collidedPairs_.end(), [&pair](const CollisionPair& p) {
-					return (p.first == pair.first && p.second == pair.second)
-						|| (p.first == pair.second && p.second == pair.first);
+					return p == pair;
 				});
 
 				if(collisionPairItr != collidedPairs_.end()) {
@@ -222,8 +213,7 @@ void CollisionSystem::RuntimeUpdate(ECSGroup* ecs) {
 
 				/// collisionPairs_からペアを削除
 				auto collisionPairItr = std::find_if(collidedPairs_.begin(), collidedPairs_.end(), [&pair](const CollisionPair& p) {
-					return (p.first == pair.first && p.second == pair.second)
-						|| (p.first == pair.second && p.second == pair.first);
+					return p == pair;
 				});
 
 				/// 削除するペアがあった場合は exitPairs_ に追加
@@ -256,8 +246,8 @@ void CollisionSystem::CallEnterFunc(const std::string& ecsGroupName) {
 	std::vector<std::pair<int32_t, int32_t>> enterIds;
 	enterIds.reserve(enterPairs_.size());
 	for (auto& pair : enterPairs_) {
-		if (pair.first && pair.second) {
-			enterIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+		if (pair.first != 0 && pair.second != 0) {
+			enterIds.push_back({ pair.first, pair.second });
 		}
 	}
 
@@ -299,28 +289,29 @@ void CollisionSystem::CallEnterFunc(const std::string& ecsGroupName) {
 				MonoObject* exc = nullptr;
 
 				/// 引数の準備
-				void* params[1];
-				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
-
+				MonoObject* targetEntityCS = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
 				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, checkSelf->GetId(), script.scriptName);
-				if(!script.collisionEventMethods[0]) {
+
+				if (!script.collisionEventMethods[0]) {
 					script.collisionEventMethods[0] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionEnter", 1);
 				}
 
-				mono_runtime_invoke(script.collisionEventMethods[0], monoBehavior, params, &exc);
+				if (monoBehavior && script.collisionEventMethods[0] && targetEntityCS) {
+					void* params[1] = { targetEntityCS };
+					MonoScriptEngineUtils::SafeInvoke(script.collisionEventMethods[0], monoBehavior, params, &exc);
 
+					Console::Log("Collision Enter Event Invoked");
 
-				Console::Log("Collision Enter Event Invoked");
-
-				/// 例外が発生した場合の処理
-				if(exc) {
-					MonoString* monoStr = mono_object_to_string(exc, nullptr);
-					if(monoStr) {
-						char* message = mono_string_to_utf8(monoStr);
-						Console::Log(std::string("Mono Exception: ") + message);
-						mono_free(message);
-					} else {
-						Console::Log("Mono Exception occurred, but message is null.");
+					/// 例外が発生した場合の処理
+					if(exc) {
+						MonoString* monoStr = mono_object_to_string(exc, nullptr);
+						if(monoStr) {
+							char* message = mono_string_to_utf8(monoStr);
+							Console::Log(std::string("Mono Exception: ") + message);
+							mono_free(message);
+						} else {
+							Console::Log("Mono Exception occurred, but message is null.");
+						}
 					}
 				}
 
@@ -340,8 +331,8 @@ void CollisionSystem::CallStayFunc(const std::string& ecsGroupName) {
 	std::vector<std::pair<int32_t, int32_t>> stayIds;
 	stayIds.reserve(stayPairs_.size());
 	for (auto& pair : stayPairs_) {
-		if (pair.first && pair.second) {
-			stayIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+		if (pair.first != 0 && pair.second != 0) {
+			stayIds.push_back({ pair.first, pair.second });
 		}
 	}
 
@@ -383,27 +374,27 @@ void CollisionSystem::CallStayFunc(const std::string& ecsGroupName) {
 				MonoObject* exc = nullptr;
 
 				/// 引数の準備
-				void* params[1];
-				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
-
+				MonoObject* targetEntityCS = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
 				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, checkSelf->GetId(), script.scriptName);
-				if(!script.collisionEventMethods[1]) {
+
+				if (!script.collisionEventMethods[1]) {
 					script.collisionEventMethods[1] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionStay", 1);
 				}
 
-				mono_runtime_invoke(script.collisionEventMethods[1], monoBehavior, params, &exc);
+				if (monoBehavior && script.collisionEventMethods[1] && targetEntityCS) {
+					void* params[1] = { targetEntityCS };
+					MonoScriptEngineUtils::SafeInvoke(script.collisionEventMethods[1], monoBehavior, params, &exc);
 
-				// Console::Log("Collision Stay Event Invoked");
-
-				/// 例外が発生した場合の処理
-				if(exc) {
-					MonoString* monoStr = mono_object_to_string(exc, nullptr);
-					if(monoStr) {
-						char* message = mono_string_to_utf8(monoStr);
-						Console::Log(std::string("Mono Exception: ") + message);
-						mono_free(message);
-					} else {
-						Console::Log("Mono Exception occurred, but message is null.");
+					/// 例外が発生した場合の処理
+					if(exc) {
+						MonoString* monoStr = mono_object_to_string(exc, nullptr);
+						if(monoStr) {
+							char* message = mono_string_to_utf8(monoStr);
+							Console::Log(std::string("Mono Exception: ") + message);
+							mono_free(message);
+						} else {
+							Console::Log("Mono Exception occurred, but message is null.");
+						}
 					}
 				}
 
@@ -423,8 +414,8 @@ void CollisionSystem::CallExitFunc(const std::string& ecsGroupName) {
 	std::vector<std::pair<int32_t, int32_t>> exitIds;
 	exitIds.reserve(exitPairs_.size());
 	for (auto& pair : exitPairs_) {
-		if (pair.first && pair.second) {
-			exitIds.push_back({ pair.first->GetId(), pair.second->GetId() });
+		if (pair.first != 0 && pair.second != 0) {
+			exitIds.push_back({ pair.first, pair.second });
 		}
 	}
 
@@ -466,29 +457,29 @@ void CollisionSystem::CallExitFunc(const std::string& ecsGroupName) {
 				MonoObject* exc = nullptr;
 
 				/// 引数の準備
-				void* params[1];
-				params[0] = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
-
-
+				MonoObject* targetEntityCS = monoEngine.GetEntityFromCS(ecsGroupName, checkOther->GetId());
 				MonoObject* monoBehavior = monoEngine.GetMonoBehaviorFromCS(ecsGroupName, checkSelf->GetId(), script.scriptName);
-				if(!script.collisionEventMethods[2]) {
+
+				if (!script.collisionEventMethods[2]) {
 					script.collisionEventMethods[2] = monoEngine.GetMethodFromCS("", script.scriptName, "OnCollisionExit", 1);
 				}
 
-				mono_runtime_invoke(script.collisionEventMethods[2], monoBehavior, params, &exc);
+				if (monoBehavior && script.collisionEventMethods[2] && targetEntityCS) {
+					void* params[1] = { targetEntityCS };
+					MonoScriptEngineUtils::SafeInvoke(script.collisionEventMethods[2], monoBehavior, params, &exc);
 
+					Console::Log("Collision Exit Event Invoked");
 
-				Console::Log("Collision Exit Event Invoked");
-
-				/// 例外が発生した場合の処理
-				if(exc) {
-					MonoString* monoStr = mono_object_to_string(exc, nullptr);
-					if(monoStr) {
-						char* message = mono_string_to_utf8(monoStr);
-						Console::Log(std::string("Mono Exception: ") + message);
-						mono_free(message);
-					} else {
-						Console::Log("Mono Exception occurred, but message is null.");
+					/// 例外が発生した場合の処理
+					if(exc) {
+						MonoString* monoStr = mono_object_to_string(exc, nullptr);
+						if(monoStr) {
+							char* message = mono_string_to_utf8(monoStr);
+							Console::Log(std::string("Mono Exception: ") + message);
+							mono_free(message);
+						} else {
+							Console::Log("Mono Exception occurred, but message is null.");
+						}
 					}
 				}
 
