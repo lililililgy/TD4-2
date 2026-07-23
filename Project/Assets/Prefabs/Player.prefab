@@ -113,6 +113,10 @@
                     "y": 0.4,
                     "z": 0.4
                 },
+                "blinkEntityNames_": [
+                    "Player_Body",
+                    "Player_Tentacle"
+                ],
                 "blinkInterval_": 0.08,
                 "hitstopDuration_": 0.12,
                 "hitstopTimeScale_": 0.15,

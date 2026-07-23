@@ -32,6 +32,16 @@ static public class Time
 		}
 	}
 
+	// timeScale の影響を受けない実フレーム差分(秒)。ヒットストップ等で減速中でも実時間で進む。
+	// ※現状 unscaledTime も同じ内部呼び出しを指すが、「差分」であることを名前で明示するための別名。
+	static public float unscaledDeltaTime
+	{
+		get
+		{
+			return InternalGetUnscaledDeltaTime();
+		}
+	}
+
 	static public float timeScale
 	{
 		get
