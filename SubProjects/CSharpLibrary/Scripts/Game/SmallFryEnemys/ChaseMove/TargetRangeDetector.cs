@@ -17,12 +17,17 @@ public class TargetRangeDetector : MonoScript
 
     public override void Update()
     {
+        if (transform == null) { return; }
+
         // 未キャッシュなら検索
         if (targetEntity_ == null)
         {
+            if (ecsGroup == null) { return; }
             targetEntity_ = ecsGroup.FindEntity(targetEntityName);
             if (targetEntity_ == null) { return; }
         }
+
+        if (targetEntity_.transform == null) { return; }
 
         // 距離判定
         float dist = (targetEntity_.transform.position - transform.position).Length();

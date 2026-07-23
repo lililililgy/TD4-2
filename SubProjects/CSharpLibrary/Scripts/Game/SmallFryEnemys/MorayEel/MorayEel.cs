@@ -16,6 +16,8 @@ public class MorayEel : MonoScript {
     private ParticleOffset particleOffset_;
 
     public override void Initialize() {
+        if (entity == null) return;
+
         // スクリプト・コンポーネント取得
         hp_ = entity.GetScript<HP>();
         chaseController_ = entity.GetScript<ChaseController>();
@@ -28,6 +30,7 @@ public class MorayEel : MonoScript {
     }
 
     public override void Update() {
+        if (transform == null) return;
 
         // 親子付けしていない泳ぎの泡の座標を追従させる
         SyncSwimParticlePosition();
@@ -81,10 +84,10 @@ public class MorayEel : MonoScript {
 
     // 常時再生する泳ぎの泡を生成する
     private void SpawnSwimParticle() {
-        if (string.IsNullOrEmpty(swimParticlePrefabName)) { return; }
+        if (string.IsNullOrEmpty(swimParticlePrefabName) || ecsGroup == null || transform == null) { return; }
 
         Entity swimParticle = ecsGroup.CreateEntity(swimParticlePrefabName);
-        if (!swimParticle) { return; }
+        if (!swimParticle || swimParticle.transform == null) { return; }
 
         // 敵のスケールを継承すると泡もつられて拡大縮小し画面外に出てしまうため、
         // 親子付けはせず座標だけを毎フレーム追従させる。
@@ -94,7 +97,7 @@ public class MorayEel : MonoScript {
 
     // 泳ぎの泡の座標をこの敵の現在位置に追従させる
     private void SyncSwimParticlePosition() {
-        if (!swimParticleEntity_) { return; }
+        if (!swimParticleEntity_ || transform == null || swimParticleEntity_.transform == null) { return; }
         swimParticleEntity_.transform.position = transform.position + GetParticleOffset();
     }
 
@@ -102,6 +105,7 @@ public class MorayEel : MonoScript {
     // TargetFacingFlipはUVのX反転で左右(ミラー)を表現しつつ、transform.rotateで泳ぎの傾きも付けている。
     // そのためオフセットはまずUV反転に合わせてX成分をミラーし、その後に現在の傾き(transform.rotate)を掛ける。
     private Vector3 GetParticleOffset() {
+        if (transform == null) { return Vector3.zero; }
         if (particleOffset_ == null) { return Vector3.zero; }
 
         Vector3 offset = particleOffset_.offset;

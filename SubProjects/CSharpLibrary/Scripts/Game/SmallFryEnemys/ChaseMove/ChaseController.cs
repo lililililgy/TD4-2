@@ -51,6 +51,8 @@ public class ChaseController : MonoScript
 
     public override void Initialize()
     {
+        if (entity == null) return;
+
         motion_.Attach(entity);
 
         // 自動開始フラグが立っていればチェイス開始
@@ -62,6 +64,8 @@ public class ChaseController : MonoScript
 
     public override void Update()
     {
+        if (transform == null) return;
+
         // Idle(まだ StartChase されていない)の間は移動を触らない。
         // MorayEel は出現演出中 MorayEelSpawnMove 側が Rigidbody2D を握るため、
         // ここで書くと二重に velocity を書いて奪い合いになる。
@@ -148,7 +152,7 @@ public class ChaseController : MonoScript
             waitTimer_ += Time.deltaTime;
         }
 
-        if (!transform || !targetEntity_.transform)
+        if (transform == null || targetEntity_ == null || targetEntity_.transform == null)
         {
             return;
         }
@@ -184,6 +188,11 @@ public class ChaseController : MonoScript
 
         // 追いかけ時間切れなら Wait へ
         if (TickChaseTimer()) { return; }
+
+        if (transform == null || targetEntity_ == null || targetEntity_.transform == null)
+        {
+            return;
+        }
 
         // 近距離判定
         Vector3 toTarget = targetEntity_.transform.position - transform.position;
@@ -223,6 +232,8 @@ public class ChaseController : MonoScript
 
     private void TryFaceVelocity()
     {
+        if (transform == null) { return; }
+
         // フラグが無効なら向きを変えない
         if (!enableFacing) { return; }
 
@@ -236,6 +247,8 @@ public class ChaseController : MonoScript
 
     private bool TryFindTarget()
     {
+        if (ecsGroup == null) { return false; }
+
         // 未キャッシュなら検索
         if (targetEntity_ == null)
         {
@@ -248,7 +261,7 @@ public class ChaseController : MonoScript
 
     private void CalcVelocityToTarget()
     {
-        if (targetEntity_ == null) { return; }
+        if (targetEntity_ == null || targetEntity_.transform == null || transform == null) { return; }
 
         // ターゲット方向の速度ベクトルを計算
         Vector3 toTarget = targetEntity_.transform.position - transform.position;

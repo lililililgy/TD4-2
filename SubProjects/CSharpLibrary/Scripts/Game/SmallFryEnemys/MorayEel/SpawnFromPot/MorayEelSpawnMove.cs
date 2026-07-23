@@ -26,6 +26,8 @@ public class MorayEelSpawnMove : MonoScript
 
     public override void Initialize()
     {
+        if (entity == null || transform == null) return;
+
         motion_.Attach(entity);
 
         // 追いかけMoveスクリプトを取得
@@ -51,6 +53,7 @@ public class MorayEelSpawnMove : MonoScript
 
     private void SpawnMove()
     {
+        if (transform == null) return;
 
         // タイマー更新
         timer_ += Time.deltaTime;
@@ -82,6 +85,7 @@ public class MorayEelSpawnMove : MonoScript
 
     private void ChargeMove()
     {
+        if (ecsGroup == null) return;
 
         // Playerエンティティを取得
         if (playerEntity_ == null)
