@@ -6,6 +6,79 @@
                 "z": 5.699998378753662
             },
             "type": "Transform"
+        },
+        {
+            "inheritEmitterRotation": false,
+            "main": {
+                "startSize3D": false,
+                "startSizeX": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSizeY": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                },
+                "startSizeZ": {
+                    "constant": 1.0,
+                    "max": 1.0,
+                    "min": 0.0,
+                    "state": 0
+                }
+            },
+            "sizeOverLifetime": {
+                "separateAxes": false,
+                "x": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "y": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                },
+                "z": {
+                    "constant": 1.0,
+                    "constantMax": 1.0,
+                    "constantMin": 0.0,
+                    "curve": {
+                        "keys": []
+                    },
+                    "curveMax": {
+                        "keys": []
+                    },
+                    "curveMin": {
+                        "keys": []
+                    },
+                    "state": 0
+                }
+            },
+            "type": "ParticleSystem2D"
         }
     ],
     "guid": "9f8184808bb5e2cae9c4ac7bd5ecc61d",
