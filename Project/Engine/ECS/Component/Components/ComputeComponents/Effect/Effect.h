@@ -44,28 +44,28 @@ public:
 	/// /////////////////////////////////////////////  
 	struct Element final {
 		Transform transform; /// 座標(SRT)  
-		Color   color;     /// RGBA 0.0f ~ 1.0f  
-		float     lifeTime;  /// エフェクトの寿命  
-		Vector3   velocity;  /// エフェクトの移動速度  
+		Color   color = Color::kWhite;     /// RGBA 0.0f ~ 1.0f  
+		float     lifeTime = 0.0f;  /// エフェクトの寿命  
+		Vector3   velocity = Vector3::Zero;  /// エフェクトの移動速度  
 	};
 
 	/// /////////////////////////////////////////////
 	/// 出現するまでの距離を指定する場合のデータ
 	/// /////////////////////////////////////////////
 	struct DistanceEmitData final {
-		Vector3 currentPosition;
-		Vector3 nextPosition;
-		float moveLength;
-		float emitDistance;
-		float emitInterval;
+		Vector3 currentPosition{};
+		Vector3 nextPosition{};
+		float moveLength = 0.0f;
+		float emitDistance = 0.0f;
+		float emitInterval = 0.0f;
 	};
 
 	/// /////////////////////////////////////////////
 	/// 出現するまでの時間を指定する場合のデータ
 	/// /////////////////////////////////////////////
 	struct TimeEmitData final {
-		float emitTime;
-		float emitInterval;
+		float emitTime = 0.0f;
+		float emitInterval = 0.0f;
 	};
 
 
@@ -94,7 +94,7 @@ private:
 	/// private : objects  
 	/// ===================================================  
 
-	bool isCreateParticle_; ///!< これがtrueじゃないとパーティクルが出現しない
+	bool isCreateParticle_ = true; ///!< これがtrueじゃないとパーティクルが出現しない
 
 
 	size_t maxEffectCount_ = 1000;
@@ -107,11 +107,11 @@ private:
 	EffectMainModule mainModule_; ///< メインモジュール
 	EffectEmitShape emitShape_;  ///< エミット形状
 
-	EmitType emitType_;
-	DistanceEmitData distanceEmitData_;
-	TimeEmitData timeEmitData_;
+	EmitType emitType_ = EmitType::Time;
+	DistanceEmitData distanceEmitData_{};
+	TimeEmitData timeEmitData_{};
 
-	size_t emitInstanceCount_; /// emitごとに生成するインスタンス数
+	size_t emitInstanceCount_ = 1; /// emitごとに生成するインスタンス数
 
 	std::function<void(Element*)> elementUpdateFunc_ = nullptr; ///< エフェクトの更新関数
 

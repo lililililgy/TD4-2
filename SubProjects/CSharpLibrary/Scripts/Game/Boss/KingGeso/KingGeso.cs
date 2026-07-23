@@ -458,8 +458,8 @@ public class KingGeso : MonoScript
 
         if (first == null || second == null)
         {
-            DestroyActiveGeso(first);
-            DestroyActiveGeso(second);
+            if (first != null) DestroyActiveGeso(first);
+            if (second != null) DestroyActiveGeso(second);
             return false;
         }
 

@@ -241,7 +241,10 @@ namespace ComponentDebug {
     }
 
     void AnimatorDebug(const std::vector<Animator*>& animators) {
-        Animator* first = animators.empty() ? nullptr : animators[0];
+        Animator* first = nullptr;
+        if (!animators.empty()) {
+            first = animators[0];
+        }
         if (!first) return;
 
         // デフォルトクリップの表示

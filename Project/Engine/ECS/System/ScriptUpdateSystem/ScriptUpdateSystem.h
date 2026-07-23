@@ -46,12 +46,12 @@ private:
 	/// private : objects
 	/// ===================================================
 
-	std::string ecsGroupName_;
-	MonoClass*  monoClass_;
-	uint32_t    gcHandle_;
-	MonoMethod* updateEntitiesMethod_;
-	MonoMethod* addEntityMethod_;
-	MonoMethod* addScriptMethod_;
+	std::string ecsGroupName_{};
+	MonoClass*  monoClass_ = nullptr;
+	uint32_t    gcHandle_ = 0;
+	MonoMethod* updateEntitiesMethod_ = nullptr;
+	MonoMethod* addEntityMethod_ = nullptr;
+	MonoMethod* addScriptMethod_ = nullptr;
 	int32_t     lastReloadCounter_ = 0;
 
 };

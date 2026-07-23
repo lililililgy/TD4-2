@@ -41,12 +41,9 @@ public class ECSGroup {
 	/// c/c++側から呼び出すエンティティの追加関数
 	/// </summary>
 	public void AddEntity(int id) {
-		//Debug.LogInfo("ECSGroup.AddEntity - Adding entity with ID: " + id + ", Group Name: " + groupName);
 		if(entities_.ContainsKey(id)) {
-			//Debug.LogError("ECSGroup.AddEntity - Entity already exists with ID: " + id + ", Group Name: " + groupName);
 			return;
 		}
-
 
 		Entity entity = new Entity(id, this);
 		entities_.Add(id, entity);
@@ -54,6 +51,28 @@ public class ECSGroup {
 		/// 生成、初期化の呼び出し用リストに追加
 		awakeList_.Add(entity);
 		initList_.Add(entity);
+	}
+
+	/// <summary>
+	/// C++側で単一エンティティが破棄された時にC#側の保持を解除する関数
+	/// </summary>
+	public void RemoveEntityFromNative(int id) {
+		if (entities_.TryGetValue(id, out Entity entity)) {
+			if (entity != null) {
+				foreach (MonoScript script in entity.GetScripts()) {
+					try {
+						if (script != null) {
+							script.OnDestroy();
+						}
+					} catch (Exception e) {
+						Debug.LogError("ECSGroup.RemoveEntityFromNative - OnDestroy threw: " + e.Message);
+					}
+				}
+			}
+			entities_.Remove(id);
+			awakeList_.RemoveAll(e => e != null && e.Id == id);
+			initList_.RemoveAll(e => e != null && e.Id == id);
+		}
 	}
 
 	/// <summary>
@@ -79,6 +98,11 @@ public class ECSGroup {
 
 		int id = 0;
 		InternalCreateEntity(out id, prefabName, groupName);
+
+		if (entities_.TryGetValue(id, out Entity existingEntity)) {
+			return existingEntity;
+		}
+
 		Entity entity = new Entity(id, this);
 		entities_.Add(id, entity);
 

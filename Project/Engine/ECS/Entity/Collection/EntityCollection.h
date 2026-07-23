@@ -30,6 +30,7 @@ private:
 	struct IdContainer {
 		std::deque<int32_t> usedIds;    ///< 使用中のID
 		std::deque<int32_t> removedIds; ///< 削除されたID
+		int32_t nextId = 0;              ///< 未使用の新規IDカウンター
 	};
 
 public:

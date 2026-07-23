@@ -562,6 +562,7 @@ void MonoScriptEngine::RegisterFunctions() {
 			getComponentCollectionField_ = MonoScriptEngineUtils::FindFieldRecursive(ecsGroupClass, "componentCollection");
 			addEntityMethod_ = mono_class_get_method_from_name(ecsGroupClass, "AddEntity", 1);
 			clearEntitiesFromNativeMethod_ = mono_class_get_method_from_name(ecsGroupClass, "ClearEntitiesFromNative", 0);
+			removeEntityFromNativeMethod_ = mono_class_get_method_from_name(ecsGroupClass, "RemoveEntityFromNative", 1);
 		}
 
 		// class Entity
@@ -915,6 +916,27 @@ void MonoScriptEngine::ClearEntitiesFromNativeCS(const std::string& groupName) {
 	MonoObject* exc = nullptr;
 	MonoScriptEngineUtils::SafeInvoke(clearEntitiesFromNativeMethod_, ecsGroupObj, nullptr, &exc);
 	if(exc) {
+		MonoScriptEngineUtils::HandleException(exc);
+	}
+}
+
+void MonoScriptEngine::RemoveEntityFromNativeCS(const std::string& groupName, int32_t entityId) {
+	if (isShuttingDown_ || !domain_ || !removeEntityFromNativeMethod_) {
+		return;
+	}
+	mono_thread_attach(domain_);
+
+	MonoObject* ecsGroupObj = GetEcsGroupObject(groupName);
+	if (!ecsGroupObj) {
+		return;
+	}
+
+	void* args[1];
+	args[0] = &entityId;
+
+	MonoObject* exc = nullptr;
+	MonoScriptEngineUtils::SafeInvoke(removeEntityFromNativeMethod_, ecsGroupObj, args, &exc);
+	if (exc) {
 		MonoScriptEngineUtils::HandleException(exc);
 	}
 }
